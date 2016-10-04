@@ -1,0 +1,509 @@
+body {
+  background-color:#181818;
+  font-family:Arial;
+  margin:0;
+}
+
+#topButtonContainer {
+  width:520px;
+  height:35px;
+  position:absolute;
+  top:0px;
+  z-index:10;
+}
+
+.topButton {
+  width:250px;
+  height:35px;
+  display:inline-block;
+  background-color:rgb(48, 48, 48);
+  z-index:10;
+  vertical-align: top;
+}
+
+.topButton p {
+  margin:0;
+  color:white;
+  text-align: center;
+  padding:7px;
+  font-size:20px;
+  cursor:pointer;
+}
+
+.topButton:hover {
+  background-color:rgb(70, 70, 70);
+}
+
+#keyboardControlsImg {
+  display:none;
+  z-index:10;
+}
+
+#controllerSupportContainer {
+  width:510px;
+  height:490px;
+  display:none;
+  z-index:10;
+  background-color: black;
+  border-radius:10px;
+}
+
+#controllerMessage {
+  width:240px;
+  height:82px;
+  border: 2px solid rgb(255, 85, 85);
+  margin: 3px 0px 3px 125px;
+  border-radius:5px;
+}
+
+#controllerMessage p {
+  font-size:15px;
+  text-align: center;
+  color:rgb(249, 131, 131);
+}
+
+.controllerBox {
+  width:240px;
+  height:118px;
+  border: 2px solid rgb(134, 134, 134);
+  margin: 3px;
+  border-radius:5px;
+  display:inline-block;
+}
+.controllerName {
+  width:240px;
+  height:30px;
+}
+
+.controllerName p {
+  font-size:20px;
+  text-align: center;
+}
+.controllerDriver {
+  width:240px;
+  height:20px;
+}
+
+.controllerDriver p {
+  font-size:15px;
+  text-align: center;
+  margin:0;
+  padding:0;
+}
+.controllerBrowser {
+  width:240px;
+  height:32px;
+}
+
+.browserBox {
+  width:56px;
+  height:32px;
+  display:inline-block;
+  vertical-align: top;
+  border:1px solid rgb(108, 108, 108);
+  margin:0px 1px;
+}
+
+.browserImg {
+  width:32px;
+  height:32px;
+  display: inline-block;
+  vertical-align: top;
+
+}
+
+.browserImgFile {
+  display:inline-block;
+  vertical-align: top;
+}
+
+.browserSupport, .osSupport {
+  width:18px;
+  height:32px;
+  display:inline-block;
+  vertical-align: top;
+}
+
+.browserSupport p, .osSupport p {
+  text-align:center;
+  font-size:19px;
+  margin:0;
+  padding:3px 0px;
+  display:inline-block;
+  vertical-align: top;
+}
+
+.controllerOS {
+  width:240px;
+  height:32px;
+}
+
+.osBox {
+  height:32px;
+  display:inline-block;
+  vertical-align: top;
+  border:1px solid rgb(108, 108, 108);
+  margin:0px 1px;
+}
+
+.osBoxWide {
+  width:90px;
+}
+
+.osBoxShort {
+  width:69px;
+}
+
+.osName {
+  height:32px;
+  display:inline-block;
+  vertical-align: top;
+}
+
+.osNameWide {
+  width:62px;
+}
+
+.osNameShort {
+  width:41px;
+}
+
+.osName p {
+  text-align:center;
+  font-size:15px;
+  margin:0;
+  padding:7px;
+}
+
+.tick {
+  color:#28ed48;
+}
+
+.unknown {
+  color:rgb(175, 175, 175);
+  padding:6px 3px;
+}
+
+.cross {
+  color:#ff4e4e;
+}
+
+.native {
+  color:#28ed48;
+}
+a {
+  color:#edbc28;
+}
+.driver {
+  color:#edbc28;
+  text-decoration: underline;
+}
+
+#display {
+  width:1200px;
+  height:750px;
+  background-color: black;
+  position:relative;
+  padding:0;
+  vertical-align: top;
+  z-index:9;
+}
+
+#tagTextContainer {
+  width:1040px;
+  height:50px;
+  margin-left:160px;
+  position:absolute;
+  top:620px;
+}
+
+.pTagEdit {
+  width:169px;
+  height:30px;
+  background-color:#262626;
+  color:white;
+  text-align:Center;
+  font-size:25px;
+  margin:0px 46px 0px 0px;
+  padding:5px;
+  border:0;
+  resize:none;
+  display:none;
+}
+
+#customStageContainer {
+  width:800px;
+  height:450px;
+  margin-left:200px;
+  position:absolute;
+  top:100px;
+  z-index:9;
+  display:none;
+  background-color:rgb(29, 29, 29);
+  font-weight: 900;
+}
+#cStage1 {
+  width:550px;
+  height:450px;
+  display:inline-block;
+  vertical-align: top;
+}
+#cStage2 {
+  width:250px;
+  height:450px;
+  display:inline-block;
+  vertical-align: top;
+}
+
+#cStageTitle{
+  z-index:9;
+  width:500px;
+  height:40px;
+  color:white;
+  font-size:30px;
+  margin-left:25px;
+}
+
+#cStageInfo {
+  width:225px;
+  height:320px;
+  z-index:9;
+  color:white;
+  font-size:20px;
+  margin-left:10px;
+  margin-right:25px;
+}
+
+#cStagePrompt {
+  width:250px;
+  z-index:9;
+  height:40px;
+  color:white;
+  font-size:30px;
+  margin-left:10px;
+}
+
+#cStagePrompt p {
+  margin:0;
+  padding:10px;
+}
+
+#cStagePrompt p {
+  display:inline-block;
+  vertical-align: top;
+}
+
+#aButton {
+  background-color:rgb(50, 177, 47);
+  width:50px;
+  height:50px;
+  border-radius:25px;
+  color:rgb(26, 50, 27);
+  display:inline-block;
+  vertical-align: top;
+}
+
+#aButton p {
+  margin:0;
+  padding:4px 13px;
+}
+
+#cStageEdit {
+  width:500px;
+  height:300px;
+  background-color:#262626;
+  color:white;
+  text-align:Center;
+  font-size:25px;
+  margin:25px 0px 0px 25px;
+  padding:5px;
+  border:0;
+  resize:none;
+}
+
+#pTagEdit1 {
+  margin-left:225px;
+}
+
+#pTagEdit2 {
+  margin-left:450px;
+}
+
+#pTagEdit3 {
+  margin-left:675px;
+}
+
+#gameCanvas {
+  display:inline-block;
+  position:absolute;
+  padding:0;
+  vertical-align: top;
+}
+
+#gameSvg {
+  display:block;
+  position:absolute;
+}
+
+#buttons {
+  position:absolute;
+  width:600px;
+  height:50px;
+  background-color:none;
+  left:307px;
+  top:700px;
+}
+
+.button {
+  width:100px;
+  height:30px;
+  display:inline-block;
+  background-color:rgba(0, 0, 0, 0.3);
+  border-radius:10px;
+  margin:0px 5px;
+}
+
+.button p {
+  color:white;
+  padding: 6px;
+  margin:0;
+  text-align: center;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:bolder;
+}
+
+#debug {
+  position:absolute;
+  width:400px;
+  height:100px;
+  right: 20px;
+  top : 20px;
+  font-size:10px;
+  color:white;
+  display:none;
+}
+
+.resetIndicator {
+  width:120px;
+  height:30px;
+  position:absolute;
+  display:none;
+}
+
+.resetIndicator p {
+  text-align: center;
+  color:#fffd59;
+  text-shadow:
+      3px 4px 0 #000,
+    -1px -2px 0 #000,
+     1px -2px 0 #000,
+     -1px 2px 0 #000,
+      1px 2px 0 #000;
+  font-size:18px;
+  font-weight:bold;
+  margin:0;
+}
+
+#players {
+  display:none;
+}
+
+.playerDetails {
+  width:300px;
+  height:150px;
+  display:inline-block;
+  background-color: #363636;
+  color:white;
+}
+
+.playerTitle {
+  height:20px;
+  width:150px;
+  text-align: center;
+  font-size: 14px;
+  background-color:#1f1f1f;
+  border-radius:5px;
+  margin:2px 75px;
+}
+
+.playerTitle p {
+  margin:0;
+  padding:2px;
+}
+
+.inputs, .actionstatetext, .velocities {
+  height:15px;
+  text-align: center;
+  font-size: 11px;
+}
+
+.inputs, .velocities {
+  display:inline-block;
+  width:100px;
+  text-align: left;
+  margin:1px 0px;
+}
+
+.inputs p, .actionstatetext p, .velocities p{
+  margin:0;
+  padding:2px 10px;
+}
+
+.buttons {
+  margin-left:17px;
+}
+
+.b {
+  display:inline-block;
+  width:20px;
+  height:20px;
+  border:1px solid white;
+}
+
+.b div {
+  position:absolute;
+  display:inline-block;
+  width:20px;
+  height:20px;
+  background-color:rgba(255, 0, 0, 0.53);
+  z-index:0;
+  vertical-align: top;
+}
+
+.b p {
+  margin:0;
+  text-align: center;
+  padding:3px;
+  font-size:12px;
+  z-index:5;
+  vertical-align: top;
+}
+
+.model {
+  stroke-width:0px;
+}
+
+.ground {
+  stroke-width:5px;
+}
+
+.djRing {
+  stroke-width:2px;
+}
+
+.wallR, .wallL {
+  stroke-width:4px;
+}
+
+.edge {
+  stroke-width:2px;
+}
+
+.swing {
+  fill : rgba(97, 226, 255, 0.65);
+}
+
+.1hitFlair {
+  stroke-width:10px;
+}

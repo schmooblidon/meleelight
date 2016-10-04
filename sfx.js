@@ -1,0 +1,391 @@
+sounds = {
+  menu2 : new Howl({
+    src: ['sfx/menu2.mp3'],
+    volume: 0,
+    sprite : {
+      menu2Start : [0,1300],
+      menu2Loop : [1300,55500]
+    },
+    onend : function(){
+      this.play("menu2Loop");
+      //console.log("test");
+    }
+
+  }),
+  battlefield : new Howl({
+    src: ['sfx/battlefield.mp3'],
+    sprite : {
+      battlefieldStart : [0,8000],
+      battlefieldLoop : [8000,75200]
+    },
+    volume: 0,
+    onend : function(){
+      this.play("battlefieldLoop");
+      //console.log("test2");
+    }
+  }),
+  menuBack : new Howl({
+    src: ['sfx/menu-back.wav']
+  }),
+  menuForward : new Howl({
+    src: ['sfx/menu-forward.wav']
+  }),
+  menuSelect : new Howl({
+    src: ['sfx/menu-select.wav']
+  }),
+  marth : new Howl({
+    src: ['sfx/marth.wav']
+  }),
+  ready : new Howl({
+    src: ['sfx/ready.wav']
+  }),
+  go : new Howl({
+    src: ['sfx/go.wav']
+  }),
+  game : new Howl({
+    src: ['sfx/game.wav']
+  }),
+  dash : new Howl({
+    src: ['sfx/dash.wav'],
+    volume : 0.3
+  }),
+  tech : new Howl({
+    src: ['sfx/tech.wav']
+  }),
+  airdodge : new Howl({
+    src: ['sfx/airdodge.wav'],
+    volume: 0.7
+  }),
+  dolphinSlash : new Howl({
+    src: ['sfx/dolphin-slash.wav']
+  }),
+  dolphinSlash2 : new Howl({
+    src: ['sfx/dolphin-slash2.wav']
+  }),
+  grab : new Howl({
+    src: ['sfx/grab.wav'],
+    volume: 0.5
+  }),
+  grabbed : new Howl({
+    src: ['sfx/grabbed.wav']
+  }),
+  jump : new Howl({
+    src: ['sfx/jump.wav'],
+    volume: 0.7
+  }),
+  jump2 : new Howl({
+    src: ['sfx/jump2.wav'],
+    volume: 0.4
+  }),
+  kill : new Howl({
+    src: ['sfx/kill.wav']
+  }),
+  land : new Howl({
+    src: ['sfx/land.wav'],
+    volume: 0.7
+  }),
+  ledgegrab : new Howl({
+    src: ['sfx/ledgegrab.wav'],
+    volume: 0.7
+  }),
+  powershield : new Howl({
+    src: ['sfx/powershield.wav']
+  }),
+  roll : new Howl({
+    src: ['sfx/roll.wav']
+  }),
+  shieldbreak : new Howl({
+    src: ['sfx/shieldbreak.wav']
+  }),
+  shieldup : new Howl({
+    src: ['sfx/shieldup.wav'],
+    volume: 0.7
+  }),
+  swordsheath : new Howl({
+    src: ['sfx/swordsheath.wav'],
+    volume: 0.7
+  }),
+  sworddraw : new Howl({
+    src: ['sfx/sworddraw.wav'],
+    volume: 0.7
+  }),
+  fastfall : new Howl({
+    src: ['sfx/fastfall.wav'],
+    volume: 0.4
+  }),
+  spotdodge : new Howl({
+    src: ['sfx/spotdodge.wav']
+  }),
+  dancingBlade : new Howl({
+    src: ['sfx/dancing-blade.wav']
+  }),
+  shieldoff : new Howl({
+    src: ['sfx/shieldoff.wav'],
+    volume: 0.4
+  }),
+  runbrake : new Howl({
+    src: ['sfx/runbrake.wav']
+  }),
+  shout1 : new Howl({
+    src: ['sfx/shout1.wav']
+  }),
+  shout2 : new Howl({
+    src: ['sfx/shout2.wav']
+  }),
+  shout3 : new Howl({
+    src: ['sfx/shout3.wav']
+  }),
+  shout4 : new Howl({
+    src: ['sfx/shout4.wav']
+  }),
+  shout5 : new Howl({
+    src: ['sfx/shout5.wav']
+  }),
+  shout6 : new Howl({
+    src: ['sfx/shout6.wav']
+  }),
+  sword1 : new Howl({
+    src: ['sfx/sword1.wav'],
+    volume: 0.7
+  }),
+  sword2 : new Howl({
+    src: ['sfx/sword2.wav'],
+    volume: 0.7
+  }),
+  sword3 : new Howl({
+    src: ['sfx/sword3.wav'],
+    volume: 0.7
+  }),
+  footstep : new Howl({
+    src: ['sfx/footstep.wav']
+  }),
+  smashcharge : new Howl({
+    src: ['sfx/smashcharge.wav']
+  }),
+  deathShout : new Howl({
+    src: ['sfx/death.wav']
+  }),
+  walljump : new Howl({
+    src: ['sfx/walljump.wav']
+  }),
+  weakhurt : new Howl({
+    src: ['sfx/weakhurt.wav']
+  }),
+  stronghurt : new Howl({
+    src: ['sfx/stronghurt.wav']
+  }),
+  swordweakhit : new Howl({
+    src: ['sfx/swordweakhit.wav'],
+    volume: 0.5
+  }),
+  swordmediumhit : new Howl({
+    src: ['sfx/swordmediumhit.wav'],
+    volume: 0.5
+  }),
+  swordstronghit : new Howl({
+    src: ['sfx/swordstronghit.wav'],
+    volume: 0.5
+  }),
+  swordreallystronghit : new Howl({
+    src: ['sfx/swordreallystronghit.wav'],
+    volume: 0.7
+  }),
+  stronghit : new Howl({
+    src: ['sfx/stronghit.wav']
+  }),
+  strongerhit : new Howl({
+    src: ['sfx/strongerhit.wav']
+  }),
+  normalweakhit : new Howl({
+    src: ['sfx/normalweakhit.wav']
+  }),
+  cheer : new Howl({
+    src: ['sfx/cheer.wav']
+  }),
+  lowdown : new Howl({
+    src: ['sfx/lowdown.wav']
+  }),
+  bounce : new Howl({
+    src: ['sfx/bounce.wav']
+  }),
+  pause : new Howl({
+    src: ['sfx/pause.wav']
+  }),
+  furacry : new Howl({
+    src: ['sfx/furacry.wav'],
+    volume: 0.4
+  }),
+  furaloop : new Howl({
+    src: ['sfx/furaloop.wav'],
+    loop:true
+  }),
+  parry : new Howl({
+    src: ['sfx/parry.wav']
+  }),
+  blunthit : new Howl({
+    src: ['sfx/blunthit.wav'],
+    volume: 0.7
+  }),
+  clank : new Howl({
+    src : ['sfx/clank.wav']
+  }),
+  deny : new Howl({
+    src : ['sfx/deny.wav']
+  }),
+  targetBreak : new Howl({
+    src : ['sfx/target-break.wav']
+  }),
+  complete : new Howl({
+    src : ['sfx/complete.wav']
+  }),
+  newRecord : new Howl({
+    src : ['sfx/new-record.wav']
+  }),
+  failure : new Howl({
+    src : ['sfx/failure.wav']
+  }),
+  time : new Howl({
+    src : ['sfx/time.wav']
+  }),
+  puffshout1 : new Howl({
+    src : ['sfx/puffshout1.wav']
+  }),
+  puffshout2 : new Howl({
+    src : ['sfx/puffshout2.wav']
+  }),
+  puffshout3 : new Howl({
+    src : ['sfx/puffshout3.wav']
+  }),
+  puffshout4 : new Howl({
+    src : ['sfx/puffshout4.wav']
+  }),
+  puffshout5 : new Howl({
+    src : ['sfx/puffshout5.wav']
+  }),
+  rest1 : new Howl({
+    src : ['sfx/rest1.wav']
+  }),
+  rest2 : new Howl({
+    src : ['sfx/rest2.wav']
+  }),
+  restbubbles : new Howl({
+    src : ['sfx/restbubbles.wav']
+  }),
+  sing1 : new Howl({
+    src : ['sfx/sing1.wav']
+  }),
+  sing2 : new Howl({
+    src : ['sfx/sing2.wav']
+  }),
+  puffdeath : new Howl({
+    src : ['sfx/puffkill.wav']
+  }),
+  normalswing1 : new Howl({
+    src : ['sfx/normalswing1.wav'],
+    volume : 0.5
+  }),
+  normalswing2 : new Howl({
+    src : ['sfx/normalswing2.wav'],
+    volume : 0.5
+  }),
+  puffledgegrab : new Howl({
+    src : ['sfx/puffledgegrab.wav'],
+    volume : 0.7
+  }),
+  normalmediumhit : new Howl({
+    src : ['sfx/normalmediumhit.wav']
+  }),
+  normalstronghit : new Howl({
+    src : ['sfx/normalstronghit.wav']
+  }),
+  bathit : new Howl({
+    src: ['sfx/bathit.wav']
+  }),
+  fireweakhit : new Howl({
+    src : ['sfx/fireweakhit.wav']
+  }),
+  firemediumhit : new Howl({
+    src : ['sfx/firemediumhit.wav']
+  }),
+  firestronghit : new Howl({
+    src : ['sfx/firestronghit.wav']
+  }),
+  jigglypuff : new Howl({
+    src : ['sfx/jigglypuff.wav']
+  }),
+  foxairdodge : new Howl({
+    src : ['sfx/foxairdodge.wav']
+  }),
+  foxjump : new Howl({
+    src : ['sfx/foxjump.wav']
+  }),
+  foxshine : new Howl({
+    src : ['sfx/foxshine.wav']
+  }),
+  foxshout1 : new Howl({
+    src : ['sfx/foxshout1.wav']
+  }),
+  foxshout2 : new Howl({
+    src : ['sfx/foxshout2.wav']
+  }),
+  foxshout3 : new Howl({
+    src : ['sfx/foxshout3.wav']
+  }),
+  foxshout4 : new Howl({
+    src : ['sfx/foxshout4.wav']
+  }),
+  foxshout5 : new Howl({
+    src : ['sfx/foxshout5.wav']
+  }),
+  foxupbburn : new Howl({
+    src : ['sfx/foxupbburn.wav']
+  }),
+  foxupbshout : new Howl({
+    src : ['sfx/foxupbshout.wav']
+  }),
+  foxillusion1 : new Howl({
+    src : ['sfx/foxillusion1.wav']
+  }),
+  foxillusion2 : new Howl({
+    src : ['sfx/foxillusion2.wav']
+  }),
+  foxcliffcatch : new Howl({
+    src : ['sfx/foxcliffcatch.wav']
+  }),
+  foxupblaunch : new Howl({
+    src : ['sfx/foxupblaunch.wav']
+  }),
+  foxlasercock : new Howl({
+    src : ['sfx/foxlasercock.wav']
+  }),
+  foxlaserfire : new Howl({
+    src : ['sfx/foxlaserfire.wav']
+  }),
+  foxlaserholster : new Howl({
+    src : ['sfx/foxlaserholster.wav']
+  }),
+  foxfura : new Howl({
+    src : ['sfx/foxfura.wav']
+  }),
+  foxdeath : new Howl({
+    src : ['sfx/foxdeath.wav']
+  }),
+  foxweakhurt : new Howl({
+    src : ['sfx/foxweakhurt.wav']
+  }),
+  foxstronghurt : new Howl({
+    src : ['sfx/foxstronghurt.wav']
+  }),
+  star : new Howl({
+    src : ['sfx/star.wav']
+  }),
+  vcancel : new Howl({
+    src : ['sfx/vcancel.wav']
+  })
+}
+
+Howler.volume(0.2);
+
+function playSfx(name){
+  sounds[name].play();
+}
