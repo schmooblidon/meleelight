@@ -1,3 +1,22 @@
+/*you duplicate
+c.save();
+...
+c.restore();
+
+all over the place
+what you can do instead is create a function that wraps a function in those two lines(edited)
+so the context will always get restored automatically(edited)
+without having to explicitly state it everywhere
+function foobar(callback) {
+    c.save();
+    callback();
+    c.restore();
+}
+then you just call foobar() passing in the function as an argument(edited)
+first class functions are really powerful, abuse them everywhere possible*/
+
+
+
 player = [0,0,0,0];
 
 renderTime = [10,0,100,0];
@@ -1074,7 +1093,7 @@ function physics(i){
     player[i].phys.ECBp = [new Vec2D(0+x,1+y),new Vec2D(2+x,9+y),new Vec2D(0+x,14+y),new Vec2D(-2+x,9+y)];
   }*/
 
-  if (!aS[cS[i]][player[i].actionState].ignoreCollision){
+
   //console.log(player[i].timer);
   var frame = Math.floor(player[i].timer);
   if (frame == 0){
@@ -1105,15 +1124,8 @@ function physics(i){
   if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
     player[i].phys.ECBp[0].y = 0+y;;
   }
-  /*
-  else if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
-    player[i].phys.ECBp = [new Vec2D(0+x,0+y),new Vec2D(3+x,7+y),new Vec2D(0+x,14+y),new Vec2D(-3+x,7+y)];
-  }
-  else {
-    player[i].phys.ECBp = [new Vec2D(0+x,4+y),new Vec2D(3+x,9+y),new Vec2D(0+x,14+y),new Vec2D(-3+x,9+y)];
-  }*/
+  if (!aS[cS[i]][player[i].actionState].ignoreCollision){
 
-  //console.log(stage.platform[6]);
   for (var j=0;j<stage.platform.length;j++){
     if (player[i].phys.abovePlatforms[j] && player[i].phys.ECBp[0].y < stage.platform[j][0].y && player[i].phys.ECBp[0].x >= stage.platform[j][0].x && player[i].phys.ECBp[0].x <= stage.platform[j][1].x && ((player[i].inputs.lStickAxis[0].y > -0.56 && aS[cS[i]][player[i].actionState].canPassThrough) || !aS[cS[i]][player[i].actionState].canPassThrough)){
       if (player[i].hit.hitlag > 0){
@@ -1126,7 +1138,7 @@ function physics(i){
   }
 
   for (var j=0;j<stage.platform.length;j++){
-    if (player[i].phys.ECBp[0].y > stage.platform[j][0].y){
+    if (player[i].phys.ECBp[0].y >= stage.platform[j][0].y){
       player[i].phys.abovePlatforms[j] = true;
     }
     else {
@@ -1240,7 +1252,8 @@ function physics(i){
   }
   var notTouchingWalls = [true,true];
   for (var j=0;j<stage.wallL.length;j++){
-    if (player[i].phys.ECBp[1].y < stage.wallL[j][0].y && player[i].phys.ECBp[1].y > stage.wallL[j][1].y && player[i].phys.ECBp[1].x >= stage.wallL[j][1].x && player[i].phys.ECB1[1].x <= stage.wallL[j][1].x){
+    if (player[i].phys.ECBp[1].y < stage.wallL[j][0].y && player[i].phys.ECBp[1].y > stage.wallL[j][1].y && player[i].phys.ECBp[1].x >= stage.wallL[j][1].x && (player[i].phys.ECB1[1].x <= stage.wallL[j][1].x || ((player[i].phys.ECB1[1].y >= stage.wallL[j][0].y || player[i].phys.ECB1[1].y <= stage.wallL[j][1].y) && player[i].phys.ECB1[3].x <= stage.wallL[j][0].x))){
+      //player[i].phys.ECB1[3].x <= stage.wallL[j][0].x is kind of a shitty fix. It is very unlikely something will break it though.
       notTouchingWalls[0] = false;
       player[i].phys.pos.x -= player[i].phys.ECBp[1].x - stage.wallL[j][1].x;
       if (player[i].actionState == 39){
@@ -1281,7 +1294,7 @@ function physics(i){
   }
 
   for (var j=0;j<stage.wallR.length;j++){
-    if (player[i].phys.ECBp[3].y < stage.wallR[j][0].y && player[i].phys.ECBp[3].y > stage.wallR[j][1].y && player[i].phys.ECBp[3].x <= stage.wallR[j][1].x && player[i].phys.ECBp[3].x > stage.wallR[j][1].x - 5){
+    if (player[i].phys.ECBp[3].y < stage.wallR[j][0].y && player[i].phys.ECBp[3].y > stage.wallR[j][1].y && player[i].phys.ECBp[3].x <= stage.wallR[j][1].x && (player[i].phys.ECB1[3].x >= stage.wallR[j][1].x || ((player[i].phys.ECB1[3].y >= stage.wallR[j][0].y || player[i].phys.ECB1[3].y <= stage.wallR[j][1].y) && player[i].phys.ECB1[1].x >= stage.wallR[j][0].x))){
       notTouchingWalls[1] = false;
       player[i].phys.pos.x -= player[i].phys.ECBp[3].x - stage.wallR[j][1].x;
       if (player[i].actionState == 39){
@@ -1353,37 +1366,22 @@ function physics(i){
 
   if (!player[i].phys.grounded){
     for (var j=0;j<stage.ground.length;j++){
-      if (player[i].phys.ECBp[0].y < stage.ground[j][0].y && player[i].phys.ECBp[0].x >= stage.ground[j][0].x && player[i].phys.ECBp[0].x <= stage.ground[j][1].x && player[i].phys.ECB1[0].y >= stage.ground[j][0].y /*player[i].phys.ECBp[2].y > stage.ceiling[j][0].y*/){
-        if (player[i].phys.posPrev.y+(player[i].phys.ECBp[0].y-player[i].phys.pos.y) < stage.ceiling[j][0].y){
-          player[i].phys.pos.y = stage.ceiling[j][0].y-14;
-          if (aS[cS[i]][player[i].actionState].headBonk){
-            player[i].phys.cVel.y = 0;
-            aS[cS[i]][13].init(i)
-          }
+      if (player[i].phys.ECBp[0].y < stage.ground[j][0].y && player[i].phys.ECBp[0].x >= stage.ground[j][0].x && player[i].phys.ECBp[0].x <= stage.ground[j][1].x && player[i].phys.ECB1[0].y >= stage.ground[j][0].y){
+        if (player[i].hit.hitlag > 0){
+          player[i].phys.pos.y = stage.ground[j][0].y;
         }
         else {
-          if (player[i].hit.hitlag > 0){
-            player[i].phys.pos.y = stage.ground[j][0].y;
-          }
-          else {
-            land(i,stage.ground[j][0].y,0,j);
-          }
-          break;
+          land(i,stage.ground[j][0].y,0,j);
         }
+        break;
       }
     }
     for (var j=0;j<stage.ceiling.length;j++){
-      if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y && player[i].phys.ECBp[0].x >= stage.ceiling[j][0].x && player[i].phys.ECBp[0].x <= stage.ceiling[j][1].x){
-        var groundY = stage.ground[0][0].y;
-        if (typeof stage.ground[j] != "undefined"){
-          groundY = stage.ground[j][0].y;
-        }
-        if (player[i].phys.ECBp[2].y < groundY){
-          player[i].phys.pos.y = stage.ceiling[j][0].y-14;
-          if (aS[cS[i]][player[i].actionState].headBonk){
-            player[i].phys.cVel.y = 0;
-            aS[cS[i]][13].init(i)
-          }
+      if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y && player[i].phys.ECBp[0].x >= stage.ceiling[j][0].x && player[i].phys.ECBp[0].x <= stage.ceiling[j][1].x && player[i].phys.ECB1[2].y <= stage.ceiling[j][0].y){
+        player[i].phys.pos.y = stage.ceiling[j][0].y-(player[i].phys.ECBp[2].y-player[i].phys.pos.y);
+        if (aS[cS[i]][player[i].actionState].headBonk){
+          player[i].phys.cVel.y = 0;
+          aS[cS[i]][13].init(i)
         }
       }
     }
@@ -1391,8 +1389,8 @@ function physics(i){
 
   // TOP CORNER COLLISION
   for (var j=0;j<stage.ground.length;j++){
-    if (stage.ground[j][0].x > player[i].phys.ECBp[0].x && stage.ground[j][0].x < player[i].phys.ECBp[1].x && stage.ground[j][0].y > player[i].phys.ECBp[0].y && stage.ground[j][0].y < player[i].phys.ECBp[1].y){
-      //console.log("top left corner in rectangle");
+    if (player[i].phys.ECBp[0].y < stage.ground[j][0].y && player[i].phys.ECBp[1].y > stage.ground[j][0].y && player[i].phys.ECB1[0].x <= stage.ground[j][0].x){
+      //console.log("top left corner in line");
       var yDistToBottom = Math.abs(stage.ground[j][0].y - player[i].phys.ECBp[0].y);
       //console.log("yDistToBottom "+yDistToBottom);
       var curECBangle = Math.atan((ecbOffset[2]-ecbOffset[0])/ecbOffset[1]);
@@ -1403,13 +1401,13 @@ function physics(i){
       //console.log("ECB X:"+ecbOffset[1]);
       //console.log("ECB Y:"+ecbOffset[2]);
       //console.log("corner to centre dist : "+(stage.ground[j][0].x-player[i].phys.ECBp[0].x));
-      if (Math.abs(stage.ground[j][0].x-player[i].phys.ECBp[0].x) < proposedXDistance){
+      if (stage.ground[j][0].x-player[i].phys.ECBp[0].x < proposedXDistance){
         //console.log("top left corner within diamond");
         player[i].phys.pos.x = stage.ground[j][0].x - proposedXDistance;
       }
 
     }
-    else if (stage.ground[j][1].x < player[i].phys.ECBp[0].x && stage.ground[j][1].x > player[i].phys.ECBp[3].x && stage.ground[j][1].y > player[i].phys.ECBp[0].y && stage.ground[j][1].y < player[i].phys.ECBp[3].y){
+    else if (player[i].phys.ECBp[0].y < stage.ground[j][0].y && player[i].phys.ECBp[3].y > stage.ground[j][0].y && player[i].phys.ECB1[0].x >= stage.ground[j][1].x){
       //console.log("top right corner in rectangle");
       var yDistToBottom = Math.abs(stage.ground[j][1].y - player[i].phys.ECBp[0].y);
       //console.log("yDistToBottom "+yDistToBottom);
@@ -1420,7 +1418,7 @@ function physics(i){
       //console.log("ECB X:"+ecbOffset[1]);
       //console.log("ECB Y:"+ecbOffset[2]);
       //console.log("corner to centre dist : "+(stage.ground[j][1].x-player[i].phys.ECBp[0].x));
-      if (Math.abs(stage.ground[j][1].x-player[i].phys.ECBp[0].x) < proposedXDistance){
+      if ((stage.ground[j][1].x-player[i].phys.ECBp[0].x)*-1 < proposedXDistance){
         //console.log("top right corner within diamond");
         player[i].phys.pos.x = stage.ground[j][1].x + proposedXDistance;
       }
@@ -1428,7 +1426,7 @@ function physics(i){
   }
   // BOTTOM CORNER COLLISION
   for (var j=0;j<stage.ceiling.length;j++){
-    if (stage.ceiling[j][1].x < player[i].phys.ECBp[2].x && stage.ceiling[j][1].x > player[i].phys.ECBp[3].x && stage.ceiling[j][1].y > player[i].phys.ECBp[3].y && stage.ceiling[j][1].y < player[i].phys.ECBp[2].y){
+    if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y && player[i].phys.ECBp[3].y < stage.ceiling[j][0].y && player[i].phys.ECB1[2].x >= stage.ceiling[j][1].x){
       //console.log("bottom right corner in rectangle");
       var yDistToTop = Math.abs(stage.ceiling[j][1].y - player[i].phys.ECBp[2].y);
       //console.log("yDistToTop "+yDistToTop);
@@ -1439,12 +1437,12 @@ function physics(i){
       //console.log("ECB X:"+ecbOffset[1]);
       //console.log("ECB Y:"+ecbOffset[2]);
       //console.log("corner to centre dist : "+(stage.ceiling[j][1].x-player[i].phys.ECBp[0].x));
-      if (Math.abs(stage.ceiling[j][1].x-player[i].phys.ECBp[0].x) < proposedXDistance){
+      if ((stage.ceiling[j][1].x-player[i].phys.ECBp[0].x)*-1 < proposedXDistance){
         //console.log("bottom right corner within diamond");
         player[i].phys.pos.x = stage.ceiling[j][1].x + proposedXDistance;
       }
     }
-    else if (stage.ceiling[j][0].x > player[i].phys.ECBp[2].x && stage.ceiling[j][0].x < player[i].phys.ECBp[1].x && stage.ceiling[j][0].y > player[i].phys.ECBp[1].y && stage.ceiling[j][0].y < player[i].phys.ECBp[2].y){
+    else if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y && player[i].phys.ECBp[1].y < stage.ceiling[j][0].y && player[i].phys.ECB1[2].x <= stage.ceiling[j][0].x){
       //console.log("bottom left corner in rectangle");
       var yDistToTop = Math.abs(stage.ceiling[j][0].y - player[i].phys.ECBp[2].y);
       //console.log("yDistToTop "+yDistToTop);
@@ -1456,7 +1454,7 @@ function physics(i){
       //console.log("ECB X:"+ecbOffset[1]);
       //console.log("ECB Y:"+ecbOffset[2]);
       //console.log("corner to centre dist : "+(stage.ceiling[j][0].x-player[i].phys.ECBp[2].x));
-      if (Math.abs(stage.ceiling[j][0].x-player[i].phys.ECBp[2].x) < proposedXDistance){
+      if (stage.ceiling[j][0].x-player[i].phys.ECBp[2].x < proposedXDistance){
         //console.log("bottom left corner within diamond");
         player[i].phys.pos.x = stage.ceiling[j][0].x - proposedXDistance;
       }
@@ -1577,12 +1575,11 @@ function physics(i){
   else if (player[i].actionState == 24){
     player[i].phys.ECB1 = [new Vec2D(0+x,1+y),new Vec2D(2+x,9+y),new Vec2D(0+x,14+y),new Vec2D(-2+x,9+y)];
   }*/
-  if (!aS[cS[i]][player[i].actionState].ignoreCollision){
-    player[i].phys.ECB1 = [new Vec2D(0+x,ecbOffset[0]+y),new Vec2D(ecbOffset[1]+x,ecbOffset[2]+y),new Vec2D(0+x,ecbOffset[3]+y),new Vec2D(ecbOffset[1]*-1+x,ecbOffset[2]+y)];
-    if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
-      player[i].phys.ECB1[0].y = 0+y;
-    }
+  player[i].phys.ECB1 = [new Vec2D(0+x,ecbOffset[0]+y),new Vec2D(ecbOffset[1]+x,ecbOffset[2]+y),new Vec2D(0+x,ecbOffset[3]+y),new Vec2D(ecbOffset[1]*-1+x,ecbOffset[2]+y)];
+  if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
+    player[i].phys.ECB1[0].y = 0+y;
   }
+
   /*else if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
     player[i].phys.ECB1 = [new Vec2D(0+x,0+y),new Vec2D(3+x,7+y),new Vec2D(0+x,14+y),new Vec2D(-3+x,7+y)];
   }

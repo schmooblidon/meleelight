@@ -603,6 +603,7 @@ aS[0][7] = {
 aS[0][8] = {
   name : "KNEEBEND",
   canEdgeCancel : true,
+  disableTeeter : true,
   canBeGrabbed : true,
   init : function(p){
     player[p].actionState = 8;
@@ -1684,6 +1685,7 @@ aS[0][25] = {
 aS[0][26] = {
   name : "DEADLEFT",
   canBeGrabbed : false,
+  ignoreCollision : true,
   init : function(p){
     player[p].actionState = 26;
     player[p].timer = 0;
@@ -1735,6 +1737,7 @@ aS[0][26] = {
 aS[0][27] = {
   name : "DEADRIGHT",
   canBeGrabbed : false,
+  ignoreCollision : true,
   init : function(p){
     player[p].actionState = 27;
     player[p].timer = 0;
@@ -1786,6 +1789,7 @@ aS[0][27] = {
 aS[0][28] = {
   name : "DEADUP",
   canBeGrabbed : false,
+  ignoreCollision : true,
   init : function(p){
     player[p].actionState = 28;
     player[p].timer = 0;
@@ -1837,6 +1841,7 @@ aS[0][28] = {
 aS[0][29] = {
   name : "DEADDOWN",
   canBeGrabbed : false,
+  ignoreCollision : true,
   init : function(p){
     player[p].actionState = 29;
     player[p].timer = 0;
@@ -1888,6 +1893,7 @@ aS[0][29] = {
 aS[0][30] = {
   name : "REBIRTH",
   canBeGrabbed : false,
+  ignoreCollision : true,
   init : function(p){
     player[p].actionState = 30;
     player[p].timer = 1;
