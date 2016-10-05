@@ -2549,9 +2549,7 @@ aS[2][38] = {
   main : function(p){
     player[p].timer++;
     if (!aS[2][38].interrupt(p)){
-      if (player[p].phys.grounded){
-        reduceByTraction(p);
-      }
+
       if (player[p].timer < 43){
         var frame = (player[p].timer-1) % 10;
         drawVfx("firefoxcharge",player[p].phys.pos,player[p].phys.face,frame);
@@ -2562,6 +2560,10 @@ aS[2][38] = {
         }
         drawVfx("firefoxlaunch",player[p].phys.pos,player[p].phys.face,p);
       }
+      if (player[p].phys.grounded){
+        reduceByTraction(p);
+      }
+      else {
         if (player[p].phys.cVel.x > 0){
           player[p].phys.cVel.x -= player[p].charAttributes.airFriction;
           if (player[p].phys.cVel.x < 0){
@@ -2574,9 +2576,15 @@ aS[2][38] = {
             player[p].phys.cVel.x = 0;
           }
         }
+      }
         if (player[p].timer >= 73){
-          fastfall(p);
-          airDrift(p);
+          if (player[p].phys.grounded){
+            reduceByTraction(p);
+          }
+          else {
+            fastfall(p);
+            airDrift(p);
+          }
         }
         else if (player[p].timer >= 48){
           player[p].phys.cVel.y -= 0.1*Math.sin(player[p].phys.upbAngleMultiplier);
@@ -2595,8 +2603,7 @@ aS[2][38] = {
                 ang = 0;
               }
               else {
-                ang = 180;
-                //SHOULD BE ang = Math.PI;
+                ang = Math.PI;
               }
             }
           }
@@ -2667,6 +2674,18 @@ aS[2][38] = {
     }
     else {
       return false;
+    }
+  },
+  land : function(p){
+    if (player[p].timer > 42){
+      if (player[p].timer < 73){
+        // BOUNCE
+        drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
+        aS[2][130].init(p);
+      }
+      else {
+        drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
+      }
     }
   }
 }
@@ -6013,6 +6032,7 @@ aS[2][104] = {
     player[p].phys.cVel.y = 0;
     player[p].phys.cVel.x *= 0.5;
     player[p].shineLoop = 6;
+    player[p].phys.inShine = 0;
     sounds.foxshine.play();
     drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
     drawVfx("shine",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+6));
@@ -6022,6 +6042,7 @@ aS[2][104] = {
   },
   main : function(p){
     player[p].timer++;
+    player[p].phys.inShine++;
     if (!aS[2][104].interrupt(p)){
       if (player[p].phys.grounded){
         player[p].actionState = 109;
@@ -6067,12 +6088,21 @@ aS[2][104] = {
           drawVfx("shineloop",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+6),part);
         }
 
-        if (player[p].timer >= 22 && player[p].timer <= 32){
-          if (!player[p].inputs.b[0]){
+        if (player[p].timer == 35){
+          player[p].phys.face *= -1;
+          player[p].timer = 4;
+        }
+        if (player[p].timer >= 4 && player[p].timer <= 32){
+          if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < 0){
             player[p].timer = 32;
           }
-          else if (player[p].timer == 32){
-            player[p].timer = 4;
+          else if (player[p].phys.inShine >= 22){
+            if (!player[p].inputs.b[0]){
+              player[p].timer = 36;
+            }
+            else if (player[p].timer == 32){
+              player[p].timer = 4;
+            }
           }
         }
 
@@ -6270,6 +6300,7 @@ aS[2][109] = {
   init : function(p){
     player[p].actionState = 109;
     player[p].timer = 0;
+    player[p].phys.inShine = 0;
     sounds.foxshine.play();
     player[p].shineLoop = 6;
     drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
@@ -6280,10 +6311,22 @@ aS[2][109] = {
   },
   main : function(p){
     player[p].timer++;
+    player[p].phys.inShine++;
     if (!aS[2][109].interrupt(p)){
+      if (player[p].phys.onSurface[0] == 1 && player[p].timer > 1){
+        if (player[p].inputs.lStickAxis[0].y < -0.66 && player[p].inputs.lStickAxis[6].y >= 0){
+          player[p].phys.grounded = false;
+          player[p].phys.abovePlatforms[player[p].phys.onSurface[1]] = false;
+          player[p].phys.cVel.y = -0.5;
+        }
+      }
       if (player[p].phys.grounded){
         reduceByTraction(p);
-        if (player[p].timer >= 4 && player[p].timer <= 32){
+        if (player[p].timer >= 3){
+          //shine turn
+          // takes 3 frames, act on 4th
+        }
+        if (player[p].timer >= 4 && player[p].timer <= 35){
           if (player[p].shineLoop == 6){
             player[p].shineLoop = 0;
           }
@@ -6291,12 +6334,21 @@ aS[2][109] = {
           var part = Math.round(player[p].shineLoop/2);
           drawVfx("shineloop",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+6),part);
         }
-        if (player[p].timer >= 22 && player[p].timer <= 32){
-          if (!player[p].inputs.b[0]){
+        if (player[p].timer == 35){
+          player[p].phys.face *= -1;
+          player[p].timer = 4;
+        }
+        if (player[p].timer >= 4 && player[p].timer <= 32){
+          if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < 0){
             player[p].timer = 32;
           }
-          else if (player[p].timer == 32){
-            player[p].timer = 4;
+          else if (player[p].phys.inShine >= 22){
+            if (!player[p].inputs.b[0]){
+              player[p].timer = 36;
+            }
+            else if (player[p].timer == 32){
+              player[p].timer = 4;
+            }
           }
         }
 
@@ -6312,7 +6364,7 @@ aS[2][109] = {
       else {
         player[p].actionState = 104;
         player[p].timer--;
-        aS[104].main(p);
+        aS[2][104].main(p);
       }
     }
   },
@@ -6569,6 +6621,47 @@ aS[2][113] = {
   interrupt : function(p){
     if (player[p].timer > 51){
       aS[2][0].init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+aS[2][130] = {
+  name : "FIREFOXBOUNCE",
+  canPassThrough : true,
+  canGrabLedge : [true,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  setVelocities : [0.00062,0.00062,0.00062,5.27148,5.4568,2.56,0.0638,0.02712,-0.00286,-0.02613,-0.0427,-0.05257,-0.05573,-1.83217],
+  init : function(p){
+    player[p].actionState = 130;
+    player[p].timer = 0;
+    player[p].phys.grounded = false;
+    aS[2][130].main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!aS[2][130].interrupt(p)){
+      if (player[p].phys.cVel.x != 0){
+        player[p].phys.cVel.x -= 0.03*player[p].phys.face;
+        if (player[p].phys.cVel.x*player[p].phys.face < 0){
+          player[p].phys.cVel.x = 0;
+        }
+      }
+      player[p].phys.cVel.y = aS[2][130].setVelocities[player[p].timer-1];
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 14){
+      if (player[p].phys.grounded){
+      }
+      else {
+        aS[2][14].init(p);
+      }
       return true;
     }
     else {

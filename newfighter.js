@@ -95,7 +95,7 @@ findingPlayers = true;
 showVfx = true;
 showDebug = false;
 
-gameMode = 0;
+gameMode = 20;
 
 versusMode = 0;
 
@@ -828,7 +828,10 @@ function land(i,y,t,j){
     case 56:
       break;
     case 38:
-      if (player[i].phys.cVel.y+player[i].phys.kVel.y <= 0){
+      if (cS[i] == 2){
+        aS[cS[i]][38].land(i);
+      }
+      else if (player[i].phys.cVel.y+player[i].phys.kVel.y <= 0){
         aS[cS[i]][12].init(i);
       }
       break;
@@ -1889,7 +1892,10 @@ function renderTick(){
   otherFrame ^= true
   if ((fps30 && otherFrame) || !fps30){
     //console.log("------");
-    if (gameMode == 0){
+    if (gameMode == 20){
+      drawStartUp();
+    }
+    else if (gameMode == 0){
       drawStartScreen();
     }
     else if (gameMode == 1){
@@ -2383,7 +2389,7 @@ $(document).ready(function(){
   c = canvas.getContext("2d");
   c.fillStyle = "rgba(0, 0, 0, 1)";
   c.fillRect(-100,-100,canvas.width+200,canvas.height+200);
-  drawStartScreen();
+  //drawStartScreen();
   //drawStage();
   gameTick();
   renderTick();
