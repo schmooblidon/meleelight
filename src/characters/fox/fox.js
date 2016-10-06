@@ -2541,6 +2541,7 @@ aS[2][38] = {
     player[p].phys.cVel.x *= 0.8;
     player[p].phys.cVel.y = 0;
     player[p].phys.fastfalled = false;
+    player[p].phys.landingMultiplier = 10;
     sounds.foxupbburn.play();
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.upb1.id0;
@@ -3738,7 +3739,8 @@ aS[2][55] = {
 aS[2][56] = {
   name : "SIDESPECIALGROUND",
   canPassThrough : false,
-  canEdgeCancel : false,
+  canEdgeCancel : true,
+  disableTeeter : true,
   canGrabLedge : [false,false],
   wallJumpAble : false,
   headBonk : false,
@@ -3747,11 +3749,10 @@ aS[2][56] = {
     player[p].actionState = 56;
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
+    player[p].phys.landingMultiplier = 1.5;
     drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
     turnOffHitboxes(p);
     sounds.star.play();
-    player[p].hitboxes.id[0] = player[p].charHitboxes.sidespecial.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.sidespecial.id1;
     aS[2][56].main(p);
   },
   main : function(p){
@@ -3759,6 +3760,7 @@ aS[2][56] = {
     if (!aS[2][56].interrupt(p)){
       if (player[p].phys.grounded){
         if (player[p].timer == 21){
+          articles[1].init(p,1);
           player[p].phys.cVel.x = 18.72*player[p].phys.face
           if ((player[p].inputs.b[0] || player[p].inputs.b[1]) && !player[p].inputs.b[2]){
             player[p].timer = 24;
@@ -3790,15 +3792,8 @@ aS[2][56] = {
         aS[2][103].main(p);
       }
 
-      if (player[p].timer == 12){
-        player[p].hitboxes.active = [true,true,false,false];
-        player[p].hitboxes.frame = 0;
-      }
-      if (player[p].timer > 12 && player[p].timer < 28){
-        player[p].hitboxes.frame++;
-      }
-      if (player[p].timer == 28){
-        turnOffHitboxes(p);
+      if (player[p].timer >= 21 && player[p].timer <= 24){
+        drawVfx("illusion",player[p].phys.posPrev,player[p].phys.face);
       }
     }
   },
@@ -4854,6 +4849,30 @@ aS[2][81] = {
   main : function(p){
     player[p].timer+=7/player[p].phys.releaseFrame;
     if (!aS[2][81].interrupt(p)){
+      if (player[p].timer == 13){
+        sounds.foxlasercock.play();
+      }
+      else if (player[p].timer == 16){
+        articles[0].init(p,2,1,Math.PI*65/180);
+        // rotate 65
+        sounds.foxlaserfire.play();
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
+      }
+      else if (player[p].timer == 18){
+        articles[0].init(p,2,0,Math.PI/2);
+        // rotate 90
+        sounds.foxlaserfire.play();
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
+      }
+      else if (player[p].timer == 21){
+        articles[0].init(p,2,0.5,Math.PI*85/180);
+        // rotate 85
+        sounds.foxlaserfire.play();
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
+      }
+      else if (player[p].timer == 33){
+        sounds.foxlaserholster.play();
+      }
       if (Math.floor(player[p].timer) == player[p].phys.releaseFrame){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
@@ -4957,6 +4976,23 @@ aS[2][83] = {
         turnOffHitboxes(p);
       }
 
+      if (player[p].timer == 23){
+        articles[0].init(p,2,0,Math.PI*275/180);
+        // 275
+      }
+      else if (player[p].timer == 25){
+        articles[0].init(p,2,0,Math.PI*230/180);
+        // 230
+      }
+      else if (player[p].timer == 28){
+        articles[0].init(p,2,0,Math.PI*290/180);
+        // 290
+      }
+      else if (player[p].timer == 31){
+        articles[0].init(p,2,0,Math.PI*275/180);
+        // 275
+      }
+
     }
   },
   interrupt : function(p){
@@ -5042,6 +5078,18 @@ aS[2][85] = {
   main : function(p){
     player[p].timer+=(48/43)*(22/player[p].phys.releaseFrame);
     if (!aS[2][85].interrupt(p)){
+      if (player[p].timer == 14){
+        articles[0].init(p,2,0,Math.PI*0.75);
+        // 135
+      }
+      else if (player[p].timer == 16){
+        articles[0].init(p,2,0,Math.PI*0.75);
+        // 135
+      }
+      else if (player[p].timer == 19){
+        articles[0].init(p,2,0,Math.PI*0.75);
+        // 135
+      }
       if (Math.floor(player[p].timer) > 13 && Math.floor(player[p].timer < 37)){
         player[p].phys.cVel.x = aS[2][85].setVelocities[Math.floor(player[p].timer)-14]*player[p].phys.face;
       }
@@ -5930,11 +5978,10 @@ aS[2][103] = {
       player[p].phys.cVel.x *= 0.667;
       player[p].phys.cVel.y = 0;
     }
+    player[p].phys.landingMultiplier = 1.5;
     drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
     turnOffHitboxes(p);
     sounds.star.play();
-    player[p].hitboxes.id[0] = player[p].charHitboxes.sidespecial.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.sidespecial.id1;
     aS[2][103].main(p);
   },
   main : function(p){
@@ -5957,6 +6004,7 @@ aS[2][103] = {
           player[p].phys.cVel.y -= 0.08;
         }
         if (player[p].timer == 21){
+          articles[1].init(p,0);
           player[p].phys.cVel.x = 18.72*player[p].phys.face;
           player[p].phys.cVel.y = 0;
           if ((player[p].inputs.b[0] || player[p].inputs.b[1]) && !player[p].inputs.b[2]){
@@ -5988,16 +6036,8 @@ aS[2][103] = {
         player[p].timer--;
         aS[2][103].main(p);
       }
-
-      if (player[p].timer == 12){
-        player[p].hitboxes.active = [true,true,false,false];
-        player[p].hitboxes.frame = 0;
-      }
-      if (player[p].timer > 12 && player[p].timer < 28){
-        player[p].hitboxes.frame++;
-      }
-      if (player[p].timer == 28){
-        turnOffHitboxes(p);
+      if (player[p].timer >= 21 && player[p].timer <= 24){
+        drawVfx("illusion",player[p].phys.posPrev,player[p].phys.face);
       }
     }
   },
@@ -6482,7 +6522,7 @@ aS[2][111] = {
         sounds.foxlaserfire.play();
         // laser instance
         drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
-        articles[0].init(p,2);
+        articles[0].init(p,8,9,0);
       }
       if (player[p].timer == 30){
         sounds.foxlaserholster.play();
@@ -6533,7 +6573,7 @@ aS[2][112] = {
         sounds.foxlaserfire.play();
         // laser instance
         drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+7),player[p].phys.face);
-        articles[0].init(p,0);
+        articles[0].init(p,8,7,0);
       }
       if (player[p].timer == 37){
         sounds.foxlaserholster.play();

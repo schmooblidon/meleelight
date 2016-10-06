@@ -421,97 +421,8 @@ function executeHits(){
                 default:
                   break;
               }
-                if (player[v].hit.knockback < 50){
-                  switch (player[a].hitboxes.id[h].type){
-                    case 0:
-                      sounds.normalweakhit.play();
-                      break;
-                    case 1:
-                      sounds.swordweakhit.play();
-                      break;
-                    case 3:
-                      sounds.fireweakhit.play();
-                      break;
-                    default:
-                      break;
-                  }
-                }
-                else if (player[v].hit.knockback < 100){
-                  switch (player[a].hitboxes.id[h].type){
-                    case 0:
-                      sounds.normalmediumhit.play();
-                      break;
-                    case 1:
-                      sounds.swordmediumhit.play();
-                      break;
-                    case 3:
-                      sounds.firemediumhit.play();
-                      break;
-                    default:
-                      break;
-                  }
-                }
-                else if (player[v].hit.knockback < 140){
-                  switch (player[a].hitboxes.id[h].type){
-                    case 0:
-                      sounds.normalstronghit.play();
-                      break;
-                    case 1:
-                      sounds.swordstronghit.play();
-                      break;
-                    case 3:
-                      sounds.firestronghit.play();
-                      break;
-                    default:
-                      break;
-                  }
-                }
-                else {
-                  switch (player[a].hitboxes.id[h].type){
-                    case 0:
-                      sounds.normalstronghit.play();
-                      break;
-                    case 1:
-                      sounds.swordreallystronghit.play();
-                      break;
-                    case 3:
-                      sounds.bathit.play();
-                      sounds.firestronghit.play();
-                      break;
-                    default:
-                      break;
-                  }
-                  sounds.cheer.play();
-                  if (player[v].hit.knockback < 280){
-                    sounds.stronghit.play();
-                    switch (cS[v]){
-                      case 0 :
-                        sounds.weakhurt.play();
-                        break;
-                      case 2 :
-                        sounds.foxweakhurt.play();
-                        break;
-                      default:
-                        break;
-                    }
-                  }
-                  else {
-                    sounds.strongerhit.play();
-                    switch (cS[v]){
-                      case 0 :
-                        sounds.stronghurt.play();
-                        break;
-                      case 1 :
-                        sounds.puffhurt.play();
-                        break;
-                      case 2 :
-                        sounds.foxstronghurt.play();
-                        break;
-                      default:
-                        break;
-                    }
-                  }
-                }
+              
+              knockbackSounds(player[a].hitboxes.id[h].type,player[v].hit.knockback,v);
 
             }
             else {
@@ -743,4 +654,98 @@ function getHitstun(knockback) {
     //knockback *= 1.25;
   //}
   return Math.floor(knockback * .4);
+}
+
+function knockbackSounds(type,knockback,v){
+  if (knockback < 50){
+    switch (type){
+      case 0:
+        sounds.normalweakhit.play();
+        break;
+      case 1:
+        sounds.swordweakhit.play();
+        break;
+      case 3:
+        sounds.fireweakhit.play();
+        break;
+      default:
+        break;
+    }
+  }
+  else if (knockback < 100){
+    switch (type){
+      case 0:
+        sounds.normalmediumhit.play();
+        break;
+      case 1:
+        sounds.swordmediumhit.play();
+        break;
+      case 3:
+        sounds.firemediumhit.play();
+        break;
+      default:
+        break;
+    }
+  }
+  else if (knockback < 140){
+    switch (type){
+      case 0:
+        sounds.normalstronghit.play();
+        break;
+      case 1:
+        sounds.swordstronghit.play();
+        break;
+      case 3:
+        sounds.firestronghit.play();
+        break;
+      default:
+        break;
+    }
+  }
+  else {
+    switch (type){
+      case 0:
+        sounds.normalstronghit.play();
+        break;
+      case 1:
+        sounds.swordreallystronghit.play();
+        break;
+      case 3:
+        sounds.bathit.play();
+        sounds.firestronghit.play();
+        break;
+      default:
+        break;
+    }
+    sounds.cheer.play();
+    if (knockback < 280){
+      sounds.stronghit.play();
+      switch (cS[v]){
+        case 0 :
+          sounds.weakhurt.play();
+          break;
+        case 2 :
+          sounds.foxweakhurt.play();
+          break;
+        default:
+          break;
+      }
+    }
+    else {
+      sounds.strongerhit.play();
+      switch (cS[v]){
+        case 0 :
+          sounds.stronghurt.play();
+          break;
+        case 1 :
+          sounds.puffhurt.play();
+          break;
+        case 2 :
+          sounds.foxstronghurt.play();
+          break;
+        default:
+          break;
+      }
+    }
+  }
 }

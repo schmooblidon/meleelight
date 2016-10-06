@@ -1,13 +1,13 @@
 var marthPic = new Image();
-marthPic.src = "marth.png";
+marthPic.src = "assets/css/marth.png";
 var puffPic = new Image();
-puffPic.src = "puff.png";
+puffPic.src = "assets/css/puff.png";
 var handPoint = new Image();
-handPoint.src = "handpoint.png";
+handPoint.src = "assets/hand/handpoint.png";
 var handOpen = new Image();
-handOpen.src = "handopen.png";
+handOpen.src = "assets/hand/handopen.png";
 var handGrab = new Image();
-handGrab.src = "handgrab.png";
+handGrab.src = "assets/hand/handgrab.png";
 
 choosingTag = -1;
 handType = [0,0,0,0];
