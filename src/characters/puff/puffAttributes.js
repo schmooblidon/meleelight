@@ -1,6 +1,6 @@
 charAttributes[1] = {
-  dFrameMin : 12,
-  dFrameMax : 23,
+  dashFrameMin : 12,
+  dashFrameMax : 23,
   dInitV : 1.31,
   dMaxV : 1.1,
   dAccA : 0.065,
@@ -34,8 +34,97 @@ charAttributes[1] = {
   ledgeSnapBoxOffset : [14,8,18],
   shieldOffset : [0,22],
   charScale : 0.24,
-  miniScale : 0.168
+  miniScale : 0.168,
+  runTurnBreakPoint : 16,
+  airdodgeIntangible : 25,
+  wallJumpVelX : 1.3,
+  wallJumpVelY : 2.4,
+  shieldBreakVel : 10,
+  multiJump : true
 }
+
+  // start, length
+  intangibility[1] = {
+  "ESCAPEAIR" : [4,25],
+  "ESCAPEB" : [4,16],
+  "ESCAPEF" : [2,17],
+  "ESCAPEN" : [2,14],
+  "DOWNSTANDN" : [1,23],
+  "DOWNSTANDB" : [1,20],
+  "DOWNSTANDF" : [1,18],
+  "TECHN" : [1,20],
+  "TECHB" : [1,20],
+  "TECHF" : [1,20]
+  }
+
+  frames[1] = {
+  "WAIT" : 464,
+  "DASH" : 23,
+  "RUN" : 16,
+  "RUNBRAKE" : 19,
+  "RUNTURN" : 25,
+  "WALK" : 45,
+  "JUMPF" : 52,
+  "JUMPB" : 52,
+  "FALL" : 8,
+  "FALLAERIAL" : 8,
+  "FALLSPECIAL" : 8,
+  "SQUAT" : 7,
+  "SQUATWAIT" : 40,
+  "SQUATRV" : 10,
+  "JUMPAERIALF" : 50,
+  "JUMPAERIALB" : 50,
+  "PASS" : 30,
+  "GUARDON" : 8,
+  "GUARDOFF" : 14,
+  "CLIFFCATCH" : 7,
+  "CLIFFWAIT" : 60,
+  "DAMAGEFLYN" : 60,
+  "DAMAGEFALL" : 30,
+  "DAMAGEN2" : 11,
+  "LANDINGATTACKAIRF" : 20,
+  "LANDINGATTACKAIRB" : 20,
+  "LANDINGATTACKAIRU" : 20,
+  "LANDINGATTACKAIRD" : 30,
+  "LANDINGATTACKAIRN" : 20,
+  "ESCAPEB" : 34,
+  "ESCAPEF" : 34,
+  "ESCAPEN" : 27,
+  "DOWNBOUND" : 26,
+  "DOWNWAIT" : 59,
+  "DOWNSTANDN" : 30,
+  "DOWNSTANDB" : 35,
+  "DOWNSTANDF" : 35,
+  "TECHN" : 26,
+  "TECHB" : 40,
+  "TECHF" : 40,
+  "SHIELDBREAKFALL" : 27,
+  "SHIELDBREAKDOWNBOUND" : 26,
+  "SHIELDBREAKSTAND" : 30,
+  "FURAFURA" : 100,
+  "CAPTUREWAIT" : 130,
+  "CATCHWAIT" : 30,
+  "CAPTURECUT" : 30,
+  "CATCHCUT" : 29,
+  "CAPTUREDAMAGE" : 20,
+  "WALLDAMAGE" : 31,
+  "WALLTECH" : 31,
+  "WALLJUMP" : 40
+  }
+
+  actionSounds[1] = {
+  "JUMP" : [],
+  "ESCAPEAIR" : [],
+  "JUMPAERIAL" : [],
+  "GUARDON" : [],
+  "GUARDOFF" : [],
+  "CLIFFCATCH" : [[1,"puffledgegrab"],[1,"puffshout5"]],
+  "DEAD" : [[1,"puffdeath"]],
+  "FURAFURA" : [],
+  "ESCAPEB" : [],
+  "ESCAPEF" : [],
+  "ESCAPEN" : [],
+  }
 
 // HITBOX OFFSETS
 

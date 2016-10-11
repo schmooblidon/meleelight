@@ -966,16 +966,17 @@ dVfx = {
   shineloop : function(j){
     c.save();
     var part = Math.round(vfxQueue[j][1]/2);
-    var tX = (vfxQueue[j][2].x*stage.scale)+stage.offset[0];
-    var tY = (vfxQueue[j][2].y*-stage.scale)+stage.offset[1];
+    var tX = (player[vfxQueue[j][3]].phys.pos.x*stage.scale)+stage.offset[0];
+    var tY = ((player[vfxQueue[j][3]].phys.pos.y+6)*-stage.scale)+stage.offset[1];
+    var part = Math.round(player[vfxQueue[j][3]].shineLoop/2);
     c.fillStyle = "rgb(143, 228, 255)";
-    if (vfxQueue[j][3] == 1){
+    if (part == 1){
       drawHexagon(4*stage.scale,tX,tY,14);
     }
-    else if (vfxQueue[j][3] == 2){
+    else if (part == 2){
       drawHexagon(6*stage.scale,tX,tY,14);
     }
-    else if (vfxQueue[j][3] == 3){
+    else if (part == 3){
       drawHexagon(8*stage.scale,tX,tY,14);
     }
     else {
@@ -993,7 +994,7 @@ dVfx = {
   },
   firefoxlaunch : function(j){
     var p = vfxQueue[j][4];
-    if (player[p].actionState == 38){
+    if (player[p].actionState == "UPSPECIAL"){
       c.save();
       var frame = (player[p].timer-43) % 4;
 

@@ -99,7 +99,7 @@ gameMode = 20;
 
 versusMode = 0;
 
-cS = [0,0,0,0];
+cS = [0,2,2,2];
 
 randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
 
@@ -138,8 +138,7 @@ wallsL = [[[-68.4,0],[-68.4,-108.8]]];
 wallsR = [[[68.4,0],[68.4,-108.8]]];
 
 edges = [[[-68.4,0],[-63.4,0]],[[68.4,0],[63.4,0]]];
-//cliffcatchOffset = [[-71.9,-22.3],[-73.1,-22.19],[-72.21,-24],[-71.8,-24],[-71.1,-23.74],[-70.74,-23.76],[-71.3,-23.75]];
-cliffcatchOffset = [[-3.5,-22.3],[-4.7,-22.19],[-3.81,-24],[-3.4,-24],[-2.7,-23.74],[-2.34,-23.76],[-2.9,-23.75]];
+
 //edgeOffset = [[-71.3,-23.7],[71.3,-23.7]];
 edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
 
@@ -881,6 +880,7 @@ function gameTick(){
         interpretInputs(i,true);
         cssControls(i);
       }
+
       aS[cS[i]][player[i].actionState].main(i);
     }
     for (var i=0;i<4;i++){
@@ -1176,7 +1176,7 @@ function buildPlayerObject(i){
 for (var i=0;i<4;i++){
   buildPlayerObject(i);
   player[i].phys.face = 1;
-  player[i].actionState = 0;
+  player[i].actionState = "WAIT";
 }
 
 function initializePlayers(i,target){
@@ -1244,14 +1244,14 @@ function endGame(){
   positionPlayersInCSS();
   for (var i=0;i<4;i++){
     if (playerType[i] > -1){
-      if (player[i].actionState == 72){
+      if (player[i].actionState == "FURAFURA"){
         sounds.furaloop.stop(player[i].furaLoopID);
       }
       player[i].inputs.a[0] = true;
       player[i].inputs.a[1] = true;
       player[i].inCSS = true;
       player[i].phys.face = 1;
-      player[i].actionState = 0;
+      player[i].actionState = "WAIT";
       player[i].timer = 0;
     }
   }

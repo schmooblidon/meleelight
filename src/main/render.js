@@ -56,47 +56,34 @@ function renderPlayer(i){
   if (frame == 0){
     frame = 1;
   }
-  var model = animations[cS[i]][aS[cS[i]][player[i].actionState].name][frame-1];
-  if (cS[i] == 0){
-      switch (player[i].actionState){
-        case 15:
-        case 17:
-        case 20:
-        case 25:
-        case 61:
-        case 72:
-        case 94:
-          var model = animations[cS[i]][aS[cS[i]][player[i].actionState].name][0];
-          break;
-        default:
-          break;
-      }
-  }
+
+  var model = animations[cS[i]][player[i].actionState][frame-1];
+
   if (aS[cS[i]][player[i].actionState].reverseModel){
     face *= -1;
   }
-  else if (player[i].actionState == 4){
+  else if (player[i].actionState == "TILTTURN"){
     if (frame > 5){
       face *= -1;
     }
   }
-  else if (player[i].actionState == 6){
-    if (frame > aS[cS[i]][6].reverseModelFrame){
+  else if (player[i].actionState == "RUNTURN"){
+    if (frame > aS[cS[i]].RUNTURN.reverseModelFrame){
       face *= -1;
     }
   }
   // JiGGS MULTIJUMP TURN
-  else if (player[i].actionState >= 125 && player[i].actionState <= 129 && player[i].timer > 5){
+  else if (player[i].actionState.substring(0, player[i].actionState.length-1) == "AERIALTURN" && player[i].timer > 5){
     face *= -1;
   }
   // MARTH BAIR
-  else if (player[i].actionState == 34 && cS[i] == 0){
+  else if (player[i].actionState == "ATTACKAIRB" && cS[i] == 0){
     if (frame > 29){
       face *= -1;
     }
   }
 
-  if (player[i].actionState < 26 || player[i].actionState > 29){
+  if (!aS[cS[i]][player[i].actionState].dead){
     var col;
     if (player[i].phys.shielding && player[i].phys.powerShielded && player[i].hit.hitlag > 0){
       col = "rgb(255,255,255)";
@@ -107,7 +94,7 @@ function renderPlayer(i){
     else if (player[i].phys.charging && player[i].phys.chargeFrames % 9 > 3){
       col = "rgba(252, 255, 91, 0.7)";
     }
-    else if (player[i].actionState == 72 && player[i].timer % 30 < 6){
+    else if (player[i].actionState == "FURAFURA" && player[i].timer % 30 < 6){
       col = palettes[pPal[i]][3];
     }
     else {
@@ -161,7 +148,7 @@ function renderPlayer(i){
     else {
       player[i].miniView = false;
     }
-    if (player[i].miniView && player[i].actionState != 93){
+    if (player[i].miniView && player[i].actionState != "SLEEP"){
       c.fillStyle = "black";
       c.strokeStyle = palettes[pPal[i]][0];
       c.beginPath();
@@ -170,41 +157,15 @@ function renderPlayer(i){
       c.lineWidth = 6;
       c.stroke();
       c.lineWidth = 1;
-      if (cS[i] > 0){
-        drawArrayPathNew(col,face,player[i].miniViewPoint.x,player[i].miniViewPoint.y+30,model,player[i].charAttributes.miniScale,player[i].charAttributes.miniScale,player[i].rotation,player[i].rotationPoint.x,player[i].rotationPoint.y);
-      }
-      else {
-        if ((player[i].actionState >= 105 && player[i].actionState <= 108)){
 
-          drawArrayPathNew(col,face,temX,temY,model,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5),player[i].rotation,player[i].rotationPoint.x,player[i].rotationPoint.y);
-        }
-        else {
-          drawArrayPath(col,face,player[i].miniViewPoint.x,player[i].miniViewPoint.y+30,model,0.14,0.14);
-        }
-      }
+      drawArrayPathNew(col,face,player[i].miniViewPoint.x,player[i].miniViewPoint.y+30,model,player[i].charAttributes.miniScale,player[i].charAttributes.miniScale,player[i].rotation,player[i].rotationPoint.x,player[i].rotationPoint.y);
     }
     else {
-      if (player[i].actionState == 94){
-        if (cS[i]){
-          drawArrayPathNew(col,face,temX,temY,model,player[i].charAttributes.charScale*(stage.scale/4.5),Math.min(player[i].charAttributes.charScale,player[i].charAttributes.charScale*(1.5-startTimer))*(stage.scale/4.5),player[i].rotation,player[i].rotationPoint.x,player[i].rotationPoint.y);
-        }
-        else {
-          drawArrayPath(col,face,temX,temY,model,0.2*(stage.scale/4.5),Math.min(0.2,0.2*(1.5-startTimer))*(stage.scale/4.5));
-        }
+      if (player[i].actionState == "ENTRANCE"){
+        drawArrayPathNew(col,face,temX,temY,model,player[i].charAttributes.charScale*(stage.scale/4.5),Math.min(player[i].charAttributes.charScale,player[i].charAttributes.charScale*(1.5-startTimer))*(stage.scale/4.5),player[i].rotation,player[i].rotationPoint.x,player[i].rotationPoint.y);
       }
       else {
-        if (cS[i]){
-          drawArrayPathNew(col,face,temX,temY,model,player[i].charAttributes.charScale*(stage.scale/4.5),player[i].charAttributes.charScale*(stage.scale/4.5),player[i].rotation,player[i].rotationPoint.x,player[i].rotationPoint.y);
-        }
-        else {
-          if ((player[i].actionState >= 105 && player[i].actionState <= 108)){
-            //console.log(player[i].timer);
-            drawArrayPathNew(col,face,temX,temY,model,0.25*(stage.scale/4.5),0.25*(stage.scale/4.5),player[i].rotation,player[i].rotationPoint.x,player[i].rotationPoint.y);
-          }
-          else {
-            drawArrayPath(col,face,temX,temY,model,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
-          }
-        }
+        drawArrayPathNew(col,face,temX,temY,model,player[i].charAttributes.charScale*(stage.scale/4.5),player[i].charAttributes.charScale*(stage.scale/4.5),player[i].rotation,player[i].rotationPoint.x,player[i].rotationPoint.y);
       }
     }
   }
@@ -241,7 +202,7 @@ function renderPlayer(i){
     c.fill();
     c.textAlign = "start";
   }
-  if (player[i].actionState == 30 || player[i].actionState == 31){
+  if (player[i].actionState == "REBIRTH" || player[i].actionState == "REBIRTHWAIT"){
     c.fillStyle = palettes[pPal[i]][1];
     c.strokeStyle = palettes[pPal[i]][0];
     c.beginPath();
@@ -314,7 +275,7 @@ function renderPlayer(i){
       }
       if (player[i].hitboxes.active[j]){
         var offset = player[i].hitboxes.id[j].offset[player[i].hitboxes.frame];
-        if (player[i].actionState == 39){
+        if (player[i].actionState == "DAMAGEFLYN"){
           offset = player[i].hitboxes.id[j].offset[0];
         }
         c.beginPath();
@@ -322,7 +283,7 @@ function renderPlayer(i){
         c.fill();
         if (player[i].phys.prevFrameHitboxes.active[j]){
           var offset = player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame];
-          if (player[i].actionState == 39){
+          if (player[i].actionState == "DAMAGEFLYN"){
             offset = player[i].phys.prevFrameHitboxes.id[j].offset[0];
           }
           c.beginPath();
@@ -343,7 +304,7 @@ function renderPlayer(i){
 
     }
   }
-  $("#actState"+i).empty().append(aS[cS[i]][player[i].actionState].name);
+  $("#actState"+i).empty().append(player[i].actionState);
   $("#stateNum"+i).empty().append(frame);
   $("#face"+i).empty().append(player[i].phys.face);
   $("#percent"+i).empty().append(player[i].percent);

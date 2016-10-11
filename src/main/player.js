@@ -110,7 +110,7 @@ function inputObject(){
 
 function playerObject(character,pos,face){
   this.phys = new physicsObject(pos,face);
-  this.actionState = 94;
+  this.actionState = "ENTRANCE";
   this.timer = 0;
   this.inputs = new inputObject();
   this.charAttributes = chars[character].attributes;

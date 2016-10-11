@@ -14,130 +14,39 @@ function land(i,y,t,j){
   player[i].phys.onLedge = -1;
   player[i].rotation = 0;
   player[i].rotationPoint = new Vec2D(0,0);
-  switch (player[i].actionState){
-    case 104:
-    case 56:
-      break;
-    case 38:
-      if (cS[i] == 2){
-        aS[cS[i]][38].land(i);
-      }
-      else if (player[i].phys.cVel.y+player[i].phys.kVel.y <= 0){
-        aS[cS[i]][12].init(i);
-      }
-      break;
-    case 103:
-      if (cS[i] == 2){
-        if (player[i].timer >= 20){
-          aS[2][12].init(i);
-        }
-        else {
-          player[i].actionState = 56;
-        }
-      }
-      else {
-        player[i].actionState = 56;
-      }
-      break;
-    case 33:
-      //fair
-      if (player[i].phys.autoCancel){
-        aS[cS[i]][10].init(i);
-      }
-      else {
-        aS[cS[i]][43].init(i);
-      }
-      break;
-    case 34:
-      //b
-      if (player[i].phys.autoCancel){
-        aS[cS[i]][10].init(i);
-      }
-      else {
-        aS[cS[i]][44].init(i);
-      }
-      break;
-    case 35:
-      //u
-      if (player[i].phys.autoCancel){
-        aS[cS[i]][10].init(i);
-      }
-      else {
-        aS[cS[i]][46].init(i);
-      }
-      break;
-    case 36:
-      //d
-      if (player[i].phys.autoCancel){
-        aS[cS[i]][10].init(i);
-      }
-      else {
-        aS[cS[i]][45].init(i);
-      }
-      break;
-    case 37:
-      //n
-      if (player[i].phys.autoCancel){
-        aS[cS[i]][10].init(i);
-      }
-      else {
-        aS[cS[i]][42].init(i);
-      }
-      break;
-    case 9:
-    case 13:
-    case 15:
-    case 19:
-    case 20:
-    case 120:
-    case 121:
-    case 122:
-    case 123:
-    case 124:
-    case 125:
-    case 126:
-    case 127:
-    case 128:
-    case 129:
+  switch (aS[cS[i]][player[i].actionState].landType){
+    case 0:
+    // LANDING / NIL
       if (player[i].phys.cVel.y >= -1){
-        aS[cS[i]][0].init(i);
+        aS[cS[i]].WAIT.init(i);
       }
       else {
-        aS[cS[i]][10].init(i);
+        aS[cS[i]].LANDING.init(i);
       }
       break;
-    case 41:
-    case 111:
-    case 112:
-      aS[cS[i]][10].init(i);
+    case 1:
+    // OWN FUNCTION
+      aS[cS[i]][player[i].actionState].land(i);
       break;
-    case 11:
-      player[i].phys.intangibleTimer = 0;
-      player[i].phys.hurtBoxState = 0;
-      aS[cS[i]][12].init(i);
-      break;
-    case 39:
-    case 40:
+    case 2:
+    // KNOCKDOWN / TECH
       if (player[i].phys.techTimer > 0){
         if (player[i].inputs.lStickAxis[0].x*player[i].phys.face > 0.5){
-          aS[cS[i]][68].init(i);
+          aS[cS[i]].TECHF.init(i);
         }
         else if (player[i].inputs.lStickAxis[0].x*player[i].phys.face < -0.5){
-          aS[cS[i]][67].init(i);
+          aS[cS[i]].TECHB.init(i);
         }
         else {
-          aS[cS[i]][66].init(i);
+          aS[cS[i]].TECHN.init(i);
         }
       }
       else {
-        aS[cS[i]][60].init(i);
+        aS[cS[i]].DOWNBOUND.init(i);
       }
       break;
-    case 69:
-      aS[cS[i]][70].init(i);
-      break;
     default:
-      aS[cS[i]][12].init(i);
+      aS[cS[i]].LANDING.init(i);
       break;
   }
   player[i].phys.cVel.y = 0;
@@ -170,7 +79,7 @@ function physics(i){
         player[i].phys.charging = false;
         player[i].phys.chargeFrames = 0;
         player[i].phys.shielding = false;
-        if (player[i].phys.grounded){
+        /*if (player[i].phys.grounded){
           if (newAngle == 0 || newAngle > 270){
             player[i].phys.kVel.y = 0;
             player[i].phys.kDec.x = player[i].charAttributes.traction;
@@ -179,7 +88,7 @@ function physics(i){
             player[i].phys.kVel.y = 0;
             player[i].phys.kDec.x = -player[i].charAttributes.traction;
           }
-        }
+        }*/
         if (player[i].phys.kVel.y == 0){
           if (player[i].hit.knockback >= 80){
             player[i].phys.grounded = false;
@@ -195,10 +104,10 @@ function physics(i){
 
     //SDI / ASDI
     switch (player[i].actionState){
-      case 41:
-      case 39:
-      case 21:
-      case 22:
+      case "DAMAGEN2":
+      case "DAMAGEFLYN":
+      case "GUARDON":
+      case "GUARD":
         if (player[i].hit.hitlag > 0){
           if ((player[i].inputs.lStickAxis[0].x > 0.7 && player[i].inputs.lStickAxis[1].x < 0.7) || (player[i].inputs.lStickAxis[0].x < -0.7 && player[i].inputs.lStickAxis[1].x > -0.7) || (player[i].inputs.lStickAxis[0].y > 0.7 && player[i].inputs.lStickAxis[1].y < 0.7) || (player[i].inputs.lStickAxis[0].y < -0.7 && player[i].inputs.lStickAxis[1].y > -0.7)){
             player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x*6;
@@ -226,29 +135,32 @@ function physics(i){
     aS[cS[i]][player[i].actionState].main(i);
     if (Math.abs(player[i].phys.kVel.x) > 0){
       var oSign = Math.sign(player[i].phys.kVel.x);
-      player[i].phys.kVel.x -= player[i].phys.kDec.x;
+      if (player[i].phys.grounded){
+        player[i].phys.kVel.x -= oSign*player[i].charAttributes.traction;
+      }
+      else {
+        player[i].phys.kVel.x -= player[i].phys.kDec.x;
+      }
       if (oSign != Math.sign(player[i].phys.kVel.x)){
         player[i].phys.kVel.x = 0;
       }
     }
     if (Math.abs(player[i].phys.kVel.y) > 0){
       var oSign = Math.sign(player[i].phys.kVel.y);
+      if (player[i].phys.grounded){
+        player[i].phys.kVel.y = 0;
+      }
       player[i].phys.kVel.y -= player[i].phys.kDec.y;
       if (oSign != Math.sign(player[i].phys.kVel.y)){
         player[i].phys.kVel.y = 0;
       }
     }
-    if (player[i].actionState == 68 || player[i].actionState == 67){
-      player[i].phys.pos.x += player[i].phys.cVel.x;
-      player[i].phys.pos.y += player[i].phys.cVel.y;
-    }
-    else {
-      player[i].phys.pos.x += player[i].phys.cVel.x + player[i].phys.kVel.x;
-      player[i].phys.pos.y += player[i].phys.cVel.y + player[i].phys.kVel.y;
-    }
+
+    player[i].phys.pos.x += player[i].phys.cVel.x + player[i].phys.kVel.x;
+    player[i].phys.pos.y += player[i].phys.cVel.y + player[i].phys.kVel.y;
 
   }
-  if (player[i].actionState == 30 || player[i].actionState == 31){
+  if (player[i].actionState == "REBIRTH" || player[i].actionState == "REBIRTHWAIT"){
     player[i].phys.hurtBoxState = 1;
   }
   else {
@@ -304,17 +216,11 @@ function physics(i){
     frame = 1;
   }
   //console.log(aS[cS[i]][player[i].actionState].name+" "+(frame-1));
-  var ecbOffset = ecb[cS[i]][aS[cS[i]][player[i].actionState].name][frame-1];
-  switch (player[i].actionState){
-    case 15:
-    case 17:
-    case 20:
-    case 25:
-    case 61:
-    case 72:
-    case 94:
-      ecbOffset = ecb[cS[i]][aS[cS[i]][player[i].actionState].name][0];
-      break;
+  var ecbOffset = ecb[cS[i]][player[i].actionState][frame-1];
+  if (aS[cS[i]][player[i].actionState].dead){
+    ecbOffset = [0,0,0,0];
+  }
+  /*switch (player[i].actionState){
     case 26:
     case 27:
     case 28:
@@ -323,7 +229,7 @@ function physics(i){
       break;
     default:
       break;
-  }
+  }*/
   player[i].phys.ECBp = [new Vec2D(0+x,ecbOffset[0]+y),new Vec2D(ecbOffset[1]+x,ecbOffset[2]+y),new Vec2D(0+x,ecbOffset[3]+y),new Vec2D(ecbOffset[1]*-1+x,ecbOffset[2]+y)];
   if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
     player[i].phys.ECBp[0].y = 0+y;;
@@ -364,10 +270,10 @@ function physics(i){
           else {
             player[i].phys.cVel.x = 0;
             player[i].phys.pos.x = stage.ground[g][0].x;
-            aS[cS[i]][0].init(i);
+            aS[cS[i]].WAIT.init(i);
           }
         }
-        else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && (player[i].actionState < 74 || player[i].actionState > 84)){
+        else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && !aS[cS[i]][player[i].actionState].inGrab){
           stillGrounded = false;
         }
         else {
@@ -386,10 +292,10 @@ function physics(i){
           else {
             player[i].phys.cVel.x = 0;
             player[i].phys.pos.x = stage.ground[g][1].x;
-            aS[cS[i]][0].init(i);
+            aS[cS[i]].WAIT.init(i);
           }
         }
-        else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && (player[i].actionState < 74 || player[i].actionState > 84)){
+        else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && !aS[cS[i]][player[i].actionState].inGrab){
           stillGrounded = false;
         }
         else {
@@ -411,10 +317,10 @@ function physics(i){
           else {
             player[i].phys.cVel.x = 0;
             player[i].phys.pos.x = stage.platform[m][0].x;
-            aS[cS[i]][0].init(i);
+            aS[cS[i]].WAIT.init(i);
           }
         }
-        else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && (player[i].actionState < 74 || player[i].actionState > 84)){
+        else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && !aS[cS[i]][player[i].actionState].inGrab){
           stillGrounded = false;
         }
         else {
@@ -433,10 +339,10 @@ function physics(i){
           else {
             player[i].phys.cVel.x = 0;
             player[i].phys.pos.x = stage.platform[m][1].x;
-            aS[cS[i]][0].init(i);
+            aS[cS[i]].WAIT.init(i);
           }
         }
-        else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && (player[i].actionState < 74 || player[i].actionState > 84)){
+        else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && !aS[cS[i]][player[i].actionState].inGrab){
           stillGrounded = false;
         }
         else {
@@ -448,11 +354,11 @@ function physics(i){
     if (!stillGrounded){
       player[i].phys.grounded = false;
       player[i].phys.shielding = false;
-      if (cS[i] == 2 && player[i].actionState == 56){
-        player[i].actionState = 103;
+      if (typeof aS[cS[i]][player[i].actionState].airborneState !== 'undefined'){
+        player[i].actionState = aS[cS[i]][player[i].actionState].airborneState;
       }
       else {
-        aS[cS[i]][13].init(i);
+        aS[cS[i]].FALL.init(i);
         if (Math.abs(player[i].phys.cVel.x) > player[i].charAttributes.aerialHmaxV){
           player[i].phys.cVel.x = Math.sign(player[i].phys.cVel.x) * player[i].charAttributes.aerialHmaxV;
         }
@@ -465,20 +371,20 @@ function physics(i){
       //player[i].phys.ECB1[3].x <= stage.wallL[j][0].x is kind of a shitty fix. It is very unlikely something will break it though.
       notTouchingWalls[0] = false;
       player[i].phys.pos.x -= player[i].phys.ECBp[1].x - stage.wallL[j][1].x;
-      if (player[i].actionState == 39){
+      if (player[i].actionState == "DAMAGEFLYN"){
         if (player[i].hit.hitlag == 0){
           player[i].phys.face = -1;
           if (player[i].phys.techTimer > 0){
             if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7){
-              aS[cS[i]][92].init(i);
+              aS[cS[i]].WALLTECHJUMP.init(i);
             }
             else {
-              aS[cS[i]][90].init(i);
+              aS[cS[i]].WALLTECH.init(i);
             }
           }
           else {
             drawVfx("wallBounce",new Vec2D(stage.wallL[j][1].x,player[i].phys.ECBp[1].y),-1,0);
-            aS[cS[i]][89].init(i);
+            aS[cS[i]].WALLDAMAGE.init(i);
           }
         }
       }
@@ -492,7 +398,7 @@ function physics(i){
           if (player[i].inputs.lStickAxis[0].x <= -0.7 && player[i].inputs.lStickAxis[3].x >= 0 && player[i].charAttributes.walljump){
             player[i].phys.wallJumpTimer = 254;
             player[i].phys.face = -1;
-            aS[cS[i]][91].init(i);
+            aS[cS[i]].WALLJUMP.init(i);
           }
           else {
             player[i].phys.wallJumpTimer++;
@@ -506,20 +412,20 @@ function physics(i){
     if (player[i].phys.ECBp[3].y < stage.wallR[j][0].y && player[i].phys.ECBp[3].y > stage.wallR[j][1].y && player[i].phys.ECBp[3].x <= stage.wallR[j][1].x && (player[i].phys.ECB1[3].x >= stage.wallR[j][1].x || ((player[i].phys.ECB1[3].y >= stage.wallR[j][0].y || player[i].phys.ECB1[3].y <= stage.wallR[j][1].y) && player[i].phys.ECB1[1].x >= stage.wallR[j][0].x))){
       notTouchingWalls[1] = false;
       player[i].phys.pos.x -= player[i].phys.ECBp[3].x - stage.wallR[j][1].x;
-      if (player[i].actionState == 39){
+      if (player[i].actionState == "DAMAGEFLYN"){
         if (player[i].hit.hitlag == 0){
           player[i].phys.face = 1;
           if (player[i].phys.techTimer > 0){
             if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7){
-              aS[cS[i]][92].init(i);
+              aS[cS[i]].WALLTECHJUMP.init(i);
             }
             else {
-              aS[cS[i]][90].init(i);
+              aS[cS[i]].WALLTECH.init(i);
             }
           }
           else {
             drawVfx("wallBounce",new Vec2D(stage.wallR[j][1].x,player[i].phys.ECBp[3].y),1,1);
-            aS[cS[i]][89].init(i);
+            aS[cS[i]].WALLDAMAGE.init(i);
           }
         }
       }
@@ -533,7 +439,7 @@ function physics(i){
           if (player[i].inputs.lStickAxis[0].x >= 0.7 && player[i].inputs.lStickAxis[3].x <= 0 && player[i].charAttributes.walljump){
             player[i].phys.wallJumpTimer = 254;
             player[i].phys.face = 1;
-            aS[cS[i]][91].init(i);
+            aS[cS[i]].WALLJUMP.init(i);
           }
           else {
             player[i].phys.wallJumpTimer++;
@@ -590,7 +496,7 @@ function physics(i){
         player[i].phys.pos.y = stage.ceiling[j][0].y-(player[i].phys.ECBp[2].y-player[i].phys.pos.y);
         if (aS[cS[i]][player[i].actionState].headBonk){
           player[i].phys.cVel.y = 0;
-          aS[cS[i]][13].init(i)
+          aS[cS[i]].FALL.init(i)
         }
       }
     }
@@ -734,7 +640,7 @@ function physics(i){
             player[i].phys.ledgeRegrabTimeout = 30;
             player[i].phys.face = stage.ledge[lsBF][1]*-2+1;
             player[i].phys.pos = new Vec2D(stage.box[stage.ledge[lsBF][0]].min.x+edgeOffset[0][0],stage.box[stage.ledge[lsBF][0]].min.y+edgeOffset[0][1]);
-            aS[cS[i]][24].init(i);
+            aS[cS[i]].CLIFFCATCH.init(i);
           }
         }
         else if (lsBB > -1){
@@ -743,28 +649,28 @@ function physics(i){
             player[i].phys.ledgeRegrabTimeout = 30;
             player[i].phys.face = stage.ledge[lsBB][1]*-2+1;
             player[i].phys.pos = new Vec2D(stage.box[stage.ledge[lsBB][0]].max.x+edgeOffset[1][0],stage.box[stage.ledge[lsBB][0]].min.y+edgeOffset[1][1]);
-            aS[cS[i]][24].init(i);
+            aS[cS[i]].CLIFFCATCH.init(i);
           }
         }
       }
     }
   }
 
-  if ((player[i].actionState < 26 || player[i].actionState > 29) && player[i].actionState != 93){
+  if (!aS[cS[i]][player[i].actionState].dead && player[i].actionState != "SLEEP"){
     var state = 0;
     if (player[i].phys.pos.x < stage.blastzone.min.x){
-      state = 26;
+      state = "DEADLEFT";
     }
     else if (player[i].phys.pos.x > stage.blastzone.max.x){
-      state = 27;
+      state = "DEADRIGHT";
     }
     else if (player[i].phys.pos.y < stage.blastzone.min.y){
-      state = 29;
+      state = "DEADDOWN";
     }
     else if (player[i].phys.pos.y > stage.blastzone.max.y){
-      state = 28;
+      state = "DEADUP";
     }
-    if (state > 0){
+    if (state != 0){
       player[i].stocks--;
       lostStockQueue.push([i,player[i].stocks,0]);
       if (player[i].stocks == 0 && versusMode){

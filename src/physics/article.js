@@ -1,9 +1,10 @@
 aArticles = [];
 destroyArticleQueue = [];
-articles = [];
+
 articleHitQueue = [];
 // 0.00390583333333333333333333333333 = hitbox size multiplier
-articles[0] = {
+articles = {
+"LASER" : {
   name : "LASER",
   init : function(p,x,y,rotate){
     var obj = {
@@ -18,8 +19,8 @@ articles[0] = {
       hb : new hitbox(new Vec2D(0,0),1.172,3,361,0,0,0,0,0,1,1),
       ecb : [new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y-10),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face)+10,player[p].phys.pos.y+y),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y+10),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face)-10,player[p].phys.pos.y+y)]
     };
-    aArticles.push([0,p,obj]);
-    articles[0].main(aArticles.length-1);
+    aArticles.push(["LASER",p,obj]);
+    articles.LASER.main(aArticles.length-1);
   },
   main : function(i){
     aArticles[i][2].timer++;
@@ -61,9 +62,9 @@ articles[0] = {
     c.stroke();
     c.restore();
   }
-}
+},
 
-articles[1] = {
+"ILLUSION" : {
   name : "ILLUSION",
   noDraw : true,
   init : function(p,type){
@@ -81,8 +82,8 @@ articles[1] = {
     if (type){
       obj.hb.kg = 40;
     }
-    aArticles.push([1,p,obj]);
-    articles[1].main(aArticles.length-1);
+    aArticles.push(["ILLUSION",p,obj]);
+    articles.ILLUSION.main(aArticles.length-1);
   },
   main : function(i){
     var p = aArticles[i][1];
@@ -94,6 +95,7 @@ articles[1] = {
       destroyArticleQueue.push(i);
     }
   }
+}
 }
 
 
@@ -226,7 +228,7 @@ function executeArticleHits(){
           player[v].phys.grounded = false;
           player[v].phys.shieldHP = 0;
           drawVfx("breakShield",player[v].phys.pos,player[v].phys.face);
-          aS[cS[v]][69].init(v);
+          aS[cS[v]].SHIELDBREAKFALL.init(v);
           break;
         }
       }
@@ -258,29 +260,17 @@ function executeArticleHits(){
         player[v].phys.cVel.x -= victimPush
       }
 
-      aS[cS[v]][22].init(v);
+      aS[cS[v]].GUARD.init(v);
 
     }
     else {
       if (player[v].phys.hurtBoxState == 0){
-        var crouching = (player[v].actionState >= 16 && player[v].actionState <= 18);
+        var crouching = aS[cS[v]][player[v].actionState].crouch;
         var vCancel = false;
         if (player[v].phys.vCancelTimer > 0){
-          switch (player[v].actionState){
-            case 9:
-            case 15:
-            case 19:
-            case 110:
-            case 13:
-            case 14:
-            case 32:
-            case 40:
-            case 11:
+          if (aS[cS[v]][player[v].actionState].vCancel){
               vCancel = true;
               sounds.vcancel.play();
-              break;
-            default:
-              break;
           }
         }
         player[v].hit.knockback = getKnockback(hb,damage,damage,player[v].percent,player[v].charAttributes.weight,crouching,vCancel);
@@ -334,15 +324,15 @@ function executeArticleHits(){
             player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
 
             if (player[v].hit.knockback >= 80 || isThrow){
-              aS[cS[v]][39].init(v,!isThrow);
+              aS[cS[v]].DAMAGEFLYN.init(v,!isThrow);
             }
             else {
-              aS[cS[v]][41].init(v);
+              aS[cS[v]].DAMAGEN2.init(v);
             }
           }
           else {
-            if (player[v].actionState != 106){
-              aS[cS[v]][80].init(v);
+            if (player[v].actionState != "THROWNPUFFDOWN"){
+              aS[cS[v]].CAPTUREDAMAGE.init(v);
             }
           }
 

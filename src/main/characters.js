@@ -38,6 +38,9 @@ function Box2D(min,max){
 
 offsets = [];
 charAttributes = [];
+intangibility = [];
+frames = [];
+actionSounds = [];
 
 function charObject(num){
   this.attributes = charAttributes[num];

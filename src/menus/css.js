@@ -650,12 +650,7 @@ function drawCSS(){
       else {
         c.globalAlpha = 1;
       }
-      if (cS[i]){
-        drawArrayPathNew(col,face,(player[i].phys.pos.x*4.5*1.5) + 600,(player[i].phys.pos.y*-4.5) +480,model,player[i].charAttributes.charScale*1.5,player[i].charAttributes.charScale*1.5,0,0,0);
-      }
-      else {
-        drawArrayPath(col,face,(player[i].phys.pos.x*4.5*1.5) + 600,(player[i].phys.pos.y*-4.5) +480,model,player[i].charAttributes.charScale*1.5,player[i].charAttributes.charScale*1.5);
-      }
+      drawArrayPathNew(col,face,(player[i].phys.pos.x*4.5*1.5) + 600,(player[i].phys.pos.y*-4.5) +480,model,player[i].charAttributes.charScale*1.5,player[i].charAttributes.charScale*1.5,0,0,0);
       //drawArrayPath(col,face,245+i*225,610,model,0.3,0.3);
       if (player[i].phys.shielding){
         var sCol = palettes[pPal[i]][2];
