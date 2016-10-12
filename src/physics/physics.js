@@ -108,6 +108,7 @@ function physics(i){
       case "DAMAGEFLYN":
       case "GUARDON":
       case "GUARD":
+      case "DOWNDAMAGE":
         if (player[i].hit.hitlag > 0){
           if ((player[i].inputs.lStickAxis[0].x > 0.7 && player[i].inputs.lStickAxis[1].x < 0.7) || (player[i].inputs.lStickAxis[0].x < -0.7 && player[i].inputs.lStickAxis[1].x > -0.7) || (player[i].inputs.lStickAxis[0].y > 0.7 && player[i].inputs.lStickAxis[1].y < 0.7) || (player[i].inputs.lStickAxis[0].y < -0.7 && player[i].inputs.lStickAxis[1].y > -0.7)){
             player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x*6;
@@ -173,6 +174,13 @@ function physics(i){
   if (player[i].phys.intangibleTimer > 0){
     player[i].phys.intangibleTimer--;
     player[i].phys.hurtBoxState = 1;
+  }
+
+  if (player[i].phys.outOfCameraTimer >= 60){
+    player[i].percent++;
+    percentShake(40,i);
+    sounds.outofcamera.play();
+    player[i].phys.outOfCameraTimer = 0;
   }
 
   var x = player[i].phys.pos.x;
@@ -257,20 +265,22 @@ function physics(i){
   }
   if (player[i].phys.grounded){
     var stillGrounded = true;
+    var backward = false;
     if (player[i].phys.onSurface[0] == 0){
       var g = player[i].phys.onSurface[1];
       if (player[i].phys.ECBp[0].x < stage.ground[g][0].x-0.1){
         if (aS[cS[i]][player[i].actionState].canEdgeCancel){
-          if (player[i].inputs.lStickAxis[0].x < -0.6 || player[i].phys.face == 1 || aS[cS[i]][player[i].actionState].disableTeeter){
+          if (player[i].phys.face == 1){
             stillGrounded = false;
+            backward = true;
           }
-          else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0){
+          else if (player[i].inputs.lStickAxis[0].x < -0.6 || (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) || aS[cS[i]][player[i].actionState].disableTeeter || player[i].phys.shielding){
             stillGrounded = false;
           }
           else {
             player[i].phys.cVel.x = 0;
             player[i].phys.pos.x = stage.ground[g][0].x;
-            aS[cS[i]].WAIT.init(i);
+            aS[cS[i]].OTTOTTO.init(i);
           }
         }
         else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && !aS[cS[i]][player[i].actionState].inGrab){
@@ -283,16 +293,17 @@ function physics(i){
       }
       else if (player[i].phys.ECBp[0].x > stage.ground[g][1].x+0.1){
         if (aS[cS[i]][player[i].actionState].canEdgeCancel){
-          if (player[i].inputs.lStickAxis[0].x > 0.6 || player[i].phys.face == -1 || aS[cS[i]][player[i].actionState].disableTeeter){
+          if (player[i].phys.face == -1){
             stillGrounded = false;
+            backward = true;
           }
-          else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0){
+          else if (player[i].inputs.lStickAxis[0].x > 0.6 || (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) || aS[cS[i]][player[i].actionState].disableTeeter || player[i].phys.shielding){
             stillGrounded = false;
           }
           else {
             player[i].phys.cVel.x = 0;
             player[i].phys.pos.x = stage.ground[g][1].x;
-            aS[cS[i]].WAIT.init(i);
+            aS[cS[i]].OTTOTTO.init(i);
           }
         }
         else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && !aS[cS[i]][player[i].actionState].inGrab){
@@ -308,16 +319,17 @@ function physics(i){
       var m = player[i].phys.onSurface[1];
       if (player[i].phys.ECBp[0].x < stage.platform[m][0].x-0.1){
         if (aS[cS[i]][player[i].actionState].canEdgeCancel){
-          if (player[i].inputs.lStickAxis[0].x < -0.6 || player[i].phys.face == 1 || aS[cS[i]][player[i].actionState].disableTeeter){
+          if (player[i].phys.face == 1){
             stillGrounded = false;
+            backward = true;
           }
-          else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0){
+          else if (player[i].inputs.lStickAxis[0].x < -0.6 || (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) || aS[cS[i]][player[i].actionState].disableTeeter || player[i].phys.shielding){
             stillGrounded = false;
           }
           else {
             player[i].phys.cVel.x = 0;
             player[i].phys.pos.x = stage.platform[m][0].x;
-            aS[cS[i]].WAIT.init(i);
+            aS[cS[i]].OTTOTTO.init(i);
           }
         }
         else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && !aS[cS[i]][player[i].actionState].inGrab){
@@ -330,16 +342,17 @@ function physics(i){
       }
       else if (player[i].phys.ECBp[0].x > stage.platform[m][1].x+0.1){
         if (aS[cS[i]][player[i].actionState].canEdgeCancel){
-          if (player[i].inputs.lStickAxis[0].x > 0.6 || player[i].phys.face == -1 || aS[cS[i]][player[i].actionState].disableTeeter){
+          if (player[i].phys.face == -1){
             stillGrounded = false;
+            backward = true;
           }
-          else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0){
+          else if (player[i].inputs.lStickAxis[0].x > 0.6 || (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) || aS[cS[i]][player[i].actionState].disableTeeter || player[i].phys.shielding){
             stillGrounded = false;
           }
           else {
             player[i].phys.cVel.x = 0;
             player[i].phys.pos.x = stage.platform[m][1].x;
-            aS[cS[i]].WAIT.init(i);
+            aS[cS[i]].OTTOTTO.init(i);
           }
         }
         else if (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0 && !aS[cS[i]][player[i].actionState].inGrab){
@@ -353,16 +366,21 @@ function physics(i){
     }
     if (!stillGrounded){
       player[i].phys.grounded = false;
-      player[i].phys.shielding = false;
       if (typeof aS[cS[i]][player[i].actionState].airborneState !== 'undefined'){
         player[i].actionState = aS[cS[i]][player[i].actionState].airborneState;
       }
       else {
-        aS[cS[i]].FALL.init(i);
+        if (aS[cS[i]][player[i].actionState].missfoot && backward){
+          aS[cS[i]].MISSFOOT.init(i);
+        }
+        else {
+          aS[cS[i]].FALL.init(i);
+        }
         if (Math.abs(player[i].phys.cVel.x) > player[i].charAttributes.aerialHmaxV){
           player[i].phys.cVel.x = Math.sign(player[i].phys.cVel.x) * player[i].charAttributes.aerialHmaxV;
         }
       }
+      player[i].phys.shielding = false;
     }
   }
   var notTouchingWalls = [true,true];
@@ -671,6 +689,7 @@ function physics(i){
       state = "DEADUP";
     }
     if (state != 0){
+      player[i].phys.outOfCameraTimer = 0;
       player[i].stocks--;
       lostStockQueue.push([i,player[i].stocks,0]);
       if (player[i].stocks == 0 && versusMode){

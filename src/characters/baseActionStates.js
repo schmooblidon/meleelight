@@ -289,6 +289,7 @@ baseActionStates = {
   canEdgeCancel : true,
   reverseModel : true,
   canBeGrabbed : true,
+  disableTeeter : true,
   init : function(p){
     player[p].actionState = "SMASHTURN";
     player[p].timer = 0;
@@ -351,6 +352,7 @@ baseActionStates = {
   name : "TILTTURN",
   canEdgeCancel : true,
   canBeGrabbed : true,
+  disableTeeter : true,
   init : function(p){
     player[p].actionState = "TILTTURN";
     player[p].timer = 0;
@@ -1143,6 +1145,7 @@ baseActionStates = {
   canEdgeCancel : true,
   canBeGrabbed : true,
   crouch : true,
+  disableTeeter : true,
   init : function(p){
     player[p].actionState = "SQUAT";
     player[p].timer = 0;
@@ -1201,6 +1204,7 @@ baseActionStates = {
   canEdgeCancel : true,
   canBeGrabbed : true,
   crouch : true,
+  disableTeeter : true,
   init : function(p){
     player[p].actionState = "SQUATWAIT";
     player[p].timer = 0;
@@ -1266,6 +1270,7 @@ baseActionStates = {
   canEdgeCancel : true,
   canBeGrabbed : true,
   crouch : true,
+  disableTeeter : true,
   init : function(p){
     player[p].actionState = "SQUATRV";
     player[p].timer = 0;
@@ -1344,7 +1349,7 @@ baseActionStates = {
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 1);
+    player[p].phys.cVel.x = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
     aS[cS[p]].JUMPAERIALF.main(p);
@@ -1399,7 +1404,7 @@ baseActionStates = {
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 1);
+    player[p].phys.cVel.x = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
     aS[cS[p]].JUMPAERIALB.main(p);
@@ -1512,6 +1517,7 @@ baseActionStates = {
   name : "GUARDON",
   canEdgeCancel : true,
   canBeGrabbed : true,
+  missfoot : true,
   init : function(p){
     player[p].actionState = "GUARDON";
     player[p].timer = 0;
@@ -1607,6 +1613,7 @@ baseActionStates = {
   name : "GUARD",
   canEdgeCancel : true,
   canBeGrabbed : true,
+  missfoot : true,
   init : function(p){
     player[p].actionState = "GUARD";
     player[p].timer = 0;
@@ -1696,6 +1703,7 @@ baseActionStates = {
   name : "GUARDOFF",
   canEdgeCancel : true,
   canBeGrabbed : true,
+  missfoot : true,
   init : function(p){
     player[p].actionState = "GUARDOFF";
     player[p].timer = 0;
@@ -2327,6 +2335,7 @@ baseActionStates = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
+  missfoot : true,
   init : function(p){
     player[p].actionState = "DAMAGEN2";
     player[p].timer = 0;
@@ -2335,9 +2344,6 @@ baseActionStates = {
     player[p].rotation = 0;
     player[p].rotationPoint = new Vec2D(0,0);
     turnOffHitboxes(p);
-    // drawVfx("hitSparks",player[p].hit.hitPoint,player[p].phys.face);
-    // drawVfx("hitFlair",player[p].hit.hitPoint,player[p].phys.face);
-    // drawVfx("hitCurve",player[p].hit.hitPoint,player[p].phys.face,player[p].hit.angle);
     aS[cS[p]].DAMAGEN2.main(p);
   },
   main : function(p){
@@ -2454,10 +2460,6 @@ baseActionStates = {
           aS[cS[p]].FALL.init(p);
           return true;
         }
-        else if (player[p].timer > 30){
-          aS[cS[p]].DAMAGEFALL.init(p);
-          return true;
-        }
         else {
           return false;
         }
@@ -2468,7 +2470,9 @@ baseActionStates = {
     }
   },
   land : function(p){
-    aS[cS[p]].LANDING.init(p);
+    if (player[p].hit.hitstun <= 0){
+      aS[cS[p]].LANDING.init(p);
+    }
   }
 },
 
@@ -2747,11 +2751,13 @@ baseActionStates = {
 "DOWNBOUND" : {
   name : "DOWNBOUND",
   canEdgeCancel : true,
-  canBeGrabbed : true,
+  canBeGrabbed : false,
+  downed : true,
   init : function(p){
     player[p].actionState = "DOWNBOUND";
     player[p].timer = 0;
     player[p].phys.kVel.y = 0;
+    player[p].phys.jabReset = false;
     drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
     sounds.bounce.play();
     aS[cS[p]].DOWNBOUND.main(p);
@@ -2782,6 +2788,7 @@ baseActionStates = {
   name : "DOWNWAIT",
   canEdgeCancel : true,
   canBeGrabbed : false,
+  downed : true,
   init : function(p){
     player[p].actionState = "DOWNWAIT";
     player[p].timer = 0;
@@ -2791,12 +2798,38 @@ baseActionStates = {
     player[p].timer++;
     if (!aS[cS[p]].DOWNWAIT.interrupt(p)){
       reduceByTraction(p,true);
+      if (player[p].timer > 1){
+        player[p].hit.hitstun--;
+      }
     }
   },
   interrupt : function(p){
     if (player[p].timer > frames[cS[p]].DOWNWAIT){
       aS[cS[p]].DOWNWAIT.init(p);
       return true;
+    }
+    else if (player[p].phys.jabReset){
+      if (player[p].hit.hitstun <= 0){
+        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7){
+          aS[cS[p]].DOWNSTANDB.init(p);
+          return true;
+        }
+        else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7){
+          aS[cS[p]].DOWNSTANDF.init(p);
+          return true;
+        }
+        else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1])){
+          aS[cS[p]].DOWNATTACK.init(p);
+          return true;
+        }
+        else {
+          aS[cS[p]].DOWNSTANDN.init(p);
+          return true;
+        }
+      }
+      else {
+        return false;
+      }
     }
     else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7){
       aS[cS[p]].DOWNSTANDB.init(p);
@@ -2817,6 +2850,57 @@ baseActionStates = {
     else {
       return false;
     }
+  }
+},
+
+"DOWNDAMAGE" : {
+  name : "DOWNDAMAGE",
+  canEdgeCancel : true,
+  canBeGrabbed : true,
+  downed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "DOWNDAMAGE";
+    player[p].timer = 0;
+    player[p].phys.jabReset = true;
+    player[p].phys.grounded = false;
+    aS[cS[p]].DOWNDAMAGE.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!aS[cS[p]].DOWNDAMAGE.interrupt(p)){
+      if (!player[p].phys.grounded){
+        player[p].phys.cVel.y -= player[p].charAttributes.gravity;
+      }
+      else {
+        reduceByTraction(p,true);
+      }
+      if (player[p].timer > 1){
+        player[p].hit.hitstun--;
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 13){
+      if (player[p].phys.grounded){
+        if (player[p].hit.hitstun <= 0){
+          aS[cS[p]].DOWNSTANDN.init(p);
+        }
+        else {
+          aS[cS[p]].DOWNWAIT.init(p);
+        }
+      }
+      else {
+        aS[cS[p]].FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+
   }
 },
 
@@ -3643,6 +3727,186 @@ baseActionStates = {
       else {
         return false;
       }
+    }
+    else {
+      return false;
+    }
+  }
+},
+
+"OTTOTTO" : {
+  name : "OTTOTTO",
+  canEdgeCancel : true,
+  canBeGrabbed : true,
+  init : function(p){
+    player[p].actionState = "OTTOTTO";
+    player[p].timer = 1;
+    player[p].phys.cVel.x = 0;
+    aS[cS[p]].OTTOTTO.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!aS[cS[p]].OTTOTTO.interrupt(p)){
+
+    }
+  },
+  interrupt : function(p){
+    var b = checkForSpecials(p);
+    var t = checkForTilts(p);
+    var s = checkForSmashes(p);
+    if (player[p].timer > frames[cS[p]].OTTOTTO){
+      aS[cS[p]].OTTOTTOWAIT.init(p);
+      return true;
+    }
+    else if (checkForJump(p)){
+      aS[cS[p]].KNEEBEND.init(p);
+      return true;
+    }
+    else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
+      aS[cS[p]].GUARDON.init(p);
+      return true;
+    }
+    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+      aS[cS[p]].GUARDON.init(p);
+    }
+    else if (b[0]){
+      aS[cS[p]][b[1]].init(p);
+      return true;
+    }
+    else if (s[0]){
+      aS[cS[p]][s[1]].init(p);
+      return true;
+    }
+    else if (t[0]){
+      aS[cS[p]][t[1]].init(p);
+      return true;
+    }
+    else if (checkForSquat(p)){
+      aS[cS[p]].SQUAT.init(p);
+      return true;
+    }
+    else if (checkForDash(p)){
+      aS[cS[p]].DASH.init(p);
+      return true;
+    }
+    else if (checkForSmashTurn(p)){
+      aS[cS[p]].SMASHTURN.init(p);
+      return true;
+    }
+    else if (checkForTiltTurn(p)){
+      player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
+      aS[cS[p]].TILTTURN.init(p);
+      return true;
+    }
+    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
+      aS[cS[p]].WALK.init(p,true);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+},
+
+"OTTOTTOWAIT" : {
+  name : "OTTOTTOWAIT",
+  canEdgeCancel : true,
+  canBeGrabbed : true,
+  init : function(p){
+    player[p].actionState = "OTTOTTOWAIT";
+    player[p].timer = 1;
+    sounds[actionSounds[cS[p]].OTTOTTOWAIT[0][1]].play();
+    player[p].phys.cVel.x = 0;
+    aS[cS[p]].OTTOTTOWAIT.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (player[p].timer > frames[cS[p]].OTTOTTOWAIT){
+      player[p].timer = 0
+    }
+    if (!aS[cS[p]].OTTOTTOWAIT.interrupt(p)){
+
+    }
+  },
+  interrupt : function(p){
+    var b = checkForSpecials(p);
+    var t = checkForTilts(p);
+    var s = checkForSmashes(p);
+    if (checkForJump(p)){
+      aS[cS[p]].KNEEBEND.init(p);
+      return true;
+    }
+    else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
+      aS[cS[p]].GUARDON.init(p);
+      return true;
+    }
+    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+      aS[cS[p]].GUARDON.init(p);
+    }
+    else if (b[0]){
+      aS[cS[p]][b[1]].init(p);
+      return true;
+    }
+    else if (s[0]){
+      aS[cS[p]][s[1]].init(p);
+      return true;
+    }
+    else if (t[0]){
+      aS[cS[p]][t[1]].init(p);
+      return true;
+    }
+    else if (checkForSquat(p)){
+      aS[cS[p]].SQUAT.init(p);
+      return true;
+    }
+    else if (checkForDash(p)){
+      aS[cS[p]].DASH.init(p);
+      return true;
+    }
+    else if (checkForSmashTurn(p)){
+      aS[cS[p]].SMASHTURN.init(p);
+      return true;
+    }
+    else if (checkForTiltTurn(p)){
+      player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
+      aS[cS[p]].TILTTURN.init(p);
+      return true;
+    }
+    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
+      aS[cS[p]].WALK.init(p,true);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+},
+
+"MISSFOOT" : {
+  name : "MISSFOOT",
+  canPassThrough : true,
+  canGrabLedge : [true,false],
+  wallJumpAble : false,
+  headBonk : true,
+  canBeGrabbed : true,
+  landType : 0,
+  init : function(p){
+    player[p].actionState = "MISSFOOT";
+    player[p].timer = 0;
+    turnOffHitboxes(p);
+    aS[cS[p]].MISSFOOT.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!aS[cS[p]].MISSFOOT.interrupt(p)){
+      fastfall(p);
+      airDrift(p);
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 26){
+      aS[cS[p]].DAMAGEFALL.init(p);
+      return true;
     }
     else {
       return false;

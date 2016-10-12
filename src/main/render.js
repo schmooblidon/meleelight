@@ -120,6 +120,7 @@ function renderPlayer(i){
           player[i].miniViewSide = 1;
         }
         player[i].miniView = true;
+        player[i].phys.outOfCameraTimer++;
       }
       else if (-600 <= 375/s && 375/s<= 600){
         if (pA.y > pB.y){
@@ -140,13 +141,16 @@ function renderPlayer(i){
           player[i].miniViewSide = 2;
         }
         player[i].miniView = true;
+        player[i].phys.outOfCameraTimer++;
       }
       else {
         player[i].miniView = false;
+        player[i].phys.outOfCameraTimer = 0;
       }
     }
     else {
       player[i].miniView = false;
+      player[i].phys.outOfCameraTimer = 0;
     }
     if (player[i].miniView && player[i].actionState != "SLEEP"){
       c.fillStyle = "black";

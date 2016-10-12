@@ -86,6 +86,8 @@ function physicsObject(pos,face){
   this.vCancelTimer = 0;
   this.shoulderLockout = 0;
   this.inShine = 0;
+  this.jabReset = false;
+  this.outOfCameraTimer = 0;
 }
 
 function inputObject(){

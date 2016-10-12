@@ -25,6 +25,7 @@ charAttributes[1] = {
   walkAcc : 0.1,
   walkMaxV : 0.7,
   djMultiplier : 0,
+  djMomentum : 0,
   shieldScale : 13.125,
   modelScale : 0.94,
   weight : 60,

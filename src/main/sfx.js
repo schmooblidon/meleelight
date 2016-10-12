@@ -390,6 +390,9 @@ sounds = {
   }),
   vcancel : new Howl({
     src : ['sfx/vcancel.wav']
+  }),
+  outofcamera : new Howl({
+    src : ['sfx/outofcamera.wav']
   })
 }
 

@@ -323,6 +323,10 @@ function executeHits(){
                   sounds.vcancel.play();
               }
             }
+            var jabReset = false;
+            if (aS[cS[v]][player[v].actionState].downed && damage < 7){
+              jabReset = true;
+            }
             player[v].hit.knockback = getKnockback(player[a].hitboxes.id[h],damage,damage,player[v].percent,player[v].charAttributes.weight,crouching,vCancel);
             player[v].hit.angle = player[a].hitboxes.id[h].angle;
             if (player[v].hit.angle == 361){
@@ -340,11 +344,12 @@ function executeHits(){
               player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y);
               if (player[a].phys.pos.x < player[v].phys.pos.x){
                 player[v].hit.reverse = false;
-                player[v].phys.face = -1;
               }
               else {
                 player[v].hit.reverse = true;
-                player[v].phys.face = 1;
+              }
+              if (!jabReset){
+                player[v].phys.face = player[v].hit.reverse ? 1 : -1;
               }
             }
             else {
@@ -372,7 +377,10 @@ function executeHits(){
 
               player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
                 //console.log(player[v].hit.reverse);
-              if (player[v].hit.knockback >= 80 || isThrow){
+              if (jabReset){
+                aS[cS[v]].DOWNDAMAGE.init(v);
+              }
+              else if (player[v].hit.knockback >= 80 || isThrow){
                 aS[cS[v]].DAMAGEFLYN.init(v,!isThrow);
               }
               else {

@@ -10,12 +10,30 @@ for (var i=0;i<keys.length;i++){
 var puff = aS[1];
 
 // OVERWRITES START
-
+// BITES PLZ
 puff.FURAFURA = {
   name : "FURAFURA",
   init : function(p){
     puff.WAIT.init(p);
     //*cough*BITES*cough*
+  }
+}
+puff.OTTOTTO = {
+  name : "OTTOTTO",
+  init : function(p){
+    puff.WAIT.init(p);
+  }
+}
+puff.MISSFOOT = {
+  name : "MISSFOOT",
+  init : function(p){
+    puff.FALL.init(p);
+  }
+}
+puff.DOWNDAMAGE = {
+  name : "DOWNDAMAGE",
+  init : function(p){
+    puff.FALL.init(p);
   }
 }
 

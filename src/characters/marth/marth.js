@@ -2677,12 +2677,51 @@ marth.NEUTRALSPECIALGROUND = {
   init : function(p){
     player[p].actionState = "NEUTRALSPECIALGROUND";
     player[p].timer = 0;
+    sounds.jump.play();
     marth.NEUTRALSPECIALGROUND.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (!marth.NEUTRALSPECIALGROUND.interrupt(p)){
       reduceByTraction(p);
+      /*
+      if (charge == 152){
+        release
+      }
+      if (player[p].timer == 7){
+        sounds.shieldbreaker1.play();
+      }
+      else if (player[p].timer == 11){
+        sounds.shieldbreakercharge.play();
+      }
+      else if (player[p].timer == 44){
+        sounds.shout5.play();
+        and soomething else
+      }
+      else if (player[p].timer == 47){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+        if (charge >= 150){
+
+        }
+        else {
+          sounds.sword3.play();
+        }
+      }
+      else if (player[p].timer > 47 && player[p].timer < 53){
+        player[p].hitboxes.frame++;
+      }
+      else if (player[p].timer == 53){
+        turnOffHitboxes(p);
+      }
+
+      if (player[p].timer == 51){
+        draw green bounce
+      }*/
+
+      // charge start on 12
+      // charge end on 42
+      // attack start on 43
     }
   },
   interrupt : function(p){

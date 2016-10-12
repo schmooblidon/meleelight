@@ -25,6 +25,7 @@ charAttributes[0] = {
   walkAcc : 0,
   walkMaxV : 1.6,
   djMultiplier : 0.88,
+  djMomentum : 1,
   shieldScale : 11.75,
   modelScale : 1.15,
   weight : 87,
@@ -40,7 +41,8 @@ charAttributes[0] = {
   wallJumpVelX : 1.3,
   wallJumpVelY : 2.4,
   shieldBreakVel : 2.5,
-  multiJump : false
+  multiJump : false,
+  ecbScale : 1.8
 }
 
 // start, length
@@ -109,7 +111,9 @@ frames[0] = {
   "CAPTUREDAMAGE" : 20,
   "WALLDAMAGE" : 50,
   "WALLTECH" : 26,
-  "WALLJUMP" : 40
+  "WALLJUMP" : 40,
+  "OTTOTTO" : 8,
+  "OTTOTTOWAIT" : 79
 }
 
 actionSounds[0] = {
@@ -124,6 +128,7 @@ actionSounds[0] = {
   "ESCAPEB" : [[33,"sworddraw"]],
   "ESCAPEF" : [[33,"sworddraw"]],
   "ESCAPEN" : [[2,"airdodge"],[18,"sworddraw"]],
+  "OTTOTTOWAIT" : [[0,"airdodge"]]
 }
 
 // HITBOX OFFSETS
