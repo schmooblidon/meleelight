@@ -1257,7 +1257,7 @@ marth.ATTACKDASH = {
       marth.WAIT.init(p);
       return true;
     }
-    else if (player[p].timer < 5 && player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].timer < 5 && (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0)){
       if (player[p].phys.cVel.x*player[p].phys.face > player[p].charAttributes.dMaxV){
         player[p].phys.cVel.x = player[p].charAttributes.dMaxV*player[p].phys.face;
       }
@@ -1313,6 +1313,19 @@ marth.ATTACKDASH = {
 
 // -------- SPECIALS -----------
 
+function dancingBladeCombo(p,min,max){
+  if (player[p].timer > 1){
+    if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) && !player[p].phys.dancingBladeDisable){
+      if (player[p].timer < min){
+        player[p].phys.dancingBladeDisable = true;
+      }
+      else if (player[p].timer <= max){
+        player[p].phys.dancingBlade = true;
+      }
+    }
+  }
+}
+
 marth.SIDESPECIALGROUND = {
   name : "SIDESPECIALGROUND",
   canPassThrough : false,
@@ -1324,53 +1337,25 @@ marth.SIDESPECIALGROUND = {
   init : function(p){
     player[p].actionState = "SIDESPECIALGROUND";
     player[p].timer = 0;
-    if (!player[p].phys.grounded){
-      if (player[p].phys.sideBJumpFlag){
-        player[p].phys.cVel.y = 1;
-        player[p].phys.sideBJumpFlag = false;
-      }
-      else {
-        player[p].phys.cVel.y = 0;
-      }
-      player[p].phys.fastfalled = false;
-      player[p].phys.cVel.x *= 0.8;
-    }
-    else {
-      player[p].phys.cVel.x *= 0.2;
-    }
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    player[p].phys.cVel.x *= 0.2;
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.sidespecial.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.sidespecial.id1;
-    player[p].hitboxes.id[2] = player[p].charHitboxes.sidespecial.id2;
-    player[p].hitboxes.id[3] = player[p].charHitboxes.sidespecial.id3;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbground.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbground.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbground.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbground.id3;
     sounds.shout6.play();
     marth.SIDESPECIALGROUND.main(p);
   },
   main : function(p){
     player[p].timer++;
+    dancingBladeCombo(p,8,26);
     if (!marth.SIDESPECIALGROUND.interrupt(p)){
       if (player[p].timer == 6){
         sounds.dancingBlade.play();
       }
-      if (!player[p].phys.grounded){
-        player[p].phys.cVel.y -= 0.06;
-        if (player[p].phys.cVel.x > 0){
-          player[p].phys.cVel.x -= 0.0025;
-          if (player[p].phys.cVel.x < 0){
-            player[p].phys.cVel.x = 0;
-          }
-        }
-        else {
-          player[p].phys.cVel.x += 0.0025;
-          if (player[p].phys.cVel.x > 0){
-            player[p].phys.cVel.x = 0
-          }
-        }
-      }
-      else {
-        reduceByTraction(p,true);
-      }
-
+      reduceByTraction(p,true);
       if (player[p].timer > 4 && player[p].timer < 12){
         drawVfx("swingSideB",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
       }
@@ -1396,8 +1381,551 @@ marth.SIDESPECIALGROUND = {
       }
       return true;
     }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALGROUND2UP.init(p);
+      }
+      else {
+        marth.SIDESPECIALGROUND2FORWARD.init(p);
+      }
+      return true;
+    }
     else {
       return false;
+    }
+  }
+}
+
+marth.SIDESPECIALGROUND2FORWARD = {
+  name : "SIDESPECIALGROUND2FORWARD",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALGROUND2FORWARD";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbground2forward.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbground2forward.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbground2forward.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbground2forward.id3;
+    sounds.shout7.play();
+    marth.SIDESPECIALGROUND2FORWARD.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,17,33);
+    if (!marth.SIDESPECIALGROUND2FORWARD.interrupt(p)){
+      reduceByTraction(p,true);
+      if (player[p].timer == 14){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade2.play();
+      }
+      if (player[p].timer > 14 && player[p].timer < 17){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 17){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 40){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALGROUND3UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALGROUND3DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALGROUND3FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+marth.SIDESPECIALGROUND2UP = {
+  name : "SIDESPECIALGROUND2UP",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALGROUND2UP";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbground2up.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbground2up.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbground2up.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbground2up.id3;
+    sounds.shout1.play();
+    marth.SIDESPECIALGROUND2UP.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,17,32);
+    if (!marth.SIDESPECIALGROUND2UP.interrupt(p)){
+      reduceByTraction(p,true);
+      if (player[p].timer == 12){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade2.play();
+      }
+      if (player[p].timer > 12 && player[p].timer < 16){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 16){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 40){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALGROUND3UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALGROUND3DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALGROUND3FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+marth.SIDESPECIALGROUND3DOWN = {
+  name : "SIDESPECIALGROUND3DOWN",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  setVelocities : [0,2.53,3.15,1.25,1.25,1.21,1.13,1.01,0.85,0.66,0.42,0.15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.32,-0.85,-1.20,-1.37,-1.37,-1.20,-0.85,-0.32,0.03,0.10,0.15,0.18,0.21,0.22,0.22,0.20,0.18,0.14,0.09],
+  init : function(p){
+    player[p].actionState = "SIDESPECIALGROUND3DOWN";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbground3down.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbground3down.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbground3down.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbground3down.id3;
+    sounds.shout8.play();
+    marth.SIDESPECIALGROUND3DOWN.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,19,35);
+    if (!marth.SIDESPECIALGROUND3DOWN.interrupt(p)){
+      player[p].phys.cVel.x = marth.SIDESPECIALGROUND3DOWN.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer == 15){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 15 && player[p].timer < 19){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 19){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 46){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALGROUND4UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALGROUND4DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALGROUND4FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+marth.SIDESPECIALGROUND3FORWARD = {
+  name : "SIDESPECIALGROUND3FORWARD",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  setVelocities : [0,0.41,0.80,0.58,0.20,0.10,0.03,0,-0.01,0,0,0,0,1.10,2.75,3.58,3.58,2.76,1.11,0.01,0,0,0,0,0,-0.01,-0.01,0,0,0,0,0.01,0.01,0.03,-0.01,-0.18,-0.48,-0.99,-1.39,-1.43,-1.12,-0.45,0,0,0,0],
+  init : function(p){
+    player[p].actionState = "SIDESPECIALGROUND3FORWARD";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbground3forward.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbground3forward.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbground3forward.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbground3forward.id3;
+    sounds.shout5.play();
+    marth.SIDESPECIALGROUND3FORWARD.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,16,37);
+    if (!marth.SIDESPECIALGROUND3FORWARD.interrupt(p)){
+      player[p].phys.cVel.x = marth.SIDESPECIALGROUND3FORWARD.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer == 11){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 11 && player[p].timer < 15){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 15){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 46){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALGROUND4UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALGROUND4DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALGROUND4FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+marth.SIDESPECIALGROUND3UP = {
+  name : "SIDESPECIALGROUND3UP",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  setVelocities : [0,0.37,0.91,1.18,1.18,0.9,0.46,0.22,0.25,0.55,1.02,1.32,1.35,1.11,0.88,0.76,0.54,0.20,0,0,0,0,0,0,0,0,0,-0.04,-0.12,-0.18,-0.24,-0.28,-0.32,-0.34,-0.35,-0.35,-0.34,-0.32,-0.28,-0.24,-0.18,-0.12,-0.04,0,0.01,0.01],
+  init : function(p){
+    player[p].actionState = "SIDESPECIALGROUND3UP";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbground3up.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbground3up.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbground3up.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbground3up.id3;
+    sounds.shout3.play();
+    marth.SIDESPECIALGROUND3UP.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,18,38);
+    if (!marth.SIDESPECIALGROUND3UP.interrupt(p)){
+      player[p].phys.cVel.x = marth.SIDESPECIALGROUND3UP.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer == 13){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 13 && player[p].timer < 18){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 18){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 46){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALGROUND4UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALGROUND4DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALGROUND4FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+marth.SIDESPECIALGROUND4DOWN = {
+  name : "SIDESPECIALGROUND4DOWN",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  setVelocities : [0,1.37,1.61,1.56,1.20,0.94,0.94,0.91,0.83,0.71,0.56,0.36,0.13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.01,-0.02,-0.02,-0.02,-0.02,-0.02,-0.02,-0.01,0,0,0,0,-0.02,-0.05,-0.08,-0.09,-0.10,-0.11,-0.10,-0.09,-0.07,-0.04],
+  init : function(p){
+    player[p].actionState = "SIDESPECIALGROUND4DOWN";
+    player[p].timer = 0;
+    turnOffHitboxes(p);
+    marth.SIDESPECIALGROUND4DOWN.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.SIDESPECIALGROUND4DOWN.interrupt(p)){
+      player[p].phys.cVel.x = marth.SIDESPECIALGROUND4DOWN.setVelocities[player[p].timer-1]*player[p].phys.face;
+      /*13-15
+      19-21
+      25-27
+      31-33
+      37-38*/
+      if (player[p].timer > 12 && player[p].timer < 39){
+        switch (player[p].timer%6){
+          case 1:
+            var hbName = "dbground4down"+Math.floor((player[p].timer-7)/6);
+            player[p].hitboxes.id[0] = player[p].charHitboxes[hbName].id0;
+            player[p].hitboxes.id[1] = player[p].charHitboxes[hbName].id1;
+            player[p].hitboxes.id[2] = player[p].charHitboxes[hbName].id2;
+            player[p].hitboxes.id[3] = player[p].charHitboxes[hbName].id3;
+            player[p].hitboxes.active = [true,true,true,true];
+            player[p].hitboxes.frame = 0;
+            sounds.dancingBlade2.play();
+            if (player[p].timer < 37){
+              sounds.shout6.play();
+            }
+            break;
+          case 2:
+          case 3:
+            player[p].hitboxes.frame++;
+            break;
+          case 4:
+            turnOffHitboxes(p);
+            break;
+          default:
+            break;
+        }
+      }
+      if (player[p].timer == 39){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 60){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+marth.SIDESPECIALGROUND4FORWARD = {
+  name : "SIDESPECIALGROUND4FORWARD",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  setVelocities : [0,0.38,1.33,1.49,1.56,1.53,1.41,1.19,0.88,0.62,0.50,0.40,0.31,0.25,0.21,0.19,0.19,0.21,0.22,0.21,0.19,0.18,0.16,0.14,0.11,0.08,0.05,0.02,0,0,0,0,0,0,0,0,0,0,-0.04,-0.11,-0.18,-0.22,-0.25,-0.27,-0.28,-0.27,-0.25,-0.22,-0.17,-0.11,-0.05],
+  init : function(p){
+    player[p].actionState = "SIDESPECIALGROUND4FORWARD";
+    player[p].timer = 0;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbground4forward.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbground4forward.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbground4forward.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbground4forward.id3;
+    sounds.shout2.play();
+    marth.SIDESPECIALGROUND4FORWARD.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.SIDESPECIALGROUND4FORWARD.interrupt(p)){
+      player[p].phys.cVel.x = marth.SIDESPECIALGROUND4FORWARD.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer == 23){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 23 && player[p].timer < 27){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 27){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 50){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+marth.SIDESPECIALGROUND4UP = {
+  name : "SIDESPECIALGROUND4UP",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  setVelocities : [0,0.87,0.91,0.94,0.97,0.98,0.99,0.98,0.97,0.95,0.92,0.88,0.83,0.77,0.70,0.60,0.49,0.39,0.32,0.26,0.23,0.21,0.21,0.23,0.27,0.30,0.25,0.10,0,0,0,0,0,0,0,0,0,0,0,-0.36,-0.93,-1.28,-1.39,-1.28,-0.93,-0.36,0,0,0,0],
+  init : function(p){
+    player[p].actionState = "SIDESPECIALGROUND4UP";
+    player[p].timer = 0;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbground4up.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbground4up.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbground4up.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbground4up.id3;
+    sounds.shout4.play();
+    marth.SIDESPECIALGROUND4UP.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.SIDESPECIALGROUND4UP.interrupt(p)){
+      player[p].phys.cVel.x = marth.SIDESPECIALGROUND4UP.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer == 20){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 20 && player[p].timer < 26){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 26){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 50){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+function dancingBladeAirMobility(p){
+  player[p].phys.cVel.y -= 0.06;
+  if (player[p].phys.cVel.y < -1.5){
+    player[p].phys.cVel.y = -1.5;
+  }
+  if (player[p].phys.cVel.x > 0){
+    player[p].phys.cVel.x -= 0.0025;
+    if (player[p].phys.cVel.x < 0){
+      player[p].phys.cVel.x = 0;
+    }
+  }
+  else {
+    player[p].phys.cVel.x += 0.0025;
+    if (player[p].phys.cVel.x > 0){
+      player[p].phys.cVel.x = 0
     }
   }
 }
@@ -1414,6 +1942,8 @@ marth.SIDESPECIALAIR = {
   init : function(p){
     player[p].actionState = "SIDESPECIALAIR";
     player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
     if (!player[p].phys.grounded){
       if (player[p].phys.sideBJumpFlag){
         player[p].phys.cVel.y = 1;
@@ -1429,37 +1959,22 @@ marth.SIDESPECIALAIR = {
       player[p].phys.cVel.x *= 0.2;
     }
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.sidespecial.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.sidespecial.id1;
-    player[p].hitboxes.id[2] = player[p].charHitboxes.sidespecial.id2;
-    player[p].hitboxes.id[3] = player[p].charHitboxes.sidespecial.id3;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbair.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbair.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbair.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbair.id3;
     sounds.shout6.play();
     marth.SIDESPECIALAIR.main(p);
   },
   main : function(p){
     player[p].timer++;
+    dancingBladeCombo(p,8,26);
     if (!marth.SIDESPECIALAIR.interrupt(p)){
       if (player[p].timer == 6){
         sounds.dancingBlade.play();
       }
-      if (!player[p].phys.grounded){
-        player[p].phys.cVel.y -= 0.06;
-        if (player[p].phys.cVel.x > 0){
-          player[p].phys.cVel.x -= 0.0025;
-          if (player[p].phys.cVel.x < 0){
-            player[p].phys.cVel.x = 0;
-          }
-        }
-        else {
-          player[p].phys.cVel.x += 0.0025;
-          if (player[p].phys.cVel.x > 0){
-            player[p].phys.cVel.x = 0
-          }
-        }
-      }
-      else {
-        reduceByTraction(p,true);
-      }
+
+      dancingBladeAirMobility(p);
 
       if (player[p].timer > 4 && player[p].timer < 12){
         drawVfx("swingSideB",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
@@ -1486,12 +2001,563 @@ marth.SIDESPECIALAIR = {
       }
       return true;
     }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALAIR2UP.init(p);
+      }
+      else {
+        marth.SIDESPECIALAIR2FORWARD.init(p);
+      }
+      return true;
+    }
     else {
       return false;
     }
   },
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND";
+  }
+}
+
+marth.SIDESPECIALAIR2FORWARD = {
+  name : "SIDESPECIALAIR2FORWARD",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALAIR2FORWARD";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbair2forward.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbair2forward.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbair2forward.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbair2forward.id3;
+    sounds.shout7.play();
+    marth.SIDESPECIALAIR2FORWARD.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,17,33);
+    if (!marth.SIDESPECIALAIR2FORWARD.interrupt(p)){
+      dancingBladeAirMobility(p);
+      if (player[p].timer == 14){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade2.play();
+      }
+      if (player[p].timer > 14 && player[p].timer < 17){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 17){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 40){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALAIR3UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALAIR3DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALAIR3FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+    player[p].actionState = "SIDESPECIALGROUND2FORWARD";
+  }
+}
+
+marth.SIDESPECIALAIR2UP = {
+  name : "SIDESPECIALAIR2UP",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALAIR2UP";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbair2up.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbair2up.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbair2up.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbair2up.id3;
+    sounds.shout1.play();
+    marth.SIDESPECIALAIR2UP.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,17,32);
+    if (!marth.SIDESPECIALAIR2UP.interrupt(p)){
+      dancingBladeAirMobility(p);
+      if (player[p].timer == 12){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade2.play();
+      }
+      if (player[p].timer > 12 && player[p].timer < 16){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 16){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 40){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALAIR3UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALAIR3DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALAIR3FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+    player[p].actionState = "SIDESPECIALGROUND2UP";
+  }
+}
+
+marth.SIDESPECIALAIR3DOWN = {
+  name : "SIDESPECIALAIR3DOWN",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALAIR3DOWN";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbair3down.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbair3down.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbair3down.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbair3down.id3;
+    sounds.shout8.play();
+    marth.SIDESPECIALAIR3DOWN.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,19,35);
+    if (!marth.SIDESPECIALAIR3DOWN.interrupt(p)){
+      dancingBladeAirMobility(p);
+      player[p].phys.cVel.x = 0;
+      if (player[p].timer == 15){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 15 && player[p].timer < 19){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 19){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 46){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALAIR4UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALAIR4DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALAIR4FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+    player[p].actionState = "SIDESPECIALGROUND3DOWN";
+  }
+}
+
+marth.SIDESPECIALAIR3FORWARD = {
+  name : "SIDESPECIALAIR3FORWARD",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALAIR3FORWARD";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbair3forward.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbair3forward.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbair3forward.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbair3forward.id3;
+    sounds.shout5.play();
+    marth.SIDESPECIALAIR3FORWARD.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,16,37);
+    if (!marth.SIDESPECIALAIR3FORWARD.interrupt(p)){
+      dancingBladeAirMobility(p);
+      player[p].phys.cVel.x = 0;
+      if (player[p].timer == 11){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 11 && player[p].timer < 15){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 15){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 46){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALAIR4UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALAIR4DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALAIR4FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+    player[p].actionState = "SIDESPECIALGROUND3FORWARD";
+  }
+}
+
+marth.SIDESPECIALAIR3UP = {
+  name : "SIDESPECIALAIR3UP",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALAIR3UP";
+    player[p].timer = 0;
+    player[p].phys.dancingBlade = false;
+    player[p].phys.dancingBladeDisable = false;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbair3up.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbair3up.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbair3up.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbair3up.id3;
+    sounds.shout3.play();
+    marth.SIDESPECIALAIR3UP.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    dancingBladeCombo(p,18,38);
+    if (!marth.SIDESPECIALAIR3UP.interrupt(p)){
+      dancingBladeAirMobility(p);
+      player[p].phys.cVel.x = 0;
+      if (player[p].timer == 13){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 13 && player[p].timer < 18){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 18){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 46){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else if (player[p].phys.dancingBlade){
+      if (player[p].inputs.lStickAxis[0].y > 0.56){
+        marth.SIDESPECIALAIR4UP.init(p);
+      }
+      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+        marth.SIDESPECIALAIR4DOWN.init(p);
+      }
+      else {
+        marth.SIDESPECIALAIR4FORWARD.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+    player[p].actionState = "SIDESPECIALGROUND3UP";
+  }
+}
+
+marth.SIDESPECIALAIR4DOWN = {
+  name : "SIDESPECIALAIR4DOWN",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALAIR4DOWN";
+    player[p].timer = 0;
+    turnOffHitboxes(p);
+    marth.SIDESPECIALAIR4DOWN.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.SIDESPECIALAIR4DOWN.interrupt(p)){
+      dancingBladeAirMobility(p);
+      player[p].phys.cVel.x = 0;
+      if (player[p].timer > 12 && player[p].timer < 39){
+        switch (player[p].timer%6){
+          case 1:
+            var hbName = "dbair4down"+Math.floor((player[p].timer-7)/6);
+            player[p].hitboxes.id[0] = player[p].charHitboxes[hbName].id0;
+            player[p].hitboxes.id[1] = player[p].charHitboxes[hbName].id1;
+            player[p].hitboxes.id[2] = player[p].charHitboxes[hbName].id2;
+            player[p].hitboxes.id[3] = player[p].charHitboxes[hbName].id3;
+            player[p].hitboxes.active = [true,true,true,true];
+            player[p].hitboxes.frame = 0;
+            sounds.dancingBlade2.play();
+            if (player[p].timer < 37){
+              sounds.shout6.play();
+            }
+            break;
+          case 2:
+          case 3:
+            player[p].hitboxes.frame++;
+            break;
+          case 4:
+            turnOffHitboxes(p);
+            break;
+          default:
+            break;
+        }
+      }
+      if (player[p].timer == 39){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 60){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+    player[p].actionState = "SIDESPECIALGROUND4DOWN";
+  }
+}
+
+marth.SIDESPECIALAIR4FORWARD = {
+  name : "SIDESPECIALAIR4FORWARD",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALAIR4FORWARD";
+    player[p].timer = 0;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbair4forward.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbair4forward.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbair4forward.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbair4forward.id3;
+    sounds.shout2.play();
+    marth.SIDESPECIALAIR4FORWARD.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.SIDESPECIALAIR4FORWARD.interrupt(p)){
+      dancingBladeAirMobility(p);
+      player[p].phys.cVel.x = 0;
+      if (player[p].timer == 23){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 23 && player[p].timer < 27){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 27){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 50){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+    player[p].actionState = "SIDESPECIALGROUND4FORWARD";
+  }
+}
+
+marth.SIDESPECIALAIR4UP = {
+  name : "SIDESPECIALAIR4UP",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 1,
+  init : function(p){
+    player[p].actionState = "SIDESPECIALAIR4UP";
+    player[p].timer = 0;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dbair4up.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dbair4up.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dbair4up.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.dbair4up.id3;
+    sounds.shout4.play();
+    marth.SIDESPECIALAIR4UP.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.SIDESPECIALAIR4UP.interrupt(p)){
+      dancingBladeAirMobility(p);
+      player[p].phys.cVel.x = 0;
+      if (player[p].timer == 20){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+        sounds.dancingBlade.play();
+      }
+      if (player[p].timer > 20 && player[p].timer < 26){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer == 26){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 50){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  land : function(p){
+    player[p].actionState = "SIDESPECIALGROUND4UP";
   }
 }
 

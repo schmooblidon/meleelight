@@ -119,6 +119,9 @@ sounds = {
   dancingBlade : new Howl({
     src: ['sfx/dancing-blade.wav']
   }),
+  dancingBlade2 : new Howl({
+    src : ['sfx/dancing-blade2.wav']
+  }),
   shieldoff : new Howl({
     src: ['sfx/shieldoff.wav'],
     volume: 0.4
@@ -143,6 +146,12 @@ sounds = {
   }),
   shout6 : new Howl({
     src: ['sfx/shout6.wav']
+  }),
+  shout7 : new Howl({
+    src : ['sfx/shout7.wav']
+  }),
+  shout8 : new Howl({
+    src : ['sfx/shout8.wav']
   }),
   sword1 : new Howl({
     src: ['sfx/sword1.wav'],
