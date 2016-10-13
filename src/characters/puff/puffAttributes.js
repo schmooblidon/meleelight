@@ -110,7 +110,9 @@ charAttributes[1] = {
   "CAPTUREDAMAGE" : 20,
   "WALLDAMAGE" : 31,
   "WALLTECH" : 31,
-  "WALLJUMP" : 40
+  "WALLJUMP" : 40,
+  "OTTOTTO" : 12,
+  "OTTOTTOWAIT" : 63
   }
 
   actionSounds[1] = {
@@ -125,6 +127,7 @@ charAttributes[1] = {
   "ESCAPEB" : [],
   "ESCAPEF" : [],
   "ESCAPEN" : [],
+  "OTTOTTOWAIT" : []
   }
 
 // HITBOX OFFSETS

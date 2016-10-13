@@ -3819,7 +3819,9 @@ baseActionStates = {
   init : function(p){
     player[p].actionState = "OTTOTTOWAIT";
     player[p].timer = 1;
-    sounds[actionSounds[cS[p]].OTTOTTOWAIT[0][1]].play();
+    if (cS[p] != 1){
+      sounds[actionSounds[cS[p]].OTTOTTOWAIT[0][1]].play();
+    }
     player[p].phys.cVel.x = 0;
     aS[cS[p]].OTTOTTOWAIT.main(p);
   },

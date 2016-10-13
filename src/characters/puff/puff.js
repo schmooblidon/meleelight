@@ -18,24 +18,6 @@ puff.FURAFURA = {
     //*cough*BITES*cough*
   }
 }
-puff.OTTOTTO = {
-  name : "OTTOTTO",
-  init : function(p){
-    puff.WAIT.init(p);
-  }
-}
-puff.MISSFOOT = {
-  name : "MISSFOOT",
-  init : function(p){
-    puff.FALL.init(p);
-  }
-}
-puff.DOWNDAMAGE = {
-  name : "DOWNDAMAGE",
-  init : function(p){
-    puff.FALL.init(p);
-  }
-}
 
 puff.JUMPAERIALF = {
   name : "JUMPAERIALF",
