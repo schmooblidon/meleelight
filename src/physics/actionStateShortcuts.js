@@ -351,20 +351,10 @@ function checkForSpecials(p){
         return [true,"UPSPECIAL"];
       }
       else if (player[p].inputs.lStickAxis[0].y < -0.58){
-        if (cS[p] == 2 || cS[p] == 0){
-          return [true,"DOWNSPECIALGROUND"];
-        }
-        else {
-          return [true,"DOWNSPECIAL"];
-        }
+        return [true,"DOWNSPECIALGROUND"];
       }
       else {
-        if (cS[p] == 2 || cS[p] == 0){
-          return [true,"NEUTRALSPECIALGROUND"];
-        }
-        else {
-          return [false,false];
-        }
+        return [true,"NEUTRALSPECIALGROUND"];
       }
     }
     else {
@@ -379,12 +369,7 @@ function checkForSpecials(p){
         return [true,"SIDESPECIALAIR"];
       }
       else {
-        if (cS[p] == 2 || cS[p] == 0){
-          return [true,"NEUTRALSPECIALAIR"];
-        }
-        else {
-          return [false,false];
-        }
+        return [true,"NEUTRALSPECIALAIR"];
       }
     }
   }
