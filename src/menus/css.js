@@ -2,6 +2,8 @@ var marthPic = new Image();
 marthPic.src = "assets/css/marth.png";
 var puffPic = new Image();
 puffPic.src = "assets/css/puff.png";
+var foxPic = new Image();
+foxPic.src = "assets/css/fox.png";
 var handPoint = new Image();
 handPoint.src = "assets/hand/handpoint.png";
 var handOpen = new Image();
@@ -12,7 +14,7 @@ handGrab.src = "assets/hand/handgrab.png";
 choosingTag = -1;
 handType = [0,0,0,0];
 handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
-tokenPos = [new Vec2D(518,268),new Vec2D(558,268),new Vec2D(518,308),new Vec2D(558,308)];
+tokenPos = [new Vec2D(475,268),new Vec2D(515,268),new Vec2D(475,308),new Vec2D(515,308)];
 chosenChar = [0,0,0,0];
 tokenGrabbed = [false,false,false,false];
 whichTokenGrabbed = [-1,-1,-1,-1];
@@ -63,7 +65,8 @@ function cssControls(i){
         handType[i] = 2;
         tokenPos[whichTokenGrabbed[i]] = new Vec2D(handPos[i].x,handPos[i].y);
         if (handPos[i].y > 240 && handPos[i].y < 335){
-            if (handPos[i].x > 495 && handPos[i].x < 590){
+          // - 43
+            if (handPos[i].x > 452 && handPos[i].x < 547){
               if (chosenChar[whichTokenGrabbed[i]] != 0){
                 chosenChar[whichTokenGrabbed[i]] = 0;
                 cS[whichTokenGrabbed[i]] = 0;
@@ -74,12 +77,12 @@ function cssControls(i){
               if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
                 tokenGrabbed[whichTokenGrabbed[i]] = false;
                 occupiedToken[whichTokenGrabbed[i]] = false;
-                tokenPos[whichTokenGrabbed[i]] = new Vec2D(518+(whichTokenGrabbed[i]%2)*40,268+(whichTokenGrabbed[i]>1?40:0));
+                tokenPos[whichTokenGrabbed[i]] = new Vec2D(473+(whichTokenGrabbed[i]%2)*40,268+(whichTokenGrabbed[i]>1?40:0));
                 whichTokenGrabbed[i] = -1;
                 sounds.marth.play();
               }
             }
-            else if (handPos[i].x > 590 && handPos[i].x < 685){
+            else if (handPos[i].x > 547 && handPos[i].x < 642){
               if (chosenChar[whichTokenGrabbed[i]] != 1){
                 chosenChar[whichTokenGrabbed[i]] = 1;
                 cS[whichTokenGrabbed[i]] = 1;
@@ -91,9 +94,26 @@ function cssControls(i){
 
                 tokenGrabbed[whichTokenGrabbed[i]] = false;
                 occupiedToken[whichTokenGrabbed[i]] = false;
-                tokenPos[whichTokenGrabbed[i]] = new Vec2D(611+(whichTokenGrabbed[i]%2)*40,268+(whichTokenGrabbed[i]>1?40:0));
+                tokenPos[whichTokenGrabbed[i]] = new Vec2D(568+(whichTokenGrabbed[i]%2)*40,268+(whichTokenGrabbed[i]>1?40:0));
                 whichTokenGrabbed[i] = -1;
                 sounds.jigglypuff.play();
+              }
+            }
+            else if (handPos[i].x > 642 && handPos[i].x < 737){
+              if (chosenChar[whichTokenGrabbed[i]] != 2){
+                chosenChar[whichTokenGrabbed[i]] = 2;
+                cS[whichTokenGrabbed[i]] = 2;
+                player[whichTokenGrabbed[i]].charAttributes = chars[cS[whichTokenGrabbed[i]]].attributes;
+                player[whichTokenGrabbed[i]].charHitboxes = chars[cS[whichTokenGrabbed[i]]].hitboxes;
+                sounds.menuSelect.play();
+              }
+              if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
+
+                tokenGrabbed[whichTokenGrabbed[i]] = false;
+                occupiedToken[whichTokenGrabbed[i]] = false;
+                tokenPos[whichTokenGrabbed[i]] = new Vec2D(663+(whichTokenGrabbed[i]%2)*40,268+(whichTokenGrabbed[i]>1?40:0));
+                whichTokenGrabbed[i] = -1;
+                sounds.fox.play();
               }
             }
         }
@@ -347,17 +367,17 @@ function drawCSS(){
   bgGrad.addColorStop(0,"rgb(41, 47, 68)");
   bgGrad.addColorStop(1,"rgb(85, 95, 128)");
   c.lineWidth = 2;
-  for (var j=0;j<2;j++){
+  for (var j=0;j<3;j++){
     c.fillStyle=bgGrad;
     c.beginPath();
-    c.moveTo(500+j*95,265);
-    c.bezierCurveTo(500+j*95,245,500+j*95,245,520+j*95,245);
-    c.lineTo(565+j*95,245);
-    c.bezierCurveTo(585+j*95,245,585+j*95,245,585+j*95,265);
-    c.lineTo(585+j*95,310);
-    c.bezierCurveTo(585+j*95,330,585+j*95,330,565+j*95,330);
-    c.lineTo(520+j*95,330);
-    c.bezierCurveTo(500+j*95,330,500+j*95,330,500+j*95,310);
+    c.moveTo(457+j*95,265);
+    c.bezierCurveTo(457+j*95,245,457+j*95,245,477+j*95,245);
+    c.lineTo(522+j*95,245);
+    c.bezierCurveTo(542+j*95,245,542+j*95,245,542+j*95,265);
+    c.lineTo(542+j*95,310);
+    c.bezierCurveTo(542+j*95,330,542+j*95,330,522+j*95,330);
+    c.lineTo(477+j*95,330);
+    c.bezierCurveTo(457+j*95,330,457+j*95,330,457+j*95,310);
     c.closePath();
     c.fill();
     c.stroke();
@@ -368,31 +388,38 @@ function drawCSS(){
       case 1:
         var add = 7;
         break;
+      case 2:
+        var add = 0;
+        break;
       default:
         var add = 0;
         break;
     }
     c.fillStyle = "black";
     c.beginPath();
-    c.moveTo(583+j*95,305-add);
-    c.lineTo(583+j*95,310-add);
-    c.bezierCurveTo(583+j*95,328,583+j*95,328,565+j*95,328);
-    c.lineTo(520+j*95,328);
-    c.bezierCurveTo(502+j*95,328,502+j*95,328,502+j*95,310-add);
-    c.lineTo(502+j*95,305-add);
+    c.moveTo(540+j*95,305-add);
+    c.lineTo(540+j*95,310-add);
+    c.bezierCurveTo(540+j*95,328,540+j*95,328,522+j*95,328);
+    c.lineTo(487+j*95,328);
+    c.bezierCurveTo(459+j*95,328,459+j*95,328,459+j*95,310-add);
+    c.lineTo(459+j*95,305-add);
     c.closePath();
     c.fill();
     c.fillStyle = "rgb(180, 180, 180)";
     c.font = "700 18px Arial";
     switch (j){
       case 0:
-        c.fillText("MARTH",510+j*95,323);
-        c.drawImage(marthPic, 502+j*95, 247, 81, 58);
+        c.fillText("MARTH",467+j*95,323);
+        c.drawImage(marthPic, 459+j*95, 247, 81, 58);
         break;
       case 1:
-        c.fillText("JIGGLY-",507+j*95,313);
-        c.fillText("PUFF",520+j*95,326);
-        c.drawImage(puffPic, 502+j*95, 247, 81, 51);
+        c.fillText("JIGGLY-",464+j*95,313);
+        c.fillText("PUFF",477+j*95,326);
+        c.drawImage(puffPic, 459+j*95, 247, 81, 51);
+        break;
+      case 2:
+        c.fillText("  F O X ",467+j*95,323);
+        c.drawImage(foxPic, 459+j*95, 247, 81, 58);
         break;
       default:
         break;
@@ -525,6 +552,9 @@ function drawCSS(){
         break;
       case 1:
         var text = "Jigglypuff";
+        break;
+      case 2:
+        var text = "Fox";
         break;
       default:
         var text = "Unknown";

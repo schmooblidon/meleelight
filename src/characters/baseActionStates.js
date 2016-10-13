@@ -1928,6 +1928,7 @@ baseActionStates = {
     player[p].timer++;
     playSounds("DEAD",p);
     if (!aS[cS[p]].DEADLEFT.interrupt(p)){
+      player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
         if (isFinalDeath()){
@@ -1981,6 +1982,7 @@ baseActionStates = {
     player[p].timer++;
     playSounds("DEAD",p);
     if (!aS[cS[p]].DEADRIGHT.interrupt(p)){
+      player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
         if (isFinalDeath()){
@@ -2034,6 +2036,7 @@ baseActionStates = {
     player[p].timer++;
     playSounds("DEAD",p);
     if (!aS[cS[p]].DEADUP.interrupt(p)){
+      player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
         if (isFinalDeath()){
@@ -2087,6 +2090,7 @@ baseActionStates = {
     player[p].timer++;
     playSounds("DEAD",p);
     if (!aS[cS[p]].DEADDOWN.interrupt(p)){
+      player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
         if (isFinalDeath()){
@@ -2141,7 +2145,7 @@ baseActionStates = {
   main : function(p){
     player[p].timer+= 1;
     if (!aS[cS[p]].REBIRTH.interrupt(p)){
-
+      player[p].phys.outOfCameraTimer = 0;
     }
   },
   interrupt : function(p){
@@ -2167,7 +2171,7 @@ baseActionStates = {
     player[p].timer+= 1;
     player[p].spawnWaitTime++;
     if (!aS[cS[p]].REBIRTHWAIT.interrupt(p)){
-
+      player[p].phys.outOfCameraTimer = 0;
     }
   },
   interrupt : function(p){
@@ -3929,6 +3933,7 @@ baseActionStates = {
     aS[cS[p]].SLEEP.main(p);
   },
   main : function(p){
+    player[p].phys.outOfCameraTimer = 0;
   },
   interrupt : function(p){
     return false;

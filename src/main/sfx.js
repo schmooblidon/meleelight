@@ -393,6 +393,9 @@ sounds = {
   }),
   outofcamera : new Howl({
     src : ['sfx/outofcamera.wav']
+  }),
+  fox : new Howl({
+    src : ['sfx/fox.wav']
   })
 }
 
