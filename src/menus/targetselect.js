@@ -21,11 +21,17 @@ function tssControls(i){
       }
     }
     if ((player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]) || (player[i].inputs.l[0] && !player[i].inputs.l[1])){
-      cS[i] = 1-cS[i];
+      cS[i]--;
+      if (cS[i] < 0){
+        cS[i] = 2;
+      }
       sounds.menuSelect.play();
     }
     else if ((player[i].inputs.dpaddown[0] && !player[i].inputs.dpaddown[1]) || (player[i].inputs.r[0] && !player[i].inputs.r[1])){
-      cS[i] = 1-cS[i];
+      cS[i]++;
+      if (cS[i] > 2){
+        cS[i] = 0;
+      }
       sounds.menuSelect.play();
     }
     if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
@@ -434,6 +440,9 @@ function drawTSS(){
     case 1:
       var add = 7;
       break;
+    case 2:
+      var add = 0;
+      break;
     default:
       var add = 0;
       break;
@@ -460,6 +469,10 @@ function drawTSS(){
       c.fillText("JIGGLY-",107,578);
       c.fillText("PUFF",120,591);
       c.drawImage(puffPic, 102, 512, 81, 51);
+      break;
+    case 2:
+      c.fillText("  F O X ",110,588);
+      c.drawImage(foxPic, 102, 512, 81, 58);
       break;
     default:
       break;
