@@ -1166,6 +1166,7 @@ puff.NEUTRALSPECIALAIR = {
     player[p].phys.rollOutWallHit = false;
     player[p].phys.rollOutPlayerHitTimer = 0;
     player[p].phys.cVel.y = Math.max(-1.3,player[p].phys.cVel.y);
+    sounds.rolloutshout.play();
     turnOffHitboxes(p);
     puff.NEUTRALSPECIALAIR.main(p);
   },
@@ -1184,12 +1185,15 @@ puff.NEUTRALSPECIALAIR = {
         player[p].phys.rollOutChargeAttempt = false;
         player[p].phys.rollOutVel = Math.max(0.5,Math.min(4.1,(0.2+(0.09*player[p].phys.rollOutCharge))));
         player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
+        sounds.rolloutlaunch.play();
+        sounds.rollouttickair.play();
       }
     }
     if (player[p].phys.rollOutCharging || player[p].phys.rollOutDistance < 100 || player[p].phys.rollOutPlayerHit){
       player[p].timer += 1+(2*(player[p].phys.rollOutCharge/44));
       if (player[p].timer > 39){
         player[p].timer = 16;
+        sounds.rollouttickair.play();
       }
     }
     else {
@@ -1243,6 +1247,7 @@ puff.NEUTRALSPECIALAIR = {
       player[p].phys.cVel.x *= -0.75;
       player[p].timer = 16;
       player[p].phys.face *= -1;
+      sounds.rollouthit.play();
       if (wallFace == "R"){
         drawVfx("wallBounce",new Vec2D(stage.wallR[wallNum][1].x,player[p].phys.ECBp[3].y),1,1);
       }
@@ -1257,6 +1262,7 @@ puff.NEUTRALSPECIALAIR = {
     player[p].phys.cVel.x *= -0.13;
     player[p].phys.cVel.y = 1.6
     player[p].phys.grounded = false;
+    sounds.rollouthit.play();
     turnOffHitboxes(p);
   }
 }
@@ -1280,6 +1286,7 @@ puff.NEUTRALSPECIALGROUND = {
     player[p].phys.rollOutWallHit = false;
     player[p].phys.rollOutPlayerHitTimer = 0;
     player[p].phys.cVel.x = 0.0001*player[p].phys.face;
+    sounds.rolloutshout.play();
     turnOffHitboxes(p);
     puff.NEUTRALSPECIALGROUND.main(p);
   },
@@ -1298,12 +1305,16 @@ puff.NEUTRALSPECIALGROUND = {
         player[p].phys.rollOutCharging = false;
         player[p].phys.rollOutChargeAttempt = false;
         player[p].phys.rollOutVel = Math.min(4.2,(0.3+(0.09*player[p].phys.rollOutCharge)));
+        sounds.stronghit.play();
+        sounds.rolloutlaunch.play();
+        sounds.rollouttickground.play();
       }
     }
     if (player[p].phys.rollOutCharging || player[p].phys.rollOutDistance < 100){
       player[p].timer += 1+(2*(player[p].phys.rollOutCharge/44));
       if (player[p].timer > 45){
         player[p].timer = 16;
+        sounds.rollouttickground.play();
       }
     }
     else {
@@ -1365,6 +1376,7 @@ puff.NEUTRALSPECIALGROUNDTURN = {
     player[p].timer = 0;
     player[p].phys.rollOutTurnTimer = 0;
     player[p].phys.face *= -1;
+    sounds.rolloutlaunch.play();
     turnOffHitboxes(p);
     puff.NEUTRALSPECIALGROUNDTURN.main(p);
   },
@@ -1389,6 +1401,7 @@ puff.NEUTRALSPECIALGROUNDTURN = {
       player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
       player[p].actionState = "NEUTRALSPECIALGROUND";
       player[p].timer = 15+player[p].timer;
+      sounds.stronghit.play();
       return true;
     }
     else {

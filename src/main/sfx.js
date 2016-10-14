@@ -396,6 +396,21 @@ sounds = {
   }),
   fox : new Howl({
     src : ['sfx/fox.wav']
+  }),
+  rolloutshout : new Howl({
+    src : ['sfx/rolloutshout.wav']
+  }),
+  rollouttickground : new Howl({
+    src : ['sfx/rollouttickground.wav']
+  }),
+  rollouttickair : new Howl({
+    src : ['sfx/rollouttickair.wav']
+  }),
+  rolloutlaunch : new Howl({
+    src : ['sfx/rolloutlaunch.wav']
+  }),
+  rollouthit : new Howl({
+    src : ['sfx/rollouthit.wav']
   })
 }
 
