@@ -145,4 +145,6 @@ function playerObject(character,pos,face){
   this.laserCombo = false;
   this.rotation = 0;
   this.rotationPoint = new Vec2D(0,0);
+  this.colourOverlay = "";
+  this.colourOverlayBool = false;
 }

@@ -14,6 +14,7 @@ function land(i,y,t,j){
   player[i].phys.onLedge = -1;
   player[i].rotation = 0;
   player[i].rotationPoint = new Vec2D(0,0);
+  player[i].colourOverlayBool = false;
   player[i].hitboxes.active = [false,false,false,false];
   switch (aS[cS[i]][player[i].actionState].landType){
     case 0:

@@ -97,6 +97,9 @@ function renderPlayer(i){
     else if (player[i].actionState == "FURAFURA" && player[i].timer % 30 < 6){
       col = palettes[pPal[i]][3];
     }
+    else if (player[i].colourOverlayBool){
+      col = player[i].colourOverlay;
+    }
     else {
       col = palettes[pPal[i]][0];
     }

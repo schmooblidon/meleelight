@@ -1803,6 +1803,7 @@ baseActionStates = {
     player[p].phys.ledgeHangTimer = 0;
     player[p].rotation = 0;
     player[p].rotationPoint = new Vec2D(0,0);
+    player[p].colourOverlayBool = false;
     turnOffHitboxes(p);
     drawVfx("cliffcatchspark",new Vec2D(stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x,stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y),player[p].phys.face);
     aS[cS[p]].CLIFFCATCH.main(p);
@@ -2213,6 +2214,7 @@ baseActionStates = {
     player[p].phys.grabbedBy = -1;
     player[p].rotation = 0;
     player[p].rotationPoint = new Vec2D(0,0);
+    player[p].colourOverlayBool = false;
     if (drawStuff){
       // drawVfx("hitSparks",player[p].hit.hitPoint,player[p].phys.face);
       // drawVfx("hitFlair",player[p].hit.hitPoint,player[p].phys.face);
@@ -2347,6 +2349,7 @@ baseActionStates = {
     player[p].phys.grabbedBy = -1;
     player[p].rotation = 0;
     player[p].rotationPoint = new Vec2D(0,0);
+    player[p].colourOverlayBool = false;
     turnOffHitboxes(p);
     aS[cS[p]].DAMAGEN2.main(p);
   },

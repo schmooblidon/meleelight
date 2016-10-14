@@ -1165,18 +1165,27 @@ puff.NEUTRALSPECIALAIR = {
     player[p].phys.rollOutPlayerHit = false;
     player[p].phys.rollOutWallHit = false;
     player[p].phys.rollOutPlayerHitTimer = 0;
+    player[p].colourOverlay = "rgba(255, 248, 88, 0.83)";
     player[p].phys.cVel.y = Math.max(-1.3,player[p].phys.cVel.y);
     sounds.rolloutshout.play();
     turnOffHitboxes(p);
     puff.NEUTRALSPECIALAIR.main(p);
   },
   main : function(p){
+    if (player[p].timer == 15){
+      drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+    }
     if (player[p].timer >= 16 && player[p].timer <= 45 && player[p].phys.rollOutChargeAttempt){
       if (player[p].inputs.b[0]){
         player[p].phys.rollOutCharging = true;
         player[p].phys.rollOutCharge++;
         if (player[p].phys.rollOutCharge > 44){
           player[p].phys.rollOutCharge = 44;
+        }
+        if (player[p].phys.rollOutCharge >= 21){
+          if (player[p].timer == 16){
+            drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+          }
         }
       }
       else {
@@ -1195,6 +1204,10 @@ puff.NEUTRALSPECIALAIR = {
       }
     }
     if (player[p].phys.rollOutCharging || player[p].phys.rollOutDistance < 100 || player[p].phys.rollOutPlayerHit){
+      player[p].colourOverlayBool = false;
+      if (player[p].timer >= 24 && player[p].timer <= 28 && player[p].phys.rollOutCharge >= 21 && !player[p].phys.rollOutPlayerHit){
+        player[p].colourOverlayBool = true;
+      }
       player[p].timer += 1+(2*(player[p].phys.rollOutCharge/44));
       if (player[p].timer > 39){
         player[p].timer = 16;
@@ -1216,10 +1229,16 @@ puff.NEUTRALSPECIALAIR = {
           player[p].hitboxes.id[0].dmg = newDmg;
           player[p].hitboxes.id[1].dmg = newDmg;
           player[p].hitboxes.id[2].dmg = newDmg;
+          if (player[p].phys.rollOutCharge >= 21){
+            if (player[p].phys.rollOutDistance % 10 == 0){
+              drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+            }
+          }
         }
         if (player[p].phys.rollOutDistance > 100 && !player[p].phys.rollOutPlayerHit){
           player[p].timer = 39;
           player[p].phys.cVel.x *= 0.6;
+          player[p].colourOverlayBool = false;
           turnOffHitboxes(p);
         }
       }
@@ -1274,6 +1293,7 @@ puff.NEUTRALSPECIALAIR = {
     player[p].phys.cVel.y = 1.6
     player[p].phys.grounded = false;
     sounds.rollouthit.play();
+    player[p].colourOverlayBool = false;
     turnOffHitboxes(p);
   }
 }
@@ -1296,18 +1316,27 @@ puff.NEUTRALSPECIALGROUND = {
     player[p].phys.rollOutPlayerHit = false;
     player[p].phys.rollOutWallHit = false;
     player[p].phys.rollOutPlayerHitTimer = 0;
+    player[p].colourOverlay = "rgba(255, 248, 88, 0.83)";
     player[p].phys.cVel.x = 0.0001*player[p].phys.face;
     sounds.rolloutshout.play();
     turnOffHitboxes(p);
     puff.NEUTRALSPECIALGROUND.main(p);
   },
   main : function(p){
+    if (player[p].timer == 15){
+      drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+    }
     if (player[p].timer >= 16 && player[p].timer <= 45 && player[p].phys.rollOutChargeAttempt){
       if (player[p].inputs.b[0]){
         player[p].phys.rollOutCharging = true;
         player[p].phys.rollOutCharge++;
         if (player[p].phys.rollOutCharge > 44){
           player[p].phys.rollOutCharge = 44;
+        }
+        if (player[p].phys.rollOutCharge >= 19){
+          if (player[p].timer == 16){
+            drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+          }
         }
         player[p].phys.cVel.x = 0.0001*player[p].phys.face;
       }
@@ -1330,6 +1359,10 @@ puff.NEUTRALSPECIALGROUND = {
     }
     if (player[p].phys.rollOutCharging || player[p].phys.rollOutDistance < 100){
       player[p].timer += 1+(2*(player[p].phys.rollOutCharge/44));
+      player[p].colourOverlayBool = false;
+      if (player[p].timer >= 28 && player[p].timer <= 34 && player[p].phys.rollOutCharge >= 19 && !player[p].phys.rollOutPlayerHit){
+        player[p].colourOverlayBool = true;
+      }
       if (player[p].timer > 45){
         player[p].timer = 16;
         sounds.rollouttickground.play();
@@ -1347,16 +1380,23 @@ puff.NEUTRALSPECIALGROUND = {
           player[p].hitboxes.id[0].dmg = newDmg;
           player[p].hitboxes.id[1].dmg = newDmg;
           player[p].hitboxes.id[2].dmg = newDmg;
+          if (player[p].phys.rollOutCharge >= 19){
+            if (player[p].phys.rollOutDistance % 10 == 0){
+              drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+            }
+          }
         }
         if (player[p].phys.rollOutDistance > 100){
           turnOffHitboxes(p);
           player[p].timer = 46;
           player[p].phys.cVel.x *= 0.6;
+          player[p].colourOverlayBool = false;
         }
         else {
           player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
           if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.49){
             puff.NEUTRALSPECIALGROUNDTURN.init(p);
+            player[p].colourOverlayBool = false;
           }
         }
       }
@@ -1407,6 +1447,9 @@ puff.NEUTRALSPECIALGROUNDTURN = {
     player[p].phys.rollOutDistance++;
     if (!puff.NEUTRALSPECIALGROUNDTURN.interrupt(p)){
       player[p].phys.cVel.x = (player[p].phys.rollOutVel*player[p].phys.face*-1)-(player[p].phys.rollOutVel*0.045*player[p].phys.rollOutTurnTimer*player[p].phys.face*-1);
+      if (player[p].phys.rollOutDistance % 5 == 0){
+        drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+      }
     }
   },
   interrupt : function(p){
