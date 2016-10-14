@@ -369,6 +369,12 @@ function checkForSpecials(p){
         return [true,"SIDESPECIALAIR"];
       }
       else {
+        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.25){
+          player[p].phys.face *= -1;
+        }
+        else if (player[p].phys.bTurnaroundTimer > 0){
+          player[p].phys.face = player[p].phys.bTurnaroundDirection;
+        }
         return [true,"NEUTRALSPECIALAIR"];
       }
     }

@@ -89,6 +89,8 @@ function physicsObject(pos,face){
   this.jabReset = false;
   this.outOfCameraTimer = 0;
   this.rollOutDistance = 0;
+  this.bTurnaroundTimer = 0;
+  this.bTurnaroundDirection = 1;
 }
 
 function inputObject(){

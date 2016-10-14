@@ -133,6 +133,12 @@ function physics(i){
       }
     }
     player[i].phys.canWallJump = aS[cS[i]][player[i].actionState].wallJumpAble;
+    player[i].phys.bTurnaroundTimer = Math.max(0,player[i].phys.bTurnaroundTimer-1);
+    if ((player[i].inputs.lStickAxis[0].x > 0.9 && player[i].inputs.lStickAxis[1].x < 0.9) || (player[i].inputs.lStickAxis[0].x < -0.9 && player[i].inputs.lStickAxis[1].x > -0.9)){
+        player[i].phys.bTurnaroundTimer = 20;
+        player[i].phys.bTurnaroundDirection = Math.sign(player[i].inputs.lStickAxis[0].x);
+    }
+
     aS[cS[i]][player[i].actionState].main(i);
     if (Math.abs(player[i].phys.kVel.x) > 0){
       var oSign = Math.sign(player[i].phys.kVel.x);
