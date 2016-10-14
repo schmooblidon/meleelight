@@ -1275,6 +1275,7 @@ puff.NEUTRALSPECIALAIR = {
   onWallCollide : function(p,wallFace,wallNum){
     if (!player[p].phys.rollOutCharging && !player[p].phys.rollOutChargeAttempt && !player[p].phys.rollOutPlayerHit){
       player[p].phys.cVel.x *= -0.75;
+      player[p].phys.rollOutVel *= 0.75;
       player[p].timer = 16;
       player[p].phys.face *= -1;
       sounds.rollouthit.play();

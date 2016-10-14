@@ -705,6 +705,7 @@ function physics(i){
       player[i].phys.outOfCameraTimer = 0;
       turnOffHitboxes(i);
       player[i].stocks--;
+      player[i].colourOverlayBool = false;
       lostStockQueue.push([i,player[i].stocks,0]);
       if (player[i].stocks == 0 && versusMode){
         player[i].stocks = 1;
