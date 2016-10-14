@@ -406,6 +406,9 @@ function physics(i){
           }
         }
       }
+      else if (aS[cS[i]][player[i].actionState].specialWallCollide){
+        aS[cS[i]][player[i].actionState].onWallCollide(i,"L",j);
+      }
       else if (player[i].phys.canWallJump){
         if (player[i].phys.wallJumpTimer == 254){
           if (player[i].phys.posDelta.x >= 0.5){
@@ -446,6 +449,9 @@ function physics(i){
             aS[cS[i]].WALLDAMAGE.init(i);
           }
         }
+      }
+      else if (aS[cS[i]][player[i].actionState].specialWallCollide){
+        aS[cS[i]][player[i].actionState].onWallCollide(i,"R",j);
       }
       else if (player[i].phys.canWallJump){
         if (player[i].phys.wallJumpTimer == 254){

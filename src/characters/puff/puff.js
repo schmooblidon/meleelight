@@ -1152,6 +1152,8 @@ puff.NEUTRALSPECIALAIR = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
+  specialWallCollide : true,
+  specialOnHit : true,
   init : function(p){
     player[p].actionState = "NEUTRALSPECIALAIR";
     player[p].timer = 0;
@@ -1160,6 +1162,9 @@ puff.NEUTRALSPECIALAIR = {
     player[p].phys.rollOutDistance = 0;
     player[p].phys.rollOutChargeAttempt = true;
     player[p].phys.rollOutVel = 0.5;
+    player[p].phys.rollOutPlayerHit = false;
+    player[p].phys.rollOutWallHit = false;
+    player[p].phys.rollOutPlayerHitTimer = 0;
     player[p].phys.cVel.y = Math.max(-1.3,player[p].phys.cVel.y);
     turnOffHitboxes(p);
     puff.NEUTRALSPECIALAIR.main(p);
@@ -1178,11 +1183,12 @@ puff.NEUTRALSPECIALAIR = {
         player[p].phys.rollOutCharging = false;
         player[p].phys.rollOutChargeAttempt = false;
         player[p].phys.rollOutVel = Math.max(0.5,Math.min(4.1,(0.2+(0.09*player[p].phys.rollOutCharge))));
+        player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
       }
     }
-    if (player[p].phys.rollOutCharging || player[p].phys.rollOutDistance < 100){
+    if (player[p].phys.rollOutCharging || player[p].phys.rollOutDistance < 100 || player[p].phys.rollOutPlayerHit){
       player[p].timer += 1+(2*(player[p].phys.rollOutCharge/44));
-      if (player[p].timer > 45){
+      if (player[p].timer > 39){
         player[p].timer = 16;
       }
     }
@@ -1194,18 +1200,24 @@ puff.NEUTRALSPECIALAIR = {
       if (player[p].phys.cVel.y < -1.3){
         player[p].phys.cVel.y = -1.3;
       }
-      if (player[p].timer > 15 && player[p].timer < 46 && !player[p].phys.rollOutCharging && !player[p].phys.rollOutChargeAttempt){
+      if (player[p].timer > 15 && player[p].timer < 39 && !player[p].phys.rollOutCharging && !player[p].phys.rollOutChargeAttempt){
         player[p].phys.rollOutDistance++;
-        if (player[p].rollOutDistance > 100){
-          player[p].timer = 46;
-          player[p].phys.cVel.x *= 0.6;
+        if (!player[p].phys.rollOutPlayerHit){
+          player[p].hitboxes.frame = 0;
+          player[p].hitboxes.id[0] = player[p].charHitboxes.neutralspecialair.id0;
+          player[p].hitboxes.active = [true,false,false,false];
         }
-        else {
-          player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
+        if (player[p].phys.rollOutDistance > 100 && !player[p].phys.rollOutPlayerHit){
+          player[p].timer = 39;
+          player[p].phys.cVel.x *= 0.6;
+          turnOffHitboxes(p);
         }
       }
-      if (player[p].timer >= 46){
-
+      if (player[p].phys.rollOutPlayerHit){
+        player[p].phys.rollOutPlayerHitTimer++;
+        if (player[p].phys.rollOutPlayerHitTimer > 42){
+          airDrift(p);
+        }
       }
     }
   },
@@ -1219,7 +1231,33 @@ puff.NEUTRALSPECIALAIR = {
     }
   },
   land : function(p){
-    player[p].actionState = "NEUTRALSPECIALGROUND";
+    if (player[p].phys.rollOutPlayerHit){
+      puff.LANDINGFALLSPECIAL.init(p);
+    }
+    else {
+      player[p].actionState = "NEUTRALSPECIALGROUND";
+    }
+  },
+  onWallCollide : function(p,wallFace,wallNum){
+    if (!player[p].phys.rollOutCharging && !player[p].phys.rollOutChargeAttempt && !player[p].phys.rollOutPlayerHit){
+      player[p].phys.cVel.x *= -0.75;
+      player[p].timer = 16;
+      player[p].phys.face *= -1;
+      if (wallFace == "R"){
+        drawVfx("wallBounce",new Vec2D(stage.wallR[wallNum][1].x,player[p].phys.ECBp[3].y),1,1);
+      }
+      else {
+        drawVfx("wallBounce",new Vec2D(stage.wallL[wallNum][1].x,player[p].phys.ECBp[1].y),-1,0);
+      }
+    }
+  },
+  onPlayerHit : function(p){
+    player[p].phys.rollOutPlayerHit = true;
+    player[p].phys.rollOutPlayerHitTimer = 0;
+    player[p].phys.cVel.x *= -0.13;
+    player[p].phys.cVel.y = 1.6
+    player[p].phys.grounded = false;
+    turnOffHitboxes(p);
   }
 }
 
@@ -1229,6 +1267,7 @@ puff.NEUTRALSPECIALGROUND = {
   canBeGrabbed : true,
   disableTeeter : true,
   airborneState : "NEUTRALSPECIALAIR",
+  specialOnHit : true,
   init : function(p){
     player[p].actionState = "NEUTRALSPECIALGROUND";
     player[p].timer = 0;
@@ -1237,6 +1276,9 @@ puff.NEUTRALSPECIALGROUND = {
     player[p].phys.rollOutDistance = 0;
     player[p].phys.rollOutChargeAttempt = true;
     player[p].phys.rollOutVel = 0.3;
+    player[p].phys.rollOutPlayerHit = false;
+    player[p].phys.rollOutWallHit = false;
+    player[p].phys.rollOutPlayerHitTimer = 0;
     player[p].phys.cVel.x = 0.0001*player[p].phys.face;
     turnOffHitboxes(p);
     puff.NEUTRALSPECIALGROUND.main(p);
@@ -1271,7 +1313,14 @@ puff.NEUTRALSPECIALGROUND = {
 
       if (player[p].timer > 15 && player[p].timer < 46 && !player[p].phys.rollOutCharging && !player[p].phys.rollOutChargeAttempt){
         player[p].phys.rollOutDistance++;
-        if (player[p].rollOutDistance > 100){
+        if (!player[p].phys.rollOutPlayerHit){
+          player[p].hitboxes.frame = 0;
+          player[p].hitboxes.id[0] = player[p].charHitboxes.neutralspecialground.id0;
+          player[p].hitboxes.id[1] = player[p].charHitboxes.neutralspecialground.id1;
+          player[p].hitboxes.id[2] = player[p].charHitboxes.neutralspecialground.id2;
+          player[p].hitboxes.active = [true,true,true,false];
+        }
+        if (player[p].phys.rollOutDistance > 100){
           player[p].timer = 46;
           player[p].phys.cVel.x *= 0.6;
         }
@@ -1289,41 +1338,6 @@ puff.NEUTRALSPECIALGROUND = {
           player[p].phys.cVel.x=0;
         }
       }
-
-      // 15 frame startup
-      /*16 - 45 rolling
-      46 - end
-
-      charging vel = 0.0001
-      reach max with 44 frames of charging
-      at max charge, one revolution is ~10 frames
-
-      always about 100 frames of rolling before break
-      106 frames rolling uncharged - 0.3 velx
-      += 0.09 each charge frame
-
-      turning
-      4.2 > 4.011 > 3.822 > 3.633
-      -= 0.189 (0.045*4.2)
-      when reached -1.092 next frame = -4.2
-
-      when vel = 0.3
-      0.3 > 0.2865
-      -= 0.0135 (0.045*0.3)
-      when reached -0.078 (28 th frame) next frame = -0.3 (29 th frame)
-
-
-      initial brake *= 0.6
-      brake -0.09 each frame
-
-      player collide , remove hitbox
-      when vel = 4.2
-      velx = -0.546 vely = 1.6
-      vely -= 0.07 each frame
-
-      on frame 43 after collide drift possible but no fastfall
-      land in landingfallspecial with 30 frames lag*/
-
     }
   },
   interrupt : function(p){
@@ -1334,6 +1348,10 @@ puff.NEUTRALSPECIALGROUND = {
     else {
       return false;
     }
+  },
+  onPlayerHit : function(p){
+    player[p].actionState = "NEUTRALSPECIALAIR";
+    puff.NEUTRALSPECIALAIR.onPlayerHit(p);
   }
 }
 
@@ -1341,11 +1359,13 @@ puff.NEUTRALSPECIALGROUNDTURN = {
   name : "NEUTRALSPECIALGROUNDTURN",
   canEdgeCancel : false,
   canBeGrabbed : true,
+  specialOnHit : true,
   init : function(p){
     player[p].actionState = "NEUTRALSPECIALGROUNDTURN",
     player[p].timer = 0;
     player[p].phys.rollOutTurnTimer = 0;
     player[p].phys.face *= -1;
+    turnOffHitboxes(p);
     puff.NEUTRALSPECIALGROUNDTURN.main(p);
   },
   main : function(p){
@@ -1356,16 +1376,6 @@ puff.NEUTRALSPECIALGROUNDTURN = {
     player[p].phys.rollOutTurnTimer++;
     player[p].phys.rollOutDistance++;
     if (!puff.NEUTRALSPECIALGROUNDTURN.interrupt(p)){
-
-      /*turning
-      4.2 > 4.011 > 3.822 > 3.633
-      -= 0.189 (0.045*4.2)
-      when reached -1.092 next frame = -4.2
-
-      when vel = 0.3
-      0.3 > 0.2865
-      -= 0.0135 (0.045*0.3)
-      when reached -0.078 (28 th frame) next frame = -0.3 (29 th frame)*/
       player[p].phys.cVel.x = (player[p].phys.rollOutVel*player[p].phys.face*-1)-(player[p].phys.rollOutVel*0.045*player[p].phys.rollOutTurnTimer*player[p].phys.face*-1);
     }
   },
@@ -1384,8 +1394,11 @@ puff.NEUTRALSPECIALGROUNDTURN = {
     else {
       return false;
     }
+  },
+  onPlayerHit : function(p){
+    player[p].actionState = "NEUTRALSPECIALAIR";
+    puff.NEUTRALSPECIALAIR.onPlayerHit(p);
   }
-
 }
 
 puff.SIDESPECIALAIR = {

@@ -340,6 +340,10 @@ function executeHits(){
 
             player[v].hit.hitlag = Math.floor(damage * (1/3) + 3);
 
+            if (aS[cS[a]][player[a].actionState].specialOnHit){
+              aS[cS[a]][player[a].actionState].onPlayerHit(a);
+            }
+
             if (!isThrow){
               player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y);
               if (player[a].phys.pos.x < player[v].phys.pos.x){

@@ -522,6 +522,14 @@ new Vec2D(8.18-0.96,0.97)]
   },
   throwforwardextra : {
     id0 : [new Vec2D(1.41,7.43)]
+  },
+  neutralspecialair : {
+    id0 : [new Vec2D(0,5.14)]
+  },
+  neutralspecialground : {
+    id0 : [new Vec2D(0,5.14)],
+    id1 : [new Vec2D(-3.67,5.14)],
+    id2 : [new Vec2D(3.67,5.14)]
   }
 }
 
@@ -555,6 +563,8 @@ hitboxes[1] = {
   downspecial : new hitboxObject(new hitbox(offsets[1].downspecial.id0,1.953,28,361,120,78,0,3,0,1,1)),
   ledgegetupquick : new hitboxObject(new hitbox(offsets[1].ledgegetupquick.id0,3.906,6,361,100,0,90,0,1,1,1),new hitbox(offsets[1].ledgegetupquick.id1,4.687,6,361,100,0,90,0,1,1,1)),
   ledgegetupslow : new hitboxObject(new hitbox(offsets[1].ledgegetupslow.id0,5.859,6,361,100,0,90,0,1,1,1),new hitbox(offsets[1].ledgegetupslow.id1,5.859,6,361,100,0,90,0,1,1,1)),
+  neutralspecialground : new hitboxObject(new hitbox(offsets[1].neutralspecialground.id0,1.953,10,20,120,30,0,0,0,1,1),new hitbox(offsets[1].neutralspecialground.id1,2.734,10,20,120,30,0,0,0,1,1),new hitbox(offsets[1].neutralspecialground.id2,2.734,10,20,120,30,0,0,0,1,1)),
+  neutralspecialair : new hitboxObject(new hitbox(offsets[1].neutralspecialair.id0,1.953,10,90,102,30,0,0,0,1,1)),
   pummel : new hitboxObject(new hitbox(offsets[1].pummel.id0,4.687,3,361,100,0,30,0,0,1,1)),
   throwup : new hitboxObject(new hitbox(new Vec2D(-4.44533,0.66545),0,11,90,25,130,0,0,0,1,1)),
   throwdown : new hitboxObject(new hitbox(new Vec2D(0.56941,0),0,2,80,45,100,0,0,0,1,1)),

@@ -88,6 +88,7 @@ function physicsObject(pos,face){
   this.inShine = 0;
   this.jabReset = false;
   this.outOfCameraTimer = 0;
+  this.rollOutDistance = 0;
 }
 
 function inputObject(){
