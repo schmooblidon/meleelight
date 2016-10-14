@@ -14,6 +14,7 @@ function land(i,y,t,j){
   player[i].phys.onLedge = -1;
   player[i].rotation = 0;
   player[i].rotationPoint = new Vec2D(0,0);
+  player[i].hitboxes.active = [false,false,false,false];
   switch (aS[cS[i]][player[i].actionState].landType){
     case 0:
     // LANDING / NIL
@@ -52,7 +53,6 @@ function land(i,y,t,j){
   player[i].phys.cVel.y = 0;
   player[i].phys.kVel.y = 0;
   player[i].hit.hitstun = 0;
-  player[i].hitboxes.active = [false,false,false,false];
 }
 
 function physics(i){

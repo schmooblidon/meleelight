@@ -1187,6 +1187,11 @@ puff.NEUTRALSPECIALAIR = {
         player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
         sounds.rolloutlaunch.play();
         sounds.rollouttickair.play();
+        if (player[p].phys.rollOutCharge >= 21){
+          player[p].hitboxes.frame = 0;
+          player[p].hitboxes.id[0] = player[p].charHitboxes.neutralspecialair.id0;
+          player[p].hitboxes.active = [true,false,false,false];
+        }
       }
     }
     if (player[p].phys.rollOutCharging || player[p].phys.rollOutDistance < 100 || player[p].phys.rollOutPlayerHit){
@@ -1207,9 +1212,10 @@ puff.NEUTRALSPECIALAIR = {
       if (player[p].timer > 15 && player[p].timer < 39 && !player[p].phys.rollOutCharging && !player[p].phys.rollOutChargeAttempt){
         player[p].phys.rollOutDistance++;
         if (!player[p].phys.rollOutPlayerHit){
-          player[p].hitboxes.frame = 0;
-          player[p].hitboxes.id[0] = player[p].charHitboxes.neutralspecialair.id0;
-          player[p].hitboxes.active = [true,false,false,false];
+          var newDmg = 12+Math.round((player[p].phys.rollOutCharge-19)/4);
+          player[p].hitboxes.id[0].dmg = newDmg;
+          player[p].hitboxes.id[1].dmg = newDmg;
+          player[p].hitboxes.id[2].dmg = newDmg;
         }
         if (player[p].phys.rollOutDistance > 100 && !player[p].phys.rollOutPlayerHit){
           player[p].timer = 39;
@@ -1240,6 +1246,11 @@ puff.NEUTRALSPECIALAIR = {
     }
     else {
       player[p].actionState = "NEUTRALSPECIALGROUND";
+      if (player[p].phys.rollOutCharge >= 21){
+        player[p].hitboxes.frame = 0;
+        player[p].hitboxes.id[0] = player[p].charHitboxes.neutralspecialair.id0;
+        player[p].hitboxes.active = [true,false,false,false];
+      }
     }
   },
   onWallCollide : function(p,wallFace,wallNum){
@@ -1308,6 +1319,13 @@ puff.NEUTRALSPECIALGROUND = {
         sounds.stronghit.play();
         sounds.rolloutlaunch.play();
         sounds.rollouttickground.play();
+        if (player[p].phys.rollOutCharge >= 19){
+          player[p].hitboxes.frame = 0;
+          player[p].hitboxes.id[0] = player[p].charHitboxes.neutralspecialground.id0;
+          player[p].hitboxes.id[1] = player[p].charHitboxes.neutralspecialground.id1;
+          player[p].hitboxes.id[2] = player[p].charHitboxes.neutralspecialground.id2;
+          player[p].hitboxes.active = [true,true,true,false];
+        }
       }
     }
     if (player[p].phys.rollOutCharging || player[p].phys.rollOutDistance < 100){
@@ -1325,11 +1343,10 @@ puff.NEUTRALSPECIALGROUND = {
       if (player[p].timer > 15 && player[p].timer < 46 && !player[p].phys.rollOutCharging && !player[p].phys.rollOutChargeAttempt){
         player[p].phys.rollOutDistance++;
         if (!player[p].phys.rollOutPlayerHit){
-          player[p].hitboxes.frame = 0;
-          player[p].hitboxes.id[0] = player[p].charHitboxes.neutralspecialground.id0;
-          player[p].hitboxes.id[1] = player[p].charHitboxes.neutralspecialground.id1;
-          player[p].hitboxes.id[2] = player[p].charHitboxes.neutralspecialground.id2;
-          player[p].hitboxes.active = [true,true,true,false];
+          var newDmg = 12+Math.round((player[p].phys.rollOutCharge-19)/4);
+          player[p].hitboxes.id[0].dmg = newDmg;
+          player[p].hitboxes.id[1].dmg = newDmg;
+          player[p].hitboxes.id[2].dmg = newDmg;
         }
         if (player[p].phys.rollOutDistance > 100){
           turnOffHitboxes(p);
@@ -1402,6 +1419,13 @@ puff.NEUTRALSPECIALGROUNDTURN = {
       player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
       player[p].actionState = "NEUTRALSPECIALGROUND";
       player[p].timer = 15+player[p].timer;
+      if (player[p].phys.rollOutCharge >= 19){
+        player[p].hitboxes.frame = 0;
+        player[p].hitboxes.id[0] = player[p].charHitboxes.neutralspecialground.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.neutralspecialground.id1;
+        player[p].hitboxes.id[2] = player[p].charHitboxes.neutralspecialground.id2;
+        player[p].hitboxes.active = [true,true,true,false];
+      }
       sounds.stronghit.play();
       return true;
     }
