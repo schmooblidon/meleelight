@@ -2924,6 +2924,7 @@ fox.CLIFFATTACKSLOW = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupslow.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupslow.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.ledgegetupslow.id1;
     fox.CLIFFATTACKSLOW.main(p);
   },
   main : function(p){
@@ -2983,6 +2984,7 @@ fox.CLIFFATTACKQUICK = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupquick.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupquick.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.ledgegetupquick.id2;
     fox.CLIFFATTACKQUICK.main(p);
   },
   main : function(p){
@@ -3006,7 +3008,7 @@ fox.CLIFFATTACKQUICK = {
       }
 
       if (player[p].timer == 25){
-        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
         // needs 3

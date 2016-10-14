@@ -3357,94 +3357,350 @@ marth.CLIFFGETUPQUICK = {
 
 marth.CLIFFGETUPSLOW = {
   name : "CLIFFGETUPSLOW",
+  offset : [[-71.28,-23.58],[-71.24,-23.27],[-71.18,-22.72],[-71.11,-21.97],[-71.04,-21.05],[-70.96,-20.00],[-70.87,-18.83],[-70.77,-17.58],[-70.67,-16.29],[-70.58,-14.97],[-70.48,-13.67],[-70.38,-12.40],[-70.28,-11.21],[-70.19,-10.05],[-70.10,-8.66],[-69.99,-6.99],[-69.86,-5.26],[-69.76,-3.64],[-69.74,-2.33],[-69.85,-1.49],[-70.07,-1.06],[-70.35,-0.79],[-70.62,-0.59],[-70.83,-0.41],[-70.92,-0.23],[-70.84,-0.1],[-70.66,-0.02],[-70.48,0.03],[-70.28,0.05],[-70.08,0.05],[-69.87,0.04],[-69.64,0.02],[-69.40,0.01],[-69.15,0],[-68.87,0],[-68.58,0],[-67.95,0]],
+  setVelocities : [0.34,0.36,0.39,0.40,0.41,0.41,0.41,0.41,0.40,0.40,0.39,0.39,0.38],
+  canBeGrabbed : true,
   init : function(p){
-    player[p].timer = 1;
+    player[p].actionState = "CLIFFGETUPSLOW";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 55;
+    marth.CLIFFGETUPSLOW.main(p);
   },
   main : function(p){
-
+    player[p].timer++;
+    if (!marth.CLIFFGETUPSLOW.interrupt(p)){
+      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      if (player[p].timer < 46){
+        if (player[p].timer > 8){
+          player[p].phys.pos = new Vec2D(x+(marth.CLIFFGETUPSLOW.offset[player[p].timer-9][0]+68.4)*player[p].phys.face,y+marth.CLIFFGETUPSLOW.offset[player[p].timer-9][1]);
+        }
+        else {
+          player[p].phys.pos = new Vec2D(x+(-71.31+68.4)*player[p].phys.face,y-23.71);
+        }
+      }
+      else {
+        player[p].phys.cVel.x = marth.CLIFFGETUPSLOW.setVelocities[player[p].timer-46]*player[p].phys.face;
+      }
+      if (player[p].timer == 45){
+        player[p].phys.grounded = true;
+        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.airborneTimer = 0;
+        player[p].phys.pos.y = y;
+      }
+    }
   },
   interrupt : function(p){
-
+    if (player[p].timer > 58){
+      player[p].phys.onLedge = -1;
+      player[p].phys.ledgeRegrabCount = false;
+      marth.WAIT.init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-}
+};
 
 marth.CLIFFESCAPEQUICK = {
   name : "CLIFFESCAPEQUICK",
+  offset : [[-70.31,-23.71],[-71.33,-23.71],[-71.36,-23.71],[-71.40,-23.71],[-71.43,-23.71],[-71.44,-23.71],[-71.42,-23.71],[-71.37,-23.71],[-71.28,-23.71],[-71.13,-22.69],[-70.93,-19.99],[-70.69,-16.19],[-70.40,-11.83],[-70.04,-7.48],[-69.69,-3.68],[-69.05,-1.01],[-67.74,0]],
+  setVelocities : [4.23,4.22,4.21,1.74,1.67,1.61,1.56,1.51,1.47,1.44,1.41,1.39,1.37,1.36,1.36,1.36,1.37,0.14,0.22,0.42,0.62,0.68,0.63,0.49,0.34,0.27,0.21,0.17,0.14,0.13,0.13],
+  canBeGrabbed : true,
   init : function(p){
-    player[p].timer = 1;
+    player[p].actionState = "CLIFFESCAPEQUICK";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 38;
+    marth.CLIFFESCAPEQUICK.main(p);
   },
   main : function(p){
-
+    player[p].timer++;
+    if (!marth.CLIFFESCAPEQUICK.interrupt(p)){
+      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      if (player[p].timer < 18){
+        player[p].phys.pos = new Vec2D(x+(marth.CLIFFESCAPEQUICK.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+marth.CLIFFESCAPEQUICK.offset[player[p].timer-1][1]);
+      }
+      else {
+        player[p].phys.cVel.x = marth.CLIFFESCAPEQUICK.setVelocities[player[p].timer-18]*player[p].phys.face;
+      }
+      if (player[p].timer == 17){
+        player[p].phys.grounded = true;
+        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.airborneTimer = 0;
+        player[p].phys.pos.y = y;
+      }
+    }
   },
   interrupt : function(p){
-
+    if (player[p].timer > 48){
+      player[p].phys.onLedge = -1;
+      player[p].phys.ledgeRegrabCount = false;
+      marth.WAIT.init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-}
+
+};
 
 marth.CLIFFESCAPESLOW = {
   name : "CLIFFESCAPESLOW",
+  offset : [[-71.27,-23.58],[-71.21,-23.27],[-71.14,-22.72],[-71.05,-21.97],[-70.96,-21.05],[-70.86,-20.0],[-70.76,-18.83],[-70.65,-17.58],[-70.55,-16.29],[-70.45,-14.97],[-70.37,-13.67],[-70.29,-12.40],[-70.23,-11.21],[-70.18,-10.07],[-70.13,-8.90],[-70.01,-6.95],[-69.12,-2.82],[-67.68,0]],
+  setVelocities : [0,0,0,0,0,0,0,0,0.02,2.76,2.65,2.55,2.44,2.34,2.23,2.12,2.01,1.90,1.79,1.68,1.56,1.45,1.34,1.24,1.15,1.07,0.99,0.91,0.85,0.79,0.64,0.42,0.25,0.14,0.08,0.07,0.08,0.07,0.06,0.05,0.05,0.04,0.03,0.02,0.02,0.01,0.01,0,0,0,-0.01],
+  canBeGrabbed : true,
   init : function(p){
-    player[p].timer = 1;
+    player[p].actionState = "CLIFFESCAPESLOW";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 56;
+    marth.CLIFFESCAPESLOW.main(p);
   },
   main : function(p){
-
+    player[p].timer++;
+    if (!marth.CLIFFESCAPESLOW.interrupt(p)){
+      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      if (player[p].timer < 28){
+        if (player[p].timer > 9){
+          player[p].phys.pos = new Vec2D(x+(marth.CLIFFESCAPESLOW.offset[player[p].timer-10][0]+68.4)*player[p].phys.face,y+marth.CLIFFESCAPESLOW.offset[player[p].timer-10][1]);
+        }
+        else {
+          player[p].phys.pos = new Vec2D(x+(-71.31+68.4)*player[p].phys.face,y-23.71);
+        }
+      }
+      else {
+        player[p].phys.cVel.x = marth.CLIFFESCAPESLOW.setVelocities[player[p].timer-28]*player[p].phys.face;
+      }
+      if (player[p].timer == 27){
+        player[p].phys.grounded = true;
+        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.airborneTimer = 0;
+        player[p].phys.pos.y = y;
+      }
+    }
   },
   interrupt : function(p){
-
+    if (player[p].timer > 78){
+      player[p].phys.onLedge = -1;
+      player[p].phys.ledgeRegrabCount = false;
+      marth.WAIT.init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-}
-
-marth.CLIFFATTACKSLOW = {
-  name : "CLIFFATTACKSLOW",
-  init : function(p){
-    player[p].timer = 1;
-  },
-  main : function(p){
-
-  },
-  interrupt : function(p){
-
-  }
-}
-
-marth.CLIFFATTACKQUICK = {
-  name : "CLIFFATTACKQUICK",
-  init : function(p){
-    player[p].timer = 1;
-  },
-  main : function(p){
-
-  },
-  interrupt : function(p){
-
-  }
-}
+};
 
 marth.CLIFFJUMPQUICK = {
   name : "CLIFFJUMPQUICK",
+  offset : [[-70.91,-23.37],[-70.48,-22.70],[-70.03,-21.59],[-69.59,-20.23],[-69.16,-18.77],[-68.76,-17.39],[-68.82,-16.26],[-69.31,-15.57],[-69.00,-13.87],[-68.51,-8.90],[-68.4,-2.95]],
+  canBeGrabbed : true,
   init : function(p){
-    player[p].timer = 1;
+    player[p].actionState = "CLIFFJUMPQUICK";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 11;
+    marth.CLIFFJUMPQUICK.main(p);
   },
   main : function(p){
-
+    player[p].timer++;
+    if (!marth.CLIFFJUMPQUICK.interrupt(p)){
+      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      if (player[p].timer < 12){
+        player[p].phys.pos = new Vec2D(x+(marth.CLIFFJUMPQUICK.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+marth.CLIFFJUMPQUICK.offset[player[p].timer-1][1]);
+      }
+      if (player[p].timer == 12){
+        player[p].phys.cVel = new Vec2D(1*player[p].phys.face,2.4);
+      }
+      if (player[p].timer > 12){
+        airDrift(p);
+        fastfall(p);
+      }
+    }
   },
   interrupt : function(p){
-
+    if (player[p].timer > 50){
+      player[p].phys.onLedge = -1;
+      player[p].phys.ledgeRegrabCount = false;
+      marth.FALL.init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-}
+};
 
 marth.CLIFFJUMPSLOW = {
   name : "CLIFFJUMPSLOW",
+  offset : [[-71.27,-23.71],[-71.15,-23.55],[-70.96,-23.07],[-70.73,-22.26],[-70.48,-21.16],[-70.21,-19.81],[-69.94,-18.28],[-69.70,-16.60],[-69.45,-14.12],[-69.19,-10.70],[-69.37,-7.08],[-68.97,-3.53],[-68.59,-1.00],[-68.40,0],[-68.4,0],[-68.4,0],[-68.4,0],[-68.4,0]],
+  canBeGrabbed : true,
   init : function(p){
-    player[p].timer = 1;
+    player[p].actionState = "CLIFFJUMPSLOW";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 18;
+    marth.CLIFFJUMPSLOW.main(p);
   },
   main : function(p){
-
+    player[p].timer++;
+    if (!marth.CLIFFJUMPSLOW.interrupt(p)){
+      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      if (player[p].timer < 19){
+        player[p].phys.pos = new Vec2D(x+(marth.CLIFFJUMPSLOW.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+marth.CLIFFJUMPSLOW.offset[player[p].timer-1][1]);
+      }
+      if (player[p].timer == 19){
+        player[p].phys.cVel = new Vec2D(1*player[p].phys.face,2.4);
+      }
+      if (player[p].timer > 19){
+        airDrift(p);
+        fastfall(p);
+      }
+    }
   },
   interrupt : function(p){
-
+    if (player[p].timer > 57){
+      player[p].phys.onLedge = -1;
+      player[p].phys.ledgeRegrabCount = false;
+      marth.FALL.init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-}
+};
+
+marth.CLIFFATTACKSLOW = {
+  name : "CLIFFATTACKSLOW",
+  offset : [[-71.27,-23.58],[-71.22,-23.27],[-71.16,-22.72],[-71.09,-21.97],[-71.00,-21.05],[-70.91,-20.00],[-70.82,-18.83],[-70.72,-17.58],[-70.62,-16.29],[-70.52,-14.97],[-70.43,-13.67],[-70.34,-12.40],[-70.25,-11.21],[-70.18,-10.11],[-70.1,-8.54],[-70.00,-6.96],[-69.87,-5.72],[-69.72,-4.66],[-69.53,-3.63],[-69.31,-2.56],[-69.05,-1.55],[-68.75,-0.66],[-67.85,0]],
+  setVelocities : [0.66,0.79,0.76,0.65,0.56,0.51,0.47,0.47,0.46,0.42,0.34,0.24,0.11,0.03,0.03,0.03,0.02,0.01,0,-0.01,-0.02,-0.04,-0.06,-0.08,-0.10,-0.13,-0.16,-0.19,-0.21,-0.21,-0.21,-0.20,-0.18,-0.16,-0.13,-0.09],
+  canBeGrabbed : true,
+  init : function(p){
+    player[p].actionState = "CLIFFATTACKSLOW";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 34;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupslow.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupslow.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.ledgegetupslow.id2;
+    marth.CLIFFATTACKSLOW.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.CLIFFATTACKSLOW.interrupt(p)){
+      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      if (player[p].timer < 33){
+        if (player[p].timer > 9){
+          player[p].phys.pos = new Vec2D(x+(marth.CLIFFATTACKSLOW.offset[player[p].timer-10][0]+68.4)*player[p].phys.face,y+marth.CLIFFATTACKSLOW.offset[player[p].timer-10][1]);
+        }
+        else {
+          player[p].phys.pos = new Vec2D(x+(-71.31+68.4)*player[p].phys.face,y-23.71);
+        }
+      }
+      else {
+        player[p].phys.cVel.x = marth.CLIFFATTACKSLOW.setVelocities[player[p].timer-33]*player[p].phys.face;
+      }
+      if (player[p].timer == 32){
+        player[p].phys.grounded = true;
+        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.airborneTimer = 0;
+        player[p].phys.pos.y = y;
+      }
+
+      if (player[p].timer == 38){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+        sounds.normalswing2.play();
+        randomShout(cS[p]);
+      }
+      else if (player[p].timer > 38 && player[p].timer < 42){
+        player[p].hitboxes.frame++;
+      }
+      else if (player[p].timer == 42){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 68){
+      player[p].phys.onLedge = -1;
+      player[p].phys.ledgeRegrabCount = false;
+      marth.WAIT.init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+};
+
+marth.CLIFFATTACKQUICK = {
+  name : "CLIFFATTACKQUICK",
+  offset : [[-71.31,-23.71],[-71.32,-23.71],[-71.36,-23.71],[-71.41,-23.71],[-71.46,-23.71],[-71.49,-23.71],[-71.48,-23.71],[-71.42,-23.71],[-71.28,-23.71],[-71.06,-22.49],[-70.72,-19.41],[-70.33,-15.28],[-69.94,-11.06],[-69.55,-7.59],[-69.16,-4.33],[-68.77,-1.27],[-67.98,0]],
+  setVelocities : [0.39,0.39,0.38,0.38,0.38,0.38,0.37,0.37,0.36,0.36,0.35,0.35,0.29,0.19,0.11,0.05,0,-0.02,-0.03,-0.01,0,-0.01,-0.01,-0.02,-0.02,-0.03,-0.03,-0.04,-0.04,-0.04,-0.04,-0.04,-0.04,-0.05,-0.04,-0.04,-0.04],
+  canBeGrabbed : true,
+  init : function(p){
+    player[p].actionState = "CLIFFATTACKQUICK";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 20;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupquick.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupquick.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.ledgegetupquick.id2;
+    marth.CLIFFATTACKQUICK.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.CLIFFATTACKQUICK.interrupt(p)){
+      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      if (player[p].timer < 18){
+        player[p].phys.pos = new Vec2D(x+(marth.CLIFFATTACKQUICK.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+marth.CLIFFATTACKQUICK.offset[player[p].timer-1][1]);
+      }
+      else {
+        player[p].phys.cVel.x = marth.CLIFFATTACKQUICK.setVelocities[player[p].timer-18]*player[p].phys.face;
+      }
+      if (player[p].timer == 17){
+        player[p].phys.grounded = true;
+        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.airborneTimer = 0;
+        player[p].phys.pos.y = y;
+      }
+
+      if (player[p].timer == 24){
+        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.frame = 0;
+        sounds.normalswing2.play();
+        // needs 3
+        randomShout(cS[p]);
+      }
+      else if (player[p].timer > 24 && player[p].timer < 28){
+        player[p].hitboxes.frame++;
+      }
+      else if (player[p].timer == 28){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 54){
+      player[p].phys.onLedge = -1;
+      player[p].phys.ledgeRegrabCount = false;
+      marth.WAIT.init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+};
 
 //------------MISC----------------
 marth.CATCHATTACK = {
@@ -3545,7 +3801,7 @@ marth.DOWNATTACK = {
 // SET VELOCITIES AND POSITIONS
 
 marth.ESCAPEB.setVelocities = [-2.267,-2.536,-2.706,-2.780,-2.758,-2.640,-2.426,-2.116,-1.711,-1.209,-0.888,-0.819,-0.758,-0.707,-0.664,-0.631,-0.606,-0.591,-0.585,-0.587,-0.599,-0.620,-0.809,-1.072,-1.205,-1.207,-1.078,-0.819,-0.617,-0.556,-0.487,-0.413,-0.332,-0.245,-0.152];
-marth.ESCAPEF.setVelocities = [2.267,2.536,2.706,2.780,2.758,2.640,2.426,2.116,1.711,1.209,0.888,0.819,0.758,0.707,0.664,0.631,0.606,0.591,0.585,0.587,0.599,0.620,0.809,1.072,1.205,1.207,1.078,0.819,0.617,0.556,0.487,0.413,0.332,0.245,0.152];
+marth.ESCAPEF.setVelocities = [1.282,1.254,1.267,1.322,1.418,1.557,1.737,1.959,4.447,4.593,2.338,2.229,2.070,1.862,1.605,1.298,0.941,0.727,0.687,0.648,0.608,0.569,0.529,0.490,0.450,0.411,0.372,0.332,0.293,0.254,0.215,0.176,0.137,0.098,0.058];
 marth.DOWNSTANDB.setVelocities = [-0.185,-0.370,-0.573,-1.540,-1.614,-1.586,-1.566,-1.614,-1.647,-1.666,-1.669,-1.657,-1.630,-1.588,-1.531,-1.397,-1.224,-1.094,-1.006,-0.962,-0.960,-0.926,-0.816,-0.684,-0.529,-0.352,-0.226,-0.171,-0.124,-0.084,-0.051,-0.025,-0.007,0.004,0.008];
 marth.DOWNSTANDF.setVelocities = [0.467,1.360,1.733,2.135,2.355,2.581,2.055,2.281,2.184,1.902,1.703,1.521,1.357,1.211,1.082,0.971,0.878,0.802,0.743,0.703,0.680,0.674,0.686,0.716,0.763,0.775,0.727,0.661,0.577,0.474,0.352,0.241,0.163,0.101,0.055];
 marth.TECHB.setVelocities = [0,0,0,0,0,0,0,-2.832,-2.726,-2.622,-2.521,-2.422,-2.326,-2.233,-2.142,-2.054,-1.968,-1.885,-1.811,-1.748,-1.691,-1.639,-1.593,-1.553,-1.519,-1.490,-1.467,-1.450,-1.439,-1.433,-1.433,-0.002,-0.003,-0.004,-0.005,-0.006,-0.006,-0.007,-0.007,-0.006];
