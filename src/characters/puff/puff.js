@@ -1332,6 +1332,7 @@ puff.NEUTRALSPECIALGROUND = {
           player[p].hitboxes.active = [true,true,true,false];
         }
         if (player[p].phys.rollOutDistance > 100){
+          turnOffHitboxes(p);
           player[p].timer = 46;
           player[p].phys.cVel.x *= 0.6;
         }
