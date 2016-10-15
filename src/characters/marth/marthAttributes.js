@@ -955,6 +955,58 @@ new Vec2D(6.76-1.91,23.23)],
   new Vec2D(12.66-0.98,13.58),
 new Vec2D(9.21-1.45,16.98),
 new Vec2D(4.26-1.91,18.52)]
+},
+neutralspecialground : {
+  id0 : [new Vec2D(8.15,20.65),
+  new Vec2D(15.85,16.32),
+new Vec2D(17.84,8.04),
+new Vec2D(15.37,3.44),
+new Vec2D(13.33,1.15),
+new Vec2D(13.54,0.62)],
+  id1 : [new Vec2D(10.27,15.97),
+  new Vec2D(12.74,12.26),
+new Vec2D(12.95,8.01),
+new Vec2D(10.96,4.77),
+new Vec2D(10.03,4.11),
+new Vec2D(10.13,3.48)],
+  id2 : [new Vec2D(5.18,8.27),
+  new Vec2D(5.69,6.91),
+new Vec2D(5.80,5.67),
+new Vec2D(5.73,5.03),
+new Vec2D(5.70,4.53),
+new Vec2D(5.77,3.85)],
+  id3 : [new Vec2D(2.93,24.49),
+  new Vec2D(17.81,22.47),
+new Vec2D(24.04,10.06),
+new Vec2D(21.74,4.64),
+new Vec2D(19.80,1.02),
+new Vec2D(20.00,0.97)]
+},
+neutralspecialair : {
+  id0 : [new Vec2D(6.70,20.09),
+  new Vec2D(14.32,17.01),
+new Vec2D(17.69,7.25),
+new Vec2D(13.33,1.00),
+new Vec2D(12.50,-0.48),
+new Vec2D(10.72,-1.75)],
+  id1 : [new Vec2D(9.82,16.12),
+  new Vec2D(12.50,12.52),
+new Vec2D(12.67,8.00),
+new Vec2D(10.03,4.11),
+new Vec2D(9.54,3.06),
+new Vec2D(8.85,2.53)],
+  id2 : [new Vec2D(5.18,8.26),
+  new Vec2D(5.78,6.87),
+new Vec2D(5.77,5.63),
+new Vec2D(5.70,4.53),
+new Vec2D(5.77,3.98),
+new Vec2D(5.82,3.85)],
+  id3 : [new Vec2D(0.70,22.63),
+  new Vec2D(13.68,23.49),
+new Vec2D(24.02,8.79),
+new Vec2D(19.82,0.71),
+new Vec2D(18.79,-2.15),
+new Vec2D(15.51,-6.15)]
 }
 }
 
@@ -1014,7 +1066,12 @@ hitboxes[0] = {
   throwdown : new hitboxObject(new hitbox(new Vec2D(3.57509,0),0,5,135,50,65,0,0,0,1,1)),
   throwback : new hitboxObject(new hitbox(new Vec2D(-1.29306,0),0,4,117,60,70,0,0,0,1,1)),
   throwforward : new hitboxObject(new hitbox(new Vec2D(7.69851,0),0,4,50,45,70,0,0,0,1,1)),
-  thrown : new hitboxObject(new hitbox(offsets[0].thrown.id0,3.906,4,361,50,20,0,1,0,1,1))
+  thrown : new hitboxObject(new hitbox(offsets[0].thrown.id0,3.906,4,361,50,20,0,1,0,1,1)),
+  neutralspecialground : new hitboxObject(new hitbox(offsets[0].neutralspecialground.id0,4.297,7,361,100,30,0,1,1,1,1),
+  new hitbox(offsets[0].neutralspecialground.id1,2.734,7,361,100,30,0,1,1,1,1),
+  new hitbox(offsets[0].neutralspecialground.id2,3.125,7,361,100,34,0,1,1,1,1),
+  new hitbox(offsets[0].neutralspecialground.id3,3.906,7,361,100,40,0,1,1,1,1)),
+  neutralspecialair : new hitboxObject(new hitbox(offsets[0].neutralspecialair.id0,4,297,7,361,100,30,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id1,2.734,7,361,100,30,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id2,3.125,7,361,100,34,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id3,3.906,7,361,100,40,0,1,0,1,1))
 };
 
 for (var l=0;l<20;l++){

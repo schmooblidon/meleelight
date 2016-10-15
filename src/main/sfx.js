@@ -411,6 +411,18 @@ sounds = {
   }),
   rollouthit : new Howl({
     src : ['sfx/rollouthit.wav']
+  }),
+  shieldbreaker1 : new Howl({
+    src : ['sfx/shieldbreaker1.wav']
+  }),
+  shieldbreaker2 : new Howl({
+    src : ['sfx/shieldbreaker2.wav']
+  }),
+  shieldbreakershout : new Howl({
+    src : ['sfx/shieldbreakershout.wav']
+  }),
+  shieldbreakercharge : new Howl({
+    src : ['sfx/shieldbreakercharge.wav']
   })
 }
 
