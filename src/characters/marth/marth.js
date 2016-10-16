@@ -3207,27 +3207,14 @@ marth.THROWFORWARD = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
     randomShout(cS[p]);
-    var frame = 0;
-    switch (cS[player[p].phys.grabbing]){
-      case 0:
-        frame = 13;
-        break;
-      case 1:
-        frame = 9;
-        break;
-      case 2:
-        frame = 9;
-        break;
-      default:
-        break;
-    }
-    player[p].phys.releaseFrame = frame;
+    var frame = frames[cS[player[p].phys.grabbing]].THROWNMARTHFORWARD;
+    player[p].phys.releaseFrame = frame+1;
     marth.THROWFORWARD.main(p);
   },
   main : function(p){
     player[p].timer+=13/player[p].phys.releaseFrame;
     if (!marth.THROWFORWARD.interrupt(p)){
-      if (Math.floor(player[p].timer) == 13){
+      if (Math.floor(player[p].timer+0.01) == 13){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
@@ -3260,27 +3247,14 @@ marth.THROWBACK = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
     randomShout(cS[p]);
-    var frame = 0;
-    switch (cS[player[p].phys.grabbing]){
-      case 0:
-        frame = 7;
-        break;
-      case 1:
-        frame = 5;
-        break;
-      case 2:
-        frame = 9;
-        break;
-      default:
-        break;
-    }
-    player[p].phys.releaseFrame = frame;
+    var frame = frames[cS[player[p].phys.grabbing]].THROWNMARTHBACK;
+    player[p].phys.releaseFrame = frame+1;
     marth.THROWBACK.main(p);
   },
   main : function(p){
     player[p].timer+=7/player[p].phys.releaseFrame;
     if (!marth.THROWBACK.interrupt(p)){
-      if (Math.floor(player[p].timer) == 7){
+      if (Math.floor(player[p].timer+0.01) == 7){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
@@ -3312,28 +3286,15 @@ marth.THROWUP = {
     aS[cS[player[p].phys.grabbing]].THROWNMARTHUP.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
-    var frame = 0;
-    switch (cS[player[p].phys.grabbing]){
-      case 0:
-        frame = 11;
-        break;
-      case 1:
-        frame = 8;
-        break;
-      case 2:
-        frame = 9;
-        break;
-      default:
-        break;
-    }
-    player[p].phys.releaseFrame = frame;
+    var frame = frames[cS[player[p].phys.grabbing]].THROWNMARTHUP;
+    player[p].phys.releaseFrame = frame+1;
     randomShout(cS[p]);
     marth.THROWUP.main(p);
   },
   main : function(p){
-    player[p].timer+=11/player[p].phys.releaseFrame;
+    player[p].timer+=12/player[p].phys.releaseFrame;
     if (!marth.THROWUP.interrupt(p)){
-      if (Math.floor(player[p].timer) == 11){
+      if (Math.floor(player[p].timer+0.01) == 12){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
@@ -3347,7 +3308,6 @@ marth.THROWUP = {
       return true;
     }
     else if (player[p].timer < 11 && player[player[p].phys.grabbing].phys.grabbedBy != p){
-      console.log("test");
       marth.CATCHCUT.init(p);
       return true;
     }
@@ -3367,27 +3327,14 @@ marth.THROWDOWN = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
     randomShout(cS[p]);
-    var frame = 0;
-    switch (cS[player[p].phys.grabbing]){
-      case 0:
-        frame = 13;
-        break;
-      case 1:
-        frame = 9;
-        break;
-      case 2:
-        frame = 9;
-        break;
-      default:
-        break;
-    }
-    player[p].phys.releaseFrame = frame;
+    var frame = frames[cS[player[p].phys.grabbing]].THROWNMARTHDOWN;
+    player[p].phys.releaseFrame = frame+1;
     marth.THROWDOWN.main(p);
   },
   main : function(p){
     player[p].timer+=13/player[p].phys.releaseFrame;
     if (!marth.THROWDOWN.interrupt(p)){
-      if (Math.floor(player[p].timer) == 13){
+      if (Math.floor(player[p].timer+0.01) == 13){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
@@ -3418,6 +3365,7 @@ marth.THROWNMARTHUP = {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
+  offset : [[-9.42,2.73],[-10.14,2.56],[-10.83,2.00],[-10.97,1.82],[-10.74,1.85],[-10.44,1.95],[-10.17,2.05],[-10.08,2.08],[-11.07,2.81],[-8.94,11.00],[-8.94,11.00]],
   init : function(p){
     player[p].actionState = "THROWNMARTHUP";
     if (player[p].phys.grabbedBy < p){
@@ -3433,7 +3381,9 @@ marth.THROWNMARTHUP = {
   main : function(p){
     player[p].timer++;
     if (!marth.THROWNMARTHUP.interrupt(p)){
-
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNMARTHUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNMARTHUP.offset[player[p].timer-1][1]);
+      }
     }
   },
   interrupt : function(p){
@@ -3449,6 +3399,7 @@ marth.THROWNMARTHDOWN = {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
+  offset : [[-9.23,3.12],[-11.00,3.75],[-12.45,4.26],[-12.67,4.33],[-12.67,4.33],[-12.67,4.33],[-12.92,3.86],[-13.31,2.59],[-13.16,1.05],[-12.50,-0.70],[-11.29,-2.85],[-8.43,-6.34],[-8.43,-6.34]],
   init : function(p){
     player[p].actionState = "THROWNMARTHDOWN";
     if (player[p].phys.grabbedBy < p){
@@ -3458,14 +3409,15 @@ marth.THROWNMARTHDOWN = {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    player[p].phys.face *= -1;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
     marth.THROWNMARTHDOWN.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (!marth.THROWNMARTHDOWN.interrupt(p)){
-
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNMARTHDOWN.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNMARTHDOWN.offset[player[p].timer-1][1]);
+      }
     }
   },
   interrupt : function(p){
@@ -3481,6 +3433,7 @@ marth.THROWNMARTHBACK = {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
+  offset : [[-6.93,2.63],[-4.37,2.35],[-1.03,2.23],[-0.04,0.73],[1.12,-1.77],[1.23,-2.01],[1.23,-2.01]],
   init : function(p){
     player[p].actionState = "THROWNMARTHBACK";
     if (player[p].phys.grabbedBy < p){
@@ -3490,14 +3443,15 @@ marth.THROWNMARTHBACK = {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    player[p].phys.face *= -1;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
     marth.THROWNMARTHBACK.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (!marth.THROWNMARTHBACK.interrupt(p)){
-
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNMARTHBACK.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNMARTHBACK.offset[player[p].timer-1][1]);
+      }
     }
   },
   interrupt : function(p){
@@ -3512,6 +3466,7 @@ marth.THROWNMARTHFORWARD = {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
+  offset : [[-10.23,2.34],[-11.36,2.91],[-9.76,4.86],[-9.49,5.06],[-9.31,5.09],[-9.28,5.01],[-9.49,4.86],[-10.27,4.65],[-13.57,3.61],[-11.63,1.55],[-9.61,-2.20],[-7.85,-7.66],[-7.85,-7.66]],
   init : function(p){
     player[p].actionState = "THROWNMARTHFORWARD";
     if (player[p].phys.grabbedBy < p){
@@ -3527,7 +3482,9 @@ marth.THROWNMARTHFORWARD = {
   main : function(p){
     player[p].timer++;
     if (!marth.THROWNMARTHFORWARD.interrupt(p)){
-
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNMARTHFORWARD.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNMARTHFORWARD.offset[player[p].timer-1][1]);
+      }
     }
   },
   interrupt : function(p){
@@ -3660,6 +3617,140 @@ marth.THROWNPUFFUP = {
     if (!marth.THROWNPUFFUP.interrupt(p)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNPUFFUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNPUFFUP.offset[player[p].timer-1][1]);
+      }
+    }
+  },
+  interrupt : function(p){
+    return false;
+  }
+}
+
+marth.THROWNFOXFORWARD = {
+  name : "THROWNFOXFORWARD",
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  canBeGrabbed : false,
+  ignoreCollision : true,
+  offset : [[-10.52,-3.27],[-9.84,-3.27],[-9.13,-3.27],[-8.70,-3.27],[-8.60,-3.27],[-8.61,-3.27],[-8.67,-3.27],[-8.70,-3.27],[-9.78,-3.27],[-9.78,0.01]],
+  init : function(p){
+    player[p].actionState = "THROWNFOXFORWARD";
+    if (player[p].phys.grabbedBy < p){
+      player[p].timer = -1;
+    }
+    else {
+      player[p].timer = 0;
+    }
+    player[p].phys.grounded = false;
+    marth.THROWNFOXFORWARD.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.THROWNFOXFORWARD.interrupt(p)){
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNFOXFORWARD.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNFOXFORWARD.offset[player[p].timer-1][1]);
+      }
+    }
+  },
+  interrupt : function(p){
+    return false;
+  }
+}
+
+marth.THROWNFOXDOWN = {
+  name : "THROWNFOXDOWN",
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  canBeGrabbed : false,
+  ignoreCollision : true,
+  offset : [[-9.84,-3.86],[-7.24,-5.16],[-4.52,-6.41],[-2.68,-7.35],[-0.51,-8.44],[-0.48,-8.42],[-0.58,-8.37],[-0.59,-8.41],[-0.51,-8.47],[-0.54,-8.45],[-0.59,-8.42],[-0.61,-8.41],[-0.57,-8.42],[-0.50,-8.43],[-0.48,-8.46],[-0.49,-8.49],[-0.49,-8.48],[-0.49,-8.44],[-0.50,-8.42],[-0.54,-8.41],[-0.57,-8.44],[-0.56,-8.47],[-0.54,-8.47],[-0.50,-8.44],[-0.46,-8.40],[-0.49,-8.39],[-0.54,-8.42],[-0.52,-8.47],[-0.51,-8.52],[-0.50,-8.50],[-0.52,-8.43],[-0.46,-8.37],[-0.41,-8.38],[-0.47,-8.44],[-0.51,-8.45],[-0.53,-8.43],[-0.54,-8.41],[-0.47,-8.39],[-0.44,-8.43],[-0.45,-8.48],[-0.46,-8.46],[-0.48,-8.43],[-0.49,-8.41],[-0.55,-8.41],[-0.57,-8.43],[-0.57,-8.46],[-0.55,-8.47],[-0.51,-8.45],[-0.48,-8.40],[-0.51,-8.38],[-0.57,-8.39],[-0.55,-8.44],[-0.55,-8.47],[-0.54,-8.46],[-0.53,-8.43],[-0.48,-8.38],[-0.48,-8.38],[-0.52,-8.44],[-0.50,-8.46],[-0.48,-8.50],[-0.51,-8.49],[-0.55,-8.47],[-0.55,-8.47]],
+  init : function(p){
+    player[p].actionState = "THROWNFOXDOWN";
+    if (player[p].phys.grabbedBy < p){
+      player[p].timer = -1;
+    }
+    else {
+      player[p].timer = 0;
+    }
+    player[p].phys.grounded = false;
+
+    marth.THROWNFOXDOWN.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.THROWNFOXDOWN.interrupt(p)){
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNFOXDOWN.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNFOXDOWN.offset[player[p].timer-1][1]);
+      }
+    }
+  },
+  interrupt : function(p){
+    return false;
+  }
+}
+
+marth.THROWNFOXBACK = {
+  name : "THROWNFOXBACK",
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  canBeGrabbed : false,
+  ignoreCollision : true,
+  reverseModel : true,
+  //[1.05,7.14],[3.78,7.55],[10.37,1.56],[13.72,-6.85],[13.66,-9.95],[13.67,-10.28],[13.85,-9.92],[14.04,-9.34],[14.04,-9.34]],
+  offset : [[-11.22,-3.35],[-11.51,-3.60],[-11.64,-3.90],[-11.51,-4.11],[-10.99,-4.13],[-9.98,-4.05],[-8.74,-3.92],[-7.52,-3.55],[-6.37,-2.46],[-5.04,-0.22],[-3.44,2.32],[-1.58,3.79],[0.31,4.86],[0.92,7.14],[2.41,7.55],[5.89,1.56],[6.52,-6.85],[6.13,-9.95],[6.14,-10.28],[6.32,-9.92],[6.51,-9.34],[6.51,-9.34]],
+  offsetVel : [-0.12755,-1.24035,-3.10533,-2.72023,-0.32654],
+  //7.53
+  init : function(p){
+    player[p].actionState = "THROWNFOXBACK";
+    if (player[p].phys.grabbedBy < p){
+      player[p].timer = -1;
+    }
+    else {
+      player[p].timer = 0;
+    }
+    player[p].phys.grounded = false;
+    player[p].phys.face*= -1;
+    marth.THROWNFOXBACK.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.THROWNFOXBACK.interrupt(p)){
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNFOXBACK.offset[player[p].timer-1][0]*player[p].phys.face*-1,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNFOXBACK.offset[player[p].timer-1][1]);
+        /*if (player[p].timer > 13 && player[p].timer < 19){
+          player[p].phys.pos.x += marth.THROWNFOXBACK.offsetVel[player[p].timer-14]*player[p].phys.face;
+        }*/
+      }
+
+    }
+  },
+  interrupt : function(p){
+    return false;
+  }
+}
+
+marth.THROWNFOXUP = {
+  name : "THROWNFOXUP",
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  canBeGrabbed : false,
+  ignoreCollision : true,
+  offset : [[-10.63,-3.65],[-9.46,-4.14],[-7.29,-4.39],[-2.98,-3.79],[2.65,-2.33],[4.95,-0.64],[4.95,-0.64]],
+  init : function(p){
+    player[p].actionState = "THROWNFOXUP";
+    if (player[p].phys.grabbedBy < p){
+      player[p].timer = -1;
+    }
+    else {
+      player[p].timer = 0;
+    }
+    player[p].phys.grounded = false;
+    marth.THROWNFOXUP.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.THROWNFOXUP.interrupt(p)){
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+marth.THROWNFOXUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+marth.THROWNFOXUP.offset[player[p].timer-1][1]);
       }
     }
   },

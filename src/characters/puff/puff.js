@@ -1989,31 +1989,17 @@ puff.THROWFORWARD = {
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNPUFFFORWARD.init(player[p].phys.grabbing);
-    var frame = 0;
-    switch (cS[player[p].phys.grabbing]){
-      case 0:
-        frame = 10;
-        break;
-      case 1:
-        frame = 10;
-        break;
-      case 2:
-        frame = 9;
-        break;
-      default:
-        break;
-    }
-    player[p].phys.releaseFrame = frame;
+    var frame = frames[cS[player[p].phys.grabbing]].THROWNPUFFFORWARD;
+    player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
     randomShout(cS[p]);
     puff.THROWFORWARD.main(p);
   },
   main : function(p){
-    player[p].timer++;
+    player[p].timer+=12/player[p].phys.releaseFrame;
     if (!puff.THROWFORWARD.interrupt(p)){
-
-      if (player[p].timer == player[p].phys.releaseFrame){
+      if (Math.floor(player[p].timer+0.01) == 12){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
@@ -2053,33 +2039,20 @@ puff.THROWBACK = {
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNPUFFBACK.init(player[p].phys.grabbing);
-    var frame = 0;
-    switch (cS[player[p].phys.grabbing]){
-      case 0:
-        frame = 22;
-        break;
-      case 1:
-        frame = 15;
-        break;
-      case 2:
-        frame = 9;
-        break;
-      default:
-        break;
-    }
-    player[p].phys.releaseFrame = frame;
+    var frame = frames[cS[player[p].phys.grabbing]].THROWNPUFFBACK;
+    player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
     randomShout(cS[p]);
     puff.THROWBACK.main(p);
   },
   main : function(p){
-    player[p].timer+=(48/43)*(22/player[p].phys.releaseFrame);
+    player[p].timer+=(22/player[p].phys.releaseFrame);
     if (!puff.THROWBACK.interrupt(p)){
-      if (Math.floor(player[p].timer) > 13 && Math.floor(player[p].timer < 37)){
-        player[p].phys.cVel.x = puff.THROWBACK.setVelocities[Math.floor(player[p].timer)-14]*player[p].phys.face;
+      if (Math.floor(player[p].timer+0.01) > 13 && Math.floor(player[p].timer+0.01 < 37)){
+        player[p].phys.cVel.x = puff.THROWBACK.setVelocities[Math.floor(player[p].timer+0.01)-14]*player[p].phys.face;
       }
-      if (Math.floor(player[p].timer) == 22){
+      if (Math.floor(player[p].timer+0.01) == 22){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
@@ -2110,28 +2083,15 @@ puff.THROWUP = {
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNPUFFUP.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
-    var frame = 0;
-    switch (cS[player[p].phys.grabbing]){
-      case 0:
-        frame = 7;
-        break;
-      case 1:
-        frame = 5;
-        break;
-      case 2:
-        frame = 9;
-        break;
-      default:
-        break;
-    }
-    player[p].phys.releaseFrame = frame;
+    var frame = frames[cS[player[p].phys.grabbing]].THROWNPUFFUP;
+    player[p].phys.releaseFrame = frame+1;
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
     puff.THROWUP.main(p);
   },
   main : function(p){
     player[p].timer+=7/player[p].phys.releaseFrame;
     if (!puff.THROWUP.interrupt(p)){
-      if (Math.floor(player[p].timer) == player[p].phys.releaseFrame){
+      if (Math.floor(player[p].timer+0.01) == 7){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
@@ -2163,28 +2123,15 @@ puff.THROWDOWN = {
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNPUFFDOWN.init(player[p].phys.grabbing);
-    var frame = 0;
-    switch (cS[player[p].phys.grabbing]){
-      case 0:
-        frame = 61;
-        break;
-      case 1:
-        frame = 61;
-        break;
-      case 2:
-        frame = 9;
-        break;
-      default:
-        break;
-    }
-    player[p].phys.releaseFrame = frame;
+    var frame = frames[cS[player[p].phys.grabbing]].THROWNPUFFDOWN;
+    player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdownextra.id0;
     randomShout(cS[p]);
     puff.THROWDOWN.main(p);
   },
   main : function(p){
-    player[p].timer++;
+    player[p].timer+=61/player[p].phys.releaseFrame;
     if (!puff.THROWDOWN.interrupt(p)){
       //10,23,36,49
       if (player[p].timer < 51){
@@ -2196,7 +2143,7 @@ puff.THROWDOWN = {
           turnOffHitboxes(p);
         }
       }
-      if (player[p].timer == player[p].phys.releaseFrame){
+      if (Math.floor(player[p].timer+0.01) == 61){
         player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);

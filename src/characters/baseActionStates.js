@@ -2866,6 +2866,7 @@ baseActionStates = {
   canBeGrabbed : true,
   downed : true,
   landType : 1,
+  canGrabLedge : [false,false],
   init : function(p){
     player[p].actionState = "DOWNDAMAGE";
     player[p].timer = 0;
@@ -3234,6 +3235,7 @@ baseActionStates = {
   name : "CAPTUREPULLED",
   canEdgeCancel : false,
   canBeGrabbed : false,
+  inGrab : true,
   init : function(p){
     player[p].actionState = "CAPTUREPULLED";
     player[p].timer = 0;
@@ -3269,6 +3271,7 @@ baseActionStates = {
   name : "CAPTUREWAIT",
   canEdgeCancel : false,
   canBeGrabbed : false,
+  inGrab : true,
   init : function(p){
     player[p].actionState = "CAPTUREWAIT";
     player[p].timer = 0;
@@ -3308,6 +3311,7 @@ baseActionStates = {
   name : "CATCHWAIT",
   canEdgeCancel : false,
   canBeGrabbed : true,
+  inGrab : true,
   init : function(p){
     player[p].actionState = "CATCHWAIT";
     player[p].timer = 0;
@@ -3357,6 +3361,7 @@ baseActionStates = {
   canGrabLedge : [true,false],
   wallJumpAble : false,
   canBeGrabbed : true,
+  inGrab : true,
   init : function(p){
     player[p].actionState = "CAPTURECUT";
     player[p].timer = 0;
@@ -3389,6 +3394,7 @@ baseActionStates = {
   canEdgeCancel : false,
   canGrabLedge : [true,false],
   canBeGrabbed : true,
+  inGrab : true,
   init : function(p){
     player[p].actionState = "CATCHCUT";
     player[p].timer = 0;
@@ -3418,6 +3424,7 @@ baseActionStates = {
   canEdgeCancel : false,
   canBeGrabbed : false,
   setPositions : [9.478,9.478,9.478,9.478,9.478,9.478,9.478,9.478,9.478,9.306,8.920,8.516,8.290,8.293,8.410,8.593,8.792,8.959,9.043,9.068],
+  inGrab : true,
   init : function(p){
     player[p].actionState = "CAPTUREDAMAGE";
     player[p].timer = 0;

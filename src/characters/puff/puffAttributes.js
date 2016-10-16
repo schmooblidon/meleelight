@@ -41,7 +41,8 @@ charAttributes[1] = {
   wallJumpVelX : 1.3,
   wallJumpVelY : 2.4,
   shieldBreakVel : 10,
-  multiJump : true
+  multiJump : true,
+  ecbscale : 2.6
 }
 
   // start, length
@@ -112,7 +113,19 @@ charAttributes[1] = {
   "WALLTECH" : 31,
   "WALLJUMP" : 40,
   "OTTOTTO" : 12,
-  "OTTOTTOWAIT" : 63
+  "OTTOTTOWAIT" : 63,
+  "THROWNMARTHUP" : 7,
+  "THROWNMARTHBACK" : 4,
+  "THROWNMARTHFORWARD" : 8,
+  "THROWNMARTHDOWN" : 8,
+  "THROWNPUFFUP" : 4,
+  "THROWNPUFFBACK" : 14,
+  "THROWNPUFFFORWARD" : 9,
+  "THROWNPUFFDOWN" : 60,
+  "THROWNFOXUP" : 0,
+  "THROWNFOXBACK" : 0,
+  "THROWNFOXFORWARD" : 0,
+  "THROWNFOXDOWN" : 0
   }
 
   actionSounds[1] = {

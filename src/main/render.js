@@ -56,6 +56,10 @@ function renderPlayer(i){
   if (frame == 0){
     frame = 1;
   }
+  if (frame > frames[cS[i]][player[i].actionState]){
+    console.log("test");
+    frame = frames[cS[i]][player[i].actionState];
+  }
 
   var model = animations[cS[i]][player[i].actionState][frame-1];
 

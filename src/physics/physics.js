@@ -230,6 +230,9 @@ function physics(i){
   if (frame == 0){
     frame = 1;
   }
+  if (frame > frames[cS[i]][player[i].actionState]){
+    frame = frames[cS[i]][player[i].actionState];
+  }
   //console.log(aS[cS[i]][player[i].actionState].name+" "+(frame-1));
   var ecbOffset = ecb[cS[i]][player[i].actionState][frame-1];
   if (aS[cS[i]][player[i].actionState].dead){
