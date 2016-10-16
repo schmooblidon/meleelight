@@ -23,43 +23,55 @@ function hitDetection(p){
               }
               if (player[p].hitboxes.active[j] && !(player[p].phys.thrownHitbox && player[p].phys.thrownHitboxOwner == i)){
                 //console.log(player[i].phys.shielding);
-
-                if (player[p].hitboxes.id[j].clank == 1 || (player[p].hitboxes.id[j].clank == 2 && player[p].phys.grounded)){
+                // clank == 6 means special clank
+                if (player[p].hitboxes.id[j].clank == 1 || (player[p].hitboxes.id[j].clank == 2 && player[p].phys.grounded) || player[p].hitboxes.id[j].clank == 6){
                   for (var k=0;k<4;k++){
-                    if (player[i].hitboxes.active[k] && (player[i].hitboxes.id[k].clank == 1 || (player[i].hitboxes.id[k].clank == 2 && player[i].phys.grounded))){
+                    if (player[i].hitboxes.active[k] && (player[i].hitboxes.id[k].clank == 1 || (player[i].hitboxes.id[k].clank == 2 && player[i].phys.grounded) || (player[p].hitboxes.id[j].clank == 6 && player[i].hitboxes.id[k].clank != 6))){
 
                       var clankHit = hitHitCollision(i,p,j,k);
                       if (clankHit[0]){
 
                           var diff = player[p].hitboxes.id[j].dmg - player[i].hitboxes.id[k].dmg;
-                          if (diff >= 9){
-                            // victim clank
-                            // attacker cut through
-                            player[i].hit.hitlag = Math.floor(player[p].hitboxes.id[j].dmg * (1/3) + 3);
-                            turnOffHitboxes(i);
-                            aS[cS[i]].CATCHCUT.init(i);
-                          }
-                          else if (diff <= -9){
-                            // attacker clank
-                            // victim cut through
-                            player[p].hit.hitlag = Math.floor(player[i].hitboxes.id[k].dmg * (1/3) + 3);
+                          if (player[p].hitboxes.id[j].clank == 6){
                             attackerClank = true;
-                            turnOffHitboxes(p);
-                            aS[cS[p]].CATCHCUT.init(p);
+                            drawVfx("clank",clankHit[1]);
+                            player[p].phys.hurtBoxState = 1;
+                            player[p].phys.intangibleTimer = 1;
+                            // double check still in action state for some weird case
+                            if (aS[cS[p]][player[p].actionState].specialClank){
+                              aS[cS[p]][player[p].actionState].onClank(p);
+                            }
                           }
                           else {
-                            // both clank
-                            player[i].hit.hitlag = Math.floor(player[p].hitboxes.id[j].dmg * (1/3) + 3);
-                            player[p].hit.hitlag = Math.floor(player[i].hitboxes.id[k].dmg * (1/3) + 3);
-                            attackerClank = true;
-                            turnOffHitboxes(i);
-                            aS[cS[i]].CATCHCUT.init(i);
-                            turnOffHitboxes(p);
-                            aS[cS[p]].CATCHCUT.init(p);
+                            if (diff >= 9){
+                              // victim clank
+                              // attacker cut through
+                              player[i].hit.hitlag = Math.floor(player[p].hitboxes.id[j].dmg * (1/3) + 3);
+                              turnOffHitboxes(i);
+                              aS[cS[i]].CATCHCUT.init(i);
+                            }
+                            else if (diff <= -9){
+                              // attacker clank
+                              // victim cut through
+                              player[p].hit.hitlag = Math.floor(player[i].hitboxes.id[k].dmg * (1/3) + 3);
+                              attackerClank = true;
+                              turnOffHitboxes(p);
+                              aS[cS[p]].CATCHCUT.init(p);
+                            }
+                            else {
+                              // both clank
+                              player[i].hit.hitlag = Math.floor(player[p].hitboxes.id[j].dmg * (1/3) + 3);
+                              player[p].hit.hitlag = Math.floor(player[i].hitboxes.id[k].dmg * (1/3) + 3);
+                              attackerClank = true;
+                              turnOffHitboxes(i);
+                              aS[cS[i]].CATCHCUT.init(i);
+                              turnOffHitboxes(p);
+                              aS[cS[p]].CATCHCUT.init(p);
+                            }
+                            sounds.clank.play();
+                            drawVfx("clank",clankHit[1]);
+                            player[p].hitboxes.hitList.push(i);
                           }
-                          sounds.clank.play();
-                          drawVfx("clank",clankHit[1]);
-                          player[p].hitboxes.hitList.push(i);
                           break;
                       }
 

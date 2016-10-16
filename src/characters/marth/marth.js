@@ -2570,16 +2570,52 @@ marth.DOWNSPECIALAIR = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
+  specialClank : true,
   init : function(p){
     player[p].actionState = "DOWNSPECIALAIR";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
+    player[p].phys.cVel.y = 0;
+    player[p].phys.cVel.x *= 0.5;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.downspecialair.id0;
     marth.DOWNSPECIALAIR.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (!marth.DOWNSPECIALAIR.interrupt(p)){
-
+      player[p].phys.cVel.y -= 0.04;
+      if (player[p].phys.cVel.y < -1.2){
+        player[p].phys.cVel.y = -1.2;
+      }
+      var sign = Math.sign(player[p].phys.cVel.x);
+      player[p].phys.cVel.x -= sign*0.0025;
+      if (player[p].phys.cVel.x*sign < 0){
+        player[p].phys.cVel.x = 0;
+      }
+      if (player[p].timer == 5){
+        sounds.marthcounter.play();
+        player[p].colourOverlayBool = true;
+        player[p].colourOverlay = "white";
+        player[p].hitboxes.active = [true,false,false,false];
+        player[p].hitboxes.frame = 0;
+      }
+      else if (player[p].timer == 30){
+        turnOffHitboxes(p);
+      }
+      if (player[p].timer >= 6 && player[p].timer <= 28){
+        if (player[p].timer % 6 < 2){
+          player[p].colourOverlayBool = true;
+          player[p].colourOverlay = "rgb(122, 122, 122)";
+        }
+        else if (player[p].timer % 6 < 4){
+          player[p].colourOverlayBool = true;
+          player[p].colourOverlay = "rgb(200, 120, 255)";
+        }
+        else {
+          player[p].colourOverlayBool = false;
+        }
+      }
     }
   },
   interrupt : function(p){
@@ -2598,6 +2634,72 @@ marth.DOWNSPECIALAIR = {
   },
   land : function(p){
     player[p].actionState = "DOWNSPECIALGROUND";
+  },
+  onClank : function(p){
+    player[p].hit.hitlag = 11;
+    player[p].colourOverlayBool = false;
+    marth.DOWNSPECIALAIR2.init(p);
+  }
+}
+
+marth.DOWNSPECIALAIR2 = {
+  name : "DOWNSPECIALAIR2",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  init : function(p){
+    player[p].actionState = "DOWNSPECIALAIR2";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 16;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.downspecialair2.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.downspecialair2.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.downspecialair2.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.downspecialair2.id3;
+    sounds.powershield.play();
+    sounds.marthcounterclank.play();
+    sounds.marthcountershout.play();
+    drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
+    drawVfx("powershield",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+8),player[p].phys.face);
+    marth.DOWNSPECIALAIR2.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.DOWNSPECIALAIR2.interrupt(p)){
+      player[p].phys.cVel.y -= 0.04;
+      if (player[p].phys.cVel.y < -1.2){
+        player[p].phys.cVel.y = -1.2;
+      }
+      var sign = Math.sign(player[p].phys.cVel.x);
+      player[p].phys.cVel.x -= sign*0.0025;
+      if (player[p].timer == 4){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+      }
+      else if (player[p].timer > 4 && player[p].timer < 11){
+        player[p].hitboxes.frame++;
+      }
+      else if (player[p].timer == 11){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 36){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }
 
@@ -2609,18 +2711,107 @@ marth.DOWNSPECIALGROUND = {
   wallJumpAble : false,
   headBonk : false,
   canBeGrabbed : true,
+  specialClank : true,
   init : function(p){
     player[p].actionState = "DOWNSPECIALGROUND";
     player[p].timer = 0;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.downspecialground.id0;
     marth.DOWNSPECIALGROUND.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (!marth.DOWNSPECIALGROUND.interrupt(p)){
+      reduceByTraction(p,true);
+      if (player[p].timer == 5){
+        sounds.marthcounter.play();
+        player[p].colourOverlayBool = true;
+        player[p].colourOverlay = "white";
+        player[p].hitboxes.active = [true,false,false,false];
+        player[p].hitboxes.frame = 0;
+      }
+      else if (player[p].timer == 30){
+        turnOffHitboxes(p);
+      }
+
+      if (player[p].timer >= 6 && player[p].timer <= 28){
+        if (player[p].timer % 6 < 2){
+          player[p].colourOverlayBool = true;
+          player[p].colourOverlay = "rgb(122, 122, 122)";
+        }
+        else if (player[p].timer % 6 < 4){
+          player[p].colourOverlayBool = true;
+          player[p].colourOverlay = "rgb(200, 120, 255)";
+        }
+        else {
+          player[p].colourOverlayBool = false;
+        }
+      }
     }
   },
   interrupt : function(p){
     if (player[p].timer > 59){
+      if (player[p].phys.grounded){
+        marth.WAIT.init(p);
+      }
+      else {
+        marth.FALL.init(p);
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  onClank : function(p){
+    player[p].hit.hitlag = 11;
+    player[p].colourOverlayBool = false;
+    marth.DOWNSPECIALGROUND2.init(p);
+  }
+}
+
+marth.DOWNSPECIALGROUND2 = {
+  name : "DOWNSPECIALGROUND2",
+  canPassThrough : false,
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  init : function(p){
+    reduceByTraction(p,true);
+    player[p].actionState = "DOWNSPECIALGROUND2";
+    player[p].timer = 0;
+    player[p].phys.intangibleTimer = 16;
+    turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.downspecialground2.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.downspecialground2.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.downspecialground2.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.downspecialground2.id3;
+    sounds.powershield.play();
+    sounds.marthcounterclank.play();
+    sounds.marthcountershout.play();
+    drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
+    drawVfx("powershield",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+8),player[p].phys.face);
+    marth.DOWNSPECIALGROUND2.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!marth.DOWNSPECIALGROUND2.interrupt(p)){
+      if (player[p].timer == 4){
+        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.frame = 0;
+      }
+      else if (player[p].timer > 4 && player[p].timer < 11){
+        player[p].hitboxes.frame++;
+      }
+      else if (player[p].timer == 11){
+        turnOffHitboxes(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 36){
       if (player[p].phys.grounded){
         marth.WAIT.init(p);
       }

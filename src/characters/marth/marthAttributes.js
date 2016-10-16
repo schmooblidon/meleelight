@@ -1007,6 +1007,72 @@ new Vec2D(24.02,8.79),
 new Vec2D(19.82,0.71),
 new Vec2D(18.79,-2.15),
 new Vec2D(15.51,-6.15)]
+},
+downspecialground : {
+  id0 : [new Vec2D(0,8)]
+},
+downspecialair : {
+  id0 : [new Vec2D(0,8)]
+},
+downspecialground2 : {
+  id0 : [new Vec2D(1.81,0.91),
+  new Vec2D(15.13,1.33),
+new Vec2D(19.09,7.68),
+new Vec2D(19.18,11.78),
+new Vec2D(18.33,16.01),
+new Vec2D(16.13,19.54),
+new Vec2D(10.90,22.93)],
+  id1 : [new Vec2D(5.36,3.54),
+  new Vec2D(13.65,5.57),
+new Vec2D(15.42,10.26),
+new Vec2D(14.90,13.12),
+new Vec2D(13.86,15.57),
+new Vec2D(12.08,17.59),
+new Vec2D(8.01,19.52)],
+  id2 : [new Vec2D(7.34,8.21),
+  new Vec2D(10.13,9.41),
+new Vec2D(10.33,11.54),
+new Vec2D(9.65,12.82),
+new Vec2D(9.16,13.22),
+new Vec2D(8.64,13.60),
+new Vec2D(6.72,14.45)],
+  id3 : [new Vec2D(4.06,13.30),
+  new Vec2D(4.38,12.76),
+new Vec2D(4.63,12.22),
+new Vec2D(5.42,11.62),
+new Vec2D(6.27,10.96),
+new Vec2D(7.04,10.38),
+new Vec2D(7.59,9.97)]
+},
+downspecialair2 : {
+  id0 : [new Vec2D(5.66,3.08),
+  new Vec2D(18.53,6.00),
+new Vec2D(20.01,13.39),
+new Vec2D(18.66,16.83),
+new Vec2D(16.80,19.12),
+new Vec2D(12.87,21.93),
+new Vec2D(9.16,23.02)],
+  id1 : [new Vec2D(8.54,5.83),
+  new Vec2D(15.37,9.19),
+new Vec2D(15.52,13.30),
+new Vec2D(14.41,15.46),
+new Vec2D(12.85,16.99),
+new Vec2D(9.67,18.82),
+new Vec2D(6.63,19.53)],
+  id2 : [new Vec2D(9.76,10.28),
+  new Vec2D(10.48,10.86),
+new Vec2D(10.57,11.58),
+new Vec2D(10.13,12.38),
+new Vec2D(9.32,13.13),
+new Vec2D(7.69,14.07),
+new Vec2D(6.03,14.57)],
+  id3 : [new Vec2D(3.82,13.25),
+  new Vec2D(4.36,12.60),
+new Vec2D(5.06,11.90),
+new Vec2D(5.89,11.18),
+new Vec2D(6.79,10.47),
+new Vec2D(7.54,9.93),
+new Vec2D(7.98,9.67)]
 }
 }
 
@@ -1071,7 +1137,11 @@ hitboxes[0] = {
   new hitbox(offsets[0].neutralspecialground.id1,2.734,7,361,100,30,0,1,1,1,1),
   new hitbox(offsets[0].neutralspecialground.id2,3.125,7,361,100,34,0,1,1,1,1),
   new hitbox(offsets[0].neutralspecialground.id3,3.906,7,361,100,40,0,1,1,1,1)),
-  neutralspecialair : new hitboxObject(new hitbox(offsets[0].neutralspecialair.id0,4,297,7,361,100,30,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id1,2.734,7,361,100,30,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id2,3.125,7,361,100,34,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id3,3.906,7,361,100,40,0,1,0,1,1))
+  neutralspecialair : new hitboxObject(new hitbox(offsets[0].neutralspecialair.id0,4.297,7,361,100,30,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id1,2.734,7,361,100,30,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id2,3.125,7,361,100,34,0,1,0,1,1),new hitbox(offsets[0].neutralspecialair.id3,3.906,7,361,100,40,0,1,0,1,1)),
+  downspecialground : new hitboxObject(new hitbox(offsets[0].downspecialground.id0,10,0,361,0,0,0,6,6,0,0)),
+  downspecialair : new hitboxObject(new hitbox(offsets[0].downspecialair.id0,10,0,361,0,0,0,6,6,0,0)),
+  downspecialground2 : new hitboxObject(new hitbox(offsets[0].downspecialground2.id0,3.906,7,361,35,90,0,1,0,1,1),new hitbox(offsets[0].downspecialground2.id1,4.297,7,361,35,90,0,1,0,1,1),new hitbox(offsets[0].downspecialground2.id2,2.734,7,361,35,90,0,1,0,1,1),new hitbox(offsets[0].downspecialground2.id3,3.047,7,361,35,90,0,1,0,1,1)),
+  downspecialair2 : new hitboxObject(new hitbox(offsets[0].downspecialair2.id0,3.906,7,361,35,90,0,1,0,1,1),new hitbox(offsets[0].downspecialair2.id1,4.297,7,361,35,90,0,1,0,1,1),new hitbox(offsets[0].downspecialair2.id2,2.734,7,361,35,90,0,1,0,1,1),new hitbox(offsets[0].downspecialair2.id3,3.047,7,361,35,90,0,1,0,1,1))
 };
 
 for (var l=0;l<20;l++){

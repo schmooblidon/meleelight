@@ -423,6 +423,16 @@ sounds = {
   }),
   shieldbreakercharge : new Howl({
     src : ['sfx/shieldbreakercharge.wav']
+  }),
+  marthcounter : new Howl({
+    src : ['sfx/marthcounter.wav']
+  }),
+  marthcountershout : new Howl({
+    src : ['sfx/marthcountershout.wav']
+  }),
+  marthcounterclank : new Howl({
+    src : ['sfx/marthcounterclank.wav'],
+    volume : 0.6
   })
 }
 
