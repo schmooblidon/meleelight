@@ -268,6 +268,9 @@ function executeHits(){
           grabQueue.push([a,v,false]);
         }
       }
+      else if (player[a].hitboxes.id[h].type == 5){
+        aS[cS[v]].FURASLEEPSTART.init(v);
+      }
       else {
         ignoreGrabs[v] = true;
         var damage = player[a].hitboxes.id[h].dmg;

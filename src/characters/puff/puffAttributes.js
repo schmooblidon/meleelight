@@ -125,7 +125,10 @@ charAttributes[1] = {
   "THROWNFOXUP" : 0,
   "THROWNFOXBACK" : 0,
   "THROWNFOXFORWARD" : 0,
-  "THROWNFOXDOWN" : 0
+  "THROWNFOXDOWN" : 0,
+  "FURASLEEPSTART" : 33,
+  "FURASLEEPLOOP" : 76,
+  "FURASLEEPEND" : 76
   }
 
   actionSounds[1] = {
@@ -411,7 +414,10 @@ new Vec2D(6.04-1.17,7.99)]
   downspecial : {
     id0 : [new Vec2D(0.13,5.26)]
   },
-  upspecial1 : {
+  upspecial : {
+    id0 : [new Vec2D(0,5.3)]
+  },
+  /*upspecial1 : {
     id0 : [new Vec2D(-0.76,4.94),
     new Vec2D(-0.92,5.06),
   new Vec2D(-1.08,5.18),
@@ -445,7 +451,7 @@ new Vec2D(-0.41,5.56),
 new Vec2D(-0.43,5.71),
 new Vec2D(-0.45,5.86),
 new Vec2D(-0.46,5.99)]
-  },
+  },*/
   grab : {
     id0 : [new Vec2D(10.28,4.77),
     new Vec2D(10.28,4.77)],
@@ -554,9 +560,10 @@ hitboxes[1] = {
   nair2 : new hitboxObject(new hitbox(offsets[1].nair2.id0,4.687,9,361,80,10,0,0,0,1,1),new hitbox(offsets[1].nair2.id1,3.515,9,361,80,10,0,0,0,1,1)),
   dair : new hitboxObject(new hitbox(offsets[1].dair.id0,5.078,2,270,100,20,0,0,0,1,0),new hitbox(offsets[1].dair.id1,4.297,2,270,100,20,0,0,0,1,0),new hitbox(offsets[1].dair.id2,5.078,2,30,100,10,0,0,0,0,1),new hitbox(offsets[1].dair.id3,4.297,2,30,100,10,0,0,0,0,1)),
   upair : new hitboxObject(new hitbox(offsets[1].upair.id0,5.468,12,90,100,30,0,0,0,1,1)),
-  upb1 : new hitboxObject(new hitbox(offsets[1].upspecial1.id0,10.937,0,361,100,0,0,5,0,1,0)),
+  upb : new hitboxObject(new hitbox(offsets[1].upspecial.id0,10.937,0,361,100,0,0,5,0,1,0)),
+  /*upb1 : new hitboxObject(new hitbox(offsets[1].upspecial1.id0,10.937,0,361,100,0,0,5,0,1,0)),
   upb2 : new hitboxObject(new hitbox(offsets[1].upspecial2.id0,10.937,0,361,100,0,0,5,0,1,0)),
-  upb3 : new hitboxObject(new hitbox(offsets[1].upspecial3.id0,12.890,0,361,100,0,0,5,0,1,0)),
+  upb3 : new hitboxObject(new hitbox(offsets[1].upspecial3.id0,12.890,0,361,100,0,0,5,0,1,0)),*/
   dtilt : new hitboxObject(new hitbox(offsets[1].dtilt.id0,3.515,10,20,30,40,0,0,1,1,1),new hitbox(offsets[1].dtilt.id1,3.515,10,20,30,40,0,0,1,1,1),new hitbox(offsets[1].dtilt.id2,3.906,10,20,30,40,0,0,1,1,1)),
   uptilt1 : new hitboxObject(new hitbox(offsets[1].uptilt1.id0,3.125,9,96,120,40,0,0,1,1,1),new hitbox(offsets[1].uptilt1.id1,4.297,9,96,120,40,0,0,1,1,1)),
   uptilt2 : new hitboxObject(new hitbox(offsets[1].uptilt2.id0,3.125,8,88,120,40,0,0,1,1,1),new hitbox(offsets[1].uptilt2.id1,3.515,8,88,120,40,0,0,1,1,1)),

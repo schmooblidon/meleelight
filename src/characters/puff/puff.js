@@ -1893,7 +1893,7 @@ puff.UPSPECIAL = {
       }
     }
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.upb1.id0;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.upb.id0;
     puff.UPSPECIAL.main(p);
   },
   main : function(p){
@@ -1929,33 +1929,21 @@ puff.UPSPECIAL = {
       if (player[p].timer == 28){
         player[p].hitboxes.active = [true,false,false,false];
         player[p].hitboxes.frame = 0;
+        player[p].hitboxes.id[0].size = 10.937;
       }
-      if (player[p].timer > 28 && player[p].timer < 36){
-        player[p].hitboxes.frame++;
+      else if (player[p].timer == 36){
+        player[p].hitboxes.id[0].size = 1;
       }
-      if (player[p].timer == 36){
-        turnOffHitboxes(p);
+      else if (player[p].timer == 69){
+        player[p].hitboxes.id[0].size = 10.937;
       }
-      if (player[p].timer == 69){
-        player[p].hitboxes.id[0] = player[p].charHitboxes.upb2.id0;
-        player[p].hitboxes.active = [true,false,false,false];
-        player[p].hitboxes.frame = 0;
+      else if (player[p].timer == 77){
+        player[p].hitboxes.id[0].size = 1;
       }
-      if (player[p].timer > 69 && player[p].timer < 77){
-        player[p].hitboxes.frame++;
+      else if (player[p].timer == 113){
+        player[p].hitboxes.id[0].size = 12.890;
       }
-      if (player[p].timer == 77){
-        turnOffHitboxes(p);
-      }
-      if (player[p].timer == 113){
-        player[p].hitboxes.id[0] = player[p].charHitboxes.upb3.id0;
-        player[p].hitboxes.active = [true,false,false,false];
-        player[p].hitboxes.frame = 0;
-      }
-      if (player[p].timer > 113 && player[p].timer < 126){
-        player[p].hitboxes.frame++;
-      }
-      if (player[p].timer == 126){
+      else if (player[p].timer == 126){
         turnOffHitboxes(p);
       }
     }

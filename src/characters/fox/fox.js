@@ -2426,9 +2426,6 @@ fox.THROWNPUFFBACK = {
     if (!fox.THROWNPUFFBACK.interrupt(p)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+fox.THROWNPUFFBACK.offset[player[p].timer-1][0]*player[p].phys.face*-1,player[player[p].phys.grabbedBy].phys.pos.y+fox.THROWNPUFFBACK.offset[player[p].timer-1][1]);
-        /*if (player[p].timer > 13 && player[p].timer < 19){
-          player[p].phys.pos.x += aS[0].THROWNPUFFBACK.offsetVel[player[p].timer-14]*player[p].phys.face;
-        }*/
       }
 
     }
@@ -2492,7 +2489,6 @@ fox.THROWNMARTHUP = {
     player[p].timer++;
     if (!fox.THROWNMARTHUP.interrupt(p)){
       if (player[p].timer > 0){
-        console.log(player[p].timer);
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+fox.THROWNMARTHUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+fox.THROWNMARTHUP.offset[player[p].timer-1][1]);
       }
     }
