@@ -2425,6 +2425,139 @@ puff.THROWNPUFFUP = {
     return false;
   }
 }
+
+puff.THROWNFOXFORWARD = {
+  name : "THROWNFOXFORWARD",
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  canBeGrabbed : false,
+  ignoreCollision : true,
+  offset : [[-7.74-0.08,2.53],[-7.17-0.22,3.27],[-7.15-0.24,3.42],[-7.34,3.43],[-7.44+0.68,3.60],[-7.65+1.67,3.79],[-8.06+2.69,3.95],[-8.77+3.47,4.02],[-10.03+4.04,3.91],[-12.03+4.61,3.68],[-12.03+4.61,3.68]],
+  //[0.08,0.22,0.24,0,-0.68,-1.67,-2.69,-3.47,-4.04,-4.61]
+  init : function(p){
+    player[p].actionState = "THROWNFOXFORWARD";
+    if (player[p].phys.grabbedBy < p){
+      player[p].timer = -1;
+    }
+    else {
+      player[p].timer = 0;
+    }
+    player[p].phys.grounded = false;
+    puff.THROWNFOXFORWARD.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!puff.THROWNFOXFORWARD.interrupt(p)){
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNFOXFORWARD.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNFOXFORWARD.offset[player[p].timer-1][1]);
+      }
+    }
+  },
+  interrupt : function(p){
+    return false;
+  }
+}
+
+puff.THROWNFOXDOWN = {
+  name : "THROWNFOXDOWN",
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  canBeGrabbed : false,
+  ignoreCollision : true,
+  offset : [[-4.73,2.26],[-2.33,1.03],[-1.90,0.93],[-1.84,1.06],[-1.84,1.52],[-1.98,3.71],[-1.04,6.74],[-0.05,7.45],[0.82,7.62],[1.03,7.33],[1.07,6.86],[1.07,7.12],[1.07,7.30],[0.85,7.44],[-0.45,9.89],[-0.78,-0.74],[-0.82,-1.45],[-0.81,-0.59],[-0.78,0.19],[-0.72,-0.15],[-0.65,-0.88],[-0.57,-0.99],[-0.50,0.52],[-0.50,-1.74],[-0.50,-1.44],[-0.50,-1.14],[-0.50,-0.85],[-0.50,-0.58],[-0.50,-0.33],[-0.50,-0.10],[-0.50,0.10],[-0.50,0.26],[-0.50,0.26]],
+  init : function(p){
+    player[p].actionState = "THROWNFOXDOWN";
+    if (player[p].phys.grabbedBy < p){
+      player[p].timer = -1;
+    }
+    else {
+      player[p].timer = 0;
+    }
+    player[p].phys.grounded = false;
+
+    puff.THROWNFOXDOWN.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!puff.THROWNFOXDOWN.interrupt(p)){
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNFOXDOWN.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNFOXDOWN.offset[player[p].timer-1][1]);
+      }
+    }
+  },
+  interrupt : function(p){
+    return false;
+  }
+}
+
+puff.THROWNFOXBACK = {
+  name : "THROWNFOXBACK",
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  canBeGrabbed : false,
+  ignoreCollision : true,
+  reverseModel : true,
+  //[1.05,7.14],[3.78,7.55],[10.37,1.56],[13.72,-6.85],[13.66,-9.95],[13.67,-10.28],[13.85,-9.92],[14.04,-9.34],[14.04,-9.34]],
+  offset : [[-7.91,1.71],[-5.60,1.14],[-1.22,-0.33],[3.34,-1.09],[8.23,6.71],[8.23,6.71]],
+  //7.53
+  init : function(p){
+    player[p].actionState = "THROWNFOXBACK";
+    if (player[p].phys.grabbedBy < p){
+      player[p].timer = -1;
+    }
+    else {
+      player[p].timer = 0;
+    }
+    player[p].phys.grounded = false;
+    player[p].phys.face*= -1;
+    puff.THROWNFOXBACK.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!puff.THROWNFOXBACK.interrupt(p)){
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNFOXBACK.offset[player[p].timer-1][0]*player[p].phys.face*-1,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNFOXBACK.offset[player[p].timer-1][1]);
+      }
+
+    }
+  },
+  interrupt : function(p){
+    return false;
+  }
+}
+
+puff.THROWNFOXUP = {
+  name : "THROWNFOXUP",
+  canEdgeCancel : false,
+  canGrabLedge : [false,false],
+  canBeGrabbed : false,
+  ignoreCollision : true,
+  offset : [[-6.30,2.16],[-5.56,2.71],[-5.19,2.38],[-3.03,12.89],[-3.03,12.89]],
+  init : function(p){
+    player[p].actionState = "THROWNFOXUP";
+    if (player[p].phys.grabbedBy < p){
+      player[p].timer = -1;
+    }
+    else {
+      player[p].timer = 0;
+    }
+    player[p].phys.grounded = false;
+    puff.THROWNFOXUP.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!puff.THROWNFOXUP.interrupt(p)){
+      if (player[p].timer > 0){
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNFOXUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNFOXUP.offset[player[p].timer-1][1]);
+      }
+    }
+  },
+  interrupt : function(p){
+    return false;
+  }
+}
+
+
 // --------------CLIFF ACTIONS--------
 
 puff.CLIFFGETUPQUICK = {

@@ -2095,7 +2095,6 @@ fox.THROWBACK = {
   name : "THROWBACK",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  setVelocities : [-0.12755,-1.24035,-3.10533,-2.72023,-0.32654,0,0,0,0.00357,0.09035,0.22531,0.37797,0.54831,1.35048,1.60332,1.04371,0.81257,0.60621,0.42461,0.26777,0.1357,0.03,0],
   init : function(p){
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
@@ -2108,7 +2107,7 @@ fox.THROWBACK = {
     fox.THROWBACK.main(p);
   },
   main : function(p){
-    player[p].timer+=(48/43)*(22/player[p].phys.releaseFrame);
+    player[p].timer+=8/player[p].phys.releaseFrame;
     if (!fox.THROWBACK.interrupt(p)){
       if (player[p].timer == 14){
         articles.LASER.init(p,2,0,Math.PI*0.75);
@@ -2122,10 +2121,7 @@ fox.THROWBACK = {
         articles.LASER.init(p,2,0,Math.PI*0.75);
         // 135
       }
-      if (Math.floor(player[p].timer+0.01) > 13 && Math.floor(player[p].timer+0.01) < 37){
-        player[p].phys.cVel.x = fox.THROWBACK.setVelocities[Math.floor(player[p].timer+0.01)-14]*player[p].phys.face;
-      }
-      if (Math.floor(player[p].timer+0.01) == 22){
+      if (Math.floor(player[p].timer+0.01) == 8){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
@@ -2159,24 +2155,14 @@ fox.THROWDOWN = {
     var frame = frames[cS[player[p].phys.grabbing]].THROWNFOXDOWN;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.throwdownextra.id0;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
     randomShout(cS[p]);
     fox.THROWDOWN.main(p);
   },
   main : function(p){
-    player[p].timer++;
+    player[p].timer+=33/player[p].phys.releaseFrame;
     if (!fox.THROWDOWN.interrupt(p)){
-      //10,23,36,49
-      if (player[p].timer < 51){
-        if (player[p].timer%13 == 10){
-          player[p].hitboxes.active = [true,false,false,false];
-          player[p].hitboxes.frame = 0;
-        }
-        if (player[p].timer%13 == 11){
-          turnOffHitboxes(p);
-        }
-      }
-      if (Math.floor(player[p].timer+0.01) == player[p].phys.releaseFrame){
+      if (Math.floor(player[p].timer+0.01) == 33){
         player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
@@ -2202,7 +2188,7 @@ fox.THROWDOWN = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > 84){
+    if (player[p].timer > 43){
       player[p].phys.grabbing = -1;
       fox.WAIT.init(p);
       return true;
@@ -2259,7 +2245,7 @@ fox.THROWUP = {
       else if (player[p].timer == 33){
         sounds.foxlaserholster.play();
       }
-      if (Math.floor(player[p].timer+0.01) == player[p].phys.releaseFrame){
+      if (Math.floor(player[p].timer+0.01) == 7){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
@@ -2287,6 +2273,7 @@ fox.THROWFORWARD = {
   name : "THROWFORWARD",
   canEdgeCancel : false,
   canBeGrabbed : true,
+  setVelocities : [-0.08,-0.14,-0.03,0.24,0.68,0.99,1.02,0.78,0.57,0.57,0.57,0.57,0.56,0.56,0.55,0.54,0.53,0.52,0.50,0.49,0.47,0.45,0.43,0.41,0.39,0.36,0,0,0,0,0,0,0],
   init : function(p){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
@@ -2299,21 +2286,21 @@ fox.THROWFORWARD = {
     fox.THROWFORWARD.main(p);
   },
   main : function(p){
-    player[p].timer++;
+    player[p].timer+=11/player[p].phys.releaseFrame;
     if (!fox.THROWFORWARD.interrupt(p)){
-
-      if (Math.floor(player[p].timer+0.01) == player[p].phys.releaseFrame){
+      player[p].phys.cVel.x = fox.THROWFORWARD.setVelocities[Math.floor(player[p].timer+0.01)-1]*player[p].phys.face;
+      if (Math.floor(player[p].timer+0.01) == 11){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
-      if (player[p].timer == 11){
+      /*if (player[p].timer == 11){
         player[p].hitboxes.id[0] = player[p].charHitboxes.throwforwardextra.id0;
         player[p].hitboxes.active = [true,false,false,false];
         player[p].hitboxes.frame = 0;
       }
       if (player[p].timer == 12){
         turnOffHitboxes(p);
-      }
+      }*/
 
     }
   },
@@ -2605,7 +2592,7 @@ fox.THROWNFOXUP = {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-10.07,4.25],[-10.75,3.96],[-11.43,3.40],[-11.27,3.38],[-10.92,3.48],[-10.61,3.59],[-10.51,3.63],[-13.02,6.00],[-5.68,16.09],[-5.68,16.09]],
+  offset : [[-6.51,-1.28],[-5.85,-0.71],[-5.36,-0.70],[-5.17,1.05],[-3.03,9.59],[-3.03,9.59]],
   init : function(p){
     player[p].actionState = "THROWNFOXUP";
     if (player[p].phys.grabbedBy < p){
@@ -2622,7 +2609,6 @@ fox.THROWNFOXUP = {
     player[p].timer++;
     if (!fox.THROWNFOXUP.interrupt(p)){
       if (player[p].timer > 0){
-        console.log(player[p].timer);
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+fox.THROWNFOXUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+fox.THROWNFOXUP.offset[player[p].timer-1][1]);
       }
     }
@@ -2639,7 +2625,7 @@ fox.THROWNFOXDOWN = {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-9.91,4.76],[-11.99,5.49],[-13.10,5.88],[-13.10,5.88],[-13.10,5.88],[-13.33,5.45],[-13.76,3.95],[-13.44,2.14],[-12.48,-0.03],[-10.43,-3.03],[-10.43,-3.03]],
+  offset : [[-4.73,-1.04],[-2.33,-2.27],[-1.90,-2.37],[-1.84,-2.24],[-1.84,-1.78],[-1.98,0.41],[-1.04,3.44],[-0.05,4.15],[0.82,4.32],[1.03,4.03],[1.07,3.56],[1.07,3.82],[1.07,4.00],[0.85,4.14],[-0.45,6.59],[-0.78,-4.04],[-0.82,-4.75],[-0.81,-3.89],[-0.78,-3.11],[-0.72,-3.45],[-0.65,-4.18],[-0.57,-4.29],[-0.50,-2.78],[-0.50,-5.04],[-0.50,-4.74],[-0.50,-4.44],[-0.50,-4.15],[-0.50,-3.88],[-0.50,-3.63],[-0.50,-3.40],[-0.50,-3.20],[-0.50,-3.04],[-0.50,-3.04]],
   init : function(p){
     player[p].actionState = "THROWNFOXDOWN";
     if (player[p].phys.grabbedBy < p){
@@ -2674,7 +2660,7 @@ fox.THROWNFOXBACK = {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-6.96,4.12],[-3.7,3.89],[-0.79,3.40],[0.35,0.47],[0.80,-0.44],[0.80,-0.44]],
+  offset : [[-8.09,-1.57],[-6.98,-1.81],[-3.72,-2.73],[-0.66,-3.92],[3.34,-4.39],[7.60,2.89],[7.60,2.89]],
   init : function(p){
     player[p].actionState = "THROWNFOXBACK";
     if (player[p].phys.grabbedBy < p){
@@ -2707,7 +2693,8 @@ fox.THROWNFOXFORWARD = {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-11.08,3.81],[-10.84,5.65],[-10.05,6.53],[-9.79,6.65],[-9.70,6.58],[-9.90,6.41],[-11.24,6.09],[-13.48,4.96],[-11.16,1.54],[-8.89,-3.65],[-8.89,-3.65]],
+  offset : [[-7.74-0.08,-0.77],[-7.17-0.22,-0.03],[-7.15-0.24,0.12],[-7.34,0.13],[-7.44+0.68,0.30],[-7.65+1.67,0.49],[-8.06+2.69,0.65],[-8.77+3.47,0.72],[-10.03+4.04,0.61],[-12.03+4.61,0.38],[-12.03+4.61,0.38]],
+  //[0.08,0.22,0.24,0,-0.68,-1.67,-2.69,-3.47,-4.04,-4.61]
   init : function(p){
     player[p].actionState = "THROWNFOXFORWARD";
     if (player[p].phys.grabbedBy < p){

@@ -57,7 +57,6 @@ function renderPlayer(i){
     frame = 1;
   }
   if (frame > frames[cS[i]][player[i].actionState]){
-    console.log("test");
     frame = frames[cS[i]][player[i].actionState];
   }
 

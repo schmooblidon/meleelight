@@ -670,10 +670,10 @@ hitboxes[2] = {
   ledgegetupquick : new hitboxObject(new hitbox(offsets[2].ledgegetupquick.id0,4.687,8,361,100,0,90,0,1,1,1),new hitbox(offsets[2].ledgegetupquick.id1,4.687,8,361,100,0,90,0,1,1,1),new hitbox(offsets[2].ledgegetupquick.id2,4.687,8,361,100,0,90,0,1,1,1)),
   ledgegetupslow : new hitboxObject(new hitbox(offsets[2].ledgegetupslow.id0,3.125,8,361,100,0,90,0,1,1,1),new hitbox(offsets[2].ledgegetupslow.id1,4.687,8,361,100,0,90,0,1,1,1),new hitbox(offsets[2].ledgegetupslow.id2,4.687,8,361,100,0,90,0,1,1,1)),
   pummel : new hitboxObject(new hitbox(offsets[2].pummel.id0,5.859,3,361,100,0,30,0,0,1,1)),
-  throwup : new hitboxObject(new hitbox(new Vec2D(-4.44533,0.66545),0,2,90,110,75,0,0,0,1,1)),
-  throwdown : new hitboxObject(new hitbox(new Vec2D(0.56941,0),0,1,270,40,150,0,0,0,1,1)),
-  throwback : new hitboxObject(new hitbox(new Vec2D(-14.20273+7.52,0),0,2,124,85,80,0,0,0,1,1)),
-  throwforward : new hitboxObject(new hitbox(new Vec2D(10.8537,0.01),0,3,45,130,35,0,0,0,1,1)),
+  throwup : new hitboxObject(new hitbox(new Vec2D(-0.067,17.54),0,2,90,110,75,0,0,0,1,1)),
+  throwdown : new hitboxObject(new hitbox(new Vec2D(0.50063,0),0,1,270,40,150,0,0,0,1,1)),
+  throwback : new hitboxObject(new hitbox(new Vec2D(-6.59,5.66),0,2,124,85,80,0,0,0,1,1)),
+  throwforward : new hitboxObject(new hitbox(new Vec2D(14.19-4.61,2.805),0,3,45,130,35,0,0,0,1,1)),
   throwforwardextra : new hitboxObject(new hitbox(offsets[2].throwforwardextra.id0,8.593,7,361,110,40,0,0,0,1,1)),
   thrown : new hitboxObject(new hitbox(offsets[2].thrown.id0,3.906,4,361,50,20,0,1,0,1,1))
 }
