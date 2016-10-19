@@ -439,6 +439,9 @@ vfx = {
   wallBounce : {
     name : "wallBounce"
   },
+  ceilingBounce : {
+    name : "ceilingBounce"
+  },
   tech : {
     name : "tech",
     frames : 9
@@ -508,7 +511,9 @@ vfx = {
 vfx.wallBounce.path = vfx.groundBounce.path;
 vfx.wallBounce.colour = vfx.groundBounce.colour;
 vfx.wallBounce.frames = vfx.groundBounce.frames;
-
+vfx.ceilingBounce.path = vfx.groundBounce.path;
+vfx.ceilingBounce.colour = vfx.groundBounce.colour;
+vfx.ceilingBounce.frames = vfx.groundBounce.frames;
 
 
 dVfx = {
@@ -662,6 +667,9 @@ dVfx = {
     else {
       dVfx.general(j,Math.PI*1.5);
     }
+  },
+  ceilingBounce : function(j){
+    dVfx.general(j,Math.PI);
   },
   furaFura : function(j){
     c.fillStyle = "rgba(255,254,108,"+0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";

@@ -128,7 +128,9 @@ frames[0] = {
   "THROWNFOXDOWN" : 32,
   "FURASLEEPSTART" : 30,
   "FURASLEEPLOOP" : 80,
-  "FURASLEEPEND" : 60
+  "FURASLEEPEND" : 60,
+  "STOPCEIL" : 9,
+  "TECHU" : 26
 }
 
 actionSounds[0] = {

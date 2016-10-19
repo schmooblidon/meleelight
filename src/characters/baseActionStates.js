@@ -3509,6 +3509,7 @@ baseActionStates = {
     player[p].phys.kVel.y = 0;
     player[p].phys.kVel.x = 0;
     player[p].phys.cVel.x = 0;
+    player[p].phys.cVel.y = 0;
     player[p].phys.intangibleTimer = Math.max(player[p].phys.intangibleTimer,14);
     if (player[p].phys.face == 1){
       drawVfx("tech",player[p].phys.ECBp[3]);
@@ -4053,6 +4054,106 @@ baseActionStates = {
   interrupt : function(p){
     if (player[p].timer > frames[cS[p]].FURASLEEPEND){
       aS[cS[p]].WAIT.init(p);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+},
+
+"STOPCEIL" : {
+  name : "STOPCEIL",
+  canPassThrough : true,
+  canGrabLedge : [true,false],
+  wallJumpAble : false,
+  headBonk : true,
+  canBeGrabbed : true,
+  landType : 2,
+  init : function(p){
+    player[p].actionState = "STOPCEIL";
+    player[p].timer = 0;
+    player[p].phys.cVel.y = 0;
+    turnOffHitboxes(p);
+    aS[cS[p]].STOPCEIL.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!aS[cS[p]].STOPCEIL.interrupt(p)){
+      if (player[p].timer == 2){
+        player[p].phys.kVel.y *= -0.8;
+        player[p].phys.kVel.x *= 0.8;
+        player[p].phys.kDec.y *= -1
+      }
+      if (player[p].hit.hitstun > 0){
+        if (player[p].hit.hitstun % 10 == 0){
+          drawVfx("flyingDust",player[p].phys.pos);
+        }
+        player[p].hit.hitstun--;
+        player[p].phys.cVel.y -= player[p].charAttributes.gravity;
+        if (player[p].phys.cVel.y < -player[p].charAttributes.terminalV){
+          player[p].phys.cVel.y = -player[p].charAttributes.terminalV;
+        }
+      }
+      else {
+        fastfall(p);
+        airDrift(p);
+      }
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > 5 && player[p].hit.hitstun <= 0){
+      aS[cS[p]].FALL.init(p);
+    }
+    else if (player[p].timer > frames[cS[p]].STOPCEIL){
+      if (player[p].hit.hitstun <= 0){
+        aS[cS[p]].DAMAGEFALL.init(p);
+        return true;
+      }
+      else {
+        player[p].timer = frames[cS[p]].STOPCEIL;
+        return false;
+      }
+    }
+    else {
+      return false;
+    }
+  }
+},
+
+"TECHU" : {
+  name : "TECHU",
+  canPassThrough : true,
+  canGrabLedge : [true,false],
+  wallJumpAble : false,
+  headBonk : false,
+  canBeGrabbed : true,
+  landType : 0,
+  init : function(p){
+    player[p].actionState = "TECHU";
+    player[p].timer = 0;
+    player[p].phys.cVel.y = 0;
+    player[p].phys.cVel.x = 0;
+    player[p].phys.kVel.y = 0;
+    player[p].phys.kVel.x = 0;
+    player[p].phys.fastfalled = false;
+    player[p].hit.hitstun = 0;
+    player[p].phys.intangibleTimer = Math.max(player[p].phys.intangibleTimer,14);
+    drawVfx("tech",player[p].phys.ECBp[2]);
+    sounds.tech.play();
+    turnOffHitboxes(p);
+    aS[cS[p]].TECHU.main(p);
+  },
+  main : function(p){
+    player[p].timer++;
+    if (!aS[cS[p]].TECHU.interrupt(p)){
+      fastfall(p);
+      airDrift(p);
+    }
+  },
+  interrupt : function(p){
+    if (player[p].timer > frames[cS[p]].TECHU){
+      aS[cS[p]].FALL.init(p);
       return true;
     }
     else {

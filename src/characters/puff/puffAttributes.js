@@ -128,7 +128,9 @@ charAttributes[1] = {
   "THROWNFOXDOWN" : 32,
   "FURASLEEPSTART" : 33,
   "FURASLEEPLOOP" : 76,
-  "FURASLEEPEND" : 76
+  "FURASLEEPEND" : 76,
+  "STOPCEIL" : 8,
+  "TECHU" : 25
   }
 
   actionSounds[1] = {

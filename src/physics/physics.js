@@ -529,8 +529,19 @@ function physics(i){
       if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y && player[i].phys.ECBp[0].x >= stage.ceiling[j][0].x && player[i].phys.ECBp[0].x <= stage.ceiling[j][1].x && player[i].phys.ECB1[2].y <= stage.ceiling[j][0].y){
         player[i].phys.pos.y = stage.ceiling[j][0].y-(player[i].phys.ECBp[2].y-player[i].phys.pos.y);
         if (aS[cS[i]][player[i].actionState].headBonk){
-          player[i].phys.cVel.y = 0;
-          aS[cS[i]].FALL.init(i)
+          if (player[i].hit.hitstun > 0){
+            if (player[i].phys.techTimer > 0){
+              aS[cS[i]].TECHU.init(i);
+            }
+            else {
+              drawVfx("ceilingBounce",new Vec2D(player[i].phys.ECBp[0].x,stage.ceiling[j][0].y),1);
+              sounds.bounce.play();
+              aS[cS[i]].STOPCEIL.init(i);
+            }
+          }
+          else {
+            aS[cS[i]].STOPCEIL.init(i);
+          }
         }
       }
     }

@@ -101,6 +101,7 @@ gameMode = 20;
 // 12:Keyboard Controls
 // 11:Gameplay Menu
 // 10:Sound Menu
+// 9: -
 // 8: -
 // 7:Target Select
 // 6:Stage Select (VS)
