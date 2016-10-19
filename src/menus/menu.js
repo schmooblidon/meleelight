@@ -1,12 +1,14 @@
 menuSelected = 0;
-menuText = ["VS. Melee","Target Test","Target Builder"];
-menuExplanation = ["Multiplayer Battles!","Smash ten targets!","Build target test stages!"];
+menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Data"]];
+menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","look at what melee says"],["change audio","change gameplay settings","change keyboard controls","modify data"]];
+menuTitle = ["Main Menu","Options"];
 
-menuColours = [238,358,117];
+menuColours = [238,358,117,55];
 menuCurColour = 238;
-
+//hsl(55, 100%, 50%)
 menuCycle = 0;
 menuTimer = 0;
+menuMode = 0;
 
 menuGlobalTimer = 0;
 
@@ -17,25 +19,52 @@ function menuMove(i){
   var previousMenuS = menuSelected;
   if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
     sounds.menuForward.play();
-    if (menuSelected == 0){
-      gameMode = 2;
-      positionPlayersInCSS();
+    if (menuMode == 0){
+      if (menuSelected == 0){
+        gameMode = 2;
+        positionPlayersInCSS();
+      }
+      else if (menuSelected == 1){
+        targetPlayer = i;
+        targetPointerPos = [178.5,137];
+        player[i].inputs.a[1] = true;
+        gameMode = 7;
+      }
+      else if (menuSelected == 2){
+        editingStage = -1;
+        targetBuilder = i;
+        player[i].inputs.a[1] = true;
+        gameMode = 4;
+      }
+      else if (menuSelected == 3){
+        // options
+        menuMode = 1;
+        menuSelected = 0;
+        menuMove = true;
+      }
     }
-    else if (menuSelected == 1){
-      targetPlayer = i;
-      targetPointerPos = [178.5,137];
-      player[i].inputs.a[1] = true;
-      gameMode = 7;
-    }
-    else if (menuSelected == 2){
-      editingStage = -1;
-      targetBuilder = i;
-      player[i].inputs.a[1] = true;
-      gameMode = 4;
+    else {
+      if (menuSelected == 0){
+        //audio menu
+        gameMode = 10;
+      }
+      else if (menuSelected == 1){
+        //gameplay menu
+      }
+      else if (menuSelected == 2){
+        //keyboard menu
+      }
+      else if (menuSelected == 3){
+        //data
+      }
     }
   }
-  else if (player[i].inputs.b[0]){
-
+  else if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
+    if (menuMode == 1){
+      menuMode = 0;
+      menuSelected = 3;
+      menuMove = true;
+    }
   }
   else if (player[i].inputs.lStickAxis[0].y > 0.7){
     stickHoldEach[i] = true;
@@ -87,12 +116,12 @@ function menuMove(i){
     menuTimer = 0;
     sounds.menuSelect.play();
     if (menuSelected == -1){
-      menuSelected = 2;
+      menuSelected = 3;
     }
-    if (menuSelected == 3){
+    if (menuSelected == 4){
       menuSelected = 0;
     }
-    if (previousMenuS + menuSelected == 3){
+    if ((previousMenuS == 1 && menuSelected == 2) || (previousMenuS == 2 && menuSelected == 1)){
       if (menuSelected == 1){
         menuColours[menuSelected] = 0;
       }
@@ -281,47 +310,47 @@ function drawMainMenu(){
   c.textAlign = "center";
   c.fillStyle = "rgba(255, 255, 255, 0.8)";
   c.font = "700 35px Arial";
-  c.fillText(menuExplanation[menuSelected],600,660);
+  c.fillText(menuExplanation[menuMode][menuSelected],600,660);
   c.fillStyle = "rgba(255, 255, 255, 0.5)";
   c.font = "italic 900 48px Arial";
-  c.fillText("Main Menu",300,120);
+  c.fillText(menuTitle[menuMode],300,120);
 
   c.fillStyle = "rgba(0, 0, 0, 0.76)";
   c.lineWidth = 5;
   c.strokeStyle = "rgba(255, 214, 0, 0.95)";
-  for (var i=0;i<3;i++){
+  for (var i=0;i<4;i++){
     c.beginPath();
-    c.moveTo(410-i*80,250+i*100);
-    c.lineTo(960-i*80,250+i*100);
-    c.arc(960-i*80,285+i*100,35,Math.PI*1.5,Math.PI*0.5);
-    c.lineTo(960-i*80,312+i*100);
-    c.arc(960-i*80,285+i*100,20,Math.PI*0.5,Math.PI*1.5,true);
-    c.lineTo(960-i*80,275+i*100);
-    c.arc(960-i*80,285+i*100,10,Math.PI*1.5,Math.PI*0.5);
-    c.lineTo(960-i*80,320+i*100);
-    c.lineTo(405-i*80,320+i*100);
-    c.lineTo(395-i*80,300+i*100);
+    c.moveTo(420-i*65,200+i*100);
+    c.lineTo(970-i*65,200+i*100);
+    c.arc(970-i*65,235+i*100,35,Math.PI*1.5,Math.PI*0.5);
+    c.lineTo(970-i*65,262+i*100);
+    c.arc(970-i*65,235+i*100,20,Math.PI*0.5,Math.PI*1.5,true);
+    c.lineTo(970-i*65,225+i*100);
+    c.arc(970-i*65,235+i*100,10,Math.PI*1.5,Math.PI*0.5);
+    c.lineTo(970-i*65,270+i*100);
+    c.lineTo(415-i*65,270+i*100);
+    c.lineTo(405-i*65,250+i*100);
     c.closePath();
     c.fill();
     c.stroke();
   }
   c.fillStyle = "rgb(254, 238, 27)";
-  for (var i=0;i<3;i++){
+  for (var i=0;i<4;i++){
     var x = 1000;
     if (menuSelected == i){
       x = 0;
     }
     c.beginPath();
-    c.moveTo(410-i*80+x,250+i*100);
-    c.lineTo(960-i*80+x,250+i*100);
-    c.arc(960-i*80+x,285+i*100,35,Math.PI*1.5,Math.PI*0.5);
-    c.lineTo(960-i*80+x,312+i*100);
-    c.arc(960-i*80+x,285+i*100,20,Math.PI*0.5,Math.PI*1.5,true);
-    c.lineTo(960-i*80+x,275+i*100);
-    c.arc(960-i*80+x,285+i*100,10,Math.PI*1.5,Math.PI*0.5);
-    c.lineTo(960-i*80+x,320+i*100);
-    c.lineTo(405-i*80+x,320+i*100);
-    c.lineTo(395-i*80+x,300+i*100);
+    c.moveTo(420-i*65+x,200+i*100);
+    c.lineTo(970-i*65+x,200+i*100);
+    c.arc(970-i*65+x,235+i*100,35,Math.PI*1.5,Math.PI*0.5);
+    c.lineTo(970-i*65+x,262+i*100);
+    c.arc(970-i*65+x,235+i*100,20,Math.PI*0.5,Math.PI*1.5,true);
+    c.lineTo(970-i*65+x,225+i*100);
+    c.arc(970-i*65+x,235+i*100,10,Math.PI*1.5,Math.PI*0.5);
+    c.lineTo(970-i*65+x,270+i*100);
+    c.lineTo(415-i*65+x,270+i*100);
+    c.lineTo(405-i*65+x,250+i*100);
     c.closePath();
     c.fill();
     c.stroke();
@@ -329,17 +358,17 @@ function drawMainMenu(){
       c.save();
       c.fillStyle = "black";
       c.textAlign = "center";
-      c.fillText(menuText[i],670-i*80,300+i*100);
+      c.fillText(menuText[menuMode][i],680-i*65,250+i*100);
       c.globalAlpha = 0.7;
       c.strokeStyle = "rgb(255, 247, 144)";
       c.lineWidth = 8;
       c.beginPath();
-      c.arc(960-i*80,285+i*100,35,0,twoPi);
+      c.arc(970-i*65,235+i*100,35,0,twoPi);
       c.closePath();
       c.stroke();
       c.lineWidth = 15;
       c.beginPath();
-      c.arc(960-i*80,285+i*100,13,0,twoPi);
+      c.arc(970-i*65,235+i*100,13,0,twoPi);
       c.closePath();
       c.stroke();
       menuTimer++;
@@ -350,18 +379,18 @@ function drawMainMenu(){
       c.fillStyle = "rgb(255, 247, 144)";
       c.globalAlpha = Math.abs(1-menuTimer*0.033);
       c.beginPath();
-      c.arc(960-i*80,285+i*100,25,0,twoPi);
+      c.arc(970-i*65,235+i*100,25,0,twoPi);
       c.closePath();
       c.fill();
       c.lineWidth = 3;
       c.globalAlpha = 0.5;
       c.beginPath();
-      c.arc(960-i*80,285+i*100,Math.max(13,100-menuTimer*2),0,twoPi);
+      c.arc(970-i*65,235+i*100,Math.max(13,100-menuTimer*2),0,twoPi);
       c.closePath();
       c.stroke();
       if (menuCycle == 1 && menuTimer > 10){
         c.beginPath();
-        c.arc(960-i*80,285+i*100,Math.max(13,130-menuTimer*2),0,twoPi);
+        c.arc(970-i*65,235+i*100,Math.max(13,130-menuTimer*2),0,twoPi);
         c.closePath();
         c.stroke();
       }
@@ -370,7 +399,7 @@ function drawMainMenu(){
 
     }
     else {
-      c.fillText(menuText[i],670-i*80,300+i*100);
+      c.fillText(menuText[menuMode][i],680-i*65,250+i*100);
     }
   }
   c.restore();

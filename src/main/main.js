@@ -96,6 +96,20 @@ showVfx = true;
 showDebug = false;
 
 gameMode = 20;
+// 20:Startup
+// 13:Data Menu
+// 12:Keyboard Controls
+// 11:Gameplay Menu
+// 10:Sound Menu
+// 8: -
+// 7:Target Select
+// 6:Stage Select (VS)
+// 5:Target Playing
+// 4:Target Builder
+// 3:Playing (VS)
+// 2:CSS
+// 1:Main Menu
+// 0:Title Screen
 
 versusMode = 0;
 
@@ -270,7 +284,7 @@ function findPlayers(){
           keyboardOccupied = true;
           sounds.menuForward.play();
           if (ports == 0){
-            sounds.menu2.play("menu2Start");
+            music.menu2.play("menu2Start");
           }
           addPlayer(ports,4);
         }
@@ -320,7 +334,7 @@ function findPlayers(){
               gameMode = 1;
               sounds.menuForward.play();
               if (ports == 0){
-                sounds.menu2.play("menu2Start");
+                music.menu2.play("menu2Start");
               }
               addPlayer(i,gType);
             }
@@ -749,11 +763,13 @@ function interpretInputs(i,active){
       playing ^= true;
       if (!playing){
         sounds.pause.play();
-        sounds.battlefield.volume(0);
+        music.battlefield.volume(0);
+        changeVolume(music,masterVolume[1]*0.3,1);
         renderForeground();
       }
       else {
-        sounds.battlefield.volume(0);
+        music.battlefield.volume(0);
+        changeVolume(music,masterVolume[1],1);
       }
     }
   }
@@ -872,6 +888,12 @@ function gameTick(){
     for (var i=0;i<ports;i++){
       interpretInputs(i,true);
       menuMove(i);
+    }
+  }
+  else if (gameMode == 10){
+    for (var i=0;i<ports;i++){
+      interpretInputs(i,true);
+      audioMenuControls(i);
     }
   }
   else if (gameMode == 2){
@@ -1069,6 +1091,9 @@ function renderTick(){
     if (gameMode == 20){
       drawStartUp();
     }
+    else if (gameMode == 10){
+      drawAudioMenu();
+    }
     else if (gameMode == 0){
       drawStartScreen();
     }
@@ -1208,9 +1233,9 @@ function startGame(){
   matchTimer = 480;
   startTimer = 1.5;
   starting = true;
-  sounds.menu2.stop();
-  sounds.battlefield.stop();
-  sounds.battlefield.play("battlefieldStart");
+  music.menu2.stop();
+  music.battlefield.stop();
+  music.battlefield.play("battlefieldStart");
   drawVfx("start",new Vec2D(0,0));
   findingPlayers = false;
   playing = true;
@@ -1220,7 +1245,8 @@ function startGame(){
 function endGame(){
   gameEnd = false;
   lostStockQueue = [];
-  sounds.battlefield.stop();
+  music.battlefield.stop();
+  changeVolume(music,masterVolume[1],1);
   playing = false;
   c.fillStyle = "rgba(0, 0, 0, 1)";
   c.fillRect(-100,-100,canvas.width+200,canvas.height+200);
@@ -1236,7 +1262,7 @@ function endGame(){
       gameMode = 7;
     }
   }
-  sounds.menu2.play("menu2Start");
+  music.menu2.play("menu2Start");
   //$("#playerFind").show();
   pause = [[true,true],[true,true],[true,true],[true,true]];
   frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
@@ -1345,7 +1371,7 @@ function finishGame(){
   c.font="900 "+size+"px Arial";
   c.fillText(text,600,470/textScale);
   c.restore();
-  sounds.battlefield.stop();
+  music.battlefield.stop();
   setTimeout(function(){endGame()},2500);
 }
 

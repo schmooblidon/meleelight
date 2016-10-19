@@ -2107,18 +2107,22 @@ fox.THROWBACK = {
     fox.THROWBACK.main(p);
   },
   main : function(p){
+    var prevFrame = player[p].timer;
     player[p].timer+=8/player[p].phys.releaseFrame;
     if (!fox.THROWBACK.interrupt(p)){
-      if (player[p].timer == 14){
+      if (prevFrame <= 14 && player[p].timer >= 14){
         articles.LASER.init(p,2,0,Math.PI*0.75);
+        sounds.foxlaserfire.play();
         // 135
       }
-      else if (player[p].timer == 16){
+      else if (prevFrame <= 16 && player[p].timer >= 16){
         articles.LASER.init(p,2,0,Math.PI*0.75);
+        sounds.foxlaserfire.play();
         // 135
       }
-      else if (player[p].timer == 19){
+      else if (prevFrame <= 19 && player[p].timer >= 19){
         articles.LASER.init(p,2,0,Math.PI*0.75);
+        sounds.foxlaserfire.play();
         // 135
       }
       if (Math.floor(player[p].timer+0.01) == 8){
@@ -2160,6 +2164,7 @@ fox.THROWDOWN = {
     fox.THROWDOWN.main(p);
   },
   main : function(p){
+    var prevFrame = player[p].timer;
     player[p].timer+=33/player[p].phys.releaseFrame;
     if (!fox.THROWDOWN.interrupt(p)){
       if (Math.floor(player[p].timer+0.01) == 33){
@@ -2168,20 +2173,24 @@ fox.THROWDOWN = {
         turnOffHitboxes(p);
       }
 
-      if (player[p].timer == 23){
+      if (prevFrame <= 23 && player[p].timer >= 23){
         articles.LASER.init(p,2,0,Math.PI*275/180);
+        sounds.foxlaserfire.play();
         // 275
       }
-      else if (player[p].timer == 25){
+      else if (prevFrame <= 25 && player[p].timer >= 25){
         articles.LASER.init(p,2,0,Math.PI*230/180);
+        sounds.foxlaserfire.play();
         // 230
       }
-      else if (player[p].timer == 28){
+      else if (prevFrame <= 28 && player[p].timer >= 28){
         articles.LASER.init(p,2,0,Math.PI*290/180);
+        sounds.foxlaserfire.play();
         // 290
       }
-      else if (player[p].timer == 31){
+      else if (prevFrame <= 31 && player[p].timer >= 31){
         articles.LASER.init(p,2,0,Math.PI*275/180);
+        sounds.foxlaserfire.play();
         // 275
       }
 
@@ -2194,7 +2203,6 @@ fox.THROWDOWN = {
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy != p){
-      console.log("test");
       fox.CATCHCUT.init(p);
       return true;
     }
@@ -2219,30 +2227,31 @@ fox.THROWUP = {
     fox.THROWUP.main(p);
   },
   main : function(p){
+    var prevFrame = player[p].timer;
     player[p].timer+=7/player[p].phys.releaseFrame;
     if (!fox.THROWUP.interrupt(p)){
-      if (player[p].timer == 13){
+      if (prevFrame <= 13 && player[p].timer >= 13){
         sounds.foxlasercock.play();
       }
-      else if (player[p].timer == 16){
+      else if (prevFrame <= 16 && player[p].timer >= 16){
         articles.LASER.init(p,2,1,Math.PI*65/180);
         // rotate 65
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
+        //drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
       }
-      else if (player[p].timer == 18){
+      else if (prevFrame <= 18 && player[p].timer >= 18){
         articles.LASER.init(p,2,0,Math.PI/2);
         // rotate 90
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
+        //drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
       }
-      else if (player[p].timer == 21){
+      else if (prevFrame <= 21 && player[p].timer >= 21){
         articles.LASER.init(p,2,0.5,Math.PI*85/180);
         // rotate 85
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
+        //drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
       }
-      else if (player[p].timer == 33){
+      else if (prevFrame <= 33 && player[p].timer >= 33){
         sounds.foxlaserholster.play();
       }
       if (Math.floor(player[p].timer+0.01) == 7){
@@ -2259,7 +2268,6 @@ fox.THROWUP = {
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy != p){
-      console.log("test");
       fox.CATCHCUT.init(p);
       return true;
     }

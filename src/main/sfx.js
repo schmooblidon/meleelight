@@ -1,29 +1,4 @@
 sounds = {
-  menu2 : new Howl({
-    src: ['sfx/menu2.mp3'],
-    volume: 0,
-    sprite : {
-      menu2Start : [0,1300],
-      menu2Loop : [1300,55500]
-    },
-    onend : function(){
-      this.play("menu2Loop");
-      //console.log("test");
-    }
-
-  }),
-  battlefield : new Howl({
-    src: ['sfx/battlefield.mp3'],
-    sprite : {
-      battlefieldStart : [0,8000],
-      battlefieldLoop : [8000,75200]
-    },
-    volume: 0,
-    onend : function(){
-      this.play("battlefieldLoop");
-      //console.log("test2");
-    }
-  }),
   menuBack : new Howl({
     src: ['sfx/menu-back.wav']
   }),
@@ -433,10 +408,83 @@ sounds = {
   marthcounterclank : new Howl({
     src : ['sfx/marthcounterclank.wav'],
     volume : 0.6
+  }),
+  puffhurt : new Howl({
+    src : ['sfx/puffhurt.wav']
   })
 }
 
-Howler.volume(0.2);
+music = {
+  menu2 : new Howl({
+    src: ['sfx/menu2.mp3'],
+    volume: 1,
+    sprite : {
+      menu2Start : [0,1300],
+      menu2Loop : [1300,55500]
+    },
+    onend : function(){
+      this.play("menu2Loop");
+    }
+
+  }),
+  battlefield : new Howl({
+    src: ['sfx/battlefield.mp3'],
+    sprite : {
+      battlefieldStart : [0,8000],
+      battlefieldLoop : [8000,75200]
+    },
+    volume: 1,
+    onend : function(){
+      this.play("battlefieldLoop");
+    }
+  })
+}
+
+volumeOverwrites = {
+  dash : 0.3,
+  airdodge : 0.7,
+  grab : 0.5,
+  jump : 0.7,
+  jump2 : 0.4,
+  land : 0.7,
+  ledgegrab : 0.7,
+  shieldup : 0.7,
+  swordsheath : 0.7,
+  sworddraw : 0.7,
+  fastfall : 0.4,
+  shieldoff : 0.4,
+  sword1 : 0.7,
+  sword2 : 0.7,
+  sword3 : 0.7,
+  swordweakhit : 0.5,
+  swordmediumhit : 0.5,
+  swordstronghit : 0.5,
+  swordreallystronghit : 0.7,
+  furacry : 0.4,
+  blunthit : 0.7,
+  normalswing1 : 0.5,
+  normalswing2 : 0.5,
+  puffledgegrab : 0.7,
+  marthcounterclank : 0.6
+}
+
+function changeVolume(audioGroup,newVolume,groupType){
+  var keys = Object.keys(audioGroup);
+  for (var i=0;i<keys.length;i++){
+    if (volumeOverwrites[keys[i]]){
+      audioGroup[keys[i]]._volume = newVolume*volumeOverwrites[keys[i]];
+    }
+    else {
+      audioGroup[keys[i]]._volume = newVolume;
+    }
+    if (groupType){
+      audioGroup[keys[i]].volume(newVolume);
+    }
+  }
+}
+
+changeVolume(sounds,0.5,0);
+changeVolume(music,0.3,1);
 
 function playSfx(name){
   sounds[name].play();
