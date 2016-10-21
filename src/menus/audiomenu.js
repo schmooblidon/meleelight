@@ -7,6 +7,7 @@ function audioMenuControls(i){
   var audioLevelMoveUp = false;
   var audioLevelMoveDown = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
+    sounds.menuBack.play();
     player[i].inputs.b[1] = true;
     gameMode = 1;
   }

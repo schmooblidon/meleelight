@@ -4,7 +4,7 @@ keyMap = {
     "right" : [68,0],
     "left" : [65,0],
     "down" : [83,0],
-    "modifiers" : [[32,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5]]
+    "modifiers" : [[32,0.7,0.7],[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5]]
   },
   "cstick" : {
     "up" : [38,0],
@@ -15,7 +15,7 @@ keyMap = {
   "shoulders" : {
     "lAnalog" : [111,0],
     "rAnalog" : [106,0],
-    "modifiers" : [[0,0.7,0.7],[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5]]
+    "modifiers" : [[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5],[0,0.5,0.5]]
   },
   "a" : [76,101],
   "b" : [75,100],
@@ -83,7 +83,7 @@ keymapItems = {
   "r2" : new keymapItem(0,new Vec2D(630,565),105,keyMap.r,1,"l2","dpadLeft","s2","r1"),
   "s1" : new keymapItem(0,new Vec2D(550,635),219,keyMap.s,0,"r1","s2","a1","lstickMod5"),
   "s2" : new keymapItem(0,new Vec2D(630,635),109,keyMap.s,1,"r2","dpadDown","a2","s1"),
-  "cstickUp1" : new keymapItem(0,new Vec2D(950,120),38,keyMap.cstick.up,0,"dpadDown","cstickUp2","csticstickRight1","a2"),
+  "cstickUp1" : new keymapItem(0,new Vec2D(950,120),38,keyMap.cstick.up,0,"dpadDown","cstickUp2","cstickRight1","a2"),
   "cstickUp2" : new keymapItem(0,new Vec2D(1030,120),0,keyMap.cstick.up,1,"dpadDown","lstickUp1","cstickRight2","cstickUp1"),
   "cstickRight1" : new keymapItem(0,new Vec2D(950,190),39,keyMap.cstick.right,0,"cstickUp1","cstickRight2","cstickLeft1","b2"),
   "cstickRight2" : new keymapItem(0,new Vec2D(1030,190),0,keyMap.cstick.right,1,"cstickUp2","lstickRight1","cstickLeft2","cstickRight1"),
@@ -109,6 +109,7 @@ enterHeldTimer = 0;
 menuScrollSpeed = 10;
 keyboardPromptTimer = 0;
 keyboardPrompt = "";
+disableStick = [false,false,false,false];
 function keyboardMenuControls(i){
   var menuMove = false;
   var moveD = "";
@@ -213,6 +214,9 @@ function keyboardMenuControls(i){
           keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index] = keyBind;
         }
       }
+      player[i].inputs.b[0] = true;
+      player[i].inputs.b[1] = true;
+      disableStick[i] = true;
       keyListen = false;
     }
   }
@@ -238,11 +242,12 @@ function keyboardMenuControls(i){
     }
     else if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
       if (!settingModifier){
+        sounds.menuBack.play();
         player[i].inputs.b[1] = true;
         gameMode = 1;
       }
     }
-    else if (player[i].inputs.lStickAxis[0].y > 0.7){
+    else if (player[i].inputs.lStickAxis[0].y > 0.7 && !disableStick[i]){
       stickHoldEach[i] = true;
       if (stickHold == 0){
         moveD = "u";
@@ -257,7 +262,7 @@ function keyboardMenuControls(i){
         }
       }
     }
-    else if (player[i].inputs.lStickAxis[0].y < -0.7){
+    else if (player[i].inputs.lStickAxis[0].y < -0.7 && !disableStick[i]){
       stickHoldEach[i] = true;
       if (stickHold == 0){
         moveD = "d";
@@ -272,7 +277,7 @@ function keyboardMenuControls(i){
         }
       }
     }
-    else if (player[i].inputs.lStickAxis[0].x > 0.7){
+    else if (player[i].inputs.lStickAxis[0].x > 0.7 && !disableStick[i]){
       stickHoldEach[i] = true;
       if (stickHold == 0){
         moveD = "r";
@@ -287,7 +292,7 @@ function keyboardMenuControls(i){
         }
       }
     }
-    else if (player[i].inputs.lStickAxis[0].x < -0.7){
+    else if (player[i].inputs.lStickAxis[0].x < -0.7 && !disableStick[i]){
       stickHoldEach[i] = true;
       if (stickHold == 0){
         menuMove = true;
@@ -366,6 +371,9 @@ function keyboardMenuControls(i){
   else {
     enterHeld = false;
     enterHeldTimer = 0;
+  }
+  if (player[i].inputs.lStickAxis[0].x == 0 && player[i].inputs.lStickAxis[0].y == 0){
+    disableStick[i] = false;
   }
 }
 
