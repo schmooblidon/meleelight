@@ -364,8 +364,8 @@ function keyboardMenuControls(i){
             break;
           case "r":
             rangeValue[index] += 0.01;
-            if (rangeValue[index] > 1){
-              rangeValue[index] = 1;
+            if (rangeValue[index] > 2){
+              rangeValue[index] = 2;
             }
             break;
           default:
@@ -383,8 +383,8 @@ function keyboardMenuControls(i){
             break;
           case "r":
             modifierValue[settingModifierPart] += 0.01;
-            if (modifierValue[settingModifierPart] > 1){
-              modifierValue[settingModifierPart] = 1;
+            if (modifierValue[settingModifierPart] > 2){
+              modifierValue[settingModifierPart] = 2;
             }
             break;
           default:
@@ -491,7 +491,7 @@ function drawKeyboardMenu(){
         }
         else {
           var modText = (keymapItems[kMenuSelected].modType) ? ["L","R"] : ["X","Y"];
-          c.fillText(text+" "+modText[0]+":"+(keymapItems[keys[i]].binding[keymapItems[keys[i]].index][1]).toPrecision(2)+" "+modText[1]+":"+(keymapItems[keys[i]].binding[keymapItems[keys[i]].index][2]).toPrecision(2),keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y+45);
+          c.fillText(text+" "+modText[0]+":"+(keymapItems[keys[i]].binding[keymapItems[keys[i]].index][1]).toFixed(2)+" "+modText[1]+":"+(keymapItems[keys[i]].binding[keymapItems[keys[i]].index][2]).toFixed(2),keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y+45);
         }
         c.fillStyle = "rgba(200,200,200, "+Math.abs(1-kMenuKeyFlash/60)+")";
         c.strokeStyle = "rgba(255, 255, 255, 0.9)";
@@ -533,8 +533,8 @@ function drawKeyboardMenu(){
       c.strokeStyle = "black";
       c.fillStyle = "white";
       c.font = "italic 900 20px Arial";
-      c.strokeText((keymapItems[keys[i]].binding[keymapItems[keys[i]].index]).toPrecision(2),x+37,y+32);
-      c.fillText((keymapItems[keys[i]].binding[keymapItems[keys[i]].index]).toPrecision(2),x+37,y+32);
+      c.strokeText((keymapItems[keys[i]].binding[keymapItems[keys[i]].index]).toFixed(2),x+37,y+32);
+      c.fillText((keymapItems[keys[i]].binding[keymapItems[keys[i]].index]).toFixed(2),x+37,y+32);
       if (settingRange && keys[i] == kMenuSelected){
         c.strokeText("<",x-15,y+32);
         c.fillText("<",x-15,y+32);
@@ -593,7 +593,7 @@ function drawKeyboardMenu(){
     for (var i=0;i<2;i++){
       c.fillText("<",580,400+i*80);
       c.fillText(">",740,400+i*80);
-      c.fillText((keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index][i+1]).toPrecision(2),660,400+i*80);
+      c.fillText((keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index][i+1]).toFixed(2),660,400+i*80);
     }
     c.font = "italic 900 20px Arial";
     c.fillText("Hold Enter to remove settings",600,600);

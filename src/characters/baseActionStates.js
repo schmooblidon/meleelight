@@ -3199,7 +3199,7 @@ baseActionStates = {
     player[p].timer++;
     if (!aS[cS[p]].FURAFURA.interrupt(p)){
       if (player[p].timer % 100 == 65){
-        sounds[actionSounds[cS[p]][0][1]].play();
+        sounds[actionSounds[cS[p]].FURAFURA[0][1]].play();
       }
       reduceByTraction(p,true);
       if (player[p].timer % 49 == 0){

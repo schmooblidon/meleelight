@@ -541,7 +541,10 @@ function interpretInputs(i,active){
         }
       }
     }
-
+    lstickX = Math.sign(lstickX)*Math.min(1,Math.abs(lstickX));
+    lstickY = Math.sign(lstickY)*Math.min(1,Math.abs(lstickY));
+    lAnalog = Math.min(1,Math.abs(lAnalog));
+    rAnalog = Math.min(1,Math.abs(rAnalog));
     var cstickX = (keys[keyMap.cstick.right[0]] || keys[keyMap.cstick.right[1]]) ? ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? 0 : 1) : ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? -1 : 0);
     var cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
   }
