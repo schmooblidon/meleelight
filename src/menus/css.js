@@ -26,6 +26,14 @@ readyToFight = false;
 rtfFlash = 25;
 rtfFlashD = 1;
 
+function changeCharacter(i,c){
+  cS[i] = c;
+  player[i].actionState = "WAIT";
+  player[i].timer = 0;
+  player[i].charAttributes = chars[cS[i]].attributes;
+  player[i].charHitboxes = chars[cS[i]].hitboxes;
+}
+
 function cssControls(i){
   if (choosingTag == -1){
     if (player[i].inputs.b[0]){
@@ -69,9 +77,7 @@ function cssControls(i){
             if (handPos[i].x > 452 && handPos[i].x < 547){
               if (chosenChar[whichTokenGrabbed[i]] != 0){
                 chosenChar[whichTokenGrabbed[i]] = 0;
-                cS[whichTokenGrabbed[i]] = 0;
-                player[whichTokenGrabbed[i]].charAttributes = chars[cS[i]].attributes;
-                player[whichTokenGrabbed[i]].charHitboxes = chars[cS[i]].hitboxes;
+                changeCharacter(whichTokenGrabbed[i],0);
                 sounds.menuSelect.play();
               }
               if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
@@ -85,9 +91,7 @@ function cssControls(i){
             else if (handPos[i].x > 547 && handPos[i].x < 642){
               if (chosenChar[whichTokenGrabbed[i]] != 1){
                 chosenChar[whichTokenGrabbed[i]] = 1;
-                cS[whichTokenGrabbed[i]] = 1;
-                player[whichTokenGrabbed[i]].charAttributes = chars[cS[whichTokenGrabbed[i]]].attributes;
-                player[whichTokenGrabbed[i]].charHitboxes = chars[cS[whichTokenGrabbed[i]]].hitboxes;
+                changeCharacter(whichTokenGrabbed[i],1);
                 sounds.menuSelect.play();
               }
               if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
@@ -102,9 +106,7 @@ function cssControls(i){
             else if (handPos[i].x > 642 && handPos[i].x < 737){
               if (chosenChar[whichTokenGrabbed[i]] != 2){
                 chosenChar[whichTokenGrabbed[i]] = 2;
-                cS[whichTokenGrabbed[i]] = 2;
-                player[whichTokenGrabbed[i]].charAttributes = chars[cS[whichTokenGrabbed[i]]].attributes;
-                player[whichTokenGrabbed[i]].charHitboxes = chars[cS[whichTokenGrabbed[i]]].hitboxes;
+                changeCharacter(whichTokenGrabbed[i],2);
                 sounds.menuSelect.play();
               }
               if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
@@ -179,9 +181,9 @@ function cssControls(i){
       }
     }
     if (player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]){
-      cS[i] = 2;
+      /*cS[i] = 2;
       player[i].charAttributes = chars[cS[i]].attributes;
-      player[i].charHitboxes = chars[cS[i]].hitboxes;
+      player[i].charHitboxes = chars[cS[i]].hitboxes;*/
     }
     if (handPos[i].y > 100 && handPos[i].y < 160 && handPos[i].x > 380 && handPos[i].x < 910){
       if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
