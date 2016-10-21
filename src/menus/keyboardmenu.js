@@ -1,18 +1,23 @@
 function getKeyboardCookie(){
   var keys = Object.keys(keymapItems);
   for (var i=0;i<keys.length;i++){
-    if (keymapItems[keys[i]].type == 1){
-      var modVal = getCookie(keys[i]);
-      modVal = modVal.split("-");
-      keymapItems[keys[i]].binding[keymapItems[keys[i]].index][0] = parseInt(modVal[0]);
-      keymapItems[keys[i]].binding[keymapItems[keys[i]].index][1] = parseFloat(modVal[1]);
-      keymapItems[keys[i]].binding[keymapItems[keys[i]].index][2] = parseFloat(modVal[2]);
-    }
-    else if (keymapItems[keys[i]].type == 2){
-      keymapItems[keys[i]].binding[keymapItems[keys[i]].index] = parseFloat(getCookie(keys[i]));
-    }
-    else {
-      keymapItems[keys[i]].binding[keymapItems[keys[i]].index] = parseInt(getCookie(keys[i]));
+    var keymapData = getCookie(keys[i]);
+    if (keymapData != undefined && keymapData != null){
+      if (keymapItems[keys[i]].type == 1){
+        // if modifier
+        var modVal = keymapData.split("-");
+        keymapItems[keys[i]].binding[keymapItems[keys[i]].index][0] = parseInt(modVal[0]);
+        keymapItems[keys[i]].binding[keymapItems[keys[i]].index][1] = parseFloat(modVal[1]);
+        keymapItems[keys[i]].binding[keymapItems[keys[i]].index][2] = parseFloat(modVal[2]);
+      }
+      else if (keymapItems[keys[i]].type == 2){
+        // if range
+        keymapItems[keys[i]].binding[keymapItems[keys[i]].index] = parseFloat(getCookie(keys[i]));
+      }
+      else {
+        // if button
+        keymapItems[keys[i]].binding[keymapItems[keys[i]].index] = parseInt(getCookie(keys[i]));
+      }
     }
   }
 }
