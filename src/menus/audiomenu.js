@@ -140,19 +140,25 @@ function drawAudioMenu(){
     c.lineTo(1200,0+(i*30));
   }
   c.stroke();
+  c.fillStyle = "rgba(0,0,0,0.5)";
+  c.lineWidth = 10;
+  c.strokeRect(95,125,1010,650);
+  c.fillRect(95,125,1010,650);
   c.textAlign = "center";
   c.fillStyle = "rgba(255, 255, 255, 0.5)";
   c.font = "italic 900 80px Arial";
   c.fillText("Audio",600,100);
   c.font = "italic 900 50px Arial";
-  c.fillText("Sounds",250,300);
-  c.fillText("Music",250,550);
+  c.fillText("Sounds",225,275);
+  c.fillText("Music",225,525);
   for (var i=0;i<2;i++){
     if (i == audioMenuSelected){
-      c.fillStyle = "rgba(255, 255, 255, 0.7)";
+      //c.fillStyle = "rgba(255, 255, 255, 0.7)";
+      c.fillStyle = "rgba(255, 255, 255, 0.3)";
     }
     else {
-      c.fillStyle = "rgba(255, 255, 255, 0.3)";
+      c.fillStyle = "rgba(255, 255, 255, 0.1)";
+      //c.fillStyle = "rgba(0, 0, 0, 0.8)";
     }
     c.beginPath();
     c.moveTo(200,350+i*250);
@@ -160,14 +166,32 @@ function drawAudioMenu(){
     c.lineTo(1000,350+i*250);
     c.closePath();
     c.fill();
-    if (i == audioMenuSelected){
-      c.fillStyle = "rgba(255, 255, 255, 0.9)";
+    if (i == 0){
+      var bgGrad =c.createLinearGradient(200,0,1200,0);
+      bgGrad.addColorStop(0,"rgb(12, 75, 13)");
+      bgGrad.addColorStop(1,"rgb(15, 75, 255)");
+      c.fillStyle=bgGrad;
     }
     else {
-      c.fillStyle = "rgba(255, 255, 255, 0.5)";
+      var bgGrad =c.createLinearGradient(200,0,1200,0);
+      bgGrad.addColorStop(0,"rgb(11, 13, 65)");
+      bgGrad.addColorStop(1,"rgb(255, 15, 73)");
+      c.fillStyle=bgGrad;
     }
     c.beginPath();
-    c.arc(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*75),30+(masterVolume[i]*70),0,twoPi);
+    c.moveTo(200,350+i*250);
+    c.lineTo(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*150));
+    c.lineTo(200+(masterVolume[i]*800),350+i*250);
+    c.closePath();
+    c.fill();
+    if (i == audioMenuSelected){
+      c.fillStyle = "rgba(255, 255, 255, 1)";
+    }
+    else {
+      c.fillStyle = "rgba(136, 136, 136, 1)";
+    }
+    c.beginPath();
+    c.arc(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*75),15+(masterVolume[i]*65),0,twoPi);
     c.closePath();
     c.fill();
   }

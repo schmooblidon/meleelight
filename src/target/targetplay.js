@@ -92,9 +92,9 @@ function startTargetGame(p,test){
   matchTimer = 0;
   startTimer = 1.5;
   starting = true;
-  sounds.menu2.stop();
-  sounds.battlefield.stop();
-  sounds.battlefield.play("battlefieldStart");
+  music.menu2.stop();
+  music.battlefield.stop();
+  music.battlefield.play("battlefieldStart");
   drawVfx("start",new Vec2D(0,0));
   findingPlayers = false;
   playing = true;

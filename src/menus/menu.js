@@ -52,7 +52,9 @@ function menuMove(i){
         //gameplay menu
       }
       else if (menuSelected == 2){
+        gameMode = 12;
         //keyboard menu
+        keyBinding = false;
       }
       else if (menuSelected == 3){
         //data
@@ -64,6 +66,7 @@ function menuMove(i){
       menuMode = 0;
       menuSelected = 3;
       menuMove = true;
+      sounds.menuBack.play();
     }
   }
   else if (player[i].inputs.lStickAxis[0].y > 0.7){

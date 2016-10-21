@@ -191,12 +191,15 @@ matchTimer = 480;
 document.onkeydown = overrideKeyboardEvent;
 document.onkeyup = overrideKeyboardEvent;
 var keys = {};
-
+keyBind = 0;
+keyBinding = false;
 function overrideKeyboardEvent(e){
   switch(e.type){
     case "keydown":
       if(!keys[e.keyCode]){
         keys[e.keyCode] = true;
+        keyBind = e.keyCode;
+        keyBinding = true;
         // do key down stuff here
       }
     break;
@@ -279,7 +282,7 @@ function findPlayers(){
   }*/
   if (!keyboardOccupied){
     if (gameMode < 2){
-      if (keys[109] || keys[219]){
+      if (keys[13] || keys[keyMap.s[0]] || keys[keyMap.s[1]]){
         if (ports < 4){
           gameMode = 1;
           keyboardOccupied = true;
@@ -292,7 +295,7 @@ function findPlayers(){
       }
     }
     else {
-      if (keys[101] || keys[76]){
+      if (keys[keyMap.a[0]] || keys[keyMap.a[1]]){
         if (ports < 4){
           keyboardOccupied = true;
           addPlayer(ports,4);
@@ -477,18 +480,25 @@ function removePlayer(i){
 function interpretInputs(i,active){
   if (mType[i] == 4){
     // keyboard controls
-    var lstickX = keys[68] ? (keys[65] ? 0 : 1) : (keys[65] ? -1 : 0);
-    var lstickY = keys[87] ? (keys[83] ? 0 : 1) : (keys[83] ? -1 : 0);
-    if (keys[32] || keys[16]){
-      //analog
-      lstickX *= 0.7;
-      lstickY *= 0.7;
-    }
-    var cstickX = keys[39] ? (keys[37] ? 0 : 1) : (keys[37] ? -1 : 0);
-    var cstickY = keys[38] ? (keys[40] ? 0 : 1) : (keys[40] ? -1 : 0);
+    var lstickX = (keys[keyMap.lstick.right[0]] || keys[keyMap.lstick.right[1]]) ? ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ? 0 : 1) : ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ? -1 : 0);
+    var lstickY = (keys[keyMap.lstick.up[0]] || keys[keyMap.lstick.up[1]]) ? ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? 0 : 1) : ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? -1 : 0);
 
-    var lAnalog = 0;
-    var rAnalog = 0;
+    var lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? 1 : 0;
+    var rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? 1 : 0;
+
+    for (var j=0;j<5;j++){
+      if (keys[keyMap.lstick.modifiers[j][0]]){
+        lstickX *= keyMap.lstick.modifiers[j][1];
+        lstickY *= keyMap.lstick.modifiers[j][2];
+      }
+      if (keys[keyMap.shoulders.modifiers[j][0]]){
+        lAnalog *= keyMap.shoulders.modifiers[j][1];
+        rAnalog *= keyMap.shoulders.modifiers[j][2];
+      }
+    }
+
+    var cstickX = (keys[keyMap.cstick.right[0]] || keys[keyMap.cstick.right[1]]) ? ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? 0 : 1) : ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? -1 : 0);
+    var cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
   }
   else {
     var gamepad = navigator.getGamepads()[currentPlayers[i]];
@@ -585,13 +595,13 @@ function interpretInputs(i,active){
   frameAdvance[i][1] = frameAdvance[i][0];
 
   if (mType[i] == 4){
-    if (keys[109] || keys[219]){
+    if (keys[keyMap.s[0]] || keys[keyMap.s[1]]){
       pause[i][0] = true;
     }
     else {
       pause[i][0] = false
     }
-    if (keys[107] || keys[192] || keys[222]){
+    if (keys[keyMap.z[0]] || keys[keyMap.z[1]]){
       frameAdvance[i][0] = true;
     }
     else {
@@ -641,17 +651,17 @@ function interpretInputs(i,active){
     player[i].inputs.lAnalog[0] = lAnalog;
     player[i].inputs.rAnalog[0] = rAnalog;
     if (mType[i] == 4){
-      player[i].inputs.s[0] = keys[109] || keys[219];
-      player[i].inputs.x[0] = keys[102] || keys[186];
-      player[i].inputs.a[0] = keys[101] || keys[76];
-      player[i].inputs.b[0] = keys[100] || keys[75];
-      player[i].inputs.y[0] = keys[104] || keys[79];
-      player[i].inputs.r[0] = keys[105] || keys[80];
-      player[i].inputs.l[0] = keys[103] || keys[73];
-      player[i].inputs.dpadleft[0] = keys[86];
-      player[i].inputs.dpaddown[0] = keys[66];
-      player[i].inputs.dpadright[0] = keys[78];
-      player[i].inputs.dpadup[0] = keys[71];
+      player[i].inputs.s[0] = keys[keyMap.s[0]] || keys[keyMap.s[1]];
+      player[i].inputs.x[0] = keys[keyMap.x[0]] || keys[keyMap.x[1]];
+      player[i].inputs.a[0] = keys[keyMap.a[0]] || keys[keyMap.a[1]];
+      player[i].inputs.b[0] = keys[keyMap.b[0]] || keys[keyMap.b[1]];
+      player[i].inputs.y[0] = keys[keyMap.y[0]] || keys[keyMap.y[1]];
+      player[i].inputs.r[0] = keys[keyMap.r[0]] || keys[keyMap.r[1]];
+      player[i].inputs.l[0] = keys[keyMap.l[0]] || keys[keyMap.l[1]];
+      player[i].inputs.dpadleft[0] = keys[keyMap.dl[0]];
+      player[i].inputs.dpaddown[0] = keys[keyMap.dd[0]];
+      player[i].inputs.dpadright[0] = keys[keyMap.dr[0]];
+      player[i].inputs.dpadup[0] = keys[keyMap.du[0]];
     }
     else {
       player[i].inputs.s[0] = gamepad.buttons[map.s[mType[i]]].pressed;
@@ -680,7 +690,7 @@ function interpretInputs(i,active){
 
     if (!frameByFrame){
       if (mType[i] == 4){
-        player[i].inputs.z[0] = keys[107] || keys[192] || keys[222];
+        player[i].inputs.z[0] = keys[keyMap.z[0]] || keys[keyMap.z[1]];
       }
       else {
         player[i].inputs.z[0] = gamepad.buttons[map.z[mType[i]]].pressed;
@@ -699,8 +709,8 @@ function interpretInputs(i,active){
   }
   else {
     if (mType[i] == 4){
-      if ((keys[101] || keys[76]) && (keys[103] || keys[73]) && (keys[105] || keys[80]) && (keys[109] || keys[219])){
-        if (keys[100] || keys[75]){
+      if ((keys[keyMap.a[0]] || keys[keyMap.a[1]]) && (keys[keyMap.l[0]] || keys[keyMap.l[1]]) && (keys[keyMap.r[0]] || keys[keyMap.r[1]]) && (keys[keyMap.s[0]] || keys[keyMap.s[1]])){
+        if (keys[keyMap.b[0]] || keys[keyMap.b[1]]){
           startGame();
         }
         else {
@@ -790,14 +800,14 @@ function interpretInputs(i,active){
   $("#lAnalog"+i).empty().append(lAnalog.toFixed(5));
   $("#rAnalog"+i).empty().append(rAnalog.toFixed(5));
   if (mType[i] == 4){
-    for (var j=0;j<12;j++){
+    /*for (var j=0;j<12;j++){
       if ((keyboardMap[j].length > 1)?(keys[keyboardMap[j][0]] || keys[keyboardMap[j][1]] || keys[keyboardMap[j][2]]):keys[keyboardMap[j]]){
         $("#"+i+"button"+j).show();
       }
       else {
         $("#"+i+"button"+j).hide();
       }
-    }
+    }*/
   }
   else {
     for (var j=0;j<12;j++){
@@ -895,6 +905,12 @@ function gameTick(){
     for (var i=0;i<ports;i++){
       interpretInputs(i,true);
       audioMenuControls(i);
+    }
+  }
+  else if (gameMode == 12){
+    for (var i=0;i<ports;i++){
+      interpretInputs(i,true);
+      keyboardMenuControls(i);
     }
   }
   else if (gameMode == 2){
@@ -1094,6 +1110,9 @@ function renderTick(){
     }
     else if (gameMode == 10){
       drawAudioMenu();
+    }
+    else if (gameMode == 12){
+      drawKeyboardMenu();
     }
     else if (gameMode == 0){
       drawStartScreen();
