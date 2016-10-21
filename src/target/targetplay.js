@@ -85,6 +85,7 @@ function startTargetGame(p,test){
   targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
   targetsDestroyed = 0;
   vfxQueue = [];
+  aArticles = [];
   initializePlayers(p,true);
   renderPlayer(p);
 

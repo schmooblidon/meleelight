@@ -1313,6 +1313,7 @@ function startGame(){
 function endGame(){
   gameEnd = false;
   lostStockQueue = [];
+  aArticles = [];
   music.battlefield.stop();
   changeVolume(music,masterVolume[1],1);
   playing = false;
