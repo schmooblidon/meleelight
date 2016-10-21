@@ -188,6 +188,40 @@ startTimer = 1.5;
 //matchTimer = 5999.99;
 matchTimer = 480;
 
+usingLocalStorage = false;
+if (typeof(Storage) !== "undefined") {
+    // Code for localStorage/sessionStorage.
+    usingLocalStorage = true;
+    console.log("local storage works");
+} else {
+    // Sorry! No Web Storage support..
+    console.log("local storage does not work");
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var exp = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + exp;
+    localStorage.setItem(cname, cvalue);
+}
+
+function getCookie(cname) {
+  if (usingLocalStorage){
+    return localStorage.getItem(cname);
+  }
+  else {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+  }
+}
+
 document.onkeydown = overrideKeyboardEvent;
 document.onkeyup = overrideKeyboardEvent;
 var keys = {};
@@ -480,20 +514,31 @@ function removePlayer(i){
 function interpretInputs(i,active){
   if (mType[i] == 4){
     // keyboard controls
-    var lstickX = (keys[keyMap.lstick.right[0]] || keys[keyMap.lstick.right[1]]) ? ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ? 0 : 1) : ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ? -1 : 0);
-    var lstickY = (keys[keyMap.lstick.up[0]] || keys[keyMap.lstick.up[1]]) ? ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? 0 : 1) : ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? -1 : 0);
+    var stickR = 1;
+    var stickL = 1;
+    var stickU = 1;
+    var stickD = 1;
+    if (gameMode == 3 || gameMode == 5){
+      stickR = keyMap.lstick.ranges[1];
+      stickL = keyMap.lstick.ranges[2];
+      stickU = keyMap.lstick.ranges[0];
+      stickD = keyMap.lstick.ranges[3];
+    }
+    var lstickX = (keys[keyMap.lstick.right[0]] || keys[keyMap.lstick.right[1]]) ? ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ? 0 : stickR) : ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ? -stickL : 0);
+    var lstickY = (keys[keyMap.lstick.up[0]] || keys[keyMap.lstick.up[1]]) ? ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? 0 : stickU) : ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? -stickD : 0);
 
-    var lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? 1 : 0;
-    var rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? 1 : 0;
-
-    for (var j=0;j<5;j++){
-      if (keys[keyMap.lstick.modifiers[j][0]]){
-        lstickX *= keyMap.lstick.modifiers[j][1];
-        lstickY *= keyMap.lstick.modifiers[j][2];
-      }
-      if (keys[keyMap.shoulders.modifiers[j][0]]){
-        lAnalog *= keyMap.shoulders.modifiers[j][1];
-        rAnalog *= keyMap.shoulders.modifiers[j][2];
+    var lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? keyMap.shoulders.ranges[0] : 0;
+    var rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? keyMap.shoulders.ranges[1] : 0;
+    if (gameMode == 3 || gameMode == 5){
+      for (var j=0;j<5;j++){
+        if (keys[keyMap.lstick.modifiers[j][0]]){
+          lstickX *= keyMap.lstick.modifiers[j][1];
+          lstickY *= keyMap.lstick.modifiers[j][2];
+        }
+        if (keys[keyMap.shoulders.modifiers[j][0]]){
+          lAnalog *= keyMap.shoulders.modifiers[j][1];
+          rAnalog *= keyMap.shoulders.modifiers[j][2];
+        }
       }
     }
 
@@ -1396,6 +1441,7 @@ function finishGame(){
 }
 
 $(document).ready(function(){
+  getKeyboardCookie();
   $("#keyboardButton").click(function(){
     $("#keyboardControlsImg").toggle();
   });
