@@ -250,7 +250,7 @@ function physics(i){
   }*/
   player[i].phys.ECBp = [new Vec2D(0+x,ecbOffset[0]+y),new Vec2D(ecbOffset[1]+x,ecbOffset[2]+y),new Vec2D(0+x,ecbOffset[3]+y),new Vec2D(ecbOffset[1]*-1+x,ecbOffset[2]+y)];
   if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
-    player[i].phys.ECBp[0].y = 0+y;;
+    player[i].phys.ECBp[0].y = 0+y;
   }
   if (!aS[cS[i]][player[i].actionState].ignoreCollision){
 
@@ -553,7 +553,8 @@ function physics(i){
       //console.log("top left corner in line");
       var yDistToBottom = Math.abs(stage.ground[j][0].y - player[i].phys.ECBp[0].y);
       //console.log("yDistToBottom "+yDistToBottom);
-      var curECBangle = Math.atan((ecbOffset[2]-ecbOffset[0])/ecbOffset[1]);
+      var curECBangle = Math.atan((player[i].phys.ECBp[1].y-player[i].phys.ECBp[0].y)/ecbOffset[1]);
+      //var curECBangle = Math.atan((ecbOffset[2]-ecbOffset[0])/ecbOffset[1]);
       //console.log("curECBangle "+curECBangle);
       var proposedXDistance = yDistToBottom/Math.tan(curECBangle);
       //console.log("proposedXDistance "+proposedXDistance);
@@ -568,15 +569,17 @@ function physics(i){
 
     }
     else if (player[i].phys.ECBp[0].y < stage.ground[j][0].y && player[i].phys.ECBp[3].y > stage.ground[j][0].y && player[i].phys.ECB1[0].x >= stage.ground[j][1].x){
-      //console.log("top right corner in rectangle");
+      //console.log("top right corner in line");
       var yDistToBottom = Math.abs(stage.ground[j][1].y - player[i].phys.ECBp[0].y);
       //console.log("yDistToBottom "+yDistToBottom);
-      var curECBangle = Math.atan((ecbOffset[2]-ecbOffset[0])/ecbOffset[1]);
+      var curECBangle = Math.atan((player[i].phys.ECBp[3].y-player[i].phys.ECBp[0].y)/ecbOffset[1]);
+      //var curECBangle = Math.atan((ecbOffset[2]-ecbOffset[0])/ecbOffset[1]);
       //console.log("curECBangle "+curECBangle);
       var proposedXDistance = yDistToBottom/Math.tan(curECBangle);
       //console.log("proposedXDistance "+proposedXDistance);
       //console.log("ECB X:"+ecbOffset[1]);
       //console.log("ECB Y:"+ecbOffset[2]);
+      //console.log("ECB Y0:"+ecbOffset[0]);
       //console.log("corner to centre dist : "+(stage.ground[j][1].x-player[i].phys.ECBp[0].x));
       if ((stage.ground[j][1].x-player[i].phys.ECBp[0].x)*-1 < proposedXDistance){
         //console.log("top right corner within diamond");
@@ -606,7 +609,8 @@ function physics(i){
       //console.log("bottom left corner in rectangle");
       var yDistToTop = Math.abs(stage.ceiling[j][0].y - player[i].phys.ECBp[2].y);
       //console.log("yDistToTop "+yDistToTop);
-      var curECBangle = Math.atan((ecbOffset[2]-ecbOffset[0])/ecbOffset[1]);
+      var curECBangle = Math.atan((ecbOffset[3]-ecbOffset[2])/ecbOffset[1]);
+      //var curECBangle = Math.atan((ecbOffset[2]-ecbOffset[0])/ecbOffset[1]);
       //console.log("curECBangle "+curECBangle);
       var proposedXDistance = yDistToTop/Math.tan(curECBangle);
       //console.log("proposedXDistance "+proposedXDistance);
