@@ -273,8 +273,8 @@ function physics(i){
       player[i].phys.abovePlatforms[j] = false;
     }
   }
+  var stillGrounded = true;
   if (player[i].phys.grounded){
-    var stillGrounded = true;
     var backward = false;
     if (player[i].phys.onSurface[0] == 0){
       var g = player[i].phys.onSurface[1];
@@ -374,24 +374,6 @@ function physics(i){
         }
       }
     }
-    if (!stillGrounded){
-      player[i].phys.grounded = false;
-      if (typeof aS[cS[i]][player[i].actionState].airborneState !== 'undefined'){
-        player[i].actionState = aS[cS[i]][player[i].actionState].airborneState;
-      }
-      else {
-        if (aS[cS[i]][player[i].actionState].missfoot && backward){
-          aS[cS[i]].MISSFOOT.init(i);
-        }
-        else {
-          aS[cS[i]].FALL.init(i);
-        }
-        if (Math.abs(player[i].phys.cVel.x) > player[i].charAttributes.aerialHmaxV){
-          player[i].phys.cVel.x = Math.sign(player[i].phys.cVel.x) * player[i].charAttributes.aerialHmaxV;
-        }
-      }
-      player[i].phys.shielding = false;
-    }
   }
   var notTouchingWalls = [true,true];
   for (var j=0;j<stage.wallL.length;j++){
@@ -485,7 +467,33 @@ function physics(i){
   if (notTouchingWalls[0] && notTouchingWalls[1] && player[i].phys.canWallJump){
     player[i].phys.wallJumpTimer = 254;
   }
-
+  if (!notTouchingWalls[0] || !notTouchingWalls[1]){
+    if (player[i].phys.grounded){
+      var s = player[i].phys.onSurface[1];
+      var surface = player[i].phys.onSurface[0] ? stage.platform[s] : stage.ground[s];
+      if (player[i].phys.pos.x < surface[0].x-0.1 || player[i].phys.pos.x > surface[1].x+0.1){
+        stillGrounded = false;
+      }
+    }
+  }
+  if (!stillGrounded){
+    player[i].phys.grounded = false;
+    if (typeof aS[cS[i]][player[i].actionState].airborneState !== 'undefined'){
+      player[i].actionState = aS[cS[i]][player[i].actionState].airborneState;
+    }
+    else {
+      if (aS[cS[i]][player[i].actionState].missfoot && backward){
+        aS[cS[i]].MISSFOOT.init(i);
+      }
+      else {
+        aS[cS[i]].FALL.init(i);
+      }
+      if (Math.abs(player[i].phys.cVel.x) > player[i].charAttributes.aerialHmaxV){
+        player[i].phys.cVel.x = Math.sign(player[i].phys.cVel.x) * player[i].charAttributes.aerialHmaxV;
+      }
+    }
+    player[i].phys.shielding = false;
+  }
   if (player[i].phys.grounded){
     for (var j=0;j<4;j++){
       if (playerType[j] > -1){
