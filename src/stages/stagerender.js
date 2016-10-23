@@ -45,7 +45,6 @@ function drawStage(){
       c.stroke();
   }
   c.strokeStyle = "#e7a44c";
-  //c.fillStyle = "rgba(228, 159, 70, 0.2)";
   for (var j=0;j<stage.ledge.length;j++){
     var e = stage.ledge[j];
     c.beginPath();
@@ -87,7 +86,12 @@ var direction = [[1,-1,1,-1,1,-1,1,-1,1],[-1,1,-1,1,-1,1,-1,1,-1]];
 function bgStar(){
   var vSeed = Math.random();
   this.velocity = new Vec2D(5*vSeed*Math.sign(0.5-Math.random()),5*(1-vSeed)*Math.sign(0.5-Math.random()));
-  this.colour = "hsl("+358*Math.random()+", 100%, 50%)";
+  if (transparency){
+    this.colour = "hsl("+358*Math.random()+", 100%, 50%)";
+  }
+  else {
+    this.colour = "hsl("+358*Math.random()+",100%,15%)"
+  }
   this.pos = new Vec2D(0,0);
   this.life = 0;
 }
@@ -115,7 +119,9 @@ function drawBackground(){
 
     if (bgSparkle == 0){
       c.fillStyle = bgStars[p].colour;
-      c.globalAlpha = Math.min(bgStars[p].life/300,1);
+      if (transparency){
+        c.globalAlpha = Math.min(bgStars[p].life/300,1);
+      }
       c.beginPath();
       c.arc(600+bgStars[p].pos.x,375+bgStars[p].pos.y,5,twoPi,0);
       c.fill();
@@ -185,7 +191,12 @@ function drawBackground(){
           break;
       }
     }
-    c.fillStyle = "hsla("+bgPos[k][8]+", 100%, 50%, "+(0.15-k*0.07)+")";
+    if (transparency){
+      c.fillStyle = "hsla("+bgPos[k][8]+", 100%, 50%, "+(0.15-k*0.07)+")";
+    }
+    else {
+      c.fillStyle = "hsl("+bgPos[k][8]+", 100%, 7%)";
+    }
     c.beginPath();
     c.moveTo(bgPos[k][0],bgPos[k][1]);
     c.bezierCurveTo(bgPos[k][2],bgPos[k][3],bgPos[k][4],bgPos[k][5],bgPos[k][6],bgPos[k][7]);

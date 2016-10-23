@@ -2,7 +2,7 @@ vfx = {
   impactLand : {
     name : "impactLand",
     //colour : "rgba(#ffffff,",
-    colour : "rgba(255,255,255,",
+    colour : [255,255,255],
     frames : 8,
     path : [[[-157,-29],[-94,-5],[-154,-52],[-90,-9],[-145,-51],[-161,-85],[-99,-43],[-137,-78],[-115,-73],[-91,-59],[-155,-110],[-108,-84],[-150,-134],[-109,-108],[-136,-136],[-70,-89],[-94,-125],[-68,-95],[-91,-144],[-59,-109],[-83,-146],[-36,-92],[-38,-126],[-20,-105],[-2,-115],[10,-108],[18,-131],[29,-90],[96,-146],[64,-104],[100,-134],[77,-90],[105,-108],[59,-62],[95,-89],[90,-72],[66,-45],[106,-78],[90,-47],[128,-70],[92,-39],[163,-81],[143,-47],[102,-18],[161,-51],[113,-12],[164,-28],[113,4],[67,49],[15,70],[-13,69],[-57,54],[-111,10],[0,0],[-111,10],[-139,-8]],[[-213,-28],[-145,1],[-205,-46],[-145,-12],[-198,-50],[-214,-84],[-151,-41],[-190,-74],[-169,-72],[-139,-59],[-211,-109],[-159,-81],[-196,-109],[-207,-137],[-152,-103],[-189,-135],[-94,-74],[-129,-123],[-100,-93],[-115,-118],[-123,-145],[-95,-113],[-115,-148],[-65,-89],[-65,-119],[-31,-95],[-1,-114],[25,-100],[51,-119],[58,-86],[132,-143],[103,-107],[145,-140],[130,-110],[110,-89],[141,-112],[127,-92],[191,-135],[159,-106],[199,-125],[188,-103],[172,-90],[209,-110],[151,-65],[182,-78],[183,-69],[157,-48],[213,-85],[197,-49],[168,-29],[214,-54],[159,-9],[215,-27],[177,2],[115,15],[65,51],[17,65],[-15,65],[-65,52],[-119,16],[0,0],[-119,16],[-188,1]],[[-264,-30],[-199,-2],[-260,-51],[-192,-11],[-246,-49],[-261,-81],[-203,-44],[-243,-75],[-220,-72],[-182,-55],[-257,-107],[-216,-85],[-243,-105],[-254,-135],[-209,-105],[-241,-139],[-159,-80],[-167,-95],[-139,-63],[-153,-93],[-130,-79],[-159,-121],[-134,-95],[-149,-122],[-160,-152],[-124,-112],[-155,-157],[-102,-101],[-81,-88],[-87,-105],[-82,-103],[-84,-128],[-79,-115],[-76,-125],[-66,-106],[-50,-116],[-20,-97],[3,-113],[18,-101],[51,-120],[54,-98],[76,-121],[76,-111],[96,-126],[91,-116],[102,-117],[97,-102],[171,-150],[140,-108],[186,-148],[173,-117],[150,-91],[187,-124],[141,-69],[241,-139],[208,-108],[257,-132],[240,-106],[222,-91],[260,-112],[199,-66],[239,-82],[239,-73],[204,-43],[266,-87],[247,-52],[198,-17],[259,-52],[206,-12],[266,-29],[240,-5],[139,4],[66,47],[1,54],[-71,48],[-141,10],[0,0],[-141,10],[-241,-3]],[[-311,-30],[-245,-2],[-302,-50],[-243,-15],[-290,-47],[-310,-85],[-251,-46],[-290,-80],[-266,-72],[-225,-53],[-304,-110],[-267,-89],[-288,-105],[-298,-130],[-250,-103],[-288,-137],[-189,-71],[-199,-98],[-171,-67],[-185,-96],[-162,-80],[-201,-133],[-169,-99],[-181,-121],[-192,-152],[-159,-118],[-181,-158],[-121,-87],[-101,-98],[-98,-116],[-86,-103],[-93,-129],[-77,-104],[-26,-116],[38,-115],[77,-97],[101,-119],[94,-101],[113,-106],[114,-95],[104,-71],[205,-152],[181,-116],[224,-148],[208,-119],[188,-95],[226,-127],[180,-75],[204,-91],[202,-81],[290,-139],[250,-106],[301,-134],[284,-106],[261,-89],[309,-114],[247,-66],[280,-81],[254,-49],[313,-84],[296,-51],[256,-26],[310,-56],[272,-27],[311,-31],[282,-2],[156,-3],[63,33],[-50,35],[-156,4],[1,-1],[-156,4],[-281,-1]],[[-359,-35],[-294,-4],[-348,-50],[-287,-14],[-330,-45],[-351,-85],[-296,-45],[-330,-80],[-280,-61],[-351,-112],[-302,-86],[-333,-108],[-342,-131],[-302,-110],[-331,-138],[-216,-61],[-233,-102],[-199,-62],[-217,-95],[-187,-78],[-234,-137],[-199,-103],[-219,-133],[-226,-159],[-195,-126],[-217,-164],[-151,-88],[-123,-105],[-105,-104],[-108,-127],[-95,-106],[-37,-121],[30,-122],[84,-104],[113,-120],[99,-102],[121,-104],[162,-88],[248,-159],[215,-118],[261,-154],[245,-125],[228,-101],[268,-136],[218,-78],[242,-97],[237,-79],[329,-141],[294,-107],[346,-133],[327,-105],[305,-91],[351,-116],[293,-69],[329,-80],[304,-58],[353,-84],[339,-54],[304,-27],[350,-55],[306,-21],[353,-32],[327,0],[166,-1],[67,22],[-55,21],[-159,5],[0,0],[-159,5],[-326,-1]],[[-392,-38],[-327,-5],[-382,-50],[-321,-13],[-369,-54],[-387,-90],[-322,-42],[-362,-79],[-321,-59],[-383,-109],[-334,-86],[-367,-109],[-380,-136],[-328,-105],[-365,-141],[-242,-53],[-263,-99],[-219,-58],[-241,-88],[-217,-81],[-201,-64],[-261,-139],[-227,-106],[-249,-141],[-258,-173],[-222,-129],[-244,-168],[-186,-103],[-131,-118],[-120,-126],[-108,-119],[-43,-128],[51,-126],[130,-106],[167,-110],[163,-101],[194,-94],[281,-164],[249,-125],[295,-162],[282,-131],[260,-107],[302,-139],[255,-87],[282,-98],[258,-67],[362,-139],[326,-106],[377,-133],[343,-89],[387,-115],[308,-57],[364,-83],[325,-45],[389,-86],[368,-52],[316,-14],[387,-58],[320,-6],[388,-33],[354,2],[164,2],[86,9],[-1,9],[-109,10],[-180,3],[0,0],[-180,3],[-365,-2]],[[-417,-29],[-349,1],[-419,-56],[-350,-10],[-398,-48],[-416,-82],[-353,-38],[-397,-78],[-338,-51],[-416,-111],[-366,-83],[-399,-109],[-412,-135],[-356,-102],[-404,-142],[-257,-40],[-279,-62],[-290,-103],[-240,-52],[-275,-99],[-253,-88],[-225,-62],[-289,-138],[-245,-94],[-273,-136],[-281,-169],[-247,-129],[-271,-167],[-204,-91],[-153,-114],[-135,-128],[-121,-118],[-51,-140],[38,-141],[113,-115],[155,-119],[159,-105],[203,-88],[298,-164],[264,-117],[312,-158],[301,-129],[276,-102],[318,-141],[268,-81],[299,-99],[284,-73],[318,-101],[313,-89],[393,-141],[346,-103],[402,-135],[391,-114],[357,-86],[407,-118],[342,-66],[388,-84],[345,-42],[413,-89],[394,-56],[344,-18],[407,-56],[351,-11],[411,-34],[388,-2],[147,-1],[26,9],[-41,9],[-177,0],[0,10],[-177,0],[-396,2]],[[-429,-32],[-372,-2],[-426,-48],[-364,-13],[-411,-50],[-429,-87],[-366,-39],[-405,-79],[-348,-52],[-429,-115],[-383,-88],[-408,-107],[-421,-131],[-380,-108],[-411,-140],[-288,-53],[-297,-70],[-282,-55],[-302,-109],[-264,-71],[-283,-100],[-256,-87],[-295,-141],[-265,-115],[-289,-146],[-297,-167],[-255,-130],[-281,-172],[-216,-97],[-132,-127],[-131,-136],[-110,-124],[-47,-147],[49,-147],[121,-124],[167,-133],[166,-116],[219,-97],[320,-171],[283,-122],[334,-164],[320,-134],[286,-96],[338,-143],[268,-67],[322,-105],[288,-57],[344,-112],[330,-86],[409,-143],[377,-109],[424,-138],[413,-114],[385,-86],[431,-117],[349,-55],[414,-88],[373,-48],[433,-92],[416,-58],[369,-23],[434,-62],[369,-6],[435,-36],[407,-3],[-1,-1],[-405,-1]]]
   },
@@ -22,7 +22,7 @@ vfx = {
 
   dashDust : {
     name : "dashDust",
-    colour : "rgba(255,255,255,",
+    colour : [255,255,255],
     frames : 8,
     path : [[[-84,-287],[107,-135],[-161,-296],[5,-153],[-57,-173],[-15,-138],[-198,-218],[51,-86],[-33,-86],[43,-59],[-184,-80],[39,-36],[-157,-15],[0,0],[-157,-15],[257,-8],[308,-30]],[[172,-92],[189,-65],[98,-124],[174,-63],[118,-89],[166,-53],[90,-88],[138,-58],[99,-73],[154,-38],[130,-41],[55,-105],[73,-76],[25,-102],[70,-62],[-3,-96],[73,-34],[-13,-45],[81,-13],[0,0],[81,-13],[163,-13],[245,-21]],[[185,-112],[201,-66],[151,-110],[189,-60],[131,-119],[172,-65],[88,-119],[168,-56],[124,-75],[150,-51],[102,-75],[56,-123],[71,-92],[61,-93],[68,-84],[39,-104],[68,-72],[3,-117],[53,-68],[4,-85],[43,-59],[-29,-79],[31,-49],[-39,-50],[19,-39],[-29,-35],[91,-9],[0,0],[91,-9],[138,-13],[239,-17]],[[203,-67],[153,-126],[179,-69],[116,-112],[152,-71],[55,-127],[90,-83],[16,-115],[57,-75],[-109,-182],[4,-63],[-64,-86],[-5,-56],[-75,-61],[-5,-42],[-95,-45],[-10,-28],[-50,-23],[59,-11],[0,0],[59,-11],[159,-12],[221,-16]],[[190,-56],[124,-126],[147,-75],[117,-99],[140,-71],[59,-142],[131,-71],[24,-137],[92,-81],[10,-116],[86,-65],[-119,-178],[-35,-108],[-104,-136],[-24,-81],[-97,-83],[-22,-55],[-92,-60],[-37,-42],[-137,-53],[-64,-30],[-107,-24],[79,-8],[0,0],[79,-8],[170,-12],[198,-23]],[[160,-71],[118,-97],[121,-69],[40,-118],[69,-93],[20,-119],[98,-69],[69,-84],[92,-59],[10,-106],[87,-51],[11,-80],[-86,-180],[-46,-124],[-127,-176],[-52,-111],[-79,-126],[-60,-104],[-147,-151],[-92,-106],[-131,-123],[-95,-98],[-144,-113],[-55,-61],[-98,-76],[-61,-50],[-114,-62],[-77,-41],[-165,-48],[-86,-28],[-163,-28],[62,1],[0,0],[62,1],[156,-10],[183,-26]],[[136,-73],[85,-114],[119,-77],[32,-131],[96,-79],[17,-119],[72,-72],[-1,-104],[43,-64],[-16,-77],[-139,-182],[-81,-115],[-119,-139],[-90,-104],[-177,-167],[-133,-121],[-186,-136],[-109,-98],[-170,-101],[-96,-60],[-206,-49],[-92,-40],[-161,-34],[-89,-27],[-205,-19],[-25,-3],[88,-6],[0,0],[88,-6],[163,-34]],[[99,-49],[17,-112],[57,-69],[-11,-93],[32,-67],[-9,-75],[-3,-61],[-137,-161],[-87,-90],[-129,-97],[-85,-67],[-133,-77],[-88,-58],[-175,-64],[-77,-44],[-161,-44],[-86,-31],[-204,-29],[-67,-9],[43,-3],[0,0],[43,-3],[112,-15]]]
   },
@@ -74,7 +74,7 @@ vfx = {
     name : "groundBounce",
     frames : 8,
     //colour : "#66ff38",
-    colour : "rgba(102,255,56,",
+    colour : [102,255,56],
     path : [[[0,0],[-94,0],[-207,-259],[-110,-81],[-120,-116],[-77,-51],[-155,-184],[-95,-109],[-99,-171],[-63,-76],[-72,-128],[-53,-81],[-89,-287],[-41,-108],[-35,-177],[-20,-125],[-22,-419],[-5,-170],[8,-227],[10,-130],[17,-208],[23,-123],[58,-303],[49,-161],[105,-433],[64,-144],[81,-223],[61,-100],[74,-123],[70,-96],[91,-165],[83,-117],[115,-182],[95,-112],[157,-185],[94,-83],[113,-100],[104,-52],[143,-120],[127,-80],[187,-183],[165,-129],[189,-162],[96,-1]],[[0,0],[-168,-4],[-326,-135],[-165,-38],[-300,-162],[-176,-92],[-228,-175],[-88,-72],[-140,-200],[-92,-137],[-137,-377],[-59,-129],[-79,-316],[-23,-150],[-8,-211],[12,-149],[25,-187],[23,-88],[43,-184],[41,-137],[61,-253],[63,-146],[89,-207],[86,-118],[201,-380],[97,-74],[146,-97],[113,-59],[172,-94],[167,-79],[219,-133],[186,-59],[198,-59],[177,-27],[315,-125],[169,0]],[[0,0],[-227,-1],[-515,-148],[-220,-23],[-461,-171],[-283,-105],[-367,-167],[-253,-120],[-290,-161],[-140,-86],[-284,-376],[-128,-109],[-144,-201],[-117,-163],[-127,-241],[-107,-179],[-115,-261],[-38,-97],[-32,-185],[-19,-106],[-1,-143],[6,-104],[45,-312],[49,-119],[100,-202],[70,-121],[105,-142],[98,-110],[211,-336],[122,-57],[154,-84],[140,-57],[377,-171],[175,-34],[317,-101],[286,-68],[538,-189],[232,0]],[[0,0],[-281,0],[-448,-84],[-253,-45],[-610,-172],[-265,-73],[-382,-146],[-226,-75],[-303,-133],[-181,-81],[-264,-160],[-204,-133],[-352,-362],[-179,-153],[-90,-99],[-92,-208],[-50,-118],[-27,-233],[-5,-140],[14,-162],[34,-115],[119,-292],[94,-82],[215,-272],[151,-96],[226,-194],[173,-76],[439,-182],[243,-59],[448,-125],[210,-14],[558,-107],[275,2]],[[0,0],[-327,-2],[-622,-59],[-205,-20],[-540,-139],[-241,-53],[-575,-218],[-193,-75],[-353,-249],[-159,-62],[-196,-161],[-169,-123],[-291,-392],[-73,-63],[-77,-147],[-21,-54],[-34,-204],[0,-59],[5,-139],[17,-84],[59,-142],[52,-85],[135,-223],[144,-128],[192,-176],[197,-111],[313,-228],[202,-52],[396,-111],[342,-75],[552,-139],[315,-36],[361,-38],[328,-13],[616,-62],[329,0]],[[0,0],[-325,0],[-655,-44],[-315,-10],[-399,-51],[-266,-36],[-618,-137],[-253,-46],[-337,-108],[-196,-59],[-286,-164],[-182,-69],[-305,-257],[-177,-125],[-235,-265],[-82,-75],[-67,-114],[-64,-72],[-34,-360],[9,-105],[49,-176],[53,-69],[84,-141],[88,-80],[204,-161],[192,-132],[295,-200],[200,-47],[546,-153],[235,-20],[435,-46],[370,-10],[704,-52],[359,2]],[[0,0],[-394,1],[-694,-51],[-202,-16],[-625,-132],[-224,-38],[-339,-111],[-194,-51],[-285,-151],[-187,-69],[-323,-263],[-183,-124],[-246,-274],[-70,-55],[-90,-156],[-56,-97],[-34,-264],[19,-82],[59,-170],[51,-81],[96,-118],[91,-50],[213,-164],[208,-130],[309,-196],[185,-47],[539,-139],[257,-31],[355,-38],[314,-15],[661,-40],[378,2]],[[0,0],[-398,3],[-760,-25],[-323,-6],[-333,-15],[-80,-23],[-121,-41],[-16,-24],[-35,-41],[-1,-27],[25,-45],[21,-27],[162,-41],[148,-24],[306,-27],[246,-11],[546,-41],[421,-12],[838,-53],[403,4]]]
   },
   furaFura : {
@@ -165,10 +165,20 @@ vfx.ceilingBounce.path = vfx.groundBounce.path;
 vfx.ceilingBounce.colour = vfx.groundBounce.colour;
 vfx.ceilingBounce.frames = vfx.groundBounce.frames;
 
+transparency = true;
+function makeColour(r,g,b,a){
+  // maybe some hsl too
+  if (transparency){
+    return "rgba("+r+","+g+","+b+","+a+")";
+  }
+  else {
+    return "rgb("+r+","+g+","+b+")";
+  }
+}
 
 dVfx = {
   general : function(j,ang){
-    var col = vfxQueue[j][0].colour+0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    var col = makeColour(vfxQueue[j][0].colour[0],vfxQueue[j][0].colour[1],vfxQueue[j][0].colour[2],0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     c.save();
     c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     c.rotate(ang);
@@ -191,7 +201,7 @@ dVfx = {
     var sc = stage.scale;
     var soX = stage.offset[0];
     var soY = stage.offset[1];
-    c.fillStyle = "rgba(46, 217, 255, "+(0.7-(0.7/5*vfxQueue[j][1]))+")";
+    c.fillStyle = makeColour(46,217,255,(0.7-(0.7/5*vfxQueue[j][1])));
     c.beginPath();
     c.moveTo(((scale*(swordNow[0][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[0][1]/-4.5)+pos.y)*-sc+soY));
     c.lineTo(((scale*(swordNow[1][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[1][1]/-4.5)+pos.y)*-sc+soY));
@@ -207,15 +217,14 @@ dVfx = {
     for (var n=0;n<vfxQueue[j][0].circles.length;n++){
       var x = ((vfxQueue[j][2].x+(vfxQueue[j][0].circles[n]*(1+(vfxQueue[j][1]/vfxQueue[j][0].frames))))*stage.scale) + stage.offset[0];
       var y = ((vfxQueue[j][2].y+(4*(0+(vfxQueue[j][1]/vfxQueue[j][0].frames))))*-stage.scale) +stage.offset[1];
-
-      c.fillStyle = "rgba(255,255,255,"+0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+      c.fillStyle = makeColour(255,255,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
       c.beginPath();
       c.arc(x,y,12*(stage.scale/4.5),twoPi,0);
       c.fill();
     }
   },
   flyingDust : function(j){
-    c.fillStyle = "rgba(255,255,255,"+0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    c.fillStyle = makeColour(255,255,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     c.beginPath();
     c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],12*(stage.scale/4.5),twoPi,0);
     c.fill();
@@ -224,7 +233,7 @@ dVfx = {
     dVfx.general(j,0);
   },
   doubleJumpRings : function(j){
-    c.strokeStyle = "rgba(99,190,255,"+0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    c.strokeStyle = makeColour(99,100,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     for (var n=0;n<vfxQueue[j][0].rings.length;n++){
       c.save();
       c.scale(1, 0.25);
@@ -240,7 +249,7 @@ dVfx = {
     c.save();
     c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     c.rotate(vfxQueue[j][3] * Math.PI/180);
-    var col = "rgba(149,255,163,"+0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    var col = makeColour(149,255,163,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     drawArrayPath(col,1,0,-200-(20+(100*(vfxQueue[j][1]/20))),vfxQueue[j][0].path1,1.3,1.3);
     if (vfxQueue[j][1] >= vfxQueue[j][0].svg2Active[0] && vfxQueue[j][1] <= vfxQueue[j][0].svg2Active[1]){
       col = "rgb(166,223,255)";
@@ -250,10 +259,10 @@ dVfx = {
       col = "rgb(255,161,161)";
       drawArrayPath(col,1,0,-90,vfxQueue[j][0].path2,(vfxQueue[j][0].svg3Scale[vfxQueue[j][1]-vfxQueue[j][0].svg3Active[0]][0])*1.5,(vfxQueue[j][0].svg3Scale[vfxQueue[j][1]-vfxQueue[j][0].svg3Active[0]][1])*1.5);
     }
-    col = "rgba(242,255,93,"+0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    col = makeColour(242,255,93,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     drawArrayPath(col,1,0,0,vfxQueue[j][0].path4,1.5,1.5);
     if (vfxQueue[j][1] < 10){
-      c.fillStyle = "rgba(255,255,255,"+0.8*((10-vfxQueue[j][1])/10)+")";
+      c.fillStyle = makeColour(255,255,255,0.8*((10-vfxQueue[j][1])/10));
       c.scale(0.5, 1);
       c.beginPath();
       c.arc(0,0,(450*(vfxQueue[j][1]/10)+170),twoPi,0);
@@ -274,14 +283,14 @@ dVfx = {
   hitFlair : function(j){
     var x = (vfxQueue[j][2].x*stage.scale)+stage.offset[0];
     var y = (vfxQueue[j][2].y*-stage.scale)+stage.offset[1];
-    c.strokeStyle = "rgba(146,217,164,"+0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    c.strokeStyle = makeColour(146,217,164,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     c.lineWidth = 5;
     c.beginPath();
     c.arc(x,y,15,twoPi,0);
     c.closePath();
     c.stroke();
     c.lineWidth = 1;
-    c.fillStyle = "rgba(146,217,164,"+0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    c.fillStyle = makeColour(146,217,164,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     c.beginPath();
     c.moveTo(x+3,y-3);
     c.lineTo(x+30,y);
@@ -295,7 +304,7 @@ dVfx = {
     c.fill();
   },
   hitSparks : function(j){
-    var col = "rgba(143,128,233,0.7)";
+    var col = makeColour(143,128,233,0.7);;
     drawArrayPath(col,vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0]+10,(vfxQueue[j][2].y*-stage.scale) +stage.offset[1],vfxQueue[j][0].path1,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
     drawArrayPath(col,vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0]+10,(vfxQueue[j][2].y*-stage.scale) +stage.offset[1],vfxQueue[j][0].path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
     c.save();
@@ -323,13 +332,13 @@ dVfx = {
     dVfx.general(j,Math.PI);
   },
   furaFura : function(j){
-    c.fillStyle = "rgba(255,254,108,"+0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    c.fillStyle = makeColour(255,254,108,0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     c.beginPath();
     c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],5*(stage.scale/4.5),twoPi,0);
     c.fill();
   },
   breakShield : function(j){
-    c.fillStyle = "rgba(73,255,244,"+0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    c.fillStyle = makeColour(73,255,244,0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     c.beginPath();
     c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+430,(10+(3*vfxQueue[j][1]))*(stage.scale/4.5),twoPi,0);
     c.fill();
@@ -343,7 +352,7 @@ dVfx = {
   powershield : function(j){
     if (vfxQueue[j][1]%2){
       c.save();
-      c.fillStyle = "rgba(255,255,255,0.3)";
+      c.fillStyle = makeColour(255,255,255,0.3);
       c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
       var seed = (Math.random()+1.5)*(stage.scale/4.5);
       c.scale(seed,seed);
@@ -362,8 +371,9 @@ dVfx = {
   },
   targetDestroy : function(j){
     c.save();
-    c.fillStyle = "rgba(255,255,255,0.8)";
-    c.strokeStyle = "rgba(255,255,255,0.8)";
+    var col = makeColour(255,255,255,0.8);
+    c.fillStyle = col;
+    c.strokeStyle = col;
     c.lineWidth = 3;
     c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     c.beginPath();
@@ -384,7 +394,7 @@ dVfx = {
     c.restore();
   },
   shieldup : function(j){
-    c.strokeStyle = "rgba(255,255,255,"+0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+")";
+    c.strokeStyle = makeColour(255,255,255,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     c.lineWidth = 10;
     c.beginPath();
     c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfxQueue[j][4]*stage.scale+10+(5*(vfxQueue[j][1]-1)),twoPi,0);
@@ -397,8 +407,8 @@ dVfx = {
   },
   tech : function(j){
     c.save();
-    c.strokeStyle = "rgba(251,246, 119,"+(0.3*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+0.7)+")";
-    c.fillStyle = "rgba(255,116,92,"+(0.3*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+0.7)+")";
+    c.strokeStyle = makeColour(251,246,119,(0.3*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+0.7));
+    c.fillStyle = makeColour(255,116,92,(0.3*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+0.7));
     c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     c.lineWidth = 3;
     c.scale(Math.min(0.2*vfxQueue[j][1],1),Math.min(0.2*vfxQueue[j][1],1));
@@ -454,7 +464,7 @@ dVfx = {
       c.strokeStyle = "black";
       c.strokeText(Math.floor(startTimer*2)+" "+milli[2]+milli[3],900,500);
       c.fillText(Math.floor(startTimer*2)+" "+milli[2]+milli[3],900,500);
-      c.fillStyle = "rgba(255,0,0,0.2)";
+      c.fillStyle = makeColour(255,0,0,0.2);
       c.fillRect(240,450,520,15);
       var textGrad =c.createLinearGradient(240+(500*(vfxQueue[j][1]/90)),450,760+(500*(vfxQueue[j][1]/90)),465);
       textGrad.addColorStop(0,"#ff0000");
@@ -496,19 +506,19 @@ dVfx = {
       var seed = Math.random()-0.5;
       ellipseOffset = new Vec2D(35*Math.cos(anglePos),35*Math.sin(anglePos)*0.4);
       var pillarGrad =c.createLinearGradient(0,0,0,-vfxQueue[j][1]*2-seed*60);
-      pillarGrad.addColorStop(0,"rgba(255, 255, 255, 0.3)");
-      pillarGrad.addColorStop(0.5,"rgba(255, 255, 255, 0.3)");
-      pillarGrad.addColorStop(1,"rgba(255, 255, 255, 0.0)");
+      pillarGrad.addColorStop(0,makeColour(255,255,255,0.3));
+      pillarGrad.addColorStop(0.5,makeColour(255,255,255,0.3));
+      pillarGrad.addColorStop(1,makeColour(255,255,255,0));
       c.fillStyle = pillarGrad;
       c.fillRect(ellipseOffset.x,ellipseOffset.y-(vfxQueue[j][1]*2+seed*60),10*(stage.scale/4.5),(vfxQueue[j][1]*2+seed*60)*(stage.scale/4.5));
       anglePos += Math.PI/4;
     }
-    c.fillStyle = "rgba(163, 255, 203, 0.3)";
+    c.fillStyle = makeColour(163,255,203,0.3)
     c.fillRect(-35,-(vfxQueue[j][1]%15)*5,80*(stage.scale/4.5),15*(stage.scale/4.5));
     c.restore();
     c.save();
     c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
-    c.strokeStyle = "rgba(255, 149, 149, 0.8)";
+    c.strokeStyle = makeColour(255,149,149,0.8);
     c.lineWidth = 8;
     c.scale(0.8+(Math.random()*0.3),0.2+(0.2*Math.random()));
     c.beginPath();
@@ -531,7 +541,7 @@ dVfx = {
     c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     switch (vfxQueue[j][1]){
       case 1:
-        c.fillStyle = "rgba(255, 188, 14, 0.62)";
+        c.fillStyle = makeColour(255,188,14,0.62);
         c.beginPath();
         c.arc(0,0,20,0,twoPi);
         c.closePath();
@@ -559,7 +569,7 @@ dVfx = {
       case 6:
       case 7:
         for (var n=0;n<vfx.normalhit.path3.length;n++){
-          drawArrayPath("rgba(120,255,99,"+4/vfxQueue[j][1]+")",vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5),0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5));
+          drawArrayPath(makeColour(120,255,99,4/vfxQueue[j][1]),vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5),0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5));
         }
         break;
       default:
@@ -571,7 +581,7 @@ dVfx = {
     c.save();
     var tX = (vfxQueue[j][2].x*stage.scale)+stage.offset[0];
     var tY = (vfxQueue[j][2].y*-stage.scale)+stage.offset[1];
-    c.fillStyle = "rgba(77, 108, 217,0.5)";
+    c.fillStyle = makeColour(77,108,217,0.5);
     if (vfxQueue[j][1] == 1){
       drawHexagon(7*stage.scale,tX,tY,20);
       c.fillStyle = "rgb(255, 255, 255)";
@@ -647,7 +657,7 @@ dVfx = {
     c.save();
     c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     var secondFrame = (vfxQueue[j][4]+4)%10;
-    drawArrayPathNew("rgba(237, 219, 53,0.3)",vfxQueue[j][3],0,0,vfx.firefoxcharge.path[secondFrame],0.35*(stage.scale/4.5),0.5*(stage.scale/4.5),0,0,0);
+    drawArrayPathNew(makeColour(237,219,53,0.3),vfxQueue[j][3],0,0,vfx.firefoxcharge.path[secondFrame],0.35*(stage.scale/4.5),0.5*(stage.scale/4.5),0,0,0);
     drawArrayPathNew("rgb(255, 218, 163)",vfxQueue[j][3],0,0,vfx.firefoxcharge.path[vfxQueue[j][4]],0.35*(stage.scale/4.5),0.5*(stage.scale/4.5),0,0,0);
     c.restore();
   },
@@ -663,14 +673,14 @@ dVfx = {
       if (frame%2){
         var col = "rgb(255, 218, 163)";
         fireGrad.addColorStop(0,"rgb(255, 232, 198)");
-        fireGrad.addColorStop(0.6,"rgba(251, 187, 90, 0.9)");
-        fireGrad.addColorStop(1,"rgba(182, 45, 9, 0.3)");
+        fireGrad.addColorStop(0.6,makeColour(251,187,90,0.9));
+        fireGrad.addColorStop(1,makeColour(182,45,9,0.3));
       }
       else {
         var col = "rgb(223, 83, 39)";
         fireGrad.addColorStop(0,"rgb(223, 83, 39)");
-        fireGrad.addColorStop(0.6,"rgba(210, 59, 26, 0.9)");
-        fireGrad.addColorStop(1,"rgba(158, 34, 12, 0.3)");
+        fireGrad.addColorStop(0.6,makeColour(210,59,26,0.9));
+        fireGrad.addColorStop(1,makeColour(158,34,12,0.3));
       }
       drawArrayPathNew(fireGrad,vfxQueue[j][3],0,0,vfx.firefoxlaunch.path[frame],0.35*(stage.scale/4.5),0.35*(stage.scale/4.5),player[p].rotation,player[p].rotationPoint.x,player[p].rotationPoint.y);
       c.restore();
@@ -682,12 +692,12 @@ dVfx = {
     }
     c.save();
     c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],((vfxQueue[j][2].y+4)*-stage.scale)+stage.offset[1]);
-    c.fillStyle = "rgba("+Math.max(149,251-(vfxQueue[j][1]*5))+", "+Math.max(149,187-(vfxQueue[j][1]*5))+", "+Math.min(149,90+(vfxQueue[j][1]*5))+","+(1-(vfxQueue[j][1]/15))+")";
+    c.fillStyle = makeColour(Math.max(149,251-(vfxQueue[j][1]*5)),Math.max(149,187-(vfxQueue[j][1]*5)),Math.min(149,90+(vfxQueue[j][1]*5)),(1-(vfxQueue[j][1]/15)));
     c.beginPath();
     c.arc((-2+vfxQueue[j][5][0]*4)*stage.scale,(-2+vfxQueue[j][5][1]*4)*stage.scale,4*stage.scale,0,twoPi);
     c.closePath();
     c.fill();
-    c.fillStyle = "rgba("+Math.max(149,223-(vfxQueue[j][1]*5))+", "+Math.min(149,83+(vfxQueue[j][1]*5))+", "+Math.min(149,39+(vfxQueue[j][1]*5))+","+(1-(vfxQueue[j][1]/15))+")";
+    c.fillStyle = makeColour(Math.max(149,223-(vfxQueue[j][1]*5)),Math.min(149,83+(vfxQueue[j][1]*5)),Math.min(149,39+(vfxQueue[j][1]*5)),(1-(vfxQueue[j][1]/15)));
     c.beginPath();
     c.arc((-2+vfxQueue[j][5][2]*4)*stage.scale,(-2+vfxQueue[j][5][3]*4)*stage.scale,2*stage.scale,0,twoPi);
     c.closePath();
@@ -700,14 +710,13 @@ dVfx = {
 
     c.lineWidth = 3;
     if (vfxQueue[j][1] > 3){
-      c.strokeStyle = "rgba(255, 59, 59,"+(1-(vfxQueue[j][1]-4)/6)+")";
+      c.strokeStyle = makeColour(255,59,59,(1-(vfxQueue[j][1]-4)/6));
       c.beginPath();
       c.arc(0,0,(-0.1+vfxQueue[j][1]*0.6)*stage.scale,0,twoPi);
       c.closePath();
       c.stroke();
     }
-
-    c.fillStyle = "rgba(255, 57, 87,"+Math.min(1,(1-(vfxQueue[j][1]-4)/6))+")";
+    c.fillStyle = makeColour(255,57,87,Math.min(1,(1-(vfxQueue[j][1]-4)/6)));
     c.beginPath();
     c.moveTo((-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(-1.6-vfxQueue[j][1]*1.6)*stage.scale);
     c.lineTo((-2.3-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(-2.4-vfxQueue[j][1]*1.6)*stage.scale);
@@ -719,7 +728,7 @@ dVfx = {
   },
   illusion : function(j){
     if (!(vfxQueue[j][1]%2)){
-      drawArrayPathNew("rgba(68,244,255,0.5)",vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfx.illusion.path,0.35*(stage.scale/4.5),0.35*(stage.scale/4.5),0,0,0);
+      drawArrayPathNew(makeColour(68,244,255,0.5),vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfx.illusion.path,0.35*(stage.scale/4.5),0.35*(stage.scale/4.5),0,0,0);
     }
   }
 }

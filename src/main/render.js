@@ -95,7 +95,7 @@ function renderPlayer(i){
       col = palettes[pPal[i]][1];
     }
     else if (player[i].phys.charging && player[i].phys.chargeFrames % 9 > 3){
-      col = "rgba(252, 255, 91, 0.7)";
+      col = "rgb(252, 255, 91)";
     }
     else if (player[i].actionState == "FURAFURA" && player[i].timer % 30 < 6){
       col = palettes[pPal[i]][3];
@@ -194,7 +194,7 @@ function renderPlayer(i){
     }
   }
   if (hasTag[i]){
-    c.fillStyle = "rgba(0,0,0,0.5)";
+    c.fillStyle = makeColour(0,0,0,0.5);
     c.strokeStyle = palettes[pPal[i]][0];
     var size = 10*tagText[i].length
     c.fillRect(temX-size/2,temY-130*(stage.scale/4.5),size,20);
@@ -261,24 +261,24 @@ function renderPlayer(i){
   if (player[i].showHitbox){
     c.fillStyle = hurtboxColours[player[i].phys.hurtBoxState];
     c.fillRect(player[i].phys.hurtbox.min.x*stage.scale+stage.offset[0],player[i].phys.hurtbox.min.y*-stage.scale+stage.offset[1],player[i].charAttributes.hurtboxOffset[0]*2*stage.scale,player[i].charAttributes.hurtboxOffset[1]*stage.scale);
-    c.fillStyle = "rgba(255, 29, 29, 0.69)";
+    c.fillStyle = makeColour(255,29,29,0.69);
     for (var j=0;j<4;j++){
       switch (j){
         case 0:
-          c.fillStyle = "rgba(255, 29, 29, 0.69)";
-          c.strokeStyle = "rgba(255, 126, 126, 0.69)";
+          c.fillStyle = makeColour(255,29,29,0.69);
+          c.strokeStyle = makeColour(255,126,126,0.69);
           break;
         case 1:
-          c.fillStyle = "rgba(47, 255, 29, 0.69)";
-          c.strokeStyle = "rgba(126, 252, 115, 0.69)";
+          c.fillStyle = makeColour(47,255,29,0.69);
+          c.strokeStyle = makeColour(126,252,115,0.69);
           break;
         case 2:
-          c.fillStyle = "rgba(29, 208, 255, 0.69)";
-          c.strokeStyle = "rgba(117, 226, 255, 0.69)";
+          c.fillStyle = makeColour(29,208,255,0.69);
+          c.strokeStyle = makeColour(117,226,255,0.69);
           break;
         case 3:
-          c.fillStyle = "rgba(203, 29, 255, 0.69)";
-          c.strokeStyle = "rgba(216, 116, 246, 0.69)";
+          c.fillStyle = makeColour(203,29,255,0.69);
+          c.strokeStyle = makeColour(216,116,246,0.69);
           break;
         default:
           break;

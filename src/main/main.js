@@ -120,15 +120,15 @@ randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tem
 
 vfxQueue = [];
 
-palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgba(244, 68, 68, 0.6)","rgba(255, 225, 167, "],
-["rgb(4, 255, 134)","rgb(154, 254, 170)","rgba(252, 95, 95, ","rgba(255, 182, 96, 0.6)","rgba(254, 141, 141, "],
-["rgb(5, 195, 255)","rgb(121, 223, 255)","rgba(218, 96, 254, ","rgba(231, 134, 255, 0.6)","rgba(230, 144, 255, "],
-["rgb(255, 187, 70)","rgb(248, 255, 122)","rgba(80, 182, 255, ","rgba(255, 142, 70, 0.6)","rgba(139, 203, 249, "],
-["rgb(177, 89, 255)","rgb(203, 144, 255)","rgba(144, 255, 110, ","rgba(247, 126, 250, 0.6)","rgba(190, 255, 170, "],
-["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgba(255, 112, 66, 0.6)","rgba(111, 214, 168, "],
-["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgba(191, 119, 119, 0.6)","rgba(175, 172, 172, "]];
+palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
+["rgb(4, 255, 134)","rgb(154, 254, 170)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
+["rgb(5, 195, 255)","rgb(121, 223, 255)","rgba(218, 96, 254, ","rgb(231, 134, 255)","rgba(230, 144, 255, "],
+["rgb(255, 187, 70)","rgb(248, 255, 122)","rgba(80, 182, 255, ","rgb(255, 142, 70)","rgba(139, 203, 249, "],
+["rgb(177, 89, 255)","rgb(203, 144, 255)","rgba(144, 255, 110, ","rgb(247, 126, 250)","rgba(190, 255, 170, "],
+["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgb(255, 112, 66)","rgba(111, 214, 168, "],
+["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgb(191, 119, 119)","rgba(175, 172, 172, "]];
 
-hurtboxColours = ["rgba(255, 237, 70, 0.6)","rgba(42, 57, 255, 0.6)","rgba(54, 255, 37, 0.6)"];
+hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
 
 hasTag = [false,false,false,false];
 tagText = ["","","",""];
@@ -1184,7 +1184,7 @@ function renderTick(){
     else if (gameMode == 5){
       if (playing || frameByFrameRender){
         var rStart = performance.now();
-        c.fillStyle = "rgba(0, 0, 0, 1)";
+        c.fillStyle = "rgb(0, 0, 0)";
         c.fillRect(0,0,canvas.width,canvas.height);
         if (showVfx){
           drawBackground();
@@ -1219,7 +1219,7 @@ function renderTick(){
       console.log(delta);*/
       //console.log("test2");
       var rStart = performance.now();
-      c.fillStyle = "rgba(0, 0, 0, 1)";
+      c.fillStyle = "rgb(0, 0, 0)";
       c.fillRect(0,0,canvas.width,canvas.height);
       if (showVfx){
         drawBackground();
@@ -1317,7 +1317,7 @@ function endGame(){
   music.battlefield.stop();
   changeVolume(music,masterVolume[1],1);
   playing = false;
-  c.fillStyle = "rgba(0, 0, 0, 1)";
+  c.fillStyle = "rgb(0, 0, 0)";
   c.fillRect(-100,-100,canvas.width+200,canvas.height+200);
   drawStage();
   if (gameMode == 3){
@@ -1454,7 +1454,7 @@ $(document).ready(function(){
   });
   canvas = document.getElementById("gameCanvas");
   c = canvas.getContext("2d");
-  c.fillStyle = "rgba(0, 0, 0, 1)";
+  c.fillStyle = "rgb(0, 0, 0)";
   c.fillRect(-100,-100,canvas.width+200,canvas.height+200);
   //drawStartScreen();
   //drawStage();
@@ -1482,6 +1482,16 @@ $(document).ready(function(){
       $("#fpsButtonEdit").empty().append("30");
     }
     fps30 ^= true;
+  });
+
+  $("#alphaButton").click(function(){
+    if (transparency){
+      $("#alphaButtonEdit").empty().append("OFF");
+    }
+    else {
+      $("#alphaButtonEdit").empty().append("ON");
+    }
+    transparency ^= true;
   });
 
   $("#debugButton").click(function(){
