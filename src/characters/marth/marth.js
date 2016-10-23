@@ -37,8 +37,12 @@ marth.JAB1 = {
     player[p].timer++;
     if (!marth.JAB1.interrupt(p)){
       reduceByTraction(p,true);
-      if (player[p].timer > 3 && player[p].timer < 14){
-        drawVfx("swingJab1",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-4);
+      if (player[p].timer > 3 && player[p].timer < 15){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"JAB1",
+          frame:player[p].timer-4
+        });
       }
       if (player[p].timer > 2 && player[p].timer < 26 && player[p].inputs.a[0] && !player[p].inputs.a[1]){
         player[p].phys.jabCombo = true;
@@ -131,8 +135,12 @@ marth.JAB2 = {
     player[p].timer++;
     if (!marth.JAB2.interrupt(p)){
       reduceByTraction(p,true);
-      if (player[p].timer > 4 && player[p].timer < 14){
-        drawVfx("swingJab2",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
+      if (player[p].timer > 4 && player[p].timer < 15){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"JAB2",
+          frame:player[p].timer-5
+        });
       }
       if (player[p].timer > 1 && player[p].timer < 26 && player[p].inputs.a[0] && !player[p].inputs.a[1]){
         player[p].phys.jabCombo = true;
@@ -224,8 +232,12 @@ marth.DOWNTILT = {
     player[p].timer++;
     if (!marth.DOWNTILT.interrupt(p)){
       reduceByTraction(p,true);
-      if (player[p].timer > 5 && player[p].timer < 10){
-        drawVfx("swingDtilt",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-6);
+      if (player[p].timer > 5 && player[p].timer < 11){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"DOWNTILT",
+          frame:player[p].timer-6
+        });
       }
       if (player[p].timer == 7){
         player[p].hitboxes.active = [true,true,true,true];
@@ -311,7 +323,11 @@ marth.UPTILT = {
     if (!marth.UPTILT.interrupt(p)){
       reduceByTraction(p,true);
       if (player[p].timer > 4 && player[p].timer < 15){
-        drawVfx("swingUptilt",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"UPTILT",
+          frame:player[p].timer-5
+        });
       }
       if (player[p].timer == 6){
         player[p].hitboxes.active = [true,true,true,true];
@@ -404,7 +420,11 @@ marth.FORWARDTILT = {
     if (!marth.FORWARDTILT.interrupt(p)){
       reduceByTraction(p,true);
       if (player[p].timer > 5 && player[p].timer < 14){
-        drawVfx("swingFtilt",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-6);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"FORWARDTILT",
+          frame:player[p].timer-6
+        });
       }
       if (player[p].timer == 7){
         player[p].hitboxes.active = [true,true,true,true];
@@ -458,7 +478,11 @@ marth.ATTACKAIRF = {
       fastfall(p);
       airDrift(p);
       if (player[p].timer > 2 && player[p].timer < 11){
-        drawVfx("swingFair",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-3);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"FAIR",
+          frame:player[p].timer-3
+        });
       }
       if (player[p].timer == 4){
         player[p].hitboxes.active = [true,true,true,true];
@@ -543,7 +567,11 @@ marth.ATTACKAIRB = {
       fastfall(p);
       airDrift(p);
       if (player[p].timer > 2 && player[p].timer < 12){
-        drawVfx("swingBair",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-3);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"BAIR",
+          frame:player[p].timer-3
+        });
       }
       if (player[p].timer == 7){
         player[p].hitboxes.active = [true,true,true,true];
@@ -624,8 +652,12 @@ marth.ATTACKAIRU = {
     if (!marth.ATTACKAIRU.interrupt(p)){
       fastfall(p);
       airDrift(p);
-      if (player[p].timer > 4 && player[p].timer < 15){
-        drawVfx("swingUpair",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
+      if (player[p].timer > 4 && player[p].timer < 18){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"UPAIR",
+          frame:player[p].timer-5
+        });
       }
       if (player[p].timer == 5){
         player[p].hitboxes.active = [true,true,true,true];
@@ -689,7 +721,11 @@ marth.ATTACKAIRD = {
       fastfall(p);
       airDrift(p);
       if (player[p].timer > 4 && player[p].timer < 12){
-        drawVfx("swingDair",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"DAIR",
+          frame:player[p].timer-5
+        });
       }
       if (player[p].timer == 6){
         player[p].hitboxes.active = [true,true,true,true];
@@ -753,10 +789,18 @@ marth.ATTACKAIRN = {
       fastfall(p);
       airDrift(p);
       if (player[p].timer > 4 && player[p].timer < 9){
-        drawVfx("swingNair1",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"NAIR1",
+          frame:player[p].timer-5
+        });
       }
-      if (player[p].timer > 13 && player[p].timer < 18){
-        drawVfx("swingNair2",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-14);
+      if (player[p].timer > 13 && player[p].timer < 21){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"NAIR2",
+          frame:player[p].timer-14
+        });
       }
       if (player[p].timer == 6){
         player[p].hitboxes.active = [true,true,true,true];
@@ -857,8 +901,12 @@ marth.FORWARDSMASH = {
         sounds.sword3.play();
       }
 
-      if (player[p].timer > 6 && player[p].timer < 14){
-        drawVfx("swingFsmash",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-7);
+      if (player[p].timer > 5 && player[p].timer < 14){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"FORWARDSMASH",
+          frame:player[p].timer-6
+        });
       }
       if (player[p].timer == 10){
         player[p].hitboxes.active = [true,true,true,true];
@@ -965,12 +1013,12 @@ marth.UPSMASH = {
     }
     if (!marth.UPSMASH.interrupt(p)){
       reduceByTraction(p,true);
-
-
-
-
-      if (player[p].timer > 10 && player[p].timer < 15){
-        drawVfx("swingUpsmash",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-11);
+      if (player[p].timer > 10 && player[p].timer < 16){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"UPSMASH",
+          frame:player[p].timer-11,
+        });
       }
       if (player[p].timer == 13){
         player[p].hitboxes.active = [true,true,true,true];
@@ -1082,11 +1130,19 @@ marth.DOWNSMASH = {
 
 
 
-      if (player[p].timer > 3 && player[p].timer < 10){
-        drawVfx("swingDsmash1",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-4);
+      if (player[p].timer > 3 && player[p].timer < 11){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"DOWNSMASH1",
+          frame:player[p].timer-4
+        });
       }
       if (player[p].timer > 16 && player[p].timer < 26){
-        drawVfx("swingDsmash2",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-17);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"DOWNSMASH2",
+          frame:player[p].timer-17
+        });
       }
       if (player[p].timer == 5){
         player[p].hitboxes.active = [true,true,true,true];
@@ -1236,8 +1292,12 @@ marth.ATTACKDASH = {
     if (!marth.ATTACKDASH.interrupt(p)){
       player[p].phys.cVel.x = marth.ATTACKDASH.setVelocities[player[p].timer-1]*player[p].phys.face;
 
-      if (player[p].timer > 12 && player[p].timer < 21){
-        drawVfx("swingDashAttack",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-13);
+      if (player[p].timer > 9 && player[p].timer < 21){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"DASHATTACK",
+          frame:player[p].timer-10
+        });
       }
       if (player[p].timer == 12){
         player[p].hitboxes.active = [true,true,true,true];
@@ -1357,7 +1417,11 @@ marth.SIDESPECIALGROUND = {
       }
       reduceByTraction(p,true);
       if (player[p].timer > 4 && player[p].timer < 12){
-        drawVfx("swingSideB",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND1",
+          frame:player[p].timer-5
+        });
       }
       if (player[p].timer == 6){
         player[p].hitboxes.active = [true,true,true,true];
@@ -1422,6 +1486,13 @@ marth.SIDESPECIALGROUND2FORWARD = {
     dancingBladeCombo(p,17,33);
     if (!marth.SIDESPECIALGROUND2FORWARD.interrupt(p)){
       reduceByTraction(p,true);
+      if (player[p].timer > 12 && player[p].timer < 17){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND2FORWARD",
+          frame:player[p].timer-13
+        });
+      }
       if (player[p].timer == 14){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -1489,6 +1560,13 @@ marth.SIDESPECIALGROUND2UP = {
     dancingBladeCombo(p,17,32);
     if (!marth.SIDESPECIALGROUND2UP.interrupt(p)){
       reduceByTraction(p,true);
+      if (player[p].timer > 10 && player[p].timer < 20){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND2UP",
+          frame:player[p].timer-11
+        });
+      }
       if (player[p].timer == 12){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -1557,6 +1635,13 @@ marth.SIDESPECIALGROUND3DOWN = {
     dancingBladeCombo(p,19,35);
     if (!marth.SIDESPECIALGROUND3DOWN.interrupt(p)){
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND3DOWN.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer > 13 && player[p].timer < 18){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND3DOWN",
+          frame:player[p].timer-14
+        });
+      }
       if (player[p].timer == 15){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -1625,6 +1710,13 @@ marth.SIDESPECIALGROUND3FORWARD = {
     dancingBladeCombo(p,16,37);
     if (!marth.SIDESPECIALGROUND3FORWARD.interrupt(p)){
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND3FORWARD.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer > 10 && player[p].timer < 18){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND3FORWARD",
+          frame:player[p].timer-11
+        });
+      }
       if (player[p].timer == 11){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -1693,6 +1785,13 @@ marth.SIDESPECIALGROUND3UP = {
     dancingBladeCombo(p,18,38);
     if (!marth.SIDESPECIALGROUND3UP.interrupt(p)){
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND3UP.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer > 3 && player[p].timer < 21){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND3UP",
+          frame:player[p].timer-4
+        });
+      }
       if (player[p].timer == 13){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -1758,6 +1857,13 @@ marth.SIDESPECIALGROUND4DOWN = {
       25-27
       31-33
       37-38*/
+      if (player[p].timer > 9 && player[p].timer < 40){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND4DOWN",
+          frame:player[p].timer-10
+        });
+      }
       if (player[p].timer > 12 && player[p].timer < 39){
         switch (player[p].timer%6){
           case 1:
@@ -1829,6 +1935,13 @@ marth.SIDESPECIALGROUND4FORWARD = {
     player[p].timer++;
     if (!marth.SIDESPECIALGROUND4FORWARD.interrupt(p)){
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND4FORWARD.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer > 21 && player[p].timer < 30){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND4FORWARD",
+          frame:player[p].timer-22
+        });
+      }
       if (player[p].timer == 23){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -1882,6 +1995,13 @@ marth.SIDESPECIALGROUND4UP = {
     player[p].timer++;
     if (!marth.SIDESPECIALGROUND4UP.interrupt(p)){
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND4UP.setVelocities[player[p].timer-1]*player[p].phys.face;
+      if (player[p].timer > 18 && player[p].timer < 27){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND4UP",
+          frame:player[p].timer-19
+        });
+      }
       if (player[p].timer == 20){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -1977,7 +2097,7 @@ marth.SIDESPECIALAIR = {
       dancingBladeAirMobility(p);
 
       if (player[p].timer > 4 && player[p].timer < 12){
-        drawVfx("swingSideB",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-5);
+
       }
       if (player[p].timer == 6){
         player[p].hitboxes.active = [true,true,true,true];
@@ -2397,6 +2517,13 @@ marth.SIDESPECIALAIR4DOWN = {
     if (!marth.SIDESPECIALAIR4DOWN.interrupt(p)){
       dancingBladeAirMobility(p);
       player[p].phys.cVel.x = 0;
+      if (player[p].timer > 21 && player[p].timer < 30){
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"SIDESPECIALGROUND4FORWARD",
+          frame:player[p].timer-22
+        });
+      }
       if (player[p].timer > 12 && player[p].timer < 39){
         switch (player[p].timer%6){
           case 1:
@@ -3175,7 +3302,11 @@ marth.UPSPECIAL = {
         turnOffHitboxes(p);
       }
       if (player[p].timer > 2 && player[p].timer < 12){
-        drawVfx("swingUpb",new Vec2D(player[p].phys.pos.x+player[p].phys.cVel.x,player[p].phys.pos.y+player[p].phys.cVel.y),player[p].phys.face,player[p].timer-3);
+        drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
+          pNum:p,
+          swingType:"UPSPECIAL",
+          frame:player[p].timer-3
+        });
       }
     }
   },

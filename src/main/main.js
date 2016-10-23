@@ -890,12 +890,12 @@ function renderVfx(){
     vfxQueue[j][1]++;
     if (vfxQueue[j][0].frames >= vfxQueue[j][1]){
       if (showVfx){
-        if (vfxQueue[j][0].name[0] == "s" && vfxQueue[j][0].name[1] == "w"){
+        /*if (vfxQueue[j][0].name[0] == "s" && vfxQueue[j][0].name[1] == "w"){
           dVfx["swing"](j);
         }
-        else {
+        else {*/
           dVfx[vfxQueue[j][0].name](j);
-        }
+        //}
       }
     }
     else {

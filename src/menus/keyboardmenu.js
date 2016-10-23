@@ -2,7 +2,7 @@ function getKeyboardCookie(){
   var keys = Object.keys(keymapItems);
   for (var i=0;i<keys.length;i++){
     var keymapData = getCookie(keys[i]);
-    if (keymapData != undefined && keymapData != null){
+    if (keymapData != undefined && keymapData != null && keymapData != ""){
       if (keymapItems[keys[i]].type == 1){
         // if modifier
         var modVal = keymapData.split("-");

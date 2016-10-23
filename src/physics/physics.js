@@ -253,7 +253,6 @@ function physics(i){
     player[i].phys.ECBp[0].y = 0+y;
   }
   if (!aS[cS[i]][player[i].actionState].ignoreCollision){
-
   for (var j=0;j<stage.platform.length;j++){
     if (player[i].phys.abovePlatforms[j] && player[i].phys.ECBp[0].y < stage.platform[j][0].y && player[i].phys.ECBp[0].x >= stage.platform[j][0].x && player[i].phys.ECBp[0].x <= stage.platform[j][1].x && ((player[i].inputs.lStickAxis[0].y > -0.56 && aS[cS[i]][player[i].actionState].canPassThrough) || !aS[cS[i]][player[i].actionState].canPassThrough)){
       if (player[i].hit.hitlag > 0){

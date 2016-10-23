@@ -64,7 +64,8 @@ stages = [{
       for (var j=0;j<4;j++){
         if (player[j].phys.onSurface[0] == 1 && player[j].phys.onSurface[1] == 0 && player[j].phys.grounded){
           player[j].phys.pos.x += move[0];
-          player[j].phys.pos.y += move[1];
+          //player[j].phys.pos.y += move[1];
+          player[j].phys.pos.y = plat[0].y;
         }
       }
     }
