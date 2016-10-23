@@ -45,7 +45,11 @@
   </head>
   <body>
     <div id="display">
-    <canvas id="gameCanvas" width="1200" height ="750"></canvas>
+    <canvas id="bg1Canvas" class="gameCanvas" width="1200" height ="750"></canvas>
+    <canvas id="bg2Canvas" class="gameCanvas" width="1200" height ="750"></canvas>
+    <canvas id="fg1Canvas" class="gameCanvas" width="1200" height ="750"></canvas>
+    <canvas id="fg2Canvas" class="gameCanvas" width="1200" height ="750"></canvas>
+    <canvas id="uiCanvas" class="gameCanvas" width="1200" height ="750"></canvas>
     <div id="tagTextContainer"><textarea id="pTagEdit0" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit1" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit2" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit3" class="pTagEdit" maxlength="10"></textarea></div>
     <div id="customStageContainer"><div id="cStage1"><div id="cStageTitle"><p><span id="cStageTitleEdit">Share this code</span></p></div><textarea id="cStageEdit"></textarea></div><div id="cStage2"><div id="cStageInfo"><p><span id="cStageInfoEdit"></span></p></div><div id="cStagePrompt"><p>Finish</p><div id="aButton"><p>A</p></div></div></div></div>
     <div id="debug">
@@ -53,7 +57,7 @@
       <div id="gamelogicTime"><p>GameLogic: avg: <span id="gamelogicAvg">0</span>ms | high: <span id="gamelogicHigh">0</span>ms | low :<span id="gamelogicLow">0</span>ms | PeakCount: <span id="gamelogicPeak">0</span></p></div>
       <div id="framerate"><p>Framerate: cur: <span id="framerateCurrent">0</span>fps | high : <span id="framerateHigh">0</span>fps | low : <span id="framerateLow">0</span>fps</p></div>
     </div>
-    <div id="buttons"><div id="effectsButton" class="button"><p>VFX <span id="effectsButtonEdit">ON</span></p></div><div id="debugButton" class="button"><p>DEBUG <span id="debugButtonEdit">OFF</span></p></div><div id="fpsButton" class="button"><p><span id="fpsButtonEdit">60</span>fps</p></div><div id="alphaButton" class="button"><p>ALPHA <span id="alphaButtonEdit">ON</span></p></div></div>
+    <div id="buttons"><div id="effectsButton" class="button"><p>VFX <span id="effectsButtonEdit">ON</span></p></div><div id="debugButton" class="button"><p>DEBUG <span id="debugButtonEdit">OFF</span></p></div><div id="fpsButton" class="button"><p><span id="fpsButtonEdit">60</span>fps</p></div><div id="alphaButton" class="button"><p>ALPHA <span id="alphaButtonEdit">ON</span></p></div><div id="layerButton" class="button"><p>LAYERS<span id="layerButtonEdit"></span></p><div id="layerDropdown"><div id="layer1" class="layer layerOn"><p>BG1</p></div><div id="layer2" class="layer layerOn"><p>BG2</p></div><div id="layer3" class="layer layerOn"><p>FG1</p></div><div id="layer4" class="layer layerOn"><p>FG2</p></div><div id="layer5" class="layer layerOn"><p>UI</p></div></div></div></div>
   </div>
   <div id="topButtonContainer">
       <div id="keyboardButton" class="topButton"><p>Keyboard Controls</p><img id="keyboardControlsImg" width="860" height="616" src="http://i.imgur.com/vdfvaII.png"/></div><div id="controllerButton" class="topButton"><p>Controller Support</p><div id="controllerSupportContainer">

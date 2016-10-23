@@ -43,24 +43,24 @@ articles = {
     }
   },
   draw : function(i){
-    c.save();
-    c.strokeStyle = "rgb(255, 59, 59)";
-    c.fillStyle = "rgb(255, 193, 193)";
-    c.lineWidth = 2;
+    fg1.save();
+    fg1.strokeStyle = "rgb(255, 59, 59)";
+    fg1.fillStyle = "rgb(255, 193, 193)";
+    fg1.lineWidth = 2;
     var h = new Vec2D((aArticles[i][2].pos.x*stage.scale)+stage.offset[0],(aArticles[i][2].pos.y*-stage.scale)+stage.offset[1]);
     var t = new Vec2D((aArticles[i][2].posPrev.x*stage.scale)+stage.offset[0],(aArticles[i][2].posPrev.y*-stage.scale)+stage.offset[1]);
     var d = (h.x>t.x)?1:-1;
-    c.beginPath();
-    c.moveTo(h.x,h.y);
-    c.lineTo(h.x-4*d,h.y+2);
-    c.lineTo(t.x+4*d,t.y+2);
-    c.lineTo(t.x,t.y);
-    c.lineTo(t.x+4*d,t.y-2);
-    c.lineTo(h.x-4*d,h.y-2);
-    c.closePath();
-    c.fill();
-    c.stroke();
-    c.restore();
+    fg1.beginPath();
+    fg1.moveTo(h.x,h.y);
+    fg1.lineTo(h.x-4*d,h.y+2);
+    fg1.lineTo(t.x+4*d,t.y+2);
+    fg1.lineTo(t.x,t.y);
+    fg1.lineTo(t.x+4*d,t.y-2);
+    fg1.lineTo(h.x-4*d,h.y-2);
+    fg1.closePath();
+    fg1.fill();
+    fg1.stroke();
+    fg1.restore();
   }
 },
 

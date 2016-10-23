@@ -116,85 +116,87 @@ function audioMenuControls(i){
 }
 
 function drawAudioMenu(){
-  var bgGrad =c.createLinearGradient(0,0,1200,750);
+  clearScreen();
+  var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
-  c.fillStyle=bgGrad;
-  c.fillRect(0,0,canvas.width,canvas.height);
-  c.lineWidth = 3;
+  bg1.fillStyle=bgGrad;
+  bg1.fillRect(0,0,canvasBG1.width,canvasBG1.height);
+  bg2.lineWidth = 3;
   shine += 0.01;
   if (shine > 1.8){
     shine = -0.8;
   }
   var opacity = (shine < 0)?(0.05+(0.25/0.8)*(0.8+shine)):((shine > 1)?(0.3-(0.25/0.8)*(shine-1)):0.3);
-  var bgGrad =c.createLinearGradient(0,0,1200,750);
+  var bgGrad =bg2.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(255, 255, 255,0.05)");
   bgGrad.addColorStop(Math.min(Math.max(0,shine),1),"rgba(255,255,255,"+opacity+")");
   bgGrad.addColorStop(1,"rgba(255, 255, 255,0.05)");
-  //c.strokeStyle = "rgba(255,255,255,0.13)";
-  c.strokeStyle = bgGrad;
-  c.beginPath();
+  //ui.strokeStyle = "rgba(255,255,255,0.13)";
+  bg2.strokeStyle = bgGrad;
+  bg2.beginPath();
   for (var i=0;i<60;i++){
-    c.moveTo(0+(i*30),0);
-    c.lineTo(0+(i*30),750);
-    c.moveTo(0,0+(i*30));
-    c.lineTo(1200,0+(i*30));
+    bg2.moveTo(0+(i*30),0);
+    bg2.lineTo(0+(i*30),750);
+    bg2.moveTo(0,0+(i*30));
+    bg2.lineTo(1200,0+(i*30));
   }
-  c.stroke();
-  c.fillStyle = "rgba(0,0,0,0.5)";
-  c.lineWidth = 10;
-  c.strokeRect(95,125,1010,650);
-  c.fillRect(95,125,1010,650);
-  c.textAlign = "center";
-  c.fillStyle = "rgba(255, 255, 255, 0.5)";
-  c.font = "italic 900 80px Arial";
-  c.fillText("Audio",600,100);
-  c.font = "italic 900 50px Arial";
-  c.fillText("Sounds",225,275);
-  c.fillText("Music",225,525);
+  bg2.stroke();
+  ui.fillStyle = "rgba(0,0,0,0.5)";
+  ui.lineWidth = 10;
+  ui.strokeStyle = "rgba(255, 255, 255, 0.3)";
+  ui.strokeRect(95,125,1010,650);
+  ui.fillRect(95,125,1010,650);
+  ui.textAlign = "center";
+  ui.fillStyle = "rgba(255, 255, 255, 0.5)";
+  ui.font = "italic 900 80px Arial";
+  ui.fillText("Audio",600,100);
+  ui.font = "italic 900 50px Arial";
+  ui.fillText("Sounds",225,275);
+  ui.fillText("Music",225,525);
   for (var i=0;i<2;i++){
     if (i == audioMenuSelected){
-      //c.fillStyle = "rgba(255, 255, 255, 0.7)";
-      c.fillStyle = "rgba(255, 255, 255, 0.3)";
+      //ui.fillStyle = "rgba(255, 255, 255, 0.7)";
+      ui.fillStyle = "rgba(255, 255, 255, 0.3)";
     }
     else {
-      c.fillStyle = "rgba(255, 255, 255, 0.1)";
-      //c.fillStyle = "rgba(0, 0, 0, 0.8)";
+      ui.fillStyle = "rgba(255, 255, 255, 0.1)";
+      //ui.fillStyle = "rgba(0, 0, 0, 0.8)";
     }
-    c.beginPath();
-    c.moveTo(200,350+i*250);
-    c.lineTo(1000,200+i*250);
-    c.lineTo(1000,350+i*250);
-    c.closePath();
-    c.fill();
+    ui.beginPath();
+    ui.moveTo(200,350+i*250);
+    ui.lineTo(1000,200+i*250);
+    ui.lineTo(1000,350+i*250);
+    ui.closePath();
+    ui.fill();
     if (i == 0){
-      var bgGrad =c.createLinearGradient(200,0,1200,0);
+      var bgGrad =ui.createLinearGradient(200,0,1200,0);
       bgGrad.addColorStop(0,"rgb(12, 75, 13)");
       bgGrad.addColorStop(1,"rgb(15, 75, 255)");
-      c.fillStyle=bgGrad;
+      ui.fillStyle=bgGrad;
     }
     else {
-      var bgGrad =c.createLinearGradient(200,0,1200,0);
+      var bgGrad =ui.createLinearGradient(200,0,1200,0);
       bgGrad.addColorStop(0,"rgb(11, 13, 65)");
       bgGrad.addColorStop(1,"rgb(255, 15, 73)");
-      c.fillStyle=bgGrad;
+      ui.fillStyle=bgGrad;
     }
-    c.beginPath();
-    c.moveTo(200,350+i*250);
-    c.lineTo(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*150));
-    c.lineTo(200+(masterVolume[i]*800),350+i*250);
-    c.closePath();
-    c.fill();
+    ui.beginPath();
+    ui.moveTo(200,350+i*250);
+    ui.lineTo(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*150));
+    ui.lineTo(200+(masterVolume[i]*800),350+i*250);
+    ui.closePath();
+    ui.fill();
     if (i == audioMenuSelected){
-      c.fillStyle = "rgba(255, 255, 255, 1)";
+      ui.fillStyle = "rgba(255, 255, 255, 1)";
     }
     else {
-      c.fillStyle = "rgba(136, 136, 136, 1)";
+      ui.fillStyle = "rgba(136, 136, 136, 1)";
     }
-    c.beginPath();
-    c.arc(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*75),15+(masterVolume[i]*65),0,twoPi);
-    c.closePath();
-    c.fill();
+    ui.beginPath();
+    ui.arc(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*75),15+(masterVolume[i]*65),0,twoPi);
+    ui.closePath();
+    ui.fill();
   }
 
 }

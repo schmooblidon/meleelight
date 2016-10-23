@@ -179,11 +179,11 @@ function makeColour(r,g,b,a){
 dVfx = {
   general : function(j,ang){
     var col = makeColour(vfxQueue[j][0].colour[0],vfxQueue[j][0].colour[1],vfxQueue[j][0].colour[2],0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
-    c.rotate(ang);
-    drawArrayPath(col,vfxQueue[j][3],0,0,vfxQueue[j][0].path[vfxQueue[j][1]-1],0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
-    c.restore();
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.rotate(ang);
+    drawArrayPath(fg2,col,vfxQueue[j][3],0,0,vfxQueue[j][0].path[vfxQueue[j][1]-1],0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+    fg2.restore();
   },
   swing : function(j){
     var p = vfxQueue[j][4].pNum;
@@ -201,14 +201,14 @@ dVfx = {
     var sc = stage.scale;
     var soX = stage.offset[0];
     var soY = stage.offset[1];
-    c.fillStyle = makeColour(46,217,255,(0.7-(0.7/5*vfxQueue[j][1])));
-    c.beginPath();
-    c.moveTo(((scale*(swordNow[0][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[0][1]/-4.5)+pos.y)*-sc+soY));
-    c.lineTo(((scale*(swordNow[1][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[1][1]/-4.5)+pos.y)*-sc+soY));
-    c.lineTo(((scale*(swordPrev[1][0]/4.5*player[p].phys.face)+posPrev.x)*sc+soX),((scale*(swordPrev[1][1]/-4.5)+posPrev.y)*-sc+soY));
-    c.lineTo(((scale*(swordPrev[0][0]/4.5*player[p].phys.face)+posPrev.x)*sc+soX),((scale*(swordPrev[0][1]/-4.5)+posPrev.y)*-sc+soY));
-    c.closePath();
-    c.fill();
+    fg2.fillStyle = makeColour(46,217,255,(0.7-(0.7/5*vfxQueue[j][1])));
+    fg2.beginPath();
+    fg2.moveTo(((scale*(swordNow[0][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[0][1]/-4.5)+pos.y)*-sc+soY));
+    fg2.lineTo(((scale*(swordNow[1][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[1][1]/-4.5)+pos.y)*-sc+soY));
+    fg2.lineTo(((scale*(swordPrev[1][0]/4.5*player[p].phys.face)+posPrev.x)*sc+soX),((scale*(swordPrev[1][1]/-4.5)+posPrev.y)*-sc+soY));
+    fg2.lineTo(((scale*(swordPrev[0][0]/4.5*player[p].phys.face)+posPrev.x)*sc+soX),((scale*(swordPrev[0][1]/-4.5)+posPrev.y)*-sc+soY));
+    fg2.closePath();
+    fg2.fill();
   },
   impactLand : function(j){
     dVfx.general(j,0);
@@ -217,102 +217,102 @@ dVfx = {
     for (var n=0;n<vfxQueue[j][0].circles.length;n++){
       var x = ((vfxQueue[j][2].x+(vfxQueue[j][0].circles[n]*(1+(vfxQueue[j][1]/vfxQueue[j][0].frames))))*stage.scale) + stage.offset[0];
       var y = ((vfxQueue[j][2].y+(4*(0+(vfxQueue[j][1]/vfxQueue[j][0].frames))))*-stage.scale) +stage.offset[1];
-      c.fillStyle = makeColour(255,255,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-      c.beginPath();
-      c.arc(x,y,12*(stage.scale/4.5),twoPi,0);
-      c.fill();
+      fg2.fillStyle = makeColour(255,255,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+      fg2.beginPath();
+      fg2.arc(x,y,12*(stage.scale/4.5),twoPi,0);
+      fg2.fill();
     }
   },
   flyingDust : function(j){
-    c.fillStyle = makeColour(255,255,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    c.beginPath();
-    c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],12*(stage.scale/4.5),twoPi,0);
-    c.fill();
+    fg2.fillStyle = makeColour(255,255,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],12*(stage.scale/4.5),twoPi,0);
+    fg2.fill();
   },
   dashDust : function(j){
     dVfx.general(j,0);
   },
   doubleJumpRings : function(j){
-    c.strokeStyle = makeColour(99,100,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+    fg2.strokeStyle = makeColour(99,100,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
     for (var n=0;n<vfxQueue[j][0].rings.length;n++){
-      c.save();
-      c.scale(1, 0.25);
-      c.beginPath();
-      c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],((vfxQueue[j][2].y*-stage.scale)+stage.offset[1])*4,vfxQueue[j][1]*(40/8)+n*stage.scale,twoPi,0);
-      c.lineWidth = 3;
-      c.stroke();
-      c.closePath();
-      c.restore();
+      fg2.save();
+      fg2.scale(1, 0.25);
+      fg2.beginPath();
+      fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],((vfxQueue[j][2].y*-stage.scale)+stage.offset[1])*4,vfxQueue[j][1]*(40/8)+n*stage.scale,twoPi,0);
+      fg2.lineWidth = 3;
+      fg2.stroke();
+      fg2.closePath();
+      fg2.restore();
     }
   },
   blastzoneExplosion : function(j){
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
-    c.rotate(vfxQueue[j][3] * Math.PI/180);
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.rotate(vfxQueue[j][3] * Math.PI/180);
     var col = makeColour(149,255,163,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    drawArrayPath(col,1,0,-200-(20+(100*(vfxQueue[j][1]/20))),vfxQueue[j][0].path1,1.3,1.3);
+    drawArrayPath(fg2,col,1,0,-200-(20+(100*(vfxQueue[j][1]/20))),vfxQueue[j][0].path1,1.3,1.3);
     if (vfxQueue[j][1] >= vfxQueue[j][0].svg2Active[0] && vfxQueue[j][1] <= vfxQueue[j][0].svg2Active[1]){
       col = "rgb(166,223,255)";
-      drawArrayPath(col,1,0,-90,vfxQueue[j][0].path2,(vfxQueue[j][0].svg2Scale[vfxQueue[j][1]-1][0])*1.5,(vfxQueue[j][0].svg2Scale[vfxQueue[j][1]-1][1])*1.5);
+      drawArrayPath(fg2,col,1,0,-90,vfxQueue[j][0].path2,(vfxQueue[j][0].svg2Scale[vfxQueue[j][1]-1][0])*1.5,(vfxQueue[j][0].svg2Scale[vfxQueue[j][1]-1][1])*1.5);
     }
     if (vfxQueue[j][1] >= vfxQueue[j][0].svg3Active[0] && vfxQueue[j][1] <= vfxQueue[j][0].svg3Active[1]){
       col = "rgb(255,161,161)";
-      drawArrayPath(col,1,0,-90,vfxQueue[j][0].path2,(vfxQueue[j][0].svg3Scale[vfxQueue[j][1]-vfxQueue[j][0].svg3Active[0]][0])*1.5,(vfxQueue[j][0].svg3Scale[vfxQueue[j][1]-vfxQueue[j][0].svg3Active[0]][1])*1.5);
+      drawArrayPath(fg2,col,1,0,-90,vfxQueue[j][0].path2,(vfxQueue[j][0].svg3Scale[vfxQueue[j][1]-vfxQueue[j][0].svg3Active[0]][0])*1.5,(vfxQueue[j][0].svg3Scale[vfxQueue[j][1]-vfxQueue[j][0].svg3Active[0]][1])*1.5);
     }
     col = makeColour(242,255,93,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    drawArrayPath(col,1,0,0,vfxQueue[j][0].path4,1.5,1.5);
+    drawArrayPath(fg2,col,1,0,0,vfxQueue[j][0].path4,1.5,1.5);
     if (vfxQueue[j][1] < 10){
-      c.fillStyle = makeColour(255,255,255,0.8*((10-vfxQueue[j][1])/10));
-      c.scale(0.5, 1);
-      c.beginPath();
-      c.arc(0,0,(450*(vfxQueue[j][1]/10)+170),twoPi,0);
-      c.fill();
-      c.closePath();
+      fg2.fillStyle = makeColour(255,255,255,0.8*((10-vfxQueue[j][1])/10));
+      fg2.scale(0.5, 1);
+      fg2.beginPath();
+      fg2.arc(0,0,(450*(vfxQueue[j][1]/10)+170),twoPi,0);
+      fg2.fill();
+      fg2.closePath();
     }
-    c.restore();
+    fg2.restore();
   },
   cliffcatchspark : function(j){
-    c.save();
-    c.strokeStyle = "rgb(47, 194, 214)";
-    c.lineWidth = 10-(vfxQueue[j][1]/3);
-    c.beginPath();
-    c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],(12*((vfxQueue[j][1])/vfxQueue[j][0].frames)+3)*(stage.scale/4.5),twoPi,0);
-    c.stroke();
-    c.restore();
+    fg2.save();
+    fg2.strokeStyle = "rgb(47, 194, 214)";
+    fg2.lineWidth = 10-(vfxQueue[j][1]/3);
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],(12*((vfxQueue[j][1])/vfxQueue[j][0].frames)+3)*(stage.scale/4.5),twoPi,0);
+    fg2.stroke();
+    fg2.restore();
   },
   hitFlair : function(j){
     var x = (vfxQueue[j][2].x*stage.scale)+stage.offset[0];
     var y = (vfxQueue[j][2].y*-stage.scale)+stage.offset[1];
-    c.strokeStyle = makeColour(146,217,164,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    c.lineWidth = 5;
-    c.beginPath();
-    c.arc(x,y,15,twoPi,0);
-    c.closePath();
-    c.stroke();
-    c.lineWidth = 1;
-    c.fillStyle = makeColour(146,217,164,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    c.beginPath();
-    c.moveTo(x+3,y-3);
-    c.lineTo(x+30,y);
-    c.lineTo(x+3,y+3);
-    c.lineTo(x,y+30);
-    c.lineTo(x-3,y+3);
-    c.lineTo(x-30,y);
-    c.lineTo(x-3,y-3);
-    c.lineTo(x,y-30);
-    c.closePath();
-    c.fill();
+    fg2.strokeStyle = makeColour(146,217,164,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+    fg2.lineWidth = 5;
+    fg2.beginPath();
+    fg2.arc(x,y,15,twoPi,0);
+    fg2.closePath();
+    fg2.stroke();
+    fg2.lineWidth = 1;
+    fg2.fillStyle = makeColour(146,217,164,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+    fg2.beginPath();
+    fg2.moveTo(x+3,y-3);
+    fg2.lineTo(x+30,y);
+    fg2.lineTo(x+3,y+3);
+    fg2.lineTo(x,y+30);
+    fg2.lineTo(x-3,y+3);
+    fg2.lineTo(x-30,y);
+    fg2.lineTo(x-3,y-3);
+    fg2.lineTo(x,y-30);
+    fg2.closePath();
+    fg2.fill();
   },
   hitSparks : function(j){
     var col = makeColour(143,128,233,0.7);;
-    drawArrayPath(col,vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0]+10,(vfxQueue[j][2].y*-stage.scale) +stage.offset[1],vfxQueue[j][0].path1,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
-    drawArrayPath(col,vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0]+10,(vfxQueue[j][2].y*-stage.scale) +stage.offset[1],vfxQueue[j][0].path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
-    c.rotate(Math.PI);
-    drawArrayPath(col,vfxQueue[j][3],0,0,vfxQueue[j][0].path1,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
-    drawArrayPath(col,vfxQueue[j][3],0,0,vfxQueue[j][0].path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
-    c.restore();
+    drawArrayPath(fg2,col,vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0]+10,(vfxQueue[j][2].y*-stage.scale) +stage.offset[1],vfxQueue[j][0].path1,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+    drawArrayPath(fg2,col,vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0]+10,(vfxQueue[j][2].y*-stage.scale) +stage.offset[1],vfxQueue[j][0].path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.rotate(Math.PI);
+    drawArrayPath(fg2,col,vfxQueue[j][3],0,0,vfxQueue[j][0].path1,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+    drawArrayPath(fg2,col,vfxQueue[j][3],0,0,vfxQueue[j][0].path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+    fg2.restore();
   },
   hitCurve : function(j){
 
@@ -332,108 +332,108 @@ dVfx = {
     dVfx.general(j,Math.PI);
   },
   furaFura : function(j){
-    c.fillStyle = makeColour(255,254,108,0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    c.beginPath();
-    c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],5*(stage.scale/4.5),twoPi,0);
-    c.fill();
+    fg2.fillStyle = makeColour(255,254,108,0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],5*(stage.scale/4.5),twoPi,0);
+    fg2.fill();
   },
   breakShield : function(j){
-    c.fillStyle = makeColour(73,255,244,0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    c.beginPath();
-    c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+430,(10+(3*vfxQueue[j][1]))*(stage.scale/4.5),twoPi,0);
-    c.fill();
-    c.fillStyle = "#cd8eff";
+    fg2.fillStyle = makeColour(73,255,244,0.9*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+430,(10+(3*vfxQueue[j][1]))*(stage.scale/4.5),twoPi,0);
+    fg2.fill();
+    fg2.fillStyle = "#cd8eff";
     for (var k=0;k<3;k++){
-      c.beginPath();
-      c.arc((vfxQueue[j][2].x*stage.scale)+550+Math.random()*100,(vfxQueue[j][2].y*-stage.scale)+380+Math.random()*100,8*(stage.scale/4.5),twoPi,0);
-      c.fill();
+      fg2.beginPath();
+      fg2.arc((vfxQueue[j][2].x*stage.scale)+550+Math.random()*100,(vfxQueue[j][2].y*-stage.scale)+380+Math.random()*100,8*(stage.scale/4.5),twoPi,0);
+      fg2.fill();
     }
   },
   powershield : function(j){
     if (vfxQueue[j][1]%2){
-      c.save();
-      c.fillStyle = makeColour(255,255,255,0.3);
-      c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+      fg2.save();
+      fg2.fillStyle = makeColour(255,255,255,0.3);
+      fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
       var seed = (Math.random()+1.5)*(stage.scale/4.5);
-      c.scale(seed,seed);
+      fg2.scale(seed,seed);
       for (var i=0;i<6;i++){
-        c.rotate(Math.PI/3);
-        c.beginPath();
-        c.moveTo(0,-15);
-        c.lineTo(6,-23);
-        c.lineTo(0,-40);
-        c.lineTo(-6,-23);
-        c.closePath();
-        c.fill();
+        fg2.rotate(Math.PI/3);
+        fg2.beginPath();
+        fg2.moveTo(0,-15);
+        fg2.lineTo(6,-23);
+        fg2.lineTo(0,-40);
+        fg2.lineTo(-6,-23);
+        fg2.closePath();
+        fg2.fill();
       }
-      c.restore();
+      fg2.restore();
     }
   },
   targetDestroy : function(j){
-    c.save();
+    fg2.save();
     var col = makeColour(255,255,255,0.8);
-    c.fillStyle = col;
-    c.strokeStyle = col;
-    c.lineWidth = 3;
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
-    c.beginPath();
-    c.arc(0,0,vfxQueue[j][1]*2,0,twoPi);
-    c.closePath;
-    c.stroke();
-    c.scale((stage.scale/4.5),(stage.scale/4.5));
+    fg2.fillStyle = col;
+    fg2.strokeStyle = col;
+    fg2.lineWidth = 3;
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.beginPath();
+    fg2.arc(0,0,vfxQueue[j][1]*2,0,twoPi);
+    fg2.closePath;
+    fg2.stroke();
+    fg2.scale((stage.scale/4.5),(stage.scale/4.5));
     for (var i=0;i<6;i++){
-      c.rotate(Math.PI/3);
-      c.beginPath();
-      c.moveTo(0,-14-vfxQueue[j][1]*2);
-      c.lineTo(6,-22-vfxQueue[j][1]*2);
-      c.lineTo(0,-40-vfxQueue[j][1]*2);
-      c.lineTo(-6,-22-vfxQueue[j][1]*2);
-      c.closePath();
-      c.fill();
+      fg2.rotate(Math.PI/3);
+      fg2.beginPath();
+      fg2.moveTo(0,-14-vfxQueue[j][1]*2);
+      fg2.lineTo(6,-22-vfxQueue[j][1]*2);
+      fg2.lineTo(0,-40-vfxQueue[j][1]*2);
+      fg2.lineTo(-6,-22-vfxQueue[j][1]*2);
+      fg2.closePath();
+      fg2.fill();
     }
-    c.restore();
+    fg2.restore();
   },
   shieldup : function(j){
-    c.strokeStyle = makeColour(255,255,255,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
-    c.lineWidth = 10;
-    c.beginPath();
-    c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfxQueue[j][4]*stage.scale+10+(5*(vfxQueue[j][1]-1)),twoPi,0);
-    c.stroke();
-    c.lineWidth = 5;
-    c.beginPath();
-    c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfxQueue[j][4]*stage.scale+(5*(vfxQueue[j][1]-1)),twoPi,0);
-    c.stroke();
-    c.lineWidth = 1;
+    fg2.strokeStyle = makeColour(255,255,255,0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+    fg2.lineWidth = 10;
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfxQueue[j][4]*stage.scale+10+(5*(vfxQueue[j][1]-1)),twoPi,0);
+    fg2.stroke();
+    fg2.lineWidth = 5;
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfxQueue[j][4]*stage.scale+(5*(vfxQueue[j][1]-1)),twoPi,0);
+    fg2.stroke();
+    fg2.lineWidth = 1;
   },
   tech : function(j){
-    c.save();
-    c.strokeStyle = makeColour(251,246,119,(0.3*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+0.7));
-    c.fillStyle = makeColour(255,116,92,(0.3*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+0.7));
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
-    c.lineWidth = 3;
-    c.scale(Math.min(0.2*vfxQueue[j][1],1),Math.min(0.2*vfxQueue[j][1],1));
-    c.rotate(vfxQueue[j][1]*Math.PI/8);
+    fg2.save();
+    fg2.strokeStyle = makeColour(251,246,119,(0.3*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+0.7));
+    fg2.fillStyle = makeColour(255,116,92,(0.3*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames)+0.7));
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.lineWidth = 3;
+    fg2.scale(Math.min(0.2*vfxQueue[j][1],1),Math.min(0.2*vfxQueue[j][1],1));
+    fg2.rotate(vfxQueue[j][1]*Math.PI/8);
     for (var i=0;i<4;i++){
-      c.scale(0.7+Math.random()*0.6,0.7+Math.random()*0.6);
-      c.rotate(i*Math.PI/2);
-      c.beginPath();
-      c.arc(0,0,10*(stage.scale/4.5),1.35*Math.PI,1.65*Math.PI);
-      c.closePath();
-      c.stroke();
-      c.beginPath();
-      c.arc(0,0,15*(stage.scale/4.5),1.35*Math.PI,1.65*Math.PI);
-      c.closePath();
-      c.stroke();
-      c.beginPath();
-      c.arc(0,0,20*(stage.scale/4.5),1.35*Math.PI,1.65*Math.PI);
-      c.closePath();
-      c.stroke();
-      c.beginPath();
-      c.arc(0,0,23*(stage.scale/4.5),1.35*Math.PI,1.65*Math.PI);
-      c.closePath();
-      c.fill();
+      fg2.scale(0.7+Math.random()*0.6,0.7+Math.random()*0.6);
+      fg2.rotate(i*Math.PI/2);
+      fg2.beginPath();
+      fg2.arc(0,0,10*(stage.scale/4.5),1.35*Math.PI,1.65*Math.PI);
+      fg2.closePath();
+      fg2.stroke();
+      fg2.beginPath();
+      fg2.arc(0,0,15*(stage.scale/4.5),1.35*Math.PI,1.65*Math.PI);
+      fg2.closePath();
+      fg2.stroke();
+      fg2.beginPath();
+      fg2.arc(0,0,20*(stage.scale/4.5),1.35*Math.PI,1.65*Math.PI);
+      fg2.closePath();
+      fg2.stroke();
+      fg2.beginPath();
+      fg2.arc(0,0,23*(stage.scale/4.5),1.35*Math.PI,1.65*Math.PI);
+      fg2.closePath();
+      fg2.fill();
     }
-    c.restore();
+    fg2.restore();
   },
   start : function(j){
     if (vfxQueue[j][1] == 1){
@@ -443,30 +443,30 @@ dVfx = {
       sounds.go.play();
     }
     if (vfxQueue[j][1] < 90){
-      var textGrad =c.createLinearGradient(0,200,0,500);
+      var textGrad =fg2.createLinearGradient(0,200,0,500);
       textGrad.addColorStop(0,"rgb(255, 51, 51)");
       textGrad.addColorStop(0.6,"rgb(255, 51, 51)");
       textGrad.addColorStop(1,"rgb(121, 0, 0)");
-      c.save();
-      c.fillStyle=textGrad;
-      c.textAlign = "start";
-      c.lineWidth = 20;
-      c.strokeStyle="black";
-      c.font="italic 900 200px Arial";
-      c.strokeText("Ready",240,420);
-      c.lineWidth = 10;
-      c.strokeStyle="white";
-      c.strokeText("Ready",240,420);
-      c.fillText("Ready",240,420);
-      c.fillStyle = "rgb("+Math.round(vfxQueue[j][1]*2.6)+","+Math.round(140-(vfxQueue[j][1]*1.5))+","+Math.round(255-(vfxQueue[j][1]*2.6))+")";
-      c.font="italic 700 70px Arial";
+      fg2.save();
+      fg2.fillStyle=textGrad;
+      fg2.textAlign = "start";
+      fg2.lineWidth = 20;
+      fg2.strokeStyle="black";
+      fg2.font="italic 900 200px Arial";
+      fg2.strokeText("Ready",240,420);
+      fg2.lineWidth = 10;
+      fg2.strokeStyle="white";
+      fg2.strokeText("Ready",240,420);
+      fg2.fillText("Ready",240,420);
+      fg2.fillStyle = "rgb("+Math.round(vfxQueue[j][1]*2.6)+","+Math.round(140-(vfxQueue[j][1]*1.5))+","+Math.round(255-(vfxQueue[j][1]*2.6))+")";
+      fg2.font="italic 700 70px Arial";
       var milli = ((startTimer*2)%1).toFixed(2);
-      c.strokeStyle = "black";
-      c.strokeText(Math.floor(startTimer*2)+" "+milli[2]+milli[3],900,500);
-      c.fillText(Math.floor(startTimer*2)+" "+milli[2]+milli[3],900,500);
-      c.fillStyle = makeColour(255,0,0,0.2);
-      c.fillRect(240,450,520,15);
-      var textGrad =c.createLinearGradient(240+(500*(vfxQueue[j][1]/90)),450,760+(500*(vfxQueue[j][1]/90)),465);
+      fg2.strokeStyle = "black";
+      fg2.strokeText(Math.floor(startTimer*2)+" "+milli[2]+milli[3],900,500);
+      fg2.fillText(Math.floor(startTimer*2)+" "+milli[2]+milli[3],900,500);
+      fg2.fillStyle = makeColour(255,0,0,0.2);
+      fg2.fillRect(240,450,520,15);
+      var textGrad =fg2.createLinearGradient(240+(500*(vfxQueue[j][1]/90)),450,760+(500*(vfxQueue[j][1]/90)),465);
       textGrad.addColorStop(0,"#ff0000");
       textGrad.addColorStop(0.16,"#ff00ff");
       textGrad.addColorStop(0.33,"#0000ff");
@@ -474,171 +474,171 @@ dVfx = {
       textGrad.addColorStop(0.66,"#00ff00");
       textGrad.addColorStop(0.83,"#ffff00");
       textGrad.addColorStop(1,"#ff0000");
-      c.fillStyle = textGrad;
-      c.fillRect(240+(500*(vfxQueue[j][1]/90)),450,520-(500*(vfxQueue[j][1]/90)),15);
-      c.restore();
+      fg2.fillStyle = textGrad;
+      fg2.fillRect(240+(500*(vfxQueue[j][1]/90)),450,520-(500*(vfxQueue[j][1]/90)),15);
+      fg2.restore();
     }
     else {
-      var textGrad =c.createLinearGradient(0,200,0,480);
+      var textGrad =fg2.createLinearGradient(0,200,0,480);
       textGrad.addColorStop(0,"black");
       textGrad.addColorStop(0.6,"black");
       textGrad.addColorStop(1,"rgb(221, 145, 57)");
-      c.save();
-      c.fillStyle=textGrad;
-      c.textAlign = "start";
-      c.lineWidth = 40;
-      c.strokeStyle="black";
-      c.font="900 400px Arial";
-      c.strokeText("Go!",240,470);
-      c.lineWidth = 20;
-      c.strokeStyle="white";
-      c.strokeText("Go!",240,470);
-      c.fillText("Go!",240,470);
-      c.restore();
+      fg2.save();
+      fg2.fillStyle=textGrad;
+      fg2.textAlign = "start";
+      fg2.lineWidth = 40;
+      fg2.strokeStyle="black";
+      fg2.font="900 400px Arial";
+      fg2.strokeText("Go!",240,470);
+      fg2.lineWidth = 20;
+      fg2.strokeStyle="white";
+      fg2.strokeText("Go!",240,470);
+      fg2.fillText("Go!",240,470);
+      fg2.restore();
     }
   },
   entrance : function(j){
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     var ellipseOffset = 0;
     var anglePos = vfxQueue[j][1]*Math.PI/32;
     for (var i=0;i<8;i++){
       var seed = Math.random()-0.5;
       ellipseOffset = new Vec2D(35*Math.cos(anglePos),35*Math.sin(anglePos)*0.4);
-      var pillarGrad =c.createLinearGradient(0,0,0,-vfxQueue[j][1]*2-seed*60);
+      var pillarGrad =fg2.createLinearGradient(0,0,0,-vfxQueue[j][1]*2-seed*60);
       pillarGrad.addColorStop(0,makeColour(255,255,255,0.3));
       pillarGrad.addColorStop(0.5,makeColour(255,255,255,0.3));
       pillarGrad.addColorStop(1,makeColour(255,255,255,0));
-      c.fillStyle = pillarGrad;
-      c.fillRect(ellipseOffset.x,ellipseOffset.y-(vfxQueue[j][1]*2+seed*60),10*(stage.scale/4.5),(vfxQueue[j][1]*2+seed*60)*(stage.scale/4.5));
+      fg2.fillStyle = pillarGrad;
+      fg2.fillRect(ellipseOffset.x,ellipseOffset.y-(vfxQueue[j][1]*2+seed*60),10*(stage.scale/4.5),(vfxQueue[j][1]*2+seed*60)*(stage.scale/4.5));
       anglePos += Math.PI/4;
     }
-    c.fillStyle = makeColour(163,255,203,0.3)
-    c.fillRect(-35,-(vfxQueue[j][1]%15)*5,80*(stage.scale/4.5),15*(stage.scale/4.5));
-    c.restore();
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
-    c.strokeStyle = makeColour(255,149,149,0.8);
-    c.lineWidth = 8;
-    c.scale(0.8+(Math.random()*0.3),0.2+(0.2*Math.random()));
-    c.beginPath();
-    c.arc(5,-vfxQueue[j][1]*3,(35+(vfxQueue[j][1]%2)*10)*(stage.scale/4.5),0,twoPi);
-    c.closePath();
-    c.stroke();
-    c.restore();
+    fg2.fillStyle = makeColour(163,255,203,0.3)
+    fg2.fillRect(-35,-(vfxQueue[j][1]%15)*5,80*(stage.scale/4.5),15*(stage.scale/4.5));
+    fg2.restore();
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.strokeStyle = makeColour(255,149,149,0.8);
+    fg2.lineWidth = 8;
+    fg2.scale(0.8+(Math.random()*0.3),0.2+(0.2*Math.random()));
+    fg2.beginPath();
+    fg2.arc(5,-vfxQueue[j][1]*3,(35+(vfxQueue[j][1]%2)*10)*(stage.scale/4.5),0,twoPi);
+    fg2.closePath();
+    fg2.stroke();
+    fg2.restore();
   },
   clank : function(j){
-    c.save();
-    c.strokeStyle = "rgb(47, 214, 114)";
-    c.lineWidth = 10-(vfxQueue[j][1]/3);
-    c.beginPath();
-    c.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],(12*((vfxQueue[j][1])/vfxQueue[j][0].frames)+3)*(stage.scale/4.5),twoPi,0);
-    c.stroke();
-    c.restore();
+    fg2.save();
+    fg2.strokeStyle = "rgb(47, 214, 114)";
+    fg2.lineWidth = 10-(vfxQueue[j][1]/3);
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],(12*((vfxQueue[j][1])/vfxQueue[j][0].frames)+3)*(stage.scale/4.5),twoPi,0);
+    fg2.stroke();
+    fg2.restore();
   },
   normalhit : function(j){
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     switch (vfxQueue[j][1]){
       case 1:
-        c.fillStyle = makeColour(255,188,14,0.62);
-        c.beginPath();
-        c.arc(0,0,20,0,twoPi);
-        c.closePath();
-        c.fill();
-        c.beginPath();
-        c.moveTo(0,30);
-        c.lineTo(5,5);
-        c.lineTo(30,0);
-        c.lineTo(5,-5);
-        c.lineTo(0,-30);
-        c.lineTo(-5,-5);
-        c.lineTo(-30,0);
-        c.lineTo(-5,5);
-        c.closePath();
-        c.fill();
+        fg2.fillStyle = makeColour(255,188,14,0.62);
+        fg2.beginPath();
+        fg2.arc(0,0,20,0,twoPi);
+        fg2.closePath();
+        fg2.fill();
+        fg2.beginPath();
+        fg2.moveTo(0,30);
+        fg2.lineTo(5,5);
+        fg2.lineTo(30,0);
+        fg2.lineTo(5,-5);
+        fg2.lineTo(0,-30);
+        fg2.lineTo(-5,-5);
+        fg2.lineTo(-30,0);
+        fg2.lineTo(-5,5);
+        fg2.closePath();
+        fg2.fill();
         break;
       case 2:
-        drawArrayPath("rgb(255,61,61)",vfxQueue[j][3],0,0,vfx.normalhit.path1,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+        drawArrayPath(fg2,"rgb(255,61,61)",vfxQueue[j][3],0,0,vfx.normalhit.path1,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
         break;
       case 3:
-        drawArrayPath("rgb(150, 208, 255)",vfxQueue[j][3],0,0,vfx.normalhit.path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+        drawArrayPath(fg2,"rgb(150, 208, 255)",vfxQueue[j][3],0,0,vfx.normalhit.path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
         break;
       case 4:
       case 5:
       case 6:
       case 7:
         for (var n=0;n<vfx.normalhit.path3.length;n++){
-          drawArrayPath(makeColour(120,255,99,4/vfxQueue[j][1]),vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5),0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5));
+          drawArrayPath(fg2,makeColour(120,255,99,4/vfxQueue[j][1]),vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5),0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5));
         }
         break;
       default:
         break;
     }
-    c.restore();
+    fg2.restore();
   },
   shine : function(j){
-    c.save();
+    fg2.save();
     var tX = (vfxQueue[j][2].x*stage.scale)+stage.offset[0];
     var tY = (vfxQueue[j][2].y*-stage.scale)+stage.offset[1];
-    c.fillStyle = makeColour(77,108,217,0.5);
+    fg2.fillStyle = makeColour(77,108,217,0.5);
     if (vfxQueue[j][1] == 1){
       drawHexagon(7*stage.scale,tX,tY,20);
-      c.fillStyle = "rgb(255, 255, 255)";
+      fg2.fillStyle = "rgb(255, 255, 255)";
       drawHexagon(4*stage.scale,tX,tY,3);
       var r = 6*stage.scale;
       var a = r*Math.sin(Math.PI/6);
       var b = r*Math.cos(Math.PI/6);
-      c.translate(tX,tY);
-      c.beginPath();
-      c.moveTo(0,r);
-      c.lineTo(b,r-a);
-      c.lineTo(b,-r+a);
-      c.lineTo(0,-r);
-      c.closePath();
-      c.fill();
+      fg2.translate(tX,tY);
+      fg2.beginPath();
+      fg2.moveTo(0,r);
+      fg2.lineTo(b,r-a);
+      fg2.lineTo(b,-r+a);
+      fg2.lineTo(0,-r);
+      fg2.closePath();
+      fg2.fill();
     }
     else if (vfxQueue[j][1] == 2){
       drawHexagon(8*stage.scale,tX,tY,20);
-      c.fillStyle = "rgb(255, 255, 255)";
+      fg2.fillStyle = "rgb(255, 255, 255)";
       drawHexagon(6*stage.scale,tX,tY,3);
-      c.translate(tX,tY);
+      fg2.translate(tX,tY);
       var r = 7*stage.scale;
       var a = r*Math.sin(Math.PI/6);
       var b = r*Math.cos(Math.PI/6);
-      c.beginPath();
-      c.moveTo(-b,r-a);
-      c.lineTo(0,r);
-      c.lineTo(b,r-a);
-      c.lineTo(b,-r+a);
-      c.closePath();
-      c.fill();
+      fg2.beginPath();
+      fg2.moveTo(-b,r-a);
+      fg2.lineTo(0,r);
+      fg2.lineTo(b,r-a);
+      fg2.lineTo(b,-r+a);
+      fg2.closePath();
+      fg2.fill();
     }
     else {
       drawHexagon(10*stage.scale,tX,tY,20);
-      c.fillStyle = "rgb(255, 255, 255)";
+      fg2.fillStyle = "rgb(255, 255, 255)";
       drawHexagon(8*stage.scale,tX,tY,3);
-      c.translate(tX,tY);
+      fg2.translate(tX,tY);
       var r = 9*stage.scale;
       var a = r*Math.sin(Math.PI/6);
       var b = r*Math.cos(Math.PI/6);
-      c.beginPath();
-      c.moveTo(-b,-r+a);
-      c.lineTo(-b,r-a);
-      c.lineTo(0,r);
-      c.lineTo(b,r-a);
-      c.closePath();
-      c.fill();
+      fg2.beginPath();
+      fg2.moveTo(-b,-r+a);
+      fg2.lineTo(-b,r-a);
+      fg2.lineTo(0,r);
+      fg2.lineTo(b,r-a);
+      fg2.closePath();
+      fg2.fill();
     }
-    c.restore();
+    fg2.restore();
   },
   shineloop : function(j){
-    c.save();
+    fg2.save();
     var part = Math.round(vfxQueue[j][1]/2);
     var tX = (player[vfxQueue[j][3]].phys.pos.x*stage.scale)+stage.offset[0];
     var tY = ((player[vfxQueue[j][3]].phys.pos.y+6)*-stage.scale)+stage.offset[1];
     var part = Math.round(player[vfxQueue[j][3]].shineLoop/2);
-    c.fillStyle = "rgb(143, 228, 255)";
+    fg2.fillStyle = "rgb(143, 228, 255)";
     if (part == 1){
       drawHexagon(4*stage.scale,tX,tY,14);
     }
@@ -651,25 +651,25 @@ dVfx = {
     else {
       console.log(vfxQueue[j][3]);
     }
-    c.restore();
+    fg2.restore();
   },
   firefoxcharge : function(j){
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     var secondFrame = (vfxQueue[j][4]+4)%10;
-    drawArrayPathNew(makeColour(237,219,53,0.3),vfxQueue[j][3],0,0,vfx.firefoxcharge.path[secondFrame],0.35*(stage.scale/4.5),0.5*(stage.scale/4.5),0,0,0);
-    drawArrayPathNew("rgb(255, 218, 163)",vfxQueue[j][3],0,0,vfx.firefoxcharge.path[vfxQueue[j][4]],0.35*(stage.scale/4.5),0.5*(stage.scale/4.5),0,0,0);
-    c.restore();
+    drawArrayPathNew(fg2,makeColour(237,219,53,0.3),vfxQueue[j][3],0,0,vfx.firefoxcharge.path[secondFrame],0.35*(stage.scale/4.5),0.5*(stage.scale/4.5),0,0,0);
+    drawArrayPathNew(fg2,"rgb(255, 218, 163)",vfxQueue[j][3],0,0,vfx.firefoxcharge.path[vfxQueue[j][4]],0.35*(stage.scale/4.5),0.5*(stage.scale/4.5),0,0,0);
+    fg2.restore();
   },
   firefoxlaunch : function(j){
     var p = vfxQueue[j][4];
     if (player[p].actionState == "UPSPECIAL"){
-      c.save();
+      fg2.save();
       var frame = (player[p].timer-43) % 4;
 
-      c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+      fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
 
-      var fireGrad =c.createLinearGradient(0,-130,0,20);
+      var fireGrad =fg2.createLinearGradient(0,-130,0,20);
       if (frame%2){
         var col = "rgb(255, 218, 163)";
         fireGrad.addColorStop(0,"rgb(255, 232, 198)");
@@ -682,81 +682,81 @@ dVfx = {
         fireGrad.addColorStop(0.6,makeColour(210,59,26,0.9));
         fireGrad.addColorStop(1,makeColour(158,34,12,0.3));
       }
-      drawArrayPathNew(fireGrad,vfxQueue[j][3],0,0,vfx.firefoxlaunch.path[frame],0.35*(stage.scale/4.5),0.35*(stage.scale/4.5),player[p].rotation,player[p].rotationPoint.x,player[p].rotationPoint.y);
-      c.restore();
+      drawArrayPathNew(fg2,fireGrad,vfxQueue[j][3],0,0,vfx.firefoxlaunch.path[frame],0.35*(stage.scale/4.5),0.35*(stage.scale/4.5),player[p].rotation,player[p].rotationPoint.x,player[p].rotationPoint.y);
+      fg2.restore();
     }
   },
   firefoxtail : function(j){
     if (vfxQueue[j][1] == 1){
       vfxQueue[j].push([Math.random(),Math.random(),Math.random(),Math.random()]);
     }
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],((vfxQueue[j][2].y+4)*-stage.scale)+stage.offset[1]);
-    c.fillStyle = makeColour(Math.max(149,251-(vfxQueue[j][1]*5)),Math.max(149,187-(vfxQueue[j][1]*5)),Math.min(149,90+(vfxQueue[j][1]*5)),(1-(vfxQueue[j][1]/15)));
-    c.beginPath();
-    c.arc((-2+vfxQueue[j][5][0]*4)*stage.scale,(-2+vfxQueue[j][5][1]*4)*stage.scale,4*stage.scale,0,twoPi);
-    c.closePath();
-    c.fill();
-    c.fillStyle = makeColour(Math.max(149,223-(vfxQueue[j][1]*5)),Math.min(149,83+(vfxQueue[j][1]*5)),Math.min(149,39+(vfxQueue[j][1]*5)),(1-(vfxQueue[j][1]/15)));
-    c.beginPath();
-    c.arc((-2+vfxQueue[j][5][2]*4)*stage.scale,(-2+vfxQueue[j][5][3]*4)*stage.scale,2*stage.scale,0,twoPi);
-    c.closePath();
-    c.fill();
-    c.restore();
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],((vfxQueue[j][2].y+4)*-stage.scale)+stage.offset[1]);
+    fg2.fillStyle = makeColour(Math.max(149,251-(vfxQueue[j][1]*5)),Math.max(149,187-(vfxQueue[j][1]*5)),Math.min(149,90+(vfxQueue[j][1]*5)),(1-(vfxQueue[j][1]/15)));
+    fg2.beginPath();
+    fg2.arc((-2+vfxQueue[j][5][0]*4)*stage.scale,(-2+vfxQueue[j][5][1]*4)*stage.scale,4*stage.scale,0,twoPi);
+    fg2.closePath();
+    fg2.fill();
+    fg2.fillStyle = makeColour(Math.max(149,223-(vfxQueue[j][1]*5)),Math.min(149,83+(vfxQueue[j][1]*5)),Math.min(149,39+(vfxQueue[j][1]*5)),(1-(vfxQueue[j][1]/15)));
+    fg2.beginPath();
+    fg2.arc((-2+vfxQueue[j][5][2]*4)*stage.scale,(-2+vfxQueue[j][5][3]*4)*stage.scale,2*stage.scale,0,twoPi);
+    fg2.closePath();
+    fg2.fill();
+    fg2.restore();
   },
   laser : function(j){
-    c.save();
-    c.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
 
-    c.lineWidth = 3;
+    fg2.lineWidth = 3;
     if (vfxQueue[j][1] > 3){
-      c.strokeStyle = makeColour(255,59,59,(1-(vfxQueue[j][1]-4)/6));
-      c.beginPath();
-      c.arc(0,0,(-0.1+vfxQueue[j][1]*0.6)*stage.scale,0,twoPi);
-      c.closePath();
-      c.stroke();
+      fg2.strokeStyle = makeColour(255,59,59,(1-(vfxQueue[j][1]-4)/6));
+      fg2.beginPath();
+      fg2.arc(0,0,(-0.1+vfxQueue[j][1]*0.6)*stage.scale,0,twoPi);
+      fg2.closePath();
+      fg2.stroke();
     }
-    c.fillStyle = makeColour(255,57,87,Math.min(1,(1-(vfxQueue[j][1]-4)/6)));
-    c.beginPath();
-    c.moveTo((-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(-1.6-vfxQueue[j][1]*1.6)*stage.scale);
-    c.lineTo((-2.3-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(-2.4-vfxQueue[j][1]*1.6)*stage.scale);
-    c.lineTo((-2.3-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(2.4+vfxQueue[j][1]*1.6)*stage.scale);
-    c.lineTo((-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(1.6+vfxQueue[j][1]*1.6)*stage.scale);
-    c.closePath();
-    c.fill();
-    c.restore();
+    fg2.fillStyle = makeColour(255,57,87,Math.min(1,(1-(vfxQueue[j][1]-4)/6)));
+    fg2.beginPath();
+    fg2.moveTo((-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(-1.6-vfxQueue[j][1]*1.6)*stage.scale);
+    fg2.lineTo((-2.3-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(-2.4-vfxQueue[j][1]*1.6)*stage.scale);
+    fg2.lineTo((-2.3-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(2.4+vfxQueue[j][1]*1.6)*stage.scale);
+    fg2.lineTo((-vfxQueue[j][1]*1)*vfxQueue[j][3]*stage.scale,(1.6+vfxQueue[j][1]*1.6)*stage.scale);
+    fg2.closePath();
+    fg2.fill();
+    fg2.restore();
   },
   illusion : function(j){
     if (!(vfxQueue[j][1]%2)){
-      drawArrayPathNew(makeColour(68,244,255,0.5),vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfx.illusion.path,0.35*(stage.scale/4.5),0.35*(stage.scale/4.5),0,0,0);
+      drawArrayPathNew(fg2,makeColour(68,244,255,0.5),vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfx.illusion.path,0.35*(stage.scale/4.5),0.35*(stage.scale/4.5),0,0,0);
     }
   }
 }
 
 function drawHexagon(r,tX,tY,width){
-  c.save();
-  c.translate(tX,tY);
+  fg2.save();
+  fg2.translate(tX,tY);
   var a = r*Math.sin(Math.PI/6);
   var b = r*Math.cos(Math.PI/6);
-  c.beginPath();
-  c.moveTo(0,r);
-  c.lineTo(b,r-a);
-  c.lineTo(b,-r+a);
-  c.lineTo(0,-r);
-  c.lineTo(-b,-r+a);
-  c.lineTo(-b,r-a);
-  c.lineTo(0,r);
+  fg2.beginPath();
+  fg2.moveTo(0,r);
+  fg2.lineTo(b,r-a);
+  fg2.lineTo(b,-r+a);
+  fg2.lineTo(0,-r);
+  fg2.lineTo(-b,-r+a);
+  fg2.lineTo(-b,r-a);
+  fg2.lineTo(0,r);
   var rs = r-width;
   var a = rs*Math.sin(Math.PI/6);
   var b = rs*Math.cos(Math.PI/6);
-  c.moveTo(0,rs);
-  c.lineTo(-b,rs-a);
-  c.lineTo(-b,-rs+a);
-  c.lineTo(0,-rs);
-  c.lineTo(b,-rs+a);
-  c.lineTo(b,rs-a);
-  c.lineTo(0,rs);
-  c.closePath();
-  c.fill();
-  c.restore();
+  fg2.moveTo(0,rs);
+  fg2.lineTo(-b,rs-a);
+  fg2.lineTo(-b,-rs+a);
+  fg2.lineTo(0,-rs);
+  fg2.lineTo(b,-rs+a);
+  fg2.lineTo(b,rs-a);
+  fg2.lineTo(0,rs);
+  fg2.closePath();
+  fg2.fill();
+  fg2.restore();
 }

@@ -423,196 +423,198 @@ function keyboardMenuControls(i){
 }
 
 function drawKeyboardMenu(){
-  var bgGrad =c.createLinearGradient(0,0,1200,750);
+  clearScreen();
+  var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
-  c.fillStyle=bgGrad;
-  c.fillRect(0,0,canvas.width,canvas.height);
-  c.lineWidth = 3;
+  bg1.fillStyle=bgGrad;
+  bg1.fillRect(0,0,canvasBG1.width,canvasBG1.height);
+  bg2.lineWidth = 3;
   shine += 0.01;
   if (shine > 1.8){
     shine = -0.8;
   }
   var opacity = (shine < 0)?(0.05+(0.25/0.8)*(0.8+shine)):((shine > 1)?(0.3-(0.25/0.8)*(shine-1)):0.3);
-  var bgGrad =c.createLinearGradient(0,0,1200,750);
+  var bgGrad =bg2.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(255, 255, 255,0.05)");
   bgGrad.addColorStop(Math.min(Math.max(0,shine),1),"rgba(255,255,255,"+opacity+")");
   bgGrad.addColorStop(1,"rgba(255, 255, 255,0.05)");
-  //c.strokeStyle = "rgba(255,255,255,0.13)";
-  c.strokeStyle = bgGrad;
-  c.beginPath();
+  //ui.strokeStyle = "rgba(255,255,255,0.13)";
+  bg2.strokeStyle = bgGrad;
+  bg2.beginPath();
   for (var i=0;i<60;i++){
-    c.moveTo(0+(i*30),0);
-    c.lineTo(0+(i*30),750);
-    c.moveTo(0,0+(i*30));
-    c.lineTo(1200,0+(i*30));
+    bg2.moveTo(0+(i*30),0);
+    bg2.lineTo(0+(i*30),750);
+    bg2.moveTo(0,0+(i*30));
+    bg2.lineTo(1200,0+(i*30));
   }
-  c.stroke();
-  c.textAlign = "center";
-  c.fillStyle = "rgba(255, 255, 255, 0.65)";
-  c.font = "italic 900 60px Arial";
-  c.fillText("Keyboard Controls",600,75);
-  c.font = "italic 900 30px Arial";
-  c.fillText("L-stick",150,100);
-  c.fillText("Shoulder Analog",200,495);
-  c.fillText("C-stick",950,100);
-  c.fillText("Dpad",950,420);
+  bg2.stroke();
+  ui.lineWidth = 3;
+  ui.textAlign = "center";
+  ui.fillStyle = "rgba(255, 255, 255, 0.65)";
+  ui.font = "italic 900 60px Arial";
+  ui.fillText("Keyboard Controls",600,75);
+  ui.font = "italic 900 30px Arial";
+  ui.fillText("L-stick",150,100);
+  ui.fillText("Shoulder Analog",200,495);
+  ui.fillText("C-stick",950,100);
+  ui.fillText("Dpad",950,420);
   var buttonLetters = ["A","B","X","Y","Z","L","R","S"];
   for (var i=0;i<buttonLetters.length;i++){
-    c.fillText(buttonLetters[i],510,186+i*70);
+    ui.fillText(buttonLetters[i],510,186+i*70);
   }
-  c.fillText("L",95,556);
-  c.fillText("R",95,626);
-  c.font = "italic 900 16px Arial";
-  c.fillText("Press Enter to listen for key bind    Hold Enter to clear",600,115);
-  c.font = "italic 900 20px Arial";
-  c.fillText("Modifiers",200,405);
-  c.fillText("Modifiers",200,665);
-  c.textAlign = "left";
+  ui.fillText("L",95,556);
+  ui.fillText("R",95,626);
+  ui.font = "italic 900 16px Arial";
+  ui.fillText("Press Enter to listen for key bind    Hold Enter to clear",600,115);
+  ui.font = "italic 900 20px Arial";
+  ui.fillText("Modifiers",200,405);
+  ui.fillText("Modifiers",200,665);
+  ui.textAlign = "left";
   var directionPlacements = [new Vec2D(75,153),new Vec2D(875,153),new Vec2D(875,475)];
   for (var i=0;i<3;i++){
-    c.fillText("Up",directionPlacements[i].x,directionPlacements[i].y);
-    c.fillText("Right",directionPlacements[i].x,directionPlacements[i].y+70);
-    c.fillText("Left",directionPlacements[i].x,directionPlacements[i].y+140);
-    c.fillText("Down",directionPlacements[i].x,directionPlacements[i].y+210);
+    ui.fillText("Up",directionPlacements[i].x,directionPlacements[i].y);
+    ui.fillText("Right",directionPlacements[i].x,directionPlacements[i].y+70);
+    ui.fillText("Left",directionPlacements[i].x,directionPlacements[i].y+140);
+    ui.fillText("Down",directionPlacements[i].x,directionPlacements[i].y+210);
   }
-  c.textAlign = "center";
+  ui.textAlign = "center";
   var keys = Object.keys(keymapItems);
   for (var i=0;i<keys.length;i++){
     if (keymapItems[keys[i]].type == 1){
       if (keys[i] == kMenuSelected){
-        c.fillStyle = "black";
-        c.fillRect(keymapItems[keys[i]].pos.x-80,keymapItems[keys[i]].pos.y+20,160,40);
-        c.fillStyle = "white";
+        ui.fillStyle = "black";
+        ui.fillRect(keymapItems[keys[i]].pos.x-80,keymapItems[keys[i]].pos.y+20,160,40);
+        ui.fillStyle = "white";
         var text = keyText[keymapItems[keys[i]].binding[keymapItems[keys[i]].index][0]];
-        c.font = "italic 900 "+Math.round(Math.max(8,23-(2*text.length)))+"px Arial";
+        ui.font = "italic 900 "+Math.round(Math.max(8,23-(2*text.length)))+"px Arial";
         if (keymapItems[keys[i]].binding[keymapItems[keys[i]].index][0] == 0){
-          c.fillText("empty",keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y+45);
+          ui.fillText("empty",keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y+45);
         }
         else {
           var modText = (keymapItems[kMenuSelected].modType) ? ["L","R"] : ["X","Y"];
-          c.fillText(text+" "+modText[0]+":"+(keymapItems[keys[i]].binding[keymapItems[keys[i]].index][1]).toFixed(2)+" "+modText[1]+":"+(keymapItems[keys[i]].binding[keymapItems[keys[i]].index][2]).toFixed(2),keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y+45);
+          ui.fillText(text+" "+modText[0]+":"+(keymapItems[keys[i]].binding[keymapItems[keys[i]].index][1]).toFixed(2)+" "+modText[1]+":"+(keymapItems[keys[i]].binding[keymapItems[keys[i]].index][2]).toFixed(2),keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y+45);
         }
-        c.fillStyle = "rgba(200,200,200, "+Math.abs(1-kMenuKeyFlash/60)+")";
-        c.strokeStyle = "rgba(255, 255, 255, 0.9)";
+        ui.fillStyle = "rgba(200,200,200, "+Math.abs(1-kMenuKeyFlash/60)+")";
+        ui.strokeStyle = "rgba(255, 255, 255, 0.9)";
       }
       else if (keymapItems[keys[i]].binding[keymapItems[keys[i]].index][0] == 0){
-        c.fillStyle = "rgba(0, 0, 0, 0.5)";
-        c.strokeStyle = "rgba(255, 255, 255, 0.2)";
+        ui.fillStyle = "rgba(0, 0, 0, 0.5)";
+        ui.strokeStyle = "rgba(255, 255, 255, 0.2)";
       }
       else {
-        c.fillStyle = "rgb(0, 0, 0)";
-        c.strokeStyle = "rgba(255, 255, 255, 0.8)";
+        ui.fillStyle = "rgb(0, 0, 0)";
+        ui.strokeStyle = "rgba(255, 255, 255, 0.8)";
       }
-      c.beginPath();
-      c.arc(keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y,15,0,twoPi);
-      c.closePath();
-      c.fill();
-      c.stroke();
+      ui.beginPath();
+      ui.arc(keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y,15,0,twoPi);
+      ui.closePath();
+      ui.fill();
+      ui.stroke();
     }
     else if (keymapItems[keys[i]].type == 2){
       if (keys[i] == kMenuSelected){
-        c.fillStyle = "rgba(200,200,200, "+Math.abs(1-kMenuKeyFlash/60)+")";
-        c.strokeStyle = "rgba(255, 255, 255, 0.9)";
+        ui.fillStyle = "rgba(200,200,200, "+Math.abs(1-kMenuKeyFlash/60)+")";
+        ui.strokeStyle = "rgba(255, 255, 255, 0.9)";
       }
       else {
-        c.fillStyle = "rgba(0, 0, 0, 0.65)";
-        c.strokeStyle = "rgba(255, 255, 255, 0.6)";
+        ui.fillStyle = "rgba(0, 0, 0, 0.65)";
+        ui.strokeStyle = "rgba(255, 255, 255, 0.6)";
       }
       var x = keymapItems[keys[i]].pos.x;
       var y = keymapItems[keys[i]].pos.y;
-      c.beginPath();
-      c.moveTo(x+15,y+10);
-      c.lineTo(x+65,y+10);
-      c.arc(x+65,y+25,15,1.5*Math.PI,0.5*Math.PI);
-      c.lineTo(x+15,y+40);
-      c.arc(x+15,y+25,15,0.5*Math.PI,1.5*Math.PI);
-      c.closePath();
-      c.fill();
-      c.stroke();
-      c.strokeStyle = "black";
-      c.fillStyle = "white";
-      c.font = "italic 900 20px Arial";
-      c.strokeText((keymapItems[keys[i]].binding[keymapItems[keys[i]].index]).toFixed(2),x+37,y+32);
-      c.fillText((keymapItems[keys[i]].binding[keymapItems[keys[i]].index]).toFixed(2),x+37,y+32);
+      ui.beginPath();
+      ui.moveTo(x+15,y+10);
+      ui.lineTo(x+65,y+10);
+      ui.arc(x+65,y+25,15,1.5*Math.PI,0.5*Math.PI);
+      ui.lineTo(x+15,y+40);
+      ui.arc(x+15,y+25,15,0.5*Math.PI,1.5*Math.PI);
+      ui.closePath();
+      ui.fill();
+      ui.stroke();
+      ui.strokeStyle = "black";
+      ui.fillStyle = "white";
+      ui.font = "italic 900 20px Arial";
+      ui.strokeText((keymapItems[keys[i]].binding[keymapItems[keys[i]].index]).toFixed(2),x+37,y+32);
+      ui.fillText((keymapItems[keys[i]].binding[keymapItems[keys[i]].index]).toFixed(2),x+37,y+32);
       if (settingRange && keys[i] == kMenuSelected){
-        c.strokeText("<",x-15,y+32);
-        c.fillText("<",x-15,y+32);
-        c.strokeText(">",x+90,y+32);
-        c.fillText(">",x+90,y+32);
-        c.strokeText("Enter to Confirm",x+37,y+60);
-        c.fillText("Enter to Confirm",x+37,y+60);
+        ui.strokeText("<",x-15,y+32);
+        ui.fillText("<",x-15,y+32);
+        ui.strokeText(">",x+90,y+32);
+        ui.fillText(">",x+90,y+32);
+        ui.strokeText("Enter to Confirm",x+37,y+60);
+        ui.fillText("Enter to Confirm",x+37,y+60);
       }
     }
     else {
       if (keys[i] == kMenuSelected){
-        c.fillStyle = "rgba(255, 255, 255, "+Math.abs(1-kMenuKeyFlash/60)+")";
-        c.strokeStyle = "rgba(255, 255, 255, 0.9)";
+        ui.fillStyle = "rgba(255, 255, 255, "+Math.abs(1-kMenuKeyFlash/60)+")";
+        ui.strokeStyle = "rgba(255, 255, 255, 0.9)";
       }
       else if (keymapItems[keys[i]].binding[keymapItems[keys[i]].index] == 0){
-        c.fillStyle = "rgba(31, 31, 31, 0.69)";
-        c.strokeStyle = "rgba(182, 182, 182, 0.66)";
+        ui.fillStyle = "rgba(31, 31, 31, 0.69)";
+        ui.strokeStyle = "rgba(182, 182, 182, 0.66)";
       }
       else {
-        c.fillStyle = "rgba(255, 255, 255, 0.2)";
-        c.strokeStyle = "rgba(255, 255, 255, 0.8)";
+        ui.fillStyle = "rgba(255, 255, 255, 0.2)";
+        ui.strokeStyle = "rgba(255, 255, 255, 0.8)";
       }
-      c.fillRect(keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y,50,50);
-      c.strokeRect(keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y,50,50);
-      c.fillStyle = "white";
-      c.strokeStyle = "black";
+      ui.fillRect(keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y,50,50);
+      ui.strokeRect(keymapItems[keys[i]].pos.x,keymapItems[keys[i]].pos.y,50,50);
+      ui.fillStyle = "white";
+      ui.strokeStyle = "black";
       var text = keyText[keymapItems[keys[i]].binding[keymapItems[keys[i]].index]];
-      c.font = "italic 900 "+Math.round(Math.max(8,25-(2*text.length)))+"px Arial";
-      c.strokeText(text,keymapItems[keys[i]].pos.x+22,keymapItems[keys[i]].pos.y+32);
-      c.fillText(text,keymapItems[keys[i]].pos.x+22,keymapItems[keys[i]].pos.y+32);
+      ui.font = "italic 900 "+Math.round(Math.max(8,25-(2*text.length)))+"px Arial";
+      ui.strokeText(text,keymapItems[keys[i]].pos.x+22,keymapItems[keys[i]].pos.y+32);
+      ui.fillText(text,keymapItems[keys[i]].pos.x+22,keymapItems[keys[i]].pos.y+32);
     }
   }
   if (settingModifier){
-    c.fillStyle = "black";
-    c.fillRect(400,200,400,420);
-    c.font = "italic 900 40px Arial";
-    c.fillStyle = "white";
-    c.fillText("Setting Modifier",600,245);
-    c.font = "italic 900 30px Arial";
-    c.fillText("Key:",460,320);
+    ui.fillStyle = "black";
+    ui.fillRect(400,200,400,420);
+    ui.font = "italic 900 40px Arial";
+    ui.fillStyle = "white";
+    ui.fillText("Setting Modifier",600,245);
+    ui.font = "italic 900 30px Arial";
+    ui.fillText("Key:",460,320);
     if (keymapItems[kMenuSelected].modType){
-      c.fillText("L:",460,400);
-      c.fillText("R:",460,480);
+      ui.fillText("L:",460,400);
+      ui.fillText("R:",460,480);
     }
     else {
-      c.fillText("X:",460,400);
-      c.fillText("Y:",460,480);
+      ui.fillText("X:",460,400);
+      ui.fillText("Y:",460,480);
     }
     if (keyListen){
-      c.fillText("Listening...",660,320);
+      ui.fillText("Listening...",660,320);
     }
     else {
-      c.fillText(keyText[keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index][0]],660,320);
-      c.fillText("Enter to confirm",600,560);
+      ui.fillText(keyText[keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index][0]],660,320);
+      ui.fillText("Enter to confirm",600,560);
     }
     for (var i=0;i<2;i++){
-      c.fillText("<",580,400+i*80);
-      c.fillText(">",740,400+i*80);
-      c.fillText((keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index][i+1]).toFixed(2),660,400+i*80);
+      ui.fillText("<",580,400+i*80);
+      ui.fillText(">",740,400+i*80);
+      ui.fillText((keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index][i+1]).toFixed(2),660,400+i*80);
     }
-    c.font = "italic 900 20px Arial";
-    c.fillText("Hold Enter to remove settings",600,600);
-    c.strokeStyle = "rgba(255, 255, 255, "+Math.abs(1-kMenuKeyFlash/60)+")";
-    c.strokeRect(550,285+80*settingModifierPart,220,50);
+    ui.font = "italic 900 20px Arial";
+    ui.fillText("Hold Enter to remove settings",600,600);
+    ui.strokeStyle = "rgba(255, 255, 255, "+Math.abs(1-kMenuKeyFlash/60)+")";
+    ui.strokeRect(550,285+80*settingModifierPart,220,50);
   }
   else if (keyListen){
-    c.fillStyle = "black";
-    c.fillRect(keymapItems[kMenuSelected].pos.x-75,keymapItems[kMenuSelected].pos.y+55,200,45);
-    c.fillStyle = "white";
+    ui.fillStyle = "black";
+    ui.fillRect(keymapItems[kMenuSelected].pos.x-75,keymapItems[kMenuSelected].pos.y+55,200,45);
+    ui.fillStyle = "white";
     var text = keyText[keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index]];
-    c.font = "italic 900 30px Arial";
-    c.fillText("Listening...",keymapItems[kMenuSelected].pos.x+25,keymapItems[kMenuSelected].pos.y+90);
+    ui.font = "italic 900 30px Arial";
+    ui.fillText("Listening...",keymapItems[kMenuSelected].pos.x+25,keymapItems[kMenuSelected].pos.y+90);
   }
   if (keyboardPromptTimer > 0){
-    c.fillStyle = "black";
-    c.fillRect(400,300,400,100);
-    c.fillStyle = "white";
-    c.font = "italic 900 40px Arial";
-    c.fillText(keyboardPrompt,600,360);
+    ui.fillStyle = "black";
+    ui.fillRect(400,300,400,100);
+    ui.fillStyle = "white";
+    ui.font = "italic 900 40px Arial";
+    ui.fillText(keyboardPrompt,600,360);
   }
 }

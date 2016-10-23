@@ -632,128 +632,130 @@ function targetBuilderControls(p){
 }
 
 function drawTargetStage(){
+  ui.fillStyle = boxFill;
   for (var i=0;i<stageTemp.draw.box.length;i++){
     var b = stageTemp.draw.box[i];
-    c.fillRect(b.min.x,b.max.y,Math.abs(b.max.x-b.min.x),Math.abs(b.max.y-b.min.y));
+    ui.fillRect(b.min.x,b.max.y,Math.abs(b.max.x-b.min.x),Math.abs(b.max.y-b.min.y));
   }
   for (var i=0;i<stageTemp.draw.target.length;i++){
     var x = stageTemp.draw.target[i].x;
     var y = stageTemp.draw.target[i].y;
     for (var j=0;j<5;j++){
       if (hoverItem[0] == "target" && hoverItem[1] == i){
-        c.fillStyle = (j%2)?"white":"rgb(241, 111, 111)";
+        ui.fillStyle = (j%2)?"white":"rgb(241, 111, 111)";
       }
       else {
-        c.fillStyle = (j%2)?"white":"red";
+        ui.fillStyle = (j%2)?"white":"red";
       }
-      c.beginPath();
-      c.arc(x,y,25-j*5,0,twoPi);
-      c.closePath();
-      c.fill();
+      ui.beginPath();
+      ui.arc(x,y,25-j*5,0,twoPi);
+      ui.closePath();
+      ui.fill();
     }
   }
 
-  c.strokeStyle = "#db80cc";
-  c.lineWidth = 1;
+  ui.strokeStyle = "#db80cc";
+  ui.lineWidth = 1;
   for (var i=0;i<stageTemp.draw.ground.length;i++){
     var g = stageTemp.draw.ground[i];
-    c.beginPath();
-    c.moveTo(g[0].x,g[0].y);
-    c.lineTo(g[1].x,g[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(g[0].x,g[0].y);
+    ui.lineTo(g[1].x,g[1].y);
+    ui.closePath();
+    ui.stroke();
   }
-  c.strokeStyle = "#4794c6";
+  ui.strokeStyle = "#4794c6";
   for (var i=0;i<stageTemp.draw.platform.length;i++){
     var p = stageTemp.draw.platform[i];
-    c.beginPath();
-    c.moveTo(p[0].x,p[0].y);
-    c.lineTo(p[1].x,p[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(p[0].x,p[0].y);
+    ui.lineTo(p[1].x,p[1].y);
+    ui.closePath();
+    ui.stroke();
   }
-  c.strokeStyle = "#47c648";
+  ui.strokeStyle = "#47c648";
   for (var i=0;i<stageTemp.draw.wallL.length;i++){
     var w = stageTemp.draw.wallL[i];
-    c.beginPath();
-    c.moveTo(w[0].x,w[0].y);
-    c.lineTo(w[1].x,w[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(w[0].x,w[0].y);
+    ui.lineTo(w[1].x,w[1].y);
+    ui.closePath();
+    ui.stroke();
   }
-  c.strokeStyle = "#9867de";
+  ui.strokeStyle = "#9867de";
   for (var i=0;i<stageTemp.draw.wallR.length;i++){
     var w = stageTemp.draw.wallR[i];
-    c.beginPath();
-    c.moveTo(w[0].x,w[0].y);
-    c.lineTo(w[1].x,w[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(w[0].x,w[0].y);
+    ui.lineTo(w[1].x,w[1].y);
+    ui.closePath();
+    ui.stroke();
   }
-  c.strokeStyle = "#f04c4c";
+  ui.strokeStyle = "#f04c4c";
   for (var i=0;i<stageTemp.draw.ceiling.length;i++){
     var ce = stageTemp.draw.ceiling[i];
-    c.beginPath();
-    c.moveTo(ce[0].x,ce[0].y);
-    c.lineTo(ce[1].x,ce[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(ce[0].x,ce[0].y);
+    ui.lineTo(ce[1].x,ce[1].y);
+    ui.closePath();
+    ui.stroke();
   }
-  c.strokeStyle = "#e7a44c";
-  c.lineWidth = 1;
+  ui.strokeStyle = "#e7a44c";
+  ui.lineWidth = 1;
   for (var i=0;i<stageTemp.ledge.length;i++){
     var e = stageTemp.ledge[i];
-    c.beginPath();
+    ui.beginPath();
     if (e[1]){
-      c.moveTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
-      c.lineTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y);
-      c.lineTo(stageTemp.draw.box[e[0]].max.x-Math.min(30,(stageTemp.draw.box[e[0]].max.x-stageTemp.draw.box[e[0]].min.x)/2),stageTemp.draw.box[e[0]].max.y);
+      ui.moveTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
+      ui.lineTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y);
+      ui.lineTo(stageTemp.draw.box[e[0]].max.x-Math.min(30,(stageTemp.draw.box[e[0]].max.x-stageTemp.draw.box[e[0]].min.x)/2),stageTemp.draw.box[e[0]].max.y);
     }
     else {
-      c.moveTo(stageTemp.draw.box[e[0]].min.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
-      c.lineTo(stageTemp.draw.box[e[0]].min.x,stageTemp.draw.box[e[0]].max.y);
-      c.lineTo(stageTemp.draw.box[e[0]].min.x+Math.min(30,(stageTemp.draw.box[e[0]].max.x-stageTemp.draw.box[e[0]].min.x)/2),stageTemp.draw.box[e[0]].max.y);
+      ui.moveTo(stageTemp.draw.box[e[0]].min.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
+      ui.lineTo(stageTemp.draw.box[e[0]].min.x,stageTemp.draw.box[e[0]].max.y);
+      ui.lineTo(stageTemp.draw.box[e[0]].min.x+Math.min(30,(stageTemp.draw.box[e[0]].max.x-stageTemp.draw.box[e[0]].min.x)/2),stageTemp.draw.box[e[0]].max.y);
     }
-    c.closePath();
-    c.stroke();
+    ui.closePath();
+    ui.stroke();
   }
 }
 
 function renderTargetBuilder(){
+  clearScreen();
   drawBackground();
-  c.strokeStyle = "rgba(255, 255, 255, 0.17)";
-  c.lineWidth = 2;
+  ui.strokeStyle = "rgba(255, 255, 255, 0.17)";
+  ui.lineWidth = 2;
   if (gridType != 4){
-    c.beginPath();
+    ui.beginPath();
     for (var i=0;i<1200/gridSizes[gridType];i++){
-      c.moveTo(i*gridSizes[gridType],0);
-      c.lineTo(i*gridSizes[gridType],750);
+      ui.moveTo(i*gridSizes[gridType],0);
+      ui.lineTo(i*gridSizes[gridType],750);
     }
     for (var i=0;i<750/gridSizes[gridType];i++){
-      c.moveTo(0,i*gridSizes[gridType]);
-      c.lineTo(1200,i*gridSizes[gridType]);
+      ui.moveTo(0,i*gridSizes[gridType]);
+      ui.lineTo(1200,i*gridSizes[gridType]);
     }
-    c.closePath();
-    c.stroke();
+    ui.closePath();
+    ui.stroke();
   }
   drawTargetStage();
   if (holdingA){
     switch (targetTool){
       case 0:
       //BOX
-        c.strokeStyle = "white";
-        c.lineWidth = 4;
-        c.strokeRect(Math.min(drawingBox.min.x,drawingBox.max.x),Math.min(drawingBox.min.y,drawingBox.max.y),Math.abs(drawingBox.min.x-drawingBox.max.x),Math.abs(drawingBox.min.y-drawingBox.max.y));
+        ui.strokeStyle = "white";
+        ui.lineWidth = 4;
+        ui.strokeRect(Math.min(drawingBox.min.x,drawingBox.max.x),Math.min(drawingBox.min.y,drawingBox.max.y),Math.abs(drawingBox.min.x-drawingBox.max.x),Math.abs(drawingBox.min.y-drawingBox.max.y));
         break;
       case 1:
       //PLATFORM
-        c.strokeStyle = "rgb(79, 244, 255)";
-        c.lineWidth = 4;
-        c.beginPath();
-        c.moveTo(drawingPlatform[0].x,drawingPlatform[0].y);
-        c.lineTo(drawingPlatform[1].x,drawingPlatform[1].y);
-        c.stroke();
-        c.closePath();
+        ui.strokeStyle = "rgb(79, 244, 255)";
+        ui.lineWidth = 4;
+        ui.beginPath();
+        ui.moveTo(drawingPlatform[0].x,drawingPlatform[0].y);
+        ui.lineTo(drawingPlatform[1].x,drawingPlatform[1].y);
+        ui.stroke();
+        ui.closePath();
         break;
       case 2:
       //LEDGE
@@ -771,224 +773,224 @@ function renderTargetBuilder(){
         break;
     }
   }
-  c.textAlign = "center";
-  c.lineWidth = 2;
+  ui.textAlign = "center";
+  ui.lineWidth = 2;
   var spCol = ["rgb(0, 0, 0)","rgb(110, 255, 66)"];
   if (hoverItem[0] == "startingPoint"){
     spCol = ["rgb(82, 82, 82)","rgb(171, 255, 145)"];
   }
-  c.fillStyle = spCol[0];
-  c.fillRect(stageTemp.draw.startingPoint.x-4,stageTemp.draw.startingPoint.y-12,8,24);
-  c.fillRect(stageTemp.draw.startingPoint.x-12,stageTemp.draw.startingPoint.y-4,24,8);
-  c.fillRect(stageTemp.draw.startingPoint.x-27,stageTemp.draw.startingPoint.y-23,54,13);
-  c.fillStyle = spCol[1];
-  c.fillRect(stageTemp.draw.startingPoint.x-2,stageTemp.draw.startingPoint.y-10,4,20);
-  c.fillRect(stageTemp.draw.startingPoint.x-10,stageTemp.draw.startingPoint.y-2,20,4);
-  c.font = "900 14px Arial";
-  c.fillText("START",stageTemp.draw.startingPoint.x,stageTemp.draw.startingPoint.y-12);
-  //c.strokeText("START",stageTemp.draw.startingPoint.x,stageTemp.draw.startingPoint.y-12);
+  ui.fillStyle = spCol[0];
+  ui.fillRect(stageTemp.draw.startingPoint.x-4,stageTemp.draw.startingPoint.y-12,8,24);
+  ui.fillRect(stageTemp.draw.startingPoint.x-12,stageTemp.draw.startingPoint.y-4,24,8);
+  ui.fillRect(stageTemp.draw.startingPoint.x-27,stageTemp.draw.startingPoint.y-23,54,13);
+  ui.fillStyle = spCol[1];
+  ui.fillRect(stageTemp.draw.startingPoint.x-2,stageTemp.draw.startingPoint.y-10,4,20);
+  ui.fillRect(stageTemp.draw.startingPoint.x-10,stageTemp.draw.startingPoint.y-2,20,4);
+  ui.font = "900 14px Arial";
+  ui.fillText("START",stageTemp.draw.startingPoint.x,stageTemp.draw.startingPoint.y-12);
+  //ui.strokeText("START",stageTemp.draw.startingPoint.x,stageTemp.draw.startingPoint.y-12);
   var i = hoverItem[1];
   if (hoverItem[0] == "box"){
-    c.strokeStyle = "#e9bee2";
-    c.lineWidth = 3;
+    ui.strokeStyle = "#e9bee2";
+    ui.lineWidth = 3;
     var g = stageTemp.draw.ground[i];
-    c.beginPath();
-    c.moveTo(g[0].x,g[0].y);
-    c.lineTo(g[1].x,g[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(g[0].x,g[0].y);
+    ui.lineTo(g[1].x,g[1].y);
+    ui.closePath();
+    ui.stroke();
 
-    c.strokeStyle = "#86df87";
+    ui.strokeStyle = "#86df87";
     var w = stageTemp.draw.wallL[i];
-    c.beginPath();
-    c.moveTo(w[0].x,w[0].y);
-    c.lineTo(w[1].x,w[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(w[0].x,w[0].y);
+    ui.lineTo(w[1].x,w[1].y);
+    ui.closePath();
+    ui.stroke();
 
-    c.strokeStyle = "#b99fde";
+    ui.strokeStyle = "#b99fde";
     var w = stageTemp.draw.wallR[i];
-    c.beginPath();
-    c.moveTo(w[0].x,w[0].y);
-    c.lineTo(w[1].x,w[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(w[0].x,w[0].y);
+    ui.lineTo(w[1].x,w[1].y);
+    ui.closePath();
+    ui.stroke();
 
-    c.strokeStyle = "#fa9292";
+    ui.strokeStyle = "#fa9292";
     var ce = stageTemp.draw.ceiling[i];
-    c.beginPath();
-    c.moveTo(ce[0].x,ce[0].y);
-    c.lineTo(ce[1].x,ce[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(ce[0].x,ce[0].y);
+    ui.lineTo(ce[1].x,ce[1].y);
+    ui.closePath();
+    ui.stroke();
 
-    c.strokeStyle = "#e8bd84";
+    ui.strokeStyle = "#e8bd84";
     for (var j=0;j<stageTemp.ledge.length;j++){
       var e = stageTemp.ledge[j];
       if (e[0] == i){
-        c.beginPath();
+        ui.beginPath();
         if (e[1]){
-          c.moveTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
-          c.lineTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y);
-          c.lineTo(stageTemp.draw.box[e[0]].max.x-Math.min(30,(stageTemp.draw.box[e[0]].max.x-stageTemp.draw.box[e[0]].min.x)/2),stageTemp.draw.box[e[0]].max.y);
+          ui.moveTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
+          ui.lineTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y);
+          ui.lineTo(stageTemp.draw.box[e[0]].max.x-Math.min(30,(stageTemp.draw.box[e[0]].max.x-stageTemp.draw.box[e[0]].min.x)/2),stageTemp.draw.box[e[0]].max.y);
         }
         else {
-          c.moveTo(stageTemp.draw.box[e[0]].min.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
-          c.lineTo(stageTemp.draw.box[e[0]].min.x,stageTemp.draw.box[e[0]].max.y);
-          c.lineTo(stageTemp.draw.box[e[0]].min.x+Math.min(30,(stageTemp.draw.box[e[0]].max.x-stageTemp.draw.box[e[0]].min.x)/2),stageTemp.draw.box[e[0]].max.y);
+          ui.moveTo(stageTemp.draw.box[e[0]].min.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
+          ui.lineTo(stageTemp.draw.box[e[0]].min.x,stageTemp.draw.box[e[0]].max.y);
+          ui.lineTo(stageTemp.draw.box[e[0]].min.x+Math.min(30,(stageTemp.draw.box[e[0]].max.x-stageTemp.draw.box[e[0]].min.x)/2),stageTemp.draw.box[e[0]].max.y);
         }
-        c.closePath();
-        c.stroke();
+        ui.closePath();
+        ui.stroke();
       }
     }
   }
   else if (hoverItem[0] == "platform"){
-    c.lineWidth = 3;
-    c.strokeStyle = "#7eb3d5";
+    ui.lineWidth = 3;
+    ui.strokeStyle = "#7eb3d5";
     var p = stageTemp.draw.platform[i];
-    c.beginPath();
-    c.moveTo(p[0].x,p[0].y);
-    c.lineTo(p[1].x,p[1].y);
-    c.closePath();
-    c.stroke();
+    ui.beginPath();
+    ui.moveTo(p[0].x,p[0].y);
+    ui.lineTo(p[1].x,p[1].y);
+    ui.closePath();
+    ui.stroke();
   }
 
   if (ledgeHoverItem != 0){
-    c.fillStyle = "rgb(255, 148, 70)";
-    c.beginPath();
+    ui.fillStyle = "rgb(255, 148, 70)";
+    ui.beginPath();
     if (ledgeHoverItem[2]){
       // if right side
-      c.arc(stageTemp.draw.box[ledgeHoverItem[1]].max.x,stageTemp.draw.box[ledgeHoverItem[1]].max.y,10,0,twoPi);
+      ui.arc(stageTemp.draw.box[ledgeHoverItem[1]].max.x,stageTemp.draw.box[ledgeHoverItem[1]].max.y,10,0,twoPi);
     }
     else {
-      c.arc(stageTemp.draw.box[ledgeHoverItem[1]].min.x,stageTemp.draw.box[ledgeHoverItem[1]].max.y,10,0,twoPi);
+      ui.arc(stageTemp.draw.box[ledgeHoverItem[1]].min.x,stageTemp.draw.box[ledgeHoverItem[1]].max.y,10,0,twoPi);
     }
-    c.closePath();
-    c.fill();
+    ui.closePath();
+    ui.fill();
   }
 
   if (toolInfoTimer > 0){
     toolInfoTimer--;
   }
-  c.fillStyle = "rgb(255,255,255)";
-  c.font = "13px Lucida Console, monaco, monospace";
+  ui.fillStyle = "rgb(255,255,255)";
+  ui.font = "13px Lucida Console, monaco, monospace";
 
   for (var i=0;i<6;i++){
     if (targetTool == i){
       if (toolInfoTimer > 0){
-        c.save();
-        c.globalAlpha = 1*hoverToolbar;
-        c.fillStyle = "rgba(0,0,0,"+Math.min(toolInfoTimer/60,1)+")";
-        c.fillRect(690+i*70,715,80,30);
-        c.fillStyle = "rgba(255,255,255,"+Math.min(toolInfoTimer/60,1)+")";
-        c.fillText(toolInfo[targetTool],730+i*70,733);
-        c.restore();
+        ui.save();
+        ui.globalAlpha = 1*hoverToolbar;
+        ui.fillStyle = "rgba(0,0,0,"+Math.min(toolInfoTimer/60,1)+")";
+        ui.fillRect(690+i*70,715,80,30);
+        ui.fillStyle = "rgba(255,255,255,"+Math.min(toolInfoTimer/60,1)+")";
+        ui.fillText(toolInfo[targetTool],730+i*70,733);
+        ui.restore();
       }
-      c.globalAlpha = 0.6*hoverToolbar;
+      ui.globalAlpha = 0.6*hoverToolbar;
     }
     else {
-      c.globalAlpha = 0.2*hoverToolbar;
+      ui.globalAlpha = 0.2*hoverToolbar;
     }
-    c.beginPath();
-    c.moveTo(700+i*70,660);
-    c.arc(710+i*70,660,10,Math.PI,Math.PI*1.5);
-    c.lineTo(750+i*70,650);
-    c.arc(750+i*70,660,10,Math.PI*1.5,twoPi);
-    c.lineTo(760+i*70,710);
-    c.arc(750+i*70,700,10,0,Math.PI/2);
-    c.lineTo(710+i*70,710);
-    c.arc(710+i*70,700,10,Math.PI/2,Math.PI);
-    c.closePath();
-    c.fill();
+    ui.beginPath();
+    ui.moveTo(700+i*70,660);
+    ui.arc(710+i*70,660,10,Math.PI,Math.PI*1.5);
+    ui.lineTo(750+i*70,650);
+    ui.arc(750+i*70,660,10,Math.PI*1.5,twoPi);
+    ui.lineTo(760+i*70,710);
+    ui.arc(750+i*70,700,10,0,Math.PI/2);
+    ui.lineTo(710+i*70,710);
+    ui.arc(710+i*70,700,10,Math.PI/2,Math.PI);
+    ui.closePath();
+    ui.fill();
   }
-  c.lineWidth = 4;
-  c.globalAlpha = 1;
-  c.save();
-  c.globalAlpha = 1*hoverToolbar;
-  c.fillStyle = "rgba(0,0,0,0.8)";
-  c.strokeStyle = "rgba(0,0,0,0.8)";
-  c.font = "600 14px Lucida Console, monaco, monospace";
-  c.fillText(100-stageTemp.box.length,745,707);
-  c.strokeRect(720,670,20,20);
-  c.fillText(100-stageTemp.platform.length,815,707);
-  c.beginPath();
-  c.moveTo(788,680);
-  c.lineTo(812,680);
-  c.stroke();
-  c.closePath();
-  c.beginPath();
-  c.moveTo(860,690);
-  c.lineTo(860,670);
-  c.lineTo(880,670);
-  c.stroke();
-  c.closePath();
-  c.fillText(10-stageTemp.target.length,955,707);
-  c.fillStyle = "rgba(255,0,0,0.8)";
-  c.beginPath();
-  c.arc(940,680,15,0,twoPi);
-  c.closePath();
-  c.fill();
-  c.fillStyle = "rgba(255,255,255,0.8)";
-  c.beginPath();
-  c.arc(940,680,10,0,twoPi);
-  c.closePath();
-  c.fill();
-  c.fillStyle = "rgba(255,0,0,0.8)";
-  c.beginPath();
-  c.arc(940,680,5,0,twoPi);
-  c.closePath();
-  c.fill();
-  c.drawImage(handOpen, 997, 663,29,38);
-  c.font = "900 30px Arial";
-  c.fillStyle = "rgba(252, 45, 45, 0.8)";
-  c.fillText("X",1080,692);
-  c.restore();
-  c.font = "13px Lucida Console, monaco, monospace";
+  ui.lineWidth = 4;
+  ui.globalAlpha = 1;
+  ui.save();
+  ui.globalAlpha = 1*hoverToolbar;
+  ui.fillStyle = "rgba(0,0,0,0.8)";
+  ui.strokeStyle = "rgba(0,0,0,0.8)";
+  ui.font = "600 14px Lucida Console, monaco, monospace";
+  ui.fillText(100-stageTemp.box.length,745,707);
+  ui.strokeRect(720,670,20,20);
+  ui.fillText(100-stageTemp.platform.length,815,707);
+  ui.beginPath();
+  ui.moveTo(788,680);
+  ui.lineTo(812,680);
+  ui.stroke();
+  ui.closePath();
+  ui.beginPath();
+  ui.moveTo(860,690);
+  ui.lineTo(860,670);
+  ui.lineTo(880,670);
+  ui.stroke();
+  ui.closePath();
+  ui.fillText(10-stageTemp.target.length,955,707);
+  ui.fillStyle = "rgba(255,0,0,0.8)";
+  ui.beginPath();
+  ui.arc(940,680,15,0,twoPi);
+  ui.closePath();
+  ui.fill();
+  ui.fillStyle = "rgba(255,255,255,0.8)";
+  ui.beginPath();
+  ui.arc(940,680,10,0,twoPi);
+  ui.closePath();
+  ui.fill();
+  ui.fillStyle = "rgba(255,0,0,0.8)";
+  ui.beginPath();
+  ui.arc(940,680,5,0,twoPi);
+  ui.closePath();
+  ui.fill();
+  ui.drawImage(handOpen, 997, 663,29,38);
+  ui.font = "900 30px Arial";
+  ui.fillStyle = "rgba(252, 45, 45, 0.8)";
+  ui.fillText("X",1080,692);
+  ui.restore();
+  ui.font = "13px Lucida Console, monaco, monospace";
   if (tooSmallTimer > 0){
     tooSmallTimer--;
-    c.fillStyle = "rgba(0,0,0,"+Math.min(tooSmallTimer/60,1)+")";
-    c.fillRect(tooSmallPos.x+30,tooSmallPos.y,80,25);
-    c.fillStyle = "rgba(255,255,255,"+Math.min(tooSmallTimer/60,1)+")";
-    c.fillText("Too small",tooSmallPos.x+70,tooSmallPos.y+17);
+    ui.fillStyle = "rgba(0,0,0,"+Math.min(tooSmallTimer/60,1)+")";
+    ui.fillRect(tooSmallPos.x+30,tooSmallPos.y,80,25);
+    ui.fillStyle = "rgba(255,255,255,"+Math.min(tooSmallTimer/60,1)+")";
+    ui.fillText("Too small",tooSmallPos.x+70,tooSmallPos.y+17);
   }
   if (targetTool == 4){
     if (grabbedItem == 0){
-      c.drawImage(handOpen, crossHairPos.x*3+600-18, crossHairPos.y*-3+375-24,36,48);
+      ui.drawImage(handOpen, crossHairPos.x*3+600-18, crossHairPos.y*-3+375-24,36,48);
     }
     else {
-      c.drawImage(handGrab, crossHairPos.x*3+600-18, crossHairPos.y*-3+375-24,36,48);
+      ui.drawImage(handGrab, crossHairPos.x*3+600-18, crossHairPos.y*-3+375-24,36,48);
     }
   }
   else if (targetTool == 5){
-    c.font = "900 40px Arial";
-    c.fillStyle = "rgb(255, 83, 83)";
-    c.strokeStyle = "black";
-    c.fillText("X",crossHairPos.x*3+600,crossHairPos.y*-3+375+10);
-    c.strokeText("X",crossHairPos.x*3+600,crossHairPos.y*-3+375+10);
+    ui.font = "900 40px Arial";
+    ui.fillStyle = "rgb(255, 83, 83)";
+    ui.strokeStyle = "black";
+    ui.fillText("X",crossHairPos.x*3+600,crossHairPos.y*-3+375+10);
+    ui.strokeText("X",crossHairPos.x*3+600,crossHairPos.y*-3+375+10);
   }
   else {
-    c.fillStyle = "#ffffff";
-    c.fillRect(crossHairPos.x*3+600-2,crossHairPos.y*-3+375-10,4,20);
-    c.fillRect(crossHairPos.x*3+600-10,crossHairPos.y*-3+375-2,20,4);
+    ui.fillStyle = "#ffffff";
+    ui.fillRect(crossHairPos.x*3+600-2,crossHairPos.y*-3+375-10,4,20);
+    ui.fillRect(crossHairPos.x*3+600-10,crossHairPos.y*-3+375-2,20,4);
   }
 
   if (builderPaused){
-    c.fillStyle = "rgba(0,0,0,0.4)";
-    c.fillRect(0,0,canvas.width,canvas.height);
+    ui.fillStyle = "rgba(0,0,0,0.4)";
+    ui.fillRect(0,0,canvasUI.width,canvasUI.height);
     for (var i=0;i<3;i++){
       if (builderPauseSelected == i){
-        c.fillStyle = "rgba(255,255,255,0.9)";
+        ui.fillStyle = "rgba(255,255,255,0.9)";
       }
       else {
-        c.fillStyle = "rgba(255,255,255,0.2)";
+        ui.fillStyle = "rgba(255,255,255,0.2)";
       }
-      c.fillRect(400,150+i*150,400,100);
+      ui.fillRect(400,150+i*150,400,100);
     }
-    c.font = "900 50px Arial";
-    c.fillStyle = "rgba(0,0,0,0.8)";
-    c.fillText("Test stage",600,220);
-    c.fillText("Save stage",600,370);
-    c.fillText("Quit",600,520);
+    ui.font = "900 50px Arial";
+    ui.fillStyle = "rgba(0,0,0,0.8)";
+    ui.fillText("Test stage",600,220);
+    ui.fillText("Save stage",600,370);
+    ui.fillText("Quit",600,520);
   }
 }
 

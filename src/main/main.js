@@ -294,11 +294,11 @@ function matchTimerTick(){
 
 function screenShake(kb){
   var seed = [Math.random(),Math.random(),Math.random(),Math.random()];
-  c.translate(kb*0.1*seed[0],kb*0.1*seed[1]);
-  setTimeout(function(){c.translate(-kb*0.05*seed[0],-kb*0.05*seed[1])},20);
-  setTimeout(function(){c.translate(-kb*0.05*seed[0],-kb*0.05*seed[1]);c.translate(-kb*0.1*seed[2],-kb*0.1*seed[3])},40);
-  setTimeout(function(){c.translate(kb*0.05*seed[2],kb*0.05*seed[3])},60);
-  setTimeout(function(){c.translate(kb*0.05*seed[2],kb*0.05*seed[3])},80);
+  fg1.translate(kb*0.1*seed[0],kb*0.1*seed[1]);
+  setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1])},20);
+  setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1]);fg1.translate(-kb*0.1*seed[2],-kb*0.1*seed[3])},40);
+  setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},60);
+  setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},80);
 }
 
 function percentShake(kb,i){
@@ -881,8 +881,16 @@ function interpretInputs(i,active){
   }
 }
 
-c = 0;
-canvas = 0;
+bg1 = 0;
+canvasBG1 = 0;
+bg2 = 0;
+canvasBG2 = 0;
+fg1 = 0;
+canvasFG1 = 0;
+fg2 = 0;
+canvasFG2 = 0;
+ui = 0;
+canvasUI = 0;
 
 function renderVfx(){
   var popQueue = [];
@@ -1146,6 +1154,16 @@ function gameTick(){
 
   setTimeout(gameTick,16-diff);
 }
+
+function clearScreen(){
+  bg1.fillStyle = "rgb(0, 0, 0)";
+  bg1.fillRect(0,0,canvasBG1.width,canvasBG1.height);
+  bg2.clearRect(0,0,canvasBG2.width,canvasBG2.height);
+  fg1.clearRect(0,0,canvasFG1.width,canvasFG1.height);
+  fg2.clearRect(0,0,canvasFG2.width,canvasFG2.height);
+  ui.clearRect(0,0,canvasUI.width,canvasUI.height);
+}
+
 otherFrame = true;
 fps30 = false;
 function renderTick(){
@@ -1184,8 +1202,7 @@ function renderTick(){
     else if (gameMode == 5){
       if (playing || frameByFrameRender){
         var rStart = performance.now();
-        c.fillStyle = "rgb(0, 0, 0)";
-        c.fillRect(0,0,canvas.width,canvas.height);
+        clearScreen();
         if (showVfx){
           drawBackground();
         }
@@ -1219,8 +1236,7 @@ function renderTick(){
       console.log(delta);*/
       //console.log("test2");
       var rStart = performance.now();
-      c.fillStyle = "rgb(0, 0, 0)";
-      c.fillRect(0,0,canvas.width,canvas.height);
+      clearScreen();
       if (showVfx){
         drawBackground();
       }
@@ -1317,8 +1333,9 @@ function endGame(){
   music.battlefield.stop();
   changeVolume(music,masterVolume[1],1);
   playing = false;
-  c.fillStyle = "rgb(0, 0, 0)";
-  c.fillRect(-100,-100,canvas.width+200,canvas.height+200);
+  clearScreen();
+  /*c.fillStyle = "rgb(0, 0, 0)";
+  c.fillRect(-100,-100,canvas.width+200,canvas.height+200);*/
   drawStage();
   if (gameMode == 3){
     gameMode = 2;
@@ -1356,12 +1373,12 @@ function finishGame(){
   endTargetGame = false;
   gameEnd = true;
   playing = false;
-  c.save();
-  c.textAlign = "center";
+  fg2.save();
+  fg2.textAlign = "center";
   var text = "Game!";
   var size = 300;
   var textScale = 1;
-  var textGrad =c.createLinearGradient(0,200,0,520);
+  var textGrad =fg2.createLinearGradient(0,200,0,520);
   if (gameMode == 5 || gameMode == 8){
     if (stage.target.length == targetsDestroyed){
       if (!targetTesting){
@@ -1394,7 +1411,7 @@ function finishGame(){
       text = "Complete!";
       size = 200;
       textScale = 1.5;
-      var textGrad =c.createLinearGradient(0,200/textScale,0,520/textScale);
+      var textGrad =fg2.createLinearGradient(0,200/textScale,0,520/textScale);
       textGrad.addColorStop(0,"black");
       textGrad.addColorStop(0.4,"black");
       textGrad.addColorStop(0.8,"rgb(150, 86, 46)");
@@ -1427,19 +1444,19 @@ function finishGame(){
       textGrad.addColorStop(1,"rgb(255, 31, 52)");
     }
   }
-  c.scale(1,textScale);
-  c.fillStyle=textGrad;
-  c.lineWidth = 40;
-  c.strokeStyle="black";
-  c.font="900 "+size+"px Arial";
-  c.strokeText(text,600,470/textScale);
-  c.lineWidth = 20;
-  c.strokeStyle="white";
-  c.font="900 "+size+"px Arial";
-  c.strokeText(text,600,470/textScale);
-  c.font="900 "+size+"px Arial";
-  c.fillText(text,600,470/textScale);
-  c.restore();
+  fg2.scale(1,textScale);
+  fg2.fillStyle=textGrad;
+  fg2.lineWidth = 40;
+  fg2.strokeStyle="black";
+  fg2.font="900 "+size+"px Arial";
+  fg2.strokeText(text,600,470/textScale);
+  fg2.lineWidth = 20;
+  fg2.strokeStyle="white";
+  fg2.font="900 "+size+"px Arial";
+  fg2.strokeText(text,600,470/textScale);
+  fg2.font="900 "+size+"px Arial";
+  fg2.fillText(text,600,470/textScale);
+  fg2.restore();
   music.battlefield.stop();
   setTimeout(function(){endGame()},2500);
 }
@@ -1452,12 +1469,18 @@ $(document).ready(function(){
   $("#controllerButton").click(function(){
     $("#controllerSupportContainer").toggle();
   });
-  canvas = document.getElementById("gameCanvas");
-  c = canvas.getContext("2d");
-  c.fillStyle = "rgb(0, 0, 0)";
-  c.fillRect(-100,-100,canvas.width+200,canvas.height+200);
-  //drawStartScreen();
-  //drawStage();
+  canvasBG1 = document.getElementById("bg1Canvas");
+  bg1 = canvasBG1.getContext("2d");
+  canvasBG2 = document.getElementById("bg2Canvas");
+  bg2 = canvasBG2.getContext("2d");
+  canvasFG1 = document.getElementById("fg1Canvas");
+  fg1 = canvasFG1.getContext("2d");
+  canvasFG2 = document.getElementById("fg2Canvas");
+  fg2 = canvasFG2.getContext("2d");
+  canvasUI = document.getElementById("uiCanvas");
+  ui = canvasUI.getContext("2d");
+  bg1.fillStyle = "rgb(0, 0, 0)";
+  bg1.fillRect(-100,-100,canvasBG1.width+200,canvasBG1.height+200);
   gameTick();
   renderTick();
   var mX = Math.max(($(window).width()-1200)/2,0);
@@ -1492,6 +1515,34 @@ $(document).ready(function(){
       $("#alphaButtonEdit").empty().append("ON");
     }
     transparency ^= true;
+  });
+
+  $("#layerButton").hover(function(){
+    $("#layerDropdown").toggle();
+  });
+
+  $(".layer").click(function(){
+    var id = $(this).attr("id");
+    switch (id){
+      case "layer1":
+        $("#bg1Canvas").toggle();
+        break;
+      case "layer2":
+        $("#bg2Canvas").toggle();
+        break;
+      case "layer3":
+        $("#fg1Canvas").toggle();
+        break;
+      case "layer4":
+        $("#fg2Canvas").toggle();
+        break;
+      case "layer5":
+        $("#uiCanvas").toggle();
+        break;
+      default:
+        break;
+    }
+    $(this).toggleClass("layerOn");
   });
 
   $("#debugButton").click(function(){
