@@ -1,6 +1,3 @@
-//cpu[i].currentAction = "NONE"; //used for memory in the CPU besides checking action states. You figure out how this shit should be handled.
-//player[2].difficulty = 4; // 0 - 4 //DEFINE THIS SOMEWHERe WITH A FANCY ASS SLIDER
-//player[2].lastMash = 0; //DEFINE THIS SHIT SOMEWHERE AS WELL
 function runAI(i){
   player[i].inputs.lStickAxis[0].x = 0;
   player[i].inputs.lStickAxis[0].y = 0;
@@ -11,6 +8,9 @@ function runAI(i){
   player[i].inputs.cStickAxis[0].x = 0;
   player[i].inputs.cStickAxis[0].y = 0;
   player[i].inputs.a[0] = false;
+  //if (player[i].currentSubaction.substr(0,2) == "TUMBLE" && !(player[i].actionState == "DAMAGEFALL") {
+  //	  player[i].currentSubaction = "NONE";
+  //}
   if (player[i].currentAction == "TECH" || player[i].currentAction == "MISSEDTECH") {
 	  if (player[i].actionState == "CLIFFWAIT" || player[i].actionState == "FALLN" || player[i].actionState == "WAIT") {
 		  player[i].currentAction = "NONE";
@@ -38,6 +38,10 @@ function runAI(i){
 	  player[i].inputs.lStickAxis[0].x = inputs.lstickX;
 	  player[i].inputs.l[0] = inputs.l;
   }
+    //if (player[i].actionState == "DAMAGEFALL") {
+	//	var inputs = CPUTumble(player[i],i);
+	//	player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+	//}
   if (player[i].actionState == "DOWNWAIT") { //missed tech options
       player[i].currentAction = "MISSEDTECH";
 	  var inputs = CPUMissedTech(player[i],i);
@@ -47,7 +51,7 @@ function runAI(i){
   }
   if (player[i].actionState != "DOWNWAIT") {
 
-    if (player[i].actionState.substr(0,7) == "CAPTURE" && player[i].difficulty > 0) { //break out of grabs
+    if (player[i].actionState.substr(0,7) == "CAPTURE" && player[i].difficulty > 0 && player[i].actionState != "CAPTURECUT") { //break out of grabs
       player[i].currentAction = "MASHING";
   	  player[i].lastMash += 1;
   	  if (player[i].lastMash > (8 - (2 * (player[i].difficulty)))) {
@@ -56,11 +60,47 @@ function runAI(i){
   		  player[i].inputs.lAnalog[0] = 1;
 		  if (!player[i].inputs.a[1]) {
   		  player[i].inputs.a[0] = true;
+		  player[i].inputs.x[0] = true;
+		  player[i].inputs.lStickAxis[0].x = -1.0;
+		  player[i].inputs.cStickAxis[0].x = -1.0;
+		  //player[i].inputs.r[0] = true;
 		  } else {
+		  player[i].inputs.y[0] = true;
+		  player[i].inputs.lStickAxis[0].x = 1.0;
 		  player[i].inputs.b[0] = true;
+		  player[i].inputs.cStickAxis[0].x = 1.0;
+		  //player[i].inputs.l[0] = true;
 		  }
   	  }
     }
+	if (player[i].currentAction == "WAVESHINEANY") {
+		var inputs = CPUWaveshineAny(player[i],i);
+		player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+		player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+		player[i].inputs.x[0] = inputs.x;
+		player[i].inputs.b[0] = inputs.b;
+		player[i].inputs.l[0] = inputs.l;
+		if (player[i].inputs.l[0]){
+        player[i].inputs.lAnalog[0] = 1;
+        }
+		return ;
+	}
+	if (player[i].currentAction != "WAVESHINEANY" && (player[i].actionState == "CAPTURECUT" || player[i].currentAction == "GRABRELEASE")) {
+		currentAction = "GRABRELEASE";
+		var inputs = CPUGrabRelease(player[i],i);
+		player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+        player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+        player[i].inputs.x[0] = inputs.x;
+        player[i].inputs.b[0] = inputs.b;
+        player[i].inputs.l[0] = inputs.l;
+    	player[i].inputs.cStickAxis[0].x = inputs.cstickX;
+    	player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+    	player[i].inputs.a[0] = inputs.a;
+		if (player[i].inputs.l[0]){
+        player[i].inputs.lAnalog[0] = 1;
+        }
+		return ;
+	}
     if (player[i].currentAction == "MASHING" && !(player[i].actionState.substr(0,7) == "CAPTURE")) {
   	  player[i].currentAction == "NONE";
   	  player[i].lastMash = 0;
@@ -80,7 +120,7 @@ function runAI(i){
       player[i].inputs.b[0] = inputs.b;
     }
     if (player[i].actionState == "CLIFFWAIT" || player[i].currentAction == "LEDGEDASH"|| player[i].currentAction == "LEDGEAIRATTACK2" || player[i].currentAction == "LEDGEAIRATTACK" || player[i].currentAction == "LEDGESTALL" || player[i].currentAction == "LEDGEGETUP" || player[i].currentAction == "LEDGEATTACK" || player[i].currentAction == "LEDGESTALL" || player[i].currentAction == "LEDGEROLL" || player[i].currentAction == "LEDGEJUMP" || player[i].currentAction == "TOURNAMENTWINNER") {
-      var inputs = CPULedge(player[i],i);
+	  var inputs = CPULedge(player[i],i);
       //do inputs
       player[i].inputs.lStickAxis[0].x = inputs.lstickX;
       player[i].inputs.lStickAxis[0].y = inputs.lstickY;
@@ -96,6 +136,23 @@ function runAI(i){
     player[i].inputs.lAnalog[0] = 1;
   }
   //console.log(player[i].currentAction);
+}
+
+function NearestEnemy(cpu,p){
+  var nearestEnemy = -1;
+  var enemyDistance = 100000;
+  for (var i=0;i<4;i++){
+    if (playerType[i] > -1){
+      if (i != p){
+        var dist = Math.pow(cpu.phys.pos.x-player[i].phys.pos.x,2)+Math.pow(cpu.phys.pos.y-player[i].phys.pos.y,2);
+        if (dist < enemyDistance){
+          enemyDistance = dist;
+          nearestEnemy = i;
+        }
+      }
+    }
+  }
+  return nearestEnemy;
 }
 
 function NearestFloor(cpu) {
@@ -202,7 +259,108 @@ function CPUMissedTech(cpu,p) {
 	//console.log("3");
 	return returnInput;
 }
+function CPUWaveshineAny(cpu,p) {
+	var returnInput = {
+	lstickX : 0.0,
+    lstickY : 0.0,
+    x : false,
+	b : false,
+	l : false,
+	}
 
+	if (cpu.actionState == "WAIT") {
+		returnInput.lstickY = -1.0;
+		returnInput.b = true;
+	}
+	if (cpu.actionState == "DOWNSPECIALGROUND") {
+	  if (cpu.timer == 4) {
+		  returnInput.x = true;
+	  }
+    } else if (cpu.actionState == "KNEEBEND" && (cpu.timer == 3)) {
+	  var randomSeed = Math.floor((Math.random() * 3) + 1);
+	  if (randomSeed == 1) {//foward
+	      returnInput.lstickX = cpu.phys.face * 0.75;
+	      returnInput.lstickY = -1.0;
+		  returnInput.l = true;
+		  cpu.currentAction = "NONE";
+	  } else if (randomSeed == 2) {//in place
+		  returnInput.lstickX = 0;
+	      returnInput.lstickY = -1.0;
+		  returnInput.l = true;
+		  cpu.currentAction = "NONE";
+	  } else { //backwards
+		  returnInput.lstickX = cpu.phys.face * -0.75;
+	      returnInput.lstickY = -1.0;
+		  returnInput.l = true;
+		  cpu.currentAction = "NONE";
+	  }
+    }
+	return returnInput;
+}
+function CPUGrabRelease(cpu,p) {
+  var returnInput = {
+    lstickX : 0.0,
+    lstickY : 0.0,
+    x : false,
+    b : false,
+    l : false,
+    cstickX : 0.0,
+    cstickY : 0.0,
+    a : false
+  };
+  if (cpu.actionState == "WAIT" || cpu.actionState == "CAPTURECUT") {
+    if (cS[p] == 2) {//is fox
+  	  var randomSeed = Math.floor((Math.random() * 125) + 1);
+	  if (randomSeed < 4) { //waveshine
+		  returnInput.b = true;
+		  returnInput.lstickY = -1.0;
+		  cpu.currentAction = "WAVESHINEANY";
+		  return returnInput;
+	  } else if (randomSeed < 45) {//jab
+		  returnInput.a = true;
+		  //cpu.currentAction = "NONE";
+	  } else if (randomSeed == 85) {//roll
+		  returnInput.l = true;
+		  var randomSeed1 = Math.floor((Math.random() * 3) + 1);
+		  if (randomSeed1 == 1) {
+			  returnInput.cstickX = 1.0;
+		  } else if (randomSeed1 == 2) {
+			  returnInput.cstickY = -1.0;
+		  } else {
+			  returnInput.cstickX = -1.0;
+		  }
+		  //cpu.currentAction = "NONE";
+	  } else if (randomSeed <= 125) {//jump
+		  returnInput.x = true;
+		  //cpu.currentAction = "NONE";
+	  }
+    } else { //all other characters
+	  var randomSeed = Math.floor((Math.random() * 5) + 1);
+	  if (randomSeed == 1) { //f-smash
+		  returnInput.cstickX = cpu.phys.face;
+		  //cpu.currentAction = "NONE";
+	  } else if (randomSeed == 2) {//jab
+		  returnInput.a = true;
+		  //cpu.currentAction = "NONE";
+	  } else if (randomSeed == 3) {//roll
+		  returnInput.l = true;
+		  var randomSeed1 = Math.floor((Math.random() * 3) + 1);
+		  if (randomSeed1 == 1) {
+			  returnInput.cstickX = 1.0;
+		  } else if (randomSeed1 == 2) {
+			  returnInput.cstickY = -1.0;
+		  } else {
+			  returnInput.cstickX = -1.0;
+		  }
+		  //cpu.currentAction = "NONE";
+	  } else if (randomSeed == 4) {//jump
+		  returnInput.x = true;
+		  //cpu.currentAction = "NONE";
+	  }
+	}
+  }
+  return returnInput;
+}
 function CPULedge(cpu,p) {
   //var returnInput = [0.0,0.0,false,false,0.0,0.0,0.0,false];
   var returnInput = {
@@ -485,6 +643,7 @@ function CPUrecover(cpu,p) {
   }
   return returnInput;
 }
+//player[i].phys.grounded
 //this.phys.pos.y
 //this.actionState
 //player[p].inputs.x[0] = true
