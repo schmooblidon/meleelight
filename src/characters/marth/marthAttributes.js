@@ -30,7 +30,7 @@ charAttributes[0] = {
   modelScale : 1.15,
   weight : 87,
   waitAnimSpeed : 1,
-  walljump : true,
+  walljump : false,
   hurtboxOffset : [4,18],
   ledgeSnapBoxOffset : [14,12,22],
   shieldOffset : [5,40],

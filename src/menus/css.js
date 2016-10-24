@@ -21,6 +21,12 @@ whichTokenGrabbed = [-1,-1,-1,-1];
 occupiedToken = [false,false,false,false];
 bHold = [0,0,0,0];
 
+cpuSlider = [new Vec2D(152+15+166+0,595),new Vec2D(152+15+166+225,595),new Vec2D(152+15+166+450,595),new Vec2D(152+15+166+675,595)];
+
+cpuGrabbed = [false,false,false,false];
+whichCpuGrabbed = [-1,-1,-1,-1];
+occupiedCpu = [false,false,false,false];
+
 readyToFight = false;
 
 rtfFlash = 25;
@@ -139,9 +145,28 @@ function cssControls(i){
 
       }
     }
+    else if (cpuGrabbed[i]){
+      handPos[i].y = cpuSlider[whichCpuGrabbed[i]].y+15;
+      if (handPos[i].x < 152+15+whichCpuGrabbed[i]*225){
+        handPos[i].x = 152+15+whichCpuGrabbed[i]*225;
+      }
+      if (handPos[i].x > 152+15+166+whichCpuGrabbed[i]*225){
+        handPos[i].x = 152+15+166+whichCpuGrabbed[i]*225;
+      }
+      cpuSlider[whichCpuGrabbed[i]].x = handPos[i].x;
+      cpuDifficulty[whichCpuGrabbed[i]] = Math.round((cpuSlider[whichCpuGrabbed[i]].x-whichCpuGrabbed[i]*225-152-15)*3/166)+1;
+      player[whichCpuGrabbed[i]].difficulty = cpuDifficulty[whichCpuGrabbed[i]];
+      if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
+        cpuGrabbed[i] = false;
+        occupiedCpu[whichCpuGrabbed[i]] = false;
+        whichCpuGrabbed[i] = -1;
+        handType[i] = 0;
+        player[i].inputs.a[1] = true;
+      }
+    }
     else {
       handType[i] = 0;
-      console.log("test");
+      //console.log("test");
       tokenPos[whichTokenGrabbed[i]] = new Vec2D(518+(whichTokenGrabbed[i]%2)*40+chosenChar[whichTokenGrabbed[i]]*93,268+(whichTokenGrabbed[i]>1?40:0));
       //tokenPos[i] = new Vec2D(518+(i%2)*40,268+(i>1?40:0));
       //tokenGrabbed[i] = false;
@@ -189,6 +214,23 @@ function cssControls(i){
       if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
         sounds.menuSelect.play();
         versusMode = 1 - versusMode;
+      }
+    }
+    if (!cpuGrabbed[i]){
+      for (var s=0;s<4;s++){
+        if (playerType[s] == 1){
+          if (!occupiedCpu[s]){
+            if (handPos[i].y >= cpuSlider[s].y-25 && handPos[i].y <= cpuSlider[s].y+25 && handPos[i].x >= cpuSlider[s].x-25 && handPos[i].x <= cpuSlider[s].x+25){
+              if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
+                cpuGrabbed[i] = true;
+                whichCpuGrabbed[i] = s;
+                occupiedCpu[s] = true;
+                handType[i] = 2;
+                break;
+              }
+            }
+          }
+        }
       }
     }
 
@@ -536,38 +578,7 @@ function drawCSS(){
     }
     ui.fillText(text,87+i*225/(14/8),690)
     ui.restore();
-    ui.fillRect(160+i*225,620,180,40);
-    ui.strokeRect(160+i*225,620,180,40);
-    ui.font = "900 24px Arial";
-    if (playerType[i] == 0){
-    ui.fillStyle = "rgb(42, 42, 42)";
-      ui.fillRect(162+i*225,622,22,37);
-      ui.fillRect(316+i*225,622,22,37);
-      ui.fillStyle = "rgb(83, 83, 83)";
-      ui.fillText("?",166+i*225,648);
-      ui.fillText("x",319+i*225,647);
-    }
-    ui.font = "500 28px Arial";
-    ui.fillStyle = "white";
-    switch(chosenChar[i]){
-      case 0:
-        var text = "Marth";
-        break;
-      case 1:
-        var text = "Jigglypuff";
-        break;
-      case 2:
-        var text = "Fox";
-        break;
-      default:
-        var text = "Unknown";
-        break;
-    }
-    if (hasTag[i]){
-      var text = tagText[i];
-    }
-    ui.textAlign = "center";
-    ui.fillText(text,250+i*225,650);
+
     ui.textAlign = "start";
   }
   }
@@ -693,6 +704,75 @@ function drawCSS(){
         ui.fill();
       }
       ui.globalAlpha = 1;
+      if (playerType[i] == 1){
+        ui.fillStyle = "rgba(0,0,0,0.5)";
+        ui.strokeStyle = "rgb(102, 102, 102)";
+        ui.fillRect(152+i*225,555,196,85);
+        ui.strokeRect(152+i*225,555,196,85);
+        ui.fillStyle = "rgb(177, 177, 177)";
+        ui.save();
+        ui.font = "900 18px Arial";
+        ui.scale(1.2,1);
+        ui.fillText("CPU Level",(152+10+i*225)/1.2,575);
+        ui.restore();
+        var sliderGrad = ui.createLinearGradient(152+10+i*225,0,152+196-20+i*225,0);
+        sliderGrad.addColorStop(0,"rgb(0, 47, 168)");
+        sliderGrad.addColorStop(0.5,"rgb(168, 162, 0)");
+        sliderGrad.addColorStop(1,"rgb(168, 0, 0)");
+        ui.fillStyle = sliderGrad;
+        ui.fillRect(152+15+i*225,592,166,5);
+        ui.fillStyle = "black";
+        ui.fillRect(152+18+i*225,594,160,1);
+        ui.fillStyle = "rgb(214, 35, 35)";
+        ui.beginPath();
+        ui.arc(cpuSlider[i].x,cpuSlider[i].y,17,0,twoPi);
+        ui.closePath();
+        ui.fill();
+        ui.save();
+        ui.fillStyle = "black";
+        ui.strokeStyle = "white";
+        ui.lineWidth = 2;
+        ui.font = "900 30px Arial";
+        ui.textAlign = "center";
+        ui.strokeText(player[i].difficulty,cpuSlider[i].x,cpuSlider[i].y+11);
+        ui.fillText(player[i].difficulty,cpuSlider[i].x,cpuSlider[i].y+11);
+        ui.restore();
+      }
+      ui.fillStyle = "black";
+      ui.strokeStyle = "rgb(102, 102, 102)";
+      ui.fillRect(160+i*225,620,180,40);
+      ui.strokeRect(160+i*225,620,180,40);
+      ui.font = "900 24px Arial";
+      if (playerType[i] == 0){
+      ui.fillStyle = "rgb(42, 42, 42)";
+        ui.fillRect(162+i*225,622,22,37);
+        ui.fillRect(316+i*225,622,22,37);
+        ui.fillStyle = "rgb(83, 83, 83)";
+        ui.fillText("?",166+i*225,648);
+        ui.fillText("x",319+i*225,647);
+      }
+      ui.font = "500 28px Arial";
+      ui.fillStyle = "white";
+      switch(chosenChar[i]){
+        case 0:
+          var text = "Marth";
+          break;
+        case 1:
+          var text = "Jigglypuff";
+          break;
+        case 2:
+          var text = "Fox";
+          break;
+        default:
+          var text = "Unknown";
+          break;
+      }
+      if (hasTag[i]){
+        var text = tagText[i];
+      }
+      ui.textAlign = "center";
+      ui.fillText(text,250+i*225,650);
+      ui.textAlign = "start";
     }
   }
   ui.font = "900 31px Arial";

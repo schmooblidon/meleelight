@@ -148,4 +148,6 @@ function playerObject(character,pos,face){
   this.colourOverlay = "";
   this.colourOverlayBool = false;
   this.currentAction = "NONE";
+  this.difficulty = 4;
+  this.lastMash = 0;
 }

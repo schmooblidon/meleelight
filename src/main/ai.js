@@ -1,7 +1,6 @@
-
-
-//pls remove marth walljump?
 //cpu[i].currentAction = "NONE"; //used for memory in the CPU besides checking action states. You figure out how this shit should be handled.
+//player[2].difficulty = 4; // 0 - 4 //DEFINE THIS SOMEWHERe WITH A FANCY ASS SLIDER
+//player[2].lastMash = 0; //DEFINE THIS SHIT SOMEWHERE AS WELL
 function runAI(i){
   player[i].inputs.lStickAxis[0].x = 0;
   player[i].inputs.lStickAxis[0].y = 0;
@@ -12,36 +11,91 @@ function runAI(i){
   player[i].inputs.cStickAxis[0].x = 0;
   player[i].inputs.cStickAxis[0].y = 0;
   player[i].inputs.a[0] = false;
-  if (player[i].hit.hitstun > 0) { //stops action if they get interrupt. pretty simple? could also expand for DI
-    player[i].currentAction = "NONE";
+  if (player[i].currentAction == "TECH" || player[i].currentAction == "MISSEDTECH") {
+	  if (player[i].actionState == "CLIFFWAIT" || player[i].actionState == "FALLN" || player[i].actionState == "WAIT") {
+		  player[i].currentAction = "NONE";
+	  }
   }
-  if (player[i].actionState == "REBIRTHWAIT") {
-     player[i].inputs.lStickAxis[0].y = -1.0;
+  if ((player[i].actionState == "DAMAGEFALL" || player[i].actionState == "DAMAGEFLYN") && (!isOffstage(player[i])) && player[i].difficulty != 0) {
+	   if(player[i].hit.hitstun <= 0) {
+		  var extra = 0;
+		  if (!player[i].phys.doubleJumped || (player[i].phys.jumpsUsed < 5 && player[i].charAttributes.multiJump)) {
+			  extra = 3
+		  }
+		  var randomSeed = Math.floor((Math.random() * (2 + extra)) + 1);
+		  if (randomSeed == 1) {//left
+			  player[i].inputs.lStickAxis[0].x = -1.0;
+		  } else if (randomSeed == 2){ //right
+			  player[i].inputs.lStickAxis[0].x = 1.0;
+		  } else {//jump
+			  player[i].inputs.x[0] = true;
+		  }
+		  player[i].currentAction = "NONE";
+		  return ;
+	  }
+	  player[i].currentAction = "TECH";
+	  var inputs = CPUTech(player[i],i);
+	  player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+	  player[i].inputs.l[0] = inputs.l;
   }
-  if (isOffstage(player[i]) && player[i].currentAction == "NONE"){
-    var inputs = CPUrecover(player[i],i);
-    //do inputs
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = inputs.lstickY;
-    player[i].inputs.x[0] = inputs.x;
-    player[i].inputs.b[0] = inputs.b;
+  if (player[i].actionState == "DOWNWAIT") { //missed tech options
+      player[i].currentAction = "MISSEDTECH";
+	  var inputs = CPUMissedTech(player[i],i);
+	  player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+	  player[i].inputs.a[0] = inputs.a;
   }
-  if (player[i].actionState == "CLIFFWAIT" || player[i].currentAction == "LEDGEDASH"|| player[i].currentAction == "LEDGEAIRATTACK2" || player[i].currentAction == "LEDGEAIRATTACK" || player[i].currentAction == "LEDGESTALL" || player[i].currentAction == "LEDGEGETUP" || player[i].currentAction == "LEDGEATTACK" || player[i].currentAction == "LEDGESTALL" || player[i].currentAction == "LEDGEROLL" || player[i].currentAction == "LEDGEJUMP" || player[i].currentAction == "TOURNAMENTWINNER") {
-    var inputs = CPULedge(player[i],i);
-    //do inputs
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = inputs.lstickY;
-    player[i].inputs.x[0] = inputs.x;
-    player[i].inputs.b[0] = inputs.b;
-    player[i].inputs.l[0] = inputs.l;
-    if (player[i].inputs.l[0]){
-      player[i].inputs.lAnalog[0] = 1;
+  if (player[i].actionState != "DOWNWAIT") {
+
+    if (player[i].actionState.substr(0,7) == "CAPTURE" && player[i].difficulty > 0) { //break out of grabs
+      player[i].currentAction = "MASHING";
+  	  player[i].lastMash += 1;
+  	  if (player[i].lastMash > (8 - (2 * (player[i].difficulty)))) {
+  		  player[i].lastMash = 0;
+  		  player[i].inputs.lStickAxis[0].y = 1.0;
+  		  player[i].inputs.lAnalog[0] = 1;
+		  if (!player[i].inputs.a[1]) {
+  		  player[i].inputs.a[0] = true;
+		  } else {
+		  player[i].inputs.b[0] = true;
+		  }
+  	  }
     }
-  	player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-  	player[i].inputs.cStickAxis[0].y = inputs.cstickY;
-  	player[i].inputs.a[0] = inputs.a;
+    if (player[i].currentAction == "MASHING" && !(player[i].actionState.substr(0,7) == "CAPTURE")) {
+  	  player[i].currentAction == "NONE";
+  	  player[i].lastMash = 0;
+    }
+    if (player[i].hit.hitstun > 0) { //stops action if they get interrupt. pretty simple? could also expand for DI
+      player[i].currentAction = "NONE";
+    }
+    if (player[i].actionState == "REBIRTHWAIT") {
+       player[i].inputs.lStickAxis[0].y = -1.0;
+    }
+    if (isOffstage(player[i]) && player[i].currentAction == "NONE"){
+      var inputs = CPUrecover(player[i],i);
+      //do inputs
+      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.x[0] = inputs.x;
+      player[i].inputs.b[0] = inputs.b;
+    }
+    if (player[i].actionState == "CLIFFWAIT" || player[i].currentAction == "LEDGEDASH"|| player[i].currentAction == "LEDGEAIRATTACK2" || player[i].currentAction == "LEDGEAIRATTACK" || player[i].currentAction == "LEDGESTALL" || player[i].currentAction == "LEDGEGETUP" || player[i].currentAction == "LEDGEATTACK" || player[i].currentAction == "LEDGESTALL" || player[i].currentAction == "LEDGEROLL" || player[i].currentAction == "LEDGEJUMP" || player[i].currentAction == "TOURNAMENTWINNER") {
+      var inputs = CPULedge(player[i],i);
+      //do inputs
+      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.x[0] = inputs.x;
+      player[i].inputs.b[0] = inputs.b;
+      player[i].inputs.l[0] = inputs.l;
+    	player[i].inputs.cStickAxis[0].x = inputs.cstickX;
+    	player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+    	player[i].inputs.a[0] = inputs.a;
+    }
   }
-  console.log(player[i].currentAction);
+  if (player[i].inputs.l[0]){
+    player[i].inputs.lAnalog[0] = 1;
+  }
+  //console.log(player[i].currentAction);
 }
 
 function NearestFloor(cpu) {
@@ -88,6 +142,66 @@ function isOffstage(cpu){
   }
   return true;
 }
+function CPUTech(cpu, p) {
+	var returnInput = {
+    lstickX : 0.0,
+  	l : false,
+  	lAnalog: 0.0
+	};
+    //console.log("1");
+	console.log("pos" , cpu.phys.pos.y);
+	console.log("nearest" , NearestFloor(cpu));
+	if (cpu.phys.pos.y - NearestFloor(cpu) <= 3 && cpu.phys.kVel.y + cpu.phys.cVel.y <= 0) {
+	   console.log("trying to tech");
+  	var MissedTechPercent = 85 - (cpu.difficulty * 20);//how often the CPU miss techs. difficulty: {1: 65%,2: 45%,3: 25%,4: 5%}
+  	var randomSeed = Math.floor((Math.random() * 100 + MissedTechPercent) + 1);
+  	//console.log("3");
+  	if (randomSeed <= 34) {//inplace
+  		returnInput.l = true;
+  		returnInput.lAnalog = 1.0;
+      console.log("techinplace");
+  	} else if (randomSeed <= 67) {//roll left
+  	    returnInput.l = true;
+  		returnInput.lstickX = -1.0;
+  		returnInput.lAnalog = 1.0;
+      console.log("techrollleft");
+  	} else if (randomSeed <= 100) { //roll right
+  	    returnInput.l = true;
+  		returnInput.lstickX = 1.0;
+  		returnInput.lAnalog = 1.0;
+      console.log("techrollright");
+  	} //otherwise miss tech
+  	//console.log("4");
+	}
+	return returnInput;
+
+}
+function CPUMissedTech(cpu,p) {
+	var returnInput = {
+    lstickX : 0.0,
+    lstickY : 0.0,
+	   a : false
+	};
+	//console.log(randomSeed);
+	var randomSeed = Math.floor((Math.random() * 10) + 1);
+	//console.log(randomSeed);
+	//console.log("2");
+	if (randomSeed <= 2) {//getup attack
+		returnInput.a = true;
+		//returnInput.lstickX = -1.0;
+	} else if (randomSeed <= 4) {//roll
+		var randomSeeds = Math.floor((Math.random() * 2) + 1);
+		if (randomSeeds == 1) { //left
+			returnInput.lstickX = -1.0;
+		} else { //right
+			returnInput.lstickX = 1.0;
+		}
+	} else if (randomSeed <= 6) {//getup
+		returnInput.lstickY = 1.0;
+	} //else do nothing
+	//console.log("3");
+	return returnInput;
+}
 
 function CPULedge(cpu,p) {
   //var returnInput = [0.0,0.0,false,false,0.0,0.0,0.0,false];
@@ -110,7 +224,7 @@ function CPULedge(cpu,p) {
     }
 	}
 	if (cpu.currentAction == "NONE") {
-		var randomSeed = Math.floor((Math.random() * 25) + 1); //highest number of randomSeed can be increased or decrease to add artificial "difficulty level". Higher seeds = less difficulty
+		var randomSeed = Math.floor((Math.random() * 30) + 1); //highest number of randomSeed can be increased or decrease to add artificial "difficulty level". Higher seeds = less difficulty
     var randomSeed = 20;
 		if (randomSeed <= 3) {//normal getup
 			cpu.currentAction = "LEDGEGETUP";
@@ -128,17 +242,17 @@ function CPULedge(cpu,p) {
 			cpu.currentAction = "LEDGEJUMP";
 			returnInput.lstickY = -1.0;
 			returnInput.x = true;
-		} else if (randomSeed <= 15) {//ledgedash
+		} else if (randomSeed <= 16) {//ledgedash
 			cpu.currentAction = "LEDGEDASH";
 			returnInput.lstickY = -1.0;
 			returnInput.x = true;
-		} else if (randomSeed <= 17) {//ledgestall
-		  cpu.currentAction = "LEDGESTALL";
-			returnInput.lstickY = -1.0;
 		} else if (randomSeed <= 20) {//ledgeairattack
 			cpu.currentAction = "LEDGEAIRATTACK";
 			returnInput.lstickY = -1.0;
-		} //else does nothing
+		} else if (randomSeed <= 22) {//ledgestall
+		  cpu.currentAction = "LEDGESTALL";
+			returnInput.lstickY = -1.0;
+		}//else does nothing
 	} else if (cpu.currentAction == "LEDGEDASH") {
 		//fox waits 4 frames
 		//jiggs waits 5 frames
@@ -188,7 +302,8 @@ function CPULedge(cpu,p) {
 				if (randomSeed <= 2) { //fair
 					returnInput.cstickX = cpu.phys.face;
 				} else if (randomSeed == 3) { //nair
-					returnInput.a = true;
+					returnInput.lstickX = 0;
+				    returnInput.a = true;
 				} else { //uair
 					returnInput.cstickY = 1.0;
 				}
@@ -207,7 +322,8 @@ function CPULedge(cpu,p) {
 				if (randomSeed <= 2) { //fair
 					returnInput.cstickX = cpu.phys.face;
 				} else if (randomSeed == 3) { //nair
-					returnInput.a = true;
+					returnInput.lstickX = 0;
+				    returnInput.a = true;
 				} else { //uair
 					returnInput.cstickY = 1.0;
 				}
@@ -222,10 +338,13 @@ function CPULedge(cpu,p) {
       }
 			else if(cpu.timer == 6) {
 				var randomSeed = Math.floor((Math.random() * 4) + 1);//aerial to chose
-        returnInput.lstickX = cpu.phys.face;
-				if (randomSeed <= 2) { //dair
+				returnInput.cstickX = 0.0;
+				returnInput.a = false;
+                returnInput.lstickX = cpu.phys.face;
+				if (randomSeed <= 2) { //nair
+				    returnInput.lstickX = 0;
 				    returnInput.a = true;
-				} else if (randomSeed == 3) { //nair
+				} else if (randomSeed == 3) { //dair
 					returnInput.cstickY = -1.0;
 				} else { //uair
 					returnInput.cstickY = 1.0;
@@ -287,7 +406,7 @@ function CPUrecover(cpu,p) {
     x : false,
     b : false
   }; //format is [x joystick float, y joystick float, x button, b button]
-  if (cpu.actionState == "JUMPF" || cpu.actionState == "JUMPB" || cpu.actionState == "FALLAERIAL" || cpu.actionState == "JUMPAERIALB" || cpu.actionState == "JUMPAERIALF" || cpu.actionState == "DAMAGEFALL" || cpu.actionState == "FALL" || cpu.actionState == "FALLSPECIAL") {
+  if (cpu.actionState.substr(0,4) == "JUMP" || cpu.actionState == "FALLAERIAL" || cpu.actionState == "DAMAGEFALL" || cpu.actionState == "FALL" || cpu.actionState == "FALLSPECIAL") {
     //not in up-b or some shit
     if (cpu.phys.pos.x < closest.x) {
       returnInput.lstickX = 1.0;
@@ -295,35 +414,58 @@ function CPUrecover(cpu,p) {
       returnInput.lstickX = -1.0;
     }
 
-    if (cpu.phys.cVel.y <= 0) { //is falling
+    if (cpu.phys.cVel.y <= 0 && closest.y - cpu.phys.pos.y > -5) { //is falling
       if (!cpu.phys.doubleJumped || (cpu.phys.jumpsUsed < 5 && cpu.charAttributes.multiJump)) { //if jumps isn't .jumps thats unintuitive on your part. only tries to jump if it can jump
         var randomSeed = Math.floor((Math.random() * 1000) + 1);
 
         if (randomSeed <= 300) { //will jump
           returnInput.x = true;
-        } else if (randomSeed <= 310) { //will up-b
+        } else if (randomSeed <= 301) { //will up-b
 		        if (cS[p] != 1) { //not jigglypuff
+			  returnInput.lstickX = 0.0;
               returnInput.lstickY = 1.0;
               returnInput.b = true;
             }
 			  }
       } else {
         if (cS[p] == 0) { //is marth
-    		  if (Math.abs(closest.x - cpu.phys.pos.x) <= 52) {
+    		  if ((Math.abs(closest.x - cpu.phys.pos.x) <= 20 && closest.y - cpu.phys.pos.y > 30) || closest.y - cpu.phys.pos.y > 60) {
     			  returnInput.lstickY = 1.0;
     		    returnInput.b = true;
     		  } //else moves towards ledge
 		    }
+		if (cS[p] == 2) { //is fox
+		    if ((Math.abs(closest.y - cpu.phys.pos.y) <= -20) && Math.abs(closest.x - cpu.phys.pos.x) >= 77) {//can side-b?
+				randomSeed = Math.floor((Math.random() * 10) + 1);
+				if (randomSeed <= 1) {
+					returnInput.lstickX = 1 * Math.sign(closest.x - cpu.phys.pos.x);
+					returnInput.b = true;
+				} else if (randomSeed <= 4) {
+					returnInput.lstickX = 0.0;
+					returnInput.lstickY = 1.0;
+					returnInput.b = true;
+				}
+			}
+			if (closest.y - cpu.phys.pos.y >= 40 || Math.abs(closest.x - cpu.phys.pos.x) >= 50) {
+				returnInput.lstickX = 0.0;
+				returnInput.lstickY = 1.0;
+				returnInput.b = true;
+			}
+		  }
 		  }
     }
+	if (cS[p] == 2 && returnInput.lStickY == 1.0) {
+		returnInput.lStickX = 0.0;
+	}
   } else {
     // if charSelect of player num is 2 meaning Fox
     if (cS[p] == 2) {
       //perfect imperfect firefox angles
       if (cpu.actionState == "UPSPECIAL") {
         if (cpu.timer == 41) {
-          var imperfection = Math.floor(((Math.random() * 20) + 1) - 10) / 2000;
-          var theta = Math.atan((closest.y - (cpu.phys.ledgeSnapBoxF.max.y-cpu.phys.ledgeSnapBoxF.min.y)/2) / (closest.x - cpu.phys.pos.x)) + imperfection; //some trig to get angles
+          //var imperfection = Math.floor(((Math.random() * 20) + 1) - 10) / 2000;
+		  var imperfection = 0;
+          var theta = Math.atan((closest.y - cpu.phys.pos.y) / (closest.x - cpu.phys.pos.x)) + imperfection; //some trig to get angles //(cpu.phys.ledgeSnapBoxF.max.y-cpu.phys.ledgeSnapBoxF.min.y)/2
           var newX = Math.cos(theta);//* Math.sqrt(2);
           var newY = Math.sin(theta); //* Math.sqrt(2);
           if (closest.x < cpu.phys.pos.x){
@@ -343,3 +485,10 @@ function CPUrecover(cpu,p) {
   }
   return returnInput;
 }
+//this.phys.pos.y
+//this.actionState
+//player[p].inputs.x[0] = true
+//player[p].inputs.b[0] = true
+//player[p].inputs.lStickAxis[0].y =
+//player[p].inputs.lStickAxis[0].x =
+//player[p].phys.face

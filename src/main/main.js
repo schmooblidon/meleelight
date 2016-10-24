@@ -82,6 +82,8 @@ playerAmount = 0;
 
 playerType = [-1,-1,-1,-1];
 
+cpuDifficulty = [4,4,4,4];
+
 ports = 0;
 activePorts = [];
 
@@ -1301,6 +1303,7 @@ function buildPlayerObject(i){
   player[i] = new playerObject(cS[i],startingPoint[i],startingFace[i]);
   player[i].phys.ECB1 = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
   player[i].phys.ECBp = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
+  player[i].difficulty = cpuDifficulty[i];
 }
 
 for (var i=0;i<4;i++){
