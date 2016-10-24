@@ -3028,10 +3028,10 @@ puff.DOWNATTACK = {
         player[p].hitboxes.frame = 0;
         sounds.sword2.play();
       }
-      if (player[p].timer > 20 && player[p].timer < 24){
+      if (player[p].timer > 20 && player[p].timer < 22){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer == 24){
+      if (player[p].timer == 22){
         turnOffHitboxes(p);
       }
       if (player[p].timer == 30){
