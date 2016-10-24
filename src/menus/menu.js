@@ -154,7 +154,7 @@ function drawMainMenu(){
   bgGrad.addColorStop(0,"rgba(12, 11, 54, 1)");
   bgGrad.addColorStop(1,"rgba(1, 2, 15, 1)");
   bg1.fillStyle=bgGrad;
-  bg1.fillRect(0,0,canvasBG1.width,canvasBG1.height);
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
 
   bg2.save();
   bg2.fillStyle = "rgba(18, 16, 85, 0.4)";

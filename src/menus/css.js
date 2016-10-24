@@ -212,7 +212,7 @@ function cssControls(i){
           hasTag[i] = true;
           choosingTag = i;
           ui.fillStyle = "rgba(0,0,0,0.8)";
-          ui.fillRect(0,0,canvasUI.width,canvasUI.height);
+          ui.fillRect(0,0,layers.UI.width,layers.UI.height);
           $("#pTagEdit"+i).show().select();
 
         }
@@ -240,7 +240,7 @@ function drawCSS(){
   bgGrad.addColorStop(0,"rgb(17, 12, 56)");
   bgGrad.addColorStop(1,"black");
   bg1.fillStyle=bgGrad;
-  bg1.fillRect(0,0,canvasBG1.width,canvasBG1.height);
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   ui.fillStyle = "rgb(85, 96, 107)";
   ui.strokeStyle = "rgb(144, 152, 161)";
   ui.save();
@@ -264,16 +264,16 @@ function drawCSS(){
   ui.restore();
   ui.save();
   ui.lineWidth = 3;
-  ui.translate(canvasUI.width/2,canvasUI.height/2+20);
+  ui.translate(layers.UI.width/2,layers.UI.height/2+20);
   for (var i=0;i<2;i++){
     ui.rotate(i*Math.PI);
     ui.beginPath();
-    ui.moveTo(-10-canvasUI.width/2,-250);
+    ui.moveTo(-10-layers.UI.width/2,-250);
     ui.lineTo(-300,-250);
     ui.bezierCurveTo(-240,-250,-240,-330,-180,-330);
-    ui.lineTo(10+canvasUI.width/2,-330);
-    ui.lineTo(10+canvasUI.width/2,-30-canvasUI.height/2);
-    ui.lineTo(-10-canvasUI.width/2,-30-canvasUI.height/2);
+    ui.lineTo(10+layers.UI.width/2,-330);
+    ui.lineTo(10+layers.UI.width/2,-30-layers.UI.height/2);
+    ui.lineTo(-10-layers.UI.width/2,-30-layers.UI.height/2);
     ui.closePath();
     ui.fill();
     ui.stroke();
@@ -860,7 +860,7 @@ function drawCSS(){
 
     if (choosingTag > -1){
       ui.fillStyle = "rgba(0,0,0,0.8)";
-      ui.fillRect(0,0,canvasUI.width,canvasUI.height);
+      ui.fillRect(0,0,layers.UI.width,layers.UI.height);
       ui.fillStyle = "white";
       ui.textAlign = "center";
       //ui.fillText(text,250+i*225,650);

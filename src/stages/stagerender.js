@@ -109,7 +109,7 @@ function drawBackground(){
   bgGrad.addColorStop(0,"rgb(24, 17, 66)");
   bgGrad.addColorStop(1,"black");
   bg1.fillStyle=bgGrad;
-  bg1.fillRect(-100,-100,canvasBG1.width+200,canvasBG1.height+200);
+  bg1.fillRect(-100,-100,layers.BG1.width+200,layers.BG1.height+200);
   for (var p=0;p<20;p++){
     if (Math.abs(bgStars[p].pos.x) > 600 || Math.abs(bgStars[p].pos.y) > 400){
       bgStars[p] = new bgStar();

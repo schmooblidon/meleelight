@@ -22,7 +22,7 @@ function drawStartUp(){
   ui.fillStyle = "rgba(0, 0, 0,0.1)";
   ui.lineWidth = 3;
   ui.strokeStyle = "rgba(255, 255, 255,0.1)";
-  ui.fillRect(0,0,canvasUI.width,canvasUI.height);
+  ui.fillRect(0,0,layers.UI.width,layers.UI.height);
   if (startUpTimer > 30){
     if (startUpTimer > 40){
       for (var i=0;i<particles.length;i++){
@@ -38,18 +38,18 @@ function drawStartUp(){
     ui.fillStyle = "rgba(255,255,255,"+Math.min(1,((startUpTimer-30)/30))+")";
     ui.font="900 "+Math.min(70,(startUpTimer-30)*5)+"px Arial";
     ui.textAlign = "center";
-    ui.fillText("schmoo",canvasUI.width/2,canvasUI.height/2);
+    ui.fillText("schmoo",layers.UI.width/2,layers.UI.height/2);
     ui.font="900 "+Math.min(40,(startUpTimer-30)*3)+"px Arial";
-    ui.fillText("games",canvasUI.width/2,canvasUI.height/2+30);
+    ui.fillText("games",layers.UI.width/2,layers.UI.height/2+30);
 
     ui.strokeStyle = "rgba(255,255,255,"+Math.max(0,((100-startUpTimer)/200))+")";
     ui.font="900 "+(startUpTimer-30)*8+"px Arial";
-    ui.strokeText("schmoo",canvasUI.width/2,canvasUI.height/2);
+    ui.strokeText("schmoo",layers.UI.width/2,layers.UI.height/2);
     ui.font="900 "+(startUpTimer-30)*5+"px Arial";
-    ui.strokeText("games",canvasUI.width/2,canvasUI.height/2+30);
+    ui.strokeText("games",layers.UI.width/2,layers.UI.height/2+30);
     if (startUpTimer > 120){
       ui.fillStyle = "rgba(0,0,0,"+(startUpTimer-120)/60+")";
-      ui.fillRect(0,0,canvasUI.width,canvasUI.height);
+      ui.fillRect(0,0,layers.UI.width,layers.UI.height);
     }
     if (startUpTimer > 180){
       gameMode = 0;

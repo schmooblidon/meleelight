@@ -174,6 +174,7 @@ stage = {
   respawnFace : [1,-1,1,-1],
   blastzone : new Box2D([-224,-108.8],[224,200]),
   ledge : [[0,0],[0,1]],
+  ledgePos : [new Vec2D(-68.4,0),new Vec2D(68.4,0)],
   scale : 4.5,
   offset : [600,480]
 }
@@ -882,15 +883,35 @@ function interpretInputs(i,active){
 }
 
 bg1 = 0;
-canvasBG1 = 0;
 bg2 = 0;
-canvasBG2 = 0;
 fg1 = 0;
-canvasFG1 = 0;
 fg2 = 0;
-canvasFG2 = 0;
 ui = 0;
-canvasUI = 0;
+c = 0;
+canvasMain = 0;
+layers = {
+  BG1 : 0,
+  BG2 : 0,
+  FG1 : 0,
+  FG2 : 0,
+  UI : 0
+};
+layerSwitches = {
+  BG1 : true,
+  BG2 : true,
+  FG1 : true,
+  FG2 : true,
+  UI : true
+};
+
+function renderToMain(){
+  var keys = Object.keys(layers);
+  for (var i=0;i<keys.length;i++){
+    if (layerSwitches[keys[i]]){
+      c.drawImage(layers[keys[i]],0,0)
+    }
+  }
+}
 
 function renderVfx(){
   var popQueue = [];
@@ -931,9 +952,12 @@ function drawVfx(name,pos,face,f){
 
 function update(i){
   if (!starting){
-    if (playerType[i] == 0){
-      if (currentPlayers[i] != -1){
+    if (currentPlayers[i] != -1){
+      if (playerType[i] == 0){
         interpretInputs(i,true);
+      }
+      else {
+        runAI(i);
       }
     }
   }
@@ -1157,11 +1181,11 @@ function gameTick(){
 
 function clearScreen(){
   bg1.fillStyle = "rgb(0, 0, 0)";
-  bg1.fillRect(0,0,canvasBG1.width,canvasBG1.height);
-  bg2.clearRect(0,0,canvasBG2.width,canvasBG2.height);
-  fg1.clearRect(0,0,canvasFG1.width,canvasFG1.height);
-  fg2.clearRect(0,0,canvasFG2.width,canvasFG2.height);
-  ui.clearRect(0,0,canvasUI.width,canvasUI.height);
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+  bg2.clearRect(0,0,layers.BG2.width,layers.BG2.height);
+  fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
+  fg2.clearRect(0,0,layers.FG2.width,layers.FG2.height);
+  ui.clearRect(0,0,layers.UI.width,layers.UI.height);
 }
 
 otherFrame = true;
@@ -1272,6 +1296,7 @@ function renderTick(){
       renderForeground();
     }
     frameByFrameRender = false;
+    renderToMain();
   //console.log(performance.now());
   }
 }
@@ -1469,18 +1494,30 @@ $(document).ready(function(){
   $("#controllerButton").click(function(){
     $("#controllerSupportContainer").toggle();
   });
-  canvasBG1 = document.getElementById("bg1Canvas");
-  bg1 = canvasBG1.getContext("2d");
-  canvasBG2 = document.getElementById("bg2Canvas");
-  bg2 = canvasBG2.getContext("2d");
-  canvasFG1 = document.getElementById("fg1Canvas");
-  fg1 = canvasFG1.getContext("2d");
-  canvasFG2 = document.getElementById("fg2Canvas");
-  fg2 = canvasFG2.getContext("2d");
-  canvasUI = document.getElementById("uiCanvas");
-  ui = canvasUI.getContext("2d");
+  layers.BG1 = document.createElement('canvas');
+  layers.BG1.width = 1200;
+  layers.BG1.height = 750;
+  bg1 = layers.BG1.getContext("2d");
+  layers.BG2 = document.createElement('canvas');
+  layers.BG2.width = 1200;
+  layers.BG2.height = 750;
+  bg2 = layers.BG2.getContext("2d");
+  layers.FG1 = document.createElement('canvas');
+  layers.FG1.width = 1200;
+  layers.FG1.height = 750;
+  fg1 = layers.FG1.getContext("2d");
+  layers.FG2 = document.createElement('canvas');
+  layers.FG2.width = 1200;
+  layers.FG2.height = 750;
+  fg2 = layers.FG2.getContext("2d");
+  layers.UI = document.createElement('canvas');
+  layers.UI.width = 1200;
+  layers.UI.height = 750;
+  ui = layers.UI.getContext("2d");
   bg1.fillStyle = "rgb(0, 0, 0)";
-  bg1.fillRect(-100,-100,canvasBG1.width+200,canvasBG1.height+200);
+  bg1.fillRect(-100,-100,layers.BG1.width+200,layers.BG1.height+200);
+  canvasMain = document.getElementById("mainCanvas");
+  c = canvasMain.getContext("2d");
   gameTick();
   renderTick();
   var mX = Math.max(($(window).width()-1200)/2,0);
@@ -1525,19 +1562,19 @@ $(document).ready(function(){
     var id = $(this).attr("id");
     switch (id){
       case "layer1":
-        $("#bg1Canvas").toggle();
+        layerSwitches.BG1 ^= true;
         break;
       case "layer2":
-        $("#bg2Canvas").toggle();
+        layerSwitches.BG2 ^= true;
         break;
       case "layer3":
-        $("#fg1Canvas").toggle();
+        layerSwitches.FG1 ^= true;
         break;
       case "layer4":
-        $("#fg2Canvas").toggle();
+        layerSwitches.FG2 ^= true;
         break;
       case "layer5":
-        $("#uiCanvas").toggle();
+        layerSwitches.UI ^= true;
         break;
       default:
         break;

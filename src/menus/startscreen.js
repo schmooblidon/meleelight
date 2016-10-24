@@ -21,7 +21,7 @@ function drawStartScreen(){
   grd.addColorStop(0.75,"#35005b");
   grd.addColorStop(1,"#38005b");
   bg1.fillStyle = grd;
-  bg1.fillRect(0,0,canvasBG1.width,canvasBG1.height);
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   bg2.save();
   bg2.scale(1.5,1);
   bg2.shadowBlur=60;
@@ -79,7 +79,7 @@ function drawStartScreen(){
   grd.addColorStop(0,"rgb(51, 51, 51)");
   grd.addColorStop(1,"rgba(51, 51, 51, 0)");
   bg2.fillStyle = grd;
-  bg2.fillRect(0,0,canvasBG2.width,canvasBG2.height);
+  bg2.fillRect(0,0,layers.BG2.width,layers.BG2.height);
   bg2.save();
   bg2.lineWidth = 3;
   bg2.strokeStyle = "rgba(149, 255, 131, 0.12)";

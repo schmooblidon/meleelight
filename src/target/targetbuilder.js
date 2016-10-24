@@ -976,7 +976,7 @@ function renderTargetBuilder(){
 
   if (builderPaused){
     ui.fillStyle = "rgba(0,0,0,0.4)";
-    ui.fillRect(0,0,canvasUI.width,canvasUI.height);
+    ui.fillRect(0,0,layers.UI.width,layers.UI.height);
     for (var i=0;i<3;i++){
       if (builderPauseSelected == i){
         ui.fillStyle = "rgba(255,255,255,0.9)";

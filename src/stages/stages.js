@@ -11,6 +11,7 @@ stages = [{
     respawnFace : [1,-1,1,-1],
     blastzone : new Box2D([-224,-108.8],[224,200]),
     ledge : [[0,0],[0,1]],
+    ledgePos : [new Vec2D(-68.4,0),new Vec2D(68.4,0)],
     scale : 4.5,
     offset : [600,480],
     movingPlatforms : function(){}
@@ -27,6 +28,7 @@ stages = [{
     respawnFace : [1,-1,1,-1],
     blastzone : new Box2D([-175.7,-91],[173.6,168]),
     ledge : [[0,0],[0,1]],
+    ledgePos : [new Vec2D(-56,0),new Vec2D(56,0)],
     scale : 5,
     offset : [600,430],
     movingPlatforms : function(){
@@ -82,6 +84,7 @@ stages = [{
     respawnFace : [1,-1,1,-1],
     blastzone : new Box2D([-230,-111],[230,180]),
     ledge : [[0,0],[0,1]],
+    ledgePos : [new Vec2D(-87.7,0),(new Vec2D(87.7,0))],
     scale : 4.2,
     offset : [600,500],
     movingPlatforms : function(){}
@@ -98,6 +101,7 @@ stages = [{
     respawnFace : [1,-1,1,-1],
     blastzone : new Box2D([-255,-123],[255,250]),
     ledge : [[0,0],[0,1]],
+    ledgePos : [new Vec2D(-77.27,0),new Vec2D(77.27,0)],
     scale : 3.5,
     offset : [600,500],
     movingPlatforms : function(){}

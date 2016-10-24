@@ -201,7 +201,7 @@ function drawTSS(){
   bgGrad.addColorStop(0,"rgb(66, 42, 6)");
   bgGrad.addColorStop(1,"rgb(26, 2, 2)");
   bg1.fillStyle=bgGrad;
-  bg1.fillRect(0,0,canvasBG1.width,canvasBG1.height);
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   bg2.lineWidth = 3;
   shine += 0.01;
   if (shine > 1.8){
