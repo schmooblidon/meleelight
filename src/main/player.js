@@ -147,4 +147,5 @@ function playerObject(character,pos,face){
   this.rotationPoint = new Vec2D(0,0);
   this.colourOverlay = "";
   this.colourOverlayBool = false;
+  this.currentAction = "NONE";
 }

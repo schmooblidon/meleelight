@@ -839,10 +839,6 @@ function interpretInputs(i,active){
       player[i].phys.lCancel = false;
     }
   }
-  if (player[i].phys.lCancelTimer == 0 && ((player[i].inputs.lAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) || (player[i].inputs.rAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) || (player[i].inputs.z[0] && !player[i].inputs.z[1]))){
-    player[i].phys.lCancelTimer = 7;
-    player[i].phys.lCancel = true;
-  }
 
   $("#lsAxisX"+i).empty().append(lstickX.toFixed(5));
   $("#lsAxisY"+i).empty().append(lstickY.toFixed(5));

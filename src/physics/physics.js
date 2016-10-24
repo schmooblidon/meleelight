@@ -133,6 +133,7 @@ function physics(i){
         player[i].hit.shieldstun = 0;
       }
     }
+    //console.log(aS[cS[i]][player[i].actionState]);
     player[i].phys.canWallJump = aS[cS[i]][player[i].actionState].wallJumpAble;
     player[i].phys.bTurnaroundTimer = Math.max(0,player[i].phys.bTurnaroundTimer-1);
     if ((player[i].inputs.lStickAxis[0].x > 0.9 && player[i].inputs.lStickAxis[1].x < 0.9) || (player[i].inputs.lStickAxis[0].x < -0.9 && player[i].inputs.lStickAxis[1].x > -0.9)){
@@ -195,6 +196,12 @@ function physics(i){
 
   if (!player[i].phys.grounded){
     player[i].phys.airborneTimer++;
+  }
+
+  // l CANCEL
+  if (player[i].phys.lCancelTimer == 0 && ((player[i].inputs.lAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) || (player[i].inputs.rAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) || (player[i].inputs.z[0] && !player[i].inputs.z[1]))){
+    player[i].phys.lCancelTimer = 7;
+    player[i].phys.lCancel = true;
   }
 
   // V Cancel

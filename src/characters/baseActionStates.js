@@ -1834,6 +1834,7 @@ baseActionStates = {
   name : "CLIFFWAIT",
   canGrabLedge : false,
   canBeGrabbed : false,
+  wallJumpAble : false,
   posOffset : [],
   landType : 0,
   init : function(p){
