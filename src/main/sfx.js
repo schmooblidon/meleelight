@@ -66,6 +66,9 @@ sounds = {
   powershield : new Howl({
     src: ['sfx/powershield.wav']
   }),
+  powershieldreflect : new Howl({
+    src: ['sfx/powershieldreflect.wav']
+  }),
   roll : new Howl({
     src: ['sfx/roll.wav']
   }),

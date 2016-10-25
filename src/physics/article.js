@@ -190,9 +190,6 @@ function articlesHitDetection(){
           if (player[v].phys.shielding && (articleShieldCollision(a,v,false) || (interpolate && (articleShieldCollision(a,v,true) || interpolatedArticleCircleCollision(a,player[v].phys.shieldPositionReal,player[v].phys.shieldSize))))){
             articleHitQueue.push([a,v,true]);
             aArticles[a][2].hitList.push(v);
-            if (aArticles[a][2].destroyOnHit){
-              destroyArticleQueue.push(a);
-            }
           }
           else if (player[v].phys.hurtBoxState != 1){
             if (articleHurtCollision(a,v,false) || (interpolate && (interpolatedArticleHurtCollision(a,v) || articleHurtCollision(a,v,true)))){
@@ -220,7 +217,19 @@ function executeArticleHits(){
     var damage = hb.dmg;
 
     if (shieldHit){
-      if (!player[v].phys.powerShieldActive){
+      if (player[v].phys.powerShieldReflectActive){
+        drawVfx("powershieldreflect",player[v].phys.shieldPositionReal,player[v].phys.face);
+        sounds.powershieldreflect.play();
+        aArticles[a][1] = v; // change ownership to victim
+        // reflects velocity
+        if (aArticles[a][2].vel != undefined || aArticles[a][2].vel != null){
+          aArticles[a][2].vel.x *= -1;
+          aArticles[a][2].vel.y *= -1;
+        }
+        // cuts damage in half
+        aArticles[a][2].hb.dmg *= 0.5;
+      }
+      else {
         player[v].phys.shieldHP -= damage;
         if (player[v].phys.shieldHP < 0){
           player[v].phys.shielding = false;
@@ -231,33 +240,22 @@ function executeArticleHits(){
           aS[cS[v]].SHIELDBREAKFALL.init(v);
           break;
         }
-      }
-
-      player[v].hit.hitlag = Math.floor(damage * (1/3) + 3);
-
-      var vPushMultiplier = 0.6;
-      if (player[v].phys.powerShieldActive){
-        vPushMultiplier = 1;
-        player[v].phys.powerShielded = true;
-        player[v].hit.powershield = true;
-        drawVfx("impactLand",player[v].phys.pos,player[v].phys.face);
-        drawVfx("powershield",player[v].phys.shieldPositionReal,player[v].phys.face);
-        sounds.powershield.play();
-      }
-      else {
+        if (aArticles[a][2].destroyOnHit){
+          destroyArticleQueue.push(a);
+        }
         drawVfx("clank",aArticles[a][2].pos,1);
-      }
-      player[v].hit.shieldstun = ((Math.floor(damage) * ((0.65 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.3)) * 1.5) + 2;
-      var victimPush = ((Math.floor(damage) * ((0.195 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.09)) + 0.4) * vPushMultiplier;
-      if (victimPush > 2){
-        victimPush = 2;
-      }
-
-      if (aArticles[a][2].pos.x < player[v].phys.pos.x){
-        player[v].phys.cVel.x += victimPush
-      }
-      else {
-        player[v].phys.cVel.x -= victimPush
+        player[v].hit.hitlag = Math.floor(damage * (1/3) + 3);
+        player[v].hit.shieldstun = ((Math.floor(damage) * ((0.65 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.3)) * 1.5) + 2;
+        var victimPush = ((Math.floor(damage) * ((0.195 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.09)) + 0.4)*0.6;
+        if (victimPush > 2){
+          victimPush = 2;
+        }
+        if (aArticles[a][2].pos.x < player[v].phys.pos.x){
+          player[v].phys.cVel.x = victimPush
+        }
+        else {
+          player[v].phys.cVel.x = -victimPush
+        }
       }
 
       aS[cS[v]].GUARD.init(v);

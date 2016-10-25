@@ -317,11 +317,11 @@ function executeHits(){
           var attackerPush = (Math.floor(damage) * ((player[v].phys.shieldAnalog - 0.3) * 0.1)) + 0.02;
 
           if (player[a].phys.pos.x < player[v].phys.pos.x){
-            player[v].phys.cVel.x += victimPush
+            player[v].phys.cVel.x = victimPush
             player[a].phys.cVel.x -= attackerPush
           }
           else {
-            player[v].phys.cVel.x -= victimPush
+            player[v].phys.cVel.x = -victimPush
             player[a].phys.cVel.x += attackerPush
           }
 

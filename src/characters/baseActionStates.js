@@ -1527,9 +1527,11 @@ baseActionStates = {
     shieldSize(p,true);
     if (Math.max(player[p].inputs.lAnalog[0],player[p].inputs.rAnalog[0]) == 1){
       player[p].phys.powerShieldActive = true;
+      player[p].phys.powerShieldReflectActive = true;
     }
     else {
       player[p].phys.powerShieldActive = false;
+      player[p].phys.powerShieldReflectActive = false;
     }
     aS[cS[p]].GUARDON.main(p);
   },
@@ -1541,9 +1543,15 @@ baseActionStates = {
     else {
       player[p].timer++;
       playSounds("GUARDON",p);
-      if (player[p].timer == 2 && Math.max(player[p].inputs.lAnalog[0],player[p].inputs.rAnalog[0]) == 1){
-        player[p].phys.powerShieldActive = true;
+      if (player[p].timer == 3){
+        player[p].phys.powerShieldReflectActive = false;
       }
+      if (player[p].timer == 5){
+        player[p].phys.powerShieldActive = false;
+      }
+      /*if (player[p].timer == 2 && Math.max(player[p].inputs.lAnalog[0],player[p].inputs.rAnalog[0]) == 1){
+        player[p].phys.powerShieldActive = true;
+      }*/
       if (!aS[cS[p]].GUARDON.interrupt(p)){
         if (player[p].timer == 1){
           sounds.shieldup.play();
@@ -1618,6 +1626,7 @@ baseActionStates = {
     player[p].actionState = "GUARD";
     player[p].timer = 0;
     player[p].phys.powerShieldActive = false;
+    player[p].phys.powerShieldReflectActive = false;
     aS[cS[p]].GUARD.main(p);
   },
   main : function(p){

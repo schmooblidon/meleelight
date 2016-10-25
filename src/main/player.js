@@ -45,6 +45,7 @@ function physicsObject(pos,face){
   this.shieldPositionReal = new Vec2D(0,0);
   this.shieldStun = 0;
   this.powerShieldActive = false;
+  this.powerShieldReflectActive = false;
   this.powerShielded = false;
   this.onLedge = -1;
   this.ledgeSnapBoxF = new Box2D([0,5],[8,10]);
