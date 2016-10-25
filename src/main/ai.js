@@ -11,6 +11,69 @@ function runAI(i){
   //if (player[i].currentSubaction.substr(0,2) == "TUMBLE" && !(player[i].actionState == "DAMAGEFALL") {
   //	  player[i].currentSubaction = "NONE";
   //}
+  if (player[i].currentSubaction in ["LASER1","LASER2","REVERSE"]) {
+	  if (player[i].hit.hitstun >= 0) {
+		  player[i].currentSubaction = "NONE";
+	  }
+  }
+  if (player[i].currentAction == "SMASHTURN") {
+	  if (player[i].actionState == "WAIT" || player[i].timer > 0) {
+		  player[i].currentAction = "NONE";
+	  }
+  }
+  if (player[i].currentAction == "NONE") {
+	  var distx = player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x;
+	  var disty = player[i].phys.pos.y - player[NearestEnemy(player[i],i)].phys.pos.y;
+  if (player[i].phys.grounded && (player[i].actionState == "WAIT" || Math.abs(distx) > 15) && (player[i].actionState == "WAIT" || player[i].actionState == "DASH")  || (player[i].actionState == "LANDING" && player[i].timer > 3)) {//smash turn to face enemy
+	  if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
+		  player[i].currentAction = "SMASHTURN";
+		  player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
+		  return ;
+	  } else {
+		  if (cS[i] == 2 && Math.abs(distx) > 80 && Math.abs(disty) < 15) { //is fox
+		      var randomSeed = Math.floor((Math.random() * 10) + 1);
+			  if (randomSeed == 1) {
+			  player[i].currentAction = "SHDL";
+			  player[i].currentSubaction = "LASER1";
+			  }
+		  }
+		  /**
+		  if (player[i].currentAction == "NONE") {
+
+		  if (Math.abs(distx) < 15 && Math.abs(disty) < 15) {
+			  var randomSeed = Math.floor((Math.random() * 100) + 1);
+			  if (randomSeed <= 5) {//grab
+				  player[i].inputs.l[0] = true;
+				  player[i].inputs.lAnalog[0] = 1;
+				  player[i].inputs.a = true;
+			  } else if (randomSeed <= 15) {//tilt/grab
+			      var randomSeed1 = Math.floor((Math.random() * 100) + 1);
+				  if (randomSeed1 <= 25) { //f-tilt
+					  player[i].inputs.lStickAxis[0].x = 1.0;
+				  } else if (randomSeed1 <= 50) { //d-tilt
+					  player[i].inputs.lStickAxis[0].y = -1.0;
+				  }  else if (randomSeed1 <= 75) { //up-tilt
+				      if (cS[i] in [1,2]) {
+						  player[i].currentAction = "REVERSEUPTILT";
+						  player[i].currentSubaction = "REVERSE";
+					  } else {
+					  player[i].inputs.lStickAxis[0].y = -1.0;
+					  }
+				  }
+				  player[i].inputs.a[0] = true;
+			  } else if (randomSeed <= 28) {//shield
+				  player[i].inputs.l[0] = true;
+				  player[i].inputs.lAnalog[0] = 1;
+			  }
+		  } } **/
+	  }
+    }
+  }
+  if (player[i].currentAction == "SHDL") {
+	  var inputs = CPUSHDL(player[i],i);
+	  player[i].inputs.x[0] = inputs.x;
+	  player[i].inputs.b[0] = inputs.b;
+  }
   if (player[i].currentAction == "TECH" || player[i].currentAction == "MISSEDTECH") {
 	  if (player[i].actionState == "CLIFFWAIT" || player[i].actionState == "FALLN" || player[i].actionState == "WAIT") {
 		  player[i].currentAction = "NONE";
@@ -142,7 +205,7 @@ function NearestEnemy(cpu,p){
   var nearestEnemy = -1;
   var enemyDistance = 100000;
   for (var i=0;i<4;i++){
-    if (playerType[i] > -1){
+    if (playerType[i] > -1 && i != p && player[i].actionState != "SLEEP"){
       if (i != p){
         var dist = Math.pow(cpu.phys.pos.x-player[i].phys.pos.x,2)+Math.pow(cpu.phys.pos.y-player[i].phys.pos.y,2);
         if (dist < enemyDistance){
@@ -151,6 +214,12 @@ function NearestEnemy(cpu,p){
         }
       }
     }
+  }
+
+  if (nearestEnemy == -1){
+    nearestEnemy = 0;
+    console.log("cant find nearest enemy");
+    // fail safe so it doesnt crash at least
   }
   return nearestEnemy;
 }
@@ -199,6 +268,25 @@ function isOffstage(cpu){
   }
   return true;
 }
+function CPUSHDL(cpu, p) {
+	var returnInput = {
+	x: false,
+	b: false
+	}
+	if (cpu.actionState == "WAIT" || cpu.actionState == "DASH" || (cpu.actionState == "LANDING" && cpu.timer > 3)) {//jump
+		returnInput.x = true;
+	} else if (cpu.actionState == "KNEEBEND" && cpu.timer >= 3) {
+		returnInput.b = true;
+		cpu.currentSubaction = "LASER2";
+	} else {
+		if (cpu.timer == 10) {
+			returnInput.b = true;
+			cpu.currentSubaction = "NONE";
+			cpu.currentAction = "NONE";
+		}
+	}
+	return returnInput;
+}
 function CPUTech(cpu, p) {
 	var returnInput = {
     lstickX : 0.0,
@@ -209,24 +297,24 @@ function CPUTech(cpu, p) {
 	console.log("pos" , cpu.phys.pos.y);
 	console.log("nearest" , NearestFloor(cpu));
 	if (cpu.phys.pos.y - NearestFloor(cpu) <= 3 && cpu.phys.kVel.y + cpu.phys.cVel.y <= 0) {
-	   console.log("trying to tech");
+	   //console.log("trying to tech");
   	var MissedTechPercent = 85 - (cpu.difficulty * 20);//how often the CPU miss techs. difficulty: {1: 65%,2: 45%,3: 25%,4: 5%}
   	var randomSeed = Math.floor((Math.random() * 100 + MissedTechPercent) + 1);
   	//console.log("3");
   	if (randomSeed <= 34) {//inplace
   		returnInput.l = true;
   		returnInput.lAnalog = 1.0;
-      console.log("techinplace");
+      //console.log("techinplace");
   	} else if (randomSeed <= 67) {//roll left
   	    returnInput.l = true;
   		returnInput.lstickX = -1.0;
   		returnInput.lAnalog = 1.0;
-      console.log("techrollleft");
+      //console.log("techrollleft");
   	} else if (randomSeed <= 100) { //roll right
   	    returnInput.l = true;
   		returnInput.lstickX = 1.0;
   		returnInput.lAnalog = 1.0;
-      console.log("techrollright");
+      //console.log("techrollright");
   	} //otherwise miss tech
   	//console.log("4");
 	}

@@ -957,7 +957,9 @@ function update(i){
         interpretInputs(i,true);
       }
       else {
-        runAI(i);
+        if (player[i].actionState != "SLEEP"){
+          runAI(i);
+        }
       }
     }
   }
