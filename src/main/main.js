@@ -844,6 +844,8 @@ function interpretInputs(i,active){
 
   $("#lsAxisX"+i).empty().append(lstickX.toFixed(5));
   $("#lsAxisY"+i).empty().append(lstickY.toFixed(5));
+  $("#csAxisX"+i).empty().append(cstickX.toFixed(5));
+  $("#csAxisY"+i).empty().append(cstickY.toFixed(5));
   $("#lAnalog"+i).empty().append(lAnalog.toFixed(5));
   $("#rAnalog"+i).empty().append(rAnalog.toFixed(5));
   if (mType[i] == 4){
