@@ -8,9 +8,31 @@ function runAI(i){
   player[i].inputs.cStickAxis[0].x = 0;
   player[i].inputs.cStickAxis[0].y = 0;
   player[i].inputs.a[0] = false;
+  if (player[i].currentAction == "MASHING" && player[i].actionState == "WAIT" && player[i].timer > 2) {
+	  player[i].currentAction = "NONE";
+  }
   //if (player[i].currentSubaction.substr(0,2) == "TUMBLE" && !(player[i].actionState == "DAMAGEFALL") {
   //	  player[i].currentSubaction = "NONE";
   //}
+  if (player[i].currentAction == "REVERSEUPTILT") {
+	  if (!player[i].actionState in ["SMASHTURN","WAIT","UPTILT","LANDING"]) {
+		  player[i].currentAction = "NONE";
+		  player[i].currentSubaction = "NONE";
+	  } else {
+	  if (player[i].currentSubaction == "REVERSE") { //smash turn
+		  player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
+		  player[i].currentSubaction = "UPTILT";
+		  return;
+	  } else if (player[i].currentSubaction == "UPTILT" && player[i].timer > 1) {
+		  player[i].inputs.lStickAxis[0].x = 0.0;
+		  player[i].currentAction = "NONE";
+		  player[i].currentSubaction = "NONE";
+		  player[i].inputs.lStickAxis[0].y = .50;
+		  player[i].inputs.a[0] = true;
+		  return;
+	  }
+	  }
+  }
   if (player[i].currentSubaction in ["LASER1","LASER2","REVERSE"]) {
 	  if (player[i].hit.hitstun >= 0) {
 		  player[i].currentSubaction = "NONE";
@@ -37,35 +59,46 @@ function runAI(i){
 			  player[i].currentSubaction = "LASER1";
 			  }
 		  }
-		  /**
 		  if (player[i].currentAction == "NONE") {
 
-		  if (Math.abs(distx) < 15 && Math.abs(disty) < 15) {
+		  if (Math.abs(distx) < 23 && Math.abs(disty) < 15) {
 			  var randomSeed = Math.floor((Math.random() * 100) + 1);
-			  if (randomSeed <= 5) {//grab
+			  if (randomSeed <= 10) {//grab
+			      player[i].inputs.z = true;
+			      /*
 				  player[i].inputs.l[0] = true;
 				  player[i].inputs.lAnalog[0] = 1;
 				  player[i].inputs.a = true;
-			  } else if (randomSeed <= 15) {//tilt/grab
+				  */
+			  } else if (randomSeed <= 25) {//tilt
 			      var randomSeed1 = Math.floor((Math.random() * 100) + 1);
 				  if (randomSeed1 <= 25) { //f-tilt
-					  player[i].inputs.lStickAxis[0].x = 1.0;
+					  player[i].inputs.lStickAxis[0].x = 0.50;
 				  } else if (randomSeed1 <= 50) { //d-tilt
-					  player[i].inputs.lStickAxis[0].y = -1.0;
+					  player[i].inputs.lStickAxis[0].y = -0.50;
 				  }  else if (randomSeed1 <= 75) { //up-tilt
-				      if (cS[i] in [1,2]) {
+				      if (cS[i] == 1 || cS[i] == 2) {
+						  if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
 						  player[i].currentAction = "REVERSEUPTILT";
 						  player[i].currentSubaction = "REVERSE";
+						  return;
+						  } else {
+						    player[i].inputs.lStickAxis[0].y = 0.50;
+							player[i].inputs.a[0] = true;
+						  }
 					  } else {
-					  player[i].inputs.lStickAxis[0].y = -1.0;
+					  //console.log(Math.sign(distx),":",player[i].phys.face)
+					  player[i].inputs.lStickAxis[0].y = 0.50;
+					  player[i].inputs.a[0] = true;
 					  }
 				  }
 				  player[i].inputs.a[0] = true;
-			  } else if (randomSeed <= 28) {//shield
+				  return;
+			  } /* else if (randomSeed <= 20) {//shield
 				  player[i].inputs.l[0] = true;
 				  player[i].inputs.lAnalog[0] = 1;
-			  }
-		  } } **/
+			  } */
+		  } }
 	  }
     }
   }
@@ -205,7 +238,8 @@ function NearestEnemy(cpu,p){
   var nearestEnemy = -1;
   var enemyDistance = 100000;
   for (var i=0;i<4;i++){
-    if (playerType[i] > -1 && i != p && player[i].actionState != "SLEEP"){
+    if (playerType[i] > -1){
+		if (playerType[i] > -1 && i != p && player[i].actionState != "SLEEP"){
       if (i != p){
         var dist = Math.pow(cpu.phys.pos.x-player[i].phys.pos.x,2)+Math.pow(cpu.phys.pos.y-player[i].phys.pos.y,2);
         if (dist < enemyDistance){
@@ -214,8 +248,8 @@ function NearestEnemy(cpu,p){
         }
       }
     }
+	}
   }
-
   if (nearestEnemy == -1){
     nearestEnemy = 0;
     console.log("cant find nearest enemy");
@@ -247,6 +281,31 @@ function NearestFloor(cpu) {
     }
   }
   return nearestY;
+}
+
+function isAboveGround(x,y) {
+  var returnValue = [false,"none",0];
+  var closest = 1000;
+  var dist;
+  for (var i=0;i<stage.ground.length;i++){
+    if (x >= stage.ground[i][0].x && x <= stage.ground[i][1].x && y >= stage.ground[i][0].y){
+      dist = y - stage.ground[i][0].y;
+      if (dist < closest){
+        closest = dist;
+        returnValue = [true,"ground",stage.ground[i][0].y];
+      }
+    }
+  }
+  for (var i=0;i<stage.platform.length;i++){
+    if (x >= stage.platform[i][0].x && x <= stage.platform[i][1].x && y >= stage.platform[i][0].y){
+      dist = y - stage.platform[i][0].y;
+      if (dist < closest){
+        closest = dist;
+        returnValue = [true,"platform",stage.platform[i][0].y];
+      }
+    }
+  }
+  return returnValue;
 }
 
 function isOffstage(cpu){
