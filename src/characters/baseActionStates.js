@@ -2770,6 +2770,7 @@ baseActionStates = {
 "DOWNBOUND" : {
   name : "DOWNBOUND",
   canEdgeCancel : true,
+  disableTeeter : true,
   canBeGrabbed : false,
   downed : true,
   init : function(p){
@@ -2806,6 +2807,7 @@ baseActionStates = {
 "DOWNWAIT" : {
   name : "DOWNWAIT",
   canEdgeCancel : true,
+  disableTeeter : true,
   canBeGrabbed : false,
   downed : true,
   init : function(p){
@@ -2875,6 +2877,8 @@ baseActionStates = {
 "DOWNDAMAGE" : {
   name : "DOWNDAMAGE",
   canEdgeCancel : true,
+  disableTeeter : true,
+  airborneState : "DOWNDAMAGE",
   canBeGrabbed : true,
   downed : true,
   landType : 1,
@@ -2927,6 +2931,7 @@ baseActionStates = {
 "DOWNSTANDN" : {
   name : "DOWNSTANDN",
   canEdgeCancel : true,
+  disableTeeter : true,
   canBeGrabbed : true,
   init : function(p){
     player[p].actionState = "DOWNSTANDN";
@@ -3763,7 +3768,7 @@ baseActionStates = {
 
 "OTTOTTO" : {
   name : "OTTOTTO",
-  canEdgeCancel : true,
+  canEdgeCancel : false,
   canBeGrabbed : true,
   init : function(p){
     player[p].actionState = "OTTOTTO";
@@ -3837,7 +3842,7 @@ baseActionStates = {
 
 "OTTOTTOWAIT" : {
   name : "OTTOTTOWAIT",
-  canEdgeCancel : true,
+  canEdgeCancel : false,
   canBeGrabbed : true,
   init : function(p){
     player[p].actionState = "OTTOTTOWAIT";

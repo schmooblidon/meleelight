@@ -447,7 +447,9 @@ function executeHits(){
           }
           else {
             sounds.blunthit.play();
-            drawVfx("clank",new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y));
+            if (!isThrow){
+              drawVfx("clank",new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y));
+            }
           }
         }
       }

@@ -1985,7 +1985,6 @@ fox.DOWNSPECIALAIR = {
 fox.DOWNSPECIALGROUND = {
   name : "DOWNSPECIALGROUND",
   canPassThrough : false,
-  canEdgeCancel : false,
   canGrabLedge : [false,false],
   wallJumpAble : false,
   headBonk : false,
