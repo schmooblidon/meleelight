@@ -291,6 +291,7 @@ function executeHits(){
               player[v].phys.shieldHP = 0;
               drawVfx("breakShield",player[v].phys.pos,player[v].phys.face);
               aS[cS[v]].SHIELDBREAKFALL.init(v);
+              sounds.shieldbreak.play();
               break;
             }
           }
