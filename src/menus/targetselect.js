@@ -134,46 +134,54 @@ function parseStage(code){
     if (bEnd == -1){
       return 0;
     }
-    var bArray = code.substr(sEnd+2,(bEnd-1)-(sEnd+1)).split(",");
-    if (bArray.length % 4 != 0){
-      return 0;
-    }
-    for (var i=0;i<bArray.length;i+=4){
-      var bT = [parseFloat(bArray[i]),parseFloat(bArray[i+1]),parseFloat(bArray[i+2]),parseFloat(bArray[i+3])];
-      newStage.box.push(new Box2D([bT[0],bT[1]],[bT[2],bT[3]]));
-      newStage.draw.box.push(new Box2D([bT[0]*3+600,bT[1]*-3+375],[bT[2]*3+600,bT[3]*-3+375]));
-      newStage.ground.push([new Vec2D(bT[0],bT[3]),new Vec2D(bT[2],bT[3])]);
-      newStage.draw.ground.push([new Vec2D(bT[0]*3+600,bT[3]*-3+375),new Vec2D(bT[2]*3+600,bT[3]*-3+375)]);
-      newStage.ceiling.push([new Vec2D(bT[0],bT[1]),new Vec2D(bT[2],bT[1])]);
-      newStage.draw.ceiling.push([new Vec2D(bT[0]*3+600,bT[1]*-3+375),new Vec2D(bT[2]*3+600,bT[1]*-3+375)]);
-      newStage.wallL.push([new Vec2D(bT[0],bT[3]),new Vec2D(bT[0],bT[1])]);
-      newStage.draw.wallL.push([new Vec2D(bT[0]*3+600,bT[3]*-3+375),new Vec2D(bT[0]*3+600,bT[1]*-3+375)]);
-      newStage.wallR.push([new Vec2D(bT[2],bT[3]),new Vec2D(bT[2],bT[1])]);
-      newStage.draw.wallR.push([new Vec2D(bT[2]*3+600,bT[3]*-3+375),new Vec2D(bT[2]*3+600,bT[1]*-3+375)]);
+    var bString = code.substr(sEnd+2,(bEnd-1)-(sEnd+1));
+    if (bString != ""){
+      var bArray = bString.split(",");
+      if (bArray.length % 4 != 0){
+        return 0;
+      }
+      for (var i=0;i<bArray.length;i+=4){
+        var bT = [parseFloat(bArray[i]),parseFloat(bArray[i+1]),parseFloat(bArray[i+2]),parseFloat(bArray[i+3])];
+        newStage.box.push(new Box2D([bT[0],bT[1]],[bT[2],bT[3]]));
+        newStage.draw.box.push(new Box2D([bT[0]*3+600,bT[1]*-3+375],[bT[2]*3+600,bT[3]*-3+375]));
+        newStage.ground.push([new Vec2D(bT[0],bT[3]),new Vec2D(bT[2],bT[3])]);
+        newStage.draw.ground.push([new Vec2D(bT[0]*3+600,bT[3]*-3+375),new Vec2D(bT[2]*3+600,bT[3]*-3+375)]);
+        newStage.ceiling.push([new Vec2D(bT[0],bT[1]),new Vec2D(bT[2],bT[1])]);
+        newStage.draw.ceiling.push([new Vec2D(bT[0]*3+600,bT[1]*-3+375),new Vec2D(bT[2]*3+600,bT[1]*-3+375)]);
+        newStage.wallL.push([new Vec2D(bT[0],bT[3]),new Vec2D(bT[0],bT[1])]);
+        newStage.draw.wallL.push([new Vec2D(bT[0]*3+600,bT[3]*-3+375),new Vec2D(bT[0]*3+600,bT[1]*-3+375)]);
+        newStage.wallR.push([new Vec2D(bT[2],bT[3]),new Vec2D(bT[2],bT[1])]);
+        newStage.draw.wallR.push([new Vec2D(bT[2]*3+600,bT[3]*-3+375),new Vec2D(bT[2]*3+600,bT[1]*-3+375)]);
+      }
     }
     var pEnd = code.indexOf("&",bEnd+1);
     if (pEnd == -1){
       return 0;
     }
-    var pArray = code.substr(bEnd+2,(pEnd-1)-(bEnd+1)).split(",");
-    if (pArray.length % 4 != 0){
-      return 0;
-    }
-    for (var i=0;i<pArray.length;i+=4){
-      newStage.platform.push([new Vec2D(parseFloat(pArray[i]),parseFloat(pArray[i+1])),new Vec2D(parseFloat(pArray[i+2]),parseFloat(pArray[i+3]))]);
-      newStage.draw.platform.push([new Vec2D(parseFloat(pArray[i])*3+600,parseFloat(pArray[i+1])*-3+375),new Vec2D(parseFloat(pArray[i+2])*3+600,parseFloat(pArray[i+3])*-3+375)]);
+    var pString = code.substr(bEnd+2,(pEnd-1)-(bEnd+1));
+    if (pString != ""){
+      var pArray = pString.split(",");
+      if (pArray.length % 4 != 0){
+        return 0;
+      }
+      for (var i=0;i<pArray.length;i+=4){
+        newStage.platform.push([new Vec2D(parseFloat(pArray[i]),parseFloat(pArray[i+1])),new Vec2D(parseFloat(pArray[i+2]),parseFloat(pArray[i+3]))]);
+        newStage.draw.platform.push([new Vec2D(parseFloat(pArray[i])*3+600,parseFloat(pArray[i+1])*-3+375),new Vec2D(parseFloat(pArray[i+2])*3+600,parseFloat(pArray[i+3])*-3+375)]);
+      }
     }
     var lEnd = code.indexOf("&",pEnd+1);
     if (lEnd == -1){
       return 0;
     }
-    var lArray = code.substr(pEnd+2,(lEnd-1)-(pEnd+1)).split(",");
-    console.log(lArray);
-    if (lArray.length % 2 != 0){
-      return 0;
-    }
-    for (var i=0;i<lArray.length;i+=2){
-      newStage.ledge.push([parseInt(lArray[i]),parseInt(lArray[i+1])]);
+    var lString = code.substr(pEnd+2,(lEnd-1)-(pEnd+1));
+    if (lString != ""){
+      var lArray = lString.split(",");
+      if (lArray.length % 2 != 0){
+        return 0;
+      }
+      for (var i=0;i<lArray.length;i+=2){
+        newStage.ledge.push([parseInt(lArray[i]),parseInt(lArray[i+1])]);
+      }
     }
     var tEnd = code.indexOf("&",lEnd+1);
     if (tEnd != -1){
@@ -182,13 +190,16 @@ function parseStage(code){
     else {
       tEnd = code.length;
     }
-    var tArray = code.substr(lEnd+2,(tEnd-1)-(lEnd+1)).split(",");
-    if (tArray.length % 2 != 0){
-      return 0;
-    }
-    for (var i=0;i<tArray.length;i+=2){
-      newStage.target.push(new Vec2D(parseFloat(tArray[i]),parseFloat(tArray[i+1])));
-      newStage.draw.target.push(new Vec2D(parseFloat(tArray[i])*3+600,parseFloat(tArray[i+1])*-3+375));
+    var tString = code.substr(lEnd+2,(tEnd-1)-(lEnd+1));
+    if (tString != ""){
+      var tArray = tString.split(",");
+      if (tArray.length % 2 != 0){
+        return 0;
+      }
+      for (var i=0;i<tArray.length;i+=2){
+        newStage.target.push(new Vec2D(parseFloat(tArray[i]),parseFloat(tArray[i+1])));
+        newStage.draw.target.push(new Vec2D(parseFloat(tArray[i])*3+600,parseFloat(tArray[i+1])*-3+375));
+      }
     }
     return newStage;
   }
