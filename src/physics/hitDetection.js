@@ -71,6 +71,7 @@ function hitDetection(p){
                             sounds.clank.play();
                             drawVfx("clank",clankHit[1]);
                             player[p].hitboxes.hitList.push(i);
+                            player[p].hasHit = true;
                           }
                           break;
                       }
@@ -82,6 +83,7 @@ function hitDetection(p){
                   if (player[i].phys.shielding && player[p].hitboxes.id[j].hitGrounded && (hitShieldCollision(i,p,j,false) || (interpolate && (hitShieldCollision(i,p,j,true) || interpolatedHitCircleCollision(player[i].phys.shieldPositionReal,player[i].phys.shieldSize,p,j))))){
                     hitQueue.push([i,p,j,true,false,false]);
                     player[p].hitboxes.hitList.push(i);
+                    player[p].hasHit = true;
                     break;
                   }
                   else if (player[i].phys.hurtBoxState != 1){
@@ -90,6 +92,7 @@ function hitDetection(p){
                     if (hitHurtCollision(i,p,j,false) || (interpolate && (interpolatedHitHurtCollision(i,p,j) || hitHurtCollision(i,p,j,true)))){
                       hitQueue.push([i,p,j,false,false,false]);
                       player[p].hitboxes.hitList.push(i);
+                      player[p].hasHit = true;
                       break;
                     }
                   }

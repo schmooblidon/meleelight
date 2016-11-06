@@ -475,6 +475,103 @@ function checkForSquat(p){
   }
 }
 
+function turboAirborneInterrupt(p){
+  var a = checkForAerials(p);
+  var b = checkForSpecials(p);
+  if (a[0] && a[1] != player[p].actionState){
+    turnOffHitboxes(p);
+    aS[cS[p]][a[1]].init(p);
+    return true;
+  }
+  else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
+    turnOffHitboxes(p);
+    aS[cS[p]].ESCAPEAIR.init(p);
+    return true;
+  }
+  else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+    turnOffHitboxes(p);
+    if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+      aS[cS[p]].JUMPAERIALB.init(p);
+    }
+    else {
+      aS[cS[p]].JUMPAERIALF.init(p);
+    }
+    return true;
+  }
+  else if (b[0] && b[1] != player[p].actionState){
+    turnOffHitboxes(p);
+    aS[cS[p]][b[1]].init(p);
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+function turboGroundedInterrupt(p){
+  var b = checkForSpecials(p);
+  var t = checkForTilts(p);
+  var s = checkForSmashes(p);
+  if (checkForJump(p)){
+    turnOffHitboxes(p);
+    aS[cS[p]].KNEEBEND.init(p);
+    return true;
+  }
+  else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
+    turnOffHitboxes(p);
+    aS[cS[p]].GUARDON.init(p);
+    return true;
+  }
+  else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    turnOffHitboxes(p);
+    aS[cS[p]].GUARDON.init(p);
+  }
+  else if (b[0] && b[1] != player[p].actionState){
+    turnOffHitboxes(p);
+    aS[cS[p]][b[1]].init(p);
+    return true;
+  }
+  else if (s[0] && s[1] != player[p].actionState){
+    turnOffHitboxes(p);
+    aS[cS[p]][s[1]].init(p);
+    return true;
+  }
+  else if (t[0] && t[1] != player[p].actionState){
+    turnOffHitboxes(p);
+    aS[cS[p]][t[1]].init(p);
+    return true;
+  }
+  else if (checkForSquat(p)){
+    turnOffHitboxes(p);
+    aS[cS[p]].SQUAT.init(p);
+    return true;
+  }
+  else if (checkForDash(p)){
+    turnOffHitboxes(p);
+    aS[cS[p]].DASH.init(p);
+    return true;
+  }
+  else if (checkForSmashTurn(p)){
+    turnOffHitboxes(p);
+    aS[cS[p]].SMASHTURN.init(p);
+    return true;
+  }
+  else if (checkForTiltTurn(p)){
+    turnOffHitboxes(p);
+    player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
+    aS[cS[p]].TILTTURN.init(p);
+    return true;
+  }
+  else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+    turnOffHitboxes(p);
+    aS[cS[p]].WALK.init(p,true);
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
 aS = [];
 
 /* char id:

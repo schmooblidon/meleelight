@@ -6,6 +6,7 @@ articleHitQueue = [];
 articles = {
 "LASER" : {
   name : "LASER",
+  canTurboCancel : false,
   init : function(p,x,y,rotate){
     var obj = {
       hitList : [],
@@ -67,6 +68,7 @@ articles = {
 "ILLUSION" : {
   name : "ILLUSION",
   noDraw : true,
+  canTurboCancel : true,
   init : function(p,type){
     var obj = {
       hitList : [],
@@ -190,11 +192,17 @@ function articlesHitDetection(){
           if (player[v].phys.shielding && (articleShieldCollision(a,v,false) || (interpolate && (articleShieldCollision(a,v,true) || interpolatedArticleCircleCollision(a,player[v].phys.shieldPositionReal,player[v].phys.shieldSize))))){
             articleHitQueue.push([a,v,true]);
             aArticles[a][2].hitList.push(v);
+            if (articles[aArticles[a][0]].canTurboCancel){
+              player[aArticles[a][1]].hasHit = true;
+            }
           }
           else if (player[v].phys.hurtBoxState != 1){
             if (articleHurtCollision(a,v,false) || (interpolate && (interpolatedArticleHurtCollision(a,v) || articleHurtCollision(a,v,true)))){
               articleHitQueue.push([a,v,false]);
               aArticles[a][2].hitList.push(v);
+              if (articles[aArticles[a][0]].canTurboCancel){
+                player[aArticles[a][1]].hasHit = true;
+              }
               if (aArticles[a][2].destroyOnHit){
                 destroyArticleQueue.push(a);
               }

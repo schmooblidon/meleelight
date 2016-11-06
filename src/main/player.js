@@ -117,6 +117,7 @@ function inputObject(){
 function playerObject(character,pos,face){
   this.phys = new physicsObject(pos,face);
   this.actionState = "ENTRANCE";
+  this.prevActionState = "";
   this.timer = 0;
   this.inputs = new inputObject();
   this.charAttributes = chars[character].attributes;
@@ -152,4 +153,5 @@ function playerObject(character,pos,face){
   this.currentSubaction = "NONE";
   this.difficulty = 4;
   this.lastMash = 0;
+  this.hasHit = false;
 }

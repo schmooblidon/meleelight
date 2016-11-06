@@ -140,8 +140,27 @@ function physics(i){
         player[i].phys.bTurnaroundTimer = 20;
         player[i].phys.bTurnaroundDirection = Math.sign(player[i].inputs.lStickAxis[0].x);
     }
-
+    player[i].prevActionState = player[i].actionState;
     aS[cS[i]][player[i].actionState].main(i);
+    if (player[i].prevActionState != player[i].actionState){
+      player[i].hasHit = false;
+    }
+    if (gameSettings.turbo){
+      if (player[i].hasHit){
+        if (player[i].phys.grounded){
+          if (turboGroundedInterrupt(i)){
+            player[i].hasHit = false;
+          }
+        }
+        else {
+          if (turboAirborneInterrupt(i)){
+            player[i].hasHit = false;
+          }
+        }
+      }
+
+    }
+
     if (Math.abs(player[i].phys.kVel.x) > 0){
       var oSign = Math.sign(player[i].phys.kVel.x);
       if (player[i].phys.grounded){

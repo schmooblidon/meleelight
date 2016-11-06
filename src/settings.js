@@ -40,6 +40,9 @@ keyMap = {
 }
 
 gameSettings = {
+  turbo : false,
+  zCancel : false,
+  blastzoneWrapping : false,
   flashOnLCancel : false,
   dustLessPerfectWavedash : false
 }

@@ -50,6 +50,7 @@ function menuMove(i){
       }
       else if (menuSelected == 1){
         //gameplay menu
+        changeGamemode(11);
       }
       else if (menuSelected == 2){
         changeGamemode(12);

@@ -538,6 +538,7 @@ function changeGamemode(newGamemode){
       break;
     // gameplay menu
     case 11:
+      drawGameplayMenuInit();
       break;
     // keyboard menu
     case 12:
@@ -1066,6 +1067,12 @@ function gameTick(){
       audioMenuControls(i);
     }
   }
+  else if (gameMode == 11){
+    for (var i=0;i<ports;i++){
+      interpretInputs(i,true);
+      gameplayMenuControls(i);
+    }
+  }
   else if (gameMode == 12){
     for (var i=0;i<ports;i++){
       interpretInputs(i,true);
@@ -1279,6 +1286,9 @@ function renderTick(){
     }
     else if (gameMode == 10){
       drawAudioMenu();
+    }
+    else if (gameMode == 11){
+      drawGameplayMenu();
     }
     else if (gameMode == 12){
       drawKeyboardMenu();
