@@ -142,6 +142,9 @@ function physics(i){
     }
     player[i].prevActionState = player[i].actionState;
     aS[cS[i]][player[i].actionState].main(i);
+
+    // TURBO MODE
+    // if just changed action states, remove ability to cancel
     if (player[i].prevActionState != player[i].actionState){
       player[i].hasHit = false;
     }
@@ -219,9 +222,35 @@ function physics(i){
     player[i].phys.airborneTimer++;
   }
 
+  // if smash 64 lcancel, put any landingattackair action states into landing
+  if (gameSettings.lCancelType == 2){
+    if (player[i].phys.lCancel){
+      if (player[i].actionState.substr(0,16) == "LANDINGATTACKAIR"){
+        player[i].actionState = "LANDING";
+        player[i].timer = 1;
+      }
+    }
+  }
+
+  if (player[i].phys.lCancelTimer > 0){
+    player[i].phys.lCancelTimer--;
+    if (player[i].phys.lCancelTimer == 0){
+      player[i].phys.lCancel = false;
+    }
+  }
   // l CANCEL
   if (player[i].phys.lCancelTimer == 0 && ((player[i].inputs.lAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) || (player[i].inputs.rAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) || (player[i].inputs.z[0] && !player[i].inputs.z[1]))){
-    player[i].phys.lCancelTimer = 7;
+    // if smash 64 lcancel, increase window to 11 frames
+    if (gameSettings.lCancelType == 2){
+      player[i].phys.lCancelTimer = 11;
+    }
+    else {
+      player[i].phys.lCancelTimer = 7;
+    }
+    player[i].phys.lCancel = true;
+  }
+  // if auto lcancel is on, always lcancel
+  if (gameSettings.lCancelType == 1){
     player[i].phys.lCancel = true;
   }
 

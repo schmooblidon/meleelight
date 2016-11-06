@@ -913,12 +913,6 @@ function interpretInputs(i,active){
       }
     }
   }
-  if (player[i].phys.lCancelTimer > 0){
-    player[i].phys.lCancelTimer--;
-    if (player[i].phys.lCancelTimer == 0){
-      player[i].phys.lCancel = false;
-    }
-  }
 
   $("#lsAxisX"+i).empty().append(lstickX.toFixed(5));
   $("#lsAxisY"+i).empty().append(lstickY.toFixed(5));

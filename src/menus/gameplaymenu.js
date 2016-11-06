@@ -7,9 +7,16 @@ function gameplayMenuControls(i){
     changeGamemode(1);
   }
   else if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
+    sounds.menuSelect.play();
     switch (gameplayMenuSelected){
       case 0:
         gameSettings.turbo ^= true;
+        break;
+      case 1:
+        gameSettings.lCancelType++;
+        if (gameSettings.lCancelType > 2){
+          gameSettings.lCancelType = 0;
+        }
         break;
       default:
         break;
@@ -78,10 +85,12 @@ function drawGameplayMenuInit(){
   bg1.fillStyle=bgGrad;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   fg1.textAlign = "center";
+  fg1.fillStyle = "rgba(255, 255, 255, 0.65)";
   fg1.font = "italic 900 80px Arial";
   fg1.fillText("Gameplay",600,100);
   fg1.font = "italic 900 50px Arial";
   fg1.fillText("Turbo Mode",225,275);
+  fg1.fillText("L-Cancel",225,335);
 }
 
 function drawGameplayMenu(){
@@ -106,17 +115,33 @@ function drawGameplayMenu(){
     bg2.lineTo(1200,0+(i*30));
   }
   bg2.stroke();
-  for (var i=0;i<1;i++){
-    if (i == audioMenuSelected){
-      ui.fillStyle = "rgba(255, 255, 255, 0.3)";
+  for (var i=0;i<2;i++){
+    ui.strokeStyle = "rgba(255, 255, 255, 0.72)";
+    if (i == gameplayMenuSelected){
+      ui.fillStyle = "rgba(255, 255, 255, 0.6)";
     }
     else {
-      ui.fillStyle = "rgba(255, 255, 255, 0.1)";
+      ui.fillStyle = "rgba(255, 255, 255, 0.2)";
     }
-    ui.fillRect(400,235,200,50);
+    ui.fillRect(400,235+i*60,300,50);
+    ui.strokeRect(400,235+i*60,300,50);
     ui.font = "900 30px Arial";
-    ui.fillStyle = "black"
-    ui.fillText(gameSettings.turbo?"On":"Off",500,275);
+    ui.textAlign = "center";
+    ui.fillStyle = "white";
+    ui.strokeStyle = "black";
+    var text = "";
+    switch (i){
+      case 0:
+        text = gameSettings.turbo?"On":"Off";
+        break;
+      case 1:
+        text = gameSettings.lCancelType?(gameSettings.lCancelType==1?"Auto":"Smash 64"):"Normal";
+        break;
+      default:
+        break;
+    }
+    ui.strokeText(text,550,270+i*60);
+    ui.fillText(text,550,270+i*60);
   }
 
 }

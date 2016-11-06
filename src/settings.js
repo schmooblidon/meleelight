@@ -41,7 +41,7 @@ keyMap = {
 
 gameSettings = {
   turbo : false,
-  zCancel : false,
+  lCancelType : 0, // 0- normal | 1 - Auto | 2 - smash 64
   blastzoneWrapping : false,
   flashOnLCancel : false,
   dustLessPerfectWavedash : false
