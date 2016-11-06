@@ -608,7 +608,7 @@ function targetBuilderControls(p){
             break;
           case 2:
             sounds.menuForward.play();
-            gameMode = 1;
+            changeGamemode(1);
             break;
           default:
             break;

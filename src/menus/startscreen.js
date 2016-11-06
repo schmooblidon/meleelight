@@ -11,8 +11,8 @@ lightDust = [];
 for (var k=0;k<20;k++){
   lightDust[k] = [Math.random()*3+2,330+(k*26+26*Math.random()),520,0.2];
 }
-function drawStartScreen(){
-  clearScreen();
+
+function drawStartScreenInit(){
   bg1.fillStyle = "rgba(46, 8, 154, 1)";
   var grd=bg1.createRadialGradient(600,375,5,600,375,750);
   grd.addColorStop(0,"#27005b");
@@ -22,23 +22,27 @@ function drawStartScreen(){
   grd.addColorStop(1,"#38005b");
   bg1.fillStyle = grd;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
-  bg2.save();
-  bg2.scale(1.5,1);
-  bg2.shadowBlur=60;
-  bg2.shadowColor="rgba(147, 14, 42, 1)";
-  bg2.shadowOffsetX = -3150;
-  bg2.fillStyle = "rgba(147, 14, 42, 0.5)";
-  bg2.translate(2440,380);
+  bg1.save();
+  bg1.scale(1.5,1);
+  bg1.shadowBlur=60;
+  bg1.shadowColor="rgba(147, 14, 42, 1)";
+  bg1.shadowOffsetX = -3150;
+  bg1.fillStyle = "rgba(147, 14, 42, 0.5)";
+  bg1.translate(2440,380);
   var ang = 0;
   for (var i=0;i<10;i++){
-    bg2.beginPath();
-    bg2.arc(0,0,720,ang,ang+Math.PI/20);
-    bg2.lineTo(0,0);
-    bg2.closePath();
-    bg2.fill();
+    bg1.beginPath();
+    bg1.arc(0,0,720,ang,ang+Math.PI/20);
+    bg1.lineTo(0,0);
+    bg1.closePath();
+    bg1.fill();
     ang += Math.PI/5;
   }
-  bg2.restore();
+  bg1.restore();
+}
+
+function drawStartScreen(){
+  clearScreen();
   bg2.save();
   bg2.lineWidth = 60;
   bg2.strokeStyle = "rgba(92, 18, 18, 0.2)";
@@ -97,29 +101,26 @@ function drawStartScreen(){
   bg2.lineWidth = 3;
   bg2.strokeStyle = "rgba(149, 255, 131, 0.12)";
   bg2.translate(670,580);
-//  angles[0] += 0.001;
-  //angles[1] -= 0.001;
   angR+=0.001;
   bg2.rotate(angR)
-  var angs = [angles[0],angles[1]];
+  var ang = 0;
+  bg2.beginPath();
   for (var m=0;m<25;m++){
-    bg2.beginPath();
+    ang+=Math.PI/12;
     bg2.moveTo(0,0);
-    bg2.bezierCurveTo(6000*Math.cos(angs[0]),6000*Math.sin(angs[0]),6000*Math.cos(angs[1]),6000*Math.sin(angs[1]),0,0);
-    bg2.closePath();
-    bg2.stroke();
-    angs[0] += Math.PI/16;
-    angs[1] -= Math.PI/16;
+    bg2.lineTo(0,850);
+    bg2.rotate(ang);
   }
+  bg2.stroke();
   bg2.restore();
   ui.save();
   ui.strokeStyle = "rgba(0, 0, 0, 0.3)";
   ui.strokeStyle = "rgba(255, 255, 255, 0.6)";
   ui.lineWidth = 5;
   ui.globalCompositeOperation="xor";
-  var bgGrad =ui.createLinearGradient(0,0,0,390);
+  var bgGrad =ui.createLinearGradient(0,200,0,390);
   bgGrad.addColorStop(0,"rgba(0, 0, 0, 1)");
-  bgGrad.addColorStop(1,"rgba(255, 255, 255, 0.5)");
+  bgGrad.addColorStop(1,"rgba(0, 0, 0, 0.5)");
   ui.fillStyle=bgGrad;
   ui.textAlign = "center";
   ui.font="900 250px Arial";
@@ -185,55 +186,4 @@ function drawStartScreen(){
   ui.closePath();
   ui.fill();
   ui.restore();
-
-
-  /*
-  ui.save();
-  ui.lineWidth = 3;
-  ui.strokeStyle = "rgba(255, 255, 255, 0.26)";
-  var s = 3;
-  var olds = 1;
-  for (var m=0;m<13;m++){
-
-    olds = s;
-    if (m > 5){
-      s -= 0.145;
-    }
-    else {
-      s -= 0.3;
-    }
-    ui.scale(s,1);
-    ui.lineWidth = 3*(1/s)*1.2;
-    ui.beginPath();
-    ui.arc(670*(1/s),0,600,0,twoPi);
-    ui.closePath();
-    ui.stroke();
-    ui.scale(1/s,1);
-  }
-  ui.restore();
-  ui.save();
-  ui.lineWidth = 3;
-  ui.strokeStyle = "rgba(255, 255, 255, 0.26)";
-  var s = 0.5;
-  var olds = 1;
-  for (var m=0;m<13;m++){
-
-    olds = s;
-    s *= (14-m)*0.145;
-    ui.scale(s,1);
-    ui.lineWidth = 3*(1/s)*1.2;
-    ui.beginPath();
-    ui.arc(670*(1/s),1200,600,0,twoPi);
-    ui.closePath();
-    ui.stroke();
-    ui.scale(1/s,1);
-  }
-  ui.restore();
-  ui.lineWidth = 3;
-  ui.strokeStyle = "rgba(255, 255, 255, 0.26)";
-  ui.beginPath();
-  ui.moveTo(670,0);
-  ui.lineTo(670,800);
-  ui.closePath();
-  ui.stroke();*/
 }

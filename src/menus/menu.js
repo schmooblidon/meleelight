@@ -21,20 +21,20 @@ function menuMove(i){
     sounds.menuForward.play();
     if (menuMode == 0){
       if (menuSelected == 0){
-        gameMode = 2;
+        changeGamemode(2);
         positionPlayersInCSS();
       }
       else if (menuSelected == 1){
         targetPlayer = i;
         targetPointerPos = [178.5,137];
         player[i].inputs.a[1] = true;
-        gameMode = 7;
+        changeGamemode(7);
       }
       else if (menuSelected == 2){
         editingStage = -1;
         targetBuilder = i;
         player[i].inputs.a[1] = true;
-        gameMode = 4;
+        changeGamemode(4);
       }
       else if (menuSelected == 3){
         // options
@@ -46,13 +46,13 @@ function menuMove(i){
     else {
       if (menuSelected == 0){
         //audio menu
-        gameMode = 10;
+        changeGamemode(10);
       }
       else if (menuSelected == 1){
         //gameplay menu
       }
       else if (menuSelected == 2){
-        gameMode = 12;
+        changeGamemode(12);
         //keyboard menu
         keyBinding = false;
       }
@@ -144,18 +144,60 @@ menuColourOffset = 0;
 menuAngle = 0;
 menuRandomBox = [Math.random(),Math.random(),Math.random(),Math.random()];
 
-function drawMainMenu(){
-  clearScreen();
-  menuGlobalTimer++;
-  if (menuGlobalTimer > 600){
-    menuGlobalTimer = 0;
-  }
+function drawMainMenuInit(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(12, 11, 54, 1)");
   bgGrad.addColorStop(1,"rgba(1, 2, 15, 1)");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
 
+  fg1.lineWidth = 5;
+  fg1.strokeStyle = "rgb(0, 0, 0)";
+  for (var i=0;i<60;i++){
+    fg1.beginPath();
+    fg1.moveTo(0,900-(i*15));
+    fg1.lineTo(1200,750-(i*15));
+    fg1.stroke();
+  }
+  fg1.strokeStyle = "rgba(3, 31, 219,0.5)";
+  fg1.fillStyle = "hsla("+menuCurColour+",100%,50%,0.5)";
+  fg1.save();
+  fg1.translate(800,400);
+  fg1.rotate(0.7);
+  fg1.scale(0.4,1);
+  fg1.beginPath();
+  fg1.arc(0,0,400,0,twoPi);
+  fg1.closePath();
+  fg1.stroke();
+  fg1.restore();
+  fg1.save();
+  fg1.translate(800,400);
+  fg1.rotate(0.8);
+  fg1.scale(0.4,1);
+  fg1.beginPath();
+  fg1.arc(0,0,400,0,twoPi);
+  fg1.closePath();
+  fg1.stroke();
+  fg1.restore();
+
+  fg1.lineWidth = 3;
+  fg1.strokeStyle = "rgba(255,255,255,0.13)";
+  fg1.beginPath();
+  for (var i=0;i<60;i++){
+    fg1.moveTo(0+(i*30),0);
+    fg1.lineTo(0+(i*30),750);
+    fg1.moveTo(0,0+(i*30));
+    fg1.lineTo(1200,0+(i*30));
+  }
+  fg1.stroke();
+}
+
+function drawMainMenu(){
+  clearScreen();
+  menuGlobalTimer++;
+  if (menuGlobalTimer > 600){
+    menuGlobalTimer = 0;
+  }
   bg2.save();
   bg2.fillStyle = "rgba(18, 16, 85, 0.4)";
   bg2.translate(400,400);
@@ -184,57 +226,20 @@ function drawMainMenu(){
     bg2.fillRect(menuRandomBox[0]*-450,menuRandomBox[1]*800-400,menuRandomBox[2]*50+30,menuRandomBox[3]*60+30);
   }
   bg2.restore();
-  bg2.lineWidth = 5;
-  bg2.strokeStyle = "rgb(0, 0, 0)";
-  for (var i=0;i<60;i++){
-    bg2.beginPath();
-    bg2.moveTo(0,900-(i*15));
-    bg2.lineTo(1200,750-(i*15));
-    bg2.stroke();
-  }
-  bg2.strokeStyle = "rgba(3, 31, 219,0.5)";
-  bg2.fillStyle = "hsla("+menuCurColour+",100%,50%,0.5)";
-  bg2.save();
-  bg2.translate(800,400);
-  bg2.rotate(0.7);
+  fg2.fillStyle = "hsla("+menuCurColour+", 60%, 41%,0.75)";
+  fg2.save();
+  fg2.translate(800,400);
+  fg2.rotate(0.7);
   menuAngle += 0.015;
   if (menuAngle >= twoPi){
     menuAngle = 0;
   }
-  bg2.beginPath();
-  bg2.arc(400*Math.cos(menuAngle)*0.4,400*Math.sin(menuAngle),15,0,twoPi);
-  bg2.closePath();
-  bg2.fill();
-  bg2.scale(0.4,1);
-  bg2.beginPath();
-  bg2.arc(0,0,400,0,twoPi);
-  bg2.closePath();
-  bg2.stroke();
-  bg2.restore();
-  bg2.save();
-  bg2.translate(800,400);
-  bg2.rotate(0.8);
-  bg2.scale(0.4,1);
-  bg2.beginPath();
-  bg2.arc(0,0,400,0,twoPi);
-  bg2.closePath();
-  bg2.stroke();
-  bg2.restore();
+  fg2.beginPath();
+  fg2.arc(400*Math.cos(menuAngle)*0.4,400*Math.sin(menuAngle),15,0,twoPi);
+  fg2.closePath();
+  fg2.fill();
+  fg2.restore();
 
-  bg2.lineWidth = 3;
-  bg2.strokeStyle = "rgba(255,255,255,0.13)";
-  bg2.beginPath();
-  for (var i=0;i<60;i++){
-  //  ui.beginPath();
-    bg2.moveTo(0+(i*30),0);
-    bg2.lineTo(0+(i*30),750);
-    //ui.stroke();
-    //ui.beginPath();
-    bg2.moveTo(0,0+(i*30));
-    bg2.lineTo(1200,0+(i*30));
-    //ui.stroke();
-  }
-  bg2.stroke();
   if (menuCurColour != menuColours[menuSelected]){
     menuCurColour += menuColourOffset*0.05;
     if (menuTimer == 19){

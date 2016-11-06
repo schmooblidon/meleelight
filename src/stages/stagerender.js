@@ -1,6 +1,4 @@
-
-function drawStage(){
-  fg1.fillStyle = boxFill;
+function drawStageInit(){
   fg1.strokeStyle = "#db80cc";
   fg1.lineWidth = 1;
   for (var j=0;j<stage.ground.length;j++){
@@ -18,16 +16,15 @@ function drawStage(){
     fg1.closePath();
     fg1.stroke();
   }
-  for (var j=0;j<stage.box.length;j++){
-    fg1.fillRect((stage.box[j].min.x*stage.scale)+stage.offset[0],(stage.box[j].max.y*-stage.scale)+stage.offset[1],(stage.box[j].max.x-stage.box[j].min.x)*stage.scale,(stage.box[j].max.y-stage.box[j].min.y)*stage.scale);
-  }
   fg1.strokeStyle = "#4794c6";
   for (var j=0;j<stage.platform.length;j++){
+    if (j != stage.movingPlat){
       fg1.beginPath();
       fg1.moveTo((stage.platform[j][0].x*stage.scale) +stage.offset[0],(stage.platform[j][0].y*-stage.scale)+stage.offset[1]);
       fg1.lineTo((stage.platform[j][1].x*stage.scale) +stage.offset[0],(stage.platform[j][1].y*-stage.scale)+stage.offset[1]);
       fg1.closePath();
       fg1.stroke();
+    }
   }
   fg1.strokeStyle = "#47c648";
   for (var k=0;k<stage.wallL.length;k++){
@@ -45,25 +42,40 @@ function drawStage(){
       fg1.closePath();
       fg1.stroke();
   }
-  fg1.strokeStyle = "#e7a44c";
+}
+
+function drawStage(){
+  if (stage.movingPlat > -1){
+    fg2.strokeStyle = "#4794c6";
+    fg2.beginPath();
+    fg2.moveTo((stage.platform[stage.movingPlat][0].x*stage.scale) +stage.offset[0],(stage.platform[stage.movingPlat][0].y*-stage.scale)+stage.offset[1]);
+    fg2.lineTo((stage.platform[stage.movingPlat][1].x*stage.scale) +stage.offset[0],(stage.platform[stage.movingPlat][1].y*-stage.scale)+stage.offset[1]);
+    fg2.closePath();
+    fg2.stroke();
+  }
+  fg2.fillStyle = boxFill;
+
+  for (var j=0;j<stage.box.length;j++){
+    fg2.fillRect((stage.box[j].min.x*stage.scale)+stage.offset[0],(stage.box[j].max.y*-stage.scale)+stage.offset[1],(stage.box[j].max.x-stage.box[j].min.x)*stage.scale,(stage.box[j].max.y-stage.box[j].min.y)*stage.scale);
+  }
+  fg2.strokeStyle = "#e7a44c";
   for (var j=0;j<stage.ledge.length;j++){
     var e = stage.ledge[j];
-    fg1.beginPath();
+    fg2.beginPath();
     if (e[1]){
-      fg1.moveTo(stage.box[e[0]].max.x*stage.scale+stage.offset[0],(stage.box[e[0]].max.y-Math.min(10,(stage.box[e[0]].max.y-stage.box[e[0]].min.y)/2))*-stage.scale+stage.offset[1]);
-      fg1.lineTo(stage.box[e[0]].max.x*stage.scale+stage.offset[0],stage.box[e[0]].max.y*-stage.scale+stage.offset[1]);
-      fg1.lineTo((stage.box[e[0]].max.x-Math.min(10,(stage.box[e[0]].max.x-stage.box[e[0]].min.x)/2))*stage.scale+stage.offset[0],stage.box[e[0]].max.y*-stage.scale+stage.offset[1]);
+      fg2.moveTo(stage.box[e[0]].max.x*stage.scale+stage.offset[0],(stage.box[e[0]].max.y-Math.min(10,(stage.box[e[0]].max.y-stage.box[e[0]].min.y)/2))*-stage.scale+stage.offset[1]);
+      fg2.lineTo(stage.box[e[0]].max.x*stage.scale+stage.offset[0],stage.box[e[0]].max.y*-stage.scale+stage.offset[1]);
+      fg2.lineTo((stage.box[e[0]].max.x-Math.min(10,(stage.box[e[0]].max.x-stage.box[e[0]].min.x)/2))*stage.scale+stage.offset[0],stage.box[e[0]].max.y*-stage.scale+stage.offset[1]);
     }
     else {
-      fg1.moveTo(stage.box[e[0]].min.x*stage.scale+stage.offset[0],(stage.box[e[0]].max.y-Math.min(10,(stage.box[e[0]].max.y-stage.box[e[0]].min.y)/2))*-stage.scale+stage.offset[1]);
-      fg1.lineTo(stage.box[e[0]].min.x*stage.scale+stage.offset[0],stage.box[e[0]].max.y*-stage.scale+stage.offset[1]);
-      fg1.lineTo((stage.box[e[0]].min.x+Math.min(10,(stage.box[e[0]].max.x-stage.box[e[0]].min.x)/2))*stage.scale+stage.offset[0],stage.box[e[0]].max.y*-stage.scale+stage.offset[1]);
+      fg2.moveTo(stage.box[e[0]].min.x*stage.scale+stage.offset[0],(stage.box[e[0]].max.y-Math.min(10,(stage.box[e[0]].max.y-stage.box[e[0]].min.y)/2))*-stage.scale+stage.offset[1]);
+      fg2.lineTo(stage.box[e[0]].min.x*stage.scale+stage.offset[0],stage.box[e[0]].max.y*-stage.scale+stage.offset[1]);
+      fg2.lineTo((stage.box[e[0]].min.x+Math.min(10,(stage.box[e[0]].max.x-stage.box[e[0]].min.x)/2))*stage.scale+stage.offset[0],stage.box[e[0]].max.y*-stage.scale+stage.offset[1]);
     }
-    fg1.closePath();
-    fg1.stroke();
-    fg1.fill();
-    fg1.fill();
-
+    fg2.closePath();
+    fg2.stroke();
+    fg2.fill();
+    fg2.fill();
   }
   if (typeof stage.target != "undefined"){
     for (var k=0;k<stage.target.length;k++){
@@ -71,11 +83,11 @@ function drawStage(){
         var x = stage.target[k].x*stage.scale+stage.offset[0];
         var y = stage.target[k].y*-stage.scale+stage.offset[1];
         for (var j=0;j<5;j++){
-          fg1.fillStyle = (j%2)?"white":"red";
-          fg1.beginPath();
-          fg1.arc(x,y,(25-j*5)*(stage.scale/4.5),0,twoPi);
-          fg1.closePath();
-          fg1.fill();
+          fg2.fillStyle = (j%2)?"white":"red";
+          fg2.beginPath();
+          fg2.arc(x,y,(25-j*5)*(stage.scale/4.5),0,twoPi);
+          fg2.closePath();
+          fg2.fill();
         }
       }
     }
@@ -100,19 +112,27 @@ function bgStar(){
 bgStars = [];
 for (var p=0;p<20;p++){
   bgStars[p] = new bgStar();
-  bgStars[p].pos = new Vec2D(600*Math.random()*Math.sign(bgStars[p].velocity.x),400*Math.random()*Math.sign(bgStars[p].velocity.y));
+  bgStars[p].pos = new Vec2D(600+100*Math.random()*bgStars[p].velocity.x,375+100*Math.random()*bgStars[p].velocity.y);
 }
 bgSparkle = 3;
-function drawBackground(){
-  bgSparkle--;
+
+function drawBackgroundInit(){
   var bgGrad =bg1.createLinearGradient(0,0,0,500);
   bgGrad.addColorStop(0,"rgb(24, 17, 66)");
   bgGrad.addColorStop(1,"black");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(-100,-100,layers.BG1.width+200,layers.BG1.height+200);
+}
+
+
+function drawBackground(){
+  bgSparkle--;
   for (var p=0;p<20;p++){
-    if (Math.abs(bgStars[p].pos.x) > 600 || Math.abs(bgStars[p].pos.y) > 400){
-      bgStars[p] = new bgStar();
+    if (bgStars[p].pos.x > 1250 || bgStars[p].pos.y > 800 || bgStars[p].pos.x < -50 || bgStars[p].pos.y < -50){
+      bgStars[p].pos = new Vec2D(600,375)
+      bgStars[p].life = 0;
+      var vSeed = Math.random();
+      bgStars[p].velocity = new Vec2D(5*vSeed*Math.sign(0.5-Math.random()),5*(1-vSeed)*Math.sign(0.5-Math.random()));
     }
     bgStars[p].pos.x += bgStars[p].velocity.x;
     bgStars[p].pos.y += bgStars[p].velocity.y;
@@ -125,7 +145,7 @@ function drawBackground(){
         bg2.globalAlpha = Math.min(bgStars[p].life/300,1);
       }
       bg2.beginPath();
-      bg2.arc(600+bgStars[p].pos.x,375+bgStars[p].pos.y,5,twoPi,0);
+      bg2.arc(bgStars[p].pos.x,bgStars[p].pos.y,5,twoPi,0);
       bg2.fill();
 
     }

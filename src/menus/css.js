@@ -46,7 +46,7 @@ function cssControls(i){
       bHold[i]++;
       if (bHold[i] == 60){
         sounds.menuBack.play();
-        gameMode = 1;
+        changeGamemode(1);
       }
     }
     else {
@@ -188,7 +188,7 @@ function cssControls(i){
     if (handPos[i].y < 160 && handPos[i].x > 920){
       if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
         sounds.menuBack.play();
-        gameMode = 1;
+        changeGamemode(1);
       }
     }
     if (player[i].inputs.x[0] && !player[i].inputs.x[1]){
@@ -271,161 +271,153 @@ function cssControls(i){
     if (pause[i][0] && !pause[i][1]){
       sounds.menuForward.play();
       //startGame();
-      gameMode = 6;
+      changeGamemode(6);
     }
   }
 }
 
-function drawCSS(){
-  clearScreen();
+function drawCSSInit(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,700);
   bgGrad.addColorStop(0,"rgb(17, 12, 56)");
   bgGrad.addColorStop(1,"black");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
-  ui.fillStyle = "rgb(85, 96, 107)";
-  ui.strokeStyle = "rgb(144, 152, 161)";
-  ui.save();
-  ui.strokeStyle = "rgb(120, 127, 161)";
-  ui.beginPath();
-  ui.moveTo(-10,200);
-  ui.lineTo(290,200);
-  ui.arc(290,225,25,Math.PI*1.5,Math.PI*0.5);
-  ui.lineTo(-10,250);
-  ui.closePath();
-  ui.stroke();
-  ui.fillStyle = "rgb(29, 144, 61)";
-  ui.beginPath();
-  ui.arc(145,225,20,0,twoPi);
-  ui.closePath();
-  ui.fill();
-  ui.fillStyle = "rgb(120, 127, 161)";
-  ui.fillText("Push     to join",37,235);
-  ui.fillStyle = "rgb(17, 71, 32)";
-  ui.fillText("A",133,235);
-  ui.restore();
-  ui.save();
-  ui.lineWidth = 3;
-  ui.translate(layers.UI.width/2,layers.UI.height/2+20);
+  bg1.fillStyle = "rgb(85, 96, 107)";
+  bg1.strokeStyle = "rgb(144, 152, 161)";
+  bg1.save();
+  bg1.lineWidth = 2;
+  bg1.strokeStyle = "rgb(120, 127, 161)";
+  bg1.beginPath();
+  bg1.moveTo(-10,200);
+  bg1.lineTo(290,200);
+  bg1.arc(290,225,25,Math.PI*1.5,Math.PI*0.5);
+  bg1.lineTo(-10,250);
+  bg1.closePath();
+  bg1.stroke();
+  bg1.fillStyle = "rgb(29, 144, 61)";
+  bg1.beginPath();
+  bg1.arc(145,225,20,0,twoPi);
+  bg1.closePath();
+  bg1.fill();
+  bg1.font = "900 31px Arial";
+  bg1.fillStyle = "rgb(120, 127, 161)";
+  bg1.fillText("Push     to join",37,235);
+  bg1.fillStyle = "rgb(17, 71, 32)";
+  bg1.fillText("A",133,235);
+  bg1.restore();
+  bg1.save();
+  bg1.lineWidth = 3;
+  bg1.translate(layers.BG1.width/2,layers.BG1.height/2+20);
   for (var i=0;i<2;i++){
-    ui.rotate(i*Math.PI);
-    ui.beginPath();
-    ui.moveTo(-10-layers.UI.width/2,-250);
-    ui.lineTo(-300,-250);
-    ui.bezierCurveTo(-240,-250,-240,-330,-180,-330);
-    ui.lineTo(10+layers.UI.width/2,-330);
-    ui.lineTo(10+layers.UI.width/2,-30-layers.UI.height/2);
-    ui.lineTo(-10-layers.UI.width/2,-30-layers.UI.height/2);
-    ui.closePath();
-    ui.fill();
-    ui.stroke();
+    bg1.rotate(i*Math.PI);
+    bg1.beginPath();
+    bg1.moveTo(-10-layers.BG1.width/2,-250);
+    bg1.lineTo(-300,-250);
+    bg1.bezierCurveTo(-240,-250,-240,-330,-180,-330);
+    bg1.lineTo(10+layers.BG1.width/2,-330);
+    bg1.lineTo(10+layers.BG1.width/2,-30-layers.BG1.height/2);
+    bg1.lineTo(-10-layers.BG1.width/2,-30-layers.BG1.height/2);
+    bg1.closePath();
+    bg1.fill();
+    bg1.stroke();
   }
-  ui.restore();
-  ui.lineWidth = 3;
-  ui.beginPath();
-  ui.moveTo(410,80);
-  ui.lineTo(950,80);
-  ui.lineTo(955,105);
-  ui.lineTo(946,130);
-  ui.lineTo(406,130);
-  ui.lineTo(400,105);
-  ui.closePath();
-  ui.stroke();
-  ui.lineWidth = 5;
-  ui.beginPath();
-  ui.moveTo(412,81);
-  ui.lineTo(422,81);
-  ui.lineTo(412,105);
-  ui.lineTo(418,129);
-  ui.lineTo(408,129);
-  ui.lineTo(402,105);
-  ui.closePath();
-  ui.fill();
-  ui.stroke();
-  ui.beginPath();
-  ui.moveTo(938,81);
-  ui.lineTo(948,81);
-  ui.lineTo(953,105);
-  ui.lineTo(944,129);
-  ui.lineTo(934,129);
-  ui.lineTo(943,105);
-  ui.closePath();
-  ui.fill();
-  ui.stroke();
-  ui.lineWidth = 3;
-  ui.fillStyle = "black";
-  ui.font = "italic 900 50px Arial";
-  ui.save();
-  ui.scale(1,1.9);
-  ui.fillText("MELEE",50,65);
-  ui.restore();
-  ui.beginPath();
-  ui.arc(305,85,30,0,twoPi);
-  ui.closePath();
-  ui.fill();
-  ui.stroke();
-  ui.fillStyle = "rgb(144, 152, 161)";
-  ui.font = "700 32px Arial";
-  ui.fillText("VS",284,98);
-  ui.fillStyle = "rgb(219, 219, 219)";
-  ui.save();
-  ui.scale(1.25,1);
-  if (versusMode){
-    ui.fillText("An endless KO fest!",393,117);
-  }
-  else {
-    ui.fillText("4-man survival test!",390,117);
-  }
-  ui.restore();
-  ui.fillStyle = "rgba(0,0,0,0.65)";
-  ui.beginPath();
-  ui.moveTo(1100,0);
-  ui.lineTo(1000,110);
-  ui.lineTo(1020,125);
-  ui.lineTo(1200,125);
-  ui.lineTo(1200,0);
-  ui.closePath();
-  ui.fill();
-  ui.fillStyle = "rgb(255, 222, 0)";
-  ui.beginPath();
-  ui.moveTo(1100,0);
-  ui.lineTo(1000,110);
-  ui.lineTo(1020,125);
-  ui.lineTo(1200,125);
-  ui.lineTo(1200,119);
-  ui.lineTo(1015,119);
-  ui.lineTo(1002,110);
-  ui.lineTo(1102,0);
-  ui.closePath();
-  ui.fill();
-  ui.font = "700 27px Arial";
-  ui.fillText("BACK",1035,112);
-  ui.fillStyle = "rgb(194, 24, 8)";
-  ui.beginPath();
-  ui.moveTo(1025,75);
-  ui.lineTo(992,110);
-  ui.lineTo(1010,125);
-  ui.lineTo(972,110);
-  ui.closePath();
-  ui.fill();
-  var bgGrad =ui.createLinearGradient(0,250,0,350);
+  bg1.restore();
+  bg1.lineWidth = 3;
+  bg1.beginPath();
+  bg1.moveTo(410,80);
+  bg1.lineTo(950,80);
+  bg1.lineTo(955,105);
+  bg1.lineTo(946,130);
+  bg1.lineTo(406,130);
+  bg1.lineTo(400,105);
+  bg1.closePath();
+  bg1.stroke();
+  bg1.lineWidth = 5;
+  bg1.beginPath();
+  bg1.moveTo(412,81);
+  bg1.lineTo(422,81);
+  bg1.lineTo(412,105);
+  bg1.lineTo(418,129);
+  bg1.lineTo(408,129);
+  bg1.lineTo(402,105);
+  bg1.closePath();
+  bg1.fill();
+  bg1.stroke();
+  bg1.beginPath();
+  bg1.moveTo(938,81);
+  bg1.lineTo(948,81);
+  bg1.lineTo(953,105);
+  bg1.lineTo(944,129);
+  bg1.lineTo(934,129);
+  bg1.lineTo(943,105);
+  bg1.closePath();
+  bg1.fill();
+  bg1.stroke();
+  bg1.lineWidth = 3;
+  bg1.fillStyle = "black";
+  bg1.font = "italic 900 50px Arial";
+  bg1.save();
+  bg1.scale(1,1.9);
+  bg1.fillText("MELEE",50,65);
+  bg1.restore();
+  bg1.beginPath();
+  bg1.arc(305,85,30,0,twoPi);
+  bg1.closePath();
+  bg1.fill();
+  bg1.stroke();
+  bg1.fillStyle = "rgb(144, 152, 161)";
+  bg1.font = "700 32px Arial";
+  bg1.fillText("VS",284,98);
+  bg1.fillStyle = "rgb(219, 219, 219)";
+  bg1.fillStyle = "rgba(0,0,0,0.65)";
+  bg1.beginPath();
+  bg1.moveTo(1100,0);
+  bg1.lineTo(1000,110);
+  bg1.lineTo(1020,125);
+  bg1.lineTo(1200,125);
+  bg1.lineTo(1200,0);
+  bg1.closePath();
+  bg1.fill();
+  bg1.fillStyle = "rgb(255, 222, 0)";
+  bg1.beginPath();
+  bg1.moveTo(1100,0);
+  bg1.lineTo(1000,110);
+  bg1.lineTo(1020,125);
+  bg1.lineTo(1200,125);
+  bg1.lineTo(1200,119);
+  bg1.lineTo(1015,119);
+  bg1.lineTo(1002,110);
+  bg1.lineTo(1102,0);
+  bg1.closePath();
+  bg1.fill();
+  bg1.font = "700 27px Arial";
+  bg1.fillText("BACK",1035,112);
+  bg1.fillStyle = "rgb(194, 24, 8)";
+  bg1.beginPath();
+  bg1.moveTo(1025,75);
+  bg1.lineTo(992,110);
+  bg1.lineTo(1010,125);
+  bg1.lineTo(972,110);
+  bg1.closePath();
+  bg1.fill();
+  var bgGrad =bg1.createLinearGradient(0,250,0,350);
   bgGrad.addColorStop(0,"rgb(41, 47, 68)");
   bgGrad.addColorStop(1,"rgb(85, 95, 128)");
-  ui.lineWidth = 2;
+  bg1.lineWidth = 2;
   for (var j=0;j<3;j++){
-    ui.fillStyle=bgGrad;
-    ui.beginPath();
-    ui.moveTo(457+j*95,265);
-    ui.bezierCurveTo(457+j*95,245,457+j*95,245,477+j*95,245);
-    ui.lineTo(522+j*95,245);
-    ui.bezierCurveTo(542+j*95,245,542+j*95,245,542+j*95,265);
-    ui.lineTo(542+j*95,310);
-    ui.bezierCurveTo(542+j*95,330,542+j*95,330,522+j*95,330);
-    ui.lineTo(477+j*95,330);
-    ui.bezierCurveTo(457+j*95,330,457+j*95,330,457+j*95,310);
-    ui.closePath();
-    ui.fill();
-    ui.stroke();
+    bg1.fillStyle=bgGrad;
+    bg1.beginPath();
+    bg1.moveTo(457+j*95,265);
+    bg1.bezierCurveTo(457+j*95,245,457+j*95,245,477+j*95,245);
+    bg1.lineTo(522+j*95,245);
+    bg1.bezierCurveTo(542+j*95,245,542+j*95,245,542+j*95,265);
+    bg1.lineTo(542+j*95,310);
+    bg1.bezierCurveTo(542+j*95,330,542+j*95,330,522+j*95,330);
+    bg1.lineTo(477+j*95,330);
+    bg1.bezierCurveTo(457+j*95,330,457+j*95,330,457+j*95,310);
+    bg1.closePath();
+    bg1.fill();
+    bg1.stroke();
     switch (j){
       case 0:
         var add = 0;
@@ -440,86 +432,101 @@ function drawCSS(){
         var add = 0;
         break;
     }
-    ui.fillStyle = "black";
-    ui.beginPath();
-    ui.moveTo(540+j*95,305-add);
-    ui.lineTo(540+j*95,310-add);
-    ui.bezierCurveTo(540+j*95,328,540+j*95,328,522+j*95,328);
-    ui.lineTo(487+j*95,328);
-    ui.bezierCurveTo(459+j*95,328,459+j*95,328,459+j*95,310-add);
-    ui.lineTo(459+j*95,305-add);
-    ui.closePath();
-    ui.fill();
-    ui.fillStyle = "rgb(180, 180, 180)";
-    ui.font = "700 18px Arial";
+    bg1.fillStyle = "black";
+    bg1.beginPath();
+    bg1.moveTo(540+j*95,305-add);
+    bg1.lineTo(540+j*95,310-add);
+    bg1.bezierCurveTo(540+j*95,328,540+j*95,328,522+j*95,328);
+    bg1.lineTo(487+j*95,328);
+    bg1.bezierCurveTo(459+j*95,328,459+j*95,328,459+j*95,310-add);
+    bg1.lineTo(459+j*95,305-add);
+    bg1.closePath();
+    bg1.fill();
+    bg1.fillStyle = "rgb(180, 180, 180)";
+    bg1.font = "700 18px Arial";
     switch (j){
       case 0:
-        ui.fillText("MARTH",467+j*95,323);
-        ui.drawImage(marthPic, 459+j*95, 247, 81, 58);
+        bg1.fillText("MARTH",467+j*95,323);
+        bg1.drawImage(marthPic, 459+j*95, 247, 81, 58);
         break;
       case 1:
-        ui.fillText("JIGGLY-",464+j*95,313);
-        ui.fillText("PUFF",477+j*95,326);
-        ui.drawImage(puffPic, 459+j*95, 247, 81, 51);
+        bg1.fillText("JIGGLY-",464+j*95,313);
+        bg1.fillText("PUFF",477+j*95,326);
+        bg1.drawImage(puffPic, 459+j*95, 247, 81, 51);
         break;
       case 2:
-        ui.fillText("  F O X ",467+j*95,323);
-        ui.drawImage(foxPic, 459+j*95, 247, 81, 58);
+        bg1.fillText("  F O X ",467+j*95,323);
+        bg1.drawImage(foxPic, 459+j*95, 247, 81, 58);
         break;
       default:
         break;
     }
   }
-  ui.fillStyle = "rgb(49, 52, 56)";
+  bg1.fillStyle = "rgb(49, 52, 56)";
   for (var i=0;i<4;i++){
-    ui.fillRect(145+i*225,430,210,280);
-    ui.strokeRect(145+i*225,430,210,280);
+    bg1.fillRect(145+i*225,430,210,280);
+    bg1.strokeRect(145+i*225,430,210,280);
   }
-  ui.fillStyle = "rgb(55, 58, 62)";
-  ui.strokeStyle = "rgb(72, 77, 85)";
+  bg1.fillStyle = "rgb(55, 58, 62)";
+  bg1.strokeStyle = "rgb(72, 77, 85)";
   for (var i=0;i<4;i++){
-    ui.fillRect(158+i*225,440,184,260);
-    ui.strokeRect(158+i*225,440,184,260);
+    bg1.fillRect(158+i*225,440,184,260);
+    bg1.strokeRect(158+i*225,440,184,260);
   }
-  ui.fillStyle = "rgba(255,255,255,0.1)";
+  bg1.fillStyle = "rgba(255,255,255,0.1)";
   for (var i=0;i<4;i++){
-    ui.fillRect(158+i*225,630,184,50);
+    bg1.fillRect(158+i*225,630,184,50);
   }
-  ui.strokeStyle = "rgba(0,0,0,0.2)";
-  ui.fillStyle = "rgba(0,0,0,0.2)";
-  ui.lineWidth = 15;
+  bg1.strokeStyle = "rgba(0,0,0,0.2)";
+  bg1.fillStyle = "rgba(0,0,0,0.2)";
+  bg1.lineWidth = 15;
   for (var i=0;i<4;i++){
-    ui.beginPath();
-    ui.moveTo(150+i*225,435);
-    ui.lineTo(350+i*225,705);
-    ui.closePath();
-    ui.stroke();
-    ui.beginPath();
-    ui.arc(250+i*225,570,60,0,twoPi);
-    ui.closePath();
-    ui.stroke();
-    ui.beginPath();
-    ui.moveTo(150+i*225,570);
-    ui.lineTo(350+i*225,570);
-    ui.closePath();
-    ui.stroke();
+    bg1.beginPath();
+    bg1.moveTo(150+i*225,435);
+    bg1.lineTo(350+i*225,705);
+    bg1.closePath();
+    bg1.stroke();
+    bg1.beginPath();
+    bg1.arc(250+i*225,570,60,0,twoPi);
+    bg1.closePath();
+    bg1.stroke();
+    bg1.beginPath();
+    bg1.moveTo(150+i*225,570);
+    bg1.lineTo(350+i*225,570);
+    bg1.closePath();
+    bg1.stroke();
   }
-  ui.lineWidth = 3;
+  bg1.lineWidth = 3;
   for (var i=0;i<4;i++){
     for (var j=0;j<7;j++){
-      ui.beginPath();
-      ui.arc(165+i*225+j*30,450,11,0,twoPi);
-      ui.closePath();
-      ui.fill();
-      ui.beginPath();
-      ui.arc(165+i*225+j*30,690,10,0,twoPi);
-      ui.closePath();
-      ui.stroke();
+      bg1.beginPath();
+      bg1.arc(165+i*225+j*30,450,11,0,twoPi);
+      bg1.closePath();
+      bg1.fill();
+      bg1.beginPath();
+      bg1.arc(165+i*225+j*30,690,10,0,twoPi);
+      bg1.closePath();
+      bg1.stroke();
       if (j == 3){
-        ui.fill();
+        bg1.fill();
       }
     }
   }
+}
+
+function drawCSS(){
+  clearScreen();
+  ui.fillStyle = "rgb(219, 219, 219)";
+  ui.save();
+  ui.scale(1.25,1);
+  if (versusMode){
+    ui.fillText("An endless KO fest!",393,117);
+  }
+  else {
+    ui.fillText("4-man survival test!",390,117);
+  }
+  ui.restore();
+
   for (var i=0;i<4;i++){
     if (playerType[i] > -1){
     if (playerType[i] == 0){
@@ -694,8 +701,7 @@ function drawCSS(){
       else {
         ui.globalAlpha = 1;
       }
-      drawArrayPathNew(ui,col,face,(player[i].phys.pos.x*4.5*1.5) + 600,(player[i].phys.pos.y*-4.5) +480,model,player[i].charAttributes.charScale*1.5,player[i].charAttributes.charScale*1.5,0,0,0);
-      //drawArrayPath(col,face,245+i*225,610,model,0.3,0.3);
+      drawArrayPathCompress(ui,col,face,(player[i].phys.pos.x*4.5*1.5) + 600,(player[i].phys.pos.y*-4.5) +480,model,player[i].charAttributes.charScale*1.5,player[i].charAttributes.charScale*1.5,0,0,0);
       if (player[i].phys.shielding){
         var sCol = palettes[pPal[i]][2];
         ui.fillStyle = sCol+(0.6*player[i].phys.shieldAnalog)+")";

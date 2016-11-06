@@ -14,6 +14,7 @@ stages = [{
     ledgePos : [new Vec2D(-68.4,0),new Vec2D(68.4,0)],
     scale : 4.5,
     offset : [600,480],
+    movingPlat : -1,
     movingPlatforms : function(){}
   },{
     box : [new Box2D([-56,-100],[56,0])],
@@ -31,6 +32,7 @@ stages = [{
     ledgePos : [new Vec2D(-56,0),new Vec2D(56,0)],
     scale : 5,
     offset : [600,430],
+    movingPlat : 0,
     movingPlatforms : function(){
       var plat = stage.platform[0];
       var move = [0,0];
@@ -87,6 +89,7 @@ stages = [{
     ledgePos : [new Vec2D(-87.7,0),(new Vec2D(87.7,0))],
     scale : 4.2,
     offset : [600,500],
+    movingPlat : -1,
     movingPlatforms : function(){}
   },{
     box : [new Box2D([-77.27,-36],[77.27,0])],
@@ -104,6 +107,7 @@ stages = [{
     ledgePos : [new Vec2D(-77.27,0),new Vec2D(77.27,0)],
     scale : 3.5,
     offset : [600,500],
+    movingPlat : -1,
     movingPlatforms : function(){}
   }
 ];

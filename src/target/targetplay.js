@@ -81,7 +81,7 @@ function startTargetGame(p,test){
     stage = stageTemp;
   }
   targetTesting = test;
-  gameMode = 5;
+  changeGamemode(5);
   targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
   targetsDestroyed = 0;
   vfxQueue = [];

@@ -271,7 +271,7 @@ function keyboardMenuControls(i){
       if (!settingModifier && !settingRange){
         sounds.menuBack.play();
         player[i].inputs.b[1] = true;
-        gameMode = 1;
+        changeGamemode(1);
         setKeyboardCookie();
       }
     }
@@ -422,13 +422,46 @@ function keyboardMenuControls(i){
   }
 }
 
-function drawKeyboardMenu(){
-  clearScreen();
+function drawKeyboardMenuInit(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+
+  fg1.lineWidth = 3;
+  fg1.textAlign = "center";
+  fg1.fillStyle = "rgba(255, 255, 255, 0.65)";
+  fg1.font = "italic 900 60px Arial";
+  fg1.fillText("Keyboard Controls",600,75);
+  fg1.font = "italic 900 30px Arial";
+  fg1.fillText("L-stick",150,100);
+  fg1.fillText("Shoulder Analog",200,495);
+  fg1.fillText("C-stick",950,100);
+  fg1.fillText("Dpad",950,420);
+  var buttonLetters = ["A","B","X","Y","Z","L","R","S"];
+  for (var i=0;i<buttonLetters.length;i++){
+    fg1.fillText(buttonLetters[i],510,186+i*70);
+  }
+  fg1.fillText("L",95,556);
+  fg1.fillText("R",95,626);
+  fg1.font = "italic 900 16px Arial";
+  fg1.fillText("Press Enter to listen for key bind    Hold Enter to clear",600,115);
+  fg1.font = "italic 900 20px Arial";
+  fg1.fillText("Modifiers",200,405);
+  fg1.fillText("Modifiers",200,665);
+  fg1.textAlign = "left";
+  var directionPlacements = [new Vec2D(75,153),new Vec2D(875,153),new Vec2D(875,475)];
+  for (var i=0;i<3;i++){
+    fg1.fillText("Up",directionPlacements[i].x,directionPlacements[i].y);
+    fg1.fillText("Right",directionPlacements[i].x,directionPlacements[i].y+70);
+    fg1.fillText("Left",directionPlacements[i].x,directionPlacements[i].y+140);
+    fg1.fillText("Down",directionPlacements[i].x,directionPlacements[i].y+210);
+  }
+}
+
+function drawKeyboardMenu(){
+  clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;
   if (shine > 1.8){
@@ -449,35 +482,6 @@ function drawKeyboardMenu(){
     bg2.lineTo(1200,0+(i*30));
   }
   bg2.stroke();
-  ui.lineWidth = 3;
-  ui.textAlign = "center";
-  ui.fillStyle = "rgba(255, 255, 255, 0.65)";
-  ui.font = "italic 900 60px Arial";
-  ui.fillText("Keyboard Controls",600,75);
-  ui.font = "italic 900 30px Arial";
-  ui.fillText("L-stick",150,100);
-  ui.fillText("Shoulder Analog",200,495);
-  ui.fillText("C-stick",950,100);
-  ui.fillText("Dpad",950,420);
-  var buttonLetters = ["A","B","X","Y","Z","L","R","S"];
-  for (var i=0;i<buttonLetters.length;i++){
-    ui.fillText(buttonLetters[i],510,186+i*70);
-  }
-  ui.fillText("L",95,556);
-  ui.fillText("R",95,626);
-  ui.font = "italic 900 16px Arial";
-  ui.fillText("Press Enter to listen for key bind    Hold Enter to clear",600,115);
-  ui.font = "italic 900 20px Arial";
-  ui.fillText("Modifiers",200,405);
-  ui.fillText("Modifiers",200,665);
-  ui.textAlign = "left";
-  var directionPlacements = [new Vec2D(75,153),new Vec2D(875,153),new Vec2D(875,475)];
-  for (var i=0;i<3;i++){
-    ui.fillText("Up",directionPlacements[i].x,directionPlacements[i].y);
-    ui.fillText("Right",directionPlacements[i].x,directionPlacements[i].y+70);
-    ui.fillText("Left",directionPlacements[i].x,directionPlacements[i].y+140);
-    ui.fillText("Down",directionPlacements[i].x,directionPlacements[i].y+210);
-  }
   ui.textAlign = "center";
   var keys = Object.keys(keymapItems);
   for (var i=0;i<keys.length;i++){

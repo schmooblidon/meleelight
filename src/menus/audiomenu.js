@@ -9,7 +9,7 @@ function audioMenuControls(i){
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
     player[i].inputs.b[1] = true;
-    gameMode = 1;
+    changeGamemode(1);
   }
   else if (player[i].inputs.lStickAxis[0].y > 0.7){
     stickHoldEach[i] = true;
@@ -115,13 +115,29 @@ function audioMenuControls(i){
   }
 }
 
-function drawAudioMenu(){
-  clearScreen();
+function drawAudioMenuInit(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+
+  fg1.fillStyle = "rgba(0,0,0,0.5)";
+  fg1.lineWidth = 10;
+  fg1.strokeStyle = "rgba(255, 255, 255, 0.3)";
+  fg1.strokeRect(95,125,1010,650);
+  fg1.fillRect(95,125,1010,650);
+  fg1.textAlign = "center";
+  fg1.fillStyle = "rgba(255, 255, 255, 0.5)";
+  fg1.font = "italic 900 80px Arial";
+  fg1.fillText("Audio",600,100);
+  fg1.font = "italic 900 50px Arial";
+  fg1.fillText("Sounds",225,275);
+  fg1.fillText("Music",225,525);
+}
+
+function drawAudioMenu(){
+  clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;
   if (shine > 1.8){
@@ -142,18 +158,6 @@ function drawAudioMenu(){
     bg2.lineTo(1200,0+(i*30));
   }
   bg2.stroke();
-  ui.fillStyle = "rgba(0,0,0,0.5)";
-  ui.lineWidth = 10;
-  ui.strokeStyle = "rgba(255, 255, 255, 0.3)";
-  ui.strokeRect(95,125,1010,650);
-  ui.fillRect(95,125,1010,650);
-  ui.textAlign = "center";
-  ui.fillStyle = "rgba(255, 255, 255, 0.5)";
-  ui.font = "italic 900 80px Arial";
-  ui.fillText("Audio",600,100);
-  ui.font = "italic 900 50px Arial";
-  ui.fillText("Sounds",225,275);
-  ui.fillText("Music",225,525);
   for (var i=0;i<2;i++){
     if (i == audioMenuSelected){
       //ui.fillStyle = "rgba(255, 255, 255, 0.7)";

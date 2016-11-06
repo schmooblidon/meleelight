@@ -1,4 +1,4 @@
-sounds = {
+sounds = {  
   menuBack : new Howl({
     src: ['sfx/menu-back.wav']
   }),

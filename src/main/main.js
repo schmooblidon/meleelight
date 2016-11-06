@@ -321,7 +321,7 @@ function findPlayers(){
     if (gameMode < 2){
       if (keys[13] || keys[keyMap.s[0]] || keys[keyMap.s[1]]){
         if (ports < 4){
-          gameMode = 1;
+          changeGamemode(1);
           keyboardOccupied = true;
           sounds.menuForward.play();
           if (ports == 0){
@@ -372,7 +372,7 @@ function findPlayers(){
           }
           if (!alreadyIn){
             if (ports < 4){
-              gameMode = 1;
+              changeGamemode(1);
               sounds.menuForward.play();
               if (ports == 0){
                 music.menu2.play("menu2Start");
@@ -474,6 +474,83 @@ function positionPlayersInCSS(){
       var y = -30;
       player[i].phys.pos = new Vec2D(x,y);
       player[i].phys.hurtbox = new Box2D([-4+x,18+y],[4+x,y]);
+  }
+}
+
+// 20:Startup
+// 13:Data Menu
+// 12:Keyboard Controls
+// 11:Gameplay Menu
+// 10:Sound Menu
+// 9: -
+// 8: -
+// 7:Target Select
+// 6:Stage Select (VS)
+// 5:Target Playing
+// 4:Target Builder
+// 3:Playing (VS)
+// 2:CSS
+// 1:Main Menu
+// 0:Title Screen
+
+function changeGamemode(newGamemode){
+  bg1.fillStyle = "black";
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+  fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
+  gameMode = newGamemode;
+  switch (newGamemode){
+    // TITLESCREEN
+    case 0:
+      drawStartScreenInit();
+      break;
+    // MAIN MENU
+    case 1:
+      drawMainMenuInit();
+      break;
+    // CSS
+    case 2:
+      drawCSSInit();
+      break;
+    // Playing (VS)
+    case 3:
+      drawBackgroundInit();
+      drawStageInit();
+      break;
+    // Target Builder
+    case 4:
+      break;
+    // Target Playing
+    case 5:
+      drawBackgroundInit();
+      drawStageInit();
+      break;
+    // Stage select (vs)
+    case 6:
+      drawSSSInit();
+      break;
+    // Target Select
+    case 7:
+      drawTSSInit();
+      break;
+    // sound menu
+    case 10:
+      drawAudioMenuInit();
+      break;
+    // gameplay menu
+    case 11:
+      break;
+    // keyboard menu
+    case 12:
+      drawKeyboardMenuInit();
+      break;
+    // data menu
+    case 13:
+      break;
+    // startup
+    case 20:
+      break;
+    default:
+      break;
   }
 }
 
@@ -1182,10 +1259,10 @@ function gameTick(){
 }
 
 function clearScreen(){
-  bg1.fillStyle = "rgb(0, 0, 0)";
-  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+  //bg1.fillStyle = "rgb(0, 0, 0)";
+  //bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   bg2.clearRect(0,0,layers.BG2.width,layers.BG2.height);
-  fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
+  //fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
   fg2.clearRect(0,0,layers.FG2.width,layers.FG2.height);
   ui.clearRect(0,0,layers.UI.width,layers.UI.height);
 }
@@ -1298,7 +1375,7 @@ function renderTick(){
       renderForeground();
     }
     frameByFrameRender = false;
-    renderToMain();
+    //renderToMain();
   //console.log(performance.now());
   }
 }
@@ -1330,7 +1407,8 @@ function initializePlayers(i,target){
 }
 
 function startGame(){
-  gameMode = 3;
+  stage = stages[stageSelect];
+  changeGamemode(3);
   vfxQueue = [];
   for (var n=0;n<4;n++){
     if (playerType[n] > -1){
@@ -1351,7 +1429,6 @@ function startGame(){
   drawVfx("start",new Vec2D(0,0));
   findingPlayers = false;
   playing = true;
-  stage = stages[stageSelect];
 }
 
 function endGame(){
@@ -1366,14 +1443,14 @@ function endGame(){
   c.fillRect(-100,-100,canvas.width+200,canvas.height+200);*/
   drawStage();
   if (gameMode == 3){
-    gameMode = 2;
+    changeGamemode(2);
   }
   else if (gameMode == 5){
     if (targetTesting){
-      gameMode = 4;
+      changeGamemode(4);
     }
     else {
-      gameMode = 7;
+      changeGamemode(7);
     }
   }
   music.menu2.play("menu2Start");
@@ -1497,30 +1574,20 @@ $(document).ready(function(){
   $("#controllerButton").click(function(){
     $("#controllerSupportContainer").toggle();
   });
-  layers.BG1 = document.createElement('canvas');
-  layers.BG1.width = 1200;
-  layers.BG1.height = 750;
+  layers.BG1 = document.getElementById("background1Canvas");
   bg1 = layers.BG1.getContext("2d");
-  layers.BG2 = document.createElement('canvas');
-  layers.BG2.width = 1200;
-  layers.BG2.height = 750;
+  layers.BG2 = document.getElementById("background2Canvas");
   bg2 = layers.BG2.getContext("2d");
-  layers.FG1 = document.createElement('canvas');
-  layers.FG1.width = 1200;
-  layers.FG1.height = 750;
+  layers.FG1 = document.getElementById("foreground1Canvas");
   fg1 = layers.FG1.getContext("2d");
-  layers.FG2 = document.createElement('canvas');
-  layers.FG2.width = 1200;
-  layers.FG2.height = 750;
+  layers.FG2 = document.getElementById("foreground2Canvas");
   fg2 = layers.FG2.getContext("2d");
-  layers.UI = document.createElement('canvas');
-  layers.UI.width = 1200;
-  layers.UI.height = 750;
+  layers.UI = document.getElementById("uiCanvas");
   ui = layers.UI.getContext("2d");
   bg1.fillStyle = "rgb(0, 0, 0)";
-  bg1.fillRect(-100,-100,layers.BG1.width+200,layers.BG1.height+200);
-  canvasMain = document.getElementById("mainCanvas");
-  c = canvasMain.getContext("2d");
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+  //canvasMain = document.getElementById("mainCanvas");
+  //c = canvasMain.getContext("2d");
   gameTick();
   renderTick();
   var mX = Math.max(($(window).width()-1200)/2,0);
@@ -1566,18 +1633,23 @@ $(document).ready(function(){
     switch (id){
       case "layer1":
         layerSwitches.BG1 ^= true;
+        $("#background1Canvas").toggle();
         break;
       case "layer2":
         layerSwitches.BG2 ^= true;
+        $("#background2Canvas").toggle();
         break;
       case "layer3":
         layerSwitches.FG1 ^= true;
+        $("#foreground1Canvas").toggle();
         break;
       case "layer4":
         layerSwitches.FG2 ^= true;
+        $("#foreground2Canvas").toggle();
         break;
       case "layer5":
         layerSwitches.UI ^= true;
+        $("#uiCanvas").toggle();
         break;
       default:
         break;

@@ -36,7 +36,7 @@ function tssControls(i){
     }
     if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
       sounds.menuBack.play();
-      gameMode = 1;
+      changeGamemode(1);
       return;
     }
     else {
@@ -67,7 +67,7 @@ function tssControls(i){
           targetBuilder = i;
           editingStage = targetSelected-10;
           player[i].inputs.a[1] = true;
-          gameMode = 4;
+          changeGamemode(4);
           return;
         }
       }
@@ -205,14 +205,70 @@ function parseStage(code){
   }
 }
 
-var shine = 0.5;
-function drawTSS(){
-  clearScreen();
+function drawTSSInit(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(66, 42, 6)");
   bgGrad.addColorStop(1,"rgb(26, 2, 2)");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+  fg1.lineWidth = 4;
+  fg1.fillStyle = "rgba(255,255,255,0.7)";
+  fg1.textAlign = "start";
+  fg1.font = "800 35px Arial";
+  fg1.fillText("Select Target Stage",50,85);
+  fg1.fillText("Custom Stages",640,85);
+  fg1.fillStyle = "black";
+  for (var i=0;i<Math.min(11+customTargetStages.length,20);i++){
+    fg1.fillRect(50+Math.floor(i/5)*260+Math.floor(i/10)*65,110+(i%5)*60,250,50);
+  }
+  fg1.font = "700 25px Arial";
+  fg1.fillStyle = "rgba(255,255,255,0.6)";
+  for (var i=0;i<10;i++){
+    fg1.fillText("Target "+(i+1),60+Math.floor(i/5)*260,143+(i%5)*60);
+  }
+  fg1.strokeStyle = "rgba(255, 255, 255, 0.5)";
+  fg1.fillStyle = "rgba(0, 0, 0, 0.5)";
+  fg1.fillRect(200,450,800,200);
+  fg1.strokeRect(200,450,800,200);
+  fg1.strokeStyle = "rgb(157, 157, 157)";
+  fg1.lineWidth = 2;
+  var bgGrad =fg1.createLinearGradient(0,250,0,350);
+  bgGrad.addColorStop(0,"rgb(41, 47, 68)");
+  bgGrad.addColorStop(1,"rgb(85, 95, 128)");
+  fg1.lineWidth = 2;
+  fg1.fillStyle=bgGrad;
+  fg1.beginPath();
+  fg1.moveTo(100,530);
+  fg1.bezierCurveTo(100,510,100,510,120,510);
+  fg1.lineTo(165,510);
+  fg1.bezierCurveTo(185,510,185,510,185,530);
+  fg1.lineTo(185,575);
+  fg1.bezierCurveTo(185,595,185,595,165,595);
+  fg1.lineTo(120,595);
+  fg1.bezierCurveTo(100,595,100,595,100,575);
+  fg1.closePath();
+  fg1.fill();
+  fg1.stroke();
+  fg1.fillStyle = "rgb(180, 180, 180)";
+  fg1.beginPath();
+  fg1.moveTo(143,480);
+  fg1.lineTo(168,500);
+  fg1.lineTo(118,500);
+  fg1.closePath();
+  fg1.fill();
+  fg1.stroke();
+  fg1.beginPath();
+  fg1.moveTo(143,625);
+  fg1.lineTo(168,605);
+  fg1.lineTo(118,605);
+  fg1.closePath();
+  fg1.fill();
+  fg1.stroke();
+}
+
+var shine = 0.5;
+function drawTSS(){
+  clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;
   if (shine > 1.8){
@@ -233,14 +289,9 @@ function drawTSS(){
     bg2.lineTo(1200,0+(i*30));
   }
   bg2.stroke();
-  ui.lineWidth = 4;
-  ui.fillStyle = "rgba(255,255,255,0.7)";
   ui.textAlign = "start";
-  ui.font = "800 35px Arial";
-  ui.fillText("Select Target Stage",50,85);
-  ui.fillText("Custom Stages",640,85);
-  ui.fillStyle = "black";
   ui.lineWidth = 3;
+  ui.fillStyle = "black";
   targetSelectTimer++;
   // swap 3 for Math.max(10+customTargetStages.length+1,20)
   for (var i=0;i<Math.min(11+customTargetStages.length,20);i++){
@@ -255,15 +306,13 @@ function drawTSS(){
     else {
       ui.strokeStyle = "rgb(166, 166, 166)";
     }
-    ui.fillRect(50+Math.floor(i/5)*260+Math.floor(i/10)*65,110+(i%5)*60,250,50);
+    if (i > 10){
+      ui.fillRect(50+Math.floor(i/5)*260+Math.floor(i/10)*65,110+(i%5)*60,250,50);
+    }
     ui.strokeRect(50+Math.floor(i/5)*260+Math.floor(i/10)*65,110+(i%5)*60,250,50);
   }
   ui.font = "700 25px Arial";
   ui.fillStyle = "rgba(255,255,255,0.6)";
-  for (var i=0;i<10;i++){
-    ui.fillText("Target "+(i+1),60+Math.floor(i/5)*260,143+(i%5)*60);
-  }
-
   for (var i=0;i<Math.min(customTargetStages.length+1,10);i++){
     if (i == customTargetStages.length){
       //ui.textAlign = "center";
@@ -321,10 +370,6 @@ function drawTSS(){
 
   }
   ui.restore();
-  ui.strokeStyle = "rgba(255, 255, 255, 0.5)";
-  ui.fillStyle = "rgba(0, 0, 0, 0.5)";
-  ui.fillRect(200,450,800,200);
-  ui.strokeRect(200,450,800,200);
   if (targetSelected < 10){
     var medalGrad =ui.createLinearGradient(270,470,330,530);
     medalGrad.addColorStop(0,"rgb(180, 123, 65)");
@@ -428,23 +473,6 @@ function drawTSS(){
       ui.save();
     }
   }
-  var bgGrad =ui.createLinearGradient(0,250,0,350);
-  bgGrad.addColorStop(0,"rgb(41, 47, 68)");
-  bgGrad.addColorStop(1,"rgb(85, 95, 128)");
-  ui.lineWidth = 2;
-  ui.fillStyle=bgGrad;
-  ui.beginPath();
-  ui.moveTo(100,530);
-  ui.bezierCurveTo(100,510,100,510,120,510);
-  ui.lineTo(165,510);
-  ui.bezierCurveTo(185,510,185,510,185,530);
-  ui.lineTo(185,575);
-  ui.bezierCurveTo(185,595,185,595,165,595);
-  ui.lineTo(120,595);
-  ui.bezierCurveTo(100,595,100,595,100,575);
-  ui.closePath();
-  ui.fill();
-  ui.stroke();
   switch (cS[targetPlayer]){
     case 0:
       var add = 0;
@@ -492,20 +520,6 @@ function drawTSS(){
   ui.textAlign = "center";
   // x 100 - 185
   // y 510 - 595
-  ui.beginPath();
-  ui.moveTo(143,480);
-  ui.lineTo(168,500);
-  ui.lineTo(118,500);
-  ui.closePath();
-  ui.fill();
-  ui.stroke();
-  ui.beginPath();
-  ui.moveTo(143,625);
-  ui.lineTo(168,605);
-  ui.lineTo(118,605);
-  ui.closePath();
-  ui.fill();
-  ui.stroke();
   ui.lineWidth = 8;
   ui.strokeStyle = "rgba(255,255,255,0.8)";
   ui.beginPath();

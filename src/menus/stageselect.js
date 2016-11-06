@@ -34,7 +34,7 @@ function sssControls(i){
   }
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
-    gameMode = 2;
+    changeGamemode(2);
   }
   else if ((player[i].inputs.s[0] && !player[i].inputs.s[1]) || (player[i].inputs.a[0] && !player[i].inputs.a[1])){
     sounds.menuForward.play();
@@ -62,13 +62,37 @@ function sssControls(i){
   }
 }
 
-function drawSSS(){
-  clearScreen();
+function drawSSSInit(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(17, 11, 65)");
   bgGrad.addColorStop(1,"rgb(61, 8, 37)");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+
+  fg1.lineWidth = 4;
+  fg1.strokeStyle = "rgba(255, 255, 255, 0.57)";
+  fg1.strokeRect(198,98,804,304);
+  fg1.fillStyle = "black";
+  stageSelectTimer++;
+  for (var i=0;i<4;i++){
+    fg1.fillRect(225+i*200,450,150,90);
+  }
+  fg1.fillRect(525,590,150,90);
+
+  fg1.fillStyle = "white";
+  fg1.font = "500 16px Arial";
+  fg1.fillText("BATTLEFIELD",300,530);
+  fg1.fillText("Y-STORY",500,530);
+  fg1.fillText("P-STADIUM",700,530);
+  fg1.fillText("DREAMLAND",900,530);
+  fg1.drawImage(bfIcon,227,452,146,55);
+  fg1.drawImage(ysIcon,427,452,146,55);
+  fg1.drawImage(psIcon,627,452,146,55);
+  fg1.drawImage(dlIcon,827,452,146,55);
+}
+
+function drawSSS(){
+  clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;
   if (shine > 1.8){
@@ -89,12 +113,7 @@ function drawSSS(){
     bg2.lineTo(1200,0+(i*30));
   }
   bg2.stroke();
-  ui.lineWidth = 4;
-  ui.strokeStyle = "rgba(255, 255, 255, 0.57)";
-  ui.strokeRect(198,98,804,304);
-  ui.fillStyle = "black";
   ui.textAlign = "center";
-  ui.font = "500 16px Arial";
   ui.lineWidth = 3;
   stageSelectTimer++;
   for (var i=0;i<4;i++){
@@ -109,10 +128,8 @@ function drawSSS(){
     else {
       ui.strokeStyle = "rgb(166, 166, 166)";
     }
-    ui.fillRect(225+i*200,450,150,90);
     ui.strokeRect(225+i*200,450,150,90);
   }
-  ui.fillRect(525,590,150,90);
   ui.fillStyle = "rgb(245, 144, 61)";
   ui.strokeStyle = "rgb(245, 144, 61)";
   if (stageSelected == 4){
@@ -131,17 +148,6 @@ function drawSSS(){
   ui.arc(600,618,18,0,twoPi);
   ui.closePath();
   ui.stroke();
-
-  ui.fillStyle = "white";
-  ui.font = "500 16px Arial";
-  ui.fillText("BATTLEFIELD",300,530);
-  ui.fillText("Y-STORY",500,530);
-  ui.fillText("P-STADIUM",700,530);
-  ui.fillText("DREAMLAND",900,530);
-  ui.drawImage(bfIcon,227,452,146,55);
-  ui.drawImage(ysIcon,427,452,146,55);
-  ui.drawImage(psIcon,627,452,146,55);
-  ui.drawImage(dlIcon,827,452,146,55);
   ui.textAlign = "start";
   ui.fillStyle = "rgba(255,255,255,0.6)";
   ui.font = "900 48px Arial";

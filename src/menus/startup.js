@@ -52,7 +52,7 @@ function drawStartUp(){
       ui.fillRect(0,0,layers.UI.width,layers.UI.height);
     }
     if (startUpTimer > 180){
-      gameMode = 0;
+      changeGamemode(0);
     }
   }
 }
