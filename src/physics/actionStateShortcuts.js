@@ -525,6 +525,7 @@ function turboGroundedInterrupt(p){
   else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
     turnOffHitboxes(p);
     aS[cS[p]].GUARDON.init(p);
+    return true;
   }
   else if (b[0] && b[1] != player[p].actionState){
     turnOffHitboxes(p);

@@ -41,6 +41,7 @@ baseActionStates = {
     }
     else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
       aS[cS[p]].GUARDON.init(p);
+      return true;
     }
     else if (b[0]){
       aS[cS[p]][b[1]].init(p);

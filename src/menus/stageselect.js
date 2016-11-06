@@ -81,6 +81,7 @@ function drawSSSInit(){
 
   fg1.fillStyle = "white";
   fg1.font = "500 16px Arial";
+  fg1.textAlign = "center";
   fg1.fillText("BATTLEFIELD",300,530);
   fg1.fillText("Y-STORY",500,530);
   fg1.fillText("P-STADIUM",700,530);

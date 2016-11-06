@@ -147,14 +147,16 @@ function physics(i){
     }
     if (gameSettings.turbo){
       if (player[i].hasHit){
-        if (player[i].phys.grounded){
-          if (turboGroundedInterrupt(i)){
-            player[i].hasHit = false;
+        if (player[i].actionState != "CATCHATTACK"){
+          if (player[i].phys.grounded){
+            if (turboGroundedInterrupt(i)){
+              player[i].hasHit = false;
+            }
           }
-        }
-        else {
-          if (turboAirborneInterrupt(i)){
-            player[i].hasHit = false;
+          else {
+            if (turboAirborneInterrupt(i)){
+              player[i].hasHit = false;
+            }
           }
         }
       }

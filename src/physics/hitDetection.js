@@ -83,7 +83,7 @@ function hitDetection(p){
                   if (player[i].phys.shielding && player[p].hitboxes.id[j].hitGrounded && (hitShieldCollision(i,p,j,false) || (interpolate && (hitShieldCollision(i,p,j,true) || interpolatedHitCircleCollision(player[i].phys.shieldPositionReal,player[i].phys.shieldSize,p,j))))){
                     hitQueue.push([i,p,j,true,false,false]);
                     player[p].hitboxes.hitList.push(i);
-                    player[p].hasHit = true;
+                    setHasHit(p,j);
                     break;
                   }
                   else if (player[i].phys.hurtBoxState != 1){
@@ -92,7 +92,7 @@ function hitDetection(p){
                     if (hitHurtCollision(i,p,j,false) || (interpolate && (interpolatedHitHurtCollision(i,p,j) || hitHurtCollision(i,p,j,true)))){
                       hitQueue.push([i,p,j,false,false,false]);
                       player[p].hitboxes.hitList.push(i);
-                      player[p].hasHit = true;
+                      setHasHit(p,j);
                       break;
                     }
                   }
@@ -103,6 +103,13 @@ function hitDetection(p){
 
       }
     }
+  }
+}
+
+function setHasHit(p,j){
+  // for turbo mode. if not a grab and not counter and not a midthrow hitbox.
+  if (player[p].hitboxes.id[j].type != 2 && player[p].hitboxes.id[j].type != 6 && player[p].actionState.substr(0,5) != "THROW"){
+    player[p].hasHit = true;
   }
 }
 
@@ -376,6 +383,8 @@ function executeHits(){
               }
             }
             else {
+              player[a].hasHit = true;
+              player[a].phys.grabbing = -1;
               player[v].phys.thrownHitbox = true;
               player[v].phys.thrownHitboxOwner = a;
               player[v].phys.pos = new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset.x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset.y);
