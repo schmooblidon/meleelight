@@ -46,7 +46,7 @@ function runAI(i){
   if (player[i].currentAction == "NONE") {
 	  var distx = player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x;
 	  var disty = player[i].phys.pos.y - player[NearestEnemy(player[i],i)].phys.pos.y;
-  if (player[i].phys.grounded && (player[i].actionState == "WAIT" || Math.abs(distx) > 15) && (player[i].actionState == "WAIT" || player[i].actionState == "DASH")  || (player[i].actionState == "LANDING" && player[i].timer > 3)) {//smash turn to face enemy
+  if (player[i].phys.grounded && ((player[i].actionState == "WAIT" || (player[i].difficulty > 0 && player[i].phys.grounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() * 10) + 1) >= 8 - (2 * player[i].difficulty)))) || Math.abs(distx) > 15) && ((player[i].difficulty > 0 && player[i].hasHit && gameSettings.turbo && player[i].phys.grounded) || player[i].actionState == "WAIT" || player[i].actionState == "DASH")  || (player[i].actionState == "LANDING" && player[i].timer > 3)) {//smash turn to face enemy
 	  if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
 		  player[i].currentAction = "SMASHTURN";
 		  player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;

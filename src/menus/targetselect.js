@@ -36,6 +36,8 @@ function tssControls(i){
     }
     if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
       sounds.menuBack.play();
+      music.targettest.stop();
+      music.menu.play("menuStart");
       changeGamemode(1);
       return;
     }
@@ -68,6 +70,8 @@ function tssControls(i){
           editingStage = targetSelected-10;
           player[i].inputs.a[1] = true;
           changeGamemode(4);
+          music.targettest.stop();
+          music.menu.play("menuStart");
           return;
         }
       }

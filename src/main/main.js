@@ -325,7 +325,7 @@ function findPlayers(){
           keyboardOccupied = true;
           sounds.menuForward.play();
           if (ports == 0){
-            music.menu2.play("menu2Start");
+            music.menu.play("menuStart");
           }
           addPlayer(ports,4);
         }
@@ -375,7 +375,7 @@ function findPlayers(){
               changeGamemode(1);
               sounds.menuForward.play();
               if (ports == 0){
-                music.menu2.play("menu2Start");
+                music.menu.play("menuStart");
               }
               addPlayer(i,gType);
             }
@@ -903,12 +903,12 @@ function interpretInputs(i,active){
       playing ^= true;
       if (!playing){
         sounds.pause.play();
-        music.battlefield.volume(0);
+        //music.battlefield.volume(0.3);
         changeVolume(music,masterVolume[1]*0.3,1);
         renderForeground();
       }
       else {
-        music.battlefield.volume(0);
+        //music.battlefield.volume(0);
         changeVolume(music,masterVolume[1],1);
       }
     }
@@ -1255,7 +1255,6 @@ function gameTick(){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
-
   setTimeout(gameTick,16-diff);
 }
 
@@ -1427,9 +1426,27 @@ function startGame(){
   matchTimer = 480;
   startTimer = 1.5;
   starting = true;
-  music.menu2.stop();
-  music.battlefield.stop();
-  music.battlefield.play("battlefieldStart");
+  music.menu.stop();
+  switch (stageSelect){
+    case 0:
+      music.battlefield.stop();
+      music.battlefield.play("battlefieldStart");
+      break;
+    case 1:
+      music.yStory.stop();
+      music.yStory.play("yStoryStart");
+      break;
+    case 2:
+      music.pStadium.stop();
+      music.pStadium.play("pStadiumStart");
+      break;
+    case 3:
+      music.dreamland.stop();
+      music.dreamland.play("dreamlandStart");
+      break;
+    default:
+      break;
+  }
   drawVfx("start",new Vec2D(0,0));
   findingPlayers = false;
   playing = true;
@@ -1440,6 +1457,9 @@ function endGame(){
   lostStockQueue = [];
   aArticles = [];
   music.battlefield.stop();
+  music.yStory.stop();
+  music.pStadium.stop();
+  music.dreamland.stop();
   changeVolume(music,masterVolume[1],1);
   playing = false;
   clearScreen();
@@ -1448,6 +1468,7 @@ function endGame(){
   drawStage();
   if (gameMode == 3){
     changeGamemode(2);
+    music.menu.play("menuStart");
   }
   else if (gameMode == 5){
     if (targetTesting){
@@ -1457,7 +1478,6 @@ function endGame(){
       changeGamemode(7);
     }
   }
-  music.menu2.play("menu2Start");
   //$("#playerFind").show();
   pause = [[true,true],[true,true],[true,true],[true,true]];
   frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
@@ -1567,6 +1587,9 @@ function finishGame(){
   fg2.fillText(text,600,470/textScale);
   fg2.restore();
   music.battlefield.stop();
+  music.yStory.stop();
+  music.pStadium.stop();
+  music.dreamland.stop();
   setTimeout(function(){endGame()},2500);
 }
 

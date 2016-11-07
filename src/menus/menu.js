@@ -28,6 +28,8 @@ function menuMove(i){
         targetPlayer = i;
         targetPointerPos = [178.5,137];
         player[i].inputs.a[1] = true;
+        music.menu.stop();
+        music.targettest.play("targettestStart");
         changeGamemode(7);
       }
       else if (menuSelected == 2){

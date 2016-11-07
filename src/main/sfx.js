@@ -1,4 +1,5 @@
-sounds = {  
+sounds = {
+
   menuBack : new Howl({
     src: ['sfx/menu-back.wav']
   }),
@@ -418,27 +419,81 @@ sounds = {
 }
 
 music = {
-  menu2 : new Howl({
-    src: ['sfx/menu2.mp3'],
+  menu : new Howl({
+    src: ['music/menu.ogg'],
     volume: 1,
+    html5 : true,
     sprite : {
-      menu2Start : [0,1300],
-      menu2Loop : [1300,55500]
+      menuStart : [0,7425],
+      menuLoop : [7425,173500]
+      //end - 181070
     },
     onend : function(){
-      this.play("menu2Loop");
+      this.play("menuLoop");
     }
-
   }),
   battlefield : new Howl({
-    src: ['sfx/battlefield.mp3'],
+    src: ['music/battlefield.ogg'],
     sprite : {
-      battlefieldStart : [0,8000],
-      battlefieldLoop : [8000,75200]
+      battlefieldStart : [0,12366],
+      battlefieldLoop : [12366,184256]
+      // 196622
     },
     volume: 1,
+    html5 : true,
     onend : function(){
       this.play("battlefieldLoop");
+    }
+  }),
+  yStory : new Howl({
+    src: ['music/yStory.ogg'],
+    sprite : {
+      yStoryStart : [0,2957],
+      yStoryLoop : [2957,252182]
+      // 255139
+    },
+    volume: 1,
+    html5 : true,
+    onend : function(){
+      this.play("yStoryLoop");
+    }
+  }),
+  pStadium : new Howl({
+    src: ['music/pStadium.ogg'],
+    sprite : {
+      pStadiumStart : [0,1],
+      pStadiumLoop : [0,219496]
+    },
+    volume: 1,
+    html5 : true,
+    onend : function(){
+      this.play("pStadiumLoop");
+    }
+  }),
+  dreamland : new Howl({
+    src: ['music/dreamland.ogg'],
+    sprite : {
+      dreamlandStart : [0,16320],
+      dreamlandLoop : [16320,194782]
+      // end 211102
+    },
+    volume: 1,
+    html5 : true,
+    onend : function(){
+      this.play("dreamlandLoop");
+    }
+  }),
+  targettest : new Howl({
+    src: ['music/targettest.ogg'],
+    sprite : {
+      targettestStart : [0,1],
+      targettestLoop : [0,224459]
+      //224459
+    },
+    volume: 1,
+    html5 : true,
+    onend : function(){
+      this.play("targettestLoop");
     }
   })
 }
