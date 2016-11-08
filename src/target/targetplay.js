@@ -117,6 +117,7 @@ function targetHitDetection(p){
       for (var j=0;j<4;j++){
         if (player[p].hitboxes.active[j]){
           if (hitTargetCollision(p,j,i,false) || (player[p].hitboxes.active[j] && player[p].phys.prevFrameHitboxes.active[j] && (hitTargetCollision(p,j,i,true) || interpolatedHitCircleCollision(new Vec2D(stage.target[i].x,stage.target[i].y),7,p,j)))){
+            player[p].hasHit = true;
             destroyTarget(i);
             break;
           }
@@ -131,6 +132,9 @@ function targetHitDetection(p){
           var interpolate = false;
         }
         if (articleTargetCollision(a,i,false) || (interpolate && (articleTargetCollision(a,i,true) || interpolatedArticleCircleCollision(a,new Vec2D(stage.target[i].x,stage.target[i].y),7)))){
+          if (articles[aArticles[a][0]].canTurboCancel){
+            player[aArticles[a][1]].hasHit = true;
+          }
           destroyTarget(i);
           destroyArticleQueue.push(a);
           break;

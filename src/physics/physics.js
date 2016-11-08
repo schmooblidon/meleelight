@@ -722,7 +722,7 @@ function physics(i){
           }
         }
       }
-      if (ledgeAvailable && !player[i].phys.grounded){
+      if (ledgeAvailable && !player[i].phys.grounded && player[i].hit.hitstun <= 0){
         var x = (stage.ledge[j][1])?stage.box[stage.ledge[j][0]].max.x:stage.box[stage.ledge[j][0]].min.x;
         var y = stage.box[stage.ledge[j][0]].max.y;
         if (x > player[i].phys.ledgeSnapBoxF.min.x && x < player[i].phys.ledgeSnapBoxF.max.x && y < player[i].phys.ledgeSnapBoxF.min.y && y > player[i].phys.ledgeSnapBoxF.max.y){

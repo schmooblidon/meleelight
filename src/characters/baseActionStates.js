@@ -2155,6 +2155,8 @@ baseActionStates = {
     player[p].percent = 0;
     player[p].phys.kVel.x = 0;
     player[p].phys.kVel.y = 0;
+    player[p].hit.hitstun = 0;
+    player[p].phys.shieldHP = 60;
   },
   main : function(p){
     player[p].timer+= 1;
@@ -4085,7 +4087,7 @@ baseActionStates = {
   wallJumpAble : false,
   headBonk : true,
   canBeGrabbed : true,
-  landType : 2,
+  landType : 1,
   init : function(p){
     player[p].actionState = "STOPCEIL";
     player[p].timer = 0;
@@ -4133,6 +4135,27 @@ baseActionStates = {
     }
     else {
       return false;
+    }
+  },
+  land : function(p){
+    if (player[p].hit.hitstun > 0){
+      if (player[p].phys.techTimer > 0){
+        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.5){
+          aS[cS[p]].TECHF.init(p);
+        }
+        else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.5){
+          aS[cS[p]].TECHB.init(p);
+        }
+        else {
+          aS[cS[p]].TECHN.init(p);
+        }
+      }
+      else {
+        aS[cS[p]].DOWNBOUND.init(p);
+      }
+    }
+    else {
+      aS[cS[p]].LANDING.init(p);
     }
   }
 },
