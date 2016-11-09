@@ -123,6 +123,14 @@ vfx = {
     name : "targetDestroy",
     frames : 8
   },
+  electrichit : {
+    name : "electrichit",
+    frames : 13
+  },
+  shocked : {
+    name : "shocked",
+    frames : 1
+  },
   normalhit : {
     name : "normalhit",
     frames : 6,
@@ -615,6 +623,106 @@ dVfx = {
       default:
         break;
     }
+    fg2.restore();
+  },
+  electrichit : function(j){
+    var s = stage.scale/4.5;
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    switch (vfxQueue[j][1]){
+      case 1:
+        fg2.fillStyle = makeColour(133,122,250,0.62);
+        fg2.beginPath();
+        fg2.arc(0,0,20,0,twoPi);
+        fg2.closePath();
+        fg2.fill();
+        fg2.beginPath();
+        fg2.moveTo(0,30);
+        fg2.lineTo(5,5);
+        fg2.lineTo(30,0);
+        fg2.lineTo(5,-5);
+        fg2.lineTo(0,-30);
+        fg2.lineTo(-5,-5);
+        fg2.lineTo(-30,0);
+        fg2.lineTo(-5,5);
+        fg2.closePath();
+        fg2.fill();
+        break;
+      case 2:
+        drawArrayPath(fg2,"rgb(50,252,162)",vfxQueue[j][3],0,0,vfx.normalhit.path1,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+        break;
+      case 3:
+        drawArrayPath(fg2,"rgb(0,0,0)",vfxQueue[j][3],0,0,vfx.normalhit.path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+        break;
+      case 4:
+        drawArrayPath(fg2,"rgb(198,222,255)",vfxQueue[j][3],0,0,vfx.normalhit.path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+        break;
+      case 5:
+        for (var n=0;n<vfx.normalhit.path3.length;n++){
+          drawArrayPath(fg2,"rgb(0,0,0)",vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5),0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5));
+        }
+        break;
+      case 6:
+        for (var n=0;n<vfx.normalhit.path3.length;n++){
+          drawArrayPath(fg2,"rgb(139,130,242)",vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5),0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5));
+        }
+        break;
+      default:
+        break;
+    }
+    fg2.fillStyle = "rgb(209, 181, 255)";
+    if (vfxQueue[j][1] < 13){
+      for (var i=0;i<2;i++){
+        fg2.beginPath();
+        fg2.arc((-30+60*Math.random())*s,(-30+60*Math.random())*s,4*s,0,twoPi);
+        fg2.closePath();
+        fg2.fill();
+      }
+    }
+    fg2.strokeStyle = "rgb(209, 181, 255)";
+    fg2.lineWidth = 2;
+    fg2.beginPath();
+    for (var i=0;i<4-(Math.round(vfxQueue[j][1]/4));i++){
+      var start = new Vec2D((-30+60*Math.random()),(-30+60*Math.random()));
+      fg2.moveTo(start.x*s,start.y*s);
+      var next1 = new Vec2D(start.x+(-10+Math.random()*20),start.y+(-10+Math.random()*20));
+      var next2 = new Vec2D(next1.x+(-10+Math.random()*20),next1.y+(-10+Math.random()*20));
+      var next3 = new Vec2D(next2.x+(-10+Math.random()*20),next2.y+(-10+Math.random()*20));
+      fg2.lineTo(next1.x*s,next1.y*s);
+      fg2.lineTo(next2.x*s,next2.y*s);
+      fg2.lineTo(next3.x*s,next3.y*s);
+    }
+    fg2.closePath();
+    fg2.stroke();
+
+    fg2.restore();
+  },
+  shocked : function(j){
+    var s = stage.scale/4.5;
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.fillStyle = "rgb(209, 181, 255)";
+    for (var i=0;i<1;i++){
+      fg2.beginPath();
+      fg2.arc((-30+60*Math.random())*s,(-30+60*Math.random())*s,4*s,0,twoPi);
+      fg2.closePath();
+      fg2.fill();
+    }
+    fg2.strokeStyle = "rgb(209, 181, 255)";
+    fg2.lineWidth = 2;
+    fg2.beginPath();
+    for (var i=0;i<1;i++){
+      var start = new Vec2D((-30+60*Math.random()),(-30+60*Math.random()));
+      fg2.moveTo(start.x*s,start.y*s);
+      var next1 = new Vec2D(start.x+(-10+Math.random()*20),start.y+(-10+Math.random()*20));
+      var next2 = new Vec2D(next1.x+(-10+Math.random()*20),next1.y+(-10+Math.random()*20));
+      var next3 = new Vec2D(next2.x+(-10+Math.random()*20),next2.y+(-10+Math.random()*20));
+      fg2.lineTo(next1.x*s,next1.y*s);
+      fg2.lineTo(next2.x*s,next2.y*s);
+      fg2.lineTo(next3.x*s,next3.y*s);
+    }
+    fg2.closePath();
+    fg2.stroke();
     fg2.restore();
   },
   shine : function(j){

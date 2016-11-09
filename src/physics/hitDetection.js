@@ -439,12 +439,22 @@ function executeHits(){
             if (!isThrow){
               switch (player[a].hitboxes.id[h].type){
                 case 0:
+                  // normal
                   drawVfx("normalhit",player[v].hit.hitPoint,player[v].phys.face);
                   break;
                 case 1:
+                  // slash
                   drawVfx("hitSparks",player[v].hit.hitPoint,player[v].phys.face);
                   drawVfx("hitFlair",player[v].hit.hitPoint,player[v].phys.face);
                   drawVfx("hitCurve",player[v].hit.hitPoint,player[v].phys.face,player[v].hit.angle);
+                  break;
+                case 3:
+                  // fire
+                  break;
+                case 4:
+                  // electric
+                  player[v].shocked = 20;
+                  drawVfx("electrichit",player[v].hit.hitPoint,player[v].phys.face);
                   break;
                 default:
                   break;
@@ -687,6 +697,9 @@ function getHitstun(knockback) {
 }
 
 function knockbackSounds(type,knockback,v){
+  if (type == 4){
+    sounds.firestronghit.play();
+  }
   if (knockback < 50){
     switch (type){
       case 0:

@@ -143,6 +143,14 @@ function physics(i){
     player[i].prevActionState = player[i].actionState;
     aS[cS[i]][player[i].actionState].main(i);
 
+    if (player[i].shocked > 0){
+      player[i].shocked--;
+      if (player[i].shocked%5 == 0){
+        sounds.electricfizz.play();
+      }
+      drawVfx("shocked",new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y+5),player[i].phys.face);
+    }
+
     // TURBO MODE
     // if just changed action states, remove ability to cancel
     if (player[i].prevActionState != player[i].actionState){
@@ -193,6 +201,7 @@ function physics(i){
     player[i].phys.pos.y += player[i].phys.cVel.y + player[i].phys.kVel.y;
 
   }
+
   if (player[i].actionState == "REBIRTH" || player[i].actionState == "REBIRTHWAIT"){
     player[i].phys.hurtBoxState = 1;
   }

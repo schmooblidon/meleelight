@@ -296,7 +296,8 @@ sounds = {
     src : ['sfx/firemediumhit.wav']
   }),
   firestronghit : new Howl({
-    src : ['sfx/firestronghit.wav']
+    src : ['sfx/firestronghit.wav'],
+    volume : 0.6
   }),
   jigglypuff : new Howl({
     src : ['sfx/jigglypuff.wav']
@@ -415,6 +416,10 @@ sounds = {
   }),
   puffhurt : new Howl({
     src : ['sfx/puffhurt.wav']
+  }),
+  electricfizz : new Howl({
+    src : ['sfx/electricfizz.wav'],
+    volume : 0.2
   })
 }
 
@@ -523,7 +528,9 @@ volumeOverwrites = {
   normalswing1 : 0.5,
   normalswing2 : 0.5,
   puffledgegrab : 0.7,
-  marthcounterclank : 0.6
+  marthcounterclank : 0.6,
+  electricfizz : 0.2,
+  firestronghit : 0.6
 }
 
 function changeVolume(audioGroup,newVolume,groupType){
