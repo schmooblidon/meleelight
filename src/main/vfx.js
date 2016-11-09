@@ -131,6 +131,22 @@ vfx = {
     name : "shocked",
     frames : 1
   },
+  firehit : {
+    name : "firehit",
+    frames : 6
+  },
+  fireburst : {
+    name : "fireburst",
+    frames : 5
+  },
+  burning : {
+    name : "burning",
+    frames : 4
+  },
+  burncircle : {
+    name : "burncircle",
+    frames : 9
+  },
   normalhit : {
     name : "normalhit",
     frames : 6,
@@ -624,6 +640,76 @@ dVfx = {
         break;
     }
     fg2.restore();
+  },
+  firehit : function(j){
+    fg2.save();
+    fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    switch (vfxQueue[j][1]){
+      case 1:
+      case 2:
+        fg2.fillStyle = makeColour(255,255,255,0.62);
+        fg2.beginPath();
+        fg2.arc(0,0,20,0,twoPi);
+        fg2.closePath();
+        fg2.fill();
+        fg2.beginPath();
+        fg2.moveTo(0,30);
+        fg2.lineTo(5,5);
+        fg2.lineTo(30,0);
+        fg2.lineTo(5,-5);
+        fg2.lineTo(0,-30);
+        fg2.lineTo(-5,-5);
+        fg2.lineTo(-30,0);
+        fg2.lineTo(-5,5);
+        fg2.closePath();
+        fg2.fill();
+        for (var n=0;n<vfx.normalhit.path3.length;n++){
+          drawArrayPath(fg2,makeColour(255,164,56,0.8),vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.15*(stage.scale/4.5),0.15*(stage.scale/4.5));
+        }
+        break;
+      case 3:
+        for (var n=0;n<vfx.normalhit.path3.length;n++){
+          drawArrayPath(fg2,makeColour(255,164,56,0.8),vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5),0.2*(vfxQueue[j][1]/7)*(stage.scale/4.5));
+        }
+        break;
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+        for (var n=0;n<vfx.normalhit.path3.length;n++){
+          drawArrayPath(fg2,makeColour(255,227,79,4/vfxQueue[j][1]),vfxQueue[j][3],0,0,vfx.normalhit.path3[n],0.1*(vfxQueue[j][1]/7)*(stage.scale/4.5),0.1*(vfxQueue[j][1]/7)*(stage.scale/4.5));
+        }
+        break;
+      default:
+        break;
+    }
+    drawVfx("fireburst",new Vec2D(-10+20*Math.random()+vfxQueue[j][2].x,-10+20*Math.random()+vfxQueue[j][2].y),8);
+    fg2.restore();
+  },
+  fireburst : function(j){
+    fg2.strokeStyle = makeColour(255,227,79,1-(vfxQueue[j][1]/5));
+    fg2.lineWidth = 1;
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1],vfxQueue[j][3]*(vfxQueue[j][1]/5),0,twoPi);
+    fg2.closePath();
+    fg2.stroke();
+  },
+  burning : function(j){
+    if (vfxQueue[j][1] == 1){
+      drawArrayPath(fg2,"rgb(253,255,161)",vfxQueue[j][3],(vfxQueue[j][2].x*stage.scale)+stage.offset[0],((vfxQueue[j][2].y+7)*-stage.scale)+stage.offset[1],vfx.normalhit.path2,0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
+    }
+    drawVfx("fireburst",new Vec2D(-10+20*Math.random()+vfxQueue[j][2].x,-10+20*Math.random()+vfxQueue[j][2].y),6)
+    drawVfx("burncircle",new Vec2D(-10+20*Math.random()+vfxQueue[j][2].x,-10+20*Math.random()+vfxQueue[j][2].y),1);
+  },
+  burncircle : function(j){
+    //rgb(253,255,161)
+    //rgb(198, 57, 5)
+    var col = blendColours([253,255,161],[198,57,5],vfxQueue[j][1]/9);
+    fg2.fillStyle = makeColour(col[0],col[1],col[2],1-vfxQueue[j][1]/9);
+    fg2.beginPath();
+    fg2.arc((vfxQueue[j][2].x*stage.scale)+stage.offset[0],((vfxQueue[j][2].y+vfxQueue[j][1])*-stage.scale)+stage.offset[1],3*stage.scale,0,twoPi);
+    fg2.closePath();
+    fg2.fill();
   },
   electrichit : function(j){
     var s = stage.scale/4.5;

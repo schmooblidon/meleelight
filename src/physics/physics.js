@@ -151,6 +151,13 @@ function physics(i){
       drawVfx("shocked",new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y+5),player[i].phys.face);
     }
 
+    if (player[i].burning > 0){
+      player[i].burning--;
+      if (player[i].burning%6 == 0){
+        drawVfx("burning",new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y+5),player[i].phys.face)
+      }
+    }
+
     // TURBO MODE
     // if just changed action states, remove ability to cancel
     if (player[i].prevActionState != player[i].actionState){

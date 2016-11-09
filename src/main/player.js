@@ -155,5 +155,5 @@ function playerObject(character,pos,face){
   this.lastMash = 0;
   this.hasHit = false;
   this.shocked = 0;
-  this.burned = 0;
+  this.burning = 0;
 }

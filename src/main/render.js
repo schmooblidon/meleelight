@@ -132,12 +132,30 @@ function renderPlayer(i){
       originalColour = originalColour.substr(4,originalColour.length-5);
       var colourArray = originalColour.split(",");
       if (player[i].shocked%2){
-        var newCol = blendColours(colourArray,[14,0,131],0.5);
+        var newCol = blendColours(colourArray,[14,0,131],0.7);
       }
       else {
-        var newCol = blendColours(colourArray,[255,255,255],0.5);
+        var newCol = blendColours(colourArray,[255,255,255],0.7);
       }
       col = "rgb("+newCol[0]+","+newCol[1]+","+newCol[2]+")";
+    }
+    else if (player[i].burning > 0){
+      var originalColour = palettes[pPal[i]][0];
+      originalColour = originalColour.substr(4,originalColour.length-5);
+      var colourArray = originalColour.split(",");
+      var part = player[i].burning%3;
+      if (part){
+        if (part == 1){
+          var newCol = blendColours(colourArray,[253,255,161],0.7);
+        }
+        else {
+          var newCol = blendColours(colourArray,[198,57,5],0.7);
+        }
+        col = "rgb("+newCol[0]+","+newCol[1]+","+newCol[2]+")";
+      }
+      else {
+        col = palettes[pPal[i]][0];
+      }
     }
     else {
       col = palettes[pPal[i]][0];

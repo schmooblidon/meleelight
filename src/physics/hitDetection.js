@@ -450,6 +450,8 @@ function executeHits(){
                   break;
                 case 3:
                   // fire
+                  player[v].burning = 20;
+                  drawVfx("firehit",player[v].hit.hitPoint,player[v].phys.face);
                   break;
                 case 4:
                   // electric

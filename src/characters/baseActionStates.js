@@ -2157,6 +2157,8 @@ baseActionStates = {
     player[p].phys.kVel.y = 0;
     player[p].hit.hitstun = 0;
     player[p].phys.shieldHP = 60;
+    player[p].burning = 0;
+    player[p].shocked = 0;
   },
   main : function(p){
     player[p].timer+= 1;
