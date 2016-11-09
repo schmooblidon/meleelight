@@ -81,6 +81,7 @@ function startTargetGame(p,test){
     stage = stageTemp;
   }
   targetTesting = test;
+  backgroundType = Math.round(Math.random());
   changeGamemode(5);
   targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
   targetsDestroyed = 0;

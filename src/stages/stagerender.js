@@ -94,6 +94,8 @@ function drawStage(){
   }
 }
 
+backgroundType = 0;
+
 var bgPos = [[-30,500,300,500,900,500,1230,450,358],[-30,400,300,400,900,400,1230,350,179]];
 var direction = [[1,-1,1,-1,1,-1,1,-1,1],[-1,1,-1,1,-1,1,-1,1,-1]];
 var boxFill;
@@ -115,17 +117,62 @@ for (var p=0;p<20;p++){
   bgStars[p].pos = new Vec2D(600+100*Math.random()*bgStars[p].velocity.x,375+100*Math.random()*bgStars[p].velocity.y);
 }
 bgSparkle = 3;
-
+var gridGrad = "rgba(94,173,255,0.2)";
 function drawBackgroundInit(){
   var bgGrad =bg1.createLinearGradient(0,0,0,500);
   bgGrad.addColorStop(0,"rgb(24, 17, 66)");
   bgGrad.addColorStop(1,"black");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(-100,-100,layers.BG1.width+200,layers.BG1.height+200);
+  if (backgroundType == 1){
+    var gridGrad = bg2.createRadialGradient(600,375,1,600,375,800);
+    gridGrad.addColorStop(0,"rgba(94, 173, 255, 0)");
+    gridGrad.addColorStop(1,"rgba(94, 173, 255, 0.2)");
+    bg2.strokeStyle = gridGrad;
+    boxFill = "rgba(94, 173, 255, 0.3)";
+  }
 }
 
-
 function drawBackground(){
+  if (backgroundType == 0){
+    drawStars();
+  }
+  else {
+    drawTunnel();
+  }
+}
+
+circleSize = [];
+for (var i=0;i<5;i++){
+  circleSize[i] = i*40;
+}
+ang = 0;
+function drawTunnel(){
+  bg2.lineWidth = 2;
+  ang += 0.005;
+  var angB = ang;
+  bg2.beginPath();
+  for (var i=0;i<16;i++){
+    var v = rotateVector(0,800,angB);
+    bg2.moveTo(600,375);
+    bg2.lineTo(600+v.x,375+v.y);
+    angB += Math.PI/8;
+  }
+  bg2.stroke();
+  for (var i=0;i<circleSize.length;i++){
+    circleSize[i]++;
+    if (circleSize[i] > 200){
+      circleSize[i] = 0;
+    }
+    bg2.lineWidth = Math.max(1,Math.round(3*(circleSize[i]/60)));
+    bg2.beginPath();
+    bg2.arc(600,375,circleSize[i]*4,0,twoPi);
+    bg2.closePath();
+    bg2.stroke();
+  }
+}
+
+function drawStars(){
   bgSparkle--;
   for (var p=0;p<20;p++){
     if (bgStars[p].pos.x > 1250 || bgStars[p].pos.y > 800 || bgStars[p].pos.x < -50 || bgStars[p].pos.y < -50){

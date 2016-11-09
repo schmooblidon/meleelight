@@ -353,8 +353,8 @@ function CPUTech(cpu, p) {
   	lAnalog: 0.0
 	};
     //console.log("1");
-	console.log("pos" , cpu.phys.pos.y);
-	console.log("nearest" , NearestFloor(cpu));
+	//console.log("pos" , cpu.phys.pos.y);
+	//console.log("nearest" , NearestFloor(cpu));
 	if (cpu.phys.pos.y - NearestFloor(cpu) <= 3 && cpu.phys.kVel.y + cpu.phys.cVel.y <= 0) {
 	   //console.log("trying to tech");
   	var MissedTechPercent = 85 - (cpu.difficulty * 20);//how often the CPU miss techs. difficulty: {1: 65%,2: 45%,3: 25%,4: 5%}

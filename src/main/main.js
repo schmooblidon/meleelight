@@ -1411,6 +1411,7 @@ function initializePlayers(i,target){
 
 function startGame(){
   stage = stages[stageSelect];
+  backgroundType = Math.round(Math.random());
   changeGamemode(3);
   vfxQueue = [];
   for (var n=0;n<4;n++){
