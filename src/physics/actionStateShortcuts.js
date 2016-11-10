@@ -512,9 +512,10 @@ function turboGroundedInterrupt(p){
   var b = checkForSpecials(p);
   var t = checkForTilts(p);
   var s = checkForSmashes(p);
-  if (checkForJump(p)){
+  var j = checkForJump(p);
+  if (j[0]){
     turnOffHitboxes(p);
-    aS[cS[p]].KNEEBEND.init(p);
+    aS[cS[p]].KNEEBEND.init(p,j[1]);
     return true;
   }
   else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
