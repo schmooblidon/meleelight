@@ -65,8 +65,9 @@ fox.JAB1 = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        fox.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        fox.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -162,8 +163,9 @@ fox.JAB2 = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        fox.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        fox.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -323,8 +325,9 @@ fox.DOWNTILT = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        fox.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        fox.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -408,8 +411,9 @@ fox.UPTILT = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        fox.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        fox.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -710,8 +714,9 @@ fox.DOWNSMASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        fox.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        fox.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -1291,8 +1296,9 @@ fox.ATTACKDASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        fox.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        fox.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -2064,8 +2070,9 @@ fox.DOWNSPECIALGROUND = {
   },
   interrupt : function(p){
     if (player[p].timer >= 4 && player[p].timer <= 32){
-      if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y >= 0.7 && player[p].inputs.lStickAxis[1].y < 0.7)){
-        fox.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        fox.KNEEBEND.init(p,j[1]);
         return true;
       }
       else {

@@ -71,6 +71,7 @@ function physicsObject(pos,face){
   this.grabbing = -1;
   this.dashbuffer = false;
   this.jumpType = 0;
+  this.jumpSquatType = 0;
   this.wallJumpTimer = 254;
   this.canWallJump = false;
   this.upbAngleMultiplier = 0;

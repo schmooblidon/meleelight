@@ -31,8 +31,9 @@ baseActionStates = {
       var t = checkForTilts(p);
     }
     var s = checkForSmashes(p);
-    if (checkForJump(p) && !player[p].inCSS){
-      aS[cS[p]].KNEEBEND.init(p);
+    var j = checkForJump(p);
+    if (j[0] && !player[p].inCSS){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
@@ -133,6 +134,7 @@ baseActionStates = {
     }
   },
   interrupt : function(p){
+    var j = checkForJump(p);
     if (player[p].inputs.l[0] || player[p].inputs.r[0]){
       player[p].phys.cVel.x *= 0.25;
       aS[cS[p]].GUARDON.init(p);
@@ -156,8 +158,8 @@ baseActionStates = {
       }
       return true;
     }
-    else if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    else if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
@@ -239,6 +241,7 @@ baseActionStates = {
     }
   },
   interrupt : function(p){
+    var j = checkForJump(p);
     if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
       if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
         aS[cS[p]].GRAB.init(p);
@@ -248,8 +251,8 @@ baseActionStates = {
       }
       return true;
     }
-    else if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    else if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
@@ -306,8 +309,9 @@ baseActionStates = {
   interrupt : function(p){
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
-    if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    var j = checkForJump(p);
+    if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
@@ -376,8 +380,9 @@ baseActionStates = {
       var t = checkForTilts(p);
     }
     var s = checkForSmashes(p);
-    if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    var j = checkForJump(p);
+    if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
@@ -439,8 +444,9 @@ baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    var j = checkForJump(p);
+    if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].timer > 1 && checkForSquat(p)){
@@ -503,8 +509,9 @@ baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    var j = checkForJump(p);
+    if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].timer > frames[cS[p]].RUNTURN){
@@ -576,6 +583,7 @@ baseActionStates = {
     var b = checkForSpecials(p);
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
+    var j = checkForJump(p);
     if (player[p].timer > frames[cS[p]].WALK){
       aS[cS[p]].WALK.init(p,false);
       return true;
@@ -584,8 +592,8 @@ baseActionStates = {
       aS[cS[p]].WAIT.init(p);
       return true;
     }
-    else if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    else if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
@@ -636,18 +644,28 @@ baseActionStates = {
   canEdgeCancel : true,
   disableTeeter : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,type){
     player[p].actionState = "KNEEBEND";
     player[p].timer = 0;
     player[p].phys.jumpType = 1;
+    player[p].phys.jumpSquatType = type;
     aS[cS[p]].KNEEBEND.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (!aS[cS[p]].KNEEBEND.interrupt(p)){
       reduceByTraction(p,true);
-      if (!player[p].inputs.x[0] && !player[p].inputs.y[0] && player[p].inputs.lStickAxis[0].y < 0.67){
-        player[p].phys.jumpType = 0;
+      // if jumpsquat initiated by stick
+      if (player[p].phys.jumpSquatType){
+        if (player[p].inputs.lStickAxis[0].y < 0.67){
+          player[p].phys.jumpType = 0;
+        }
+      }
+      // else if jumpsquat initiated by button
+      else {
+        if (!player[p].inputs.x[0] && !player[p].inputs.y[0]){
+          player[p].phys.jumpType = 0;
+        }
       }
     }
   },
@@ -850,8 +868,9 @@ baseActionStates = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        aS[cS[p]].KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        aS[cS[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
@@ -1162,6 +1181,7 @@ baseActionStates = {
     var b = checkForSpecials(p);
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
+    var j = checkForJump(p);
     if (player[p].timer == 4 && (player[p].inputs.lStickAxis[0].y < -0.65 || player[p].inputs.lStickAxis[1].y < -0.65 || player[p].inputs.lStickAxis[2].y < -0.65) && player[p].inputs.lStickAxis[6].y > -0.3 && player[p].phys.onSurface[0] == 1){
       aS[cS[p]].PASS.init(p);
       return true;
@@ -1190,8 +1210,8 @@ baseActionStates = {
       aS[cS[p]].SQUATWAIT.init(p);
       return true;
     }
-    else if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    else if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else {
@@ -1221,12 +1241,13 @@ baseActionStates = {
     var b = checkForSpecials(p);
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
+    var j = checkForJump(p);
     if (player[p].inputs.lStickAxis[0].y > -0.61){
       aS[cS[p]].SQUATRV.init(p);
       return true;
     }
-    else if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    else if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
@@ -1287,12 +1308,13 @@ baseActionStates = {
     var b = checkForSpecials(p);
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
+    var j = checkForJump(p);
     if (player[p].timer > frames[cS[p]].SQUATRV){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
-    else if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    else if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
@@ -1568,9 +1590,10 @@ baseActionStates = {
   },
   interrupt : function(p){
     if (!player[p].inCSS){
-      if (checkForJump(p) || player[p].inputs.cStickAxis[0].y > 0.65){
+      var j = checkForJump(p);
+      if (j[0] || player[p].inputs.cStickAxis[0].y > 0.65){
         player[p].phys.shielding = false;
-        aS[cS[p]].KNEEBEND.init(p);
+        aS[cS[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
@@ -1649,9 +1672,10 @@ baseActionStates = {
   },
   interrupt : function(p){
     if (!player[p].inCSS){
-      if (checkForJump(p) || player[p].inputs.cStickAxis[0].y > 0.66){
+      var j = checkForJump(p);
+      if (j[0] || player[p].inputs.cStickAxis[0].y > 0.66){
         player[p].phys.shielding = false;
-        aS[cS[p]].KNEEBEND.init(p);
+        aS[cS[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
@@ -1730,8 +1754,9 @@ baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (checkForJump(p) && !player[p].inCSS){
-      aS[cS[p]].KNEEBEND.init(p);
+    var j = checkForJump(p);
+    if (j[0] && !player[p].inCSS){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].timer > frames[cS[p]].GUARDOFF){
@@ -2409,8 +2434,9 @@ baseActionStates = {
         var b = checkForSpecials(p);
         var t = checkForTilts(p);
         var s = checkForSmashes(p);
-        if (checkForJump(p)){
-          aS[cS[p]].KNEEBEND.init(p);
+        var j = checkForJump(p);
+        if (j[0]){
+          aS[cS[p]].KNEEBEND.init(p,j[1]);
           return true;
         }
         else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
@@ -3793,12 +3819,13 @@ baseActionStates = {
     var b = checkForSpecials(p);
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
+    var j = checkForJump(p);
     if (player[p].timer > frames[cS[p]].OTTOTTO){
       aS[cS[p]].OTTOTTOWAIT.init(p);
       return true;
     }
-    else if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    else if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
@@ -3873,8 +3900,9 @@ baseActionStates = {
     var b = checkForSpecials(p);
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
-    if (checkForJump(p)){
-      aS[cS[p]].KNEEBEND.init(p);
+    var j = checkForJump(p);
+    if (j[0]){
+      aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){

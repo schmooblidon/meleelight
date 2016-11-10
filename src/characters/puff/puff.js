@@ -86,8 +86,9 @@ puff.JAB1 = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        puff.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        puff.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -169,8 +170,9 @@ puff.JAB2 = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        puff.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        puff.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -251,8 +253,9 @@ puff.DOWNTILT = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        puff.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        puff.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -899,8 +902,9 @@ puff.UPSMASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        puff.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        puff.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -1006,8 +1010,9 @@ puff.DOWNSMASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        puff.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        puff.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -1100,8 +1105,9 @@ puff.ATTACKDASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        puff.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        puff.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){

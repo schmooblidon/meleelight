@@ -456,13 +456,13 @@ function checkForTiltTurn(p){
 
 function checkForJump(p){
   if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1])){
-    return true;
+    return [true,0];
   }
   else if (player[p].inputs.lStickAxis[0].y > 0.66 && player[p].inputs.lStickAxis[3].y < 0.2){
-    return true;
+    return [true,1];
   }
   else {
-    return false;
+    return [false,false];
   }
 }
 

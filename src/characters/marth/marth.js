@@ -73,8 +73,9 @@ marth.JAB1 = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        marth.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        marth.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -171,8 +172,9 @@ marth.JAB2 = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        marth.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        marth.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -261,8 +263,9 @@ marth.DOWNTILT = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        marth.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        marth.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -358,8 +361,9 @@ marth.UPTILT = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        marth.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        marth.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -930,8 +934,9 @@ marth.FORWARDSMASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        marth.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        marth.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -1043,8 +1048,9 @@ marth.UPSMASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        marth.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        marth.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -1183,8 +1189,9 @@ marth.DOWNSMASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        marth.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        marth.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
@@ -1328,8 +1335,9 @@ marth.ATTACKDASH = {
       var b = checkForSpecials(p);
       var t = checkForTilts(p);
       var s = checkForSmashes(p);
-      if (checkForJump(p)){
-        marth.KNEEBEND.init(p);
+      var j = checkForJump(p);
+      if (j[0]){
+        marth.KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (b[0]){
