@@ -63,13 +63,6 @@ articles = {
     fg2.lineTo(t.x,t.y);
     fg2.lineTo(t.x+v3.x*d,t.y+v3.y);
     fg2.lineTo(h.x+v4.x*d,h.y+v4.y);
-
-    /*fg2.moveTo(h.x,h.y);
-    fg2.lineTo(h.x-4*d,h.y+2);
-    fg2.lineTo(t.x+4*d,t.y+2);
-    fg2.lineTo(t.x,t.y);
-    fg2.lineTo(t.x+4*d,t.y-2);
-    fg2.lineTo(h.x-4*d,h.y-2);*/
     fg2.closePath();
     fg2.fill();
     fg2.stroke();
