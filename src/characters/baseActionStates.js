@@ -3969,6 +3969,7 @@ baseActionStates = {
   init : function(p){
     player[p].actionState = "MISSFOOT";
     player[p].timer = 0;
+    player[p].hit.hitstun = 0;
     turnOffHitboxes(p);
     aS[cS[p]].MISSFOOT.main(p);
   },
