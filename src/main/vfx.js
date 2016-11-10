@@ -897,9 +897,9 @@ dVfx = {
   },
   firefoxlaunch : function(j){
     var p = vfxQueue[j][4];
-    if (player[p].actionState == "UPSPECIAL"){
+    if (player[p].actionState == "UPSPECIALLAUNCH"){
       fg2.save();
-      var frame = (player[p].timer-43) % 4;
+      var frame = (player[p].timer-1) % 4;
 
       fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
 
