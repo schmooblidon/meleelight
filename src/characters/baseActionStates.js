@@ -1022,20 +1022,27 @@ baseActionStates = {
   canBeGrabbed : true,
   landType : 0,
   vCancel : true,
-  init : function(p){
+  init : function(p,disableInputs){
+    var dInputs = disableInputs || false;
     player[p].actionState = "FALL";
     player[p].timer = 0;
     turnOffHitboxes(p);
-    aS[cS[p]].FALL.main(p);
+    aS[cS[p]].FALL.main(p,dInputs);
   },
-  main : function(p){
+  main : function(p,disableInputs){
     player[p].timer++;
-    if (!aS[cS[p]].FALL.interrupt(p)){
-      fastfall(p);
+    if (disableInputs){
+      player[p].phys.cVel.y -= player[p].charAttributes.gravity;
       airDrift(p);
     }
+    else {
+      if (!aS[cS[p]].FALL.interrupt(p)){
+        fastfall(p);
+        airDrift(p);
+      }
+    }
   },
-  interrupt : function(p){
+  interrupt : function(p,disableInputs){
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
@@ -1884,13 +1891,13 @@ baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.2 || player[p].inputs.lStickAxis[0].y < -0.2 || player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.2 || player[p].inputs.cStickAxis[0].y < -0.2){
+    if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.2 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.2) || (player[p].inputs.lStickAxis[0].y < -0.2 && player[p].inputs.lStickAxis[1].y >= -0.2) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.2 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.2) || (player[p].inputs.cStickAxis[0].y < -0.2 && player[p].inputs.cStickAxis[1].y >= -0.2)){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
-      aS[cS[p]].FALL.init(p);
+      aS[cS[p]].FALL.init(p,true);
       return true;
     }
-    else if (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.65 ){
+    else if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.65 && player[p].inputs.lStickAxis[1].y <= 0.65)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFJUMPQUICK.init(p);
       }
@@ -1899,7 +1906,7 @@ baseActionStates = {
       }
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.2 || player[p].inputs.lStickAxis[0].y > 0.2){
+    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.2 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.2) || (player[p].inputs.lStickAxis[0].y > 0.2 && player[p].inputs.lStickAxis[1].y <= 0.2)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFGETUPQUICK.init(p);
       }
@@ -1908,7 +1915,7 @@ baseActionStates = {
       }
       return true;
     }
-    else if (player[p].inputs.a[0] || player[p].inputs.b[0] || player[p].inputs.cStickAxis[0].y > 0.65){
+    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) || (player[p].inputs.cStickAxis[0].y > 0.65 && player[p].inputs.cStickAxis[1].y <= 0.65)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFATTACKQUICK.init(p);
       }
@@ -1917,7 +1924,7 @@ baseActionStates = {
       }
       return true;
     }
-    else if (player[p].inputs.l[0] || player[p].inputs.r[0] || player[p].inputs.lAnalog[0] > 0.3 || player[p].inputs.rAnalog[0] > 0.3 || player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.8){
+    else if ((player[p].inputs.lAnalog[0] > 0.3 && player[p].inputs.lAnalog[1] <= 0.3) || (player[p].inputs.rAnalog[0] > 0.3 && player[p].inputs.rAnalog[1] <= 0.3) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.8 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.8)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFESCAPEQUICK.init(p);
       }
