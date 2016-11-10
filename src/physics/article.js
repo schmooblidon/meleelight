@@ -51,13 +51,25 @@ articles = {
     var h = new Vec2D((aArticles[i][2].pos.x*stage.scale)+stage.offset[0],(aArticles[i][2].pos.y*-stage.scale)+stage.offset[1]);
     var t = new Vec2D((aArticles[i][2].posPrev.x*stage.scale)+stage.offset[0],(aArticles[i][2].posPrev.y*-stage.scale)+stage.offset[1]);
     var d = (h.x>t.x)?1:-1;
+    var r = aArticles[i][2].rotate;
+    var v1 = rotateVector(-4,2,-r);
+    var v2 = rotateVector(4,2,-r);
+    var v3 = rotateVector(4,-2,-r);
+    var v4 = rotateVector(-4,-2,-r);
     fg2.beginPath();
     fg2.moveTo(h.x,h.y);
+    fg2.lineTo(h.x+v1.x*d,h.y+v1.y);
+    fg2.lineTo(t.x+v2.x*d,t.y+v2.y);
+    fg2.lineTo(t.x,t.y);
+    fg2.lineTo(t.x+v3.x*d,t.y+v3.y);
+    fg2.lineTo(h.x+v4.x*d,h.y+v4.y);
+
+    /*fg2.moveTo(h.x,h.y);
     fg2.lineTo(h.x-4*d,h.y+2);
     fg2.lineTo(t.x+4*d,t.y+2);
     fg2.lineTo(t.x,t.y);
     fg2.lineTo(t.x+4*d,t.y-2);
-    fg2.lineTo(h.x-4*d,h.y-2);
+    fg2.lineTo(h.x-4*d,h.y-2);*/
     fg2.closePath();
     fg2.fill();
     fg2.stroke();

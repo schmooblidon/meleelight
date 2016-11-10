@@ -941,6 +941,7 @@ dVfx = {
   laser : function(j){
     fg2.save();
     fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
+    fg2.rotate(-vfxQueue[j][4]*vfxQueue[j][3]);
 
     fg2.lineWidth = 3;
     if (vfxQueue[j][1] > 3){

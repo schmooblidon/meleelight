@@ -109,6 +109,12 @@ function renderPlayer(i){
       face *= -1;
     }
   }
+  // FOX BTHROW
+  else if (player[i].actionState == "THROWBACK" && cS[i] == 2){
+    if (frame >= 10){
+      face *= -1;
+    }
+  }
 
   if (!aS[cS[i]][player[i].actionState].dead){
     var col;

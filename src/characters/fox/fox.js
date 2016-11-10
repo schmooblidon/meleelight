@@ -1588,7 +1588,7 @@ fox.NEUTRALSPECIALAIR = {
       if (player[p].timer == 10){
         sounds.foxlaserfire.play();
         // laser instance
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face,0);
         articles.LASER.init(p,8,9,0);
       }
       if (player[p].timer == 30){
@@ -1641,7 +1641,7 @@ fox.NEUTRALSPECIALGROUND = {
       if (player[p].timer == 12){
         sounds.foxlaserfire.play();
         // laser instance
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+7),player[p].phys.face);
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+7),player[p].phys.face,0);
         articles.LASER.init(p,8,7,0);
       }
       if (player[p].timer == 37){
@@ -2116,23 +2116,29 @@ fox.THROWBACK = {
     var prevFrame = player[p].timer;
     player[p].timer+=8/player[p].phys.releaseFrame;
     if (!fox.THROWBACK.interrupt(p)){
-      if (prevFrame <= 14 && player[p].timer >= 14){
-        articles.LASER.init(p,2,0,Math.PI*0.75);
-        sounds.foxlaserfire.play();
-        // 135
+      if (prevFrame < 10 && player[p].timer >= 10){
+        player[p].phys.face *= -1;
       }
-      else if (prevFrame <= 16 && player[p].timer >= 16){
-        articles.LASER.init(p,2,0,Math.PI*0.75);
+      if (prevFrame < 14 && player[p].timer >= 14){
+        articles.LASER.init(p,5.2,10,Math.PI*0.22);
         sounds.foxlaserfire.play();
         // 135
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.2*player[p].phys.face),player[p].phys.pos.y+10),player[p].phys.face,Math.PI*0.22);
       }
-      else if (prevFrame <= 19 && player[p].timer >= 19){
-        articles.LASER.init(p,2,0,Math.PI*0.75);
+      else if (prevFrame < 16 && player[p].timer >= 16){
+        articles.LASER.init(p,5.4,9.7,Math.PI*0.20);
         sounds.foxlaserfire.play();
         // 135
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.4*player[p].phys.face),player[p].phys.pos.y+9.7),player[p].phys.face,Math.PI*0.20);
+      }
+      else if (prevFrame < 19 && player[p].timer >= 19){
+        articles.LASER.init(p,5.3,9.8,Math.PI*0.22);
+        sounds.foxlaserfire.play();
+        // 135
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.3*player[p].phys.face),player[p].phys.pos.y+9.8),player[p].phys.face,Math.PI*0.22);
       }
       if (Math.floor(player[p].timer+0.01) == 8){
-        hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
+        hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
 
@@ -2179,25 +2185,29 @@ fox.THROWDOWN = {
         turnOffHitboxes(p);
       }
 
-      if (prevFrame <= 23 && player[p].timer >= 23){
-        articles.LASER.init(p,2,0,Math.PI*275/180);
+      if (prevFrame < 23 && player[p].timer >= 23){
+        articles.LASER.init(p,1,12,Math.PI*275/180);
         sounds.foxlaserfire.play();
         // 275
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(1*player[p].phys.face),player[p].phys.pos.y+12),player[p].phys.face,Math.PI*275/180);
       }
-      else if (prevFrame <= 25 && player[p].timer >= 25){
-        articles.LASER.init(p,2,0,Math.PI*230/180);
+      else if (prevFrame < 25 && player[p].timer >= 25){
+        articles.LASER.init(p,1,16,Math.PI*260/180);
         sounds.foxlaserfire.play();
-        // 230
+        // 260
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(1*player[p].phys.face),player[p].phys.pos.y+16),player[p].phys.face,Math.PI*260/180);
       }
-      else if (prevFrame <= 28 && player[p].timer >= 28){
-        articles.LASER.init(p,2,0,Math.PI*290/180);
+      else if (prevFrame < 28 && player[p].timer >= 28){
+        articles.LASER.init(p,2,15,Math.PI*290/180);
         sounds.foxlaserfire.play();
         // 290
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(2*player[p].phys.face),player[p].phys.pos.y+15),player[p].phys.face,Math.PI*290/180);
       }
-      else if (prevFrame <= 31 && player[p].timer >= 31){
-        articles.LASER.init(p,2,0,Math.PI*275/180);
+      else if (prevFrame < 31 && player[p].timer >= 31){
+        articles.LASER.init(p,2,17,Math.PI*275/180);
         sounds.foxlaserfire.play();
         // 275
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(2*player[p].phys.face),player[p].phys.pos.y+17),player[p].phys.face,Math.PI*275/180);
       }
 
     }
@@ -2236,28 +2246,28 @@ fox.THROWUP = {
     var prevFrame = player[p].timer;
     player[p].timer+=7/player[p].phys.releaseFrame;
     if (!fox.THROWUP.interrupt(p)){
-      if (prevFrame <= 13 && player[p].timer >= 13){
+      if (prevFrame < 13 && player[p].timer >= 13){
         sounds.foxlasercock.play();
       }
-      else if (prevFrame <= 16 && player[p].timer >= 16){
-        articles.LASER.init(p,2,1,Math.PI*65/180);
-        // rotate 65
-        sounds.foxlaserfire.play();
-        //drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
-      }
-      else if (prevFrame <= 18 && player[p].timer >= 18){
-        articles.LASER.init(p,2,0,Math.PI/2);
-        // rotate 90
-        sounds.foxlaserfire.play();
-        //drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
-      }
-      else if (prevFrame <= 21 && player[p].timer >= 21){
-        articles.LASER.init(p,2,0.5,Math.PI*85/180);
+      else if (prevFrame < 16 && player[p].timer >= 16){
+        articles.LASER.init(p,1.6,18,Math.PI*85/180);
         // rotate 85
         sounds.foxlaserfire.play();
-        //drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face);
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(1.6*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI*85/180);
       }
-      else if (prevFrame <= 33 && player[p].timer >= 33){
+      else if (prevFrame < 18 && player[p].timer >= 18){
+        articles.LASER.init(p,0.5,18,Math.PI/2);
+        // rotate 90
+        sounds.foxlaserfire.play();
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0.5*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI/2);
+      }
+      else if (prevFrame < 21 && player[p].timer >= 21){
+        articles.LASER.init(p,0,18,Math.PI*87/180);
+        // rotate 87
+        sounds.foxlaserfire.play();
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI*87/180);
+      }
+      else if (prevFrame < 33 && player[p].timer >= 33){
         sounds.foxlaserholster.play();
       }
       if (Math.floor(player[p].timer+0.01) == 7){
@@ -2304,7 +2314,7 @@ fox.THROWFORWARD = {
     if (!fox.THROWFORWARD.interrupt(p)){
       player[p].phys.cVel.x = fox.THROWFORWARD.setVelocities[Math.floor(player[p].timer+0.01)-1]*player[p].phys.face;
       if (Math.floor(player[p].timer+0.01) == 11){
-        hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
+        hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
       /*if (player[p].timer == 11){
@@ -2315,7 +2325,6 @@ fox.THROWFORWARD = {
       if (player[p].timer == 12){
         turnOffHitboxes(p);
       }*/
-
     }
   },
   interrupt : function(p){
