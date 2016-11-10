@@ -3386,19 +3386,19 @@ baseActionStates = {
       aS[cS[p]].CATCHATTACK.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y < 0.7) || player[p].inputs.cStickAxis[0].y > 0.7){
+    else if ((player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7) || (player[p].inputs.cStickAxis[0].y > 0.7 && player[p].inputs.cStickAxis[1].y <= 0.7)){
       aS[cS[p]].THROWUP.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y > -0.7) || player[p].inputs.cStickAxis[0].y < -0.7){
+    else if ((player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y >= -0.7) || player[p].inputs.cStickAxis[0].y < -0.7){
       aS[cS[p]].THROWDOWN.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face > -0.7) || player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.7){
+    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.7) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.7)){
       aS[cS[p]].THROWBACK.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face < 0.7) || player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.7){
+    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.7) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.7)){
       aS[cS[p]].THROWFORWARD.init(p);
       return true;
     }
