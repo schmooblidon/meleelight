@@ -1997,6 +1997,14 @@ fox.DOWNSPECIALAIR = {
         }
         if (player[p].timer == 2){
           turnOffHitboxes(p);
+          player[p].hitboxes.id[0] = player[p].charHitboxes.reflector.id0;
+        }
+        if (player[p].timer == 4){
+          player[p].hitboxes.active = [true,false,false,false];
+          player[p].hitboxes.frame = 0;
+        }
+        if (player[p].timer == 36){
+          turnOffHitboxes(p);
         }
       }
 

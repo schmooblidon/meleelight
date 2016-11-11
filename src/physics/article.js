@@ -214,7 +214,6 @@ function articlesHitDetection(){
             if (player[v].hitboxes.active[i]){
               if (player[v].hitboxes.id[i].type == 7){
                 if (articleHitCollision(a,v,i) || (interpolate && (articleHitCollision(a,v,i) || interpolatedArticleCircleCollision(a,new Vec2D(player[v].phys.pos.x+player[v].hitboxes.id[i].offset[0].x,player[v].phys.pos.y+player[v].hitboxes.id[i].offset[0].y),player[v].hitboxes.id[i].size)))){
-                  console.log(i);
                   if (player[v].actionState.substr(0,11) == "DOWNSPECIAL"){
                     // do shine reflect animation
                     sounds.foxshinereflect.play();

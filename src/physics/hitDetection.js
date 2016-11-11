@@ -21,7 +21,7 @@ function hitDetection(p){
               else {
                 var interpolate = false;
               }
-              if (player[p].hitboxes.active[j] && !(player[p].phys.thrownHitbox && player[p].phys.thrownHitboxOwner == i)){
+              if (player[p].hitboxes.active[j] && !(player[p].phys.thrownHitbox && player[p].phys.thrownHitboxOwner == i) && player[p].hitboxes.id[j].type != 7){
                 //console.log(player[i].phys.shielding);
                 // clank == 6 means special clank
                 if (player[p].hitboxes.id[j].clank == 1 || (player[p].hitboxes.id[j].clank == 2 && player[p].phys.grounded) || player[p].hitboxes.id[j].clank == 6){
