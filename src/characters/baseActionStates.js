@@ -2427,13 +2427,19 @@ baseActionStates = {
   },
   interrupt : function(p){
     if (player[p].timer > frames[cS[p]].DAMAGEN2){
-      if (player[p].phys.grounded || player[p].inCSS){
-        aS[cS[p]].WAIT.init(p);
+      if (player[p].hit.hitstun > 0){
+        player[p].timer--;
+        return false;
       }
       else {
-        aS[cS[p]].FALL.init(p);
+        if (player[p].phys.grounded || player[p].inCSS){
+          aS[cS[p]].WAIT.init(p);
+        }
+        else {
+          aS[cS[p]].FALL.init(p);
+        }
+        return true;
       }
-      return true;
     }
     else if (player[p].hit.hitstun <= 0 && !player[p].inCSS){
       if (player[p].phys.grounded){
