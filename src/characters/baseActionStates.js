@@ -471,7 +471,6 @@ baseActionStates = {
   name : "RUNTURN",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  reverseModelFrame : 16,
   init : function(p){
     player[p].actionState = "RUNTURN";
     player[p].timer = 0;

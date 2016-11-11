@@ -95,7 +95,7 @@ function renderPlayer(i){
     }
   }
   else if (player[i].actionState == "RUNTURN"){
-    if (frame > aS[cS[i]].RUNTURN.reverseModelFrame){
+    if (frame > player[i].charAttributes.runTurnBreakPoint){
       face *= -1;
     }
   }
