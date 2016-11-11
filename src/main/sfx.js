@@ -420,6 +420,9 @@ sounds = {
   electricfizz : new Howl({
     src : ['sfx/electricfizz.wav'],
     volume : 0.2
+  }),
+  foxshinereflect : new Howl({
+    src : ['sfx/foxshinereflect.wav']
   })
 }
 

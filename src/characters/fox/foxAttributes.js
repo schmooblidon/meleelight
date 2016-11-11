@@ -197,6 +197,9 @@ new Vec2D(-50.37+47.16,2.37)]
   downspecial : {
     id0 : [new Vec2D(-0.60,6.80)]
   },
+  reflector : {
+    id0 : [new Vec2D(-0.60,6.80)]
+  },
   jab1 : {
     id0 : [new Vec2D(5.49,5.97),
     new Vec2D(15.53,8.15)],
@@ -669,6 +672,7 @@ hitboxes[2] = {
   downattack1 : new hitboxObject(new hitbox(offsets[2].downattack1.id0,7.031,6,361,50,80,0,0,1,1,1),new hitbox(offsets[2].downattack1.id1,3.906,6,361,50,80,0,0,1,1,1),new hitbox(offsets[2].downattack1.id2,3.906,6,361,50,80,0,0,1,1,1)),
   downattack2 : new hitboxObject(new hitbox(offsets[2].downattack2.id0,4.687,6,361,50,80,0,0,1,1,1),new hitbox(offsets[2].downattack2.id1,6.250,6,361,50,80,0,0,1,1,1),new hitbox(offsets[2].downattack2.id2,8.694,6,361,50,80,0,0,1,1,1)),
   downspecial : new hitboxObject(new hitbox(offsets[2].downspecial.id0,7.999,5,0,100,0,80,4,0,1,1)),
+  reflector : new hitboxObject(new hitbox(offsets[2].reflector.id0,7.999,0,361,100,0,0,7,0,1,1)),
   ledgegetupquick : new hitboxObject(new hitbox(offsets[2].ledgegetupquick.id0,4.687,8,361,100,0,90,0,1,1,1),new hitbox(offsets[2].ledgegetupquick.id1,4.687,8,361,100,0,90,0,1,1,1),new hitbox(offsets[2].ledgegetupquick.id2,4.687,8,361,100,0,90,0,1,1,1)),
   ledgegetupslow : new hitboxObject(new hitbox(offsets[2].ledgegetupslow.id0,3.125,8,361,100,0,90,0,1,1,1),new hitbox(offsets[2].ledgegetupslow.id1,4.687,8,361,100,0,90,0,1,1,1),new hitbox(offsets[2].ledgegetupslow.id2,4.687,8,361,100,0,90,0,1,1,1)),
   pummel : new hitboxObject(new hitbox(offsets[2].pummel.id0,5.859,3,361,100,0,30,0,0,1,1)),

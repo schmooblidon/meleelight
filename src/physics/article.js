@@ -16,6 +16,9 @@ articles = {
       timer : 0,
       vel : new Vec2D(5*Math.cos(rotate)*player[p].phys.face,5*Math.sin(rotate)),
       pos : new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y),
+      posPrev1 : new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y),
+      posPrev2 : new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y),
+      posPrev3 : new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y),
       posPrev : new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y),
       hb : new hitbox(new Vec2D(0,0),1.172,3,361,0,0,0,0,0,1,1),
       ecb : [new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y-10),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face)+10,player[p].phys.pos.y+y),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y+10),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face)-10,player[p].phys.pos.y+y)]
@@ -25,6 +28,22 @@ articles = {
   },
   main : function(i){
     aArticles[i][2].timer++;
+    if (aArticles[i][2].timer > 4){
+      aArticles[i][2].posPrev.x = aArticles[i][2].posPrev3.x;
+      aArticles[i][2].posPrev.y = aArticles[i][2].posPrev3.y;
+    }
+    if (aArticles[i][2].timer > 3){
+      aArticles[i][2].posPrev3.x = aArticles[i][2].posPrev2.x;
+      aArticles[i][2].posPrev3.y = aArticles[i][2].posPrev2.y;
+    }
+    if (aArticles[i][2].timer > 2){
+      aArticles[i][2].posPrev2.x = aArticles[i][2].posPrev1.x;
+      aArticles[i][2].posPrev2.y = aArticles[i][2].posPrev1.y;
+    }
+    if (aArticles[i][2].timer > 1){
+      aArticles[i][2].posPrev1.x = aArticles[i][2].pos.x;
+      aArticles[i][2].posPrev1.y = aArticles[i][2].pos.y;
+    }
     aArticles[i][2].pos.x += aArticles[i][2].vel.x;
     aArticles[i][2].ecb[0].x += aArticles[i][2].vel.x;
     aArticles[i][2].ecb[1].x += aArticles[i][2].vel.x;
@@ -35,10 +54,6 @@ articles = {
     aArticles[i][2].ecb[1].y += aArticles[i][2].vel.y;
     aArticles[i][2].ecb[2].y += aArticles[i][2].vel.y;
     aArticles[i][2].ecb[3].y += aArticles[i][2].vel.y;
-    if (aArticles[i][2].timer > 4){
-      aArticles[i][2].posPrev.x += aArticles[i][2].vel.x;
-      aArticles[i][2].posPrev.y += aArticles[i][2].vel.y;
-    }
     if (wallDetection(i) || aArticles[i][2].timer > 200){
       destroyArticleQueue.push(i);
     }
@@ -194,22 +209,49 @@ function articlesHitDetection(){
           }
         }
         if (!attackerClank){
-          if (player[v].phys.shielding && (articleShieldCollision(a,v,false) || (interpolate && (articleShieldCollision(a,v,true) || interpolatedArticleCircleCollision(a,player[v].phys.shieldPositionReal,player[v].phys.shieldSize))))){
-            articleHitQueue.push([a,v,true]);
-            aArticles[a][2].hitList.push(v);
-            if (articles[aArticles[a][0]].canTurboCancel){
-              player[aArticles[a][1]].hasHit = true;
+          var reflected = false;
+          for (var i=0;i<4;i++){
+            if (player[v].hitboxes.active[i]){
+              if (player[v].hitboxes.id[i].type == 7){
+                if (articleHitCollision(a,v,i) || (interpolate && (articleHitCollision(a,v,i) || interpolatedArticleCircleCollision(a,new Vec2D(player[v].phys.pos.x+player[v].hitboxes.id[i].offset[0].x,player[v].phys.pos.y+player[v].hitboxes.id[i].offset[0].y),player[v].hitboxes.id[i].size)))){
+                  console.log(i);
+                  if (player[v].actionState.substr(0,11) == "DOWNSPECIAL"){
+                    // do shine reflect animation
+                    sounds.foxshinereflect.play();
+                  }
+                  // change ownership
+                  aArticles[a][1] = v;
+                  // increase damage
+                  aArticles[a][2].hb.dmg *= 1.5;
+                  // reflect
+                  if (aArticles[a][2].vel != undefined || aArticles[a][2].vel != null){
+                    aArticles[a][2].vel.x *= -1;
+                    aArticles[a][2].vel.y *= -1;
+                  }
+                  reflected = true;
+                  break;
+                }
+              }
             }
           }
-          else if (player[v].phys.hurtBoxState != 1){
-            if (articleHurtCollision(a,v,false) || (interpolate && (interpolatedArticleHurtCollision(a,v) || articleHurtCollision(a,v,true)))){
-              articleHitQueue.push([a,v,false]);
+          if (!reflected){
+            if (player[v].phys.shielding && (articleShieldCollision(a,v,false) || (interpolate && (articleShieldCollision(a,v,true) || interpolatedArticleCircleCollision(a,player[v].phys.shieldPositionReal,player[v].phys.shieldSize))))){
+              articleHitQueue.push([a,v,true]);
               aArticles[a][2].hitList.push(v);
               if (articles[aArticles[a][0]].canTurboCancel){
                 player[aArticles[a][1]].hasHit = true;
               }
-              if (aArticles[a][2].destroyOnHit){
-                destroyArticleQueue.push(a);
+            }
+            else if (player[v].phys.hurtBoxState != 1){
+              if (articleHurtCollision(a,v,false) || (interpolate && (interpolatedArticleHurtCollision(a,v) || articleHurtCollision(a,v,true)))){
+                articleHitQueue.push([a,v,false]);
+                aArticles[a][2].hitList.push(v);
+                if (articles[aArticles[a][0]].canTurboCancel){
+                  player[aArticles[a][1]].hasHit = true;
+                }
+                if (aArticles[a][2].destroyOnHit){
+                  destroyArticleQueue.push(a);
+                }
               }
             }
           }
@@ -387,8 +429,9 @@ function articleHitCollision(a,v,k){
   var hbpos = aArticles[a][2].pos;
   var hbpos2 = new Vec2D(player[v].phys.pos.x+(player[v].hitboxes.id[k].offset[player[v].hitboxes.frame].x*player[v].phys.face),player[v].phys.pos.y+player[v].hitboxes.id[k].offset[player[v].hitboxes.frame].y);
   var hitPoint = new Vec2D((hbpos.x+hbpos2.x)/2,(hbpos.y+hbpos2.y)/2);
+  return (Math.pow(hbpos2.x-hbpos.x,2) + Math.pow(hbpos.y-hbpos2.y,2) <= Math.pow(aArticles[a][2].hb.size+player[v].hitboxes.id[k].size,2));
 
-  return [(Math.pow(hbpos2.x-hbpos.x,2) + Math.pow(hbpos.y-hbpos2.y,2) <= Math.pow(aArticles[a][2].hb.size+player[v].hitboxes.id[k].size,2)),hitPoint];
+  //return [(Math.pow(hbpos2.x-hbpos.x,2) + Math.pow(hbpos.y-hbpos2.y,2) <= Math.pow(aArticles[a][2].hb.size+player[v].hitboxes.id[k].size,2)),hitPoint];
 }
 
 function articleShieldCollision(a,v,previous){
