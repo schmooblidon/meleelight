@@ -44,7 +44,7 @@ function cssControls(i){
   if (choosingTag == -1){
     if (player[i].inputs.b[0]){
       bHold[i]++;
-      if (bHold[i] == 60){
+      if (bHold[i] == 30){
         sounds.menuBack.play();
         changeGamemode(1);
       }
@@ -524,6 +524,46 @@ function drawCSS(){
   }
   else {
     ui.fillText("4-man survival test!",390,117);
+  }
+  var bestHold = 0;
+  bg1.lineWidth = 3;
+  bg1.fillStyle = "rgb(255, 222, 0)";
+  //bg1.beginPath();
+  //bg1.moveTo(1020,125); 
+  //bg1.lineTo(1200,125);
+  //bg1.lineTo(1200,119);
+  //bg1.lineTo(1015,119);
+  //bg1.moveTo(1100,0);
+  //bg1.lineTo(1000,110);
+  //bg1.lineTo(1002,110);
+  //bg1.lineTo(1102,0);
+  //bg1.closePath();
+  bg1.beginPath();
+  bg1.moveTo(1100,0);
+  bg1.lineTo(1000,110);
+  bg1.lineTo(1020,125);
+  bg1.lineTo(1200,125);
+  bg1.lineTo(1200,119);
+  bg1.lineTo(1015,119);
+  bg1.lineTo(1002,110);
+  bg1.lineTo(1102,0);
+  bg1.closePath();
+  bg1.fill(); 
+  for (ia = 0; ia < 4; ia++) { 
+    if (bHold[ia] > bestHold) {
+		bestHold = bHold[ia];
+	}
+  }
+  if (bestHold > 0) {
+	var abb = 1020 + (bestHold * 6);
+	bg1.fillStyle = "rgb(194, 24, 8)";
+    bg1.beginPath();
+    bg1.moveTo(1020,125);
+	bg1.lineTo(abb,125);
+	bg1.lineTo(abb,119);
+	bg1.lineTo(1015,119);
+	bg1.closePath();
+    bg1.fill(); 
   }
   ui.restore();
 
