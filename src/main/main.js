@@ -300,7 +300,7 @@ function findPlayers(){
     console.log(gps);
   }*/
   if (!keyboardOccupied){
-    if (gameMode < 2){
+    if (gameMode < 2 || gameMode == 20){
       if (keys[13] || keys[keyMap.s[0]] || keys[keyMap.s[1]]){
         if (ports < 4){
           changeGamemode(1);
@@ -344,7 +344,7 @@ function findPlayers(){
         gType = 3;
         console.log("You are using xbox 360");
       }
-      if (gameMode < 2){
+      if (gameMode < 2 || gameMode == 20){
         if (gamepad.buttons[map.s[gType]].pressed){
           var alreadyIn = false;
           for (var k=0;k<ports;k++){
@@ -378,55 +378,6 @@ function findPlayers(){
             }
           }
         }
-        /*for (var j=0;j<currentPlayers.length;j++){
-          if (currentPlayers[j] == i){
-            if (gamepad.buttons[map.x[mType[j]]].pressed || gamepad.buttons[map.y[mType[j]]].pressed){
-              if (!costumeTimeout[j]){
-                pPal[j]++;
-                if (pPal[j] > 6){
-                  pPal[j] = 0;
-                }
-                $("#pBox"+j).css({"background-color":palettes[pPal[j]][0],"border":"5px solid "+palettes[pPal[j]][2]+"0.8)"});
-                costumeTimeout[j] = true;
-                costumeTout(j);
-              }
-
-            }
-            if (gamepad.buttons[map.b[mType[j]]].pressed){
-              if (!bPress[j]){
-                hasTag[j] ^= true;
-                if (hasTag[j]){
-                  $("#pTag"+j).show();
-                  $("#pTagEdit"+j).val(randomTags[Math.round((randomTags.length-1)*Math.random())]);
-                  tagText[j] = $("#pTagEdit"+j).val();
-                }
-                else {
-                  $("#pTag"+j).hide();
-                }
-              }
-              bPress[j] = true;
-            }
-            else {
-              bPress[j] = false;
-            }
-            if (gamepad.buttons[map.z[mType[j]]].pressed){
-              if (!zPress[j]){
-                if (playerAmount < 4){
-                  addPlayer(-1,0,1);
-                }
-              }
-              zPress[j] = true;
-            }
-            else {
-              zPress[j] = false;
-            }
-            pause[j][1] = pause[j][0];
-            pause[j][0] = gamepad.buttons[map.s[mType[j]]].pressed;
-            if (pause[j][0] && !pause[j][1]){
-              startGame();
-            }
-          }
-        }*/
       }
     }
   }
@@ -487,6 +438,7 @@ function changeGamemode(newGamemode){
       break;
     // MAIN MENU
     case 1:
+      $("#logoVid").remove();
       drawMainMenuInit();
       break;
     // CSS
@@ -1027,7 +979,7 @@ lastUpdate = performance.now();
 function gameTick(){
   var start = performance.now();
   var diff = 0;
-  if (gameMode == 0){
+  if (gameMode == 0 || gameMode == 20){
     findPlayers();
   }
   else if (gameMode == 1){
