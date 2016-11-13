@@ -1420,6 +1420,14 @@ fox.UPSPECIALCHARGE = {
             ang += Math.PI;
           }
         }
+        if (player[p].phys.grounded){
+          if (ang < 0){
+            ang = 0;
+          }
+          else if (ang > Math.PI){
+            ang = Math.PI;
+          }
+        }
         player[p].phys.upbAngleMultiplier = ang;
       }
       else if (player[p].timer >= 16 && !player[p].phys.grounded){
