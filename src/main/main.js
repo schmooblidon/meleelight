@@ -919,18 +919,14 @@ function renderToMain(){
   }
 }
 
-function renderVfx(){
+function renderVfx(otherFrame){
+  otherFrame = otherFrame || false;
   var popQueue = [];
   for (var j=0;j<vfxQueue.length;j++){
     vfxQueue[j][1]++;
     if (vfxQueue[j][0].frames >= vfxQueue[j][1]){
-      if (showVfx){
-        /*if (vfxQueue[j][0].name[0] == "s" && vfxQueue[j][0].name[1] == "w"){
-          dVfx["swing"](j);
-        }
-        else {*/
-          dVfx[vfxQueue[j][0].name](j);
-        //}
+      if (showVfx && !otherFrame){
+        dVfx[vfxQueue[j][0].name](j);
       }
     }
     else {
@@ -1315,6 +1311,11 @@ function renderTick(){
     frameByFrameRender = false;
     //renderToMain();
   //console.log(performance.now());
+  }
+  else {
+    if (playing){
+      renderVfx(true);
+    }
   }
 }
 

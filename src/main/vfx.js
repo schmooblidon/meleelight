@@ -215,7 +215,7 @@ dVfx = {
   },
   swing : function(j){
     var p = vfxQueue[j][4].pNum;
-    if (vfxQueue[j][1] == 1){
+    if (vfxQueue[j][4].posNow == undefined || vfxQueue[j][4].posNow == null){
       vfxQueue[j][4].posNow = new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y);
       vfxQueue[j][4].posPrev = new Vec2D(player[p].phys.posPrev.x,player[p].phys.posPrev.y);
     }
@@ -500,11 +500,17 @@ dVfx = {
     fg2.restore();
   },
   start : function(j){
-    if (vfxQueue[j][1] == 1){
+    // hack method to ensure sounds are played in 30fps mode
+    // index 3 and 5 are unoccupied so i've made them say if the sound has played
+    if (vfxQueue[j][3] == undefined){
       sounds.ready.play();
+      vfxQueue[j][3] = true;
     }
-    if (vfxQueue[j][1] == 90){
-      sounds.go.play();
+    if (vfxQueue[j][1] >= 90){
+      if (vfxQueue[j][5] == undefined){
+        sounds.go.play();
+        vfxQueue[j][5] = true;
+      }
     }
     if (vfxQueue[j][1] < 90){
       var textGrad =fg2.createLinearGradient(0,200,0,500);
@@ -921,7 +927,7 @@ dVfx = {
     }
   },
   firefoxtail : function(j){
-    if (vfxQueue[j][1] == 1){
+    if (vfxQueue[j][5] == undefined || vfxQueue[j][5] == null){
       vfxQueue[j].push([Math.random(),Math.random(),Math.random(),Math.random()]);
     }
     fg2.save();
