@@ -832,6 +832,7 @@ function checkPhantoms(){
           break;
         }
       }
+      phantomQueue.splice(i,1);
     }
   }
 }
