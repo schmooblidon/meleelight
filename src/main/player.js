@@ -81,6 +81,7 @@ function physicsObject(pos,face){
   this.wallJumpCount = 0;
   this.prevFrameHitboxes = new hitboxes();
   this.interPolatedHitbox = [];
+  this.interPolatedHitboxPhantom = [];
   this.isInterpolated = false;
   this.facePrev = 1;
   this.jumpsUsed = 0;

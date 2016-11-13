@@ -1,21 +1,3 @@
-/*you duplicate
-c.save();
-...
-c.restore();
-
-all over the place
-what you can do instead is create a function that wraps a function in those two lines(edited)
-so the context will always get restored automatically(edited)
-without having to explicitly state it everywhere
-function foobar(callback) {
-    c.save();
-    callback();
-    c.restore();
-}
-then you just call foobar() passing in the function as an argument(edited)
-first class functions are really powerful, abuse them everywhere possible*/
-
-
 
 player = [0,0,0,0];
 
@@ -1181,6 +1163,7 @@ function gameTick(){
         update(i);
       }
     }
+    checkPhantoms();
     for (var i=0;i<4;i++){
       if (playerType[i] > -1){
         hitDetection(i);
@@ -1398,9 +1381,6 @@ for (var i=0;i<4;i++){
 
 function initializePlayers(i,target){
   buildPlayerObject(i);
-  /*if (hasTag[i]){
-    tagText[i] = $("#pTagEdit"+i).val();
-  }*/
   if (target){
     drawVfx("entrance",new Vec2D(stage.startingPoint.x,stage.startingPoint.y));
   }
@@ -1456,6 +1436,7 @@ function startGame(){
 function endGame(){
   gameEnd = false;
   lostStockQueue = [];
+  phantomQueue = [];
   aArticles = [];
   music.battlefield.stop();
   music.yStory.stop();
@@ -1464,8 +1445,6 @@ function endGame(){
   changeVolume(music,masterVolume[1],1);
   playing = false;
   clearScreen();
-  /*c.fillStyle = "rgb(0, 0, 0)";
-  c.fillRect(-100,-100,canvas.width+200,canvas.height+200);*/
   drawStage();
   if (gameMode == 3){
     changeGamemode(2);
@@ -1479,7 +1458,6 @@ function endGame(){
       changeGamemode(7);
     }
   }
-  //$("#playerFind").show();
   pause = [[true,true],[true,true],[true,true],[true,true]];
   frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
   findingPlayers = true;

@@ -44,5 +44,6 @@ gameSettings = {
   lCancelType : 0, // 0- normal | 1 - Auto | 2 - smash 64
   blastzoneWrapping : false,
   flashOnLCancel : false,
-  dustLessPerfectWavedash : false
+  dustLessPerfectWavedash : false,
+  phantomThreshold : 0.01
 }

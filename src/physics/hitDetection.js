@@ -1,4 +1,5 @@
 hitQueue = [];
+phantomQueue = [];
 angleConversion = Math.PI / 180;
 function hitDetection(p){
   var attackerClank = false;
@@ -90,7 +91,8 @@ function hitDetection(p){
                     //
                     if ((player[p].hitboxes.id[j].hitGrounded && player[i].phys.grounded) || (player[p].hitboxes.id[j].hitAirborne && !player[i].phys.grounded))
                     if (hitHurtCollision(i,p,j,false) || (interpolate && (interpolatedHitHurtCollision(i,p,j) || hitHurtCollision(i,p,j,true)))){
-                      hitQueue.push([i,p,j,false,false,false]);
+                      var phantom = !hitHurtCollision(i,p,j,false,true) && (interpolate ? !interpolatedHitHurtCollision(i,p,j,true) : true);
+                      hitQueue.push([i,p,j,false,false,false,phantom]);
                       player[p].hitboxes.hitList.push(i);
                       setHasHit(p,j);
                       break;
@@ -176,10 +178,16 @@ function segmentSegmentCollision(a1,a2,b1,b2){
   return true;
 }
 
-function interpolatedHitHurtCollision(i,p,j){
+function interpolatedHitHurtCollision(i,p,j,phantom){
   // a1 is line1 start, a2 is line1 end, b1 is line2 start, b2 is line2 end
+  phantom = phantom || false;
   var hurt = player[i].phys.hurtbox;
-  var hb = player[p].phys.interPolatedHitbox[j];
+  if (phantom){
+    var hb = player[p].phys.interPolatedHitbox[j];
+  }
+  else {
+    var hb = player[p].phys.interPolatedHitboxPhantom[j];
+  }
 
   if (segmentSegmentCollision(new Vec2D(hurt.min.x,hurt.min.y),new Vec2D(hurt.max.x,hurt.min.y),hb[0],hb[1]) || segmentSegmentCollision(new Vec2D(hurt.min.x,hurt.min.y),new Vec2D(hurt.max.x,hurt.min.y),hb[2],hb[3])){
     return true;
@@ -198,7 +206,8 @@ function interpolatedHitHurtCollision(i,p,j){
   }
 }
 
-function hitHurtCollision(i,p,j,previous){
+function hitHurtCollision(i,p,j,previous,phantom){
+  phantom = phantom || false;
   var offset = player[p].hitboxes.id[j].offset[player[p].hitboxes.frame];
   if (player[p].actionState == "DAMAGEFLYN"){
     offset = player[p].hitboxes.id[j].offset[0];
@@ -216,8 +225,8 @@ function hitHurtCollision(i,p,j,previous){
   var hurtWidth = 8;
   var hurtHeight = 18;
 
-  if (distance.x > (hurtWidth/2 + player[p].hitboxes.id[j].size)) { return false; }
-  if (distance.y > (hurtHeight/2 + player[p].hitboxes.id[j].size)) { return false; }
+  if (distance.x > (hurtWidth/2 + player[p].hitboxes.id[j].size-(phantom?gameSettings.phantomThreshold:0))) { return false; }
+  if (distance.y > (hurtHeight/2 + player[p].hitboxes.id[j].size-(phantom?gameSettings.phantomThreshold:0))) { return false; }
 
   if (distance.x <= (hurtWidth/2)) { return true; }
   if (distance.y <= (hurtHeight/2)) { return true; }
@@ -225,7 +234,7 @@ function hitHurtCollision(i,p,j,previous){
   var cornerDistance_sq = Math.pow(distance.x - hurtWidth/2,2) +
                        Math.pow(distance.y - hurtHeight/2,2);
 
-  return (cornerDistance_sq <= (Math.pow(player[p].hitboxes.id[j].size,2)));
+  return (cornerDistance_sq <= (Math.pow(player[p].hitboxes.id[j].size-(phantom?0.5:0),2)));
 }
 
 function executeHits(){
@@ -238,6 +247,7 @@ function executeHits(){
     var shieldHit = hitQueue[i][3];
     var isThrow = hitQueue[i][4];
     var drawBounce = hitQueue[i][5];
+    var phantom = hitQueue[i][6] || false;
     if (gameMode == 2){
       if (shieldHit){
         sounds.blunthit.play();
@@ -284,11 +294,17 @@ function executeHits(){
       else {
         ignoreGrabs[v] = true;
         var damage = player[a].hitboxes.id[h].dmg;
+        if (phantom){
+          phantomQueue.push([a,v]);
+          player[v].phys.phantomDamage = 0.5*damage;
+        }
         player[v].phys.grabTech = false;
         if (player[a].phys.chargeFrames > 0){
           damage *= 1 + (player[a].phys.chargeFrames * (0.3671/60));
         }
-        player[a].hit.hitlag = Math.floor(damage * (1/3) + 3);
+        if (!phantom){
+          player[a].hit.hitlag = Math.floor(damage * (1/3) + 3);
+        }
         // do staling
         if (shieldHit){
           //console.log("test");
@@ -341,100 +357,108 @@ function executeHits(){
         }
         else {
           if (player[v].phys.hurtBoxState == 0){
-            var crouching = aS[cS[v]][player[v].actionState].crouch;
-            var vCancel = false;
-            if (player[v].phys.vCancelTimer > 0){
-              if (aS[cS[v]][player[v].actionState].vCancel){
-                  vCancel = true;
-                  sounds.vcancel.play();
+            if (!phantom){
+              var crouching = aS[cS[v]][player[v].actionState].crouch;
+              var vCancel = false;
+              if (player[v].phys.vCancelTimer > 0){
+                if (aS[cS[v]][player[v].actionState].vCancel){
+                    vCancel = true;
+                    sounds.vcancel.play();
+                }
               }
-            }
-            var jabReset = false;
-            if (aS[cS[v]][player[v].actionState].downed && damage < 7){
-              jabReset = true;
-            }
-            player[v].hit.knockback = getKnockback(player[a].hitboxes.id[h],damage,damage,player[v].percent,player[v].charAttributes.weight,crouching,vCancel);
-            player[v].hit.angle = player[a].hitboxes.id[h].angle;
-            if (player[v].hit.angle == 361){
-              if (player[v].hit.knockback < 32.1) {
-                player[v].hit.angle = 0;
+              var jabReset = false;
+              if (aS[cS[v]][player[v].actionState].downed && damage < 7){
+                jabReset = true;
               }
-              else if (player[v].hit.knockback >= 32.1) {
-                player[v].hit.angle = 44;
+              player[v].hit.knockback = getKnockback(player[a].hitboxes.id[h],damage,damage,player[v].percent,player[v].charAttributes.weight,crouching,vCancel);
+              player[v].hit.angle = player[a].hitboxes.id[h].angle;
+              if (player[v].hit.angle == 361){
+                if (player[v].hit.knockback < 32.1) {
+                  player[v].hit.angle = 0;
+                }
+                else if (player[v].hit.knockback >= 32.1) {
+                  player[v].hit.angle = 44;
+                }
               }
+
+              player[v].hit.hitlag = Math.floor(damage * (1/3) + 3);
+
+              if (aS[cS[a]][player[a].actionState].specialOnHit){
+                aS[cS[a]][player[a].actionState].onPlayerHit(a);
+              }
+
+              if (!isThrow){
+                player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y);
+                if (player[a].phys.pos.x < player[v].phys.pos.x){
+                  player[v].hit.reverse = false;
+                }
+                else {
+                  player[v].hit.reverse = true;
+                }
+                if (!jabReset){
+                  player[v].phys.face = player[v].hit.reverse ? 1 : -1;
+                }
+              }
+              else {
+                player[a].hasHit = true;
+                player[a].phys.grabbing = -1;
+                player[v].phys.thrownHitbox = true;
+                player[v].phys.thrownHitboxOwner = a;
+                player[v].phys.pos = new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset.x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset.y);
+                player[v].phys.grabbedBy = -1;
+                player[v].hit.hitlag = 1;
+                player[a].hit.hitlag = 1;
+                if (player[a].phys.face == 1){
+                  player[v].hit.reverse = false;
+                }
+                else {
+                  player[v].hit.reverse = true;
+                }
+                if (drawBounce){
+                  sounds.bounce.play();
+                  drawVfx("groundBounce",player[v].phys.pos,player[v].phys.face);
+                }
+              }
+
+              player[v].percent += damage;
+
+              if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)){
+
+                player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
+                  //console.log(player[v].hit.reverse);
+                if (jabReset){
+                  aS[cS[v]].DOWNDAMAGE.init(v);
+                }
+                else if (player[v].hit.knockback >= 80 || isThrow){
+                  aS[cS[v]].DAMAGEFLYN.init(v,!isThrow);
+                }
+                else {
+                  aS[cS[v]].DAMAGEN2.init(v);
+                }
+              }
+              else {
+                if (player[v].actionState != "THROWNPUFFDOWN"){
+                  aS[cS[v]].CAPTUREDAMAGE.init(v);
+                }
+              }
+
+              if (player[v].phys.grounded && player[v].hit.angle > 180){
+                if (player[v].hit.knockback >= 80){
+                  sounds.bounce.play();
+                  drawVfx("groundBounce",player[v].phys.pos,player[v].phys.face);
+                  player[v].hit.angle = 360 - player[v].hit.angle;
+                  player[v].hit.knockback *= 0.8;
+                }
+              }
+              screenShake(player[v].hit.knockback);
+              percentShake(player[v].hit.knockback,v);
             }
-
-            player[v].hit.hitlag = Math.floor(damage * (1/3) + 3);
-
-            if (aS[cS[a]][player[a].actionState].specialOnHit){
-              aS[cS[a]][player[a].actionState].onPlayerHit(a);
-            }
-
-            if (!isThrow){
+            // else if phantomed
+            else {
+              player[v].hit.hitlag = Math.floor(damage * (1/3) + 3);
+              player[v].hit.knockback = 0;
               player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y);
-              if (player[a].phys.pos.x < player[v].phys.pos.x){
-                player[v].hit.reverse = false;
-              }
-              else {
-                player[v].hit.reverse = true;
-              }
-              if (!jabReset){
-                player[v].phys.face = player[v].hit.reverse ? 1 : -1;
-              }
             }
-            else {
-              player[a].hasHit = true;
-              player[a].phys.grabbing = -1;
-              player[v].phys.thrownHitbox = true;
-              player[v].phys.thrownHitboxOwner = a;
-              player[v].phys.pos = new Vec2D(player[a].phys.pos.x+(player[a].hitboxes.id[h].offset.x*player[a].phys.face),player[a].phys.pos.y+player[a].hitboxes.id[h].offset.y);
-              player[v].phys.grabbedBy = -1;
-              player[v].hit.hitlag = 1;
-              player[a].hit.hitlag = 1;
-              if (player[a].phys.face == 1){
-                player[v].hit.reverse = false;
-              }
-              else {
-                player[v].hit.reverse = true;
-              }
-              if (drawBounce){
-                sounds.bounce.play();
-                drawVfx("groundBounce",player[v].phys.pos,player[v].phys.face);
-              }
-            }
-
-            player[v].percent += damage;
-
-            if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)){
-
-              player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
-                //console.log(player[v].hit.reverse);
-              if (jabReset){
-                aS[cS[v]].DOWNDAMAGE.init(v);
-              }
-              else if (player[v].hit.knockback >= 80 || isThrow){
-                aS[cS[v]].DAMAGEFLYN.init(v,!isThrow);
-              }
-              else {
-                aS[cS[v]].DAMAGEN2.init(v);
-              }
-            }
-            else {
-              if (player[v].actionState != "THROWNPUFFDOWN"){
-                aS[cS[v]].CAPTUREDAMAGE.init(v);
-              }
-            }
-
-            if (player[v].phys.grounded && player[v].hit.angle > 180){
-              if (player[v].hit.knockback >= 80){
-                sounds.bounce.play();
-                drawVfx("groundBounce",player[v].phys.pos,player[v].phys.face);
-                player[v].hit.angle = 360 - player[v].hit.angle;
-                player[v].hit.knockback *= 0.8;
-              }
-            }
-            screenShake(player[v].hit.knockback);
-            percentShake(player[v].hit.knockback,v);
             //console.log(player[v].hit.knockback);
             if (!isThrow){
               switch (player[a].hitboxes.id[h].type){
@@ -790,6 +814,23 @@ function knockbackSounds(type,knockback,v){
           break;
         default:
           break;
+      }
+    }
+  }
+}
+
+function checkPhantoms(){
+  for (var i=0;i<phantomQueue.length;i++){
+    var v = phantomQueue[i][1]
+    if (player[v].hit.hitlag == 0){
+      player[v].percent += player[v].phys.phantomDamage;
+      player[v].phys.phantomDamage = 0;
+      var a = phantomQueue[i][0];
+      for (var j=0;j<player[a].hitboxes.hitList.length;j++){
+        if (player[a].hitboxes.hitList[j] == v){
+          player[a].hitboxes.hitList.splice(j,1);
+          break;
+        }
       }
     }
   }
