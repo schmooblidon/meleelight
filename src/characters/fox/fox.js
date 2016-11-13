@@ -2021,6 +2021,7 @@ fox.DOWNSPECIALAIR = {
           else {
             fox.JUMPAERIALF.init(p);
           }
+          turnOffHitboxes(p);
           return true;
         }
         else {
@@ -2046,6 +2047,11 @@ fox.DOWNSPECIALAIR = {
   },
   land : function(p){
     player[p].actionState = "DOWNSPECIALGROUND";
+    if (player[p].timer >= 4 && player[p].timer <= 35){
+      player[p].hitboxes.id[0] = player[p].charHitboxes.reflector.id0;
+      player[p].hitboxes.active = [true,false,false,false];
+      player[p].hitboxes.frame = 0;
+    }
   }
 };
 
@@ -2142,6 +2148,7 @@ fox.DOWNSPECIALGROUND = {
       var j = checkForJump(p);
       if (j[0]){
         fox.KNEEBEND.init(p,j[1]);
+        turnOffHitboxes(p);
         return true;
       }
       else {
