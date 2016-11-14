@@ -449,10 +449,10 @@ function physics(i){
   }
   var notTouchingWalls = [true,true];
   for (var j=0;j<stage.wallL.length;j++){
-    if (player[i].phys.ECBp[1].y < stage.wallL[j][0].y && player[i].phys.ECBp[1].y > stage.wallL[j][1].y && player[i].phys.ECBp[1].x >= stage.wallL[j][1].x && (player[i].phys.ECB1[1].x <= stage.wallL[j][1].x || ((player[i].phys.ECB1[1].y >= stage.wallL[j][0].y || player[i].phys.ECB1[1].y <= stage.wallL[j][1].y) && player[i].phys.ECB1[3].x <= stage.wallL[j][0].x))){
+    if (player[i].phys.ECBp[1].y < stage.wallL[j][0].y && player[i].phys.ECBp[1].y > stage.wallL[j][1].y && player[i].phys.ECBp[1].x >= stage.wallL[j][1].x - 0.000011 && (player[i].phys.ECB1[1].x <= stage.wallL[j][1].x || ((player[i].phys.ECB1[1].y >= stage.wallL[j][0].y || player[i].phys.ECB1[1].y <= stage.wallL[j][1].y) && player[i].phys.ECB1[3].x <= stage.wallL[j][0].x))){
       //player[i].phys.ECB1[3].x <= stage.wallL[j][0].x is kind of a shitty fix. It is very unlikely something will break it though.
       notTouchingWalls[0] = false;
-      player[i].phys.pos.x -= player[i].phys.ECBp[1].x - stage.wallL[j][1].x;
+      player[i].phys.pos.x -= player[i].phys.ECBp[1].x - stage.wallL[j][1].x + 0.00001;
       if (player[i].actionState == "DAMAGEFLYN"){
         if (player[i].hit.hitlag == 0){
           player[i].phys.face = -1;
@@ -494,9 +494,9 @@ function physics(i){
   }
 
   for (var j=0;j<stage.wallR.length;j++){
-    if (player[i].phys.ECBp[3].y < stage.wallR[j][0].y && player[i].phys.ECBp[3].y > stage.wallR[j][1].y && player[i].phys.ECBp[3].x <= stage.wallR[j][1].x && (player[i].phys.ECB1[3].x >= stage.wallR[j][1].x || ((player[i].phys.ECB1[3].y >= stage.wallR[j][0].y || player[i].phys.ECB1[3].y <= stage.wallR[j][1].y) && player[i].phys.ECB1[1].x >= stage.wallR[j][0].x))){
+    if (player[i].phys.ECBp[3].y < stage.wallR[j][0].y && player[i].phys.ECBp[3].y > stage.wallR[j][1].y && player[i].phys.ECBp[3].x <= stage.wallR[j][1].x + 0.000011 && (player[i].phys.ECB1[3].x >= stage.wallR[j][1].x || ((player[i].phys.ECB1[3].y >= stage.wallR[j][0].y || player[i].phys.ECB1[3].y <= stage.wallR[j][1].y) && player[i].phys.ECB1[1].x >= stage.wallR[j][0].x))){
       notTouchingWalls[1] = false;
-      player[i].phys.pos.x -= player[i].phys.ECBp[3].x - stage.wallR[j][1].x;
+      player[i].phys.pos.x -= player[i].phys.ECBp[3].x - stage.wallR[j][1].x - 0.00001;
       if (player[i].actionState == "DAMAGEFLYN"){
         if (player[i].hit.hitlag == 0){
           player[i].phys.face = 1;
@@ -607,7 +607,7 @@ function physics(i){
     }
     for (var j=0;j<stage.ceiling.length;j++){
       if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y && player[i].phys.ECBp[0].x >= stage.ceiling[j][0].x && player[i].phys.ECBp[0].x <= stage.ceiling[j][1].x && player[i].phys.ECB1[2].y <= stage.ceiling[j][0].y){
-        player[i].phys.pos.y = stage.ceiling[j][0].y-(player[i].phys.ECBp[2].y-player[i].phys.pos.y);
+        player[i].phys.pos.y = stage.ceiling[j][0].y-(player[i].phys.ECBp[2].y-player[i].phys.pos.y)-0.01;
         if (aS[cS[i]][player[i].actionState].headBonk){
           if (player[i].hit.hitstun > 0){
             if (player[i].phys.techTimer > 0){

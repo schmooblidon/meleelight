@@ -166,67 +166,67 @@ function createStageCode(){
   return tCode;
 }
 
-/*function createStageObject(){
+function createStageObject(s){
   var tCode = "{startingPoint:new Vec2D(";
-  tCode += stageTemp.startingPoint.x+","+stageTemp.startingPoint.y+"),box:[";
-  for (var i=0;i<stageTemp.box.length;i++){
-    tCode += "new Box2D(["+stageTemp.box[i].min.x+","+stageTemp.box[i].min.y+"],["+stageTemp.box[i].max.x+","+stageTemp.box[i].max.y+"])";
-    if (i != stageTemp.box.length - 1){
+  tCode += targetStages[s].startingPoint.x.toFixed(1)+","+targetStages[s].startingPoint.y.toFixed(1)+"),box:[";
+  for (var i=0;i<targetStages[s].box.length;i++){
+    tCode += "new Box2D(["+targetStages[s].box[i].min.x.toFixed(1)+","+targetStages[s].box[i].min.y.toFixed(1)+"],["+targetStages[s].box[i].max.x.toFixed(1)+","+targetStages[s].box[i].max.y.toFixed(1)+"])";
+    if (i != targetStages[s].box.length - 1){
       tCode += ",";
     }
   }
   tCode += "],ground:[";
-  for (var i=0;i<stageTemp.ground.length;i++){
-    tCode += "[new Vec2D("+stageTemp.ground[i][0].x+","+stageTemp.ground[i][0].y+"),new Vec2D("+stageTemp.ground[i][1].x+","+stageTemp.ground[i][1].y+")]";
-    if (i != stageTemp.ground.length - 1){
+  for (var i=0;i<targetStages[s].ground.length;i++){
+    tCode += "[new Vec2D("+targetStages[s].ground[i][0].x.toFixed(1)+","+targetStages[s].ground[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].ground[i][1].x.toFixed(1)+","+targetStages[s].ground[i][1].y.toFixed(1)+")]";
+    if (i != targetStages[s].ground.length - 1){
       tCode += ",";
     }
   }
   tCode += "],ceiling:[";
-  for (var i=0;i<stageTemp.ceiling.length;i++){
-    tCode += "[new Vec2D("+stageTemp.ceiling[i][0].x+","+stageTemp.ceiling[i][0].y+"),new Vec2D("+stageTemp.ceiling[i][1].x+","+stageTemp.ceiling[i][1].y+")]";
-    if (i != stageTemp.ceiling.length - 1){
+  for (var i=0;i<targetStages[s].ceiling.length;i++){
+    tCode += "[new Vec2D("+targetStages[s].ceiling[i][0].x.toFixed(1)+","+targetStages[s].ceiling[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].ceiling[i][1].x.toFixed(1)+","+targetStages[s].ceiling[i][1].y.toFixed(1)+")]";
+    if (i != targetStages[s].ceiling.length - 1){
       tCode += ",";
     }
   }
   tCode += "],wallL:[";
-  for (var i=0;i<stageTemp.wallL.length;i++){
-    tCode += "[new Vec2D("+stageTemp.wallL[i][0].x+","+stageTemp.wallL[i][0].y+"),new Vec2D("+stageTemp.wallL[i][1].x+","+stageTemp.wallL[i][1].y+")]";
-    if (i != stageTemp.wallL.length - 1){
+  for (var i=0;i<targetStages[s].wallL.length;i++){
+    tCode += "[new Vec2D("+targetStages[s].wallL[i][0].x.toFixed(1)+","+targetStages[s].wallL[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].wallL[i][1].x.toFixed(1)+","+targetStages[s].wallL[i][1].y.toFixed(1)+")]";
+    if (i != targetStages[s].wallL.length - 1){
       tCode += ",";
     }
   }
   tCode += "],wallR:[";
-  for (var i=0;i<stageTemp.wallR.length;i++){
-    tCode += "[new Vec2D("+stageTemp.wallR[i][0].x+","+stageTemp.wallR[i][0].y+"),new Vec2D("+stageTemp.wallR[i][1].x+","+stageTemp.wallR[i][1].y+")]";
-    if (i != stageTemp.wallR.length - 1){
+  for (var i=0;i<targetStages[s].wallR.length;i++){
+    tCode += "[new Vec2D("+targetStages[s].wallR[i][0].x.toFixed(1)+","+targetStages[s].wallR[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].wallR[i][1].x.toFixed(1)+","+targetStages[s].wallR[i][1].y.toFixed(1)+")]";
+    if (i != targetStages[s].wallR.length - 1){
       tCode += ",";
     }
   }
   tCode += "],platform:[";
-  for (var i=0;i<stageTemp.platform.length;i++){
-    tCode += "[new Vec2D("+stageTemp.platform[i][0].x+","+stageTemp.platform[i][0].y+"),new Vec2D("+stageTemp.platform[i][1].x+","+stageTemp.platform[i][1].y+")]";
-    if (i != stageTemp.platform.length - 1){
+  for (var i=0;i<targetStages[s].platform.length;i++){
+    tCode += "[new Vec2D("+targetStages[s].platform[i][0].x.toFixed(1)+","+targetStages[s].platform[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].platform[i][1].x.toFixed(1)+","+targetStages[s].platform[i][1].y.toFixed(1)+")]";
+    if (i != targetStages[s].platform.length - 1){
       tCode += ",";
     }
   }
   tCode += "],ledge:[";
-  for (var i=0;i<stageTemp.ledge.length;i++){
-    tCode += "["+stageTemp.ledge[i][0]+","+stageTemp.ledge[i][1]+"]";
-    if (i != stageTemp.ledge.length - 1){
+  for (var i=0;i<targetStages[s].ledge.length;i++){
+    tCode += "["+targetStages[s].ledge[i][0].toFixed(1)+","+targetStages[s].ledge[i][1].toFixed(1)+"]";
+    if (i != targetStages[s].ledge.length - 1){
       tCode += ",";
     }
   }
   tCode += "],target:[";
-  for (var i=0;i<stageTemp.target.length;i++){
-    tCode += "new Vec2D("+stageTemp.target[i].x+","+stageTemp.target[i].y+")";
-    if (i != stageTemp.target.length - 1){
+  for (var i=0;i<targetStages[s].target.length;i++){
+    tCode += "new Vec2D("+targetStages[s].target[i].x.toFixed(1)+","+targetStages[s].target[i].y.toFixed(1)+")";
+    if (i != targetStages[s].target.length - 1){
       tCode += ",";
     }
   }
-  tCode += "],scale:"+stageTemp.scale+",blastzone:new Box2D([-250,-250],[250,250]),offset:[600,375]}";
+  tCode += "],scale:"+targetStages[s].scale+",blastzone:new Box2D([-250,-250],[250,250]),offset:[600,375]}";
   return tCode;
-}*/
+}
 
 function targetBuilderControls(p){
   if (!showingCode){
