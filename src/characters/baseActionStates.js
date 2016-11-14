@@ -4159,7 +4159,6 @@ baseActionStates = {
         }
       }
       else {
-        fastfall(p);
         airDrift(p);
       }
     }
