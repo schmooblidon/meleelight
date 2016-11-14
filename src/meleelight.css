@@ -340,13 +340,6 @@ a {
   vertical-align: top;
 }
 
-#logoVid {
-  display:inline-block;
-  position:absolute;
-  top:225px;
-  left:225px;
-}
-
 #gameSvg {
   display:block;
   position:absolute;
