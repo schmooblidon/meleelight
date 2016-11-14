@@ -925,8 +925,14 @@ function renderVfx(otherFrame){
   for (var j=0;j<vfxQueue.length;j++){
     vfxQueue[j][1]++;
     if (vfxQueue[j][0].frames >= vfxQueue[j][1]){
-      if (showVfx && !otherFrame){
-        dVfx[vfxQueue[j][0].name](j);
+      if (showVfx){
+        if (!otherFrame){
+          dVfx[vfxQueue[j][0].name](j);
+        }
+        // if 30fps mode on the other frame, still call swing function but just don't draw
+        else if (vfxQueue[j][0].name == "swing"){
+          dVfx.swing(j,false);
+        }
       }
     }
     else {

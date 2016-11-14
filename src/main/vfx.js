@@ -213,7 +213,8 @@ dVfx = {
     drawArrayPath(fg2,col,vfxQueue[j][3],0,0,vfxQueue[j][0].path[vfxQueue[j][1]-1],0.2*(stage.scale/4.5),0.2*(stage.scale/4.5));
     fg2.restore();
   },
-  swing : function(j){
+  swing : function(j,draw){
+    draw = draw || true;
     var p = vfxQueue[j][4].pNum;
     if (vfxQueue[j][4].posNow == undefined || vfxQueue[j][4].posNow == null){
       vfxQueue[j][4].posNow = new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y);
@@ -229,14 +230,16 @@ dVfx = {
     var sc = stage.scale;
     var soX = stage.offset[0];
     var soY = stage.offset[1];
-    fg2.fillStyle = makeColour(46,217,255,(0.7-(0.7/5*vfxQueue[j][1])));
-    fg2.beginPath();
-    fg2.moveTo(((scale*(swordNow[0][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[0][1]/-4.5)+pos.y)*-sc+soY));
-    fg2.lineTo(((scale*(swordNow[1][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[1][1]/-4.5)+pos.y)*-sc+soY));
-    fg2.lineTo(((scale*(swordPrev[1][0]/4.5*player[p].phys.face)+posPrev.x)*sc+soX),((scale*(swordPrev[1][1]/-4.5)+posPrev.y)*-sc+soY));
-    fg2.lineTo(((scale*(swordPrev[0][0]/4.5*player[p].phys.face)+posPrev.x)*sc+soX),((scale*(swordPrev[0][1]/-4.5)+posPrev.y)*-sc+soY));
-    fg2.closePath();
-    fg2.fill();
+    if (draw){
+      fg2.fillStyle = makeColour(46,217,255,(0.7-(0.7/5*vfxQueue[j][1])));
+      fg2.beginPath();
+      fg2.moveTo(((scale*(swordNow[0][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[0][1]/-4.5)+pos.y)*-sc+soY));
+      fg2.lineTo(((scale*(swordNow[1][0]/4.5*player[p].phys.face)+pos.x)*sc+soX),((scale*(swordNow[1][1]/-4.5)+pos.y)*-sc+soY));
+      fg2.lineTo(((scale*(swordPrev[1][0]/4.5*player[p].phys.face)+posPrev.x)*sc+soX),((scale*(swordPrev[1][1]/-4.5)+posPrev.y)*-sc+soY));
+      fg2.lineTo(((scale*(swordPrev[0][0]/4.5*player[p].phys.face)+posPrev.x)*sc+soX),((scale*(swordPrev[0][1]/-4.5)+posPrev.y)*-sc+soY));
+      fg2.closePath();
+      fg2.fill();
+    }
   },
   impactLand : function(j){
     dVfx.general(j,0);
