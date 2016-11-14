@@ -7,25 +7,22 @@ schmoologo.src = "assets/schmoologo.png";
 function drawStartUp(){
   startUpTimer++;
   ui.clearRect(0,0,layers.UI.width,layers.UI.height);
-  bg1.fillStyle = "rgb(16,16,16)";
+  bg1.fillStyle = "rgb(0,0,0)";
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   ui.font = "900 25px Arial";
   ui.textAlign = "center";
   if (startUpTimer <= 200){
     ui.save();
-    //ui.globalCompositeOperation = "xor";
     drawArrayPathCompress(ui,"rgb(255,255,255)",1,300,650,LOGO,0.5,0.5,0,0,0);
-    //ui.globalCompositeOperation = "source-over";
     ui.clip();
-
     ui.drawImage(schmoologo,100,Math.round(200-startUpTimer/3));
     drawArrayPathCompress(ui,"rgb(0,0,0)",1,300,650,LOGO2,0.5,0.5,0,0,0);
     ui.restore();
     if (startUpTimer > 180){
-      ui.fillStyle = "rgba(16,16,16,"+Math.min(1,(startUpTimer-180)/20)+")";
+      ui.fillStyle = "rgba(0,0,0,"+Math.min(1,(startUpTimer-180)/20)+")";
     }
     else {
-      ui.fillStyle = "rgba(16,16,16,"+Math.max(0,1-(startUpTimer)/20)+")";
+      ui.fillStyle = "rgba(0,0,0,"+Math.max(0,1-(startUpTimer)/20)+")";
     }
     ui.fillRect(0,0,layers.UI.width,layers.UI.height);
   }
@@ -34,10 +31,10 @@ function drawStartUp(){
     ui.fillText("WITH MUSIC FROM",600,290);
     ui.drawImage(hohlogo,375,305);
     if (startUpTimer > 350){
-      ui.fillStyle = "rgba(16,16,16,"+Math.min(1,(startUpTimer-350)/20)+")";
+      ui.fillStyle = "rgba(0,0,0,"+Math.min(1,(startUpTimer-350)/20)+")";
     }
     else {
-      ui.fillStyle = "rgba(16,16,16,"+Math.max(0,1-(startUpTimer-200)/20)+")";
+      ui.fillStyle = "rgba(0,0,0,"+Math.max(0,1-(startUpTimer-200)/20)+")";
     }
     ui.fillRect(0,0,layers.UI.width,layers.UI.height);
   }

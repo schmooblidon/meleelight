@@ -822,7 +822,8 @@ function physics(i){
   else if (player[i].actionState == 24){
     player[i].phys.ECB1 = [new Vec2D(0+x,1+y),new Vec2D(2+x,9+y),new Vec2D(0+x,14+y),new Vec2D(-2+x,9+y)];
   }*/
-  player[i].phys.ECB1 = [new Vec2D(0+x,ecbOffset[0]+y),new Vec2D(ecbOffset[1]+x,ecbOffset[2]+y),new Vec2D(0+x,ecbOffset[3]+y),new Vec2D(ecbOffset[1]*-1+x,ecbOffset[2]+y)];
+  //player[i].phys.ECB1 = [new Vec2D(0+x,ecbOffset[0]+y),new Vec2D(ecbOffset[1]+x,ecbOffset[2]+y),new Vec2D(0+x,ecbOffset[3]+y),new Vec2D(ecbOffset[1]*-1+x,ecbOffset[2]+y)];
+  player[i].phys.ECB1 = [new Vec2D(0+x,(ecbOffset[0]*10+y*10)/10),new Vec2D((ecbOffset[1]*10+x*10)/10,(ecbOffset[2]*10+y*10)/10),new Vec2D((0+x*10)/10,(ecbOffset[3]*10+y*10)/10),new Vec2D((ecbOffset[1]*-1*10+x*10)/10,(ecbOffset[2]*10+y*10)/10)];
   if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
     player[i].phys.ECB1[0].y = 0+y;
   }
