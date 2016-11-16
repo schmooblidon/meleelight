@@ -1,6 +1,6 @@
 menuSelected = 0;
 menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Data"]];
-menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","look at what melee says"],["change audio","change gameplay settings","change keyboard controls","modify data"]];
+menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Modify data."]];
 menuTitle = ["Main Menu","Options"];
 
 menuColours = [238,358,117,55];
