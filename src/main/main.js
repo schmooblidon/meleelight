@@ -1460,12 +1460,6 @@ function finishGame(){
         }
         if (matchTimer < targetRecords[cS[targetPlayer]][targetStagePlaying] || targetRecords[cS[targetPlayer]][targetStagePlaying] == -1){
           targetRecords[cS[targetPlayer]][targetStagePlaying] = matchTimer;
-          if (targetStagePlaying < 10){
-            if (matchTimer < worldRecords[cS[targetPlayer]][targetStagePlaying]){
-              worldRecords[cS[targetPlayer]][targetStagePlaying] = matchTimer;
-              worldRecordNames[cS[targetPlayer]][targetStagePlaying] = "you";
-            }
-          }
           sounds.newRecord.play();
         }
         else {

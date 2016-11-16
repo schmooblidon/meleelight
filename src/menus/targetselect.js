@@ -331,6 +331,25 @@ function drawTSS(){
   ui.strokeStyle = "rgb(157, 157, 157)";
   ui.lineWidth = 2;
   for (var i=0;i<10;i++){
+    // if beaten dev record draw star
+    if (targetRecords[cS[targetPlayer]][i] != -1 && targetRecords[cS[targetPlayer]][i] <= devRecords[cS[targetPlayer]][i]){
+      var x = 190+Math.floor(i/5)*260;
+      var y = 135+(i%5)*60;
+      ui.fillStyle= "white";
+      ui.beginPath();
+      ui.moveTo(x,y-9);
+      ui.lineTo(x+3,y-3.3);
+      ui.lineTo(x+9,y-2.1);
+      ui.lineTo(x+4.8,y+2.7);
+      ui.lineTo(x+5.7,y+9);
+      ui.lineTo(x,y+6.1);
+      ui.lineTo(x-5.7,y+9);
+      ui.lineTo(x-4.8,y+2.7);
+      ui.lineTo(x-9,y-2.1);
+      ui.lineTo(x-3,y-3.3);
+      ui.closePath();
+      ui.fill();
+    }
     ui.beginPath();
     ui.arc(220+Math.floor(i/5)*260,135+(i%5)*60,10,0,twoPi);
     ui.closePath();
@@ -407,17 +426,14 @@ function drawTSS(){
       text += ((sec.length<5)?"0"+sec:sec);
       ui.fillText(text,345+i*240,513);
     }
-    ui.font = "italic 900 38px Arial";
-    ui.fillText("World Record",250,625);
-    ui.font = "700 38px Arial";
+    ui.font = "italic 900 20px Arial";
+    ui.fillText("Developer Record",340,625);
+    ui.font = "700 20px Arial";
     ui.textAlign = "center";
-    var text = "0"+Math.floor(worldRecords[cS[targetPlayer]][targetSelected]/60)+":";
-    var sec = (worldRecords[cS[targetPlayer]][targetSelected] % 60).toFixed(2);
+    var text = "0"+Math.floor(devRecords[cS[targetPlayer]][targetSelected]/60)+":";
+    var sec = (devRecords[cS[targetPlayer]][targetSelected] % 60).toFixed(2);
     text += ((sec.length<5)?"0"+sec:sec);
     ui.fillText(text,750,625);
-    ui.font = "500 20px Arial";
-    ui.textAlign = "start";
-    ui.fillText("by "+worldRecordNames[cS[targetPlayer]][targetSelected],850,625);
   }
   ui.fillStyle = "rgba(255,255,255,0.7)";
   ui.textAlign = "start";
@@ -426,7 +442,7 @@ function drawTSS(){
     ui.fillText("Add custom stage",400,560);
   }
   else {
-    ui.fillText("Personal Best",250,575-(targetSelected>9?45:0));
+    ui.fillText("Personal Best",250,585-(targetSelected>9?45:0));
     ui.font = "700 38px Arial";
     ui.textAlign = "center";
     if (targetRecords[cS[targetPlayer]][targetSelected] == -1){
@@ -437,7 +453,7 @@ function drawTSS(){
       var sec = (targetRecords[cS[targetPlayer]][targetSelected] % 60).toFixed(2);
       text += ((sec.length<5)?"0"+sec:sec);
     }
-    ui.fillText(text,750,575-(targetSelected>9?45:0));
+    ui.fillText(text,750,585-(targetSelected>9?45:0));
     ui.font = "900 35px Arial";
     if (targetSelected > 9 && targetSelected != customTargetStages.length-1){
       ui.fillText("Play",260,610);
