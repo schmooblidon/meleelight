@@ -74,6 +74,29 @@ medalsEarned = [[
   [false,false,false]]
 ];
 
+function getTargetCookies(){
+  for (var i=0;i<3;i++){
+    for (var j=0;j<20;j++){
+      var r = getCookie(i+"target"+j);
+      if (r != null && r != undefined && r != "null"){
+        targetRecords[i][j] = Number(r);
+      }
+    }
+  }
+}
+
+function giveMedals(){
+  for (var i=0;i<3;i++){
+    for (var j=0;j<10;j++){
+      for (var k=0;k<3;k++){
+        if (targetRecords[i][j] != -1 && targetRecords[i][j] <= medalTimes[i][j][k]){
+          medalsEarned[i][j][k] = true;
+        }
+      }
+    }
+  }
+}
+
 function startTargetGame(p,test){
   endTargetGame = false;
   if (test){

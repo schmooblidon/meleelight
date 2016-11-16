@@ -1461,6 +1461,7 @@ function finishGame(){
         if (matchTimer < targetRecords[cS[targetPlayer]][targetStagePlaying] || targetRecords[cS[targetPlayer]][targetStagePlaying] == -1){
           targetRecords[cS[targetPlayer]][targetStagePlaying] = matchTimer;
           sounds.newRecord.play();
+          setCookie(cS[targetPlayer]+"target"+targetStagePlaying, targetRecords[cS[targetPlayer]][targetStagePlaying],36500);
         }
         else {
           sounds.complete.play();
@@ -1527,6 +1528,9 @@ function finishGame(){
 
 $(document).ready(function(){
   getKeyboardCookie();
+  getTargetCookies();
+  giveMedals();
+  getTargetStageCookies();
   $("#keyboardButton").click(function(){
     $("#keyboardControlsImg").toggle();
   });

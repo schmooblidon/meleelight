@@ -8,7 +8,6 @@ function tssControls(i){
   if (!showingCode){
     targetPointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
     targetPointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
-    ui.fillRect(50+Math.floor(i/5)*260+Math.floor(i/10)*65,110+(i%5)*60,250,50);
     if (targetPointerPos[1] >= 45 && targetPointerPos[1] <= 420){
       for (var j=0;j<Math.min(20,11+customTargetStages.length);j++){
         if (targetPointerPos[0] >= 50+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[0] <= 300+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[1] >= 110+(j%5)*60 && targetPointerPos[1] <= 160+(j%5)*60){
@@ -45,14 +44,28 @@ function tssControls(i){
       if (targetSelected > 9 && targetSelected != 10+customTargetStages.length){
         if (player[i].inputs.z[0] && !player[i].inputs.z[1]){
           //delete
+          for (var n=targetSelected-10;n<customTargetStages.length;n++){
+            setCookie("custom"+n,getCookie("custom"+(n+1)),36500);
+          }
+          setCookie("custom"+(customTargetStages.length),null,36500);
+
+          for (var j=0;j<3;j++){
+            targetRecords[j].splice(targetSelected,1);
+            targetRecords[j].push(-1);
+            for (var k=targetSelected;k<10+customTargetStages.length;k++){
+              setCookie(j+"target"+k,getCookie(j+"target"+(k+1)),36500);
+            }
+            setCookie(j+"target"+customTargetStages.length,null,36500);
+          }
+
           customTargetStages.splice(targetSelected-10,1);
-          targetRecords[cS[i]].splice(targetSelected,1);
-          targetRecords[cS[i]].push(-1);
+          redrawCustomStageBoxes();
           return;
         }
         else if (player[i].inputs.x[0] && !player[i].inputs.x[1]){
           //dupe
           if (customTargetStages.length < 10){
+            setCookie("custom"+customTargetStages.length,getCookie("custom"+(targetSelected-10)),36500);
             customTargetStages.push({});
             $.extend(true,customTargetStages[customTargetStages.length-1],customTargetStages[targetSelected-10]);
           }
@@ -60,6 +73,7 @@ function tssControls(i){
             promptTimer = 60;
             promptType = 1;
           }
+          redrawCustomStageBoxes();
           return;
         }
         else if (player[i].inputs.y[0] && !player[i].inputs.y[1]){
@@ -109,6 +123,7 @@ function tssControls(i){
         promptType = 0;
       }
       else {
+        setCookie("custom"+customTargetStages.length,code,36500);
         customTargetStages[customTargetStages.length] = {};
         $.extend(true,customTargetStages[customTargetStages.length-1],newStage);
       }
@@ -206,6 +221,14 @@ function parseStage(code){
       }
     }
     return newStage;
+  }
+}
+
+function redrawCustomStageBoxes(){
+  fg1.clearRect(50+260+260+65-5,110-5,530,320);
+  fg1.fillStyle = "black";
+  for (var i=10;i<Math.min(11+customTargetStages.length,20);i++){
+    fg1.fillRect(50+Math.floor(i/5)*260+Math.floor(i/10)*65,110+(i%5)*60,250,50);
   }
 }
 
@@ -560,5 +583,21 @@ function drawTSS(){
       var text = "Limit reached";
     }
     ui.fillText(text,600,385);
+  }
+}
+
+function getTargetStageCookies(){
+  for (var i=0;i<10;i++){
+    var s = getCookie("custom"+i);
+    if (s != null && s != undefined && s != "null"){
+      var newStage = parseStage(s);
+      if (newStage == 0){
+        console.log(i+" invalid code");
+      }
+      else {
+        customTargetStages[customTargetStages.length] = {};
+        $.extend(true,customTargetStages[customTargetStages.length-1],newStage);
+      }
+    }
   }
 }

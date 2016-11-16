@@ -589,12 +589,14 @@ function targetBuilderControls(p){
 
             // deep copy temp stage into custom stage array
             if (editingStage > -1){
+              setCookie("custom"+editingStage,code,36500);
               customTargetStages[editingStage] = {};
               $.extend(true,customTargetStages[editingStage],stageTemp);
               $("#cStageInfoEdit").empty().append("Custom stage "+(editingStage+1)+" updated!");
             }
             else {
               if (customTargetStages.length < 10){
+                setCookie("custom"+customTargetStages.length,code,36500);
                 customTargetStages[customTargetStages.length] = {};
                 $.extend(true,customTargetStages[customTargetStages.length-1],stageTemp);
                 $("#cStageInfoEdit").empty().append("Saved as Custom stage "+customTargetStages.length);
