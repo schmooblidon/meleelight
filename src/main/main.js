@@ -1531,6 +1531,8 @@ $(document).ready(function(){
   getTargetCookies();
   giveMedals();
   getTargetStageCookies();
+  getAudioCookies();
+  getGameplayCookies();
   $("#keyboardButton").click(function(){
     $("#keyboardControlsImg").toggle();
   });

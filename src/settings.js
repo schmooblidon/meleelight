@@ -40,10 +40,10 @@ keyMap = {
 }
 
 gameSettings = {
-  turbo : false,
+  turbo : 0,
   lCancelType : 0, // 0- normal | 1 - Auto | 2 - smash 64
-  blastzoneWrapping : false,
-  flashOnLCancel : false,
-  dustLessPerfectWavedash : false,
+  blastzoneWrapping : 0,
+  flashOnLCancel : 0,
+  dustLessPerfectWavedash : 0,
   phantomThreshold : 0.01
 }

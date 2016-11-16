@@ -126,6 +126,7 @@ function tssControls(i){
         setCookie("custom"+customTargetStages.length,code,36500);
         customTargetStages[customTargetStages.length] = {};
         $.extend(true,customTargetStages[customTargetStages.length-1],newStage);
+        redrawCustomStageBoxes();
       }
       $("#customStageContainer").hide();
       sounds.menuForward.play();

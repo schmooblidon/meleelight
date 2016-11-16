@@ -9,6 +9,8 @@ function audioMenuControls(i){
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
     player[i].inputs.b[1] = true;
+    setCookie("soundsLevel",masterVolume[0],36500);
+    setCookie("musicLevel",masterVolume[1],36500);
     changeGamemode(1);
   }
   else if (player[i].inputs.lStickAxis[0].y > 0.7){
@@ -203,4 +205,17 @@ function drawAudioMenu(){
     ui.fill();
   }
 
+}
+
+function getAudioCookies(){
+  var s = getCookie("soundsLevel");
+  if (s != null && s != undefined && s != "null"){
+    masterVolume[0] = Number(s);
+    changeVolume(sounds,masterVolume[0],0);
+  }
+  var m = getCookie("musicLevel");
+  if (m != null && m != undefined && m != "null"){
+    masterVolume[1] = Number(m);
+    changeVolume(music,masterVolume[1],1);
+  }
 }

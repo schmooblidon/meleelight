@@ -1,9 +1,22 @@
 gameplayMenuSelected = 0;
+function getGameplayCookies(){
+  var keys = Object.keys(gameSettings);
+  for (var j=0;j<keys.length;j++){
+    var c = getCookie(keys[j]);
+    if (c != null && c != undefined && c != "null"){
+      gameSettings[keys[j]] = Number(c);
+    }
+  }
+}
 function gameplayMenuControls(i){
   var menuMove = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
     player[i].inputs.b[1] = true;
+    var keys = Object.keys(gameSettings);
+    for (var j=0;j<keys.length;j++){
+      setCookie(keys[j],gameSettings[keys[j]],36500);
+    }
     changeGamemode(1);
   }
   else if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
