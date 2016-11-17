@@ -121,6 +121,9 @@ function renderPlayer(i){
     if (player[i].phys.shielding && player[i].phys.powerShielded && player[i].hit.hitlag > 0){
       col = "rgb(255,255,255)";
     }
+    else if (gameSettings.flashOnLCancel && player[i].actionState.substr(0,10) == "LANDINGATT" && player[i].phys.landingLagScaling == 2 && Math.round(player[i].timer)%3==0){
+      col = "rgb(255,255,255)";
+    }
     else if (player[i].phys.intangibleTimer % 9 > 3 || player[i].phys.invincibleTimer % 9 > 3 || player[i].hit.hitlag > 0){
       col = palettes[pPal[i]][1];
     }
