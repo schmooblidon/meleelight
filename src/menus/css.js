@@ -261,11 +261,13 @@ function cssControls(i){
       }
     }
   }
-  else if (choosingTag == i && player[i].inputs.a[0] && !player[i].inputs.a[1]){
+  else if (choosingTag == i && ((player[i].inputs.a[0] && !player[i].inputs.a[1]) || keys[13])){
     sounds.menuSelect.play();
     tagText[choosingTag] = $("#pTagEdit"+choosingTag).val();
     $("#pTagEdit"+choosingTag).hide();
     choosingTag = -1;
+    pause[i][0] = true;
+    pause[i][1] = true;
   }
   if (readyToFight && choosingTag == -1){
     if (pause[i][0] && !pause[i][1]){

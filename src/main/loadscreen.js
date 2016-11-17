@@ -66,6 +66,7 @@ var scriptNames = ["libraries/howler.js",
   "menus/stageselect.js",
   "physics/physics.js",
   "main/ai.js",
+  "main/resize.js",
   "main/main.js"
 ];
 
