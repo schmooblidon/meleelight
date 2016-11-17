@@ -1526,7 +1526,7 @@ function finishGame(){
   setTimeout(function(){endGame()},2500);
 }
 
-$(document).ready(function(){
+function start(){
   getKeyboardCookie();
   getTargetCookies();
   giveMedals();
@@ -1639,4 +1639,4 @@ $(document).ready(function(){
     }
     showDebug ^= true;
   });
-});
+}
