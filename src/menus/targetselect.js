@@ -356,7 +356,7 @@ function drawTSS(){
   ui.lineWidth = 2;
   for (var i=0;i<10;i++){
     // if beaten dev record draw star
-    if (targetRecords[cS[targetPlayer]][i] != -1 && targetRecords[cS[targetPlayer]][i] <= devRecords[cS[targetPlayer]][i]){
+    if (targetRecords[cS[targetPlayer]][i] != -1 && Math.round(targetRecords[cS[targetPlayer]][i]*100)/100 <= devRecords[cS[targetPlayer]][i]){
       var x = 190+Math.floor(i/5)*260;
       var y = 135+(i%5)*60;
       ui.fillStyle= "white";

@@ -1471,7 +1471,7 @@ function finishGame(){
         if (targetStagePlaying < 10){
           for (var i=0;i<3;i++){
             if (!medalsEarned[cS[targetPlayer]][targetStagePlaying][i]){
-              if (matchTimer <= medalTimes[cS[targetPlayer]][targetStagePlaying][i]){
+              if (Math.round(matchTimer*100)/100 <= medalTimes[cS[targetPlayer]][targetStagePlaying][i]){
                 medalsEarned[cS[targetPlayer]][targetStagePlaying][i] = true;
               }
             }
@@ -1570,8 +1570,6 @@ function start(){
   ui = layers.UI.getContext("2d");
   bg1.fillStyle = "rgb(0, 0, 0)";
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
-  //canvasMain = document.getElementById("mainCanvas");
-  //c = canvasMain.getContext("2d");
   gameTick();
   renderTick();
 
