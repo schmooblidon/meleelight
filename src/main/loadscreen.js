@@ -105,6 +105,7 @@ function drawLoading(){
     drawHexagonLoading(80,150,100,14*2);
   }
   $("#loadTextEdit").empty().append(loadText[Math.round(sNum/6.5)]);
+  $("#loadPercentEdit").empty().append(Math.round(((sNum+1)/scriptNames.length)*100));
   if (loading){
     requestAnimationFrame(drawLoading);
   }

@@ -5,6 +5,11 @@
     <link href="meleelight.css" rel="stylesheet"/>
   </head>
   <body>
+    <div id="loadScreen">
+      <canvas id="loadCanvas" width="300" height="200"></canvas>
+      <div id="loadPercent"><p><span id="loadPercentEdit">0</span>%</p></div>
+      <div id="loadText"><p id="loadTextEdit">Loading...</p></div>
+    </div>
     <div id="topButtonContainer">
       <a href=""><div id="downloadButton" class="topButton"><div class="buttonDetails"><p>Download Melee Light</p></div></div></a>
         <div id="keyboardButton" class="topButton"><img id="keyboardControlsImg" width="860" height="616" src="http://i.imgur.com/vdfvaII.png"/><div class="buttonDetails"><p>Default Keyboard Controls</p></div></div><div id="controllerButton" class="topButton"><div id="controllerSupportContainer">
@@ -195,10 +200,6 @@
         <div id="hideButton" class="topButton"><div class="buttonDetails"><p>Toggle Header</p></div></div>
         <div id="fullscreenButton" class="topButton"><div class="buttonDetails"><p>Toggle Fullscreen</p></div></div>
       </div>
-    <div id="loadScreen">
-      <canvas id="loadCanvas" width="300" height="200"></canvas>
-      <div id="loadText"><p id="loadTextEdit">Loading...</p></div>
-    </div>
     <div id="display">
     <canvas id="background1Canvas" class="gameCanvas" width="1200" height="750"></canvas>
     <canvas id="background2Canvas" class="gameCanvas" width="1200" height="750"></canvas>
