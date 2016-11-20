@@ -17,32 +17,30 @@ var cScrollingMax = 2800;// max scrolling distance in y coords. Can change this 
 var cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
 var lastHit = [0,0,false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
-class ScrollingText {
-  constructor(text, yPos, position, information) {
-    this.Text = text;
-  	this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
-    this.yPos = yPos;
-  	this.fontSize = 36;
+function ScrollingText(text,yPos,position,information) {
+  this.Text = text;
+	this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
+  this.yPos = yPos;
+  this.fontSize = 36;
   	//this.fontSize = fontSize; //font should always be Consolas. Font size IS 36px
-  	this.position = position; //position in development
-  	this.information = information; //more information?
-  	this.isShot = false; //whether or not it has been shot
-  	this.canRender = false;
-  }
-  get size() {
+  this.position = position; //position in development
+	this.information = information; //more information?
+	this.isShot = false; //whether or not it has been shot
+	this.canRender = false;
+  this.size = function(){
 	  return ([[this.xPos, this.xPos + (20 * this.Text.length)],[this.yPos-23,this.yPos]]); //returns [[xMin,xMax],[yMin,yMax]]
   }
-  checkIfShouldRender(cY) { //                      SEE PLEASE?:  takes cYPos. if it can actually access that variable inside this scope, remove arguments.
-      var size = this.size;
+  this.checkIfShouldRender = function(cY) { //                      SEE PLEASE?:  takes cYPos. if it can actually access that variable inside this scope, remove arguments.
+    var size = this.size();
 	  if (size[1][0] < cY && size[1][1] > 0) { //can render
 		  this.canRender = true;
 	  } else {
 		  this.canRender = false;
 	  }
   }
-  checkIfShot(x, y) {//updates this.isShot respectively
+  this.checkIfShot = function(x, y) {//updates this.isShot respectively
       if (this.isShot == false) {
-	  var size = this.size;
+	  var size = this.size();
 	  if (x >= size[0][0] && x <= size[0][1] && y >= size[1][0] && y <= size[1][1]) {
 		  this.isShot = true;
 		  return true;
@@ -53,7 +51,7 @@ class ScrollingText {
 		  return false; //can't be shot twice
 	  }
   }
-  scrollY(y) {
+  this.scrollY = function(y) {
 	  this.yPos += y;
   }
 }
@@ -64,9 +62,6 @@ function credits(p){ //called once every frame
   if (initc) {
 	  lastHit = [0,0,false]; //see notes above
 	  shootcooldown = 0;
-	  //fill in creditNames
-	  //example:                                                SEE PLEASE:
-      // creditNames.push(new ScrollingText("Schmoo",Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12)),725,"Main Developer","Made the game."));
 		creditNames = [
 			new ScrollingText("Schmoo",800,"Creator, Main Developer","Made the game."),
 			new ScrollingText("Tatatat0",900,"Programmer","Created the AI and credits."),
@@ -118,45 +113,48 @@ function credits(p){ //called once every frame
   if (cPlayerYPos > cYSize) {
       cPlayerYPos = cYSize;
   }
-  // SEE THIS: draw circle around cXPos. do this graphics urself.
 
   if (shoot_cooldown == 0) {
 
     if (player[p].inputs.a[0] && !(player[p].inputs.a[1])) {
 	  //is shooting
       sounds.foxlaserfire.play();
-  	  var madeShot = [false,0];
-  	  for (i = 0; i < creditNames.length; i++) {
-    		if (!(creditNames[i].isShot)) {
-      	    if (creditNames[i].checkIfShot(cPlayerXPos,cPlayerYPos)) { //be careful not to place credits on top of eachother.
-      			     madeShot = [true,i];
-      		  }
-    		}
-	    }
-  	  if (madeShot[0]) {
-  		  //play hit sound
-        sounds.targetBreak.play();
-  		  lastHit[2] = false;
-  		  lastHit[0] = 600;
-  		  lastHit[1] = madeShot[1];
-  		  cScore += 1;
-
-  		  //SEE THIS
-  		  //draw bottom bar???
-  		  //bottom bar should include creditNames[lastHit[1]].(Text,position,information) and cScore. FontSize doesn't matter.
-  	  } else {
-  		  //play miss sound
-  	  }
+      cShots.push(new cShot(new Vec2D(cPlayerXPos,cPlayerYPos),new Vec2D(0,0),0));
+      cShots.push(new cShot(new Vec2D(cPlayerXPos,cPlayerYPos),new Vec2D(1200,0),1));
   	  shoot_cooldown = 5;
     }
   } else {
     shoot_cooldown -= 1;
   }
 
+  for (var n=0;n<cShots.length;n++){
+    if (cShots[n].life == 15){
+      var madeShot = [false,0];
+      for (i = 0; i < creditNames.length; i++) {
+        if (!(creditNames[i].isShot)) {
+            if (creditNames[i].checkIfShot(cShots[n].target.x,750-cShots[n].target.y)) {
+                 madeShot = [true,i];
+            }
+        }
+      }
+      if (madeShot[0]) {
+        sounds.targetBreak.play();
+        lastHit[2] = false;
+        lastHit[0] = 600;
+        lastHit[1] = madeShot[1];
+        cScore += 1;
+        drawCreditsInfo();
+      }
+    }
+  }
+
   if (player[p].inputs.b[0] && !player[p].inputs.b[1]){
     initc = true;
     sounds.menuBack.play();
     player[p].inputs.b[1] = true;
+    cShots = [];
+    lastHit = [0,0,false];
+    creditNames = [];
     changeGamemode(1);
   }
 }
@@ -165,6 +163,8 @@ function drawCreditsInit(){
   bg2.clearRect(0,0,1200,750);
   fg1.clearRect(0,0,1200,750);
   fg2.clearRect(0,0,1200,750);
+  ui.clearRect(0,0,1200,750);
+  drawCreditsInfo();
 }
 
 function cStar(){
@@ -179,43 +179,28 @@ for (var n=0;n<100;n++){
   cStars.push(new cStar());
 }
 
-function drawCredits(){
-  ui.clearRect(0,0,1200,750);
-  bg2.fillStyle = "rgba(0,0,0,0.4)";
-  bg2.fillRect(0,0,1200,750);
-  for (var n=0;n<100;n++){
-    cStars[n].life++;
-    if (cStars[n].life == 200){
-      cStars[n].vel = 4+Math.random()*4;
-      cStars[n].life = Math.round(10*(cStars[n].vel-4));
-      cStars[n].angle = twoPi*Math.random();
-      cStars[n].pos = new Vec2D(600+cStars[n].vel*Math.cos(cStars[n].angle)*cStars[n].life,375+cStars[n].vel*Math.sin(cStars[n].angle)*cStars[n].life);
+var cShots = [];
+function cShot(target,position,type){
+  this.vel = 0.3;
+  this.life = 0;
+  this.target = new Vec2D(target.x,750-target.y);
+  this.position = position;
+  this.lastPosition = position;
+  this.lastPosition2 = position;
+  this.angle = Math.atan((this.target.y-this.position.y)/(this.target.x-this.position.x));
+  if (type){
+    this.angle = Math.PI + this.angle;
+  }
+  this.distance = Math.sqrt(Math.pow(this.target.y-this.position.y,2)+Math.pow(this.target.x-this.position.x,2));
+}
 
-    }
-    cStars[n].pos.x += cStars[n].vel*Math.cos(cStars[n].angle);
-    cStars[n].pos.y += cStars[n].vel*Math.sin(cStars[n].angle);
-    var col = Math.min(255,cStars[n].life*3)
-    bg2.fillStyle = "rgb("+col+","+col+","+col+")";
-    bg2.fillRect(cStars[n].pos.x,cStars[n].pos.y,3,3);
-  }
-  ui.font = "500 36px Consolas";
-  ui.fillStyle = "white";
-  ui.textAlign = "start";
-  for (var i=0;i<creditNames.length;i++){
-    if (creditNames[i].canRender){
-      if (creditNames[i].isShot){
-        ui.fillStyle = "rgb(227, 89, 89)";
-      }
-      else {
-        ui.fillStyle = "white";
-      }
-      ui.fillText(creditNames[i].Text,creditNames[i].xPos,creditNames[i].yPos);
-    }
-  }
+function drawCreditsInfo(){
+  ui.clearRect(0,0,1200,750);
   ui.font = "900 40px Consolas";
   ui.strokeStyle = "rgba(255, 255, 255, 0.7)";
+  ui.lineWidth = 2;
   ui.fillStyle = "rgba(0,0,0,0.7)";
-  ui.fillRect(100,600,1000,100);
+  ui.fillRect(100,640,1000,60);
   ui.strokeRect(100,640,1000,60);
   ui.fillRect(100,560,330,70);
   ui.fillRect(430,560,670,70);
@@ -236,17 +221,79 @@ function drawCredits(){
   }
   ui.font = "900 35px Consolas";
   ui.fillText(cScore+" Hit",1075,85);
-  ui.lineWidth = 9;
-  ui.beginPath();
-  ui.arc(cPlayerXPos,cPlayerYPos,35,0,twoPi);
-  ui.moveTo(cPlayerXPos,cPlayerYPos+35);
-  ui.lineTo(cPlayerXPos,cPlayerYPos+10);
-  ui.moveTo(cPlayerXPos,cPlayerYPos-35);
-  ui.lineTo(cPlayerXPos,cPlayerYPos-10);
-  ui.moveTo(cPlayerXPos+35,cPlayerYPos);
-  ui.lineTo(cPlayerXPos+10,cPlayerYPos);
-  ui.moveTo(cPlayerXPos-35,cPlayerYPos);
-  ui.lineTo(cPlayerXPos-10,cPlayerYPos);
-  ui.closePath();
-  ui.stroke();
+}
+
+function drawCredits(){
+  fg1.clearRect(0,0,1200,750);
+  bg2.fillStyle = "rgba(0,0,0,0.4)";
+  bg2.fillRect(0,0,1200,750);
+  for (var n=0;n<100;n++){
+    cStars[n].life++;
+    if (cStars[n].life == 200){
+      cStars[n].vel = 4+Math.random()*4;
+      cStars[n].life = Math.round(10*(cStars[n].vel-4));
+      cStars[n].angle = twoPi*Math.random();
+      cStars[n].pos = new Vec2D(600+cStars[n].vel*Math.cos(cStars[n].angle)*cStars[n].life,375+cStars[n].vel*Math.sin(cStars[n].angle)*cStars[n].life);
+    }
+    cStars[n].pos.x += cStars[n].vel*Math.cos(cStars[n].angle);
+    cStars[n].pos.y += cStars[n].vel*Math.sin(cStars[n].angle);
+    var col = Math.min(255,cStars[n].life*3)
+    bg2.fillStyle = "rgb("+col+","+col+","+col+")";
+    bg2.fillRect(cStars[n].pos.x,cStars[n].pos.y,3,3);
+  }
+  var cShotDestroyQueue = [];
+  for (var m=0;m<cShots.length;m++){
+    cShots[m].life++;
+    cShots[m].vel *= 0.77;
+    cShots[m].lastPosition2 = new Vec2D(cShots[m].lastPosition.x,cShots[m].lastPosition.y)
+    cShots[m].lastPosition = new Vec2D(cShots[m].position.x,cShots[m].position.y);
+    cShots[m].position.x += cShots[m].vel*cShots[m].distance*Math.cos(cShots[m].angle);
+    cShots[m].position.y += cShots[m].vel*cShots[m].distance*Math.sin(cShots[m].angle);
+    if (cShots[m].life == 25){
+      cShotDestroyQueue.push(m);
+    }
+    else {
+      bg2.lineWidth = Math.max(1,(20-cShots[m].life));
+      bg2.strokeStyle = "rgb(5, 255, 15)";
+      bg2.beginPath();
+      bg2.moveTo(cShots[m].lastPosition2.x,750-cShots[m].lastPosition2.y);
+      bg2.lineTo(cShots[m].position.x,750-cShots[m].position.y);
+      bg2.closePath();
+      bg2.stroke();
+    }
+  }
+  var del = 0;
+  for (var k=0;k<cShotDestroyQueue.length;k++){
+    cShots.splice(cShotDestroyQueue[k]-del,1);
+    del++;
+  }
+
+  fg1.font = "500 36px Consolas";
+  fg1.fillStyle = "white";
+  fg1.textAlign = "start";
+  for (var i=0;i<creditNames.length;i++){
+    if (creditNames[i].canRender){
+      if (creditNames[i].isShot){
+        fg1.fillStyle = "rgb(227, 89, 89)";
+      }
+      else {
+        fg1.fillStyle = "white";
+      }
+      fg1.fillText(creditNames[i].Text,creditNames[i].xPos,creditNames[i].yPos);
+    }
+  }
+  fg1.strokeStyle = "rgba(255, 255, 255, 0.7)";
+  fg1.lineWidth = 9;
+  fg1.beginPath();
+  fg1.arc(cPlayerXPos,cPlayerYPos,35,0,twoPi);
+  fg1.moveTo(cPlayerXPos,cPlayerYPos+35);
+  fg1.lineTo(cPlayerXPos,cPlayerYPos+10);
+  fg1.moveTo(cPlayerXPos,cPlayerYPos-35);
+  fg1.lineTo(cPlayerXPos,cPlayerYPos-10);
+  fg1.moveTo(cPlayerXPos+35,cPlayerYPos);
+  fg1.lineTo(cPlayerXPos+10,cPlayerYPos);
+  fg1.moveTo(cPlayerXPos-35,cPlayerYPos);
+  fg1.lineTo(cPlayerXPos-10,cPlayerYPos);
+  fg1.closePath();
+  fg1.stroke();
 }
