@@ -98,6 +98,7 @@ function physicsObject(pos,face){
 
 function inputObject(){
   this.lStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
+  this.rawlStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
   this.cStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
   this.lAnalog = [0,0,0,0,0,0,0,0];
   this.rAnalog = [0,0,0,0,0,0,0,0];

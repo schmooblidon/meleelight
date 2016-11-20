@@ -1,6 +1,6 @@
 menuSelected = 0;
-menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Data"]];
-menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Modify data."]];
+menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Credits"]];
+menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Who did this?"]];
 menuTitle = ["Main Menu","Options"];
 
 menuColours = [238,358,117,55];
@@ -60,7 +60,9 @@ function menuMove(i){
         keyBinding = false;
       }
       else if (menuSelected == 3){
-        //data
+        //credits
+        creditsPlayer = i;
+        changeGamemode(13);
       }
     }
   }

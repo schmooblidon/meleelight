@@ -497,8 +497,9 @@ function changeGamemode(newGamemode){
     case 12:
       drawKeyboardMenuInit();
       break;
-    // data menu
+    // credits
     case 13:
+      drawCreditsInit();
       break;
     // startup
     case 20:
@@ -577,6 +578,8 @@ function interpretInputs(i,active){
     }
     lstickX = Math.sign(lstickX)*Math.min(1,Math.abs(lstickX));
     lstickY = Math.sign(lstickY)*Math.min(1,Math.abs(lstickY));
+    player[i].inputs.rawlStickAxis[0].x = lstickX;
+    player[i].inputs.rawlStickAxis[0].y = lstickY;
     lAnalog = Math.min(1,Math.abs(lAnalog));
     rAnalog = Math.min(1,Math.abs(rAnalog));
     var cstickX = (keys[keyMap.cstick.right[0]] || keys[keyMap.cstick.right[1]]) ? ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? 0 : 1) : ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? -1 : 0);
@@ -608,6 +611,8 @@ function interpretInputs(i,active){
     else {
       lstickY = Math.round(lstickY * 80)/80;
     }
+    player[i].inputs.rawlStickAxis[0].x = lstickX;
+    player[i].inputs.rawlStickAxis[0].y = lstickY;
     if (Math.abs(lstickX) < 0.3){
       lstickX = 0;
     }
@@ -709,6 +714,8 @@ function interpretInputs(i,active){
     for(var j=0;j<7;j++){
       player[i].inputs.lStickAxis[7-j].x = player[i].inputs.lStickAxis[6-j].x;
       player[i].inputs.lStickAxis[7-j].y = player[i].inputs.lStickAxis[6-j].y;
+      player[i].inputs.rawlStickAxis[7-j].x = player[i].inputs.rawlStickAxis[6-j].x;
+      player[i].inputs.rawlStickAxis[7-j].y = player[i].inputs.rawlStickAxis[6-j].y;
       player[i].inputs.cStickAxis[7-j].x = player[i].inputs.cStickAxis[6-j].x;
       player[i].inputs.cStickAxis[7-j].y = player[i].inputs.cStickAxis[6-j].y;
       player[i].inputs.lAnalog[7-j] = player[i].inputs.lAnalog[6-j];
@@ -1028,6 +1035,10 @@ function gameTick(){
       keyboardMenuControls(i);
     }
   }
+  else if (gameMode == 13){
+    interpretInputs(creditsPlayer,true);
+    credits(creditsPlayer);
+  }
   else if (gameMode == 2){
     for (var i=0;i<4;i++){
       if (i < ports){
@@ -1241,6 +1252,9 @@ function renderTick(){
     }
     else if (gameMode == 12){
       drawKeyboardMenu();
+    }
+    else if (gameMode == 13){
+      drawCredits();
     }
     else if (gameMode == 0){
       drawStartScreen();
