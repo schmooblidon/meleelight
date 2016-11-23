@@ -387,7 +387,7 @@ function renderOverlay(showStock){
 
   // stocks, percent, timer
   ui.strokeStyle = "black";
-  if (!versusMode){
+  if (!versusMode || gameMode == 5){
     ui.fillStyle = "white";
     ui.lineWidth = 2;
     ui.font = "900 40px Arial";

@@ -1087,7 +1087,7 @@ function gameTick(){
       executeArticles();
       update(targetBuilder);
       targetHitDetection(targetBuilder);
-      if (!starting && !versusMode){
+      if (!starting){
         targetTimerTick();
       }
       else {

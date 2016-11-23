@@ -314,7 +314,7 @@ function targetBuilderControls(p){
           if (!holdingA){
             if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]){
               // initiate build
-              if (stageTemp.box.length < 100){
+              if (stageTemp.box.length < 120){
                 drawingBox.min = new Vec2D(realCrossHair.x,realCrossHair.y);
                 drawingBox.max = new Vec2D(realCrossHair.x,realCrossHair.y);
                 holdingA = true;
@@ -362,7 +362,7 @@ function targetBuilderControls(p){
           if (!holdingA){
             if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]){
               // initiate build
-              if (stageTemp.platform.length < 100){
+              if (stageTemp.platform.length < 120){
                 drawingPlatform[0] = new Vec2D(realCrossHair.x,realCrossHair.y);
                 drawingPlatform[1] = new Vec2D(realCrossHair.x,drawingPlatform[0].y);
                 holdingA = true;
@@ -435,7 +435,7 @@ function targetBuilderControls(p){
         case 3:
         //TARGET
           if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]){
-            if (stageTemp.target.length < 10){
+            if (stageTemp.target.length < 20){
               stageTemp.draw.target.push(new Vec2D(realCrossHair.x,realCrossHair.y));
               stageTemp.target.push(new Vec2D(crossHairPos.x,crossHairPos.y));
               undoList.push("target");
@@ -912,9 +912,9 @@ function renderTargetBuilder(){
   ui.fillStyle = "rgba(0,0,0,0.8)";
   ui.strokeStyle = "rgba(0,0,0,0.8)";
   ui.font = "600 14px Lucida Console, monaco, monospace";
-  ui.fillText(100-stageTemp.box.length,745,707);
+  ui.fillText(120-stageTemp.box.length,745,707);
   ui.strokeRect(720,670,20,20);
-  ui.fillText(100-stageTemp.platform.length,815,707);
+  ui.fillText(120-stageTemp.platform.length,815,707);
   ui.beginPath();
   ui.moveTo(788,680);
   ui.lineTo(812,680);
@@ -926,7 +926,7 @@ function renderTargetBuilder(){
   ui.lineTo(880,670);
   ui.stroke();
   ui.closePath();
-  ui.fillText(10-stageTemp.target.length,955,707);
+  ui.fillText(20-stageTemp.target.length,955,707);
   ui.fillStyle = "rgba(255,0,0,0.8)";
   ui.beginPath();
   ui.arc(940,680,15,0,twoPi);

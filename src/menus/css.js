@@ -205,11 +205,6 @@ function cssControls(i){
         pPal[i] = 6;
       }
     }
-    if (player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]){
-      /*cS[i] = 2;
-      player[i].charAttributes = chars[cS[i]].attributes;
-      player[i].charHitboxes = chars[cS[i]].hitboxes;*/
-    }
     if (handPos[i].y > 100 && handPos[i].y < 160 && handPos[i].x > 380 && handPos[i].x < 910){
       if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
         sounds.menuSelect.play();
@@ -272,9 +267,12 @@ function cssControls(i){
   if (readyToFight && choosingTag == -1){
     if (pause[i][0] && !pause[i][1]){
       sounds.menuForward.play();
-      //startGame();
       changeGamemode(6);
     }
+  }
+  else if (choosingTag == -1 && player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]){
+    sounds.menuForward.play();
+    changeGamemode(6);
   }
 }
 

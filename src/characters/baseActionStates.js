@@ -669,7 +669,6 @@ baseActionStates = {
     }
   },
   interrupt : function(p){
-    var b = checkForSpecials(p);
     if (player[p].timer == player[p].charAttributes.jumpSquat){
       // so they can be detected as above current surface instantly
       player[p].phys.pos.y += 0.001;
@@ -691,8 +690,8 @@ baseActionStates = {
       aS[cS[p]].UPSMASH.init(p);
       return true;
     }
-    else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lStickAxis[0].y > 0.58){
+      aS[cS[p]].UPSPECIAL.init(p);
       return true;
     }
     else {
