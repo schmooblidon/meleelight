@@ -33,6 +33,7 @@ Select : 8
 Start : 9*/
 console.log("biogenik adapter support");
 console.log("mac x360 support");
+console.log("TigerGame 3 in 1 adapter support");
 // biogenik - index 4
 /*
 y : 3
@@ -49,24 +50,24 @@ r : 5
 z : 7
 */
 map = {
-  a : [1,0,4,0],
-  b : [2,1,3,2],
-  x : [0,2,2,1],
-  y : [3,3,1,3],
-  z : [7,4,7,5],
-  r : [5,5,6,7],
-  l : [4,6,5,6],
-  s : [9,7,0,9],
-  du : [12,8,8,12],
-  dr : [13,11,10,15],
-  dd : [14,9,9,13],
-  dl : [15,10,11,14],
-  lsX : [0,0,0,0],
-  lsY : [1,1,1,1],
-  csX : [5,3,3,2],
-  csY : [2,4,4,3],
-  lA : [3,2,5,6],
-  rA : [4,5,6,7]
+  a : [1,0,4,0,0],
+  b : [2,1,3,2,1],
+  x : [0,2,2,1,2],
+  y : [3,3,1,3,3],
+  z : [7,4,7,5,6],
+  r : [5,5,6,7,5],
+  l : [4,6,5,6,4],
+  s : [9,7,0,9,7],
+  du : [12,8,8,12,11],
+  dr : [13,11,10,15,9],
+  dd : [14,9,9,13,10],
+  dl : [15,10,11,14,8],
+  lsX : [0,0,0,0,0],
+  lsY : [1,1,1,1,1],
+  csX : [5,3,3,2,2],
+  csY : [2,4,4,3,3],
+  lA : [3,2,5,6,5],
+  rA : [4,5,6,7,4]
 }
 
 
@@ -344,7 +345,7 @@ function findPlayers(){
           if (ports == 0){
             music.menu.play("menuStart");
           }
-          addPlayer(ports,4);
+          addPlayer(ports,10);
         }
       }
     }
@@ -352,7 +353,7 @@ function findPlayers(){
       if (keys[keyMap.a[0]] || keys[keyMap.a[1]]){
         if (ports < 4){
           keyboardOccupied = true;
-          addPlayer(ports,4);
+          addPlayer(ports,10);
         }
       }
     }
@@ -363,10 +364,14 @@ function findPlayers(){
       var gType = 0;
       if (gamepad.id[0] == "v" || gamepad.id[0] == "1"){
         gType = 1;
-        //console.log("You are using vJoy");
+        console.log("You are using vJoy");
+      }
+      else if (gamepad.id[0] == "T"){
+        gType = 4;
+        console.log("You are using TigerGame 3 in 1");
       }
       else if (gamepad.id[0] == "M"){
-        //console.log("You are using Mayflash");
+        console.log("You are using Mayflash");
       }
       // raphnet is :
       //GC/N64 to USB, v2.9 (Vendor: 289b Product: 000c)
@@ -563,7 +568,7 @@ function removePlayer(i){
 }*/
 
 function interpretInputs(i,active){
-  if (mType[i] == 4){
+  if (mType[i] == 10){
     // keyboard controls
     var stickR = 1;
     var stickL = 1;
@@ -667,6 +672,7 @@ function interpretInputs(i,active){
       //console.log(gamepad.buttons[map.rA[mType[i]]]);
       //-cd[i].l
       //-cd[i].r
+      // FOR XBOX CONTROLLERS
       var lAnalog = gamepad.buttons[map.lA[mType[i]]].value+0.2;
       var rAnalog = gamepad.buttons[map.rA[mType[i]]].value+0.2;
     }
@@ -697,7 +703,7 @@ function interpretInputs(i,active){
   pause[i][1] = pause[i][0];
   frameAdvance[i][1] = frameAdvance[i][0];
 
-  if (mType[i] == 4){
+  if (mType[i] == 10){
     if (keys[keyMap.s[0]] || keys[keyMap.s[1]]){
       pause[i][0] = true;
     }
@@ -755,7 +761,7 @@ function interpretInputs(i,active){
     player[i].inputs.cStickAxis[0].y = cstickY;
     player[i].inputs.lAnalog[0] = lAnalog;
     player[i].inputs.rAnalog[0] = rAnalog;
-    if (mType[i] == 4){
+    if (mType[i] == 10){
       player[i].inputs.s[0] = keys[keyMap.s[0]] || keys[keyMap.s[1]];
       player[i].inputs.x[0] = keys[keyMap.x[0]] || keys[keyMap.x[1]];
       player[i].inputs.a[0] = keys[keyMap.a[0]] || keys[keyMap.a[1]];
@@ -775,6 +781,7 @@ function interpretInputs(i,active){
       player[i].inputs.b[0] = gamepad.buttons[map.b[mType[i]]].pressed;
       player[i].inputs.y[0] = gamepad.buttons[map.y[mType[i]]].pressed;
       if (mType[i] == 3){
+        // FOR XBOX CONTROLLERS
         player[i].inputs.r[0] = gamepad.buttons[map.r[mType[i]]].value == 1?true:false;
         player[i].inputs.l[0] = gamepad.buttons[map.l[mType[i]]].value == 1?true:false;
 
@@ -794,7 +801,7 @@ function interpretInputs(i,active){
     }
 
     if (!frameByFrame){
-      if (mType[i] == 4){
+      if (mType[i] == 10){
         player[i].inputs.z[0] = keys[keyMap.z[0]] || keys[keyMap.z[1]];
       }
       else {
@@ -813,7 +820,7 @@ function interpretInputs(i,active){
     }
   }
   else {
-    if (mType[i] == 4){
+    if (mType[i] == 10){
       if ((keys[keyMap.a[0]] || keys[keyMap.a[1]]) && (keys[keyMap.l[0]] || keys[keyMap.l[1]]) && (keys[keyMap.r[0]] || keys[keyMap.r[1]]) && (keys[keyMap.s[0]] || keys[keyMap.s[1]])){
         if (keys[keyMap.b[0]] || keys[keyMap.b[1]]){
           startGame();
@@ -858,7 +865,7 @@ function interpretInputs(i,active){
   if (player[i].inputs.dpadright[0] && !player[i].inputs.dpadright[1]){
     player[i].showHitbox^= true;
   }
-  if (mType[i] != 4){
+  if (mType[i] != 10){
     if (gamepad.buttons[map.du[mType[i]]].pressed && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed && !attemptingControllerReset[i]){
       attemptingControllerReset[i] = true;
       setTimeout(function(){
@@ -896,7 +903,7 @@ function interpretInputs(i,active){
   $("#csAxisY"+i).empty().append(cstickY.toFixed(5));
   $("#lAnalog"+i).empty().append(lAnalog.toFixed(5));
   $("#rAnalog"+i).empty().append(rAnalog.toFixed(5));
-  if (mType[i] == 4){
+  if (mType[i] == 10){
     /*for (var j=0;j<12;j++){
       if ((keyboardMap[j].length > 1)?(keys[keyboardMap[j][0]] || keys[keyboardMap[j][1]] || keys[keyboardMap[j][2]]):keys[keyboardMap[j]]){
         $("#"+i+"button"+j).show();
