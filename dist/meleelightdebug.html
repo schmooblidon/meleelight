@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="libraries/jquery-1.11.3.min.js" type="text/javascript"></script>
-    <link href="meleelight.css" rel="stylesheet"/>
+    <link href="./meleelight.css" rel="stylesheet"/>
   </head>
   <body>
     <div id="loadScreen">
@@ -253,7 +252,53 @@
       <div class="buttons"><div class="b"><div id="3button0"></div><p>0</p></div><div class="b"><div id="3button1"></div><p>1</p></div><div class="b"><div id="3button2"></div><p>2</p></div><div class="b"><div id="3button3"></div><p>3</p></div><div class="b"><div id="3button4"></div><p>4</p></div><div class="b"><div id="3button5"></div><p>5</p></div><div class="b"><div id="3button6"></div><p>7</p></div><div class="b"><div id="3button7"></div><p>9</p></div><div class="b"><div id="3button8"></div><p>12</p></div><div class="b"><div id="3button9"></div><p>13</p></div><div class="b"><div id="3button10"></div><p>14</p></div><div class="b"><div id="3button11"></div><p>15</p></div></div>
     </div>
   </div>
+  <script src="libraries/howler.js" type="text/javascript"></script>
+  <script src="main/sfx.js" type="text/javascript"></script>
+  <script src="settings.js" type="text/javascript"></script>
+  <script src="characters/marth/marthanimations.js" type="text/javascript"></script>
+  <script src="characters/marth/ecbmarth.js" type="text/javascript"></script>
+  <script src="characters/puff/puffanimations.js" type="text/javascript"></script>
+  <script src="characters/puff/ecbpuff.js" type="text/javascript"></script>
+  <script src="characters/baseActionStates.js" type="text/javascript"></script>
+  <script src="characters/fox/foxanimations.js" type="text/javascript"></script>
+  <script src="characters/fox/ecbfox.js" type="text/javascript"></script>
+  <script src="main/swordSwings.js" type="text/javascript"></script>
+  <script src="main/vfx.js" type="text/javascript"></script>
+  <script src="physics/hitDetection.js" type="text/javascript"></script>
+  <script src="main/characters.js" type="text/javascript"></script>
+  <script src="characters/marth/marthAttributes.js" type="text/javascript"></script>
+  <script src="characters/puff/puffAttributes.js" type="text/javascript"></script>
+  <script src="characters/fox/foxAttributes.js" type="text/javascript"></script>
+  <script src="physics/article.js" type="text/javascript"></script>
+  <script src="main/player.js" type="text/javascript"></script>
+  <script src="physics/actionStateShortcuts.js" type="text/javascript"></script>
+  <script src="characters/marth/marth.js" type="text/javascript"></script>
+  <script src="characters/puff/puff.js" type="text/javascript"></script>
+  <script src="characters/fox/fox.js" type="text/javascript"></script>
+  <script src="main/render.js" type="text/javascript"></script>
+  <script src="menus/startup.js" type="text/javascript"></script>
+  <script src="menus/startscreen.js" type="text/javascript"></script>
+  <script src="menus/menu.js" type="text/javascript"></script>
+  <script src="menus/audiomenu.js" type="text/javascript"></script>
+  <script src="menus/gameplaymenu.js" type="text/javascript"></script>
+  <script src="menus/keytest.js" type="text/javascript"></script>
+  <script src="menus/keyboardmenu.js" type="text/javascript"></script>
+  <script src="menus/credits.js" type="text/javascript"></script>
+  <script src="menus/css.js" type="text/javascript"></script>
+  <script src="target/targetbuilder.js" type="text/javascript"></script>
+  <script src="target/targetplay.js" type="text/javascript"></script>
+  <script src="menus/targetselect.js" type="text/javascript"></script>
+  <script src="stages/stages.js" type="text/javascript"></script>
+  <script src="stages/stagerender.js" type="text/javascript"></script>
+  <script src="menus/stageselect.js" type="text/javascript"></script>
+  <script src="physics/physics.js" type="text/javascript"></script>
+  <script src="main/ai.js" type="text/javascript"></script>
   <script>var offlineMode = true;</script>
-  <script src="main/loadscreen.js" type="text/javascript"></script>
+  <script src="main/resize.js" type="text/javascript"></script>
+  <script src="main/main.js" type="text/javascript"></script>
+  <script>$(document).ready(function(){
+    $("#loadScreen").fadeOut();
+    start();
+  });</script>
   </body>
 </html>

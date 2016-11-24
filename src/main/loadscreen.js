@@ -26,7 +26,7 @@ function drawHexagonLoading(r,tX,tY,width){
   lc.restore();
 }
 var loading = true;
-var scriptNames = ["libraries/howler.js",
+var scriptNames = [
   "main/sfx.js",
   "settings.js",
   "characters/marth/marthanimations.js",
@@ -74,7 +74,7 @@ var scriptNames = ["libraries/howler.js",
 var sNum=0;
 
 function loadScript(){
-  $.getScript(scriptNames[sNum]).done(function(){
+  $.getScript("../src/" + scriptNames[sNum]).done(function(){
     if (sNum < scriptNames.length - 1){
       sNum++;
       loadScript();
@@ -94,7 +94,7 @@ var loadText = [
 ];
 function drawLoading(){
   lc.clearRect(0,0,loadCanvas.width,loadCanvas.height);
-  part = sNum%3+1;
+  let part = sNum%3+1;
   lc.fillStyle = "rgb(143, 228, 255)";
   if (part == 1){
     drawHexagonLoading(40,150,100,14*2);
