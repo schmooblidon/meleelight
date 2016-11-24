@@ -8,6 +8,7 @@ function runAI(i){
   player[i].inputs.cStickAxis[0].x = 0;
   player[i].inputs.cStickAxis[0].y = 0;
   player[i].inputs.a[0] = false;
+  var willWalk = false;
   if (player[i].currentAction == "MASHING" && player[i].actionState == "WAIT" && player[i].timer > 2) {
 	  player[i].currentAction = "NONE";
   }
@@ -60,7 +61,6 @@ function runAI(i){
 			  }
 		  }
 		  if (player[i].currentAction == "NONE") {
-
 		  if (Math.abs(distx) < 23 && Math.abs(disty) < 15) {
 			  var randomSeed = Math.floor((Math.random() * 100) + 1);
 			  if (randomSeed <= 10) {//grab
@@ -98,7 +98,8 @@ function runAI(i){
 				  player[i].inputs.l[0] = true;
 				  player[i].inputs.lAnalog[0] = 1;
 			  } */
-		  } }
+		  }
+		  }
 	  }
     }
   }
@@ -231,7 +232,12 @@ function runAI(i){
   if (player[i].inputs.l[0]){
     player[i].inputs.lAnalog[0] = 1;
   }
+  if (player[i].currentAction == "NONE" && player[i].currentSubaction == "NONE" && (player[i].actionState == "WAIT" || player[i].actionState == "WALK")) {
+	  if (Math.abs(distx) >= 23 && (player[NearestEnemy(player[i],i)].phys.grounded || isAboveGround(player[NearestEnemy(player[i],i)].phys.pos.x,player[NearestEnemy(player[i],i)].phys.pos.y)[0])) {
+	  player[i].inputs.lStickAxis[0].x = 0.75 * (-1.0 * (Math.sign(distx)));
+  }
   //console.log(player[i].currentAction);
+  }
 }
 
 function NearestEnemy(cpu,p){
