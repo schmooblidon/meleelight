@@ -31,7 +31,23 @@ LT : 6
 RT : 7
 Select : 8
 Start : 9*/
-
+console.log("biogenik adapter support");
+console.log("mac x360 support");
+// biogenik - index 4
+/*
+y : 3
+x : 0
+a : 1
+b : 2
+start : 9
+dd : 14
+du : 12
+dr : 13
+dl : 15
+l : 4
+r : 5
+z : 7
+*/
 map = {
   a : [1,0,4,0],
   b : [2,1,3,2],
@@ -354,12 +370,12 @@ function findPlayers(){
       }
       // raphnet is :
       //GC/N64 to USB, v2.9 (Vendor: 289b Product: 000c)
-      else if (gamepad.id[0] == "G" || gamepad.id[0] == "2"){
+      else if ((gamepad.id[0] == "G" && gamepad.id[1] == "C") || gamepad.id[0] == "2"){
         gType = 2;
         console.log("You are using raphnet");
       }
       // Xbox 360 Controller (XInput STANDARD GAMEPAD)
-      else if (gamepad.id[0] == "X" || gamepad.id[0] == "x"){
+      else if (gamepad.id[0] == "X" || gamepad.id[0] == "x" || gamepad.id[0] == "W"){
         gType = 3;
         console.log("You are using xbox 360");
       }
