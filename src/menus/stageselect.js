@@ -1,7 +1,7 @@
-stageSelected = 4;
-stageSelectTimer = 0;
+let stageSelected = 4;
+let stageSelectTimer = 0;
 
-stagePointerPos = [600,635];
+const stagePointerPos = [600,635];
 
 var bfIcon = new Image();
 bfIcon.src = "assets/stage-icons/bf.png";

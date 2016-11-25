@@ -1,12 +1,10 @@
 /* globals aS, baseActionStates, animations */
 
-import foxAnimations from "./animations";
 import moves from "./moves";
 import "./attributes";
 import "./ecb";
 
 const Fox = {
-  animations: foxAnimations,
   moves,
   attributes: {},
   ecb: {},
@@ -28,6 +26,3 @@ aS[2].TECHB.setVelocities = [0,-1.90448,-1.87286,-1.84,-1.81,-1.77,-1.73,-1.70,-
 aS[2].TECHF.setVelocities = [0,0,0,0,0,0,0,2.56,2.49,2.43,2.36,2.29,2.22,2.14,2.07,1.99,1.90,1.82,1.73,1.64,1.54,1.45,1.35,1.24,1.14,1.03,0.92,0.81,0.70,0.58,0,0,0,0,0,0,0,0,0,0];
 aS[2].CLIFFCATCH.posOffset = [[-73.09594,-13.47469],[-72.8175,-13.5675],[-72.41531,-13.70156],[-71.94,-13.86],[-71.44219,-14.02594],[-70.9725,-14.1825],[-70.58157,-14.31281]];
 aS[2].CLIFFWAIT.posOffset = [-70.32,-14.4];
-
-// Remove when animations are figured out
-animations[2] = Fox.animations;

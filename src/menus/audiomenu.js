@@ -1,7 +1,7 @@
 // sounds, music
-masterVolume = [0.5,0.3];
-audioMenuNames = ["Sounds","Music"];
-audioMenuSelected = 0;
+window.masterVolume = [0.5,0.3];
+const audioMenuNames = ["Sounds","Music"];
+let audioMenuSelected = 0;
 function audioMenuControls(i){
   var menuMove = false;
   var audioLevelMoveUp = false;

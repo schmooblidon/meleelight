@@ -1,12 +1,12 @@
-twoPi = Math.PI*2;
+const twoPi = Math.PI * 2;
 
-function rotateVector(vecx,vecy,ang){
+window.rotateVector = function(vecx,vecy,ang){
     return new Vec2D(
         vecx * Math.cos(ang) - vecy * Math.sin(ang),
         vecx * Math.sin(ang) + vecy * Math.cos(ang));
 }
 
-function drawArrayPathNew(can,col,face,tX,tY,path,scaleX,scaleY,rotate,rpX,rpY){
+window.drawArrayPathNew = function(can,col,face,tX,tY,path,scaleX,scaleY,rotate,rpX,rpY){
   can.save();
   can.translate(tX-rpX,tY-rpY);
   can.rotate(rotate);
@@ -32,7 +32,7 @@ function drawArrayPathNew(can,col,face,tX,tY,path,scaleX,scaleY,rotate,rpX,rpY){
   can.restore();
 }
 
-function drawArrayPathCompress(can,col,face,tX,tY,path,scaleX,scaleY,rotate,rpX,rpY){
+window.drawArrayPathCompress = function(can,col,face,tX,tY,path,scaleX,scaleY,rotate,rpX,rpY){
   can.save();
   can.translate(tX-rpX,tY-rpY);
   can.rotate(rotate);
@@ -55,7 +55,7 @@ function drawArrayPathCompress(can,col,face,tX,tY,path,scaleX,scaleY,rotate,rpX,
   can.restore();
 }
 
-function drawArrayPath(can,col,face,tX,tY,path,scaleX,scaleY){
+window.drawArrayPath = function(can,col,face,tX,tY,path,scaleX,scaleY){
   for (var j=0;j<path.length;j++){
     var x = (path[j][0]*scaleX*face)+tX;
     var y = (path[j][1]*scaleY)+tY;
@@ -72,7 +72,7 @@ function drawArrayPath(can,col,face,tX,tY,path,scaleX,scaleY){
   can.fill();
 }
 
-function renderPlayer(i){
+window.renderPlayer = function(i){
   var temX = (player[i].phys.pos.x*stage.scale) + stage.offset[0];
   var temY = (player[i].phys.pos.y*-stage.scale) +stage.offset[1];
   var face = player[i].phys.face;
@@ -382,8 +382,8 @@ function renderPlayer(i){
   $("#face"+i).empty().append(player[i].phys.face);
   $("#percent"+i).empty().append(player[i].percent);
 }
-lostStockQueue = [];
-function renderOverlay(showStock){
+window.lostStockQueue = [];
+window.renderOverlay = function(showStock){
 
   // stocks, percent, timer
   ui.strokeStyle = "black";
@@ -459,7 +459,7 @@ function renderOverlay(showStock){
   }
 }
 
-function renderForeground(){
+window.renderForeground = function(){
   // pause UI
   ui.fillStyle = "#8e8e8e";
   ui.save();

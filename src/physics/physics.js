@@ -1,4 +1,4 @@
-function land(i,y,t,j){
+window.land = function(i,y,t,j){
   player[i].phys.pos.y = y;
   player[i].phys.grounded = true;
   player[i].phys.doubleJumped = false;
@@ -56,7 +56,7 @@ function land(i,y,t,j){
   player[i].hit.hitstun = 0;
 }
 
-function physics(i){
+window.physics = function(i){
   player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y);
   player[i].phys.facePrev = player[i].phys.face;
   $.extend(true,player[i].phys.prevFrameHitboxes,player[i].hitboxes);

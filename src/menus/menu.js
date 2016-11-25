@@ -1,19 +1,22 @@
-menuSelected = 0;
-menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Credits"]];
-menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Who did this?"]];
-menuTitle = ["Main Menu","Options"];
+window.menuSelected = 0;
+window.menuColourOffset = 0;
 
-menuColours = [238,358,117,55];
-menuCurColour = 238;
+const menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Credits"]];
+const menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Who did this?"]];
+const menuTitle = ["Main Menu","Options"];
+
+const menuColours = [238,358,117,55];
+let menuCurColour = 238;
 //hsl(55, 100%, 50%)
-menuCycle = 0;
-menuTimer = 0;
-menuMode = 0;
+let menuCycle = 0;
+let menuTimer = 0;
+let menuMode = 0;
+let menuGlobalTimer = 0;
+let menuAngle = 0;
+let menuRandomBox = [Math.random(),Math.random(),Math.random(),Math.random()];
 
-menuGlobalTimer = 0;
-
-stickHold = 0;
-stickHoldEach = [];
+const stickHoldEach = [];
+let stickHold = 0;
 function menuMove(i){
   var menuMove = false;
   var previousMenuS = menuSelected;
@@ -145,9 +148,7 @@ function menuMove(i){
   }
 }
 
-menuColourOffset = 0;
-menuAngle = 0;
-menuRandomBox = [Math.random(),Math.random(),Math.random(),Math.random()];
+
 
 function drawMainMenuInit(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);

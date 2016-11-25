@@ -1,18 +1,18 @@
-crossHairPos = new Vec2D(0,0);
-unGriddedCrossHairPos = new Vec2D(0,0);
-targetBuilder = 0;
-targetTool = 0;
-showingCode = false;
-toolInfoTimer = 0;
-toolInfo = ["Box","Platform","Ledge","Target","Move","Delete"];
+const crossHairPos = new Vec2D(0,0);
+const unGriddedCrossHairPos = new Vec2D(0,0);
+let targetBuilder = 0;
+let targetTool = 0;
+let showingCode = false;
+let toolInfoTimer = 0;
+let toolInfo = ["Box","Platform","Ledge","Target","Move","Delete"];
 //hoverButton = -1;
-holdingA = false;
-drawingBox = new Box2D([0,0],[0,0]);
-drawingPlatform = [new Vec2D(0,0),new Vec2D(0,0)];
-editingStage = -1;
+let holdingA = false;
+const drawingBox = new Box2D([0,0],[0,0]);
+const drawingPlatform = [new Vec2D(0,0),new Vec2D(0,0)];
+let editingStage = -1;
 
-tooSmallTimer = 0;
-tooSmallPos = new Vec2D(0,0);
+let tooSmallTimer = 0;
+let tooSmallPos = new Vec2D(0,0);
 
 function createTargetCode(){
   var tCode = "";
@@ -48,7 +48,7 @@ function createTargetCode(){
   return tCode;
 }
 
-stageTemp = {
+const stageTemp = {
   box : [],
   platform : [],
   ground : [],
@@ -72,17 +72,17 @@ stageTemp = {
     startingPoint : new Vec2D(600,375),
     ledge : []
   }
-}
+};
 
-grabbedItem = 0;
-hoverItem = 0;
-ledgeHoverItem = 0;
-builderPaused = false;
-builderPauseSelected = 0;
-undoList = [];
-hoverToolbar = 1;
-gridSizes = [80,40,20,10,0];
-gridType = 1;
+let grabbedItem = 0;
+let hoverItem = 0;
+let ledgeHoverItem = 0;
+let builderPaused = false;
+let builderPauseSelected = 0;
+const undoList = [];
+let hoverToolbar = 1;
+const gridSizes = [80,40,20,10,0];
+let gridType = 1;
 
 function undo(){
   var num = undoList.length-1;

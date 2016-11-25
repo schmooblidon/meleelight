@@ -1,5 +1,4 @@
-sounds = {
-
+window.sounds = {
   menuBack : new Howl({
     src: ['sfx/menu-back.wav']
   }),
@@ -426,7 +425,7 @@ sounds = {
   })
 }
 
-music = {
+window.music = {
   menu : new Howl({
     src: ['music/menu.ogg'],
     volume: 1,
@@ -506,7 +505,7 @@ music = {
   })
 }
 
-volumeOverwrites = {
+const volumeOverwrites = {
   dash : 0.3,
   airdodge : 0.7,
   grab : 0.5,

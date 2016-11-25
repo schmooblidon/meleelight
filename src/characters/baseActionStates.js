@@ -1,7 +1,7 @@
 
 // BASE ActionStates
 
-baseActionStates = {
+window.baseActionStates = {
 
 "WAIT" : {
   name : "WAIT",

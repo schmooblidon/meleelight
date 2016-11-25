@@ -1,14 +1,14 @@
-targetTesting = false;
-targetPlayer = 0;
-targetStagePlaying = 0;
-targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
-targetsDestroyed = 0;
-endTargetGame = false;
+let targetTesting = false;
+let targetPlayer = 0;
+let targetStagePlaying = 0;
+let targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
+let targetsDestroyed = 0;
+let endTargetGame = false;
 
-targetRecords = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]];
-devRecords = [[14.22,10.42,14.38,12.20,12.68,9.15,11.00,11.63,18.40,11.35],[15.80,13.93,22.45,14.85,14.40,10.22,14.68,14.55,22.70,12.80],[10.65,9.98,12.10,7.37,7.25,9.47,9.50,8.33,14.18,8.83]];
+const targetRecords = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]];
+const devRecords = [[14.22,10.42,14.38,12.20,12.68,9.15,11.00,11.63,18.40,11.35],[15.80,13.93,22.45,14.85,14.40,10.22,14.68,14.55,22.70,12.80],[10.65,9.98,12.10,7.37,7.25,9.47,9.50,8.33,14.18,8.83]];
 
-medalTimes = [[
+const medalTimes = [[
   [30,21,17],
   [29,20,15],
   [35,24,19],
@@ -41,7 +41,7 @@ medalTimes = [[
   [28,19,11]]
 ];
 
-medalsEarned = [[
+const medalsEarned = [[
   [false,false,false],
   [false,false,false],
   [false,false,false],

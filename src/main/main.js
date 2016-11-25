@@ -1,13 +1,12 @@
+window.player = [0,0,0,0];
+window.renderTime = [10,0,100,0];
+window.gamelogicTime = [5,0,100,0];
+window.framerate = [0,0,0];
+window.cS = [0,0,0,0];
+window.vfxQueue = [];
 
-player = [0,0,0,0];
-
-renderTime = [10,0,100,0];
-gamelogicTime = [5,0,100,0];
-framerate = [0,0,0];
-
-gameEnd = false;
-
-attemptingControllerReset = [false,false,false,false];
+let gameEnd = false;
+const attemptingControllerReset = [false,false,false,false];
 
 function customDeadzone(){
   this.ls = new Vec2D(0,0);
@@ -16,9 +15,8 @@ function customDeadzone(){
   this.r = 0;
 }
 
-keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,222],[109,219],71,78,66,86];
-
-keyboardOccupied = false;
+const keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,222],[109,219],71,78,66,86];
+let keyboardOccupied = false;
 
 /*xbox one controller
 A : 0
@@ -32,7 +30,7 @@ RT : 7
 Select : 8
 Start : 9*/
 
-map = {
+const map = {
   a : [1,0,4,0],
   b : [2,1,3,2],
   x : [0,2,2,1],
@@ -50,36 +48,36 @@ map = {
   csX : [5,3,3,2],
   csY : [2,4,4,3],
   lA : [3,2,5,6],
-  rA : [4,5,6,7]
-}
+  rA : [4,5,6,7],
+};
 
 
-mType = [0,0,0,0];
+const mType = [0,0,0,0];
 
-cd = [new customDeadzone,new customDeadzone,new customDeadzone,new customDeadzone];
+const cd = [new customDeadzone,new customDeadzone,new customDeadzone,new customDeadzone];
 
-currentPlayers = [];
+const currentPlayers = [];
 
-playerAmount = 0;
+let playerAmount = 0;
 
-playerType = [-1,-1,-1,-1];
+const playerType = [-1,-1,-1,-1];
 
-cpuDifficulty = [4,4,4,4];
+const cpuDifficulty = [4,4,4,4];
 
-ports = 0;
-activePorts = [];
+let ports = 0;
+const activePorts = [];
 
-playing = false;
+let playing = false;
 
-frameByFrame = false;
-frameByFrameRender = false;
+let frameByFrame = false;
+let frameByFrameRender = false;
 
-findingPlayers = true;
+let findingPlayers = true;
 
-showVfx = true;
-showDebug = false;
+let showVfx = true;
+let showDebug = false;
 
-gameMode = 20;
+let gameMode = 20;
 // 20:Startup
 // 13:Data Menu
 // 12:Keyboard Controls
@@ -96,15 +94,11 @@ gameMode = 20;
 // 1:Main Menu
 // 0:Title Screen
 
-versusMode = 0;
+let versusMode = 0;
 
-cS = [0,0,0,0];
+window.randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
 
-randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
-
-vfxQueue = [];
-
-palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
+window.palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
 ["rgb(4, 255, 134)","rgb(154, 254, 170)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
 ["rgb(5, 195, 255)","rgb(121, 223, 255)","rgba(218, 96, 254, ","rgb(231, 134, 255)","rgba(230, 144, 255, "],
 ["rgb(255, 187, 70)","rgb(248, 255, 122)","rgba(80, 182, 255, ","rgb(255, 142, 70)","rgba(139, 203, 249, "],
@@ -112,40 +106,40 @@ palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb
 ["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgb(255, 112, 66)","rgba(111, 214, 168, "],
 ["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgb(191, 119, 119)","rgba(175, 172, 172, "]];
 
-hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
+window.hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
 
-hasTag = [false,false,false,false];
-tagText = ["","","",""];
+window.hasTag = [false,false,false,false];
+window.tagText = ["","","",""];
 
-pPal = [0,1,2,3];
+window.pPal = [0,1,2,3];
 
-costumeTimeout = [];
+window.costumeTimeout = [];
 
-colours = ["rgba(4, 255, 82, 0.62)","rgba(117, 20, 255, 0.63)","rgba(255, 20, 20, 0.63)","rgba(255, 232, 20, 0.63)"];
+window.colours = ["rgba(4, 255, 82, 0.62)","rgba(117, 20, 255, 0.63)","rgba(255, 20, 20, 0.63)","rgba(255, 232, 20, 0.63)"];
 
-pause = [[true,true],[true,true],[true,true],[true,true]];
-frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
+window.pause = [[true,true],[true,true],[true,true],[true,true]];
+window.frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
 
-startingPoint = [[-50,50],[50,50],[-25,5],[25,5]];
-startingFace = [1,-1,1,-1];
+window.startingPoint = [[-50,50],[50,50],[-25,5],[25,5]];
+window.startingFace = [1,-1,1,-1];
 
-ground = [[-68.4,0],[68.4,0]];
+window.ground = [[-68.4,0],[68.4,0]];
 
-platforms = [[[-57.6,27.2],[-20,27.2]],[[20,27.2],[57.6,27.2]],[[-18.8,54.4],[18.8,54.4]]];
+window.platforms = [[[-57.6,27.2],[-20,27.2]],[[20,27.2],[57.6,27.2]],[[-18.8,54.4],[18.8,54.4]]];
 
-wallsL = [[[-68.4,0],[-68.4,-108.8]]];
-wallsR = [[[68.4,0],[68.4,-108.8]]];
+window.wallsL = [[[-68.4,0],[-68.4,-108.8]]];
+window.wallsR = [[[68.4,0],[68.4,-108.8]]];
 
-edges = [[[-68.4,0],[-63.4,0]],[[68.4,0],[63.4,0]]];
+window.edges = [[[-68.4,0],[-63.4,0]],[[68.4,0],[63.4,0]]];
 
 //edgeOffset = [[-71.3,-23.7],[71.3,-23.7]];
-edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
+window.edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
 
-edgeOrientation = [1,-1];
+window.edgeOrientation = [1,-1];
 
-respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
+window.respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
 
-stage = {
+window.stage = {
   box : [new Box2D([-68.4,-108.8],[68.4,0])],
   platform : [[new Vec2D(-57.6,27.2),new Vec2D(-20,27.2)],[new Vec2D(20,27.2),new Vec2D(57.6,27.2)],[new Vec2D(-18.8,54.4),new Vec2D(18.8,54.4)]],
   ground : [[new Vec2D(-68.4,0),new Vec2D(68.4,0)]],
@@ -160,20 +154,20 @@ stage = {
   ledge : [[0,0],[0,1]],
   ledgePos : [new Vec2D(-68.4,0),new Vec2D(68.4,0)],
   scale : 4.5,
-  offset : [600,480]
-}
+  offset : [600,480],
+};
 
-stageSelect = 0;
+window.stageSelect = 0;
 
-blastzone = new Box2D([-224,200],[224,-108.8]);
+window.blastzone = new Box2D([-224,200],[224,-108.8]);
 
-starting = true;
-startTimer = 1.5;
+window.starting = true;
+window.startTimer = 1.5;
 
 //matchTimer = 5999.99;
-matchTimer = 480;
+window.matchTimer = 480;
 
-usingLocalStorage = false;
+window.usingLocalStorage = false;
 if (typeof(Storage) !== "undefined") {
     // Code for localStorage/sessionStorage.
     usingLocalStorage = true;
@@ -209,9 +203,9 @@ function getCookie(cname) {
 
 document.onkeydown = overrideKeyboardEvent;
 document.onkeyup = overrideKeyboardEvent;
-var keys = {};
-keyBind = 0;
-keyBinding = false;
+const keys = {};
+window.keyBind = 0;
+window.keyBinding = false;
 function overrideKeyboardEvent(e){
   if (choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116){
     switch(e.type){
@@ -914,21 +908,21 @@ function interpretInputs(i,active){
   }
 }
 
-bg1 = 0;
-bg2 = 0;
-fg1 = 0;
-fg2 = 0;
-ui = 0;
-c = 0;
-canvasMain = 0;
-layers = {
+let bg1 = 0;
+let bg2 = 0;
+let fg1 = 0;
+let fg2 = 0;
+let ui = 0;
+let c = 0;
+let canvasMain = 0;
+const layers = {
   BG1 : 0,
   BG2 : 0,
   FG1 : 0,
   FG2 : 0,
   UI : 0
 };
-layerSwitches = {
+const layerSwitches = {
   BG1 : true,
   BG2 : true,
   FG1 : true,
@@ -1000,9 +994,9 @@ function update(i){
   physics(i);
 }
 
-delta = 0;
-lastFrameTimeMs = 0;
-lastUpdate = performance.now();
+let delta = 0;
+let lastFrameTimeMs = 0;
+let lastUpdate = performance.now();
 
 function gameTick(){
   var start = performance.now();
@@ -1234,8 +1228,8 @@ function clearScreen(){
   ui.clearRect(0,0,layers.UI.width,layers.UI.height);
 }
 
-otherFrame = true;
-fps30 = false;
+let otherFrame = true;
+let fps30 = false;
 function renderTick(){
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
@@ -1559,7 +1553,7 @@ function finishGame(){
   setTimeout(function(){endGame()},2500);
 }
 
-function start(){
+window.start = function(){
   getKeyboardCookie();
   getTargetCookies();
   giveMedals();

@@ -1,4 +1,6 @@
-creditsPlayer = 0;
+window.creditsPlayer = 0;
+
+const twoPi = Math.pi * 2;
 //scrolling top down
 var shoot_cooldown = 0;
 var initc = true; //whether or not credits should be initialized. Should be set to true every time credits is activated

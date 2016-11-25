@@ -1,8 +1,8 @@
-targetSelected = 0;
-targetSelectTimer = 0;
-promptTimer = 0;
+let targetSelected = 0;
+let targetSelectTimer = 0;
+let promptTimer = 0;
 
-targetPointerPos = [600,635];
+const targetPointerPos = [600,635];
 
 function tssControls(i){
   if (!showingCode){

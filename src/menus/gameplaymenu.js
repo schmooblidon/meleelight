@@ -1,4 +1,4 @@
-gameplayMenuSelected = 0;
+window.gameplayMenuSelected = 0;
 function getGameplayCookies(){
   var keys = Object.keys(gameSettings);
   for (var j=0;j<keys.length;j++){

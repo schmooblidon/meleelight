@@ -1,5 +1,3 @@
-
-
 function ActiveHitbox(size,offset,dmg,angle,kg,bk,sk,type){
   this.size = size;
   this.offset = offset;
@@ -117,7 +115,7 @@ function inputObject(){
 }
 
 
-function playerObject(character,pos,face){
+window.playerObject = function(character,pos,face){
   this.phys = new physicsObject(pos,face);
   this.actionState = "ENTRANCE";
   this.prevActionState = "";

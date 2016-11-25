@@ -1,13 +1,12 @@
-angB = 0;
-angles = [0,Math.PI];
-angR = 0;
-mlVel = 0;
-mlPos = 0;
-mlDir = 1;
+window.angB = 0;
+window.angR = 0;
+window.angles = [0,Math.PI];
+window.mlVel = 0;
+window.mlPos = 0;
+window.mlDir = 1;
+window.circlePos = [[200,0,0.4,1,200],[600,240,0.21,1,250],[10,600,0.7,-1,150],[350,500,0.65,-1,270],[1000,50,0.9,1,200],[900,400,0.1,-1,260]];
 
-circlePos = [[200,0,0.4,1,200],[600,240,0.21,1,250],[10,600,0.7,-1,150],[350,500,0.65,-1,270],[1000,50,0.9,1,200],[900,400,0.1,-1,260]];
-var p = 1;
-lightDust = [];
+const lightDust = [];
 for (var k=0;k<20;k++){
   lightDust[k] = [Math.random()*3+2,330+(k*26+26*Math.random()),520,0.2];
 }

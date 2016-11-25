@@ -94,11 +94,11 @@ function drawStage(){
   }
 }
 
-backgroundType = 0;
+window.backgroundType = 0;
 
-var bgPos = [[-30,500,300,500,900,500,1230,450,358],[-30,400,300,400,900,400,1230,350,179]];
-var direction = [[1,-1,1,-1,1,-1,1,-1,1],[-1,1,-1,1,-1,1,-1,1,-1]];
-var boxFill;
+const bgPos = [[-30,500,300,500,900,500,1230,450,358],[-30,400,300,400,900,400,1230,350,179]];
+const direction = [[1,-1,1,-1,1,-1,1,-1,1],[-1,1,-1,1,-1,1,-1,1,-1]];
+let boxFill;
 function bgStar(){
   var vSeed = Math.random();
   this.velocity = new Vec2D(5*vSeed*Math.sign(0.5-Math.random()),5*(1-vSeed)*Math.sign(0.5-Math.random()));
@@ -111,13 +111,13 @@ function bgStar(){
   this.pos = new Vec2D(0,0);
   this.life = 0;
 }
-bgStars = [];
+const bgStars = [];
 for (var p=0;p<20;p++){
   bgStars[p] = new bgStar();
   bgStars[p].pos = new Vec2D(600+100*Math.random()*bgStars[p].velocity.x,375+100*Math.random()*bgStars[p].velocity.y);
 }
-bgSparkle = 3;
-var gridGrad = "rgba(94,173,255,0.2)";
+let bgSparkle = 3;
+let gridGrad = "rgba(94,173,255,0.2)";
 function drawBackgroundInit(){
   var bgGrad =bg1.createLinearGradient(0,0,0,500);
   bgGrad.addColorStop(0,"rgb(24, 17, 66)");
@@ -125,7 +125,7 @@ function drawBackgroundInit(){
   bg1.fillStyle=bgGrad;
   bg1.fillRect(-100,-100,layers.BG1.width+200,layers.BG1.height+200);
   if (backgroundType == 1){
-    var gridGrad = bg2.createRadialGradient(600,375,1,600,375,800);
+    let gridGrad = bg2.createRadialGradient(600,375,1,600,375,800);
     gridGrad.addColorStop(0,"rgba(94, 173, 255, 0)");
     gridGrad.addColorStop(1,"rgba(94, 173, 255, 0.2)");
     bg2.strokeStyle = gridGrad;
@@ -142,11 +142,11 @@ function drawBackground(){
   }
 }
 
-circleSize = [];
+const circleSize = [];
 for (var i=0;i<5;i++){
   circleSize[i] = i*40;
 }
-ang = 0;
+let ang = 0;
 function drawTunnel(){
   bg2.lineWidth = 2;
   ang += 0.005;

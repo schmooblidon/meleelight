@@ -125,7 +125,6 @@ function createConfig(options) {
     entry: {
       index: path.join(srcDir, "index"),
       main: path.join(srcDir, "main"),
-      "characters/fox": path.join(srcDir, "characters/fox"),
     },
     output: {
       path: distJsDir,

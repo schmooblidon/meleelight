@@ -1,6 +1,8 @@
-hitQueue = [];
-phantomQueue = [];
-angleConversion = Math.PI / 180;
+window.hitQueue = [];
+window.phantomQueue = [];
+
+const angleConversion = Math.PI / 180;
+
 function hitDetection(p){
   var attackerClank = false;
   for (var i=0;i<4;i++){

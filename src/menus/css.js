@@ -11,26 +11,26 @@ handOpen.src = "assets/hand/handopen.png";
 var handGrab = new Image();
 handGrab.src = "assets/hand/handgrab.png";
 
-choosingTag = -1;
-handType = [0,0,0,0];
-handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
-tokenPos = [new Vec2D(475,268),new Vec2D(515,268),new Vec2D(475,308),new Vec2D(515,308)];
-chosenChar = [0,0,0,0];
-tokenGrabbed = [false,false,false,false];
-whichTokenGrabbed = [-1,-1,-1,-1];
-occupiedToken = [false,false,false,false];
-bHold = [0,0,0,0];
+window.choosingTag = -1;
+window.handType = [0,0,0,0];
+window.handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
+window.tokenPos = [new Vec2D(475,268),new Vec2D(515,268),new Vec2D(475,308),new Vec2D(515,308)];
+window.chosenChar = [0,0,0,0];
+window.tokenGrabbed = [false,false,false,false];
+window.whichTokenGrabbed = [-1,-1,-1,-1];
+window.occupiedToken = [false,false,false,false];
+window.bHold = [0,0,0,0];
 
-cpuSlider = [new Vec2D(152+15+166+0,595),new Vec2D(152+15+166+225,595),new Vec2D(152+15+166+450,595),new Vec2D(152+15+166+675,595)];
+window.cpuSlider = [new Vec2D(152+15+166+0,595),new Vec2D(152+15+166+225,595),new Vec2D(152+15+166+450,595),new Vec2D(152+15+166+675,595)];
 
-cpuGrabbed = [false,false,false,false];
-whichCpuGrabbed = [-1,-1,-1,-1];
-occupiedCpu = [false,false,false,false];
+window.cpuGrabbed = [false,false,false,false];
+window.whichCpuGrabbed = [-1,-1,-1,-1];
+window.occupiedCpu = [false,false,false,false];
 
-readyToFight = false;
+window.readyToFight = false;
 
-rtfFlash = 25;
-rtfFlashD = 1;
+window.rtfFlash = 25;
+window.rtfFlashD = 1;
 
 function changeCharacter(i,c){
   cS[i] = c;

@@ -1,9 +1,11 @@
-mobile = false;
+import $ from "jquery";
+
+let mobile = false;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
  	mobile = true;
 }
-windwidth = 0;
-windheight = 0;
+let windwidth = 0;
+let windheight = 0;
 
 function resizeHeader(){
 		windwidth = $(window).width();
@@ -44,7 +46,7 @@ function resizeHeader(){
 		}
     $("#main").css("min-height",windheight-105+"px");
 }
-var showHeader = true;
+let showHeader = true;
 if (typeof offlineMode !== "undefined"){
   if (offlineMode){
     showHeader = false;

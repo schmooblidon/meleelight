@@ -1,9 +1,7 @@
 // Legacy files
 require("main/sfx.js");
 require("settings.js");
-// require("characters/marth/marthanimations.js");
 require("characters/marth/ecbmarth.js");
-// require("characters/puff/puffanimations.js");
 require("characters/puff/ecbpuff.js");
 require("characters/baseActionStates.js");
 require("main/swordSwings.js");
@@ -17,6 +15,7 @@ require("main/player.js");
 require("physics/actionStateShortcuts.js");
 require("characters/marth/marth.js");
 require("characters/puff/puff.js");
+require("characters/fox");
 require("main/render.js");
 require("menus/startup.js");
 require("menus/startscreen.js");

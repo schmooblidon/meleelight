@@ -34,45 +34,7 @@ function drawHexagonLoading(r,tX,tY,width) {
 
 let loading = true;
 const scriptNames = [
-  "main/sfx.js",
-  "settings.js",
-  "characters/marth/marthanimations.js",
-  "characters/marth/ecbmarth.js",
-  "characters/puff/puffanimations.js",
-  "characters/puff/ecbpuff.js",
-  "characters/baseActionStates.js",
-  "main/swordSwings.js",
-  "main/vfx.js",
-  "physics/hitDetection.js",
-  "main/characters.js",
-  "characters/marth/marthAttributes.js",
-  "characters/puff/puffAttributes.js",
-  "physics/article.js",
-  "main/player.js",
-  "physics/actionStateShortcuts.js",
-  "characters/marth/marth.js",
-  "characters/puff/puff.js",
-  "../dist/js/characters/fox.js",
-  "main/render.js",
-  "menus/startup.js",
-  "menus/startscreen.js",
-  "menus/menu.js",
-  "menus/audiomenu.js",
-  "menus/gameplaymenu.js",
-  "menus/keytest.js",
-  "menus/keyboardmenu.js",
-  "menus/credits.js",
-  "menus/css.js",
-  "target/targetbuilder.js",
-  "target/targetplay.js",
-  "menus/targetselect.js",
-  "stages/stages.js",
-  "stages/stagerender.js",
-  "menus/stageselect.js",
-  "physics/physics.js",
-  "main/ai.js",
-  "main/resize.js",
-  "main/main.js"
+  "./js/main.js",
 ];
 
 const loadText = [
@@ -86,7 +48,7 @@ const loadText = [
 let sNum=0;
 
 function loadScript(){
-  $.getScript("../src/" + scriptNames[sNum])
+  $.getScript(scriptNames[sNum])
     .done(() => {
       if (sNum < scriptNames.length - 1){
         sNum++;
