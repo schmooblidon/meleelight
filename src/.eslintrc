@@ -1,6 +1,32 @@
 {
   "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "es6": true
+  },
   "rules": {
-    "indent": ["error", 2]
+    // Style / cleanliness
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "no-var": ["error"],
+    "arrow-parens": ["error"],
+    "no-duplicate-imports": ["error"],
+    "one-var": ["error", "never"],
+    "camelcase": ["error"],
+
+    // Logic / errors / performance
+    "semi": ["error", "always"],
+    "no-undef": ["error"],
+    "prefer-const": ["error"],
+    "no-const-assign": ["error"],
+    "wrap-iife": ["error"],
+    "no-loop-func": ["error"],
+    "no-param-reassign": ["error"],
+    "prefer-spread": ["error"],
+    "prefer-arrow-callback": ["error"],
+    "no-confusing-arrow": ["error"],
+    "no-dupe-class-members": ["error"],
+    "eqeqeq": ["error", "always"]
   }
 }
