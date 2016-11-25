@@ -66,11 +66,12 @@ function credits(p){ //called once every frame
 			new ScrollingText("Schmoo",800,"Creator, Main Developer","Made the game."),
 			new ScrollingText("Tatatat0",900,"Programmer","Created the AI and credits."),
 			new ScrollingText("bites",1000,"Animation Assistant, Level Design","Helped develop animation process & designed target stages."),
-			new ScrollingText("zircon",1100,"Musician","Smash Superstars (Menu Theme)"),
-			new ScrollingText("Buoy",1200,"Musician","Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
-			new ScrollingText("Tom Mauritzon",1300,"Musician","Mega Helix (PStadium Theme)"),
-			new ScrollingText("Rozen",1400,"Musician","Kumite (Battlefield Theme)"),
-			new ScrollingText("Zack Parrish",1500,"Musician","Sunny Side Up (Dreamland Theme)")
+      new ScrollingText("WwwWario",1100,"Support","Helping users troubleshoot and being a homie!"),
+			new ScrollingText("zircon",1200,"Musician","Smash Superstars (Menu Theme)"),
+			new ScrollingText("Buoy",1300,"Musician","Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
+			new ScrollingText("Tom Mauritzon",1400,"Musician","Mega Helix (PStadium Theme)"),
+			new ScrollingText("Rozen",1500,"Musician","Kumite (Battlefield Theme)"),
+			new ScrollingText("Zack Parrish",1600,"Musician","Sunny Side Up (Dreamland Theme)")
 		  ];
 	  cScore = 0;
 	  initc = false;
