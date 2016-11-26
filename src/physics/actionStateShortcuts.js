@@ -132,7 +132,7 @@ window.shieldTilt = function(p,shieldstun){
     var y = player[p].inputs.lStickAxis[0].y;
     var targetOffset = Math.sqrt(x*x+y*y)*3;
     var targetAngle = getAngle(x,y);
-    targetPosition = new Vec2D(Math.cos(targetAngle) * targetOffset, Math.sin(targetAngle) * targetOffset);
+    var targetPosition = new Vec2D(Math.cos(targetAngle) * targetOffset, Math.sin(targetAngle) * targetOffset);
     player[p].phys.shieldPosition = new Vec2D(
       player[p].phys.shieldPosition.x+((targetPosition.x-player[p].phys.shieldPosition.x)/5 + 0.01),
       player[p].phys.shieldPosition.y+((targetPosition.y-player[p].phys.shieldPosition.y)/5 + 0.01));

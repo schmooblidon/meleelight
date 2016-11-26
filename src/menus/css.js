@@ -23,7 +23,7 @@ window.whichTokenGrabbed = [-1,-1,-1,-1];
 window.occupiedToken = [false,false,false,false];
 window.bHold = [0,0,0,0];
 
-window.cpuSlider = [new Vec2D(152+15+166+0,595),new Vec2D(152+15+166+225,595),new Vec2D(152+15+166+450,595),new Vec2D(152+15+166+675,595)];
+window.cpuSlider = [new Vec2D(152+15+166+0-50,595),new Vec2D(152+15+166+225-50,595),new Vec2D(152+15+166+450-50,595),new Vec2D(152+15+166+675-50,595)];
 
 window.cpuGrabbed = [false,false,false,false];
 window.whichCpuGrabbed = [-1,-1,-1,-1];

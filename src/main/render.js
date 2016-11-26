@@ -379,10 +379,6 @@ window.renderPlayer = function(i){
 
     }
   }
-  $("#actState"+i).empty().append(player[i].currentAction+" "+player[i].currentSubaction+" : "+player[i].actionState);
-  $("#stateNum"+i).empty().append(frame);
-  $("#face"+i).empty().append(player[i].phys.face);
-  $("#percent"+i).empty().append(player[i].percent);
 }
 window.lostStockQueue = [];
 window.renderOverlay = function(showStock){

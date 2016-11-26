@@ -19,6 +19,7 @@ window.hitDetection = function(p){
             }
           }
           if (!inHitList){
+            var storedPhantom = -1;
             for (var j=0;j<4;j++){
               if (player[p].hitboxes.active[j] && player[p].phys.prevFrameHitboxes.active[j]){
                 var interpolate = true;
@@ -95,14 +96,23 @@ window.hitDetection = function(p){
                     //
                     if ((player[p].hitboxes.id[j].hitGrounded && player[i].phys.grounded) || (player[p].hitboxes.id[j].hitAirborne && !player[i].phys.grounded))
                     if (hitHurtCollision(i,p,j,false) || (interpolate && (interpolatedHitHurtCollision(i,p,j) || hitHurtCollision(i,p,j,true)))){
-                      var phantom = !hitHurtCollision(i,p,j,false,true) && (interpolate ? !interpolatedHitHurtCollision(i,p,j,true) : true);
-                      hitQueue.push([i,p,j,false,false,false,phantom]);
-                      player[p].hitboxes.hitList.push(i);
-                      setHasHit(p,j);
-                      break;
+                      if (!hitHurtCollision(i,p,j,false,true) && (interpolate ? !interpolatedHitHurtCollision(i,p,j,true) : true)){
+                        storedPhantom = j;
+                      }
+                      else {
+                        hitQueue.push([i,p,j,false,false,false,false]);
+                        player[p].hitboxes.hitList.push(i);
+                        setHasHit(p,j);
+                        break;
+                      }
                     }
                   }
                 }
+              }
+              if (storedPhantom > -1){
+                hitQueue.push([i,p,storedPhantom,false,false,false,true]);
+                player[p].hitboxes.hitList.push(i);
+                setHasHit(p,storedPhantom);
               }
             }
           }
@@ -238,7 +248,7 @@ window.hitHurtCollision = function(i,p,j,previous,phantom){
   var cornerDistance_sq = Math.pow(distance.x - hurtWidth/2,2) +
                        Math.pow(distance.y - hurtHeight/2,2);
 
-  return (cornerDistance_sq <= (Math.pow(player[p].hitboxes.id[j].size-(phantom?0.5:0),2)));
+  return (cornerDistance_sq <= (Math.pow(player[p].hitboxes.id[j].size-(phantom?gameSettings.phantomThreshold:0),2)));
 }
 
 window.executeHits = function(){
@@ -826,7 +836,7 @@ window.knockbackSounds = function(type,knockback,v){
 window.checkPhantoms = function(){
   for (var i=0;i<phantomQueue.length;i++){
     var v = phantomQueue[i][1]
-    if (player[v].hit.hitlag == 0){
+    if (player[v].hit.hitlag == 0 && player[v].phys.hurtBoxState == 0){
       player[v].percent += player[v].phys.phantomDamage;
       player[v].phys.phantomDamage = 0;
       var a = phantomQueue[i][0];
