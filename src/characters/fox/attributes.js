@@ -3,8 +3,6 @@
 /* globals charAttributes, intangibility, frames, actionSounds, offsets,
 hitboxes, chars, Vec2D, hitbox, hitboxObject, charObject */
 
-console.log("Asuh dude");
-
 charAttributes[2] = {
   dashFrameMin : 11,
   dashFrameMax : 21,

@@ -1,5 +1,7 @@
+/* eslint-disable */
+
 window.gameplayMenuSelected = 0;
-function getGameplayCookies(){
+window.getGameplayCookies = function(){
   var keys = Object.keys(gameSettings);
   for (var j=0;j<keys.length;j++){
     var c = getCookie(keys[j]);
@@ -8,7 +10,7 @@ function getGameplayCookies(){
     }
   }
 }
-function gameplayMenuControls(i){
+window.gameplayMenuControls = function(i){
   var menuMove = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
@@ -94,7 +96,7 @@ function gameplayMenuControls(i){
   }
 }
 
-function drawGameplayMenuInit(){
+window.drawGameplayMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
@@ -111,7 +113,7 @@ function drawGameplayMenuInit(){
   fg1.fillText("Flash on L-Cancel",75,395);
 }
 
-function drawGameplayMenu(){
+window.drawGameplayMenu = function(){
   clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;

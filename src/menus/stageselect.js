@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 let stageSelected = 4;
 let stageSelectTimer = 0;
 
@@ -12,7 +14,7 @@ dlIcon.src = "assets/stage-icons/dl.png";
 var psIcon = new Image();
 psIcon.src = "assets/stage-icons/ps.png";
 
-function sssControls(i){
+window.sssControls = function(i){
   stagePointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
   stagePointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
   if (stagePointerPos[1] >= 450 && stagePointerPos[1] <= 540){
@@ -62,7 +64,7 @@ function sssControls(i){
   }
 }
 
-function drawSSSInit(){
+window.drawSSSInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(17, 11, 65)");
   bgGrad.addColorStop(1,"rgb(61, 8, 37)");
@@ -92,7 +94,7 @@ function drawSSSInit(){
   fg1.drawImage(dlIcon,827,452,146,55);
 }
 
-function drawSSS(){
+window.drawSSS = function(){
   clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;

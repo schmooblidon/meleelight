@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.menuSelected = 0;
 window.menuColourOffset = 0;
 
@@ -15,9 +17,9 @@ let menuGlobalTimer = 0;
 let menuAngle = 0;
 let menuRandomBox = [Math.random(),Math.random(),Math.random(),Math.random()];
 
-const stickHoldEach = [];
-let stickHold = 0;
-function menuMove(i){
+window.stickHoldEach = [];
+window.stickHold = 0;
+window.menuMove = function(i){
   var menuMove = false;
   var previousMenuS = menuSelected;
   if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
@@ -150,7 +152,7 @@ function menuMove(i){
 
 
 
-function drawMainMenuInit(){
+window.drawMainMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(12, 11, 54, 1)");
   bgGrad.addColorStop(1,"rgba(1, 2, 15, 1)");
@@ -198,7 +200,7 @@ function drawMainMenuInit(){
   fg1.stroke();
 }
 
-function drawMainMenu(){
+window.drawMainMenu = function(){
   clearScreen();
   menuGlobalTimer++;
   if (menuGlobalTimer > 600){

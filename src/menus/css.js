@@ -1,14 +1,16 @@
-var marthPic = new Image();
+/* eslint-disable */
+
+window.marthPic = new Image();
 marthPic.src = "assets/css/marth.png";
-var puffPic = new Image();
+window.puffPic = new Image();
 puffPic.src = "assets/css/puff.png";
-var foxPic = new Image();
+window.foxPic = new Image();
 foxPic.src = "assets/css/fox.png";
-var handPoint = new Image();
+window.handPoint = new Image();
 handPoint.src = "assets/hand/handpoint.png";
-var handOpen = new Image();
+window.handOpen = new Image();
 handOpen.src = "assets/hand/handopen.png";
-var handGrab = new Image();
+window.handGrab = new Image();
 handGrab.src = "assets/hand/handgrab.png";
 
 window.choosingTag = -1;
@@ -32,7 +34,7 @@ window.readyToFight = false;
 window.rtfFlash = 25;
 window.rtfFlashD = 1;
 
-function changeCharacter(i,c){
+window.changeCharacter = function(i,c){
   cS[i] = c;
   player[i].actionState = "WAIT";
   player[i].timer = 0;
@@ -40,7 +42,7 @@ function changeCharacter(i,c){
   player[i].charHitboxes = chars[cS[i]].hitboxes;
 }
 
-function cssControls(i){
+window.cssControls = function(i){
   if (choosingTag == -1){
     if (player[i].inputs.b[0]){
       bHold[i]++;
@@ -276,7 +278,7 @@ function cssControls(i){
   }
 }
 
-function drawCSSInit(){
+window.drawCSSInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,700);
   bgGrad.addColorStop(0,"rgb(17, 12, 56)");
   bgGrad.addColorStop(1,"black");
@@ -514,7 +516,7 @@ function drawCSSInit(){
   }
 }
 
-function drawCSS(){
+window.drawCSS = function(){
   clearScreen();
   ui.fillStyle = "rgb(219, 219, 219)";
   ui.save();
@@ -539,7 +541,7 @@ function drawCSS(){
   bg1.lineTo(1102,0);
   bg1.closePath();
   bg1.fill();
-  for (ia = 0; ia < 4; ia++) {
+  for (let ia = 0; ia < 4; ia++) {
     if (bHold[ia] > bestHold) {
 		bestHold = bHold[ia];
 	}

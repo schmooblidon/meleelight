@@ -1,4 +1,6 @@
-function drawStageInit(){
+/* eslint-disable */
+
+window.drawStageInit = function(){
   fg1.strokeStyle = "#db80cc";
   fg1.lineWidth = 1;
   for (var j=0;j<stage.ground.length;j++){
@@ -44,7 +46,7 @@ function drawStageInit(){
   }
 }
 
-function drawStage(){
+window.drawStage = function(){
   if (stage.movingPlat > -1){
     fg2.strokeStyle = "#4794c6";
     fg2.beginPath();
@@ -98,8 +100,8 @@ window.backgroundType = 0;
 
 const bgPos = [[-30,500,300,500,900,500,1230,450,358],[-30,400,300,400,900,400,1230,350,179]];
 const direction = [[1,-1,1,-1,1,-1,1,-1,1],[-1,1,-1,1,-1,1,-1,1,-1]];
-let boxFill;
-function bgStar(){
+window.boxFill = "rgba(0, 0, 0, 0.1)";
+window.bgStar = function(){
   var vSeed = Math.random();
   this.velocity = new Vec2D(5*vSeed*Math.sign(0.5-Math.random()),5*(1-vSeed)*Math.sign(0.5-Math.random()));
   if (transparency){
@@ -118,7 +120,7 @@ for (var p=0;p<20;p++){
 }
 let bgSparkle = 3;
 let gridGrad = "rgba(94,173,255,0.2)";
-function drawBackgroundInit(){
+window.drawBackgroundInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,0,500);
   bgGrad.addColorStop(0,"rgb(24, 17, 66)");
   bgGrad.addColorStop(1,"black");
@@ -133,7 +135,7 @@ function drawBackgroundInit(){
   }
 }
 
-function drawBackground(){
+window.drawBackground = function(){
   if (backgroundType == 0){
     drawStars();
   }
@@ -147,7 +149,7 @@ for (var i=0;i<5;i++){
   circleSize[i] = i*40;
 }
 let ang = 0;
-function drawTunnel(){
+window.drawTunnel = function(){
   bg2.lineWidth = 2;
   ang += 0.005;
   var angB = ang;
@@ -172,7 +174,7 @@ function drawTunnel(){
   }
 }
 
-function drawStars(){
+window.drawStars = function(){
   bgSparkle--;
   for (var p=0;p<20;p++){
     if (bgStars[p].pos.x > 1250 || bgStars[p].pos.y > 800 || bgStars[p].pos.x < -50 || bgStars[p].pos.y < -50){

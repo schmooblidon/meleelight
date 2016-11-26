@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.randomShout = function(char){
   //playSfx("shout"+Math.round(0.5+Math.random()*5.99));
   switch (char){

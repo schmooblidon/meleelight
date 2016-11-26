@@ -1,13 +1,15 @@
+/* eslint-disable */
+
 import $ from "jquery";
 
-let mobile = false;
+window.mobile = false;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
  	mobile = true;
 }
 let windwidth = 0;
 let windheight = 0;
 
-function resizeHeader(){
+window.resizeHeader = function(){
 		windwidth = $(window).width();
     windheight = $(window).height();
 		if (windwidth < 1500){
@@ -52,7 +54,7 @@ if (typeof offlineMode !== "undefined"){
     showHeader = false;
   }
 }
-function resize(){
+window.resize = function(){
   resizeHeader();
   var head = showHeader ? 95 : 31;
   if (showDebug){

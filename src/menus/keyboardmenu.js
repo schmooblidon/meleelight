@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.getKeyboardCookie = function(){
   var keys = Object.keys(keymapItems);
   for (var i=0;i<keys.length;i++){
@@ -22,7 +24,7 @@ window.getKeyboardCookie = function(){
   }
 }
 
-function setKeyboardCookie(){
+window.setKeyboardCookie = function(){
   var keys = Object.keys(keymapItems);
   for (var i=0;i<keys.length;i++){
     if (keymapItems[keys[i]].type == 1){
@@ -37,7 +39,7 @@ function setKeyboardCookie(){
   console.log(localStorage);
 }
 
-function keymapItem(type,pos,value,binding,index,above,toRight,below,toLeft,modType){
+window.keymapItem = function(type,pos,value,binding,index,above,toRight,below,toLeft,modType){
   this.type = type;
   // 0 = keys, 1 = modifier
   this.pos = pos;
@@ -122,7 +124,7 @@ window.menuScrollSpeed = 10;
 window.keyboardPromptTimer = 0;
 window.keyboardPrompt = "";
 window.disableStick = [false,false,false,false];
-function keyboardMenuControls(i){
+window.keyboardMenuControls = function(i){
   var menuMove = false;
   var moveD = "";
   if (player[i].inputs.lStickAxis[0].x == 0 && player[i].inputs.lStickAxis[0].y == 0){
@@ -423,7 +425,7 @@ function keyboardMenuControls(i){
   }
 }
 
-function drawKeyboardMenuInit(){
+window.drawKeyboardMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
@@ -461,7 +463,7 @@ function drawKeyboardMenuInit(){
   }
 }
 
-function drawKeyboardMenu(){
+window.drawKeyboardMenu = function(){
   clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;

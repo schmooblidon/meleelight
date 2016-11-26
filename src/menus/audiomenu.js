@@ -1,8 +1,10 @@
+/* eslint-disable */
+
 // sounds, music
 window.masterVolume = [0.5,0.3];
 const audioMenuNames = ["Sounds","Music"];
 let audioMenuSelected = 0;
-function audioMenuControls(i){
+window.audioMenuControls = function(i){
   var menuMove = false;
   var audioLevelMoveUp = false;
   var audioLevelMoveDown = false;
@@ -117,7 +119,7 @@ function audioMenuControls(i){
   }
 }
 
-function drawAudioMenuInit(){
+window.drawAudioMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
@@ -138,7 +140,7 @@ function drawAudioMenuInit(){
   fg1.fillText("Music",225,525);
 }
 
-function drawAudioMenu(){
+window.drawAudioMenu = function(){
   clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;
@@ -207,7 +209,7 @@ function drawAudioMenu(){
 
 }
 
-function getAudioCookies(){
+window.getAudioCookies = function(){
   var s = getCookie("soundsLevel");
   if (s != null && s != undefined && s != "null"){
     masterVolume[0] = Number(s);

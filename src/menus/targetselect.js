@@ -1,10 +1,12 @@
-let targetSelected = 0;
-let targetSelectTimer = 0;
-let promptTimer = 0;
+/* eslint-disable */
 
-const targetPointerPos = [600,635];
+window.targetSelected = 0;
+window.targetSelectTimer = 0;
+window.promptType = 0;
+window.promptTimer = 0;
+window.targetPointerPos = [600,635];
 
-function tssControls(i){
+window.tssControls = function(i){
   if (!showingCode){
     targetPointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
     targetPointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
@@ -134,7 +136,7 @@ function tssControls(i){
   }
 }
 
-function parseStage(code){
+window.parseStage = function(code){
   if (code[0] != "s"){
     return 0;
   }
@@ -225,7 +227,7 @@ function parseStage(code){
   }
 }
 
-function redrawCustomStageBoxes(){
+window.redrawCustomStageBoxes = function(){
   fg1.clearRect(50+260+260+65-5,110-5,530,320);
   fg1.fillStyle = "black";
   for (var i=10;i<Math.min(11+customTargetStages.length,20);i++){
@@ -233,7 +235,7 @@ function redrawCustomStageBoxes(){
   }
 }
 
-function drawTSSInit(){
+window.drawTSSInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(66, 42, 6)");
   bgGrad.addColorStop(1,"rgb(26, 2, 2)");
@@ -294,8 +296,7 @@ function drawTSSInit(){
   fg1.stroke();
 }
 
-var shine = 0.5;
-function drawTSS(){
+window.drawTSS = function(){
   clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;
@@ -587,7 +588,7 @@ function drawTSS(){
   }
 }
 
-function getTargetStageCookies(){
+window.getTargetStageCookies = function(){
   for (var i=0;i<10;i++){
     var s = getCookie("custom"+i);
     if (s != null && s != undefined && s != "null"){

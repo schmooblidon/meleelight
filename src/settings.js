@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
  Use http://keycode.info/ to find keycodes
  0 = disabled

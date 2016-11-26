@@ -1,20 +1,21 @@
-const crossHairPos = new Vec2D(0,0);
-const unGriddedCrossHairPos = new Vec2D(0,0);
-let targetBuilder = 0;
-let targetTool = 0;
-let showingCode = false;
-let toolInfoTimer = 0;
-let toolInfo = ["Box","Platform","Ledge","Target","Move","Delete"];
-//hoverButton = -1;
-let holdingA = false;
-const drawingBox = new Box2D([0,0],[0,0]);
-const drawingPlatform = [new Vec2D(0,0),new Vec2D(0,0)];
-let editingStage = -1;
+/* eslint-disable */
 
-let tooSmallTimer = 0;
-let tooSmallPos = new Vec2D(0,0);
+window.crossHairPos = new Vec2D(0,0);
+window.unGriddedCrossHairPos = new Vec2D(0,0);
+window.targetBuilder = 0;
+window.targetTool = 0;
+window.showingCode = false;
+window.toolInfoTimer = 0;
+window.toolInfo = ["Box","Platform","Ledge","Target","Move","Delete"];
+window.holdingA = false;
+window.drawingBox = new Box2D([0,0],[0,0]);
+window.drawingPlatform = [new Vec2D(0,0),new Vec2D(0,0)];
+window.editingStage = -1;
 
-function createTargetCode(){
+window.tooSmallTimer = 0;
+window.tooSmallPos = new Vec2D(0,0);
+
+window.createTargetCode = function(){
   var tCode = "";
   tCode += stageTemp.startingPoint.x+","+stageTemp.startingPoint.y+"~";
   for (var i=0;i<stageTemp.box.length;i++){
@@ -48,7 +49,7 @@ function createTargetCode(){
   return tCode;
 }
 
-const stageTemp = {
+window.stageTemp = {
   box : [],
   platform : [],
   ground : [],
@@ -84,7 +85,7 @@ let hoverToolbar = 1;
 const gridSizes = [80,40,20,10,0];
 let gridType = 1;
 
-function undo(){
+window.undo = function(){
   var num = undoList.length-1;
   if (num >= 0){
     var item = undoList[num];
@@ -104,7 +105,7 @@ function undo(){
   }
 }
 
-function createStageCode(){
+window.createStageCode = function(){
   var tCode = "s";
   tCode += stageTemp.startingPoint.x.toFixed(2)+","+stageTemp.startingPoint.y.toFixed(2)+"&b";
   for (var i=0;i<stageTemp.box.length;i++){
@@ -166,7 +167,7 @@ function createStageCode(){
   return tCode;
 }
 
-function createStageObject(s){
+window.createStageObject = function(s){
   var tCode = "{startingPoint:new Vec2D(";
   tCode += targetStages[s].startingPoint.x.toFixed(1)+","+targetStages[s].startingPoint.y.toFixed(1)+"),box:[";
   for (var i=0;i<targetStages[s].box.length;i++){
@@ -228,7 +229,7 @@ function createStageObject(s){
   return tCode;
 }
 
-function targetBuilderControls(p){
+window.targetBuilderControls = function(p){
   if (!showingCode){
     if (!builderPaused){
       hoverItem = 0;
@@ -633,7 +634,7 @@ function targetBuilderControls(p){
 
 }
 
-function drawTargetStage(){
+window.drawTargetStage = function(){
   ui.fillStyle = boxFill;
   for (var i=0;i<stageTemp.draw.box.length;i++){
     var b = stageTemp.draw.box[i];
@@ -722,7 +723,7 @@ function drawTargetStage(){
   }
 }
 
-function renderTargetBuilder(){
+window.renderTargetBuilder = function(){
   clearScreen();
   drawBackground();
   ui.strokeStyle = "rgba(255, 255, 255, 0.17)";
@@ -996,7 +997,7 @@ function renderTargetBuilder(){
   }
 }
 
-function findTarget(realCrossHair){
+window.findTarget = function(realCrossHair){
   var found = false;
   for (var i=0;i<stageTemp.target.length;i++){
     if (Math.abs(realCrossHair.x - stageTemp.draw.target[i].x) <= 30 && Math.abs(realCrossHair.y - stageTemp.draw.target[i].y) <= 30){
@@ -1008,7 +1009,7 @@ function findTarget(realCrossHair){
   return found;
 }
 
-function findPlatform(realCrossHair){
+window.findPlatform = function(realCrossHair){
   var found = false;
   for (var i=0;i<stageTemp.platform.length;i++){
     if (Math.abs(realCrossHair.x - (stageTemp.draw.platform[i][0].x+stageTemp.draw.platform[i][1].x)/2) <= Math.abs(stageTemp.draw.platform[i][0].x-stageTemp.draw.platform[i][1].x)/2 + 10 && Math.abs(realCrossHair.y - stageTemp.draw.platform[i][0].y) <= 20){
@@ -1020,7 +1021,7 @@ function findPlatform(realCrossHair){
   return found;
 }
 
-function findBox(realCrossHair){
+window.findBox = function(realCrossHair){
   var found = false;
   for (var i=0;i<stageTemp.box.length;i++){
     if (realCrossHair.x >= stageTemp.draw.box[i].min.x-5 && realCrossHair.x <= stageTemp.draw.box[i].max.x+5 && realCrossHair.y >= stageTemp.draw.box[i].max.y-5 && realCrossHair.y <= stageTemp.draw.box[i].min.y+5){
@@ -1032,7 +1033,7 @@ function findBox(realCrossHair){
   return found;
 }
 
-function centerItem(item,realCrossHair){
+window.centerItem = function(item,realCrossHair){
   switch (item[0]){
     case "startingPoint":
       stageTemp.draw.startingPoint = new Vec2D(realCrossHair.x,realCrossHair.y);

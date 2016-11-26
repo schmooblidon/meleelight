@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.angB = 0;
 window.angR = 0;
 window.angles = [0,Math.PI];
@@ -11,7 +13,7 @@ for (var k=0;k<20;k++){
   lightDust[k] = [Math.random()*3+2,330+(k*26+26*Math.random()),520,0.2];
 }
 
-function drawStartScreenInit(){
+window.drawStartScreenInit = function(){
   bg1.fillStyle = "rgba(46, 8, 154, 1)";
   var grd=bg1.createRadialGradient(600,375,5,600,375,750);
   grd.addColorStop(0,"#27005b");
@@ -40,7 +42,7 @@ function drawStartScreenInit(){
   bg1.restore();
 }
 
-function drawStartScreen(){
+window.drawStartScreen = function(){
   clearScreen();
   bg2.save();
   bg2.lineWidth = 60;

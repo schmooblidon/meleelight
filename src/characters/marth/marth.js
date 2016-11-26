@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // action state object creation
 aS[0]={};
 // base action states added
@@ -1381,7 +1383,7 @@ marth.ATTACKDASH = {
 
 // -------- SPECIALS -----------
 
-function dancingBladeCombo(p,min,max){
+window.dancingBladeCombo = function(p,min,max){
   if (player[p].timer > 1){
     if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) && !player[p].phys.dancingBladeDisable){
       if (player[p].timer < min){
@@ -2039,7 +2041,7 @@ marth.SIDESPECIALGROUND4UP = {
   }
 }
 
-function dancingBladeAirMobility(p){
+window.dancingBladeAirMobility = function(p){
   player[p].phys.cVel.y -= 0.06;
   if (player[p].phys.cVel.y < -1.5){
     player[p].phys.cVel.y = -1.5;
@@ -3150,7 +3152,7 @@ marth.NEUTRALSPECIALAIR = {
   }
 }
 
-function blendColours(start,end,opacity){
+window.blendColours = function(start,end,opacity){
   var blended = [];
   var difference = [];
   for (var i=0;i<3;i++){

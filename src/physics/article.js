@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.aArticles = [];
 window.destroyArticleQueue = [];
 window.articleHitQueue = [];

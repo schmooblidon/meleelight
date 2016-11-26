@@ -1,10 +1,12 @@
+/* eslint-disable */
+
 window.startUpTimer = 0;
 var hohlogo = new Image();
 hohlogo.src = "assets/hohlogo.png";
 var schmoologo = new Image();
 schmoologo.src = "assets/schmoologo.png";
 
-function drawStartUp(){
+window.drawStartUp = function(){
   startUpTimer++;
   ui.clearRect(0,0,layers.UI.width,layers.UI.height);
   bg1.fillStyle = "rgb(0,0,0)";

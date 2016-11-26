@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const twoPi = Math.PI * 2;
 
 window.vfx = {
@@ -979,7 +981,7 @@ window.dVfx = {
   }
 };
 
-function drawHexagon(r,tX,tY,width){
+window.drawHexagon = function(r,tX,tY,width){
   fg2.save();
   fg2.translate(tX,tY);
   var a = r*Math.sin(Math.PI/6);

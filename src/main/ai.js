@@ -1,4 +1,6 @@
-function runAI(i){
+/* eslint-disable */
+
+window.runAI = function(i){
   player[i].inputs.lStickAxis[0].x = 0;
   player[i].inputs.lStickAxis[0].y = 0;
   player[i].inputs.x[0] = false;
@@ -234,7 +236,7 @@ function runAI(i){
   //console.log(player[i].currentAction);
 }
 
-function NearestEnemy(cpu,p){
+window.NearestEnemy = function(cpu,p){
   var nearestEnemy = -1;
   var enemyDistance = 100000;
   for (var i=0;i<4;i++){
@@ -258,7 +260,7 @@ function NearestEnemy(cpu,p){
   return nearestEnemy;
 }
 
-function NearestFloor(cpu) {
+window.NearestFloor = function(cpu) {
   // for each platform
   var nearestDist = 1000;
   var nearestY = -1000;
@@ -283,7 +285,7 @@ function NearestFloor(cpu) {
   return nearestY;
 }
 
-function isAboveGround(x,y) {
+window.isAboveGround = function(x,y) {
   var returnValue = [false,"none",0];
   var closest = 1000;
   var dist;
@@ -308,7 +310,7 @@ function isAboveGround(x,y) {
   return returnValue;
 }
 
-function isOffstage(cpu){
+window.isOffstage = function(cpu){
   // if on a ledge
   if (cpu.phys.onLedge > -1){
     return false;
@@ -327,7 +329,7 @@ function isOffstage(cpu){
   }
   return true;
 }
-function CPUSHDL(cpu, p) {
+window.CPUSHDL = function(cpu, p) {
 	var returnInput = {
 	x: false,
 	b: false
@@ -346,7 +348,7 @@ function CPUSHDL(cpu, p) {
 	}
 	return returnInput;
 }
-function CPUTech(cpu, p) {
+window.CPUTech = function(cpu, p) {
 	var returnInput = {
     lstickX : 0.0,
   	l : false,
@@ -380,7 +382,7 @@ function CPUTech(cpu, p) {
 	return returnInput;
 
 }
-function CPUMissedTech(cpu,p) {
+window.CPUMissedTech = function(cpu,p) {
 	var returnInput = {
     lstickX : 0.0,
     lstickY : 0.0,
@@ -406,7 +408,7 @@ function CPUMissedTech(cpu,p) {
 	//console.log("3");
 	return returnInput;
 }
-function CPUWaveshineAny(cpu,p) {
+window.CPUWaveshineAny = function(cpu,p) {
 	var returnInput = {
 	lstickX : 0.0,
     lstickY : 0.0,
@@ -444,7 +446,7 @@ function CPUWaveshineAny(cpu,p) {
     }
 	return returnInput;
 }
-function CPUGrabRelease(cpu,p) {
+window.CPUGrabRelease = function(cpu,p) {
   var returnInput = {
     lstickX : 0.0,
     lstickY : 0.0,
@@ -508,7 +510,7 @@ function CPUGrabRelease(cpu,p) {
   }
   return returnInput;
 }
-function CPULedge(cpu,p) {
+window.CPULedge = function(cpu,p) {
   //var returnInput = [0.0,0.0,false,false,0.0,0.0,0.0,false];
   var returnInput = {
     lstickX : 0.0,
@@ -692,17 +694,16 @@ function CPULedge(cpu,p) {
 //cpu is a reference to the current cpu. Replace it if you want
 //expect cases of jigglypuff's accidently battlefielding themselves sometimes.
 //Fox angles should be perfectly imperfect.
-function CPUrecover(cpu,p) {
+window.CPUrecover = function(cpu,p) {
 //Where ledges is a list of the ledges on the current stage in the following format. [[ledge1XPos, ledge1YPos],[ledge2XPos,ledge3Ypos],[...]...]
 //ledgepos is where a character can grab the ledge
   var closest = [0,10000]; //used to measure which ledge is closer
-  for (i = 0;i < stage.ledgePos.length; i++) {
+  for (let i = 0;i < stage.ledgePos.length; i++) {
       var closeness = Math.abs(cpu.phys.pos.x -  stage.ledgePos[i].x) + Math.abs(cpu.phys.pos.y - stage.ledgePos[i].y); //distance from ledge
       if (closeness < closest[1]) { //if closer to that ledge than others, update closest.
         closest = [i,closeness];
       }
   }
-  closestIndex = closest[0];
   closest = stage.ledgePos[closest[0]]; //updates closest to instead be the closest ledge.
   var returnInput = [0.0,0.0,false,false];
   var returnInput = {

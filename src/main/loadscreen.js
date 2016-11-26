@@ -30,11 +30,12 @@ function drawHexagonLoading(r,tX,tY,width) {
   lc.closePath();
   lc.fill();
   lc.restore();
-}
+};
 
 let loading = true;
 const scriptNames = [
   "./js/main.js",
+  "./js/animations.js",
 ];
 
 const loadText = [
@@ -62,7 +63,7 @@ function loadScript(){
     .fail((jqxhr, settings, exception) => {
       console.error(`Failed to load ${scriptNames[sNum]}`, exception);
     });
-}
+};
 
 function drawLoading(){
   lc.clearRect(0,0,loadCanvas.width,loadCanvas.height);
@@ -88,7 +89,7 @@ function drawLoading(){
   else {
     $("#loadScreen").fadeOut();
   }
-}
+};
 
 let loadCanvas;
 let lc;

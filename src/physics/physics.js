@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.land = function(i,y,t,j){
   player[i].phys.pos.y = y;
   player[i].phys.grounded = true;

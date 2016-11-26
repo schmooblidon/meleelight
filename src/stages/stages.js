@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.stages = [{
     box : [new Box2D([-68.4,-9],[68.4,0]),new Box2D([-29.3,-34],[-13.68,-9]),new Box2D([13.68,-34],[29.3,-9]),new Box2D([-13.68,-20],[13.68,-9])],
     platform : [[new Vec2D(-57.6,27.2),new Vec2D(-20,27.2)],[new Vec2D(20,27.2),new Vec2D(57.6,27.2)],[new Vec2D(-18.8,54.4),new Vec2D(18.8,54.4)]],

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.sounds = {
   menuBack : new Howl({
     src: ['sfx/menu-back.wav']
@@ -535,7 +537,7 @@ const volumeOverwrites = {
   firestronghit : 0.6
 }
 
-function changeVolume(audioGroup,newVolume,groupType){
+window.changeVolume = function(audioGroup,newVolume,groupType){
   var keys = Object.keys(audioGroup);
   for (var i=0;i<keys.length;i++){
     if (volumeOverwrites[keys[i]]){
@@ -553,6 +555,6 @@ function changeVolume(audioGroup,newVolume,groupType){
 changeVolume(sounds,0.5,0);
 changeVolume(music,0.3,1);
 
-function playSfx(name){
+window.playSfx = function(name){
   sounds[name].play();
 }

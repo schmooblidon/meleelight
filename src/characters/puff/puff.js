@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // action state object creation
 aS[1]={};
 // base action states added
@@ -3069,7 +3071,7 @@ puff.DOWNATTACK = {
 }
 
 // ------- PUFF JUMPS ---------
-function puffMultiJumpDrift(p){
+window.puffMultiJumpDrift = function(p){
   if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.3){
     var tempMax = 0
   }
@@ -3112,7 +3114,7 @@ function puffMultiJumpDrift(p){
   }
 }
 
-function puffNextJump(p){
+window.puffNextJump = function(p){
   if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3 && Math.sign(player[p].inputs.lStickAxis[0].x) != player[p].phys.face){
     puff["AERIALTURN"+(1+player[p].phys.jumpsUsed)].init(p);
   }

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.Vec2D = function(x,y){
   this.x = x;
   this.y = y;

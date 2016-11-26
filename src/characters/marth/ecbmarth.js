@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 window.ecb = [];
 
 ecb[0] = {

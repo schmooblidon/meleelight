@@ -1,4 +1,6 @@
-const twoPi = Math.PI * 2;
+/* eslint-disable */
+
+window.twoPi = Math.PI * 2;
 
 window.rotateVector = function(vecx,vecy,ang){
     return new Vec2D(
@@ -426,7 +428,7 @@ window.renderOverlay = function(showStock){
         }
       }
     }
-    lostStockPopQueue = [];
+    const lostStockPopQueue = [];
     ui.fillStyle = "white";
     ui.strokeStyle = "white";
     for (var i=0;i<lostStockQueue.length;i++){
