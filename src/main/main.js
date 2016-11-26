@@ -35,6 +35,7 @@ console.log("biogenik adapter support");
 console.log("mac x360 support");
 console.log("TigerGame 3 in 1 adapter support");
 console.log("Retrolink support");
+console.log("Mayflash 2 port on Firefox Fix");
 // biogenik - index 4
 /*
 y : 3
@@ -362,68 +363,80 @@ function findPlayers(){
   for (var i=0;i<gps.length;i++){
     var gamepad = navigator.getGamepads()[i];
     if (typeof gamepad != "undefined" &&  gamepad != null){
+      var detected = false;
       var gType = 0;
-      if (gamepad.id[0] == "v" || gamepad.id[0] == "1"){
+      if (gamepad.id[0] == "M" || (gamepad.id[0] == "1" && gamepad.id[1] == "a")){
+        detected ^= true;
+        console.log("You are using Mayflash");
+      }
+      else if (gamepad.id[0] == "v" || gamepad.id[0] == "1"){
+        detected ^= true;
         gType = 1;
         console.log("You are using vJoy");
       }
       else if (gamepad.id[0] == "T"){
+        detected ^= true;
         gType = 4;
         console.log("You are using TigerGame 3 in 1");
-      }
-      else if (gamepad.id[0] == "M"){
-        console.log("You are using Mayflash");
       }
       // raphnet is :
       //GC/N64 to USB, v2.9 (Vendor: 289b Product: 000c)
       else if ((gamepad.id[0] == "G" && gamepad.id[1] == "C") || gamepad.id[0] == "2"){
+        detected ^= true;
         gType = 2;
         console.log("You are using raphnet");
       }
       // Xbox 360 Controller (XInput STANDARD GAMEPAD)
       else if (gamepad.id[0] == "X" || gamepad.id[0] == "x" || gamepad.id[0] == "W"){
+        detected ^= true;
         gType = 3;
         console.log("You are using xbox 360");
       }
       else if (gamepad.id[0] == "G" && gamepad.id[0] == "e"){
+        detected ^= true;
         //Retrolink
         gType = 5;
         console.log("You are using retrolink");
       }
-      if (gameMode < 2 || gameMode == 20){
-        if (gamepad.buttons[map.s[gType]].pressed){
-          var alreadyIn = false;
-          for (var k=0;k<ports;k++){
-            if (currentPlayers[k] == i){
-              alreadyIn = true;
+      if (detected){
+        if (gameMode < 2 || gameMode == 20){
+          if (gamepad.buttons[map.s[gType]].pressed){
+            var alreadyIn = false;
+            for (var k=0;k<ports;k++){
+              if (currentPlayers[k] == i){
+                alreadyIn = true;
+              }
+            }
+            if (!alreadyIn){
+              if (ports < 4){
+                changeGamemode(1);
+                sounds.menuForward.play();
+                if (ports == 0){
+                  music.menu.play("menuStart");
+                }
+                addPlayer(i,gType);
+              }
             }
           }
-          if (!alreadyIn){
-            if (ports < 4){
-              changeGamemode(1);
-              sounds.menuForward.play();
-              if (ports == 0){
-                music.menu.play("menuStart");
+        }
+        else {
+          if (gamepad.buttons[map.a[gType]].pressed){
+            var alreadyIn = false;
+            for (var k=0;k<ports;k++){
+              if (currentPlayers[k] == i){
+                alreadyIn = true;
               }
-              addPlayer(i,gType);
+            }
+            if (!alreadyIn){
+              if (ports < 4){
+                addPlayer(i,gType);
+              }
             }
           }
         }
       }
       else {
-        if (gamepad.buttons[map.a[gType]].pressed){
-          var alreadyIn = false;
-          for (var k=0;k<ports;k++){
-            if (currentPlayers[k] == i){
-              alreadyIn = true;
-            }
-          }
-          if (!alreadyIn){
-            if (ports < 4){
-              addPlayer(i,gType);
-            }
-          }
-        }
+        console.log("Controller is not supported");
       }
     }
   }
