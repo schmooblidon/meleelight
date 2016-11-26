@@ -1,7 +1,8 @@
+/* eslint-disable */
 
 // BASE ActionStates
 
-baseActionStates = {
+window.baseActionStates = {
 
 "WAIT" : {
   name : "WAIT",
@@ -2256,6 +2257,7 @@ baseActionStates = {
   landType : 2,
   init : function(p,drawStuff){
     player[p].actionState = "DAMAGEFLYN";
+    player[p].tumbleJumpBuffer = 0;
     player[p].timer = 0;
     player[p].phys.grabbing = -1;
     player[p].phys.grabbedBy = -1;
@@ -2263,18 +2265,14 @@ baseActionStates = {
     player[p].rotation = 0;
     player[p].rotationPoint = new Vec2D(0,0);
     player[p].colourOverlayBool = false;
-    if (drawStuff){
-      // drawVfx("hitSparks",player[p].hit.hitPoint,player[p].phys.face);
-      // drawVfx("hitFlair",player[p].hit.hitPoint,player[p].phys.face);
-      // drawVfx("hitCurve",player[p].hit.hitPoint,player[p].phys.face,player[p].hit.angle);
-    }
     player[p].hitboxes.id[0] = player[p].charHitboxes.thrown.id0;
-    /*player[p].phys.grounded = false;
-    player[p].phys.pos.y += 0.0001;*/
     turnOffHitboxes(p);
     aS[cS[p]].DAMAGEFLYN.main(p);
   },
   main : function(p){
+    if (player[p].tumbleJumpBuffer > 0) {
+      player[p].tumbleJumpBuffer--;
+    }
     if (player[p].phys.thrownHitbox){
       if (player[p].timer == 1 && player[p].phys.cVel.y+player[p].phys.kVel.y > 0){
         player[p].hitboxes.active = [true,false,false,false];
@@ -2309,6 +2307,21 @@ baseActionStates = {
     }
   },
   interrupt : function(p){
+    if(checkForJump(p)[0]) {
+      player[p].tumbleJumpBuffer = 20;
+    }
+
+  	if (player[p].timer > 1 && player[p].hit.hitstun == 0 && player[p].tumbleJumpBuffer > 0) {
+  	   if (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump)) {
+         if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+           aS[cS[p]].JUMPAERIALB.init(p);
+           return true;
+         } else {
+           aS[cS[p]].JUMPAERIALF.init(p);
+           return true;
+         }
+      }
+    }
     if (player[p].timer > 1 && player[p].hit.hitstun == 0){
       aS[cS[p]].DAMAGEFALL.init(p);
       player[p].phys.thrownHitbox = false;
@@ -2337,8 +2350,9 @@ baseActionStates = {
   },
   main : function(p){
     player[p].timer++;
+    fastfall(p);
     if (!aS[cS[p]].DAMAGEFALL.interrupt(p)){
-      fastfall(p);
+
       airDrift(p);
     }
   },
@@ -2347,10 +2361,6 @@ baseActionStates = {
     var b = checkForSpecials(p);
     if (a[0]){
       aS[cS[p]][a[1]].init(p);
-      return true;
-    }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){

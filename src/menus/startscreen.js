@@ -1,18 +1,19 @@
-angB = 0;
-angles = [0,Math.PI];
-angR = 0;
-mlVel = 0;
-mlPos = 0;
-mlDir = 1;
+/* eslint-disable */
 
-circlePos = [[200,0,0.4,1,200],[600,240,0.21,1,250],[10,600,0.7,-1,150],[350,500,0.65,-1,270],[1000,50,0.9,1,200],[900,400,0.1,-1,260]];
-var p = 1;
-lightDust = [];
+window.angB = 0;
+window.angR = 0;
+window.angles = [0,Math.PI];
+window.mlVel = 0;
+window.mlPos = 0;
+window.mlDir = 1;
+window.circlePos = [[200,0,0.4,1,200],[600,240,0.21,1,250],[10,600,0.7,-1,150],[350,500,0.65,-1,270],[1000,50,0.9,1,200],[900,400,0.1,-1,260]];
+
+const lightDust = [];
 for (var k=0;k<20;k++){
   lightDust[k] = [Math.random()*3+2,330+(k*26+26*Math.random()),520,0.2];
 }
 
-function drawStartScreenInit(){
+window.drawStartScreenInit = function(){
   bg1.fillStyle = "rgba(46, 8, 154, 1)";
   var grd=bg1.createRadialGradient(600,375,5,600,375,750);
   grd.addColorStop(0,"#27005b");
@@ -41,7 +42,7 @@ function drawStartScreenInit(){
   bg1.restore();
 }
 
-function drawStartScreen(){
+window.drawStartScreen = function(){
   clearScreen();
   bg2.save();
   bg2.lineWidth = 60;

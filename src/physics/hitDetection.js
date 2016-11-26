@@ -1,7 +1,11 @@
-hitQueue = [];
-phantomQueue = [];
-angleConversion = Math.PI / 180;
-function hitDetection(p){
+/* eslint-disable */
+
+window.hitQueue = [];
+window.phantomQueue = [];
+
+const angleConversion = Math.PI / 180;
+
+window.hitDetection = function(p){
   var attackerClank = false;
   for (var i=0;i<4;i++){
     if (playerType[i] > -1){
@@ -15,6 +19,7 @@ function hitDetection(p){
             }
           }
           if (!inHitList){
+            var storedPhantom = -1;
             for (var j=0;j<4;j++){
               if (player[p].hitboxes.active[j] && player[p].phys.prevFrameHitboxes.active[j]){
                 var interpolate = true;
@@ -91,14 +96,23 @@ function hitDetection(p){
                     //
                     if ((player[p].hitboxes.id[j].hitGrounded && player[i].phys.grounded) || (player[p].hitboxes.id[j].hitAirborne && !player[i].phys.grounded))
                     if (hitHurtCollision(i,p,j,false) || (interpolate && (interpolatedHitHurtCollision(i,p,j) || hitHurtCollision(i,p,j,true)))){
-                      var phantom = !hitHurtCollision(i,p,j,false,true) && (interpolate ? !interpolatedHitHurtCollision(i,p,j,true) : true);
-                      hitQueue.push([i,p,j,false,false,false,phantom]);
-                      player[p].hitboxes.hitList.push(i);
-                      setHasHit(p,j);
-                      break;
+                      if (!hitHurtCollision(i,p,j,false,true) && (interpolate ? !interpolatedHitHurtCollision(i,p,j,true) : true)){
+                        storedPhantom = j;
+                      }
+                      else {
+                        hitQueue.push([i,p,j,false,false,false,false]);
+                        player[p].hitboxes.hitList.push(i);
+                        setHasHit(p,j);
+                        break;
+                      }
                     }
                   }
                 }
+              }
+              if (storedPhantom > -1){
+                hitQueue.push([i,p,storedPhantom,false,false,false,true]);
+                player[p].hitboxes.hitList.push(i);
+                setHasHit(p,storedPhantom);
               }
             }
           }
@@ -108,14 +122,14 @@ function hitDetection(p){
   }
 }
 
-function setHasHit(p,j){
+window.setHasHit = function(p,j){
   // for turbo mode. if not a grab and not counter and not a midthrow hitbox.
   if (player[p].hitboxes.id[j].type != 2 && player[p].hitboxes.id[j].type != 6 && player[p].actionState.substr(0,5) != "THROW"){
     player[p].hasHit = true;
   }
 }
 
-function hitHitCollision(i,p,j,k){
+window.hitHitCollision = function(i,p,j,k){
   var hbpos = new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x*player[p].phys.face),player[p].phys.pos.y+player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
   var hbpos2 = new Vec2D(player[i].phys.pos.x+(player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].x*player[i].phys.face),player[i].phys.pos.y+player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].y);
   var hitPoint = new Vec2D((hbpos.x+hbpos2.x)/2,(hbpos.y+hbpos2.y)/2);
@@ -123,7 +137,7 @@ function hitHitCollision(i,p,j,k){
   return [(Math.pow(hbpos2.x-hbpos.x,2) + Math.pow(hbpos.y-hbpos2.y,2) <= Math.pow(player[p].hitboxes.id[j].size+player[i].hitboxes.id[k].size,2)),hitPoint];
 }
 
-function hitShieldCollision(i,p,j,previous){
+window.hitShieldCollision = function(i,p,j,previous){
   if (previous){
     var hbpos = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   }
@@ -135,7 +149,7 @@ function hitShieldCollision(i,p,j,previous){
   return (Math.pow(shieldpos.x-hbpos.x,2) + Math.pow(hbpos.y-shieldpos.y,2) <= Math.pow(player[p].hitboxes.id[j].size+player[i].phys.shieldSize,2));
 }
 
-function interpolatedHitCircleCollision(circlePos,r,p,j){
+window.interpolatedHitCircleCollision = function(circlePos,r,p,j){
   var collision = false;
   var h1 = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   var h2 = new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x*player[p].phys.face),player[p].phys.pos.y+player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
@@ -156,7 +170,7 @@ function interpolatedHitCircleCollision(circlePos,r,p,j){
   return collision;
 }
 
-function segmentSegmentCollision(a1,a2,b1,b2){
+window.segmentSegmentCollision = function(a1,a2,b1,b2){
   var intersection = new Vec2D(0,0);
   var b = new Vec2D(a2.x-a1.x,a2.y-a1.y);
   var d = new Vec2D(b2.x-b1.x,b2.y-b1.y);
@@ -178,7 +192,7 @@ function segmentSegmentCollision(a1,a2,b1,b2){
   return true;
 }
 
-function interpolatedHitHurtCollision(i,p,j,phantom){
+window.interpolatedHitHurtCollision = function(i,p,j,phantom){
   // a1 is line1 start, a2 is line1 end, b1 is line2 start, b2 is line2 end
   phantom = phantom || false;
   var hurt = player[i].phys.hurtbox;
@@ -206,7 +220,7 @@ function interpolatedHitHurtCollision(i,p,j,phantom){
   }
 }
 
-function hitHurtCollision(i,p,j,previous,phantom){
+window.hitHurtCollision = function(i,p,j,previous,phantom){
   phantom = phantom || false;
   var offset = player[p].hitboxes.id[j].offset[player[p].hitboxes.frame];
   if (player[p].actionState == "DAMAGEFLYN"){
@@ -234,10 +248,10 @@ function hitHurtCollision(i,p,j,previous,phantom){
   var cornerDistance_sq = Math.pow(distance.x - hurtWidth/2,2) +
                        Math.pow(distance.y - hurtHeight/2,2);
 
-  return (cornerDistance_sq <= (Math.pow(player[p].hitboxes.id[j].size-(phantom?0.5:0),2)));
+  return (cornerDistance_sq <= (Math.pow(player[p].hitboxes.id[j].size-(phantom?gameSettings.phantomThreshold:0),2)));
 }
 
-function executeHits(){
+window.executeHits = function(){
   var grabQueue = [];
   var ignoreGrabs = [false,false,false,false];
   for (var i=0;i<hitQueue.length;i++){
@@ -544,7 +558,7 @@ function executeHits(){
   }
 }
 
-function executeGrabTech(a,v){
+window.executeGrabTech = function(a,v){
   if (player[a].phys.pos.x < player[v].phys.pos.x){
     player[a].phys.face = 1;
     player[v].phys.face = -1;
@@ -564,7 +578,7 @@ function executeGrabTech(a,v){
 }
 
 
-function getKnockback(hb,damagestaled,damageunstaled,percent,weight,crouching,vCancel) {
+window.getKnockback = function(hb,damagestaled,damageunstaled,percent,weight,crouching,vCancel) {
   if (hb.sk == 0){
     var kb = ((0.01 * hb.kg) * ((1.4 * (((0.05 * (damageunstaled * (damagestaled + Math.floor(percent)))) + (damagestaled + Math.floor(percent)) * 0.1) * (2.0 - (2.0 * (weight * 0.01)) / (1.0 + (weight * 0.01))))) + 18) + hb.bk);
   }
@@ -585,7 +599,7 @@ function getKnockback(hb,damagestaled,damageunstaled,percent,weight,crouching,vC
   return kb;
 }
 
-function getLaunchAngle(trajectory, knockback, reverse, x, y, v) {
+window.getLaunchAngle = function(trajectory, knockback, reverse, x, y, v) {
   var deadzone = false;
   //console.log(trajectory);
   var diAngle;
@@ -684,7 +698,7 @@ function getLaunchAngle(trajectory, knockback, reverse, x, y, v) {
   return newtraj;
 }
 
-function getHorizontalVelocity(knockback, angle) {
+window.getHorizontalVelocity = function(knockback, angle) {
     var initialVelocity = knockback * 0.03;
     var horizontalAngle = Math.cos(angle * angleConversion);
     var horizontalVelocity = initialVelocity * horizontalAngle;
@@ -692,7 +706,7 @@ function getHorizontalVelocity(knockback, angle) {
     return horizontalVelocity;
 }
 
-function getVerticalVelocity(knockback, angle,grounded,trajectory) {
+window.getVerticalVelocity = function(knockback, angle,grounded,trajectory) {
     var initialVelocity = knockback * 0.03;
     var verticalAngle = Math.sin(angle * angleConversion);
     var verticalVelocity = initialVelocity * verticalAngle;
@@ -703,26 +717,26 @@ function getVerticalVelocity(knockback, angle,grounded,trajectory) {
     return verticalVelocity;
 }
 
-function getHorizontalDecay(angle) {
+window.getHorizontalDecay = function(angle) {
   var decay = 0.051 * Math.cos(angle * angleConversion)
   decay = Math.round(decay * 100000) / 100000;
   return decay;
 }
 
-function getVerticalDecay(angle) {
+window.getVerticalDecay = function(angle) {
   var decay = 0.051 * Math.sin(angle * angleConversion)
   decay = Math.round(decay * 100000) / 100000;
   return decay;
 }
 
-function getHitstun(knockback) {
+window.getHitstun = function(knockback) {
   //if (groundDownHitType == "Fly"){
     //knockback *= 1.25;
   //}
   return Math.floor(knockback * .4);
 }
 
-function knockbackSounds(type,knockback,v){
+window.knockbackSounds = function(type,knockback,v){
   if (type == 4){
     sounds.firestronghit.play();
   }
@@ -819,10 +833,10 @@ function knockbackSounds(type,knockback,v){
   }
 }
 
-function checkPhantoms(){
+window.checkPhantoms = function(){
   for (var i=0;i<phantomQueue.length;i++){
     var v = phantomQueue[i][1]
-    if (player[v].hit.hitlag == 0){
+    if (player[v].hit.hitlag == 0 && player[v].phys.hurtBoxState == 0){
       player[v].percent += player[v].phys.phantomDamage;
       player[v].phys.phantomDamage = 0;
       var a = phantomQueue[i][0];

@@ -1,20 +1,25 @@
-menuSelected = 0;
-menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Credits"]];
-menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Who did this?"]];
-menuTitle = ["Main Menu","Options"];
+/* eslint-disable */
 
-menuColours = [238,358,117,55];
-menuCurColour = 238;
+window.menuSelected = 0;
+window.menuColourOffset = 0;
+
+const menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Credits"]];
+const menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Who did this?"]];
+const menuTitle = ["Main Menu","Options"];
+
+const menuColours = [238,358,117,55];
+let menuCurColour = 238;
 //hsl(55, 100%, 50%)
-menuCycle = 0;
-menuTimer = 0;
-menuMode = 0;
+let menuCycle = 0;
+let menuTimer = 0;
+let menuMode = 0;
+let menuGlobalTimer = 0;
+let menuAngle = 0;
+let menuRandomBox = [Math.random(),Math.random(),Math.random(),Math.random()];
 
-menuGlobalTimer = 0;
-
-stickHold = 0;
-stickHoldEach = [];
-function menuMove(i){
+window.stickHoldEach = [];
+window.stickHold = 0;
+window.menuMove = function(i){
   var menuMove = false;
   var previousMenuS = menuSelected;
   if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
@@ -145,11 +150,9 @@ function menuMove(i){
   }
 }
 
-menuColourOffset = 0;
-menuAngle = 0;
-menuRandomBox = [Math.random(),Math.random(),Math.random(),Math.random()];
 
-function drawMainMenuInit(){
+
+window.drawMainMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(12, 11, 54, 1)");
   bgGrad.addColorStop(1,"rgba(1, 2, 15, 1)");
@@ -197,7 +200,7 @@ function drawMainMenuInit(){
   fg1.stroke();
 }
 
-function drawMainMenu(){
+window.drawMainMenu = function(){
   clearScreen();
   menuGlobalTimer++;
   if (menuGlobalTimer > 600){

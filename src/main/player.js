@@ -1,6 +1,6 @@
+/* eslint-disable */
 
-
-function ActiveHitbox(size,offset,dmg,angle,kg,bk,sk,type){
+window.ActiveHitbox = function(size,offset,dmg,angle,kg,bk,sk,type){
   this.size = size;
   this.offset = offset;
   this.dmg = dmg;
@@ -11,14 +11,14 @@ function ActiveHitbox(size,offset,dmg,angle,kg,bk,sk,type){
   this.type = type;
 }
 
-function hitboxes(){
+window.hitboxes = function(){
   this.active = [false,false,false,false];
   this.frame = 0;
   this.id = [new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0)];
   this.hitList = [];
 }
 
-function physicsObject(pos,face){
+window.physicsObject = function(pos,face){
   this.cVel = new Vec2D(0,0);
   this.kVel = new Vec2D(0,0);
   this.kDec = new Vec2D(0,0);
@@ -96,7 +96,7 @@ function physicsObject(pos,face){
   this.bTurnaroundDirection = 1;
 }
 
-function inputObject(){
+window.inputObject = function(){
   this.lStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
   this.rawlStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
   this.cStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
@@ -117,7 +117,7 @@ function inputObject(){
 }
 
 
-function playerObject(character,pos,face){
+window.playerObject = function(character,pos,face){
   this.phys = new physicsObject(pos,face);
   this.actionState = "ENTRANCE";
   this.prevActionState = "";
