@@ -21,7 +21,7 @@ whichTokenGrabbed = [-1,-1,-1,-1];
 occupiedToken = [false,false,false,false];
 bHold = [0,0,0,0];
 
-cpuSlider = [new Vec2D(152+15+166+0,595),new Vec2D(152+15+166+225,595),new Vec2D(152+15+166+450,595),new Vec2D(152+15+166+675,595)];
+cpuSlider = [new Vec2D(152+15+166+0-50,595),new Vec2D(152+15+166+225-50,595),new Vec2D(152+15+166+450-50,595),new Vec2D(152+15+166+675-50,595)];
 
 cpuGrabbed = [false,false,false,false];
 whichCpuGrabbed = [-1,-1,-1,-1];

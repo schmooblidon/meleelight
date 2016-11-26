@@ -796,7 +796,7 @@ function physics(i){
     else if (player[i].phys.pos.y < stage.blastzone.min.y){
       state = "DEADDOWN";
     }
-    else if (player[i].phys.pos.y > stage.blastzone.max.y){
+    else if (player[i].phys.pos.y > stage.blastzone.max.y && player[i].phys.kVel.y >= 2.4){
       state = "DEADUP";
     }
     if (state != 0){
@@ -880,10 +880,15 @@ function physics(i){
 
   player[i].phys.posDelta = new Vec2D(Math.abs(player[i].phys.pos.x-player[i].phys.posPrev.x),Math.abs(player[i].phys.pos.y-player[i].phys.posPrev.y));
 
-  $("#velocityX"+i).empty().append(player[i].phys.cVel.x.toFixed(5));
-  $("#velocityY"+i).empty().append(player[i].phys.cVel.y.toFixed(5));
-  $("#kvelocityX"+i).empty().append(player[i].phys.kVel.x.toFixed(5));
-  $("#kvelocityY"+i).empty().append(player[i].phys.kVel.y.toFixed(5));
-  $("#pvelocityX"+i).empty().append(player[i].phys.pos.x.toFixed(5));
-  $("#pvelocityY"+i).empty().append(player[i].phys.pos.y.toFixed(5));
+  if (showDebug){
+    document.getElementById('#actState'+i).innerHTML = player[i].currentAction+" "+player[i].currentSubaction+" : "+player[i].actionState;
+    document.getElementById('#stateNum'+i).innerHTML = frame;
+    document.getElementById('#face'+i).innerHTML = player[i].phys.face;
+    document.getElementById("#velocityX"+i).innerHTML = player[i].phys.cVel.x.toFixed(5);
+    document.getElementById("#velocityY"+i).innerHTML = player[i].phys.cVel.y.toFixed(5);
+    document.getElementById("#kvelocityX"+i).innerHTML = player[i].phys.kVel.x.toFixed(5);
+    document.getElementById("#kelocityY"+i).innerHTML = player[i].phys.kVel.y.toFixed(5);
+    document.getElementById("#pvelocityX"+i).innerHTML = player[i].phys.pos.x.toFixed(5);
+    document.getElementById("#pvelocityY"+i).innerHTML = player[i].phys.pos.y.toFixed(5);
+  }
 }
