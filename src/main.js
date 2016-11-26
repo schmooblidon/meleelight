@@ -1,3 +1,8 @@
+// Libs
+require("howler");
+require("jquery");
+window.$ = require("jquery");
+
 // Legacy files
 require("main/sfx.js");
 require("settings.js");
