@@ -1,3 +1,28 @@
+//var a = 0;
+var a = 0;
+function NearestEnemy(cpu,p){
+  var nearestEnemy = -1;
+  var enemyDistance = 100000;
+  for (var i=0;i<4;i++){
+    if (playerType[i] > -1){
+		if (playerType[i] > -1 && i != p && player[i].actionState != "SLEEP"){
+      if (i != p){
+        var dist = Math.pow(cpu.phys.pos.x-player[i].phys.pos.x,2)+Math.pow(cpu.phys.pos.y-player[i].phys.pos.y,2);
+        if (dist < enemyDistance){
+          enemyDistance = dist;
+          nearestEnemy = i;
+        }
+      }
+    }
+	}
+  }
+  if (nearestEnemy == -1){
+    nearestEnemy = 0;
+    console.log("cant find nearest enemy");
+    // fail safe so it doesnt crash at least
+  }
+  return nearestEnemy;
+}
 function generalAI(i) {
   player[i].inputs.lStickAxis[0].x = 0;
   player[i].inputs.lStickAxis[0].y = 0;
@@ -9,7 +34,136 @@ function generalAI(i) {
   player[i].inputs.cStickAxis[0].y = 0;
   player[i].inputs.a[0] = false;
   var willWalk = false;
+   a += 1;
+  // if (a > 5) {
+  // if (cS[i] == 2) {
+	  // var distx = player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x;
+	  // player[i].phys.pos.x = ((Math.random() * 50) - 25) + player[i].phys.pos.x - (Math.sign(player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x) * 1.0 * Math.min(5,Math.abs(player[i].phys.pos.x - (player[NearestEnemy(player[i],i)].phys.pos.x + ((Math.random() * 50) - 20)))));
+	  // player[i].phys.pos.y = ((Math.random() * 50) - 25) + player[i].phys.pos.y - (Math.sign(player[i].phys.pos.y - player[NearestEnemy(player[i],i)].phys.pos.y) * 1.0 * Math.min(5,Math.abs(player[i].phys.pos.y - (player[NearestEnemy(player[i],i)].phys.pos.y + ((Math.random() * 50) - 20)))));
+	  // player[NearestEnemy(player[i],i)].phys.pos.x += ((Math.random() * 8) - 4);
+	  // player[NearestEnemy(player[i],i)].phys.pos.y += ((Math.random() * 8) - 4);
+	  // if (Math.abs(distx) < 50 && !(player[NearestEnemy(player[i],i)].actionState.substr(0,4) == "DEAD")) {
+	    // player[NearestEnemy(player[i],i)].hitstun = 50;
+		// player[NearestEnemy(player[i],i)].actionState = "DAMAGEFLYN";
+		// player[NearestEnemy(player[i],i)].phys.kVel.y = 1.0;
+		// player[NearestEnemy(player[i],i)].phys.kVel.x = 1.0;
+		// player[NearestEnemy(player[i],i)].phys.cVel.x = ((Math.random() * 10) - 5) / 4;
+	    // player[NearestEnemy(player[i],i)].phys.cVel.x = ((Math.random() * 10) - 5) / 4;
+	  // }
+  // }
+  // }
   //if (player[i].currentAction == "CLIFFWAIT")
+  if (player[i].currentAction == "DROPTHROUGHPLATFORM" && player[i].actionState != "SQUAT") {
+	  player[i].currentAction = "NONE";
+	  player[i].currentSubaction = "NONE";
+  } else if (player[i].currentAction == "DROPTHROUGHPLATFORM") {
+	  //if (player[i].timer <= 2) {
+		  player[i].inputs.lStickAxis[0].y = -1.0;
+		  //player[i].currentAction = "NONE";
+	  //}
+	  return;
+  }
+  if ((player[i].currentSubaction == "LEFT" || player[i].currentSubaction == "RIGHT") && player[i].currentAction == "NONE") {
+	  player[i].currentSubaction = "NONE";
+  }
+  if (player[i].currentAction == "RUNOFFPLATFORM") {
+	  if (!(player[i].phys.grounded) && isOffstage(player[i])) {
+		  player[i].currentAction = "NONE";
+		  player[i].currentSubaction = "NONE";
+	  }
+	  if (["FALL","DASH","RUN","SMASHTURN","TURN","WALK"].indexOf(player[i].actionState) == -1) {
+		  player[i].currentAction = "NONE";
+		  player[i].currentSubaction = "NONE";
+	  } else {
+		  if (player[i].actionState == "WALK") {
+			  player[i].inputs.lStickAxis[0] = player[i].phys.pos.face * -1.0;
+		  }
+		  if (player[i].actionState == "SMASHTURN") {
+			  if (player[i].timer < 2) {
+				  return;
+			  }
+		  }
+		  if (player[i].currentSubaction == "LEFT") {
+			  if (player[i].phys.grounded) {
+				  player[i].inputs.lStickAxis[0].x = -1.0;
+			  } else {
+				  player[i].inputs.lStickAxis[0].x = -1.0;
+				  if (player[i].timer == 2 && player[i].phys.cVel.y <= 0) { //fast fall
+					  player[i].inputs.lStickAxis[0].y = -1.0;
+				  }
+				  return;
+			  }
+		  } else {
+			  if (player[i].phys.grounded) {
+				  player[i].inputs.lStickAxis[0].x = 1.0;
+			  } else {
+				  player[i].inputs.lStickAxis[0].x = -1.0;
+				  if (player[i].timer == 2 && player[i].phys.cVel.y <= 0) { //fast fall
+					  player[i].inputs.lStickAxis[0].y = -1.0;
+				  }
+				  return;
+			  }
+		  }
+	  }
+  }
+  if (player[i].currentSubaction == "UPTILT" && player[i].actionState != "UPTILT") {
+	  player[i].currentSubaction = "NONE";
+  }
+  if (player[i].difficulty >= 2) {
+	  var nearest = NearestEnemy(player[i],i);
+	  //if (a % 20 == 0) {console.log(isAboveGround(player[i].phys.pos.x,player[i].phys.pos.y + 1.0));}
+	  if (player[i].currentAction == "NONE" && ["OTTOTTOWAIT","WAIT","SMASHTURN","WALKF","WALK","SQUAT"].indexOf(player[i].actionState) != -1 && isAboveGround(player[i].phys.pos.x,player[i].phys.pos.y + 1.0)[1] == "platform" && player[i].phys.grounded && player[i].phys.pos.y - player[nearest].phys.pos.y > 0 && Math.abs(player[nearest].phys.pos.x - player[i].phys.pos.x) <= 40) {
+		  //is above platform
+		  //console.log("H");
+		  var randomSeed = Math.floor((Math.random() * 10) + 1);
+		  //randomSeed = 5;
+		  if (randomSeed <= 3) {
+              player[i].inputs.lStickAxis[0].y = -1.0;
+			  player[i].currentAction = "DROPTHROUGHPLATFORM";
+			  return;
+		  } else if (randomSeed <= 5) {
+			  player[i].currentAction = "SHIELD";
+			  player[i].inputs.l[0] = 1.0;
+			  if (player[i].inputs.l[0]){
+		        player[i].inputs.lAnalog[0] = 1;
+		      }
+			  return;
+		  } else if (randomSeed >= 6) {
+			  player[i].currentAction = "RUNOFFPLATFORM";
+			  var randomSeed = Math.floor((Math.random() * 2) + 1);
+			  if (randomSeed == 1) {
+				  player[i].currentSubaction = "LEFT";
+				  player[i].inputs.lStickAxis[0].x = -1.0;
+				  return;
+			  } else {
+				  player[i].currentSubaction = "RIGHT";
+				  player[i].inputs.lStickAxis[0].x = 1.0;
+				  return;
+			  }
+		  }
+	  }
+  }
+  if (player[i].currentAction == "SHIELD") {
+	  if (["GUARD","GUARDON","WAIT","DASH","OTTOTTOWAIT","SMASHTURN"].indexOf(player[i].actionState) == -1) {
+		  player[i].currentAction = "NONE";
+		  player[i].currentSubaction = "NONE";
+	  } else {
+		  //is shielding
+		  var inputs = CPUShield(player[i],i);
+		  player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+		  player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+		  player[i].inputs.x[0] = inputs.x;
+		  player[i].inputs.b[0] = inputs.b;
+		  player[i].inputs.l[0] = inputs.l;
+		  player[i].inputs.cStickAxis[0].x = inputs.cstickX;
+		  player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+		  player[i].inputs.a[0] = inputs.a;
+		  if (player[i].inputs.l[0]){
+		  player[i].inputs.lAnalog[0] = 1;
+		  }
+		  return;
+	  }
+  }
   if (player[i].currentAction == "LEDGESTALL") {
 	  if (player[i].currentSubaction == "FALL"){
 	  if (["CLIFFWAIT","JUMPF","FALL","FALLAERIAL","JUMPAERIAL","JUMPAERIALF","JUMPAERIAL1","JUMPAERIALB"].indexOf(player[i].actionState) == -1) {
@@ -225,7 +379,7 @@ function generalAI(i) {
   if (player[i].difficulty > 1) {
 	  var distx = player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x;
 	  var disty = player[i].phys.pos.y - player[NearestEnemy(player[i],i)].phys.pos.y;
-  if (player[i].currentAction == "NONE" && player[i].currentSubaction == "NONE" && (player[i].actionState == "WAIT" || player[i].actionState == "WALK")) {  //walk towards enemy
+  if (player[i].currentAction == "NONE" && player[i].currentSubaction == "NONE" && (player[i].actionState == "WAIT" || player[i].actionState == "OTTOTTOWAIT" || player[i].actionState == "WALK")) {  //walk towards enemy
 	  if (Math.abs(distx) >= 23 && (player[NearestEnemy(player[i],i)].phys.grounded || isAboveGround(player[NearestEnemy(player[i],i)].phys.pos.x,player[NearestEnemy(player[i],i)].phys.pos.y)[0])) {
 	  player[i].inputs.lStickAxis[0].x = 0.75 * (-1.0 * (Math.sign(distx)));
   }
@@ -262,11 +416,11 @@ function marthAI(i) {
 		  return;
 	  }
   }
-  if (player[i].difficulty > 1 && (player[i].phys.grounded && ((player[i].actionState == "WAIT" || (player[i].phys.grounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() * 10) + 1) >= 8 - (2 * player[i].difficulty)))) && Math.abs(distx) > 15) || ((player[i].difficulty > 0 && player[i].hasHit && gameSettings.turbo && player[i].phys.grounded) || player[i].actionState == "WAIT" || player[i].actionState == "DASH")  || (player[i].actionState == "LANDING" && player[i].timer > 3))) {//smash turn to face enemy
+  if (player[i].currentAction == "NONE" && (player[i].difficulty > 1 && (player[i].phys.grounded && ((player[i].actionState == "WAIT" || (player[i].phys.grounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() * 10) + 1) >= 8 - (2 * player[i].difficulty)))) && Math.abs(distx) > 15) || ((player[i].difficulty > 0 && player[i].hasHit && gameSettings.turbo && player[i].phys.grounded) || player[i].actionState == "WAIT")  || (player[i].actionState == "LANDING" && player[i].timer > 3)))) {//smash turn to face enemy
 	  if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
 		  player[i].currentAction = "SMASHTURN";
 		  player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
-		  return ;
+		  return;
 	  } else {
 		  if (cS[i] == 2 && Math.abs(distx) > 80 && Math.abs(disty) < 15) { //is fox
 		      var randomSeed = Math.floor((Math.random() * 10) + 1);
@@ -324,7 +478,7 @@ function jiggsAI(i) {
 	  var distx = player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x;
 	  var disty = player[i].phys.pos.y - player[NearestEnemy(player[i],i)].phys.pos.y;
    
-  if (player[i].difficulty > 1 && (player[i].phys.grounded && ((player[i].actionState == "WAIT" || (player[i].phys.grounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() * 10) + 1) >= 8 - (2 * player[i].difficulty)))) && Math.abs(distx) > 15) || ((player[i].difficulty > 0 && player[i].hasHit && gameSettings.turbo && player[i].phys.grounded) || player[i].actionState == "WAIT" || player[i].actionState == "DASH")  || (player[i].actionState == "LANDING" && player[i].timer > 3))) {//smash turn to face enemy
+  if (player[i].currentAction == "NONE" && (player[i].difficulty > 1 && (player[i].phys.grounded && ((player[i].actionState == "WAIT" || (player[i].phys.grounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() * 10) + 1) >= 8 - (2 * player[i].difficulty)))) && Math.abs(distx) > 15) || ((player[i].difficulty > 0 && player[i].hasHit && gameSettings.turbo && player[i].phys.grounded) || player[i].actionState == "WAIT")  || (player[i].actionState == "LANDING" && player[i].timer > 3)))) {//smash turn to face enemy
 	  if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
 		  player[i].currentAction = "SMASHTURN";
 		  player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
@@ -467,7 +621,7 @@ function foxAI(i) {
 	  var distx = player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x;
 	  var disty = player[i].phys.pos.y - player[NearestEnemy(player[i],i)].phys.pos.y;
    
-  if (player[i].difficulty > 1 && (player[i].phys.grounded && ((player[i].actionState == "WAIT" || (player[i].phys.grounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() * 10) + 1) >= 8 - (2 * player[i].difficulty)))) && Math.abs(distx) > 15) || ((player[i].difficulty > 0 && player[i].hasHit && gameSettings.turbo && player[i].phys.grounded) || player[i].actionState == "WAIT" || player[i].actionState == "DASH")  || (player[i].actionState == "LANDING" && player[i].timer > 3))) {//smash turn to face enemy
+    if (player[i].currentAction == "NONE" && (player[i].difficulty > 1 && (player[i].phys.grounded && ((player[i].actionState == "WAIT" || (player[i].phys.grounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() * 10) + 1) >= 8 - (2 * player[i].difficulty)))) && Math.abs(distx) > 15) || ((player[i].difficulty > 0 && player[i].hasHit && gameSettings.turbo && player[i].phys.grounded) || player[i].actionState == "WAIT")  || (player[i].actionState == "LANDING" && player[i].timer > 3)))) {//smash turn to face enemy
 	  if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
 		  player[i].currentAction = "SMASHTURN";
 		  player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
@@ -537,29 +691,6 @@ function runAI(i){
   //These are the player Inputs
 }
 
-function NearestEnemy(cpu,p){
-  var nearestEnemy = -1;
-  var enemyDistance = 100000;
-  for (var i=0;i<4;i++){
-    if (playerType[i] > -1){
-		if (playerType[i] > -1 && i != p && player[i].actionState != "SLEEP"){
-      if (i != p){
-        var dist = Math.pow(cpu.phys.pos.x-player[i].phys.pos.x,2)+Math.pow(cpu.phys.pos.y-player[i].phys.pos.y,2);
-        if (dist < enemyDistance){
-          enemyDistance = dist;
-          nearestEnemy = i;
-        }
-      }
-    }
-	}
-  }
-  if (nearestEnemy == -1){
-    nearestEnemy = 0;
-    console.log("cant find nearest enemy");
-    // fail safe so it doesnt crash at least
-  }
-  return nearestEnemy;
-}
 function NearestLedge(cpu) {
   var closest = [0,10000]; //used to measure which ledge is closer
   for (i = 0;i < stage.ledgePos.length; i++) {
@@ -859,6 +990,45 @@ function CPUSDItoStage(cpu,p) {
         returnInput.lstickX = newX;
 		returnInput.lstickY = newY;
 	}
+	return returnInput;
+}
+function CPUShield(cpu,p) {
+	var returnInput = {
+    lstickX : 0.0,
+    lstickY : 0.0,
+    x : false,
+    b : false,
+	a : false,
+    l : true,
+    cstickX : 0.0,
+    cstickY : 0.0,
+    };
+	var shouldDoSomething = false;
+	var doSomethingChance = Math.min(100,25 * Math.tan((3.1415926535 / 121) * (60 - cpu.phys.shieldHP)));
+	//console.log(doSomethingChance);
+	var randomSeed = Math.floor((Math.random() * 100) + 1);
+	if (randomSeed <= doSomethingChance) { //do something
+		returnInput.l = false;
+		var extra = Math.max(0,15 - cpu.difficulty);
+	    var randomSeed = Math.floor((Math.random() * 30) + 1) + extra;
+	    if (randomSeed <= 30) { //jump or shield drop
+			if (isAboveGround(cpu.phys.pos.x,cpu.phys.pos.x)[1] == "platform" && cpu.difficulty >= 3) {
+				//can shield drop
+				var randomSeed = Math.floor((Math.random() * 2) + 1) + extra;
+				if (randomSeed != 1) { //shield drop
+					returnInput.lstickY = -0.66;
+					cpu.currentAction = "NONE";
+				} else {
+					returnInput.x = true;
+					cpu.currentAction = "NONE";
+				}
+			} else {
+				returnInput.x = true;
+				cpu.currentAction = "NONE";
+			}
+		}
+	}
+	
 	return returnInput;
 }
 function CPULedge(cpu,p) {
