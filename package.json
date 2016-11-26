@@ -4,7 +4,8 @@
   "description": "Melee written in JS",
   "scripts": {
     "build": "./node_modules/.bin/webpack --progress --colors --config=webpack/build.config.js",
-    "dev": "./node_modules/.bin/webpack --progress --colors --watch --config=webpack/dev.config.js"
+    "dev": "./node_modules/.bin/webpack --progress --colors --watch --config=webpack/dev.config.js",
+    "animations": "./node_modules/.bin/webpack --progress --colors --config=webpack/animations.config.js"
   },
   "engines": {
     "node": "7.2.0",

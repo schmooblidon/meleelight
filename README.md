@@ -33,14 +33,21 @@ Then install the modules by running `npm install`, or alternatively using
 `yarn init`. This project was built with [yarn](https://yarnpkg.com/), so that's
 recommended, but either works.
 
-You're all set! See the commands below for how to build the project.
+Run the compile animations command (See below) first, before trying to run it.
+This only needs to happen once, or if you change the animations at all. This was
+split out for performance reasons, as it's the largest part of the codebase.
+
+Now you're all set! See the commands below for how to build the project.
 
 ### Commands
 
-|`npm run <script>`|Description                                                |
-|------------------|-----------------------------------------------------------|
-|`dev`             |Run webpack and build the dev version, watches for changes |
-|`build`           |Run webpack once and build the optimized production version|
+All commands are run like `npm run <name>` from the root of the project.
+
+|Name         |Description                                                     |
+|-------------|----------------------------------------------------------------|
+|`dev`        |Run webpack and build the dev version, watches for changes      |
+|`build`      |Run webpack once and build the optimized production version     |
+|`animations` |This compiles the animations, run once before playing           |
 
 ### Project Layout
 
@@ -63,24 +70,41 @@ You're all set! See the commands below for how to build the project.
 
 ## FAQ
 
-Before checking any of the below, make sure you're running Melee Light in either
-Chrome or Firefox, these are the only browsers 100% supported.
+### Will Online ever be available?
+Most likely sometime in the future.
 
-### It won't recognize my controller
+### How many characters will there be?
+First priority right now is Top 8, excluding ICs. But there's no reason that
+all of the characters can't make it in.
 
-Not sure.
+### How can I get my controller to work?
+Ask Schmoo or WwwWario on Discord and they will try their best to help you.
 
-### The game is running slow
+### Why doesn't the official adapter work on Chrome?
+Because Chrome won't allow direct input. Try Firefox instead.
 
-You can disable effects and non-essential layers (BG1 & BG2) to try and help.
-If that doesn't make it run stable, your computer may not be good enough. Keep
-an eye out for performance improvements as the project continues to develop.
+### Why does my screen get stuck on the loading screen in the downloaded game?
+If you downloaded the game, you need to run meleelightdebug.html, if it still
+doesn't load, join Discord and we'll try to help. It helps if you can post
+any console output.
 
-### Something not listed above is busted
+### You can go through the walls on Target Test Stages! Do you guys know about this?
+This is a known issue.
 
-Make sure you're running the latest version of Firefox or Chrome. These are the
-only browsers 100% supported.
+### The game doesn't load or crashes!
+The game is still in active development. If you want to help, you can open a
+github issue or post in Discord. Please provide console output, if there is any.
 
-### I want to contribute to the project
+### How does Melee Light compare to Melee?
+The Devs are trying their best to replicate Vanilla Melee, but some differences
+may arise.
 
-Awesome! Hop in the discord channel and hit up @schmoo.
+### Who made this project?
+The head Developers are Schmoo, Tatatat0, and Bites.
+
+### I found a bug, is there a way to report it?
+Join the Discord and there's a text channel you can report bugs in. There's also
+Custom Stage sharing, idea sharing, and much more.
+
+### I want to help out
+Join the discord and ping the team. Help is always welcome.
