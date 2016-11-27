@@ -28,7 +28,7 @@ keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,2
 
 keyboardOccupied = false;
 
-button = {
+const button = {
   a   : 0,
   b   : 1,
   x   : 2,
@@ -36,7 +36,7 @@ button = {
   z   : 4,
   r   : 5,
   l   : 6,
-  s   : 7,
+  s   : 7,  // start
   du  : 8,  // d-pad up
   dr  : 9,  // d-pad right
   dd  : 10, // d-pad down
@@ -51,14 +51,14 @@ button = {
 
 // controller IDs: 0 = mayflash, 1 = vJoy, 2 = raphnet N64, 3 = XBOX 360 (XInput Standard Gamepad), 4 = TigerGame 3 in 1, 5 = retrolink 
 // controller ID 10 is keyboard, and not included here)
-mayflashMap  = [1,2,0,3,7,5,4,9,12,13,14,15,0,1,5,2,3,4];
-vJoyMap      = [0,1,2,3,4,5,6,7,8,11,9,10,0,1,3,4,2,5];
-raphnetMap   = [4,3,2,1,7,6,5,0,8,10,9,11,0,1,3,4,5,6];
-xbox360Map   = [0,2,1,3,5,7,6,9,12,15,13,14,0,1,2,3,6,7];
-tigergameMap = [0,1,2,3,6,5,4,7,11,9,10,8,0,1,2,3,5,4];
-retrolinkMap = [2,3,1,0,6,5,4,9,10,11,8,7,0,1,2,5,3,4];
+const mayflashMap  = [1,2,0,3,7,5,4,9,12,13,14,15,0,1,5,2,3,4];
+const vJoyMap      = [0,1,2,3,4,5,6,7,8,11,9,10,0,1,3,4,2,5];
+const raphnetMap   = [4,3,2,1,7,6,5,0,8,10,9,11,0,1,3,4,5,6];
+const xbox360Map   = [0,2,1,3,5,7,6,9,12,15,13,14,0,1,2,3,6,7];
+const tigergameMap = [0,1,2,3,6,5,4,7,11,9,10,8,0,1,2,3,5,4];
+const retrolinkMap = [2,3,1,0,6,5,4,9,10,11,8,7,0,1,2,5,3,4];
 
-controllerMaps = [mayflashMap, vJoyMap, raphnetMap, xbox360Map, tigergameMap, retrolinkMap];
+const controllerMaps = [mayflashMap, vJoyMap, raphnetMap, xbox360Map, tigergameMap, retrolinkMap];
 
 
 mType = [0,0,0,0];
