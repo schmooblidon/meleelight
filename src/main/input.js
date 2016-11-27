@@ -95,3 +95,37 @@ export function renormaliseAxisInput ([lx,ly],[rx,ry],[dx,dy],[ux,uy],[x,y]) {
             }
 };
 
+// The following functions renormalise input to mimic GC controllers.
+
+// Analog sticks.
+// x = axis input, cdx = deadzone
+export function scaleToGCAxis ( x, cdx ) {
+    let xnew = (x-cdx) / 0.75;
+    if (xnew > 1) {
+      return 1;
+    }
+    else if (xnew < -1) {
+      return -1;
+    }
+    else if (Math.abs(xnew) < 0.3){
+      return 0;
+    } 
+    else {
+      return (Math.round (xnew*80)/80);
+    }
+};
+
+// Analog triggers.
+// t = trigger input, cd = deadzone
+export function scaleToGCTrigger ( t, cd, offset, scale ) {
+    let tnew = (t-cd+offset) * scale;
+    if (tnew > 1){
+      return 1;
+    }
+    else if (tnew < 0.3){
+      return 0;
+    }
+    else {
+      return tnew;
+    }    
+};
