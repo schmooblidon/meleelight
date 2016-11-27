@@ -883,14 +883,14 @@ window.physics = function(i){
   player[i].phys.posDelta = new Vec2D(Math.abs(player[i].phys.pos.x-player[i].phys.posPrev.x),Math.abs(player[i].phys.pos.y-player[i].phys.posPrev.y));
 
   if (showDebug){
-    document.getElementById('#actState'+i).innerHTML = player[i].currentAction+" "+player[i].currentSubaction+" : "+player[i].actionState;
-    document.getElementById('#stateNum'+i).innerHTML = frame;
-    document.getElementById('#face'+i).innerHTML = player[i].phys.face;
-    document.getElementById("#velocityX"+i).innerHTML = player[i].phys.cVel.x.toFixed(5);
-    document.getElementById("#velocityY"+i).innerHTML = player[i].phys.cVel.y.toFixed(5);
-    document.getElementById("#kvelocityX"+i).innerHTML = player[i].phys.kVel.x.toFixed(5);
-    document.getElementById("#kelocityY"+i).innerHTML = player[i].phys.kVel.y.toFixed(5);
-    document.getElementById("#pvelocityX"+i).innerHTML = player[i].phys.pos.x.toFixed(5);
-    document.getElementById("#pvelocityY"+i).innerHTML = player[i].phys.pos.y.toFixed(5);
+    document.getElementById('actState'+i).innerHTML = player[i].currentAction+" "+player[i].currentSubaction+" : "+player[i].actionState;
+    document.getElementById('stateNum'+i).innerHTML = frame;
+    document.getElementById('face'+i).innerHTML = player[i].phys.face;
+    document.getElementById("velocityX"+i).innerHTML = player[i].phys.cVel.x.toFixed(5);
+    document.getElementById("velocityY"+i).innerHTML = player[i].phys.cVel.y.toFixed(5);
+    document.getElementById("kvelocityX"+i).innerHTML = player[i].phys.kVel.x.toFixed(5);
+    document.getElementById("kvelocityY"+i).innerHTML = player[i].phys.kVel.y.toFixed(5);
+    document.getElementById("pvelocityX"+i).innerHTML = player[i].phys.pos.x.toFixed(5);
+    document.getElementById("pvelocityY"+i).innerHTML = player[i].phys.pos.y.toFixed(5);
   }
 }

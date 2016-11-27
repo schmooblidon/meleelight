@@ -1,10 +1,12 @@
 # meleelight
 Melee Light Platform Fighter
 
+![Starting Scene](https://raw.githubusercontent.com/amilajack/meleelight/master/screenshots/starting.png)
+![Gameplay Scene](https://raw.githubusercontent.com/amilajack/meleelight/master/screenshots/scene.png)
+
 Play Stable Build: http://ikneedata.com/meleelitebeta
 Join the discussion on Discord: https://discord.gg/qagFayt
 Smashboards Thread: https://smashboards.com/threads/melee-light-browser-based-melee-clone-play-the-beta.439646/
-
 
 
 ## Table of Contents
