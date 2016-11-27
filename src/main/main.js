@@ -824,10 +824,10 @@ window.interpretInputs = function(i,active){
       attemptingControllerReset[i] = true;
       setTimeout(function(){
         if (gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.x]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.y]].pressed){
-          cd[i].ls = new Vec2D(gamepad.axes[0],gamepad.axes[1]*-1);
-          cd[i].cs = new Vec2D(gamepad.axes[5],gamepad.axes[2]*-1);
-          cd[i].l = gamepad.axes[3]+0.8;
-          cd[i].r = gamepad.axes[4]+0.8;
+          cd[i].ls = new Vec2D(gamepad.axes[controllerMaps[mType[i]][button.lX]],[controllerMaps[mType[i]][button.lY]]*-1);
+          cd[i].cs = new Vec2D(gamepad.axes[controllerMaps[mType[i]][button.csX]],gamepad.axes[controllerMaps[mType[i]][button.csY]]*-1);
+          cd[i].l = gamepad.axes[controllerMaps[mType[i]][button.lA]]+0.8;
+          cd[i].r = gamepad.axes[controllerMaps[mType[i]][button.lR]]+0.8;
           console.log("Controller Reset!");
           $("#resetIndicator"+i).fadeIn(100);
           $("#resetIndicator"+i).fadeOut(500);
