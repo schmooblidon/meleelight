@@ -265,9 +265,9 @@ const matchSecondsEl = document.getElementById("matchSeconds");
 
 window.matchTimerTick = function(){
   matchTimer -= 0.016667;
-  matchMinutesEl.innerHTML = Math.floor(matchTimer/60));
+  matchMinutesEl.innerHTML = Math.floor(matchTimer/60);
   var sec = (matchTimer % 60).toFixed(2);
-  matchSecondsEl.innerHTML = ((sec.length<5)?"0"+sec:sec));
+  matchSecondsEl.innerHTML = sec.length < 5 ? `0${sec}` : sec;
   if (matchTimer <= 0){
     finishGame();
   }
@@ -1319,10 +1319,10 @@ window.renderTick = function(){
         renderTime[2] = diff;
       }
 
-      renderAvgEl.innerHTML = Math.round(renderTime[0]));
-      renderHighEl.innerHTML = Math.round(renderTime[1]));
-      renderLowEl.innerHTML = Math.round(renderTime[2]));
-      renderPeakEl.innerHTML = renderTime[3]);
+      renderAvgEl.innerHTML = Math.round(renderTime[0]);
+      renderHighEl.innerHTML = Math.round(renderTime[1]);
+      renderLowEl.innerHTML = Math.round(renderTime[2]);
+      renderPeakEl.innerHTML = renderTime[3];
     }
     if (frameByFrameRender){
       renderForeground();
