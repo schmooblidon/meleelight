@@ -382,7 +382,7 @@ function findPlayers(){
         gType = 1;
         console.log("You are using vJoy");
       }
-      else if (gamepad.id[0] == "T"){
+      else if (gamepad.id[0] == "T" || gamepad.id.substring(0,4) == "0926"){
         detected ^= true;
         gType = 4;
         console.log("You are using TigerGame 3 in 1");
