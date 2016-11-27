@@ -260,11 +260,14 @@ window.addEventListener("gamepadconnected", function(e) {
 });
 if(navigator.getGamepads) console.log(navigator.getGamepads());
 
+const matchMinutesEl = document.getElementById("matchMinutes");
+const matchSecondsEl = document.getElementById("matchSeconds");
+
 window.matchTimerTick = function(){
   matchTimer -= 0.016667;
-  $("#matchMinutes").empty().append(Math.floor(matchTimer/60));
+  matchMinutesEl.innerHTML = Math.floor(matchTimer/60));
   var sec = (matchTimer % 60).toFixed(2);
-  $("#matchSeconds").empty().append(((sec.length<5)?"0"+sec:sec));
+  matchSecondsEl.innerHTML = ((sec.length<5)?"0"+sec:sec));
   if (matchTimer <= 0){
     finishGame();
   }
@@ -971,6 +974,11 @@ let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
+const gamelogicAvgEl = document.getElementById("gamelogicAvg");
+const gamelogicHighEl = document.getElementById("gamelogicHigh");
+const gamelogicLowEl = document.getElementById("gamelogicLow");
+const gamelogicPeakEl = document.getElementById("gamelogicPeak");
+
 window.gameTick = function(){
   var start = performance.now();
   var diff = 0;
@@ -1082,10 +1090,10 @@ window.gameTick = function(){
       if (diff > gamelogicTime[1]){
         gamelogicTime[1] = diff;
       }
-      $("#gamelogicAvg").empty().append(Math.round(gamelogicTime[0]));
-      $("#gamelogicHigh").empty().append(Math.round(gamelogicTime[1]));
-      $("#gamelogicLow").empty().append(Math.round(gamelogicTime[2]));
-      $("#gamelogicPeak").empty().append(gamelogicTime[3]);
+      gamelogicAvgEl.innerHTML = Math.round(gamelogicTime[0]);
+      gamelogicHighEl.innerHTML = Math.round(gamelogicTime[1]);
+      gamelogicLowEl.innerHTML = Math.round(gamelogicTime[2]);
+      gamelogicPeakEl.innerHTML = gamelogicTime[3];
     }
     else {
       if (!gameEnd){
@@ -1203,6 +1211,12 @@ window.clearScreen = function(){
 
 let otherFrame = true;
 let fps30 = false;
+
+const renderAvgEl = document.getElementById("renderAvg");
+const renderHighEl = document.getElementById("renderHigh");
+const renderLowEl = document.getElementById("renderLow");
+const renderPeakEl = document.getElementById("renderPeak");
+
 window.renderTick = function(){
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
@@ -1267,10 +1281,10 @@ window.renderTick = function(){
           renderTime[2] = diff;
         }
 
-        $("#renderAvg").empty().append(Math.round(renderTime[0]));
-        $("#renderHigh").empty().append(Math.round(renderTime[1]));
-        $("#renderLow").empty().append(Math.round(renderTime[2]));
-        $("#renderPeak").empty().append(renderTime[3]);
+        renderAvgEl.innerHTML = Math.round(renderTime[0]);
+        renderHighEl.innerHTML = Math.round(renderTime[1]);
+        renderLowEl.innerHTML = Math.round(renderTime[2]);
+        renderPeakEl.innerHTML = renderTime[3];
       }
     }
     else if (playing || frameByFrameRender){
@@ -1305,11 +1319,10 @@ window.renderTick = function(){
         renderTime[2] = diff;
       }
 
-      $("#renderAvg").empty().append(Math.round(renderTime[0]));
-      $("#renderHigh").empty().append(Math.round(renderTime[1]));
-      $("#renderLow").empty().append(Math.round(renderTime[2]));
-      $("#renderPeak").empty().append(renderTime[3]);
-      //console.log("test3");
+      renderAvgEl.innerHTML = Math.round(renderTime[0]));
+      renderHighEl.innerHTML = Math.round(renderTime[1]));
+      renderLowEl.innerHTML = Math.round(renderTime[2]));
+      renderPeakEl.innerHTML = renderTime[3]);
     }
     if (frameByFrameRender){
       renderForeground();

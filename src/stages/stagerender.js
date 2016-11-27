@@ -135,7 +135,12 @@ window.drawBackgroundInit = function(){
   }
 }
 
-window.drawBackground = function(){
+window.drawBackground = function() {
+  // Early exit if they turned off the background
+  if (!layerSwitches.BG2) {
+    return;
+  }
+
   if (backgroundType == 0){
     drawStars();
   }
