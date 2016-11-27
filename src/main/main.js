@@ -667,7 +667,6 @@ window.interpretInputs = function(i, active) {
     var gamepad = navigator.getGamepads()[currentPlayers[i]];
     //console.log(gamepad.axes);
 
-<<<<<<< HEAD
     var lstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], cd[i].ls.x);
     var lstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], cd[i].ls.y) * -1; // need to flip up/down
     var cstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csX]], cd[i].cs.x);
@@ -677,7 +676,6 @@ window.interpretInputs = function(i, active) {
       //-cd[i].l
       //-cd[i].r
       // FOR XBOX CONTROLLERS
-<<<<<<< HEAD
       var lAnalog = scaleToGCTrigger(gamepad.buttons[controllerMaps[mType[i]][button.lA]].value, cd[i].l, 0.2, 1); // shifted by +0.2
       var rAnalog = scaleToGCTrigger(gamepad.buttons[controllerMaps[mType[i]][button.rA]].value, cd[i].r, 0.2, 1); // shifted by +0.2
     }
