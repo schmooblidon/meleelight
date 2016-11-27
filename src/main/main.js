@@ -1,4 +1,12 @@
 
+layers = {
+  BG1 : 0,
+  BG2 : 0,
+  FG1 : 0,
+  FG2 : 0,
+  UI : 0
+};
+
 player = [0,0,0,0];
 
 renderTime = [10,0,100,0];
@@ -303,7 +311,7 @@ window.addEventListener("gamepadconnected", function(e) {
     e.gamepad.index, e.gamepad.id,
     e.gamepad.buttons.length, e.gamepad.axes.length);
 });
-console.log(navigator.getGamepads());
+if(navigator.getGamepads) console.log(navigator.getGamepads());
 
 function matchTimerTick(){
   matchTimer -= 0.016667;
@@ -333,7 +341,7 @@ function percentShake(kb,i){
 }
 
 function findPlayers(){
-  var gps = navigator.getGamepads();
+  var gps = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
   /*if (typeof gps != "undefined"){
     console.log(gps);
   }*/
@@ -361,7 +369,7 @@ function findPlayers(){
     }
   }
   for (var i=0;i<gps.length;i++){
-    var gamepad = navigator.getGamepads()[i];
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : null);
     if (typeof gamepad != "undefined" &&  gamepad != null){
       var detected = false;
       var gType = 0;
@@ -963,13 +971,6 @@ fg2 = 0;
 ui = 0;
 c = 0;
 canvasMain = 0;
-layers = {
-  BG1 : 0,
-  BG2 : 0,
-  FG1 : 0,
-  FG2 : 0,
-  UI : 0
-};
 layerSwitches = {
   BG1 : true,
   BG2 : true,
