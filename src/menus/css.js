@@ -193,6 +193,8 @@ window.cssControls = function(i){
         changeGamemode(1);
       }
     }
+
+    let tok;
     if (player[i].inputs.x[0] && !player[i].inputs.x[1]){
       sounds.menuSelect.play();
       if (whichTokenGrabbed[i] != -1)
