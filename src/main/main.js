@@ -1,4 +1,12 @@
 
+layers = {
+  BG1 : 0,
+  BG2 : 0,
+  FG1 : 0,
+  FG2 : 0,
+  UI : 0
+};
+
 player = [0,0,0,0];
 
 renderTime = [10,0,100,0];
@@ -303,7 +311,7 @@ window.addEventListener("gamepadconnected", function(e) {
     e.gamepad.index, e.gamepad.id,
     e.gamepad.buttons.length, e.gamepad.axes.length);
 });
-console.log(navigator.getGamepads());
+if(navigator.getGamepads) console.log(navigator.getGamepads());
 
 function matchTimerTick(){
   matchTimer -= 0.016667;
@@ -333,7 +341,7 @@ function percentShake(kb,i){
 }
 
 function findPlayers(){
-  var gps = navigator.getGamepads();
+  var gps = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
   /*if (typeof gps != "undefined"){
     console.log(gps);
   }*/
@@ -361,7 +369,7 @@ function findPlayers(){
     }
   }
   for (var i=0;i<gps.length;i++){
-    var gamepad = navigator.getGamepads()[i];
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : null);
     if (typeof gamepad != "undefined" &&  gamepad != null){
       var detected = false;
       var gType = 0;
@@ -392,7 +400,7 @@ function findPlayers(){
         gType = 3;
         console.log("You are using xbox 360");
       }
-      else if (gamepad.id[0] == "G" && gamepad.id[0] == "e"){
+      else if (gamepad.id[0] == "G" && gamepad.id[1] == "e"){
         detected ^= true;
         //Retrolink
         gType = 5;
@@ -885,14 +893,15 @@ function interpretInputs(i,active){
     player[i].showHitbox^= true;
   }
   if (mType[i] != 10){
-    if (gamepad.buttons[map.du[mType[i]]].pressed && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed && !attemptingControllerReset[i]){
+    if ((gamepad.buttons[map.z[mType[i]]].pressed || gamepad.buttons[map.du[mType[i]]].pressed) && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed && !attemptingControllerReset[i]){
       attemptingControllerReset[i] = true;
       setTimeout(function(){
-        if (gamepad.buttons[map.du[mType[i]]].pressed && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed){
+        if ((gamepad.buttons[map.z[mType[i]]].pressed || gamepad.buttons[map.du[mType[i]]].pressed) && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed){
           cd[i].ls = new Vec2D(gamepad.axes[0],gamepad.axes[1]*-1);
           cd[i].cs = new Vec2D(gamepad.axes[5],gamepad.axes[2]*-1);
           cd[i].l = gamepad.axes[3]+0.8;
           cd[i].r = gamepad.axes[4]+0.8;
+          console.log("Controller Reset!");
           $("#resetIndicator"+i).fadeIn(100);
           $("#resetIndicator"+i).fadeOut(500);
         }
@@ -963,13 +972,6 @@ fg2 = 0;
 ui = 0;
 c = 0;
 canvasMain = 0;
-layers = {
-  BG1 : 0,
-  BG2 : 0,
-  FG1 : 0,
-  FG2 : 0,
-  UI : 0
-};
 layerSwitches = {
   BG1 : true,
   BG2 : true,
