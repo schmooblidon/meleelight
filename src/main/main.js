@@ -685,7 +685,7 @@ function interpretInputs(i,active){
     }
     else {
       var lAnalog = gamepad.axes[controllerMaps[mType[i]][button.lA]]-cd[i].l;
-      var rAnalog = gamepad.axes[controllerMaps[mType[i]][button.]]-cd[i].r;
+      var rAnalog = gamepad.axes[controllerMaps[mType[i]][button.rA]]-cd[i].r;
       if (mType[i] == 2){
         lAnalog *= -1
         rAnalog *= -1
