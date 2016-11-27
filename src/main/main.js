@@ -1,46 +1,47 @@
 /* eslint-disable */
 
-import { button,
-         keyboardMap,
-         controllerMaps,
-         cd,
-         controllerNameFromIDnumber,
-         controllerIDNumberFromGamepadID
-       } from "main/input";
+import {
+  button,
+  keyboardMap,
+  controllerMaps,
+  cd,
+  controllerNameFromIDnumber,
+  controllerIDNumberFromGamepadID
+} from "main/input";
 
 
-window.player = [0,0,0,0];
-window.renderTime = [10,0,100,0];
-window.gamelogicTime = [5,0,100,0];
-window.framerate = [0,0,0];
-window.cS = [0,0,0,0];
+window.player = [0, 0, 0, 0];
+window.renderTime = [10, 0, 100, 0];
+window.gamelogicTime = [5, 0, 100, 0];
+window.framerate = [0, 0, 0];
+window.cS = [0, 0, 0, 0];
 window.vfxQueue = [];
 window.shine = 0.5;
 
 window.layers = {
-  BG1 : 0,
-  BG2 : 0,
-  FG1 : 0,
-  FG2 : 0,
-  UI : 0
+  BG1: 0,
+  BG2: 0,
+  FG1: 0,
+  FG2: 0,
+  UI: 0
 };
 
 let gameEnd = false;
-const attemptingControllerReset = [false,false,false,false];
+const attemptingControllerReset = [false, false, false, false];
 
 let keyboardOccupied = false;
 
 
 
-window.mType = [0,0,0,0];
+window.mType = [0, 0, 0, 0];
 
 window.currentPlayers = [];
 
 window.playerAmount = 0;
 
-window.playerType = [-1,-1,-1,-1];
+window.playerType = [-1, -1, -1, -1];
 
-window.cpuDifficulty = [3,3,3,3];
+window.cpuDifficulty = [3, 3, 3, 3];
 
 window.ports = 0;
 window.activePorts = [];
@@ -74,70 +75,150 @@ window.gameMode = 20;
 
 window.versusMode = 0;
 
-window.randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
+window.randomTags = ["NEO!", "SELF", "NOVA", "PNDA", "Panda", "LFFN", "Scorp", "AZ", "AXE", "Tempo", "TMPO", "[A]rmada",
+  "WBALLZ", "Westballz", "PPMD", "Kreygasm", "M2K", "Mang0", "USA", "SCAR", "TOPH", "(.Y.)", "HBOX", "HungryBox",
+  "PLUP", "Shroomed", "SFAT", "Wizz", "Lucky", "S2J", "SilentWolf", "aMSa", "S2J", "Hax$"
+];
 
-window.palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
-["rgb(4, 255, 134)","rgb(154, 254, 170)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
-["rgb(5, 195, 255)","rgb(121, 223, 255)","rgba(218, 96, 254, ","rgb(231, 134, 255)","rgba(230, 144, 255, "],
-["rgb(255, 187, 70)","rgb(248, 255, 122)","rgba(80, 182, 255, ","rgb(255, 142, 70)","rgba(139, 203, 249, "],
-["rgb(177, 89, 255)","rgb(203, 144, 255)","rgba(144, 255, 110, ","rgb(247, 126, 250)","rgba(190, 255, 170, "],
-["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgb(255, 112, 66)","rgba(111, 214, 168, "],
-["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgb(191, 119, 119)","rgba(175, 172, 172, "]];
+window.palettes = [
+  ["rgb(250, 89, 89)", "rgb(255, 170, 170)", "rgba(255, 206, 111, ", "rgb(244, 68, 68)", "rgba(255, 225, 167, "],
+  ["rgb(4, 255, 134)", "rgb(154, 254, 170)", "rgba(252, 95, 95, ", "rgb(255, 182, 96)", "rgba(254, 141, 141, "],
+  ["rgb(5, 195, 255)", "rgb(121, 223, 255)", "rgba(218, 96, 254, ", "rgb(231, 134, 255)", "rgba(230, 144, 255, "],
+  ["rgb(255, 187, 70)", "rgb(248, 255, 122)", "rgba(80, 182, 255, ", "rgb(255, 142, 70)", "rgba(139, 203, 249, "],
+  ["rgb(177, 89, 255)", "rgb(203, 144, 255)", "rgba(144, 255, 110, ", "rgb(247, 126, 250)", "rgba(190, 255, 170, "],
+  ["rgb(182, 131, 70)", "rgb(252, 194, 126)", "rgba(47, 186, 123, ", "rgb(255, 112, 66)", "rgba(111, 214, 168, "],
+  ["rgb(166, 166, 166)", "rgb(255, 255, 255)", "rgba(255, 255, 255, ", "rgb(191, 119, 119)", "rgba(175, 172, 172, "]
+];
 
-window.hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
+window.hurtboxColours = [makeColour(255, 237, 70, 0.6), makeColour(42, 57, 255, 0.6), makeColour(54, 255, 37, 0.6)];
 
-window.hasTag = [false,false,false,false];
-window.tagText = ["","","",""];
+window.hasTag = [false, false, false, false];
+window.tagText = ["", "", "", ""];
 
-window.pPal = [0,1,2,3];
+window.pPal = [0, 1, 2, 3];
 
 window.costumeTimeout = [];
 
-window.colours = ["rgba(4, 255, 82, 0.62)","rgba(117, 20, 255, 0.63)","rgba(255, 20, 20, 0.63)","rgba(255, 232, 20, 0.63)"];
+window.colours = ["rgba(4, 255, 82, 0.62)", "rgba(117, 20, 255, 0.63)", "rgba(255, 20, 20, 0.63)",
+  "rgba(255, 232, 20, 0.63)"
+];
 
-window.pause = [[true,true],[true,true],[true,true],[true,true]];
-window.frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
+window.pause = [
+  [true, true],
+  [true, true],
+  [true, true],
+  [true, true]
+];
+window.frameAdvance = [
+  [true, true],
+  [true, true],
+  [true, true],
+  [true, true]
+];
 
-window.startingPoint = [[-50,50],[50,50],[-25,5],[25,5]];
-window.startingFace = [1,-1,1,-1];
+window.startingPoint = [
+  [-50, 50],
+  [50, 50],
+  [-25, 5],
+  [25, 5]
+];
+window.startingFace = [1, -1, 1, -1];
 
-window.ground = [[-68.4,0],[68.4,0]];
+window.ground = [
+  [-68.4, 0],
+  [68.4, 0]
+];
 
-window.platforms = [[[-57.6,27.2],[-20,27.2]],[[20,27.2],[57.6,27.2]],[[-18.8,54.4],[18.8,54.4]]];
+window.platforms = [
+  [
+    [-57.6, 27.2],
+    [-20, 27.2]
+  ],
+  [
+    [20, 27.2],
+    [57.6, 27.2]
+  ],
+  [
+    [-18.8, 54.4],
+    [18.8, 54.4]
+  ]
+];
 
-window.wallsL = [[[-68.4,0],[-68.4,-108.8]]];
-window.wallsR = [[[68.4,0],[68.4,-108.8]]];
+window.wallsL = [
+  [
+    [-68.4, 0],
+    [-68.4, -108.8]
+  ]
+];
+window.wallsR = [
+  [
+    [68.4, 0],
+    [68.4, -108.8]
+  ]
+];
 
-window.edges = [[[-68.4,0],[-63.4,0]],[[68.4,0],[63.4,0]]];
+window.edges = [
+  [
+    [-68.4, 0],
+    [-63.4, 0]
+  ],
+  [
+    [68.4, 0],
+    [63.4, 0]
+  ]
+];
 
 //edgeOffset = [[-71.3,-23.7],[71.3,-23.7]];
-window.edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
+window.edgeOffset = [
+  [-2.9, -23.7],
+  [2.9, -23.7]
+];
 
-window.edgeOrientation = [1,-1];
+window.edgeOrientation = [1, -1];
 
-window.respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
+window.respawnPoints = [
+  [-50, 50, 1],
+  [50, 50, -1],
+  [25, 35, 1],
+  [-25, 35, -1]
+];
 
 window.stage = {
-  box : [new Box2D([-68.4,-108.8],[68.4,0])],
-  platform : [[new Vec2D(-57.6,27.2),new Vec2D(-20,27.2)],[new Vec2D(20,27.2),new Vec2D(57.6,27.2)],[new Vec2D(-18.8,54.4),new Vec2D(18.8,54.4)]],
-  ground : [[new Vec2D(-68.4,0),new Vec2D(68.4,0)]],
-  ceiling : [[new Vec2D(-68.4,-108.8),new Vec2D(68.4,-108.8)]],
-  wallL : [[new Vec2D(-68.4,0),new Vec2D(-68.4,-108.8)]],
-  wallR : [[new Vec2D(68.4,0),new Vec2D(68.4,-108.8)]],
-  startingPoint : [new Vec2D(-50,50),new Vec2D(50,50),new Vec2D(-25,5),new Vec2D(25,5)],
-  startingFace : [1,-1,1,-1],
-  respawnPoints : [new Vec2D(-50,50),new Vec2D(50,50),new Vec2D(-25,35),new Vec2D(25,35)],
-  respawnFace : [1,-1,1,-1],
-  blastzone : new Box2D([-224,-108.8],[224,200]),
-  ledge : [[0,0],[0,1]],
-  ledgePos : [new Vec2D(-68.4,0),new Vec2D(68.4,0)],
-  scale : 4.5,
-  offset : [600,480],
+  box: [new Box2D([-68.4, -108.8], [68.4, 0])],
+  platform: [
+    [new Vec2D(-57.6, 27.2), new Vec2D(-20, 27.2)],
+    [new Vec2D(20, 27.2), new Vec2D(57.6, 27.2)],
+    [new Vec2D(-18.8, 54.4), new Vec2D(18.8, 54.4)]
+  ],
+  ground: [
+    [new Vec2D(-68.4, 0), new Vec2D(68.4, 0)]
+  ],
+  ceiling: [
+    [new Vec2D(-68.4, -108.8), new Vec2D(68.4, -108.8)]
+  ],
+  wallL: [
+    [new Vec2D(-68.4, 0), new Vec2D(-68.4, -108.8)]
+  ],
+  wallR: [
+    [new Vec2D(68.4, 0), new Vec2D(68.4, -108.8)]
+  ],
+  startingPoint: [new Vec2D(-50, 50), new Vec2D(50, 50), new Vec2D(-25, 5), new Vec2D(25, 5)],
+  startingFace: [1, -1, 1, -1],
+  respawnPoints: [new Vec2D(-50, 50), new Vec2D(50, 50), new Vec2D(-25, 35), new Vec2D(25, 35)],
+  respawnFace: [1, -1, 1, -1],
+  blastzone: new Box2D([-224, -108.8], [224, 200]),
+  ledge: [
+    [0, 0],
+    [0, 1]
+  ],
+  ledgePos: [new Vec2D(-68.4, 0), new Vec2D(68.4, 0)],
+  scale: 4.5,
+  offset: [600, 480],
 };
 
 window.stageSelect = 0;
 
-window.blastzone = new Box2D([-224,200],[224,-108.8]);
+window.blastzone = new Box2D([-224, 200], [224, -108.8]);
 
 window.starting = true;
 window.startTimer = 1.5;
@@ -147,33 +228,32 @@ window.matchTimer = 480;
 
 window.usingLocalStorage = false;
 if (typeof(Storage) !== "undefined") {
-    // Code for localStorage/sessionStorage.
-    usingLocalStorage = true;
-    console.log("local storage works");
+  // Code for localStorage/sessionStorage.
+  usingLocalStorage = true;
+  console.log("local storage works");
 } else {
-    // Sorry! No Web Storage support..
-    console.log("local storage does not work");
+  // Sorry! No Web Storage support..
+  console.log("local storage does not work");
 }
 
 window.setCookie = function(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var exp = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + exp;
-    localStorage.setItem(cname, cvalue);
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  var exp = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + "; " + exp;
+  localStorage.setItem(cname, cvalue);
 }
 
 window.getCookie = function(cname) {
-  if (usingLocalStorage){
+  if (usingLocalStorage) {
     return localStorage.getItem(cname);
-  }
-  else {
+  } else {
     var name = cname + "=";
     var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1);
+      if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
     }
     return "";
   }
@@ -182,30 +262,29 @@ window.getCookie = function(cname) {
 window.keys = {};
 window.keyBind = 0;
 window.keyBinding = false;
-window.overrideKeyboardEvent = function(e){
-  if (choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116){
-    switch(e.type){
+window.overrideKeyboardEvent = function(e) {
+  if (choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116) {
+    switch (e.type) {
       case "keydown":
-        if(!keys[e.keyCode]){
+        if (!keys[e.keyCode]) {
           keys[e.keyCode] = true;
           keyBind = e.keyCode;
           keyBinding = true;
           // do key down stuff here
         }
-      break;
+        break;
       case "keyup":
         delete(keys[e.keyCode]);
         // do key up stuff here
-      break;
+        break;
     }
     disabledEventPropagation(e);
     e.preventDefault();
     return false;
-  }
-  else {
-    if (choosingTag > -1){
-      if (e.keyCode == 13){
-        switch(e.type){
+  } else {
+    if (choosingTag > -1) {
+      if (e.keyCode == 13) {
+        switch (e.type) {
           case "keydown":
             keys[13] = true;
             break;
@@ -214,18 +293,18 @@ window.overrideKeyboardEvent = function(e){
             break;
           default:
             break;
-          }
+        }
       }
     }
     return true;
   }
 };
 
-window.disabledEventPropagation = function(e){
-  if(e){
-    if(e.stopPropagation){
+window.disabledEventPropagation = function(e) {
+  if (e) {
+    if (e.stopPropagation) {
       e.stopPropagation();
-    } else if(window.event){
+    } else if (window.event) {
       window.event.cancelBubble = true;
     }
   }
@@ -242,9 +321,8 @@ window.onkeydown = function(e) {
   keys[e.keyCode]=true;
 }*/
 
-window.SVG = function(tag)
-{
-   return document.createElementNS('http://www.w3.org/2000/svg', tag);
+window.SVG = function(tag) {
+  return document.createElementNS('http://www.w3.org/2000/svg', tag);
 }
 
 /*if (Gamepad.supported) {
@@ -258,119 +336,134 @@ window.addEventListener("gamepadconnected", function(e) {
     e.gamepad.index, e.gamepad.id,
     e.gamepad.buttons.length, e.gamepad.axes.length);
 });
-if(navigator.getGamepads) console.log(navigator.getGamepads());
+if (navigator.getGamepads) console.log(navigator.getGamepads());
 
-window.matchTimerTick = function(){
+window.matchTimerTick = function() {
   matchTimer -= 0.016667;
 
   if (dom.matchMinutes && dom.matchSeconds) {
     var sec = (matchTimer % 60).toFixed(2);
-    dom.matchMinutes.innerHTML = Math.floor(matchTimer/60);
+    dom.matchMinutes.innerHTML = Math.floor(matchTimer / 60);
     dom.matchSeconds.innerHTML = sec.length < 5 ? `0${sec}` : sec;
   }
 
-  if (matchTimer <= 0){
+  if (matchTimer <= 0) {
     finishGame();
   }
 }
 
-window.screenShake = function(kb){
-  var seed = [Math.random(),Math.random(),Math.random(),Math.random()];
-  fg1.translate(kb*0.1*seed[0],kb*0.1*seed[1]);
-  setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1])},20);
-  setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1]);fg1.translate(-kb*0.1*seed[2],-kb*0.1*seed[3])},40);
-  setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},60);
-  setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},80);
+window.screenShake = function(kb) {
+  var seed = [Math.random(), Math.random(), Math.random(), Math.random()];
+  fg1.translate(kb * 0.1 * seed[0], kb * 0.1 * seed[1]);
+  setTimeout(function() {
+    fg1.translate(-kb * 0.05 * seed[0], -kb * 0.05 * seed[1])
+  }, 20);
+  setTimeout(function() {
+    fg1.translate(-kb * 0.05 * seed[0], -kb * 0.05 * seed[1]);
+    fg1.translate(-kb * 0.1 * seed[2], -kb * 0.1 * seed[3])
+  }, 40);
+  setTimeout(function() {
+    fg1.translate(kb * 0.05 * seed[2], kb * 0.05 * seed[3])
+  }, 60);
+  setTimeout(function() {
+    fg1.translate(kb * 0.05 * seed[2], kb * 0.05 * seed[3])
+  }, 80);
 }
 
-window.percentShake = function(kb,i){
-  player[i].percentShake = new Vec2D(kb*0.1*Math.random(),kb*0.1*Math.random());
-  setTimeout(function(){player[i].percentShake = new Vec2D(kb*0.05*Math.random(),kb*0.05*Math.random())},20);
-  setTimeout(function(){player[i].percentShake = new Vec2D(-kb*0.1*Math.random(),-kb*0.1*Math.random())},40);
-  setTimeout(function(){player[i].percentShake = new Vec2D(-kb*0.05*Math.random(),-kb*0.05*Math.random())},60);
-  setTimeout(function(){player[i].percentShake = new Vec2D(0,0)},80);
+window.percentShake = function(kb, i) {
+  player[i].percentShake = new Vec2D(kb * 0.1 * Math.random(), kb * 0.1 * Math.random());
+  setTimeout(function() {
+    player[i].percentShake = new Vec2D(kb * 0.05 * Math.random(), kb * 0.05 * Math.random())
+  }, 20);
+  setTimeout(function() {
+    player[i].percentShake = new Vec2D(-kb * 0.1 * Math.random(), -kb * 0.1 * Math.random())
+  }, 40);
+  setTimeout(function() {
+    player[i].percentShake = new Vec2D(-kb * 0.05 * Math.random(), -kb * 0.05 * Math.random())
+  }, 60);
+  setTimeout(function() {
+    player[i].percentShake = new Vec2D(0, 0)
+  }, 80);
 }
 
-window.findPlayers = function(){
-  var gps = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+window.findPlayers = function() {
+  var gps = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
+    []);
   /*if (typeof gps != "undefined"){
     console.log(gps);
   }*/
-  if (!keyboardOccupied){
-    if (gameMode < 2 || gameMode == 20){
-      if (keys[13] || keys[keyMap.s[0]] || keys[keyMap.s[1]]){
-        if (ports < 4){
+  if (!keyboardOccupied) {
+    if (gameMode < 2 || gameMode == 20) {
+      if (keys[13] || keys[keyMap.s[0]] || keys[keyMap.s[1]]) {
+        if (ports < 4) {
           changeGamemode(1);
           keyboardOccupied = true;
           sounds.menuForward.play();
-          if (ports == 0){
+          if (ports == 0) {
             music.menu.play("menuStart");
           }
-          addPlayer(ports,10);
+          addPlayer(ports, 10);
         }
       }
-    }
-    else {
-      if (keys[keyMap.a[0]] || keys[keyMap.a[1]]){
-        if (ports < 4){
+    } else {
+      if (keys[keyMap.a[0]] || keys[keyMap.a[1]]) {
+        if (ports < 4) {
           keyboardOccupied = true;
-          addPlayer(ports,10);
+          addPlayer(ports, 10);
         }
       }
     }
   }
-  for (var i=0;i<gps.length;i++){
-    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : null);
-    if (typeof gamepad != "undefined" &&  gamepad != null){
+  for (var i = 0; i < gps.length; i++) {
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
+      null);
+    if (typeof gamepad != "undefined" && gamepad != null) {
       var detected = false;
       var gType = 0;
       let gamepadIDnumber = controllerIDNumberFromGamepadID(gamepad.id);
-      if (gamepadIDnumber == -1 ) {
+      if (gamepadIDnumber == -1) {
         console.log("error: controller detected but not supported");
-      }
-      else {
+      } else {
         detected ^= true;
         gType = gamepadIDnumber;
         console.log("You are using ".concat(controllerNameFromIDnumber(gamepadIDnumber)));
       }
-      if (detected){
-        if (gameMode < 2 || gameMode == 20){
-          if (gamepad.buttons[controllerMaps[gType][button.s]].pressed){
+      if (detected) {
+        if (gameMode < 2 || gameMode == 20) {
+          if (gamepad.buttons[controllerMaps[gType][button.s]].pressed) {
             var alreadyIn = false;
-            for (var k=0;k<ports;k++){
-              if (currentPlayers[k] == i){
+            for (var k = 0; k < ports; k++) {
+              if (currentPlayers[k] == i) {
                 alreadyIn = true;
               }
             }
-            if (!alreadyIn){
-              if (ports < 4){
+            if (!alreadyIn) {
+              if (ports < 4) {
                 changeGamemode(1);
                 sounds.menuForward.play();
-                if (ports == 0){
+                if (ports == 0) {
                   music.menu.play("menuStart");
                 }
-                addPlayer(i,gType);
+                addPlayer(i, gType);
               }
             }
           }
-        }
-        else {
-          if (gamepad.buttons[controllerMaps[gType][button.a]].pressed){
+        } else {
+          if (gamepad.buttons[controllerMaps[gType][button.a]].pressed) {
             var alreadyIn = false;
-            for (var k=0;k<ports;k++){
-              if (currentPlayers[k] == i){
+            for (var k = 0; k < ports; k++) {
+              if (currentPlayers[k] == i) {
                 alreadyIn = true;
               }
             }
-            if (!alreadyIn){
-              if (ports < 4){
-                addPlayer(i,gType);
+            if (!alreadyIn) {
+              if (ports < 4) {
+                addPlayer(i, gType);
               }
             }
           }
         }
-      }
-      else {
+      } else {
         console.log("No controller detected by browser");
       }
     }
@@ -378,29 +471,29 @@ window.findPlayers = function(){
 }
 
 
-window.addPlayer = function(gamepad,gType){
+window.addPlayer = function(gamepad, gType) {
   ports++;
-  currentPlayers[ports-1] = gamepad;
-  playerType[ports-1] = 0;
-  mType[ports-1] = gType;
+  currentPlayers[ports - 1] = gamepad;
+  playerType[ports - 1] = 0;
+  mType[ports - 1] = gType;
 }
 
-window.togglePort = function(i){
+window.togglePort = function(i) {
   playerType[i]++;
-  if (playerType[i] == 2){
+  if (playerType[i] == 2) {
     playerType[i] = -1;
   }
-  if (playerType[i] == 0 && ports <= i){
+  if (playerType[i] == 0 && ports <= i) {
     playerType[i] = 1;
   }
 }
 
-window.positionPlayersInCSS = function(){
-  for (var i=0;i<4;i++){
-      var x = (-80+i*50)*2/3;
-      var y = -30;
-      player[i].phys.pos = new Vec2D(x,y);
-      player[i].phys.hurtbox = new Box2D([-4+x,18+y],[4+x,y]);
+window.positionPlayersInCSS = function() {
+  for (var i = 0; i < 4; i++) {
+    var x = (-80 + i * 50) * 2 / 3;
+    var y = -30;
+    player[i].phys.pos = new Vec2D(x, y);
+    player[i].phys.hurtbox = new Box2D([-4 + x, 18 + y], [4 + x, y]);
   }
 }
 
@@ -420,63 +513,63 @@ window.positionPlayersInCSS = function(){
 // 1:Main Menu
 // 0:Title Screen
 
-window.changeGamemode = function(newGamemode){
+window.changeGamemode = function(newGamemode) {
   bg1.fillStyle = "black";
-  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
-  fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
+  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
+  fg1.clearRect(0, 0, layers.FG1.width, layers.FG1.height);
   gameMode = newGamemode;
-  switch (newGamemode){
+  switch (newGamemode) {
     // TITLESCREEN
     case 0:
       drawStartScreenInit();
       break;
-    // MAIN MENU
+      // MAIN MENU
     case 1:
       $("#logoVid").remove();
       drawMainMenuInit();
       break;
-    // CSS
+      // CSS
     case 2:
       drawCSSInit();
       break;
-    // Playing (VS)
+      // Playing (VS)
     case 3:
       drawBackgroundInit();
       drawStageInit();
       break;
-    // Target Builder
+      // Target Builder
     case 4:
       break;
-    // Target Playing
+      // Target Playing
     case 5:
       drawBackgroundInit();
       drawStageInit();
       break;
-    // Stage select (vs)
+      // Stage select (vs)
     case 6:
       drawSSSInit();
       break;
-    // Target Select
+      // Target Select
     case 7:
       drawTSSInit();
       break;
-    // sound menu
+      // sound menu
     case 10:
       drawAudioMenuInit();
       break;
-    // gameplay menu
+      // gameplay menu
     case 11:
       drawGameplayMenuInit();
       break;
-    // keyboard menu
+      // keyboard menu
     case 12:
       drawKeyboardMenuInit();
       break;
-    // credits
+      // credits
     case 13:
       drawCreditsInit();
       break;
-    // startup
+      // startup
     case 20:
       break;
     default:
@@ -521,46 +614,54 @@ window.removePlayer = function(i){
   playerAmount--;
 }*/
 
-window.interpretInputs = function(i,active){
-  if (mType[i] == 10){
+window.interpretInputs = function(i, active) {
+  if (mType[i] == 10) {
     // keyboard controls
     var stickR = 1;
     var stickL = 1;
     var stickU = 1;
     var stickD = 1;
-    if (gameMode == 3 || gameMode == 5){
+    if (gameMode == 3 || gameMode == 5) {
       stickR = keyMap.lstick.ranges[1];
       stickL = keyMap.lstick.ranges[2];
       stickU = keyMap.lstick.ranges[0];
       stickD = keyMap.lstick.ranges[3];
     }
-    var lstickX = (keys[keyMap.lstick.right[0]] || keys[keyMap.lstick.right[1]]) ? ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ? 0 : stickR) : ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ? -stickL : 0);
-    var lstickY = (keys[keyMap.lstick.up[0]] || keys[keyMap.lstick.up[1]]) ? ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? 0 : stickU) : ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? -stickD : 0);
+    var lstickX = (keys[keyMap.lstick.right[0]] || keys[keyMap.lstick.right[1]]) ? ((keys[keyMap.lstick.left[0]] ||
+      keys[keyMap.lstick.left[1]]) ? 0 : stickR) : ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ?
+      -stickL : 0);
+    var lstickY = (keys[keyMap.lstick.up[0]] || keys[keyMap.lstick.up[1]]) ? ((keys[keyMap.lstick.down[0]] || keys[
+      keyMap.lstick.down[1]]) ? 0 : stickU) : ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? -
+      stickD : 0);
 
-    var lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? keyMap.shoulders.ranges[0] : 0;
-    var rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? keyMap.shoulders.ranges[1] : 0;
-    if (gameMode == 3 || gameMode == 5){
-      for (var j=0;j<5;j++){
-        if (keys[keyMap.lstick.modifiers[j][0]]){
+    var lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? keyMap.shoulders.ranges[
+      0] : 0;
+    var rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? keyMap.shoulders.ranges[
+      1] : 0;
+    if (gameMode == 3 || gameMode == 5) {
+      for (var j = 0; j < 5; j++) {
+        if (keys[keyMap.lstick.modifiers[j][0]]) {
           lstickX *= keyMap.lstick.modifiers[j][1];
           lstickY *= keyMap.lstick.modifiers[j][2];
         }
-        if (keys[keyMap.shoulders.modifiers[j][0]]){
+        if (keys[keyMap.shoulders.modifiers[j][0]]) {
           lAnalog *= keyMap.shoulders.modifiers[j][1];
           rAnalog *= keyMap.shoulders.modifiers[j][2];
         }
       }
     }
-    lstickX = Math.sign(lstickX)*Math.min(1,Math.abs(lstickX));
-    lstickY = Math.sign(lstickY)*Math.min(1,Math.abs(lstickY));
+    lstickX = Math.sign(lstickX) * Math.min(1, Math.abs(lstickX));
+    lstickY = Math.sign(lstickY) * Math.min(1, Math.abs(lstickY));
     player[i].inputs.rawlStickAxis[0].x = lstickX;
     player[i].inputs.rawlStickAxis[0].y = lstickY;
-    lAnalog = Math.min(1,Math.abs(lAnalog));
-    rAnalog = Math.min(1,Math.abs(rAnalog));
-    var cstickX = (keys[keyMap.cstick.right[0]] || keys[keyMap.cstick.right[1]]) ? ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? 0 : 1) : ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? -1 : 0);
-    var cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
-  }
-  else {
+    lAnalog = Math.min(1, Math.abs(lAnalog));
+    rAnalog = Math.min(1, Math.abs(rAnalog));
+    var cstickX = (keys[keyMap.cstick.right[0]] || keys[keyMap.cstick.right[1]]) ? ((keys[keyMap.cstick.left[0]] ||
+      keys[keyMap.cstick.left[1]]) ? 0 : 1) : ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? -1 :
+      0);
+    var cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[
+      keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
+  } else {
     var gamepad = navigator.getGamepads()[currentPlayers[i]];
     //console.log(gamepad.axes);
 
@@ -568,88 +669,79 @@ window.interpretInputs = function(i,active){
     var lstickY = gamepad.axes[controllerMaps[mType[i]][button.lsY]] * -1 - cd[i].ls.y;
     lstickX /= 0.75;
     lstickY /= 0.75;
-    if (lstickX > 1){
+    if (lstickX > 1) {
       lstickX = 1;
-    }
-    else if (lstickX < -1){
+    } else if (lstickX < -1) {
       lstickX = -1;
+    } else {
+      lstickX = Math.round(lstickX * 80) / 80;
     }
-    else {
-      lstickX = Math.round(lstickX * 80)/80;
-    }
-    if (lstickY > 1){
+    if (lstickY > 1) {
       lstickY = 1;
-    }
-    else if (lstickY < -1){
+    } else if (lstickY < -1) {
       lstickY = -1;
-    }
-    else {
-      lstickY = Math.round(lstickY * 80)/80;
+    } else {
+      lstickY = Math.round(lstickY * 80) / 80;
     }
     player[i].inputs.rawlStickAxis[0].x = lstickX;
     player[i].inputs.rawlStickAxis[0].y = lstickY;
-    if (Math.abs(lstickX) < 0.3){
+    if (Math.abs(lstickX) < 0.3) {
       lstickX = 0;
     }
-    if (Math.abs(lstickY) < 0.3){
+    if (Math.abs(lstickY) < 0.3) {
       lstickY = 0;
     }
-    var cstickY = gamepad.axes[controllerMaps[mType[i]][button.csY]]*-1-cd[i].cs.y;
-    var cstickX = gamepad.axes[controllerMaps[mType[i]][button.csX]]-cd[i].cs.x;
+    var cstickY = gamepad.axes[controllerMaps[mType[i]][button.csY]] * -1 - cd[i].cs.y;
+    var cstickX = gamepad.axes[controllerMaps[mType[i]][button.csX]] - cd[i].cs.x;
     cstickX /= 0.75;
     cstickY /= 0.75;
-    if (cstickX > 1){
+    if (cstickX > 1) {
       cstickX = 1;
-    }
-    else if (cstickX < -1){
+    } else if (cstickX < -1) {
       cstickX = -1;
+    } else {
+      cstickX = Math.round(cstickX * 80) / 80;
     }
-    else {
-      cstickX = Math.round(cstickX * 80)/80;
-    }
-    if (cstickY > 1){
+    if (cstickY > 1) {
       cstickY = 1;
-    }
-    else if (cstickY < -1){
+    } else if (cstickY < -1) {
       cstickY = -1;
+    } else {
+      cstickY = Math.round(cstickY * 80) / 80;
     }
-    else {
-      cstickY = Math.round(cstickY * 80)/80;
-    }
-    if (Math.abs(cstickX) < 0.3){
+    if (Math.abs(cstickX) < 0.3) {
       cstickX = 0;
     }
-    if (Math.abs(cstickY) < 0.3){
+    if (Math.abs(cstickY) < 0.3) {
       cstickY = 0;
     }
-    if (mType[i] == 3){
+    if (mType[i] == 3) {
       //console.log(gamepad.buttons[map.rA[mType[i]]]);
       //-cd[i].l
       //-cd[i].r
       // FOR XBOX CONTROLLERS
-      var lAnalog = gamepad.buttons[controllerMaps[mType[i]][button.lA]].value+0.2;
-      var rAnalog = gamepad.buttons[controllerMaps[mType[i]][button.rA]].value+0.2;
-    }
-    else {
-      var lAnalog = gamepad.axes[controllerMaps[mType[i]][button.lA]]-cd[i].l;
-      var rAnalog = gamepad.axes[controllerMaps[mType[i]][button.rA]]-cd[i].r;
-      if (mType[i] == 2){
+      var lAnalog = gamepad.buttons[controllerMaps[mType[i]][button.lA]].value + 0.2;
+      var rAnalog = gamepad.buttons[controllerMaps[mType[i]][button.rA]].value + 0.2;
+    } else {
+      var lAnalog = gamepad.axes[controllerMaps[mType[i]][button.lA]] - cd[i].l;
+      var rAnalog = gamepad.axes[controllerMaps[mType[i]][button.rA]] - cd[i].r;
+      if (mType[i] == 2) {
         lAnalog *= -1
         rAnalog *= -1
       }
       lAnalog += 0.9;
       rAnalog += 0.9;
     }
-    if (lAnalog > 1){
+    if (lAnalog > 1) {
       lAnalog = 1;
     }
-    if (rAnalog > 1){
+    if (rAnalog > 1) {
       rAnalog = 1;
     }
-    if (lAnalog < 0.3){
+    if (lAnalog < 0.3) {
       lAnalog = 0;
     }
-    if (rAnalog < 0.3){
+    if (rAnalog < 0.3) {
       rAnalog = 0;
     }
   }
@@ -657,57 +749,54 @@ window.interpretInputs = function(i,active){
   pause[i][1] = pause[i][0];
   frameAdvance[i][1] = frameAdvance[i][0];
 
-  if (mType[i] == 10){
-    if (keys[keyMap.s[0]] || keys[keyMap.s[1]]){
+  if (mType[i] == 10) {
+    if (keys[keyMap.s[0]] || keys[keyMap.s[1]]) {
       pause[i][0] = true;
-    }
-    else {
+    } else {
       pause[i][0] = false
     }
-    if (keys[keyMap.z[0]] || keys[keyMap.z[1]]){
+    if (keys[keyMap.z[0]] || keys[keyMap.z[1]]) {
       frameAdvance[i][0] = true;
-    }
-    else {
+    } else {
       frameAdvance[i][0] = false
     }
-  }
-  else {
-    if (gamepad.buttons[controllerMaps[mType[i]][button.s]].pressed || (gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed && gameMode == 5)){
+  } else {
+    if (gamepad.buttons[controllerMaps[mType[i]][button.s]].pressed || (gamepad.buttons[controllerMaps[mType[i]][
+        button.du
+      ]].pressed && gameMode == 5)) {
       pause[i][0] = true;
-    }
-    else {
+    } else {
       pause[i][0] = false
     }
-    if (gamepad.buttons[controllerMaps[mType[i]][button.z]].pressed){
+    if (gamepad.buttons[controllerMaps[mType[i]][button.z]].pressed) {
       frameAdvance[i][0] = true;
-    }
-    else {
+    } else {
       frameAdvance[i][0] = false
     }
   }
 
-  if (active){
-    for(var j=0;j<7;j++){
-      player[i].inputs.lStickAxis[7-j].x = player[i].inputs.lStickAxis[6-j].x;
-      player[i].inputs.lStickAxis[7-j].y = player[i].inputs.lStickAxis[6-j].y;
-      player[i].inputs.rawlStickAxis[7-j].x = player[i].inputs.rawlStickAxis[6-j].x;
-      player[i].inputs.rawlStickAxis[7-j].y = player[i].inputs.rawlStickAxis[6-j].y;
-      player[i].inputs.cStickAxis[7-j].x = player[i].inputs.cStickAxis[6-j].x;
-      player[i].inputs.cStickAxis[7-j].y = player[i].inputs.cStickAxis[6-j].y;
-      player[i].inputs.lAnalog[7-j] = player[i].inputs.lAnalog[6-j];
-      player[i].inputs.rAnalog[7-j] = player[i].inputs.rAnalog[6-j];
-      player[i].inputs.s[7-j] = player[i].inputs.s[6-j];
-      player[i].inputs.z[7-j] = player[i].inputs.z[6-j];
-      player[i].inputs.a[7-j] = player[i].inputs.a[6-j];
-      player[i].inputs.b[7-j] = player[i].inputs.b[6-j];
-      player[i].inputs.x[7-j] = player[i].inputs.x[6-j];
-      player[i].inputs.y[7-j] = player[i].inputs.y[6-j];
-      player[i].inputs.r[7-j] = player[i].inputs.r[6-j];
-      player[i].inputs.l[7-j] = player[i].inputs.l[6-j];
-      player[i].inputs.dpadleft[7-j] = player[i].inputs.dpadleft[6-j];
-      player[i].inputs.dpaddown[7-j] = player[i].inputs.dpaddown[6-j];
-      player[i].inputs.dpadright[7-j] = player[i].inputs.dpadright[6-j];
-      player[i].inputs.dpadup[7-j] = player[i].inputs.dpadup[6-j];
+  if (active) {
+    for (var j = 0; j < 7; j++) {
+      player[i].inputs.lStickAxis[7 - j].x = player[i].inputs.lStickAxis[6 - j].x;
+      player[i].inputs.lStickAxis[7 - j].y = player[i].inputs.lStickAxis[6 - j].y;
+      player[i].inputs.rawlStickAxis[7 - j].x = player[i].inputs.rawlStickAxis[6 - j].x;
+      player[i].inputs.rawlStickAxis[7 - j].y = player[i].inputs.rawlStickAxis[6 - j].y;
+      player[i].inputs.cStickAxis[7 - j].x = player[i].inputs.cStickAxis[6 - j].x;
+      player[i].inputs.cStickAxis[7 - j].y = player[i].inputs.cStickAxis[6 - j].y;
+      player[i].inputs.lAnalog[7 - j] = player[i].inputs.lAnalog[6 - j];
+      player[i].inputs.rAnalog[7 - j] = player[i].inputs.rAnalog[6 - j];
+      player[i].inputs.s[7 - j] = player[i].inputs.s[6 - j];
+      player[i].inputs.z[7 - j] = player[i].inputs.z[6 - j];
+      player[i].inputs.a[7 - j] = player[i].inputs.a[6 - j];
+      player[i].inputs.b[7 - j] = player[i].inputs.b[6 - j];
+      player[i].inputs.x[7 - j] = player[i].inputs.x[6 - j];
+      player[i].inputs.y[7 - j] = player[i].inputs.y[6 - j];
+      player[i].inputs.r[7 - j] = player[i].inputs.r[6 - j];
+      player[i].inputs.l[7 - j] = player[i].inputs.l[6 - j];
+      player[i].inputs.dpadleft[7 - j] = player[i].inputs.dpadleft[6 - j];
+      player[i].inputs.dpaddown[7 - j] = player[i].inputs.dpaddown[6 - j];
+      player[i].inputs.dpadright[7 - j] = player[i].inputs.dpadright[6 - j];
+      player[i].inputs.dpadup[7 - j] = player[i].inputs.dpadup[6 - j];
     }
     player[i].inputs.lStickAxis[0].x = lstickX;
     player[i].inputs.lStickAxis[0].y = lstickY;
@@ -715,7 +804,7 @@ window.interpretInputs = function(i,active){
     player[i].inputs.cStickAxis[0].y = cstickY;
     player[i].inputs.lAnalog[0] = lAnalog;
     player[i].inputs.rAnalog[0] = rAnalog;
-    if (mType[i] == 10){
+    if (mType[i] == 10) {
       player[i].inputs.s[0] = keys[keyMap.s[0]] || keys[keyMap.s[1]];
       player[i].inputs.x[0] = keys[keyMap.x[0]] || keys[keyMap.x[1]];
       player[i].inputs.a[0] = keys[keyMap.a[0]] || keys[keyMap.a[1]];
@@ -727,24 +816,22 @@ window.interpretInputs = function(i,active){
       player[i].inputs.dpaddown[0] = keys[keyMap.dd[0]];
       player[i].inputs.dpadright[0] = keys[keyMap.dr[0]];
       player[i].inputs.dpadup[0] = keys[keyMap.du[0]];
-    }
-    else {
-      player[i].inputs.s[0] = gamepad.buttons[controllerMaps[mType[i]][button.s]] .pressed;
-      player[i].inputs.x[0] = gamepad.buttons[controllerMaps[mType[i]][button.x]] .pressed;
-      player[i].inputs.a[0] = gamepad.buttons[controllerMaps[mType[i]][button.a]] .pressed;
-      player[i].inputs.b[0] = gamepad.buttons[controllerMaps[mType[i]][button.b]] .pressed;
-      player[i].inputs.y[0] = gamepad.buttons[controllerMaps[mType[i]][button.y]] .pressed;
-      if (mType[i] == 3){
+    } else {
+      player[i].inputs.s[0] = gamepad.buttons[controllerMaps[mType[i]][button.s]].pressed;
+      player[i].inputs.x[0] = gamepad.buttons[controllerMaps[mType[i]][button.x]].pressed;
+      player[i].inputs.a[0] = gamepad.buttons[controllerMaps[mType[i]][button.a]].pressed;
+      player[i].inputs.b[0] = gamepad.buttons[controllerMaps[mType[i]][button.b]].pressed;
+      player[i].inputs.y[0] = gamepad.buttons[controllerMaps[mType[i]][button.y]].pressed;
+      if (mType[i] == 3) {
         // FOR XBOX CONTROLLERS
-        player[i].inputs.r[0] = gamepad.buttons[controllerMaps[mType[i]][button.r]] .value == 1?true:false;
-        player[i].inputs.l[0] = gamepad.buttons[controllerMaps[mType[i]][button.l]] .value == 1?true:false;
+        player[i].inputs.r[0] = gamepad.buttons[controllerMaps[mType[i]][button.r]].value == 1 ? true : false;
+        player[i].inputs.l[0] = gamepad.buttons[controllerMaps[mType[i]][button.l]].value == 1 ? true : false;
 
         // 4 is lB, 5 is RB
-        if (gamepad.buttons[4].pressed){
+        if (gamepad.buttons[4].pressed) {
           player[i].inputs.l[0] = true;
         }
-      }
-      else {
+      } else {
         player[i].inputs.r[0] = gamepad.buttons[controllerMaps[mType[i]][button.r]].pressed;
         player[i].inputs.l[0] = gamepad.buttons[controllerMaps[mType[i]][button.l]].pressed;
       }
@@ -754,118 +841,123 @@ window.interpretInputs = function(i,active){
       player[i].inputs.dpadup[0] = gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed;
     }
 
-    if (!frameByFrame){
-      if (mType[i] == 10){
+    if (!frameByFrame) {
+      if (mType[i] == 10) {
         player[i].inputs.z[0] = keys[keyMap.z[0]] || keys[keyMap.z[1]];
-      }
-      else {
+      } else {
         player[i].inputs.z[0] = gamepad.buttons[controllerMaps[mType[i]][button.z]].pressed;
       }
-      if (player[i].inputs.z[0]){
+      if (player[i].inputs.z[0]) {
         player[i].inputs.lAnalog[0] = 0.35;
         player[i].inputs.a[0] = true;
       }
     }
-    if (player[i].inputs.l[0]){
+    if (player[i].inputs.l[0]) {
       player[i].inputs.lAnalog[0] = 1;
     }
-    if (player[i].inputs.r[0]){
+    if (player[i].inputs.r[0]) {
       player[i].inputs.rAnalog[0] = 1;
     }
-  }
-  else {
-    if (mType[i] == 10){
-      if ((keys[keyMap.a[0]] || keys[keyMap.a[1]]) && (keys[keyMap.l[0]] || keys[keyMap.l[1]]) && (keys[keyMap.r[0]] || keys[keyMap.r[1]]) && (keys[keyMap.s[0]] || keys[keyMap.s[1]])){
-        if (keys[keyMap.b[0]] || keys[keyMap.b[1]]){
+  } else {
+    if (mType[i] == 10) {
+      if ((keys[keyMap.a[0]] || keys[keyMap.a[1]]) && (keys[keyMap.l[0]] || keys[keyMap.l[1]]) && (keys[keyMap.r[0]] ||
+          keys[keyMap.r[1]]) && (keys[keyMap.s[0]] || keys[keyMap.s[1]])) {
+        if (keys[keyMap.b[0]] || keys[keyMap.b[1]]) {
           startGame();
-        }
-        else {
+        } else {
           endGame();
         }
       }
-    }
-    else {
-      if (mType[i] == 3){
-        if (gamepad.buttons[controllerMaps[mType[i]][button.a]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.l]].value == 1 && gamepad.buttons[controllerMaps[mType[i]][button.r]].value == 1 && gamepad.buttons[controllerMaps[mType[i]][button.s]].pressed){
-          if (gamepad.buttons[controllerMaps[mType[i]][button.b]].pressed){
+    } else {
+      if (mType[i] == 3) {
+        if (gamepad.buttons[controllerMaps[mType[i]][button.a]].pressed && gamepad.buttons[controllerMaps[mType[i]][
+            button.l
+          ]].value == 1 && gamepad.buttons[controllerMaps[mType[i]][button.r]].value == 1 && gamepad.buttons[
+            controllerMaps[mType[i]][button.s]].pressed) {
+          if (gamepad.buttons[controllerMaps[mType[i]][button.b]].pressed) {
             startGame();
+          } else {
+            endGame();
           }
-          else {
+        }
+      } else {
+        if (gamepad.buttons[controllerMaps[mType[i]][button.a]].pressed && gamepad.buttons[controllerMaps[mType[i]][
+            button.l
+          ]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.r]].pressed && gamepad.buttons[controllerMaps[
+            mType[i]][button.s]].pressed) {
+          if (gamepad.buttons[controllerMaps[mType[i]][button.b]].pressed) {
+            startGame();
+          } else {
             endGame();
           }
         }
       }
-      else {
-        if (gamepad.buttons[controllerMaps[mType[i]][button.a]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.l]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.r]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.s]].pressed){
-          if (gamepad.buttons[controllerMaps[mType[i]][button.b]].pressed){
-            startGame();
-          }
-          else {
-            endGame();
-          }
-        }
-      }
     }
-    if (frameAdvance[i][0] && !frameAdvance[i][1]){
+    if (frameAdvance[i][0] && !frameAdvance[i][1]) {
       frameByFrame = true;
     }
   }
-  if (player[i].inputs.dpadleft[0] && !player[i].inputs.dpadleft[1]){
+  if (player[i].inputs.dpadleft[0] && !player[i].inputs.dpadleft[1]) {
     player[i].showLedgeGrabBox ^= true;
   }
-  if (player[i].inputs.dpaddown[0] && !player[i].inputs.dpaddown[1]){
+  if (player[i].inputs.dpaddown[0] && !player[i].inputs.dpaddown[1]) {
     player[i].showECB ^= true;
   }
-  if (player[i].inputs.dpadright[0] && !player[i].inputs.dpadright[1]){
-    player[i].showHitbox^= true;
+  if (player[i].inputs.dpadright[0] && !player[i].inputs.dpadright[1]) {
+    player[i].showHitbox ^= true;
   }
-  if (mType[i] != 10){
-    if ((gamepad.buttons[controllerMaps[mType[i]][button.z]].pressed || gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed) && gamepad.buttons[controllerMaps[mType[i]][button.x]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.y]].pressed && !attemptingControllerReset[i]){
+  if (mType[i] != 10) {
+    if ((gamepad.buttons[controllerMaps[mType[i]][button.z]].pressed || gamepad.buttons[controllerMaps[mType[i]][
+        button.du
+      ]].pressed) && gamepad.buttons[controllerMaps[mType[i]][button.x]].pressed && gamepad.buttons[controllerMaps[
+        mType[i]][button.y]].pressed && !attemptingControllerReset[i]) {
       attemptingControllerReset[i] = true;
-      setTimeout(function(){
-        if (gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.x]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.y]].pressed){
-        //cd[i].ls = new Vec2D(gamepad.axes[0],gamepad.axes[1]*-1);
-        //cd[i].cs = new Vec2D(gamepad.axes[5],gamepad.axes[2]*-1);
-        //cd[i].l = gamepad.axes[3]+0.8;
-        //cd[i].r = gamepad.axes[4]+0.8;
-          cd[i].ls = new Vec2D(gamepad.axes[controllerMaps[mType[i]][button.lsX]],gamepad.axes[controllerMaps[mType[i]][button.lsY]]*-1);
-          cd[i].cs = new Vec2D(gamepad.axes[controllerMaps[mType[i]][button.csX]],gamepad.axes[controllerMaps[mType[i]][button.csY]]*-1);
-          cd[i].l = gamepad.axes[controllerMaps[mType[i]][button.lA]]+0.8;
-          cd[i].r = gamepad.axes[controllerMaps[mType[i]][button.rA]]+0.8;
+      setTimeout(function() {
+        if (gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed && gamepad.buttons[controllerMaps[mType[
+            i]][button.x]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.y]].pressed) {
+          //cd[i].ls = new Vec2D(gamepad.axes[0],gamepad.axes[1]*-1);
+          //cd[i].cs = new Vec2D(gamepad.axes[5],gamepad.axes[2]*-1);
+          //cd[i].l = gamepad.axes[3]+0.8;
+          //cd[i].r = gamepad.axes[4]+0.8;
+          cd[i].ls = new Vec2D(gamepad.axes[controllerMaps[mType[i]][button.lsX]], gamepad.axes[controllerMaps[
+            mType[i]][button.lsY]] * -1);
+          cd[i].cs = new Vec2D(gamepad.axes[controllerMaps[mType[i]][button.csX]], gamepad.axes[controllerMaps[
+            mType[i]][button.csY]] * -1);
+          cd[i].l = gamepad.axes[controllerMaps[mType[i]][button.lA]] + 0.8;
+          cd[i].r = gamepad.axes[controllerMaps[mType[i]][button.rA]] + 0.8;
           console.log("Controller Reset!");
-          $("#resetIndicator"+i).fadeIn(100);
-          $("#resetIndicator"+i).fadeOut(500);
+          $("#resetIndicator" + i).fadeIn(100);
+          $("#resetIndicator" + i).fadeOut(500);
         }
         attemptingControllerReset[i] = false;
-      },2000);
+      }, 2000);
     }
   }
-  if (pause[i][0] && !pause[i][1]){
-    if (gameMode == 3 || gameMode == 5){
+  if (pause[i][0] && !pause[i][1]) {
+    if (gameMode == 3 || gameMode == 5) {
       playing ^= true;
-      if (!playing){
+      if (!playing) {
         sounds.pause.play();
         //music.battlefield.volume(0.3);
-        changeVolume(music,masterVolume[1]*0.3,1);
+        changeVolume(music, masterVolume[1] * 0.3, 1);
         renderForeground();
-      }
-      else {
+      } else {
         //music.battlefield.volume(0);
-        changeVolume(music,masterVolume[1],1);
+        changeVolume(music, masterVolume[1], 1);
       }
     }
   }
 
   if (showDebug) {
-    $("#lsAxisX"+i).empty().append(lstickX.toFixed(5));
-    $("#lsAxisY"+i).empty().append(lstickY.toFixed(5));
-    $("#csAxisX"+i).empty().append(cstickX.toFixed(5));
-    $("#csAxisY"+i).empty().append(cstickY.toFixed(5));
-    $("#lAnalog"+i).empty().append(lAnalog.toFixed(5));
-    $("#rAnalog"+i).empty().append(rAnalog.toFixed(5));
+    $("#lsAxisX" + i).empty().append(lstickX.toFixed(5));
+    $("#lsAxisY" + i).empty().append(lstickY.toFixed(5));
+    $("#csAxisX" + i).empty().append(cstickX.toFixed(5));
+    $("#csAxisY" + i).empty().append(cstickY.toFixed(5));
+    $("#lAnalog" + i).empty().append(lAnalog.toFixed(5));
+    $("#rAnalog" + i).empty().append(rAnalog.toFixed(5));
   }
 
-  if (mType[i] == 10){
+  if (mType[i] == 10) {
     /*for (var j=0;j<12;j++){
       if ((keyboardMap[j].length > 1)?(keys[keyboardMap[j][0]] || keys[keyboardMap[j][1]] || keys[keyboardMap[j][2]]):keys[keyboardMap[j]]){
         $("#"+i+"button"+j).show();
@@ -874,26 +966,24 @@ window.interpretInputs = function(i,active){
         $("#"+i+"button"+j).hide();
       }
     }*/
-  }
-  else {
-    for (var j=0;j<12;j++){
+  } else {
+    for (var j = 0; j < 12; j++) {
       var bNum = j;
-      if (mType[i] == 0){
-        if (bNum > 5){
+      if (mType[i] == 0) {
+        if (bNum > 5) {
           bNum++;
         }
-        if (bNum > 7){
+        if (bNum > 7) {
           bNum++;
         }
-        if (bNum > 8){
-          bNum+=2;
+        if (bNum > 8) {
+          bNum += 2;
         }
       }
-      if (gamepad.buttons[bNum].pressed){
-        $("#"+i+"button"+j).show();
-      }
-      else {
-        $("#"+i+"button"+j).hide();
+      if (gamepad.buttons[bNum].pressed) {
+        $("#" + i + "button" + j).show();
+      } else {
+        $("#" + i + "button" + j).hide();
       }
     }
   }
@@ -907,69 +997,67 @@ window.ui = 0;
 window.c = 0;
 window.canvasMain = 0;
 window.layerSwitches = {
-  BG1 : true,
-  BG2 : true,
-  FG1 : true,
-  FG2 : true,
-  UI : true
+  BG1: true,
+  BG2: true,
+  FG1: true,
+  FG2: true,
+  UI: true
 };
 
-window.renderToMain = function(){
+window.renderToMain = function() {
   var keys = Object.keys(layers);
-  for (var i=0;i<keys.length;i++){
-    if (layerSwitches[keys[i]]){
-      c.drawImage(layers[keys[i]],0,0)
+  for (var i = 0; i < keys.length; i++) {
+    if (layerSwitches[keys[i]]) {
+      c.drawImage(layers[keys[i]], 0, 0)
     }
   }
 }
 
-window.renderVfx = function(otherFrame){
+window.renderVfx = function(otherFrame) {
   otherFrame = otherFrame || false;
   var popQueue = [];
-  for (var j=0;j<vfxQueue.length;j++){
+  for (var j = 0; j < vfxQueue.length; j++) {
     vfxQueue[j][1]++;
-    if (vfxQueue[j][0].frames >= vfxQueue[j][1]){
-      if (showVfx){
-        if (!otherFrame){
+    if (vfxQueue[j][0].frames >= vfxQueue[j][1]) {
+      if (showVfx) {
+        if (!otherFrame) {
           dVfx[vfxQueue[j][0].name](j);
         }
         // if 30fps mode on the other frame, still call swing function but just don't draw
-        else if (vfxQueue[j][0].name == "swing"){
-          dVfx.swing(j,false);
+        else if (vfxQueue[j][0].name == "swing") {
+          dVfx.swing(j, false);
         }
       }
-    }
-    else {
+    } else {
       popQueue.push(j);
     }
   }
-  for (var k=0;k<popQueue.length;k++){
-    vfxQueue.splice(popQueue[k]-k, 1);
+  for (var k = 0; k < popQueue.length; k++) {
+    vfxQueue.splice(popQueue[k] - k, 1);
   }
 }
 
-window.drawVfx = function(name,pos,face,f){
-  if (typeof(f)==='undefined') f = -1;
+window.drawVfx = function(name, pos, face, f) {
+  if (typeof(f) === 'undefined') f = -1;
   var instance = {};
-  $.extend(true,instance,vfx[name]);
-  if (instance.name == "circleDust"){
-    instance.circles[0] = Math.random()*-2;
-    instance.circles[1] = (Math.random()*-stage.scale)-2;
-    instance.circles[2] = Math.random()*2;
-    instance.circles[3] = (Math.random()*stage.scale)+2;
+  $.extend(true, instance, vfx[name]);
+  if (instance.name == "circleDust") {
+    instance.circles[0] = Math.random() * -2;
+    instance.circles[1] = (Math.random() * -stage.scale) - 2;
+    instance.circles[2] = Math.random() * 2;
+    instance.circles[3] = (Math.random() * stage.scale) + 2;
   }
-  var newPos = new Vec2D(pos.x,pos.y);
-  vfxQueue.push([instance,0,newPos,face,f]);
+  var newPos = new Vec2D(pos.x, pos.y);
+  vfxQueue.push([instance, 0, newPos, face, f]);
 }
 
-window.update = function(i){
-  if (!starting){
-    if (currentPlayers[i] != -1){
-      if (playerType[i] == 0){
-        interpretInputs(i,true);
-      }
-      else {
-        if (player[i].actionState != "SLEEP"){
+window.update = function(i) {
+  if (!starting) {
+    if (currentPlayers[i] != -1) {
+      if (playerType[i] == 0) {
+        interpretInputs(i, true);
+      } else {
+        if (player[i].actionState != "SLEEP") {
           runAI(i);
         }
       }
@@ -982,82 +1070,72 @@ let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
-window.gameTick = function(){
+window.gameTick = function() {
   var start = performance.now();
   var diff = 0;
-  if (gameMode == 0 || gameMode == 20){
+  if (gameMode == 0 || gameMode == 20) {
     findPlayers();
-  }
-  else if (gameMode == 1){
+  } else if (gameMode == 1) {
     //console.log(playerType);
-    for (var i=0;i<ports;i++){
-      interpretInputs(i,true);
+    for (var i = 0; i < ports; i++) {
+      interpretInputs(i, true);
       menuMove(i);
     }
-  }
-  else if (gameMode == 10){
-    for (var i=0;i<ports;i++){
-      interpretInputs(i,true);
+  } else if (gameMode == 10) {
+    for (var i = 0; i < ports; i++) {
+      interpretInputs(i, true);
       audioMenuControls(i);
     }
-  }
-  else if (gameMode == 11){
-    for (var i=0;i<ports;i++){
-      interpretInputs(i,true);
+  } else if (gameMode == 11) {
+    for (var i = 0; i < ports; i++) {
+      interpretInputs(i, true);
       gameplayMenuControls(i);
     }
-  }
-  else if (gameMode == 12){
-    for (var i=0;i<ports;i++){
-      interpretInputs(i,true);
+  } else if (gameMode == 12) {
+    for (var i = 0; i < ports; i++) {
+      interpretInputs(i, true);
       keyboardMenuControls(i);
     }
-  }
-  else if (gameMode == 13){
-    interpretInputs(creditsPlayer,true);
+  } else if (gameMode == 13) {
+    interpretInputs(creditsPlayer, true);
     credits(creditsPlayer);
-  }
-  else if (gameMode == 2){
-    for (var i=0;i<4;i++){
-      if (i < ports){
-        interpretInputs(i,true);
+  } else if (gameMode == 2) {
+    for (var i = 0; i < 4; i++) {
+      if (i < ports) {
+        interpretInputs(i, true);
         cssControls(i);
       }
 
       aS[cS[i]][player[i].actionState].main(i);
     }
-    for (var i=0;i<4;i++){
-      if (playerType[i] > -1){
+    for (var i = 0; i < 4; i++) {
+      if (playerType[i] > -1) {
         hitDetection(i);
       }
     }
     executeHits();
     hitQueue = [];
     findPlayers();
-  }
-  else if (gameMode == 6){
+  } else if (gameMode == 6) {
     // stage select
-    for (var i=0;i<4;i++){
-      if (i < ports){
-        interpretInputs(i,true);
+    for (var i = 0; i < 4; i++) {
+      if (i < ports) {
+        interpretInputs(i, true);
         sssControls(i);
       }
     }
-  }
-  else if (gameMode == 7){
+  } else if (gameMode == 7) {
     // stage select
-    interpretInputs(targetPlayer,true);
+    interpretInputs(targetPlayer, true);
     tssControls(targetPlayer);
-  }
-  else if (gameMode == 4){
-    interpretInputs(targetBuilder,true);
+  } else if (gameMode == 4) {
+    interpretInputs(targetBuilder, true);
     targetBuilderControls(targetBuilder);
-  }
-  else if (gameMode == 5){
-    if (endTargetGame){
+  } else if (gameMode == 5) {
+    if (endTargetGame) {
       finishGame();
     }
-    if (playing || frameByFrame){
+    if (playing || frameByFrame) {
       var now = performance.now();
       var dt = now - lastUpdate;
       lastUpdate = now;
@@ -1065,19 +1143,18 @@ window.gameTick = function(){
       executeArticles();
       update(targetBuilder);
       targetHitDetection(targetBuilder);
-      if (!starting){
+      if (!starting) {
         targetTimerTick();
-      }
-      else {
+      } else {
         startTimer -= 0.01666667;
-        if (startTimer < 0){
+        if (startTimer < 0) {
           starting = false;
         }
       }
-      if (player[targetBuilder].inputs.s[0] && !player[targetBuilder].inputs.s[1]){
+      if (player[targetBuilder].inputs.s[0] && !player[targetBuilder].inputs.s[1]) {
         endGame();
       }
-      if (frameByFrame){
+      if (frameByFrame) {
         frameByFrameRender = true;
       }
       frameByFrame = false;
@@ -1086,13 +1163,13 @@ window.gameTick = function(){
         diff = performance.now() - start;
         gamelogicTime[0] += diff;
         gamelogicTime[0] /= 2;
-        if (diff >= 10){
+        if (diff >= 10) {
           gamelogicTime[3]++;
         }
-        if (diff < gamelogicTime[2]){
+        if (diff < gamelogicTime[2]) {
           gamelogicTime[2] = diff;
         }
-        if (diff > gamelogicTime[1]){
+        if (diff > gamelogicTime[1]) {
           gamelogicTime[1] = diff;
         }
         dom.gamelogicAvg.innerHTML = Math.round(gamelogicTime[0]);
@@ -1100,14 +1177,12 @@ window.gameTick = function(){
         dom.gamelogicLow.innerHTML = Math.round(gamelogicTime[2]);
         dom.gamelogicPeak.innerHTML = gamelogicTime[3];
       }
-    }
-    else {
-      if (!gameEnd){
-        interpretInputs(targetBuilder,false);
+    } else {
+      if (!gameEnd) {
+        interpretInputs(targetBuilder, false);
       }
     }
-  }
-  else if (playing || frameByFrame){
+  } else if (playing || frameByFrame) {
     //console.log("test0");
     /*delta = timestamp - lastFrameTimeMs; // get the delta time since last frame
     lastFrameTimeMs = timestamp;
@@ -1123,30 +1198,29 @@ window.gameTick = function(){
     stage.movingPlatforms();
     destroyArticles();
     executeArticles();
-    for (var i=0;i<4;i++){
-      if (playerType[i] > -1){
+    for (var i = 0; i < 4; i++) {
+      if (playerType[i] > -1) {
         update(i);
       }
     }
     checkPhantoms();
-    for (var i=0;i<4;i++){
-      if (playerType[i] > -1){
+    for (var i = 0; i < 4; i++) {
+      if (playerType[i] > -1) {
         hitDetection(i);
       }
     }
     executeHits();
     articlesHitDetection();
     executeArticleHits();
-    if (!starting && !versusMode){
+    if (!starting && !versusMode) {
       matchTimerTick();
-    }
-    else {
+    } else {
       startTimer -= 0.01666667;
-      if (startTimer < 0){
+      if (startTimer < 0) {
         starting = false;
       }
     }
-    if (frameByFrame){
+    if (frameByFrame) {
       frameByFrameRender = true;
     }
     frameByFrame = false;
@@ -1155,13 +1229,13 @@ window.gameTick = function(){
       diff = performance.now() - start;
       gamelogicTime[0] += diff;
       gamelogicTime[0] /= 2;
-      if (diff >= 10){
+      if (diff >= 10) {
         gamelogicTime[3]++;
       }
-      if (diff < gamelogicTime[2]){
+      if (diff < gamelogicTime[2]) {
         gamelogicTime[2] = diff;
       }
-      if (diff > gamelogicTime[1]){
+      if (diff > gamelogicTime[1]) {
         gamelogicTime[1] = diff;
       }
       dom.gamelogicAvg.innerHTML = Math.round(gamelogicTime[0]);
@@ -1169,16 +1243,14 @@ window.gameTick = function(){
       dom.gameLogicLow.innerHTML = Math.round(gamelogicTime[2]);
       dom.gameLogicPeak.innerHTML = gamelogicTime[3];
     }
-  }
-  else if (findingPlayers){
+  } else if (findingPlayers) {
     findPlayers();
-  }
-  else {
-    if (!gameEnd){
-      for (var i=0;i<4;i++){
-        if (playerType[i] == 0){
-          if (currentPlayers[i] != -1){
-            interpretInputs(i,false);
+  } else {
+    if (!gameEnd) {
+      for (var i = 0; i < 4; i++) {
+        if (playerType[i] == 0) {
+          if (currentPlayers[i] != -1) {
+            interpretInputs(i, false);
           }
         }
       }
@@ -1202,65 +1274,54 @@ window.gameTick = function(){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick,16-diff);
+  setTimeout(gameTick, 16 - diff);
 }
 
-window.clearScreen = function(){
+window.clearScreen = function() {
   //bg1.fillStyle = "rgb(0, 0, 0)";
   //bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
-  bg2.clearRect(0,0,layers.BG2.width,layers.BG2.height);
+  bg2.clearRect(0, 0, layers.BG2.width, layers.BG2.height);
   //fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
-  fg2.clearRect(0,0,layers.FG2.width,layers.FG2.height);
-  ui.clearRect(0,0,layers.UI.width,layers.UI.height);
+  fg2.clearRect(0, 0, layers.FG2.width, layers.FG2.height);
+  ui.clearRect(0, 0, layers.UI.width, layers.UI.height);
 }
 
 let otherFrame = true;
 let fps30 = false;
 
-window.renderTick = function(){
+window.renderTick = function() {
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
-  if ((fps30 && otherFrame) || !fps30){
+  if ((fps30 && otherFrame) || !fps30) {
     //console.log("------");
-    if (gameMode == 20){
+    if (gameMode == 20) {
       drawStartUp();
-    }
-    else if (gameMode == 10){
+    } else if (gameMode == 10) {
       drawAudioMenu();
-    }
-    else if (gameMode == 11){
+    } else if (gameMode == 11) {
       drawGameplayMenu();
-    }
-    else if (gameMode == 12){
+    } else if (gameMode == 12) {
       drawKeyboardMenu();
-    }
-    else if (gameMode == 13){
+    } else if (gameMode == 13) {
       drawCredits();
-    }
-    else if (gameMode == 0){
+    } else if (gameMode == 0) {
       drawStartScreen();
-    }
-    else if (gameMode == 1){
+    } else if (gameMode == 1) {
       drawMainMenu();
-    }
-    else if (gameMode == 2){
+    } else if (gameMode == 2) {
       drawCSS();
       //renderVfx();
-    }
-    else if (gameMode == 6){
+    } else if (gameMode == 6) {
       drawSSS();
-    }
-    else if (gameMode == 7){
+    } else if (gameMode == 7) {
       drawTSS();
-    }
-    else if (gameMode == 4){
+    } else if (gameMode == 4) {
       renderTargetBuilder();
-    }
-    else if (gameMode == 5){
-      if (playing || frameByFrameRender){
+    } else if (gameMode == 5) {
+      if (playing || frameByFrameRender) {
         var rStart = performance.now();
         clearScreen();
-        if (showVfx){
+        if (showVfx) {
           drawBackground();
         }
         drawStage();
@@ -1273,13 +1334,13 @@ window.renderTick = function(){
           var diff = performance.now() - rStart;
           renderTime[0] += diff;
           renderTime[0] /= 2;
-          if (diff >= 10){
+          if (diff >= 10) {
             renderTime[3]++;
           }
-          if (diff > renderTime[1]){
+          if (diff > renderTime[1]) {
             renderTime[1] = diff;
           }
-          if (diff < renderTime[2]){
+          if (diff < renderTime[2]) {
             renderTime[2] = diff;
           }
 
@@ -1289,20 +1350,19 @@ window.renderTick = function(){
           dom.renderPeak.innerHTML = renderTime[3];
         }
       }
-    }
-    else if (playing || frameByFrameRender){
+    } else if (playing || frameByFrameRender) {
       /*delta = timestamp - lastFrameTimeMs; // get the delta time since last frame
       lastFrameTimeMs = timestamp;
       console.log(delta);*/
       //console.log("test2");
       var rStart = performance.now();
       clearScreen();
-      if (showVfx){
+      if (showVfx) {
         drawBackground();
       }
       drawStage();
-      for (var i=0;i<4;i++){
-        if (playerType[i] > -1){
+      for (var i = 0; i < 4; i++) {
+        if (playerType[i] > -1) {
           renderPlayer(i);
         }
       }
@@ -1314,13 +1374,13 @@ window.renderTick = function(){
         var diff = performance.now() - rStart;
         renderTime[0] += diff;
         renderTime[0] /= 2;
-        if (diff >= 10){
+        if (diff >= 10) {
           renderTime[3]++;
         }
-        if (diff > renderTime[1]){
+        if (diff > renderTime[1]) {
           renderTime[1] = diff;
         }
-        if (diff < renderTime[2]){
+        if (diff < renderTime[2]) {
           renderTime[2] = diff;
         }
 
@@ -1330,55 +1390,57 @@ window.renderTick = function(){
         dom.renderPeak.innerHTML = renderTime[3];
       }
     }
-    if (frameByFrameRender){
+    if (frameByFrameRender) {
       renderForeground();
     }
     frameByFrameRender = false;
     //renderToMain();
-  //console.log(performance.now());
-  }
-  else {
-    if (playing){
+    //console.log(performance.now());
+  } else {
+    if (playing) {
       renderVfx(true);
     }
   }
 }
 
-window.buildPlayerObject = function(i){
-  player[i] = new playerObject(cS[i],startingPoint[i],startingFace[i]);
-  player[i].phys.ECB1 = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
-  player[i].phys.ECBp = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
+window.buildPlayerObject = function(i) {
+  player[i] = new playerObject(cS[i], startingPoint[i], startingFace[i]);
+  player[i].phys.ECB1 = [new Vec2D(startingPoint[i].x, startingPoint[i].y), new Vec2D(startingPoint[i].x,
+    startingPoint[i].y), new Vec2D(startingPoint[i].x, startingPoint[i].y), new Vec2D(startingPoint[i].x,
+    startingPoint[i].y)];
+  player[i].phys.ECBp = [new Vec2D(startingPoint[i].x, startingPoint[i].y), new Vec2D(startingPoint[i].x,
+    startingPoint[i].y), new Vec2D(startingPoint[i].x, startingPoint[i].y), new Vec2D(startingPoint[i].x,
+    startingPoint[i].y)];
   player[i].difficulty = cpuDifficulty[i];
 }
 
-for (var i=0;i<4;i++){
+for (var i = 0; i < 4; i++) {
   buildPlayerObject(i);
   player[i].phys.face = 1;
   player[i].actionState = "WAIT";
 }
 
-window.initializePlayers = function(i,target){
+window.initializePlayers = function(i, target) {
   buildPlayerObject(i);
-  if (target){
-    drawVfx("entrance",new Vec2D(stage.startingPoint.x,stage.startingPoint.y));
-  }
-  else {
-    drawVfx("entrance",new Vec2D(startingPoint[i][0],startingPoint[i][1]));
+  if (target) {
+    drawVfx("entrance", new Vec2D(stage.startingPoint.x, stage.startingPoint.y));
+  } else {
+    drawVfx("entrance", new Vec2D(startingPoint[i][0], startingPoint[i][1]));
   }
 }
 
-window.startGame = function(){
+window.startGame = function() {
   stage = stages[stageSelect];
   backgroundType = Math.round(Math.random());
   changeGamemode(3);
   vfxQueue = [];
-  for (var n=0;n<4;n++){
-    if (playerType[n] > -1){
-      initializePlayers(n,false);
+  for (var n = 0; n < 4; n++) {
+    if (playerType[n] > -1) {
+      initializePlayers(n, false);
       renderPlayer(n);
       player[n].inCSS = false;
     }
-    if (versusMode){
+    if (versusMode) {
       player[n].stocks = 1;
     }
   }
@@ -1386,7 +1448,7 @@ window.startGame = function(){
   startTimer = 1.5;
   starting = true;
   music.menu.stop();
-  switch (stageSelect){
+  switch (stageSelect) {
     case 0:
       music.battlefield.stop();
       music.battlefield.play("battlefieldStart");
@@ -1406,12 +1468,12 @@ window.startGame = function(){
     default:
       break;
   }
-  drawVfx("start",new Vec2D(0,0));
+  drawVfx("start", new Vec2D(0, 0));
   findingPlayers = false;
   playing = true;
 }
 
-window.endGame = function(){
+window.endGame = function() {
   gameEnd = false;
   lostStockQueue = [];
   phantomQueue = [];
@@ -1420,29 +1482,37 @@ window.endGame = function(){
   music.yStory.stop();
   music.pStadium.stop();
   music.dreamland.stop();
-  changeVolume(music,masterVolume[1],1);
+  changeVolume(music, masterVolume[1], 1);
   playing = false;
   clearScreen();
   drawStage();
-  if (gameMode == 3){
+  if (gameMode == 3) {
     changeGamemode(2);
     music.menu.play("menuStart");
-  }
-  else if (gameMode == 5){
-    if (targetTesting){
+  } else if (gameMode == 5) {
+    if (targetTesting) {
       changeGamemode(4);
-    }
-    else {
+    } else {
       changeGamemode(7);
     }
   }
-  pause = [[true,true],[true,true],[true,true],[true,true]];
-  frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
+  pause = [
+    [true, true],
+    [true, true],
+    [true, true],
+    [true, true]
+  ];
+  frameAdvance = [
+    [true, true],
+    [true, true],
+    [true, true],
+    [true, true]
+  ];
   findingPlayers = true;
   positionPlayersInCSS();
-  for (var i=0;i<4;i++){
-    if (playerType[i] > -1){
-      if (player[i].actionState == "FURAFURA"){
+  for (var i = 0; i < 4; i++) {
+    if (playerType[i] > -1) {
+      if (player[i].actionState == "FURAFURA") {
         sounds.furaloop.stop(player[i].furaLoopID);
       }
       player[i].inputs.a[0] = true;
@@ -1455,7 +1525,7 @@ window.endGame = function(){
   }
 }
 
-window.finishGame = function(){
+window.finishGame = function() {
   endTargetGame = false;
   gameEnd = true;
   playing = false;
@@ -1464,88 +1534,89 @@ window.finishGame = function(){
   var text = "Game!";
   var size = 300;
   var textScale = 1;
-  var textGrad =fg2.createLinearGradient(0,200,0,520);
-  if (gameMode == 5 || gameMode == 8){
-    if (stage.target.length == targetsDestroyed){
-      if (!targetTesting){
-        if (targetStagePlaying < 10){
-          for (var i=0;i<3;i++){
-            if (!medalsEarned[cS[targetPlayer]][targetStagePlaying][i]){
-              if (Math.round(matchTimer*100)/100 <= medalTimes[cS[targetPlayer]][targetStagePlaying][i]){
+  var textGrad = fg2.createLinearGradient(0, 200, 0, 520);
+  if (gameMode == 5 || gameMode == 8) {
+    if (stage.target.length == targetsDestroyed) {
+      if (!targetTesting) {
+        if (targetStagePlaying < 10) {
+          for (var i = 0; i < 3; i++) {
+            if (!medalsEarned[cS[targetPlayer]][targetStagePlaying][i]) {
+              if (Math.round(matchTimer * 100) / 100 <= medalTimes[cS[targetPlayer]][targetStagePlaying][i]) {
                 medalsEarned[cS[targetPlayer]][targetStagePlaying][i] = true;
               }
             }
           }
         }
-        if (matchTimer < targetRecords[cS[targetPlayer]][targetStagePlaying] || targetRecords[cS[targetPlayer]][targetStagePlaying] == -1){
+        if (matchTimer < targetRecords[cS[targetPlayer]][targetStagePlaying] || targetRecords[cS[targetPlayer]][
+            targetStagePlaying
+          ] == -1) {
           targetRecords[cS[targetPlayer]][targetStagePlaying] = matchTimer;
           sounds.newRecord.play();
-          setCookie(cS[targetPlayer]+"target"+targetStagePlaying, targetRecords[cS[targetPlayer]][targetStagePlaying],36500);
-        }
-        else {
+          setCookie(cS[targetPlayer] + "target" + targetStagePlaying, targetRecords[cS[targetPlayer]][
+            targetStagePlaying
+          ], 36500);
+        } else {
           sounds.complete.play();
         }
-      }
-      else {
+      } else {
         sounds.complete.play();
       }
       text = "Complete!";
       size = 200;
       textScale = 1.5;
-      var textGrad =fg2.createLinearGradient(0,200/textScale,0,520/textScale);
-      textGrad.addColorStop(0,"black");
-      textGrad.addColorStop(0.4,"black");
-      textGrad.addColorStop(0.8,"rgb(150, 86, 46)");
-      textGrad.addColorStop(1,"rgb(205, 108, 45)");
-    }
-    else {
+      var textGrad = fg2.createLinearGradient(0, 200 / textScale, 0, 520 / textScale);
+      textGrad.addColorStop(0, "black");
+      textGrad.addColorStop(0.4, "black");
+      textGrad.addColorStop(0.8, "rgb(150, 86, 46)");
+      textGrad.addColorStop(1, "rgb(205, 108, 45)");
+    } else {
       sounds.failure.play();
       text = "Failure";
       size = 250;
-      textGrad.addColorStop(0,"black");
-      textGrad.addColorStop(0.5,"black");
-      textGrad.addColorStop(0.7,"rgb(51, 34, 251)");
-      textGrad.addColorStop(1,"rgb(107, 71, 250)");
+      textGrad.addColorStop(0, "black");
+      textGrad.addColorStop(0.5, "black");
+      textGrad.addColorStop(0.7, "rgb(51, 34, 251)");
+      textGrad.addColorStop(1, "rgb(107, 71, 250)");
     }
-  }
-  else {
-    if (matchTimer <= 0){
+  } else {
+    if (matchTimer <= 0) {
       text = "Time!"
       sounds.time.play();
-      textGrad.addColorStop(0,"black");
-      textGrad.addColorStop(0.5,"black");
-      textGrad.addColorStop(0.7,"rgb(21, 51, 180)");
-      textGrad.addColorStop(1,"rgb(71, 94, 250)");
-    }
-    else {
+      textGrad.addColorStop(0, "black");
+      textGrad.addColorStop(0.5, "black");
+      textGrad.addColorStop(0.7, "rgb(21, 51, 180)");
+      textGrad.addColorStop(1, "rgb(71, 94, 250)");
+    } else {
       sounds.game.play();
-      textGrad.addColorStop(0,"black");
-      textGrad.addColorStop(0.4,"black");
-      textGrad.addColorStop(0.7,"rgb(167, 27, 40)");
-      textGrad.addColorStop(1,"rgb(255, 31, 52)");
+      textGrad.addColorStop(0, "black");
+      textGrad.addColorStop(0.4, "black");
+      textGrad.addColorStop(0.7, "rgb(167, 27, 40)");
+      textGrad.addColorStop(1, "rgb(255, 31, 52)");
     }
   }
-  fg2.scale(1,textScale);
-  fg2.fillStyle=textGrad;
+  fg2.scale(1, textScale);
+  fg2.fillStyle = textGrad;
   fg2.lineWidth = 40;
-  fg2.strokeStyle="black";
-  fg2.font="900 "+size+"px Arial";
-  fg2.strokeText(text,600,470/textScale);
+  fg2.strokeStyle = "black";
+  fg2.font = "900 " + size + "px Arial";
+  fg2.strokeText(text, 600, 470 / textScale);
   fg2.lineWidth = 20;
-  fg2.strokeStyle="white";
-  fg2.font="900 "+size+"px Arial";
-  fg2.strokeText(text,600,470/textScale);
-  fg2.font="900 "+size+"px Arial";
-  fg2.fillText(text,600,470/textScale);
+  fg2.strokeStyle = "white";
+  fg2.font = "900 " + size + "px Arial";
+  fg2.strokeText(text, 600, 470 / textScale);
+  fg2.font = "900 " + size + "px Arial";
+  fg2.fillText(text, 600, 470 / textScale);
   fg2.restore();
   music.battlefield.stop();
   music.yStory.stop();
   music.pStadium.stop();
   music.dreamland.stop();
-  setTimeout(function(){endGame()},2500);
+  setTimeout(function() {
+    endGame()
+  }, 2500);
 }
 
-window.start = function(){
+window.start = function() {
   cacheDom();
   getKeyboardCookie();
   getTargetCookies();
@@ -1553,10 +1624,10 @@ window.start = function(){
   getTargetStageCookies();
   getAudioCookies();
   getGameplayCookies();
-  $("#keyboardButton").click(function(){
+  $("#keyboardButton").click(function() {
     $("#keyboardControlsImg").toggle();
   });
-  $("#controllerButton").click(function(){
+  $("#controllerButton").click(function() {
     $("#controllerSupportContainer").toggle();
   });
   layers.BG1 = document.getElementById("background1Canvas");
@@ -1570,47 +1641,44 @@ window.start = function(){
   layers.UI = document.getElementById("uiCanvas");
   ui = layers.UI.getContext("2d");
   bg1.fillStyle = "rgb(0, 0, 0)";
-  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
   gameTick();
   renderTick();
 
-  $("#effectsButton").click(function(){
-    if (showVfx){
+  $("#effectsButton").click(function() {
+    if (showVfx) {
       $("#effectsButtonEdit").empty().append("OFF");
-    }
-    else {
+    } else {
       $("#effectsButtonEdit").empty().append("ON");
     }
     showVfx ^= true;
   });
 
-  $("#fpsButton").click(function(){
-    if (fps30){
+  $("#fpsButton").click(function() {
+    if (fps30) {
       $("#fpsButtonEdit").empty().append("60");
-    }
-    else {
+    } else {
       $("#fpsButtonEdit").empty().append("30");
     }
     fps30 ^= true;
   });
 
-  $("#alphaButton").click(function(){
-    if (transparency){
+  $("#alphaButton").click(function() {
+    if (transparency) {
       $("#alphaButtonEdit").empty().append("OFF");
-    }
-    else {
+    } else {
       $("#alphaButtonEdit").empty().append("ON");
     }
     transparency ^= true;
   });
 
-  $("#layerButton").hover(function(){
+  $("#layerButton").hover(function() {
     $("#layerDropdown").toggle();
   });
 
-  $(".layer").click(function(){
+  $(".layer").click(function() {
     var id = $(this).attr("id");
-    switch (id){
+    switch (id) {
       case "layer1":
         layerSwitches.BG1 ^= true;
         $("#background1Canvas").toggle();
@@ -1637,20 +1705,19 @@ window.start = function(){
     $(this).toggleClass("layerOn");
   });
 
-  $("#debugButton").click(function(){
-    if (showDebug){
+  $("#debugButton").click(function() {
+    if (showDebug) {
       $("#debugButtonEdit").empty().append("OFF");
       $("#debug").hide();
       $("#players").hide();
-      $("body").css("overflow","hidden");
+      $("body").css("overflow", "hidden");
       //var mY = Math.max(($(window).height()-750)/2,0);
       //$("#display").css("margin",mY+"px 0px 0px "+mX+"px");
-    }
-    else {
+    } else {
       $("#debugButtonEdit").empty().append("ON");
       $("#debug").show();
       $("#players").show();
-      $("body").css("overflow","scroll");
+      $("body").css("overflow", "scroll");
       //var mY = Math.max(($(window).height()-900)/2,0);
       //$("#display").css("margin",mY+" 0px 0px px "+mX+"px");
     }
@@ -1658,62 +1725,59 @@ window.start = function(){
     resize();
   });
 
-  $("#hideButton").click(function(){
+  $("#hideButton").click(function() {
     $("#header").toggle();
     showHeader ^= true;
     resize();
   });
 
-  $("#fullscreenButton").click(function(){
-    if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+  $("#fullscreenButton").click(function() {
+    if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !
+        document.webkitIsFullScreen)) {
       if (document.documentElement.requestFullScreen) {
         document.documentElement.requestFullScreen();
-      }
-      else if (document.documentElement.mozRequestFullScreen) {
+      } else if (document.documentElement.mozRequestFullScreen) {
         document.documentElement.mozRequestFullScreen();
-      }
-      else if (document.documentElement.webkitRequestFullScreen) {
+      } else if (document.documentElement.webkitRequestFullScreen) {
         document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
       }
-    }
-    else {
+    } else {
       if (document.cancelFullScreen) {
         document.cancelFullScreen();
-      }
-      else if (document.mozCancelFullScreen) {
+      } else if (document.mozCancelFullScreen) {
         document.mozCancelFullScreen();
-      }
-      else if (document.webkitCancelFullScreen) {
+      } else if (document.webkitCancelFullScreen) {
         document.webkitCancelFullScreen();
       }
     }
     resize();
   });
 
-  $(".topButton").hover(function(){
+  $(".topButton").hover(function() {
     $(this).children(".buttonDetails").toggle();
   });
 
-  if (mobile === false){
-    $(".button").hover(function(){
+  if (mobile === false) {
+    $(".button").hover(function() {
       $(this).toggleClass("buttonhighlighted");
     });
-    $(".socialmedia").hover(function(){
+    $(".socialmedia").hover(function() {
       $(this).toggleClass("socialmediahighlight");
     });
-    $(".sugbtn").hover(function(){
+    $(".sugbtn").hover(function() {
       $(this).toggleClass("sugbtnhighlight");
     });
   }
-  $("#appsButton").hover(function(){
+  $("#appsButton").hover(function() {
     $("#appsDropdown").show();
-  }, function(){
+  }, function() {
     $("#appsDropdown").hide();
   });
   resize();
 }
 
 const dom = {};
+
 function cacheDom() {
   const elementIds = [
     "matchMinutes",
@@ -1732,4 +1796,3 @@ function cacheDom() {
     dom[id] = document.getElementById(id);
   });
 };
-

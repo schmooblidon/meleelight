@@ -6,41 +6,38 @@ hohlogo.src = "assets/hohlogo.png";
 var schmoologo = new Image();
 schmoologo.src = "assets/schmoologo.png";
 
-window.drawStartUp = function(){
+window.drawStartUp = function() {
   startUpTimer++;
-  ui.clearRect(0,0,layers.UI.width,layers.UI.height);
+  ui.clearRect(0, 0, layers.UI.width, layers.UI.height);
   bg1.fillStyle = "rgb(0,0,0)";
-  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
   ui.font = "900 25px Arial";
   ui.textAlign = "center";
-  if (startUpTimer <= 200){
+  if (startUpTimer <= 200) {
     ui.save();
-    drawArrayPathCompress(ui,"rgb(255,255,255)",1,300,650,LOGO,0.5,0.5,0,0,0);
+    drawArrayPathCompress(ui, "rgb(255,255,255)", 1, 300, 650, LOGO, 0.5, 0.5, 0, 0, 0);
     ui.clip();
-    ui.drawImage(schmoologo,100,Math.round(200-startUpTimer/3));
-    drawArrayPathCompress(ui,"rgb(0,0,0)",1,300,650,LOGO2,0.5,0.5,0,0,0);
+    ui.drawImage(schmoologo, 100, Math.round(200 - startUpTimer / 3));
+    drawArrayPathCompress(ui, "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
     ui.restore();
-    if (startUpTimer > 180){
-      ui.fillStyle = "rgba(0,0,0,"+Math.min(1,(startUpTimer-180)/20)+")";
+    if (startUpTimer > 180) {
+      ui.fillStyle = "rgba(0,0,0," + Math.min(1, (startUpTimer - 180) / 20) + ")";
+    } else {
+      ui.fillStyle = "rgba(0,0,0," + Math.max(0, 1 - (startUpTimer) / 20) + ")";
     }
-    else {
-      ui.fillStyle = "rgba(0,0,0,"+Math.max(0,1-(startUpTimer)/20)+")";
-    }
-    ui.fillRect(0,0,layers.UI.width,layers.UI.height);
-  }
-  else if (startUpTimer > 200){
+    ui.fillRect(0, 0, layers.UI.width, layers.UI.height);
+  } else if (startUpTimer > 200) {
     ui.fillStyle = "white";
-    ui.fillText("WITH MUSIC FROM",600,290);
-    ui.drawImage(hohlogo,375,305);
-    if (startUpTimer > 350){
-      ui.fillStyle = "rgba(0,0,0,"+Math.min(1,(startUpTimer-350)/20)+")";
+    ui.fillText("WITH MUSIC FROM", 600, 290);
+    ui.drawImage(hohlogo, 375, 305);
+    if (startUpTimer > 350) {
+      ui.fillStyle = "rgba(0,0,0," + Math.min(1, (startUpTimer - 350) / 20) + ")";
+    } else {
+      ui.fillStyle = "rgba(0,0,0," + Math.max(0, 1 - (startUpTimer - 200) / 20) + ")";
     }
-    else {
-      ui.fillStyle = "rgba(0,0,0,"+Math.max(0,1-(startUpTimer-200)/20)+")";
-    }
-    ui.fillRect(0,0,layers.UI.width,layers.UI.height);
+    ui.fillRect(0, 0, layers.UI.width, layers.UI.height);
   }
-  if (startUpTimer == 370){
+  if (startUpTimer == 370) {
     changeGamemode(0);
   }
 }
