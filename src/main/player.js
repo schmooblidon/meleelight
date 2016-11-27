@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-window.ActiveHitbox = function(size,offset,dmg,angle,kg,bk,sk,type){
+window.ActiveHitbox = function(size, offset, dmg, angle, kg, bk, sk, type) {
   this.size = size;
   this.offset = offset;
   this.dmg = dmg;
@@ -11,48 +11,50 @@ window.ActiveHitbox = function(size,offset,dmg,angle,kg,bk,sk,type){
   this.type = type;
 }
 
-window.hitboxes = function(){
-  this.active = [false,false,false,false];
+window.hitboxes = function() {
+  this.active = [false, false, false, false];
   this.frame = 0;
-  this.id = [new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0)];
+  this.id = [new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0,
+    0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0,
+    0, 0, 0)];
   this.hitList = [];
 }
 
-window.physicsObject = function(pos,face){
-  this.cVel = new Vec2D(0,0);
-  this.kVel = new Vec2D(0,0);
-  this.kDec = new Vec2D(0,0);
-  this.pos = new Vec2D(pos[0],pos[1]);
-  this.posPrev = new Vec2D(0,0);
-  this.posDelta = new Vec2D(0,0);
+window.physicsObject = function(pos, face) {
+  this.cVel = new Vec2D(0, 0);
+  this.kVel = new Vec2D(0, 0);
+  this.kDec = new Vec2D(0, 0);
+  this.pos = new Vec2D(pos[0], pos[1]);
+  this.posPrev = new Vec2D(0, 0);
+  this.posDelta = new Vec2D(0, 0);
   this.grounded = false;
   this.airborneTimer = 0;
   this.fastfalled = false;
   this.face = face;
-  this.ECBp = [new Vec2D(0,0),new Vec2D(3,7),new Vec2D(0,14),new Vec2D(-3,7)];
-  this.ECB1 = [new Vec2D(0,0),new Vec2D(3,7),new Vec2D(0,14),new Vec2D(-3,7)];
-  this.ECB2 = [new Vec2D(0,0),new Vec2D(3,7),new Vec2D(0,14),new Vec2D(-3,7)];
-  this.abovePlatforms = [false,false,false];
-  this.onSurface = [0,0];
+  this.ECBp = [new Vec2D(0, 0), new Vec2D(3, 7), new Vec2D(0, 14), new Vec2D(-3, 7)];
+  this.ECB1 = [new Vec2D(0, 0), new Vec2D(3, 7), new Vec2D(0, 14), new Vec2D(-3, 7)];
+  this.ECB2 = [new Vec2D(0, 0), new Vec2D(3, 7), new Vec2D(0, 14), new Vec2D(-3, 7)];
+  this.abovePlatforms = [false, false, false];
+  this.onSurface = [0, 0];
   this.doubleJumped = false;
   this.shieldHP = 60;
   this.shieldSize = 0;
   this.shieldAnalog = 0;
   this.shielding = false;
-  this.shieldPosition = new Vec2D(0,0);
-  this.shieldPosition = new Vec2D(0,0);
-  this.shieldPositionReal = new Vec2D(0,0);
-  this.shieldPositionReal = new Vec2D(0,0);
+  this.shieldPosition = new Vec2D(0, 0);
+  this.shieldPosition = new Vec2D(0, 0);
+  this.shieldPositionReal = new Vec2D(0, 0);
+  this.shieldPositionReal = new Vec2D(0, 0);
   this.shieldStun = 0;
   this.powerShieldActive = false;
   this.powerShieldReflectActive = false;
   this.powerShielded = false;
   this.onLedge = -1;
-  this.ledgeSnapBoxF = new Box2D([0,5],[8,10]);
-  this.ledgeSnapBoxB = new Box2D([0,5],[-8,10]);
+  this.ledgeSnapBoxF = new Box2D([0, 5], [8, 10]);
+  this.ledgeSnapBoxB = new Box2D([0, 5], [-8, 10]);
   this.ledgeRegrabTimeout = 0;
   this.ledgeRegrabCount = false;
-  this.hurtbox = new Box2D([-4,18],[4,0]);
+  this.hurtbox = new Box2D([-4, 18], [4, 0]);
   this.hurtBoxState = 0;
   this.intangibleTimer = 0;
   this.invincibleTimer = 0;
@@ -96,29 +98,32 @@ window.physicsObject = function(pos,face){
   this.bTurnaroundDirection = 1;
 }
 
-window.inputObject = function(){
-  this.lStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
-  this.rawlStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
-  this.cStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
-  this.lAnalog = [0,0,0,0,0,0,0,0];
-  this.rAnalog = [0,0,0,0,0,0,0,0];
-  this.s = [false,false,false,false,false,false,false,false];
-  this.z = [false,false,false,false,false,false,false,false];
-  this.a = [false,false,false,false,false,false,false,false];
-  this.b = [false,false,false,false,false,false,false,false];
-  this.x = [false,false,false,false,false,false,false,false];
-  this.y = [false,false,false,false,false,false,false,false];
-  this.r = [false,false,false,false,false,false,false,false];
-  this.l = [false,false,false,false,false,false,false,false];
-  this.dpadleft = [false,false,false,false,false,false,false];
-  this.dpaddown = [false,false,false,false,false,false,false];
-  this.dpadright = [false,false,false,false,false,false,false];
-  this.dpadup = [false,false,false,false,false,false,false];
+window.inputObject = function() {
+  this.lStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0,
+    0), new Vec2D(0, 0), new Vec2D(0, 0)];
+  this.rawlStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(
+    0, 0), new Vec2D(0, 0), new Vec2D(0, 0)];
+  this.cStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0,
+    0), new Vec2D(0, 0), new Vec2D(0, 0)];
+  this.lAnalog = [0, 0, 0, 0, 0, 0, 0, 0];
+  this.rAnalog = [0, 0, 0, 0, 0, 0, 0, 0];
+  this.s = [false, false, false, false, false, false, false, false];
+  this.z = [false, false, false, false, false, false, false, false];
+  this.a = [false, false, false, false, false, false, false, false];
+  this.b = [false, false, false, false, false, false, false, false];
+  this.x = [false, false, false, false, false, false, false, false];
+  this.y = [false, false, false, false, false, false, false, false];
+  this.r = [false, false, false, false, false, false, false, false];
+  this.l = [false, false, false, false, false, false, false, false];
+  this.dpadleft = [false, false, false, false, false, false, false];
+  this.dpaddown = [false, false, false, false, false, false, false];
+  this.dpadright = [false, false, false, false, false, false, false];
+  this.dpadup = [false, false, false, false, false, false, false];
 }
 
 
-window.playerObject = function(character,pos,face){
-  this.phys = new physicsObject(pos,face);
+window.playerObject = function(character, pos, face) {
+  this.phys = new physicsObject(pos, face);
   this.actionState = "ENTRANCE";
   this.prevActionState = "";
   this.timer = 0;
@@ -131,25 +136,25 @@ window.playerObject = function(character,pos,face){
   this.spawnWaitTime = 0;
   this.hitboxes = new hitboxes();
   this.hit = {
-    knockback : 0,
-    hitlag : 0,
-    hitstun : 0,
-    angle : 0,
-    hitPoint : new Vec2D(0,0),
-    powershield : false,
-    shieldstun : 0
+    knockback: 0,
+    hitlag: 0,
+    hitstun: 0,
+    angle: 0,
+    hitPoint: new Vec2D(0, 0),
+    powershield: false,
+    shieldstun: 0
   }
   this.percent = 0;
   this.stocks = 4;
   this.miniView = false;
-  this.miniViewPoint = new Vec2D(0,0);
+  this.miniViewPoint = new Vec2D(0, 0);
   this.inCSS = true;
   this.furaLoopID = 0;
-  this.percentShake = new Vec2D(0,0);
+  this.percentShake = new Vec2D(0, 0);
   this.shineLoop = 0;
   this.laserCombo = false;
   this.rotation = 0;
-  this.rotationPoint = new Vec2D(0,0);
+  this.rotationPoint = new Vec2D(0, 0);
   this.colourOverlay = "";
   this.colourOverlayBool = false;
   this.currentAction = "NONE";
