@@ -28,57 +28,37 @@ keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,2
 
 keyboardOccupied = false;
 
-/*xbox one controller
-A : 0
-B : 1
-X : 2
-Y : 3
-LB : 4
-RB : 5
-LT : 6
-RT : 7
-Select : 8
-Start : 9*/
-console.log("biogenik adapter support");
-console.log("mac x360 support");
-console.log("TigerGame 3 in 1 adapter support");
-console.log("Retrolink support");
-console.log("Mayflash 2 port on Firefox Fix");
-// biogenik - index 4
-/*
-y : 3
-x : 0
-a : 1
-b : 2
-start : 9
-dd : 14
-du : 12
-dr : 13
-dl : 15
-l : 4
-r : 5
-z : 7
-*/
-map = {
-  a : [1,0,4,0,0,2],
-  b : [2,1,3,2,1,3],
-  x : [0,2,2,1,2,1],
-  y : [3,3,1,3,3,0],
-  z : [7,4,7,5,6,6],
-  r : [5,5,6,7,5,5],
-  l : [4,6,5,6,4,4],
-  s : [9,7,0,9,7,9],
-  du : [12,8,8,12,11,10],
-  dr : [13,11,10,15,9,11],
-  dd : [14,9,9,13,10,8],
-  dl : [15,10,11,14,8,7],
-  lsX : [0,0,0,0,0,0],
-  lsY : [1,1,1,1,1,1],
-  csX : [5,3,3,2,2,2],
-  csY : [2,4,4,3,3,5],
-  lA : [3,2,5,6,5,3],
-  rA : [4,5,6,7,4,4]
-}
+button = {
+  a   : 0,
+  b   : 1,
+  x   : 2,
+  y   : 3,
+  z   : 4,
+  r   : 5,
+  l   : 6,
+  s   : 7,
+  du  : 8,  // d-pad up
+  dr  : 9,  // d-pad right
+  dd  : 10, // d-pad down
+  dl  : 11, // d-pad left
+  lsX : 12, // left analog stick left/right
+  lsY : 13, // left analog stick up/down
+  csX : 14, // c-stick left/right
+  csY : 15, // c-stick up/down
+  lA  : 16, // L button analog sensor
+  rA  : 17  // R button analog sensor
+};
+
+// controller IDs: 0 = mayflash, 1 = vJoy, 2 = raphnet N64, 3 = XBOX 360 (XInput Standard Gamepad), 4 = TigerGame 3 in 1, 5 = retrolink 
+// controller ID 10 is keyboard, and not included here)
+mayflashMap  = [1,2,0,3,7,5,4,9,12,13,14,15,0,1,5,2,3,4];
+vJoyMap      = [0,1,2,3,4,5,6,7,8,11,9,10,0,1,3,4,2,5];
+raphnetMap   = [4,3,2,1,7,6,5,0,8,10,9,11,0,1,3,4,5,6];
+xbox360Map   = [0,2,1,3,5,7,6,9,12,15,13,14,0,1,2,3,6,7];
+tigergameMap = [0,1,2,3,6,5,4,7,11,9,10,8,0,1,2,3,5,4];
+retrolinkMap = [2,3,1,0,6,5,4,9,10,11,8,7,0,1,2,5,3,4];
+
+controllerMaps = [mayflashMap, vJoyMap, raphnetMap, xbox360Map, tigergameMap, retrolinkMap];
 
 
 mType = [0,0,0,0];
@@ -408,7 +388,7 @@ function findPlayers(){
       }
       if (detected){
         if (gameMode < 2 || gameMode == 20){
-          if (gamepad.buttons[map.s[gType]].pressed){
+          if (gamepad.buttons[controllerMaps[gType][button.s]].pressed){
             var alreadyIn = false;
             for (var k=0;k<ports;k++){
               if (currentPlayers[k] == i){
@@ -428,7 +408,7 @@ function findPlayers(){
           }
         }
         else {
-          if (gamepad.buttons[map.a[gType]].pressed){
+          if (gamepad.buttons[controllerMaps[gType][button.a]].pressed){
             var alreadyIn = false;
             for (var k=0;k<ports;k++){
               if (currentPlayers[k] == i){
@@ -637,8 +617,8 @@ function interpretInputs(i,active){
     var gamepad = navigator.getGamepads()[currentPlayers[i]];
     //console.log(gamepad.axes);
 
-    var lstickX = gamepad.axes[map.lsX[mType[i]]] - cd[i].ls.x;
-    var lstickY = gamepad.axes[map.lsY[mType[i]]] * -1 - cd[i].ls.y;
+    var lstickX = gamepad.axes[controllerMaps[mType[i]][button.lsX]] - cd[i].ls.x;
+    var lstickY = gamepad.axes[controllerMaps[mType[i]][button.lsY]] * -1 - cd[i].ls.y;
     lstickX /= 0.75;
     lstickY /= 0.75;
     if (lstickX > 1){
@@ -667,8 +647,8 @@ function interpretInputs(i,active){
     if (Math.abs(lstickY) < 0.3){
       lstickY = 0;
     }
-    var cstickY = gamepad.axes[map.csY[mType[i]]]*-1-cd[i].cs.y;
-    var cstickX = gamepad.axes[map.csX[mType[i]]]-cd[i].cs.x;
+    var cstickY = gamepad.axes[controllerMaps[mType[i]][button.csY]]*-1-cd[i].cs.y;
+    var cstickX = gamepad.axes[controllerMaps[mType[i]][button.csX]]-cd[i].cs.x;
     cstickX /= 0.75;
     cstickY /= 0.75;
     if (cstickX > 1){
@@ -700,12 +680,12 @@ function interpretInputs(i,active){
       //-cd[i].l
       //-cd[i].r
       // FOR XBOX CONTROLLERS
-      var lAnalog = gamepad.buttons[map.lA[mType[i]]].value+0.2;
-      var rAnalog = gamepad.buttons[map.rA[mType[i]]].value+0.2;
+      var lAnalog = gamepad.buttons[controllerMaps[mType[i]][button.lA]].value+0.2;
+      var rAnalog = gamepad.buttons[controllerMaps[mType[i]][button.rA]].value+0.2;
     }
     else {
-      var lAnalog = gamepad.axes[map.lA[mType[i]]]-cd[i].l;
-      var rAnalog = gamepad.axes[map.rA[mType[i]]]-cd[i].r;
+      var lAnalog = gamepad.axes[controllerMaps[mType[i]][button.lA]]-cd[i].l;
+      var rAnalog = gamepad.axes[controllerMaps[mType[i]][button.rA]]-cd[i].r;
       if (mType[i] == 2){
         lAnalog *= -1
         rAnalog *= -1
@@ -745,13 +725,13 @@ function interpretInputs(i,active){
     }
   }
   else {
-    if (gamepad.buttons[map.s[mType[i]]].pressed || (gamepad.buttons[map.du[mType[i]]].pressed && gameMode == 5)){
+    if (gamepad.buttons[controllerMaps[mType[i]][button.s]].pressed || (gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed && gameMode == 5)){
       pause[i][0] = true;
     }
     else {
       pause[i][0] = false
     }
-    if (gamepad.buttons[map.z[mType[i]]].pressed){
+    if (gamepad.buttons[controllerMaps[mType[i]][button.z]].pressed){
       frameAdvance[i][0] = true;
     }
     else {
@@ -802,15 +782,15 @@ function interpretInputs(i,active){
       player[i].inputs.dpadup[0] = keys[keyMap.du[0]];
     }
     else {
-      player[i].inputs.s[0] = gamepad.buttons[map.s[mType[i]]].pressed;
-      player[i].inputs.x[0] = gamepad.buttons[map.x[mType[i]]].pressed;
-      player[i].inputs.a[0] = gamepad.buttons[map.a[mType[i]]].pressed;
-      player[i].inputs.b[0] = gamepad.buttons[map.b[mType[i]]].pressed;
-      player[i].inputs.y[0] = gamepad.buttons[map.y[mType[i]]].pressed;
+      player[i].inputs.s[0] = gamepad.buttons[controllerMaps[mType[i]][button.s]] .pressed;
+      player[i].inputs.x[0] = gamepad.buttons[controllerMaps[mType[i]][button.x]] .pressed;
+      player[i].inputs.a[0] = gamepad.buttons[controllerMaps[mType[i]][button.a]] .pressed;
+      player[i].inputs.b[0] = gamepad.buttons[controllerMaps[mType[i]][button.b]] .pressed;
+      player[i].inputs.y[0] = gamepad.buttons[controllerMaps[mType[i]][button.y]] .pressed;
       if (mType[i] == 3){
         // FOR XBOX CONTROLLERS
-        player[i].inputs.r[0] = gamepad.buttons[map.r[mType[i]]].value == 1?true:false;
-        player[i].inputs.l[0] = gamepad.buttons[map.l[mType[i]]].value == 1?true:false;
+        player[i].inputs.r[0] = gamepad.buttons[controllerMaps[mType[i]][button.r]] .value == 1?true:false;
+        player[i].inputs.l[0] = gamepad.buttons[controllerMaps[mType[i]][button.l]] .value == 1?true:false;
 
         // 4 is lB, 5 is RB
         if (gamepad.buttons[4].pressed){
@@ -818,13 +798,13 @@ function interpretInputs(i,active){
         }
       }
       else {
-        player[i].inputs.r[0] = gamepad.buttons[map.r[mType[i]]].pressed;
-        player[i].inputs.l[0] = gamepad.buttons[map.l[mType[i]]].pressed;
+        player[i].inputs.r[0] = gamepad.buttons[controllerMaps[mType[i]][button.r]].pressed;
+        player[i].inputs.l[0] = gamepad.buttons[controllerMaps[mType[i]][button.l]].pressed;
       }
-      player[i].inputs.dpadleft[0] = gamepad.buttons[map.dl[mType[i]]].pressed;
-      player[i].inputs.dpaddown[0] = gamepad.buttons[map.dd[mType[i]]].pressed;
-      player[i].inputs.dpadright[0] = gamepad.buttons[map.dr[mType[i]]].pressed;
-      player[i].inputs.dpadup[0] = gamepad.buttons[map.du[mType[i]]].pressed;
+      player[i].inputs.dpadleft[0] = gamepad.buttons[controllerMaps[mType[i]][button.dl]].pressed;
+      player[i].inputs.dpaddown[0] = gamepad.buttons[controllerMaps[mType[i]][button.dd]].pressed;
+      player[i].inputs.dpadright[0] = gamepad.buttons[controllerMaps[mType[i]][button.dr]].pressed;
+      player[i].inputs.dpadup[0] = gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed;
     }
 
     if (!frameByFrame){
@@ -832,7 +812,7 @@ function interpretInputs(i,active){
         player[i].inputs.z[0] = keys[keyMap.z[0]] || keys[keyMap.z[1]];
       }
       else {
-        player[i].inputs.z[0] = gamepad.buttons[map.z[mType[i]]].pressed;
+        player[i].inputs.z[0] = gamepad.buttons[controllerMaps[mType[i]][button.z]].pressed;
       }
       if (player[i].inputs.z[0]){
         player[i].inputs.lAnalog[0] = 0.35;
@@ -859,8 +839,8 @@ function interpretInputs(i,active){
     }
     else {
       if (mType[i] == 3){
-        if (gamepad.buttons[map.a[mType[i]]].pressed && gamepad.buttons[map.l[mType[i]]].value == 1 && gamepad.buttons[map.r[mType[i]]].value == 1 && gamepad.buttons[map.s[mType[i]]].pressed){
-          if (gamepad.buttons[map.b[mType[i]]].pressed){
+        if (gamepad.buttons[controllerMaps[mType[i]][button.a]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.l]].value == 1 && gamepad.buttons[controllerMaps[mType[i]][button.r]].value == 1 && gamepad.buttons[controllerMaps[mType[i]][button.s]].pressed){
+          if (gamepad.buttons[controllerMaps[mType[i]][button.b]].pressed){
             startGame();
           }
           else {
@@ -869,8 +849,8 @@ function interpretInputs(i,active){
         }
       }
       else {
-        if (gamepad.buttons[map.a[mType[i]]].pressed && gamepad.buttons[map.l[mType[i]]].pressed && gamepad.buttons[map.r[mType[i]]].pressed && gamepad.buttons[map.s[mType[i]]].pressed){
-          if (gamepad.buttons[map.b[mType[i]]].pressed){
+        if (gamepad.buttons[controllerMaps[mType[i]][button.a]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.l]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.r]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.s]].pressed){
+          if (gamepad.buttons[controllerMaps[mType[i]][button.b]].pressed){
             startGame();
           }
           else {
@@ -893,10 +873,10 @@ function interpretInputs(i,active){
     player[i].showHitbox^= true;
   }
   if (mType[i] != 10){
-    if ((gamepad.buttons[map.z[mType[i]]].pressed || gamepad.buttons[map.du[mType[i]]].pressed) && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed && !attemptingControllerReset[i]){
+    if ((gamepad.buttons[controllerMaps[mType[i]][button.z]].pressed || gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed) && gamepad.buttons[controllerMaps[mType[i]][button.x]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.y]].pressed && !attemptingControllerReset[i]){
       attemptingControllerReset[i] = true;
       setTimeout(function(){
-        if ((gamepad.buttons[map.z[mType[i]]].pressed || gamepad.buttons[map.du[mType[i]]].pressed) && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed){
+        if (gamepad.buttons[controllerMaps[mType[i]][button.du]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.x]].pressed && gamepad.buttons[controllerMaps[mType[i]][button.y]].pressed){
           cd[i].ls = new Vec2D(gamepad.axes[0],gamepad.axes[1]*-1);
           cd[i].cs = new Vec2D(gamepad.axes[5],gamepad.axes[2]*-1);
           cd[i].l = gamepad.axes[3]+0.8;
