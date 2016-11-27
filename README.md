@@ -54,7 +54,8 @@ All commands are run like `npm run <name>` from the root of the project.
 ### Project Layout
 
 ```
-├── webpack                  # All scripts related to the Webpack build process
+├── bin                      # All scripts that are run offline by devs
+│   └── webpack              # Webpack-specific scripts
 ├── dist                     # Where the compiled code goes to be played
 └── src                      # Application source code
     ├── index.js             # The entry point for the application. A lean file that loads additional code

@@ -61,6 +61,7 @@ const retrolinkMap = [2,3,1,0,6,5,4,9,10,11,8,7,0,1,2,5,3,4];
 
 const controllerMaps = [mayflashMap, vJoyMap, raphnetMap, xbox360Map, tigergameMap, retrolinkMap];
 
+
 window.mType = [0,0,0,0];
 
 window.cd = [new customDeadzone,new customDeadzone,new customDeadzone,new customDeadzone];
