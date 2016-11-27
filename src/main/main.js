@@ -893,8 +893,10 @@ function interpretInputs(i,active){
     player[i].showHitbox^= true;
   }
   if (mType[i] != 10){
+    if ((gamepad.buttons[map.z[mType[i]]].pressed || gamepad.buttons[map.du[mType[i]]].pressed) && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed && !attemptingControllerReset[i]){
       attemptingControllerReset[i] = true;
       setTimeout(function(){
+        if ((gamepad.buttons[map.z[mType[i]]].pressed || gamepad.buttons[map.du[mType[i]]].pressed) && gamepad.buttons[map.x[mType[i]]].pressed && gamepad.buttons[map.y[mType[i]]].pressed){
           cd[i].ls = new Vec2D(gamepad.axes[0],gamepad.axes[1]*-1);
           cd[i].cs = new Vec2D(gamepad.axes[5],gamepad.axes[2]*-1);
           cd[i].l = gamepad.axes[3]+0.8;
