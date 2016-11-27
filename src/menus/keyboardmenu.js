@@ -1,4 +1,6 @@
-function getKeyboardCookie(){
+/* eslint-disable */
+
+window.getKeyboardCookie = function(){
   var keys = Object.keys(keymapItems);
   for (var i=0;i<keys.length;i++){
     var keymapData = getCookie(keys[i]);
@@ -22,7 +24,7 @@ function getKeyboardCookie(){
   }
 }
 
-function setKeyboardCookie(){
+window.setKeyboardCookie = function(){
   var keys = Object.keys(keymapItems);
   for (var i=0;i<keys.length;i++){
     if (keymapItems[keys[i]].type == 1){
@@ -37,7 +39,7 @@ function setKeyboardCookie(){
   console.log(localStorage);
 }
 
-function keymapItem(type,pos,value,binding,index,above,toRight,below,toLeft,modType){
+window.keymapItem = function(type,pos,value,binding,index,above,toRight,below,toLeft,modType){
   this.type = type;
   // 0 = keys, 1 = modifier
   this.pos = pos;
@@ -50,7 +52,8 @@ function keymapItem(type,pos,value,binding,index,above,toRight,below,toLeft,modT
   this.toLeft = toLeft;
   this.modType = modType || 0;
 }
-keymapItems = {
+
+window.keymapItems = {
   "lstickUp1" : new keymapItem(0,new Vec2D(150,120),87,keyMap.lstick.up,0,"shoulderMod3","lstickUp2","lstickRight1","cstickUp2"),
   "lstickUp2" : new keymapItem(0,new Vec2D(230,120),0,keyMap.lstick.up,1,"shoulderMod5","lstickRangeUp","lstickRight2","lstickUp1"),
   "lstickRight1" : new keymapItem(0,new Vec2D(150,190),68,keyMap.lstick.right,0,"lstickUp1","lstickRight2","lstickLeft1","cstickRight2"),
@@ -107,21 +110,21 @@ keymapItems = {
   "dpadRight" : new keymapItem(0,new Vec2D(950,510),78,keyMap.dr,0,"dpadUp","lAnalog1","dpadLeft","l2"),
   "dpadLeft" : new keymapItem(0,new Vec2D(950,580),86,keyMap.dl,0,"dpadRight","rAnalog1","dpadDown","r2"),
   "dpadDown" : new keymapItem(0,new Vec2D(950,650),66,keyMap.dd,0,"dpadLeft","shoulderMod1","cstickUp1","s2")
-}
+};
 
-kMenuSelected = "lstickUp1";
-kMenuKeyFlash = 0;
-keyListen = false;
-settingModifier = false;
-settingModifierPart = 0;
-settingRange = false;
-enterHeld = false;
-enterHeldTimer = 0;
-menuScrollSpeed = 10;
-keyboardPromptTimer = 0;
-keyboardPrompt = "";
-disableStick = [false,false,false,false];
-function keyboardMenuControls(i){
+window.kMenuSelected = "lstickUp1";
+window.kMenuKeyFlash = 0;
+window.keyListen = false;
+window.settingModifier = false;
+window.settingModifierPart = 0;
+window.settingRange = false;
+window.enterHeld = false;
+window.enterHeldTimer = 0;
+window.menuScrollSpeed = 10;
+window.keyboardPromptTimer = 0;
+window.keyboardPrompt = "";
+window.disableStick = [false,false,false,false];
+window.keyboardMenuControls = function(i){
   var menuMove = false;
   var moveD = "";
   if (player[i].inputs.lStickAxis[0].x == 0 && player[i].inputs.lStickAxis[0].y == 0){
@@ -422,7 +425,7 @@ function keyboardMenuControls(i){
   }
 }
 
-function drawKeyboardMenuInit(){
+window.drawKeyboardMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
@@ -460,7 +463,7 @@ function drawKeyboardMenuInit(){
   }
 }
 
-function drawKeyboardMenu(){
+window.drawKeyboardMenu = function(){
   clearScreen();
   bg2.lineWidth = 3;
   shine += 0.01;

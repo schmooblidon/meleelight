@@ -1,38 +1,40 @@
-var marthPic = new Image();
+/* eslint-disable */
+
+window.marthPic = new Image();
 marthPic.src = "assets/css/marth.png";
-var puffPic = new Image();
+window.puffPic = new Image();
 puffPic.src = "assets/css/puff.png";
-var foxPic = new Image();
+window.foxPic = new Image();
 foxPic.src = "assets/css/fox.png";
-var handPoint = new Image();
+window.handPoint = new Image();
 handPoint.src = "assets/hand/handpoint.png";
-var handOpen = new Image();
+window.handOpen = new Image();
 handOpen.src = "assets/hand/handopen.png";
-var handGrab = new Image();
+window.handGrab = new Image();
 handGrab.src = "assets/hand/handgrab.png";
 
-choosingTag = -1;
-handType = [0,0,0,0];
-handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
-tokenPos = [new Vec2D(475,268),new Vec2D(515,268),new Vec2D(475,308),new Vec2D(515,308)];
-chosenChar = [0,0,0,0];
-tokenGrabbed = [false,false,false,false];
-whichTokenGrabbed = [-1,-1,-1,-1];
-occupiedToken = [false,false,false,false];
-bHold = [0,0,0,0];
+window.choosingTag = -1;
+window.handType = [0,0,0,0];
+window.handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
+window.tokenPos = [new Vec2D(475,268),new Vec2D(515,268),new Vec2D(475,308),new Vec2D(515,308)];
+window.chosenChar = [0,0,0,0];
+window.tokenGrabbed = [false,false,false,false];
+window.whichTokenGrabbed = [-1,-1,-1,-1];
+window.occupiedToken = [false,false,false,false];
+window.bHold = [0,0,0,0];
 
-cpuSlider = [new Vec2D(152+15+166+0-50,595),new Vec2D(152+15+166+225-50,595),new Vec2D(152+15+166+450-50,595),new Vec2D(152+15+166+675-50,595)];
+window.cpuSlider = [new Vec2D(152+15+166+0-50,595),new Vec2D(152+15+166+225-50,595),new Vec2D(152+15+166+450-50,595),new Vec2D(152+15+166+675-50,595)];
 
-cpuGrabbed = [false,false,false,false];
-whichCpuGrabbed = [-1,-1,-1,-1];
-occupiedCpu = [false,false,false,false];
+window.cpuGrabbed = [false,false,false,false];
+window.whichCpuGrabbed = [-1,-1,-1,-1];
+window.occupiedCpu = [false,false,false,false];
 
-readyToFight = false;
+window.readyToFight = false;
 
-rtfFlash = 25;
-rtfFlashD = 1;
+window.rtfFlash = 25;
+window.rtfFlashD = 1;
 
-function changeCharacter(i,c){
+window.changeCharacter = function(i,c){
   cS[i] = c;
   player[i].actionState = "WAIT";
   player[i].timer = 0;
@@ -40,7 +42,7 @@ function changeCharacter(i,c){
   player[i].charHitboxes = chars[cS[i]].hitboxes;
 }
 
-function cssControls(i){
+window.cssControls = function(i){
   if (choosingTag == -1){
     if (player[i].inputs.b[0]){
       bHold[i]++;
@@ -191,6 +193,8 @@ function cssControls(i){
         changeGamemode(1);
       }
     }
+
+    let tok;
     if (player[i].inputs.x[0] && !player[i].inputs.x[1]){
       sounds.menuSelect.play();
       if (whichTokenGrabbed[i] != -1)
@@ -281,7 +285,7 @@ function cssControls(i){
   }
 }
 
-function drawCSSInit(){
+window.drawCSSInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,700);
   bgGrad.addColorStop(0,"rgb(17, 12, 56)");
   bgGrad.addColorStop(1,"black");
@@ -519,7 +523,7 @@ function drawCSSInit(){
   }
 }
 
-function drawCSS(){
+window.drawCSS = function(){
   clearScreen();
   ui.fillStyle = "rgb(219, 219, 219)";
   ui.save();
@@ -544,7 +548,7 @@ function drawCSS(){
   bg1.lineTo(1102,0);
   bg1.closePath();
   bg1.fill();
-  for (ia = 0; ia < 4; ia++) {
+  for (let ia = 0; ia < 4; ia++) {
     if (bHold[ia] > bestHold) {
 		bestHold = bHold[ia];
 	}
