@@ -80,6 +80,7 @@ window.randomShout = function(char){
 window.executeIntangibility = function(actionStateName,p){
   if (player[p].timer == intangibility[cS[p]][actionStateName][0]){
     player[p].phys.intangibleTimer = intangibility[cS[p]][actionStateName][1];
+    player[p].phys.hurtBoxState = 1;
   }
 }
 
