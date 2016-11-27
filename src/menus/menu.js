@@ -1,13 +1,12 @@
 import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen} from "../main/main";
 import {sounds} from "../main/sfx";
 import {targetPlayer, setTargetPlayer} from "../target/targetplay";
-import {targetPointerPos} from "./targetselect";
+import {targetPointerPos, setTargetPointerPos} from "./targetselect";
 import {editingStage, targetBuilder} from "../target/targetbuilder";
 import {twoPi} from "../main/render";
 /* eslint-disable */
 
-window.menuSelected = 0;
-window.menuColourOffset = 0;
+ let menuSelected = 0;
 
 const menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Credits"]];
 const menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Who did this?"]];
@@ -23,9 +22,9 @@ let menuGlobalTimer = 0;
 let menuAngle = 0;
 let menuRandomBox = [Math.random(),Math.random(),Math.random(),Math.random()];
 
-window.stickHoldEach = [];
-window.stickHold = 0;
-window.menuMove = function(i){
+export let stickHoldEach = [];
+export let stickHold = 0;
+export function menuMove (i){
   var menuMove = false;
   var previousMenuS = menuSelected;
   if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
@@ -37,7 +36,7 @@ window.menuMove = function(i){
       }
       else if (menuSelected == 1){
           setTargetPlayer(i);
-        targetPointerPos = [178.5,137];
+          setTargetPointerPos([178.5,137]);
         player[i].inputs.a[1] = true;
         music.menu.stop();
         music.targettest.play("targettestStart");
@@ -158,7 +157,7 @@ window.menuMove = function(i){
 
 
 
-export const drawMainMenuInit = function(){
+export function drawMainMenuInit (){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(12, 11, 54, 1)");
   bgGrad.addColorStop(1,"rgba(1, 2, 15, 1)");
@@ -206,7 +205,7 @@ export const drawMainMenuInit = function(){
   fg1.stroke();
 }
 
-window.drawMainMenu = function(){
+export function drawMainMenu (){
   clearScreen();
   menuGlobalTimer++;
   if (menuGlobalTimer > 600){

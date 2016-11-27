@@ -2,7 +2,9 @@ import {player, cS, changeGamemode, setCookie, getCookie, stage, bg1,fg1,ui,bg2,
     addShine
     , setShine
 } from "../main/main";
-import {targetRecords, targetStagePlaying, startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords} from "../target/targetplay";
+import {targetRecords, targetStagePlaying, startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords,
+    setTargetStagePlaying
+} from "../target/targetplay";
 import {showingCode, stageTemp, targetBuilder, editingStage} from "../target/targetbuilder";
 import {sounds} from "../main/sfx";
 import {Vec2D, Box2D} from "../main/characters";
@@ -16,8 +18,10 @@ export let targetSelectTimer = 0;
 export let promptType = 0;
 export let promptTimer = 0;
 export let targetPointerPos = [600,635];
-
-export const tssControls = function(i){
+export function setTargetPointerPos(val){
+  targetPointerPos = val;
+}
+export function tssControls (i){
   if (!showingCode){
     targetPointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
     targetPointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
@@ -119,7 +123,7 @@ export const tssControls = function(i){
           else {
             setStage(targetStages[targetSelected]);
           }
-          targetStagePlaying = targetSelected;
+            setTargetStagePlaying( targetSelected);
           startTargetGame(i,false);
         }
       }
@@ -147,7 +151,7 @@ export const tssControls = function(i){
   }
 }
 
-export const parseStage = function(code){
+export function parseStage (code){
   if (code[0] != "s"){
     return 0;
   }
@@ -238,7 +242,7 @@ export const parseStage = function(code){
   }
 }
 
-export const redrawCustomStageBoxes = function(){
+export function redrawCustomStageBoxes (){
   fg1.clearRect(50+260+260+65-5,110-5,530,320);
   fg1.fillStyle = "black";
   for (let i=10;i<Math.min(11+customTargetStages.length,20);i++){
@@ -246,7 +250,7 @@ export const redrawCustomStageBoxes = function(){
   }
 }
 
-export const drawTSSInit = function(){
+export function drawTSSInit (){
   let bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(66, 42, 6)");
   bgGrad.addColorStop(1,"rgb(26, 2, 2)");
@@ -307,7 +311,7 @@ export const drawTSSInit = function(){
   fg1.stroke();
 }
 
-export const drawTSS = function(){
+export function drawTSS (){
   clearScreen();
   bg2.lineWidth = 3;
   addShine(0.01);
@@ -600,7 +604,7 @@ export const drawTSS = function(){
   }
 }
 
-export const getTargetStageCookies = function(){
+export function getTargetStageCookies (){
   for (let i=0;i<10;i++){
     let s = getCookie("custom"+i);
     if (s != null && s != undefined && s != "null"){

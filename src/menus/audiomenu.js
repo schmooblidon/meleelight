@@ -11,10 +11,10 @@ import {twoPi} from "../main/render";
 export const masterVolume = [0.5,0.3];
 const audioMenuNames = ["Sounds","Music"];
 let audioMenuSelected = 0;
-export const audioMenuControls = function(i){
-  var menuMove = false;
-  var audioLevelMoveUp = false;
-  var audioLevelMoveDown = false;
+export function audioMenuControls (i){
+  let menuMove = false;
+  let audioLevelMoveUp = false;
+  let audioLevelMoveDown = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
     player[i].inputs.b[1] = true;
@@ -81,8 +81,8 @@ export const audioMenuControls = function(i){
   else {
     stickHoldEach[i] = false;
     if (i == ports-1){
-      var stickHoldAll = false;
-      for (var j=0;j<ports;j++){
+      let stickHoldAll = false;
+      for (let j=0; j<ports; j++){
         if (stickHoldEach[j]){
           stickHoldAll = true;
           break;
@@ -126,8 +126,8 @@ export const audioMenuControls = function(i){
   }
 }
 
-export const drawAudioMenuInit = function(){
-  var bgGrad =bg1.createLinearGradient(0,0,1200,750);
+export function drawAudioMenuInit (){
+  const bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
   bg1.fillStyle=bgGrad;
@@ -147,14 +147,14 @@ export const drawAudioMenuInit = function(){
   fg1.fillText("Music",225,525);
 }
 
-export const drawAudioMenu = function(){
+export function drawAudioMenu (){
   clearScreen();
   bg2.lineWidth = 3;
   addShine(0.01);
   if (shine > 1.8){
    setShine(-0.8);
   }
-  var opacity = (shine < 0)?(0.05+(0.25/0.8)*(0.8+shine)):((shine > 1)?(0.3-(0.25/0.8)*(shine-1)):0.3);
+  const opacity = (shine < 0) ? (0.05 + (0.25 / 0.8) * (0.8 + shine)) : ((shine > 1) ? (0.3 - (0.25 / 0.8) * (shine - 1)) : 0.3);
   var bgGrad =bg2.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(255, 255, 255,0.05)");
   bgGrad.addColorStop(Math.min(Math.max(0,shine),1),"rgba(255,255,255,"+opacity+")");
@@ -216,13 +216,13 @@ export const drawAudioMenu = function(){
 
 }
 
-export const getAudioCookies = function(){
-  var s = getCookie("soundsLevel");
+export function getAudioCookies (){
+  const s = getCookie("soundsLevel");
   if (s != null && s != undefined && s != "null"){
     masterVolume[0] = Number(s);
     changeVolume(sounds,masterVolume[0],0);
   }
-  var m = getCookie("musicLevel");
+  const m = getCookie("musicLevel");
   if (m != null && m != undefined && m != "null"){
     masterVolume[1] = Number(m);
     changeVolume(music,masterVolume[1],1);

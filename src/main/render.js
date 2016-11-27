@@ -1,16 +1,32 @@
 import {Vec2D} from "./characters";
-import {player, cS, fg2, versusMode, fg2 as ui, matchTimer, playerType, palettes, pPal} from "./main";
+import {
+    player,
+    cS,
+    fg2,
+    versusMode,
+    fg2 as ui,
+    matchTimer,
+    playerType,
+    palettes,
+    pPal,
+    stage,
+    hasTag,
+    tagText
+    , gameMode
+} from "./main";
+import {gameSettings} from "../settings";
+import {makeColour} from "./vfx";
 /* eslint-disable */
 
 export const twoPi = Math.PI * 2;
 
-export const rotateVector = function (vecx, vecy, ang) {
+export const lostStockQueue = [];
+export function rotateVector(vecx, vecy, ang) {
     return new Vec2D(
         vecx * Math.cos(ang) - vecy * Math.sin(ang),
         vecx * Math.sin(ang) + vecy * Math.cos(ang));
-};
-
-export const drawArrayPathNew = function (can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
+}
+export function drawArrayPathNew(can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
     can.save();
     can.translate(tX - rpX, tY - rpY);
     can.rotate(rotate);
@@ -34,9 +50,8 @@ export const drawArrayPathNew = function (can, col, face, tX, tY, path, scaleX, 
     can.closePath();
     can.fill();
     can.restore();
-};
-
-export const drawArrayPathCompress = function (can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
+}
+export function drawArrayPathCompress(can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
     can.save();
     can.translate(tX - rpX, tY - rpY);
     can.rotate(rotate);
@@ -57,9 +72,8 @@ export const drawArrayPathCompress = function (can, col, face, tX, tY, path, sca
     can.closePath();
     can.fill();
     can.restore();
-};
-
-export const drawArrayPath = function (can, col, face, tX, tY, path, scaleX, scaleY) {
+}
+export function drawArrayPath(can, col, face, tX, tY, path, scaleX, scaleY) {
     for (let j = 0; j < path.length; j++) {
         const x = (path[j][0] * scaleX * face) + tX;
         const y = (path[j][1] * scaleY) + tY;
@@ -74,9 +88,8 @@ export const drawArrayPath = function (can, col, face, tX, tY, path, scaleX, sca
     }
     can.closePath();
     can.fill();
-};
-
-export const renderPlayer = function (i) {
+}
+export function renderPlayer(i) {
     let temX = (player[i].phys.pos.x * stage.scale) + stage.offset[0];
     const temY = (player[i].phys.pos.y * -stage.scale) + stage.offset[1];
     let face = player[i].phys.face;
@@ -381,9 +394,8 @@ export const renderPlayer = function (i) {
 
         }
     }
-};
-export const lostStockQueue = [];
-export const renderOverlay = function (showStock) {
+}
+export function renderOverlay(showStock) {
 
     // stocks, percent, timer
     fg2.strokeStyle = "black";
@@ -457,9 +469,8 @@ export const renderOverlay = function (showStock) {
         }
         ui.textAlign = "start";
     }
-};
-
-export const renderForeground = function () {
+}
+export function renderForeground() {
     // pause UI
     ui.fillStyle = "#8e8e8e";
     ui.save();
@@ -533,4 +544,4 @@ export const renderForeground = function () {
     ui.font = "900 18px Arial";
     ui.fillText("FRAME ADVANCE", -685, -584);
     ui.restore();
-};
+}

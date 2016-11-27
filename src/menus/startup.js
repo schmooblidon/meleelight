@@ -8,7 +8,7 @@ hohlogo.src = "assets/hohlogo.png";
 var schmoologo = new Image();
 schmoologo.src = "assets/schmoologo.png";
 
-export const drawStartUp = function(){
+export function drawStartUp (){
   startUpTimer++;
   ui.clearRect(0,0,layers.UI.width,layers.UI.height);
   bg1.fillStyle = "rgb(0,0,0)";

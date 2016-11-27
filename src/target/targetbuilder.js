@@ -23,40 +23,6 @@ export let editingStage = -1;
 export let tooSmallTimer = 0;
 export let tooSmallPos = new Vec2D(0,0);
 
-export let createTargetCode = function(){
-  let tCode = "";
-  tCode += stageTemp.startingPoint.x+","+stageTemp.startingPoint.y+"~";
-  for (let i=0;i<stageTemp.box.length;i++){
-    tCode += stageTemp.box[i].min.x+","+stageTemp.box[i].min.y+","+stageTemp.box[i].max.x+","+stageTemp.box[i].max.y;
-    if (i != stageTemp.box.length - 1){
-      tCode += "#";
-    }
-  }
-  tCode += "~";
-  for (let i=0;i<stageTemp.platform.length;i++){
-    tCode += stageTemp.platform[i][0].x+","+stageTemp.platform[i][1].x+","+stageTemp.platform[i][0].y;
-    if (i != stageTemp.platform.length - 1){
-      tCode += "#";
-    }
-  }
-  tCode += "~";
-  for (let i=0;i<stageTemp.ledge.length;i++){
-    tCode += stageTemp.ledge[i][0]+","+stageTemp.ledge[i][1];
-    if (i != stageTemp.ledge.length - 1){
-      tCode += "#";
-    }
-  }
-  tCode += "~";
-  for (let i=0;i<stageTemp.target.length;i++){
-    tCode += stageTemp.target[i].x+","+stageTemp.target[i].y;
-    if (i != stageTemp.target.length - 1){
-      tCode += "#";
-    }
-  }
-  tCode += "~"+stageTemp.scale;
-  return tCode;
-}
-
 export let stageTemp = {
   box : [],
   platform : [],
@@ -93,7 +59,40 @@ let hoverToolbar = 1;
 const gridSizes = [80,40,20,10,0];
 let gridType = 1;
 
-export let undo = function(){
+export function createTargetCode (){
+    let tCode = "";
+    tCode += stageTemp.startingPoint.x+","+stageTemp.startingPoint.y+"~";
+    for (let i=0;i<stageTemp.box.length;i++){
+        tCode += stageTemp.box[i].min.x+","+stageTemp.box[i].min.y+","+stageTemp.box[i].max.x+","+stageTemp.box[i].max.y;
+        if (i != stageTemp.box.length - 1){
+            tCode += "#";
+        }
+    }
+    tCode += "~";
+    for (let i=0;i<stageTemp.platform.length;i++){
+        tCode += stageTemp.platform[i][0].x+","+stageTemp.platform[i][1].x+","+stageTemp.platform[i][0].y;
+        if (i != stageTemp.platform.length - 1){
+            tCode += "#";
+        }
+    }
+    tCode += "~";
+    for (let i=0;i<stageTemp.ledge.length;i++){
+        tCode += stageTemp.ledge[i][0]+","+stageTemp.ledge[i][1];
+        if (i != stageTemp.ledge.length - 1){
+            tCode += "#";
+        }
+    }
+    tCode += "~";
+    for (let i=0;i<stageTemp.target.length;i++){
+        tCode += stageTemp.target[i].x+","+stageTemp.target[i].y;
+        if (i != stageTemp.target.length - 1){
+            tCode += "#";
+        }
+    }
+    tCode += "~"+stageTemp.scale;
+    return tCode;
+}
+export function undo (){
   let num = undoList.length-1;
   if (num >= 0){
     let item = undoList[num];
@@ -113,7 +112,7 @@ export let undo = function(){
   }
 }
 
-export let createStageCode = function(){
+export function createStageCode (){
   let tCode = "s";
   tCode += stageTemp.startingPoint.x.toFixed(2)+","+stageTemp.startingPoint.y.toFixed(2)+"&b";
   for (let i=0;i<stageTemp.box.length;i++){
@@ -175,7 +174,7 @@ export let createStageCode = function(){
   return tCode;
 }
 
-export let createStageObject = function(s){
+export function createStageObject (s){
   let tCode = "{startingPoint:new Vec2D(";
   tCode += targetStages[s].startingPoint.x.toFixed(1)+","+targetStages[s].startingPoint.y.toFixed(1)+"),box:[";
   for (let i=0;i<targetStages[s].box.length;i++){
@@ -237,7 +236,7 @@ export let createStageObject = function(s){
   return tCode;
 }
 
-export let targetBuilderControls = function(p){
+export function targetBuilderControls (p){
   if (!showingCode){
     if (!builderPaused){
       hoverItem = 0;
@@ -642,7 +641,7 @@ export let targetBuilderControls = function(p){
 
 }
 
-export let drawTargetStage = function(){
+export function drawTargetStage (){
   ui.fillStyle = boxFill;
   for (let i=0;i<stageTemp.draw.box.length;i++){
     let b = stageTemp.draw.box[i];
@@ -731,7 +730,7 @@ export let drawTargetStage = function(){
   }
 }
 
-export let renderTargetBuilder = function(){
+export function renderTargetBuilder (){
   clearScreen();
   drawBackground();
   ui.strokeStyle = "rgba(255, 255, 255, 0.17)";
@@ -1005,7 +1004,7 @@ export let renderTargetBuilder = function(){
   }
 }
 
-export let findTarget = function(realCrossHair){
+export function findTarget (realCrossHair){
   let found = false;
   for (let i=0;i<stageTemp.target.length;i++){
     if (Math.abs(realCrossHair.x - stageTemp.draw.target[i].x) <= 30 && Math.abs(realCrossHair.y - stageTemp.draw.target[i].y) <= 30){
@@ -1017,7 +1016,7 @@ export let findTarget = function(realCrossHair){
   return found;
 }
 
-export let findPlatform = function(realCrossHair){
+export function findPlatform (realCrossHair){
   let found = false;
   for (let i=0;i<stageTemp.platform.length;i++){
     if (Math.abs(realCrossHair.x - (stageTemp.draw.platform[i][0].x+stageTemp.draw.platform[i][1].x)/2) <= Math.abs(stageTemp.draw.platform[i][0].x-stageTemp.draw.platform[i][1].x)/2 + 10 && Math.abs(realCrossHair.y - stageTemp.draw.platform[i][0].y) <= 20){
@@ -1029,7 +1028,7 @@ export let findPlatform = function(realCrossHair){
   return found;
 }
 
-export let findBox = function(realCrossHair){
+export function findBox (realCrossHair){
   let found = false;
   for (let i=0;i<stageTemp.box.length;i++){
     if (realCrossHair.x >= stageTemp.draw.box[i].min.x-5 && realCrossHair.x <= stageTemp.draw.box[i].max.x+5 && realCrossHair.y >= stageTemp.draw.box[i].max.y-5 && realCrossHair.y <= stageTemp.draw.box[i].min.y+5){
@@ -1041,7 +1040,7 @@ export let findBox = function(realCrossHair){
   return found;
 }
 
-export let centerItem = function(item,realCrossHair){
+export function centerItem (item,realCrossHair){
   switch (item[0]){
     case "startingPoint":
       stageTemp.draw.startingPoint = new Vec2D(realCrossHair.x,realCrossHair.y);

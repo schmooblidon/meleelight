@@ -5,6 +5,7 @@ import {player, changeGamemode, vfxQueue, initializePlayers, matchTimer, startTi
     , resetVfxQueue
     , setMatchTimer
     , addMatchTimer
+    , setStartTimer
 } from "../main/main";
 import {renderPlayer} from "../main/render";
 import {sounds} from "../main/sfx";
@@ -15,9 +16,6 @@ import {aArticles, articles, resetAArticles} from "../physics/article";
 
 export let targetTesting = false;
 export let targetPlayer = 0;
-export const setTargetPlayer = function(val){
-  targetPlayer = val;
-}
 export let targetStagePlaying = 0;
 export let targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
 export let targetsDestroyed = 0;
@@ -92,7 +90,13 @@ export const medalsEarned = [[
   [false,false,false]]
 ];
 
-export const getTargetCookies = function(){
+export function setTargetStagePlaying(val){
+    targetStagePlaying = val;
+}
+export function setTargetPlayer (val){
+    targetPlayer = val;
+}
+export function getTargetCookies (){
   for (var i=0;i<3;i++){
     for (var j=0;j<20;j++){
       var r = getCookie(i+"target"+j);
@@ -103,7 +107,7 @@ export const getTargetCookies = function(){
   }
 }
 
-export const giveMedals = function(){
+export function giveMedals (){
   for (var i=0;i<3;i++){
     for (var j=0;j<10;j++){
       for (var k=0;k<3;k++){
@@ -115,7 +119,7 @@ export const giveMedals = function(){
   }
 }
 
-export const startTargetGame = function(p,test){
+export function startTargetGame (p,test){
   endTargetGame = false;
   if (test){
     stage = stageTemp;
@@ -132,7 +136,7 @@ export const startTargetGame = function(p,test){
 
   player[p].phys.pos = new Vec2D(stage.startingPoint.x,stage.startingPoint.y);
   setMatchTimer(0);
-  startTimer = 1.5;
+    setStartTimer(1.5);
   starting = true;
   drawVfx("start",new Vec2D(0,0));
   findingPlayers = false;
@@ -142,7 +146,7 @@ export const startTargetGame = function(p,test){
   player[p].stocks = 1;
 }
 
-export const destroyTarget = function(i){
+export function destroyTarget (i){
   targetDestroyed[i] = true;
   targetsDestroyed++;
   drawVfx("targetDestroy",stage.target[i]);
@@ -152,7 +156,7 @@ export const destroyTarget = function(i){
   }
 }
 
-export const targetHitDetection = function(p){
+export function targetHitDetection (p){
   for (var i=0;i<stage.target.length;i++){
     if (!targetDestroyed[i]){
       for (var j=0;j<4;j++){
@@ -185,7 +189,7 @@ export const targetHitDetection = function(p){
   }
 }
 
-export const hitTargetCollision = function(p,j,t,previous){
+export function hitTargetCollision (p,j,t,previous){
   if (previous){
     var hbpos = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   }
@@ -197,7 +201,7 @@ export const hitTargetCollision = function(p,j,t,previous){
   return (Math.pow(targetPos.x-hbpos.x,2) + Math.pow(hbpos.y-targetPos.y,2) <= Math.pow(player[p].hitboxes.id[j].size+7,2));
 }
 
-export const articleTargetCollision = function(a,t,previous){
+export function articleTargetCollision (a,t,previous){
   if (previous){
     var hbpos = aArticles[a][2].posPrev;
   }
@@ -209,7 +213,7 @@ export const articleTargetCollision = function(a,t,previous){
   return (Math.pow(targetpos.x-hbpos.x,2) + Math.pow(hbpos.y-targetpos.y,2) <= Math.pow(aArticles[a][2].hb.size+7,2));
 }
 
-export const targetTimerTick = function(){
+export function targetTimerTick (){
   addMatchTimer(0.016667);
   $("#matchMinutes").empty().append(Math.floor(matchTimer/60));
   var sec = (matchTimer % 60).toFixed(2);

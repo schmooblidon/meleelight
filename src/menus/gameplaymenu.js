@@ -6,7 +6,7 @@ import {sounds} from "../main/sfx";
 /* eslint-disable */
 
 export let gameplayMenuSelected = 0;
-export const getGameplayCookies = function(){
+export function getGameplayCookies (){
   var keys = Object.keys(gameSettings);
   for (var j=0;j<keys.length;j++){
     var c = getCookie(keys[j]);
@@ -15,7 +15,7 @@ export const getGameplayCookies = function(){
     }
   }
 }
-export const gameplayMenuControls = function(i){
+export function gameplayMenuControls (i){
   var menuMove = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
@@ -101,7 +101,7 @@ export const gameplayMenuControls = function(i){
   }
 }
 
-export const drawGameplayMenuInit = function(){
+export function drawGameplayMenuInit (){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
@@ -118,7 +118,7 @@ export const drawGameplayMenuInit = function(){
   fg1.fillText("Flash on L-Cancel",75,395);
 }
 
-export const drawGameplayMenu = function(){
+export function drawGameplayMenu (){
   clearScreen();
   fg1.lineWidth = 3;
   addShine(0.01);

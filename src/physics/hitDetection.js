@@ -10,7 +10,7 @@ export const phantomQueue = [];
 
 const angleConversion = Math.PI / 180;
 
-export const hitDetection = function(p){
+export function hitDetection (p){
   var attackerClank = false;
   for (var i=0;i<4;i++){
     if (playerType[i] > -1){
@@ -127,14 +127,14 @@ export const hitDetection = function(p){
   }
 }
 
-export const setHasHit = function(p,j){
+export function setHasHit (p,j){
   // for turbo mode. if not a grab and not counter and not a midthrow hitbox.
   if (player[p].hitboxes.id[j].type != 2 && player[p].hitboxes.id[j].type != 6 && player[p].actionState.substr(0,5) != "THROW"){
     player[p].hasHit = true;
   }
 }
 
-export const hitHitCollision = function(i,p,j,k){
+export function hitHitCollision (i,p,j,k){
   var hbpos = new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x*player[p].phys.face),player[p].phys.pos.y+player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
   var hbpos2 = new Vec2D(player[i].phys.pos.x+(player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].x*player[i].phys.face),player[i].phys.pos.y+player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].y);
   var hitPoint = new Vec2D((hbpos.x+hbpos2.x)/2,(hbpos.y+hbpos2.y)/2);
@@ -142,7 +142,7 @@ export const hitHitCollision = function(i,p,j,k){
   return [(Math.pow(hbpos2.x-hbpos.x,2) + Math.pow(hbpos.y-hbpos2.y,2) <= Math.pow(player[p].hitboxes.id[j].size+player[i].hitboxes.id[k].size,2)),hitPoint];
 }
 
-export const hitShieldCollision = function(i,p,j,previous){
+export function hitShieldCollision (i,p,j,previous){
   if (previous){
     var hbpos = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   }
@@ -154,7 +154,7 @@ export const hitShieldCollision = function(i,p,j,previous){
   return (Math.pow(shieldpos.x-hbpos.x,2) + Math.pow(hbpos.y-shieldpos.y,2) <= Math.pow(player[p].hitboxes.id[j].size+player[i].phys.shieldSize,2));
 }
 
-export const interpolatedHitCircleCollision = function(circlePos,r,p,j){
+export function interpolatedHitCircleCollision (circlePos,r,p,j){
   var collision = false;
   var h1 = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   var h2 = new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x*player[p].phys.face),player[p].phys.pos.y+player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
@@ -175,7 +175,7 @@ export const interpolatedHitCircleCollision = function(circlePos,r,p,j){
   return collision;
 }
 
-export const segmentSegmentCollision = function(a1,a2,b1,b2){
+export function segmentSegmentCollision (a1,a2,b1,b2){
   var intersection = new Vec2D(0,0);
   var b = new Vec2D(a2.x-a1.x,a2.y-a1.y);
   var d = new Vec2D(b2.x-b1.x,b2.y-b1.y);
@@ -197,7 +197,7 @@ export const segmentSegmentCollision = function(a1,a2,b1,b2){
   return true;
 }
 
-export const interpolatedHitHurtCollision = function(i,p,j,phantom){
+export function interpolatedHitHurtCollision (i,p,j,phantom){
   // a1 is line1 start, a2 is line1 end, b1 is line2 start, b2 is line2 end
   phantom = phantom || false;
   var hurt = player[i].phys.hurtbox;
@@ -225,7 +225,7 @@ export const interpolatedHitHurtCollision = function(i,p,j,phantom){
   }
 }
 
-export const hitHurtCollision = function(i,p,j,previous,phantom){
+export function hitHurtCollision (i,p,j,previous,phantom){
   phantom = phantom || false;
   var offset = player[p].hitboxes.id[j].offset[player[p].hitboxes.frame];
   if (player[p].actionState == "DAMAGEFLYN"){
@@ -256,7 +256,7 @@ export const hitHurtCollision = function(i,p,j,previous,phantom){
   return (cornerDistance_sq <= (Math.pow(player[p].hitboxes.id[j].size-(phantom?gameSettings.phantomThreshold:0),2)));
 }
 
-export const executeHits = function(){
+export function executeHits (){
   var grabQueue = [];
   var ignoreGrabs = [false,false,false,false];
   for (var i=0;i<hitQueue.length;i++){
@@ -563,7 +563,7 @@ export const executeHits = function(){
   }
 }
 
-export const executeGrabTech = function(a,v){
+export function executeGrabTech (a,v){
   if (player[a].phys.pos.x < player[v].phys.pos.x){
     player[a].phys.face = 1;
     player[v].phys.face = -1;
@@ -583,7 +583,7 @@ export const executeGrabTech = function(a,v){
 }
 
 
-export const getKnockback = function(hb,damagestaled,damageunstaled,percent,weight,crouching,vCancel) {
+export function getKnockback (hb,damagestaled,damageunstaled,percent,weight,crouching,vCancel) {
   if (hb.sk == 0){
     var kb = ((0.01 * hb.kg) * ((1.4 * (((0.05 * (damageunstaled * (damagestaled + Math.floor(percent)))) + (damagestaled + Math.floor(percent)) * 0.1) * (2.0 - (2.0 * (weight * 0.01)) / (1.0 + (weight * 0.01))))) + 18) + hb.bk);
   }
@@ -604,7 +604,7 @@ export const getKnockback = function(hb,damagestaled,damageunstaled,percent,weig
   return kb;
 }
 
-export const getLaunchAngle = function(trajectory, knockback, reverse, x, y, v) {
+export function getLaunchAngle (trajectory, knockback, reverse, x, y, v) {
   var deadzone = false;
   //console.log(trajectory);
   var diAngle;
@@ -703,7 +703,7 @@ export const getLaunchAngle = function(trajectory, knockback, reverse, x, y, v) 
   return newtraj;
 }
 
-export const getHorizontalVelocity = function(knockback, angle) {
+export function getHorizontalVelocity (knockback, angle) {
     var initialVelocity = knockback * 0.03;
     var horizontalAngle = Math.cos(angle * angleConversion);
     var horizontalVelocity = initialVelocity * horizontalAngle;
@@ -711,7 +711,7 @@ export const getHorizontalVelocity = function(knockback, angle) {
     return horizontalVelocity;
 }
 
-export const getVerticalVelocity = function(knockback, angle,grounded,trajectory) {
+export function getVerticalVelocity (knockback, angle,grounded,trajectory) {
     var initialVelocity = knockback * 0.03;
     var verticalAngle = Math.sin(angle * angleConversion);
     var verticalVelocity = initialVelocity * verticalAngle;
@@ -722,26 +722,26 @@ export const getVerticalVelocity = function(knockback, angle,grounded,trajectory
     return verticalVelocity;
 }
 
-export const getHorizontalDecay = function(angle) {
+export function getHorizontalDecay (angle) {
   var decay = 0.051 * Math.cos(angle * angleConversion)
   decay = Math.round(decay * 100000) / 100000;
   return decay;
 }
 
-export const getVerticalDecay = function(angle) {
+export function getVerticalDecay (angle) {
   var decay = 0.051 * Math.sin(angle * angleConversion)
   decay = Math.round(decay * 100000) / 100000;
   return decay;
 }
 
-export const getHitstun = function(knockback) {
+export function getHitstun (knockback) {
   //if (groundDownHitType == "Fly"){
     //knockback *= 1.25;
   //}
   return Math.floor(knockback * .4);
 }
 
-export const knockbackSounds = function(type,knockback,v){
+export function knockbackSounds (type,knockback,v){
   if (type == 4){
     sounds.firestronghit.play();
   }
@@ -838,7 +838,7 @@ export const knockbackSounds = function(type,knockback,v){
   }
 }
 
-export const checkPhantoms = function(){
+export function checkPhantoms (){
   for (var i=0;i<phantomQueue.length;i++){
     var v = phantomQueue[i][1]
     if (player[v].hit.hitlag == 0 && player[v].phys.hurtBoxState == 0){

@@ -202,15 +202,6 @@ vfx.ceilingBounce.colour = vfx.groundBounce.colour;
 vfx.ceilingBounce.frames = vfx.groundBounce.frames;
 
 export const transparency = true;
-export const makeColour = function(r,g,b,a){
-  // maybe some hsl too
-  if (transparency){
-    return "rgba("+r+","+g+","+b+","+a+")";
-  }
-  else {
-    return "rgb("+r+","+g+","+b+")";
-  }
-}
 
 export const dVfx = {
   general : function(j,ang){
@@ -985,7 +976,16 @@ export const dVfx = {
   }
 };
 
-export const drawHexagon = function(r,tX,tY,width){
+export function makeColour (r,g,b,a){
+    // maybe some hsl too
+    if (transparency){
+        return "rgba("+r+","+g+","+b+","+a+")";
+    }
+    else {
+        return "rgb("+r+","+g+","+b+")";
+    }
+}
+export function drawHexagon (r,tX,tY,width){
   fg2.save();
   fg2.translate(tX,tY);
   var a = r*Math.sin(Math.PI/6);

@@ -3,7 +3,7 @@ import {sounds} from "../main/sfx";
 import {intangibility, actionSounds, Vec2D} from "../main/characters";
 /* eslint-disable */
 
-export const randomShout = function(char){
+export function randomShout (char){
   //playSfx("shout"+Math.round(0.5+Math.random()*5.99));
   switch (char){
     case 0:
@@ -80,13 +80,13 @@ export const randomShout = function(char){
   }
 }
 
-export const executeIntangibility = function(actionStateName,p){
+export function executeIntangibility (actionStateName,p){
   if (player[p].timer == intangibility[cS[p]][actionStateName][0]){
     player[p].phys.intangibleTimer = intangibility[cS[p]][actionStateName][1];
   }
 }
 
-export const playSounds = function(actionStateName,p){
+export function playSounds (actionStateName,p){
   for (var i=0; i<actionSounds[cS[p]][actionStateName].length; i++){
     if (player[p].timer == actionSounds[cS[p]][actionStateName][i][0]){
       sounds[actionSounds[cS[p]][actionStateName][i][1]].play();
@@ -94,7 +94,7 @@ export const playSounds = function(actionStateName,p){
   }
 }
 
-export const isFinalDeath = function(){
+export function isFinalDeath (){
   if (gameMode == 5){
     return true;
   }
@@ -116,7 +116,7 @@ export const isFinalDeath = function(){
   }
 }
 
-export const getAngle = function(x,y){
+export function getAngle (x,y){
   var angle = 0;
   if (x != 0 || y != 0) {
     angle = Math.atan2(y, x);
@@ -124,12 +124,12 @@ export const getAngle = function(x,y){
   return angle;
 }
 //aC = 180/Math.PI;
-export const turnOffHitboxes = function(p){
+export function turnOffHitboxes (p){
   player[p].hitboxes.active = [false,false,false,false];
   player[p].hitboxes.hitList = [];
 }
 
-export const shieldTilt = function(p,shieldstun){
+export function shieldTilt (p,shieldstun){
   if (!shieldstun && !player[p].inCSS){
     var x = player[p].inputs.lStickAxis[0].x;
     var y = player[p].inputs.lStickAxis[0].y;
@@ -143,7 +143,7 @@ export const shieldTilt = function(p,shieldstun){
   player[p].phys.shieldPositionReal = new Vec2D(player[p].phys.pos.x+player[p].phys.shieldPosition.x+(player[p].charAttributes.shieldOffset[0]*player[p].phys.face/4.5),player[p].phys.pos.y+player[p].phys.shieldPosition.y+(player[p].charAttributes.shieldOffset[1]/4.5));
 }
 
-export const reduceByTraction = function(p,applyDouble){
+export function reduceByTraction (p,applyDouble){
   if (player[p].phys.cVel.x > 0){
     if (applyDouble && player[p].phys.cVel.x > player[p].charAttributes.maxWalk){
       player[p].phys.cVel.x -= player[p].charAttributes.traction*2;
@@ -168,7 +168,7 @@ export const reduceByTraction = function(p,applyDouble){
   }
 }
 
-export const airDrift = function(p){
+export function airDrift (p){
   if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.3){
     var tempMax = 0
   }
@@ -211,7 +211,7 @@ export const airDrift = function(p){
   }
 }
 
-export const fastfall = function(p){
+export function fastfall (p){
   if (!player[p].phys.fastfalled){
     player[p].phys.cVel.y -= player[p].charAttributes.gravity;
     if (player[p].phys.cVel.y < -player[p].charAttributes.terminalV){
@@ -225,7 +225,7 @@ export const fastfall = function(p){
   }
 }
 
-export const shieldDepletion = function(p){
+export function shieldDepletion (p){
   //(0.28*input - (1-input/10))
   var input = Math.max(player[p].inputs.lAnalog[0], player[p].inputs.rAnalog[0]);
   player[p].phys.shieldHP -= 0.28*input - ((1-input)/10);
@@ -240,7 +240,7 @@ export const shieldDepletion = function(p){
   }
 }
 
-export const shieldSize = function(p,lock){
+export function shieldSize (p,lock){
    //shield size * 0.575 * model scaling
   //(shield size * 0.575 * hp/60) + (1-input)*0.60714*shieldsize
   player[p].phys.shieldAnalog = Math.max(player[p].inputs.lAnalog[0], player[p].inputs.rAnalog[0]);
@@ -250,7 +250,7 @@ export const shieldSize = function(p,lock){
   player[p].phys.shieldSize = (player[p].charAttributes.shieldScale * 0.575 * player[p].charAttributes.modelScale * (player[p].phys.shieldHP/60)) + ((1-player[p].phys.shieldAnalog)*0.6*player[p].charAttributes.shieldScale) + ((60 - player[p].phys.shieldHP)/60 * 2);
 }
 
-export const mashOut = function(p){
+export function mashOut (p){
   if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
     return true;
   }
@@ -293,7 +293,7 @@ export const mashOut = function(p){
 }
 
 // Global Interrupts
-export const checkForSmashes = function(p){
+export function checkForSmashes (p){
   if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
     if (Math.abs(player[p].inputs.lStickAxis[0].x) >= 0.79 && player[p].inputs.lStickAxis[2].x*Math.sign(player[p].inputs.lStickAxis[0].x) < 0.3){
       player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
@@ -324,7 +324,7 @@ export const checkForSmashes = function(p){
   }
 }
 
-export const checkForTilts = function(p,reverse){
+export function checkForTilts (p,reverse){
   var reverse = reverse || 1;
   if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
     if (player[p].inputs.lStickAxis[0].x*player[p].phys.face*reverse > 0.3 && Math.abs(player[p].inputs.lStickAxis[0].x)-(Math.abs(player[p].inputs.lStickAxis[0].y)) > -0.05){
@@ -345,7 +345,7 @@ export const checkForTilts = function(p,reverse){
   }
 }
 
-export const checkForSpecials = function(p){
+export function checkForSpecials (p){
   if (player[p].inputs.b[0] && !player[p].inputs.b[1]){
     if (player[p].phys.grounded){
       if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.58 || (player[p].inputs.lStickAxis[0].y > 0.58 && Math.abs(player[p].inputs.lStickAxis[0].x) > player[p].inputs.lStickAxis[0].y - 0.2)){
@@ -389,7 +389,7 @@ export const checkForSpecials = function(p){
   }
 }
 
-export const checkForAerials = function(p){
+export function checkForAerials (p){
   if (player[p].inputs.cStickAxis[0].x * player[p].phys.face >= 0.3 && player[p].inputs.cStickAxis[1].x * player[p].phys.face < 0.3 && Math.abs(player[p].inputs.cStickAxis[0].x) > Math.abs(player[p].inputs.cStickAxis[0].y) - 0.1){
     return [true,"ATTACKAIRF"];
   }
@@ -423,7 +423,7 @@ export const checkForAerials = function(p){
 }
 
 
-export const checkForDash = function(p){
+export function checkForDash (p){
   if (player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.79 && player[p].inputs.lStickAxis[2].x * player[p].phys.face < 0.3){
     return true;
   }
@@ -432,7 +432,7 @@ export const checkForDash = function(p){
   }
 }
 
-export const checkForSmashTurn = function(p){
+export function checkForSmashTurn (p){
   if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.79 && player[p].inputs.lStickAxis[2].x * player[p].phys.face > -0.3){
     return true;
   }
@@ -441,7 +441,7 @@ export const checkForSmashTurn = function(p){
   }
 }
 
-export const tiltTurnDashBuffer = function(p){
+export function tiltTurnDashBuffer (p){
   if (player[p].inputs.lStickAxis[1].x * player[p].phys.face > -0.3){
     return true;
   }
@@ -450,7 +450,7 @@ export const tiltTurnDashBuffer = function(p){
   }
 }
 
-export const checkForTiltTurn = function(p){
+export function checkForTiltTurn (p){
   if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.3){
     return true;
   }
@@ -459,7 +459,7 @@ export const checkForTiltTurn = function(p){
   }
 }
 
-export const checkForJump = function(p){
+export function checkForJump (p){
   if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1])){
     return [true,0];
   }
@@ -471,7 +471,7 @@ export const checkForJump = function(p){
   }
 }
 
-export const checkForSquat = function(p){
+export function checkForSquat (p){
   if (player[p].inputs.lStickAxis[0].y < -0.69){
     return true;
   }
@@ -480,7 +480,7 @@ export const checkForSquat = function(p){
   }
 }
 
-export const turboAirborneInterrupt = function(p){
+export function turboAirborneInterrupt (p){
   var a = checkForAerials(p);
   var b = checkForSpecials(p);
   if (a[0] && a[1] != player[p].actionState){
@@ -513,7 +513,7 @@ export const turboAirborneInterrupt = function(p){
   }
 }
 
-export const turboGroundedInterrupt = function(p){
+export function turboGroundedInterrupt (p){
   var b = checkForSpecials(p);
   var t = checkForTilts(p);
   var s = checkForSmashes(p);

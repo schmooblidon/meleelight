@@ -3,28 +3,28 @@ import {Vec2D} from "../main/characters";
 import {sounds} from "../main/sfx";
 /* eslint-disable */
 
-window.creditsPlayer = 0;
+
 
 const twoPi = Math.pi * 2;
 //scrolling top down
-var shoot_cooldown = 0;
-var initc = true; //whether or not credits should be initialized. Should be set to true every time credits is activated
-var cXSize = 1200; //not real values. Please update with real values of the size of the canvas
-var cYSize = 750; //To consider when setting the cYSize. make room for bar at bottom showing information of that person?
+let shoot_cooldown = 0;
+let initc = true; //whether or not credits should be initialized. Should be set to true every time credits is activated
+const cXSize = 1200; //not real values. Please update with real values of the size of the canvas
+const cYSize = 750; //To consider when setting the cYSize. make room for bar at bottom showing information of that person?
 //Current bar at bottom of screen is 50 pixels tall. Fill that shit out yourself.
-var cScore = 0;
-var cBoundX = (cXSize * 1.2098); //credits stick bounding octagon roughly circumscribes canvas size square
-var cBoundY = (cYSize * 1.2098);
-var cXPos = cXSize / 2;
-var cYPos = cYSize / 2;
-var cPlayerXPos = cXSize / 2;
-var cPlayerYPos = cYSize / 2;
-var cScrollingPos = 0;
-var cScrollingMax = 2800;// max scrolling distance in y coords. Can change this when you want more names or w/e
-var cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
-var lastHit = [0,0,false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
+let cScore = 0;
+const cBoundX = (cXSize * 1.2098); //credits stick bounding octagon roughly circumscribes canvas size square
+const cBoundY = (cYSize * 1.2098);
+let cXPos = cXSize / 2;
+let cYPos = cYSize / 2;
+let cPlayerXPos = cXSize / 2;
+let cPlayerYPos = cYSize / 2;
+let cScrollingPos = 0;
+let cScrollingMax = 2800;// max scrolling distance in y coords. Can change this when you want more names or w/e
+const cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
+let lastHit = [0, 0, false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
-window.ScrollingText = function(text,yPos,position,information) {
+export function ScrollingText (text,yPos,position,information) {
   this.Text = text;
 	this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
   this.yPos = yPos;
@@ -36,18 +36,18 @@ window.ScrollingText = function(text,yPos,position,information) {
 	this.canRender = false;
   this.size = function(){
 	  return ([[this.xPos, this.xPos + (20 * this.Text.length)],[this.yPos-23,this.yPos]]); //returns [[xMin,xMax],[yMin,yMax]]
-  }
+  };
   this.checkIfShouldRender = function(cY) { //                      SEE PLEASE?:  takes cYPos. if it can actually access that variable inside this scope, remove arguments.
-    var size = this.size();
+    const size = this.size();
 	  if (size[1][0] < cY && size[1][1] > 0) { //can render
 		  this.canRender = true;
 	  } else {
 		  this.canRender = false;
 	  }
-  }
+  };
   this.checkIfShot = function(x, y) {//updates this.isShot respectively
       if (this.isShot == false) {
-	  var size = this.size();
+	  const size = this.size();
 	  if (x >= size[0][0] && x <= size[0][1] && y >= size[1][0] && y <= size[1][1]) {
 		  this.isShot = true;
 		  return true;
@@ -57,15 +57,15 @@ window.ScrollingText = function(text,yPos,position,information) {
 	  } else {
 		  return false; //can't be shot twice
 	  }
-  }
+  };
   this.scrollY = function(y) {
 	  this.yPos += y;
   }
 }
-var creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
+let creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
 
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
-window.credits = function(p){ //called once every frame
+export function credits (p){ //called once every frame
   if (initc) {
 	  lastHit = [0,0,false]; //see notes above
 		creditNames = [
@@ -82,7 +82,7 @@ window.credits = function(p){ //called once every frame
 	  cScore = 0;
 	  initc = false;
   }
-  var yDif = 0;
+  let yDif = 0;
   if (player[p].inputs.s[0]) {
   //is holding down start. Should increase speed
   	yDif = Math.round(cScrollingSpeed * 1.5);
@@ -134,9 +134,9 @@ window.credits = function(p){ //called once every frame
     shoot_cooldown -= 1;
   }
 
-  for (var n=0;n<cShots.length;n++){
+  for (let n=0; n<cShots.length; n++){
     if (cShots[n].life == 15){
-      var madeShot = [false,0];
+      let madeShot = [false, 0];
       for (var i = 0; i < creditNames.length; i++) {
         if (!(creditNames[i].isShot)) {
             if (creditNames[i].checkIfShot(cShots[n].target.x,750-cShots[n].target.y)) {
@@ -166,7 +166,7 @@ window.credits = function(p){ //called once every frame
   }
 }
 
-window.drawCreditsInit = function(){
+export function drawCreditsInit (){
   bg2.clearRect(0,0,1200,750);
   fg1.clearRect(0,0,1200,750);
   fg2.clearRect(0,0,1200,750);
@@ -174,20 +174,20 @@ window.drawCreditsInit = function(){
   drawCreditsInfo();
 }
 
-window.cStar = function(){
+export function cStar (){
   this.vel = 4+Math.random()*4;
   this.life = Math.round(Math.random()*100+10*(this.vel-4));
   this.angle = twoPi*Math.random();
   this.pos = new Vec2D(600+this.vel*Math.cos(this.angle)*this.life,375+this.vel*Math.sin(this.angle)*this.life);
 
 }
-var cStars = [];
-for (var n=0;n<100;n++){
+const cStars = [];
+for (let n=0; n<100; n++){
   cStars.push(new cStar());
 }
 
 var cShots = [];
-window.cShot = function(target,position,type){
+export function cShot (target,position,type){
   this.vel = 0.3;
   this.life = 0;
   this.target = new Vec2D(target.x,750-target.y);
@@ -201,7 +201,7 @@ window.cShot = function(target,position,type){
   this.distance = Math.sqrt(Math.pow(this.target.y-this.position.y,2)+Math.pow(this.target.x-this.position.x,2));
 }
 
-window.drawCreditsInfo = function(){
+export function drawCreditsInfo (){
   ui.clearRect(0,0,1200,750);
   ui.font = "900 40px Consolas";
   ui.strokeStyle = "rgba(255, 255, 255, 0.7)";
@@ -230,11 +230,11 @@ window.drawCreditsInfo = function(){
   ui.fillText(cScore+" Hit",1075,85);
 }
 
-window.drawCredits = function(){
+export function drawCredits (){
   fg1.clearRect(0,0,1200,750);
   bg2.fillStyle = "rgba(0,0,0,0.4)";
   bg2.fillRect(0,0,1200,750);
-  for (var n=0;n<100;n++){
+  for (let n=0; n<100; n++){
     cStars[n].life++;
     if (cStars[n].life == 200){
       cStars[n].vel = 4+Math.random()*4;
@@ -244,15 +244,15 @@ window.drawCredits = function(){
     }
     cStars[n].pos.x += cStars[n].vel*Math.cos(cStars[n].angle);
     cStars[n].pos.y += cStars[n].vel*Math.sin(cStars[n].angle);
-    var col = Math.min(255,cStars[n].life*3)
+    const col = Math.min(255, cStars[n].life * 3);
     bg2.fillStyle = "rgb("+col+","+col+","+col+")";
     bg2.fillRect(cStars[n].pos.x,cStars[n].pos.y,3,3);
   }
-  var cShotDestroyQueue = [];
-  for (var m=0;m<cShots.length;m++){
+  const cShotDestroyQueue = [];
+  for (let m=0; m<cShots.length; m++){
     cShots[m].life++;
     cShots[m].vel *= 0.77;
-    cShots[m].lastPosition2 = new Vec2D(cShots[m].lastPosition.x,cShots[m].lastPosition.y)
+    cShots[m].lastPosition2 = new Vec2D(cShots[m].lastPosition.x,cShots[m].lastPosition.y);
     cShots[m].lastPosition = new Vec2D(cShots[m].position.x,cShots[m].position.y);
     cShots[m].position.x += cShots[m].vel*cShots[m].distance*Math.cos(cShots[m].angle);
     cShots[m].position.y += cShots[m].vel*cShots[m].distance*Math.sin(cShots[m].angle);
@@ -269,8 +269,8 @@ window.drawCredits = function(){
       bg2.stroke();
     }
   }
-  var del = 0;
-  for (var k=0;k<cShotDestroyQueue.length;k++){
+  let del = 0;
+  for (let k=0; k<cShotDestroyQueue.length; k++){
     cShots.splice(cShotDestroyQueue[k]-del,1);
     del++;
   }
@@ -278,7 +278,7 @@ window.drawCredits = function(){
   fg1.font = "500 36px Consolas";
   fg1.fillStyle = "white";
   fg1.textAlign = "start";
-  for (var i=0;i<creditNames.length;i++){
+  for (let i=0; i<creditNames.length; i++){
     if (creditNames[i].canRender){
       if (creditNames[i].isShot){
         fg1.fillStyle = "rgb(227, 89, 89)";

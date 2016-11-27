@@ -47,7 +47,7 @@ export let readyToFight = false;
 export let rtfFlash = 25;
 export let rtfFlashD = 1;
 
-export const changeCharacter = function(i,c){
+export function changeCharacter (i,c){
   cS[i] = c;
   player[i].actionState = "WAIT";
   player[i].timer = 0;
@@ -55,7 +55,7 @@ export const changeCharacter = function(i,c){
   player[i].charHitboxes = chars[cS[i]].hitboxes;
 }
 
-export const cssControls = function(i){
+export function cssControls (i){
   if (choosingTag == -1){
     if (player[i].inputs.b[0]){
       bHold[i]++;
@@ -298,7 +298,7 @@ export const cssControls = function(i){
   }
 }
 
-export const drawCSSInit = function(){
+export function drawCSSInit (){
   var bgGrad =bg1.createLinearGradient(0,0,1200,700);
   bgGrad.addColorStop(0,"rgb(17, 12, 56)");
   bgGrad.addColorStop(1,"black");
@@ -536,7 +536,7 @@ export const drawCSSInit = function(){
   }
 }
 
-export const drawCSS = function(){
+export function drawCSS (){
   clearScreen();
   ui.fillStyle = "rgb(219, 219, 219)";
   ui.save();

@@ -15,7 +15,7 @@ for (var k=0;k<20;k++){
   lightDust[k] = [Math.random()*3+2,330+(k*26+26*Math.random()),520,0.2];
 }
 
-export const drawStartScreenInit = function(){
+export function drawStartScreenInit (){
   bg1.fillStyle = "rgba(46, 8, 154, 1)";
   var grd=bg1.createRadialGradient(600,375,5,600,375,750);
   grd.addColorStop(0,"#27005b");
@@ -44,7 +44,7 @@ export const drawStartScreenInit = function(){
   bg1.restore();
 }
 
-export const drawStartScreen = function(){
+export function drawStartScreen (){
   clearScreen();
   bg2.save();
   bg2.lineWidth = 60;
