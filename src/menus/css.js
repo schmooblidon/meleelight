@@ -206,18 +206,25 @@ export const cssControls = function(i){
         changeGamemode(1);
       }
     }
+
+    let tok;
     if (player[i].inputs.x[0] && !player[i].inputs.x[1]){
       sounds.menuSelect.play();
-      pPal[i]++;
-      if (pPal[i] > 6){
-        pPal[i] = 0;
+      if (whichTokenGrabbed[i] != -1)
+          { tok = whichTokenGrabbed[i]; }
+          else { tok = i; }
+      pPal[tok]++;
+      if (pPal[tok] > 6){
+        pPal[tok] = 0;
       }
     }
     if (player[i].inputs.y[0] && !player[i].inputs.y[1]){
       sounds.menuSelect.play();
-      pPal[i]--;
-      if (pPal[i] < 0){
-        pPal[i] = 6;
+        if (whichTokenGrabbed[i] != -1){ tok = whichTokenGrabbed[i]; }
+        else { tok = i; }
+      pPal[tok]--;
+      if (pPal[tok] < 0){
+        pPal[tok] = 6;
       }
     }
     if (handPos[i].y > 100 && handPos[i].y < 160 && handPos[i].x > 380 && handPos[i].x < 910){
