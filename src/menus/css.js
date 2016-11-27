@@ -1,40 +1,53 @@
+import {cpuDifficulty, cS, player, changeGamemode, playerType,bg1,ui, palettes, pPal, clearScreen, versusMode, tagText,
+    pause
+    , hasTag
+    , randomTags
+    , layers
+    , togglePort
+    , keys
+    , ports
+    , setVersusMode
+} from "../main/main";
+import {Vec2D, chars} from "../main/characters";
+import {drawArrayPathCompress, twoPi} from "../main/render";
+import {sounds} from "../main/sfx";
 /* eslint-disable */
 
-window.marthPic = new Image();
+export const marthPic = new Image();
 marthPic.src = "assets/css/marth.png";
-window.puffPic = new Image();
+export const puffPic = new Image();
 puffPic.src = "assets/css/puff.png";
-window.foxPic = new Image();
+export const foxPic = new Image();
 foxPic.src = "assets/css/fox.png";
-window.handPoint = new Image();
+export const handPoint = new Image();
 handPoint.src = "assets/hand/handpoint.png";
-window.handOpen = new Image();
+export const handOpen = new Image();
 handOpen.src = "assets/hand/handopen.png";
-window.handGrab = new Image();
+export const handGrab = new Image();
 handGrab.src = "assets/hand/handgrab.png";
 
-window.choosingTag = -1;
-window.handType = [0,0,0,0];
-window.handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
-window.tokenPos = [new Vec2D(475,268),new Vec2D(515,268),new Vec2D(475,308),new Vec2D(515,308)];
-window.chosenChar = [0,0,0,0];
-window.tokenGrabbed = [false,false,false,false];
-window.whichTokenGrabbed = [-1,-1,-1,-1];
-window.occupiedToken = [false,false,false,false];
-window.bHold = [0,0,0,0];
+export let choosingTag = -1;
+export const handType = [0,0,0,0];
+export const handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
+export const tokenPos = [new Vec2D(475,268),new Vec2D(515,268),new Vec2D(475,308),new Vec2D(515,308)];
+export const chosenChar = [0,0,0,0];
+export const tokenGrabbed = [false,false,false,false];
+export const whichTokenGrabbed = [-1,-1,-1,-1];
+export const occupiedToken = [false,false,false,false];
+export const bHold = [0,0,0,0];
 
-window.cpuSlider = [new Vec2D(152+15+166+0-50,595),new Vec2D(152+15+166+225-50,595),new Vec2D(152+15+166+450-50,595),new Vec2D(152+15+166+675-50,595)];
+export const cpuSlider = [new Vec2D(152+15+166+0-50,595),new Vec2D(152+15+166+225-50,595),new Vec2D(152+15+166+450-50,595),new Vec2D(152+15+166+675-50,595)];
 
-window.cpuGrabbed = [false,false,false,false];
-window.whichCpuGrabbed = [-1,-1,-1,-1];
-window.occupiedCpu = [false,false,false,false];
+export const cpuGrabbed = [false,false,false,false];
+export const whichCpuGrabbed = [-1,-1,-1,-1];
+export const occupiedCpu = [false,false,false,false];
 
-window.readyToFight = false;
+export let readyToFight = false;
 
-window.rtfFlash = 25;
-window.rtfFlashD = 1;
+export let rtfFlash = 25;
+export let rtfFlashD = 1;
 
-window.changeCharacter = function(i,c){
+export const changeCharacter = function(i,c){
   cS[i] = c;
   player[i].actionState = "WAIT";
   player[i].timer = 0;
@@ -42,7 +55,7 @@ window.changeCharacter = function(i,c){
   player[i].charHitboxes = chars[cS[i]].hitboxes;
 }
 
-window.cssControls = function(i){
+export const cssControls = function(i){
   if (choosingTag == -1){
     if (player[i].inputs.b[0]){
       bHold[i]++;
@@ -210,7 +223,7 @@ window.cssControls = function(i){
     if (handPos[i].y > 100 && handPos[i].y < 160 && handPos[i].x > 380 && handPos[i].x < 910){
       if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
         sounds.menuSelect.play();
-        versusMode = 1 - versusMode;
+       setVersusMode( 1 - versusMode);
       }
     }
     if (!cpuGrabbed[i]){
@@ -278,7 +291,7 @@ window.cssControls = function(i){
   }
 }
 
-window.drawCSSInit = function(){
+export const drawCSSInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,700);
   bgGrad.addColorStop(0,"rgb(17, 12, 56)");
   bgGrad.addColorStop(1,"black");
@@ -516,7 +529,7 @@ window.drawCSSInit = function(){
   }
 }
 
-window.drawCSS = function(){
+export const drawCSS = function(){
   clearScreen();
   ui.fillStyle = "rgb(219, 219, 219)";
   ui.save();
@@ -843,6 +856,7 @@ window.drawCSS = function(){
       case 1:
         text = "CP";
         bgGrad.addColorStop(1,"rgb(135, 135, 135)");
+        break;
       default:
         break;
     }
@@ -872,7 +886,7 @@ window.drawCSS = function(){
 
   }
   // 72 95
-  for (var i=0;i<ports;i++){
+  for (var i=0; i<ports; i++){
 
       switch (handType[i]){
         case 0:

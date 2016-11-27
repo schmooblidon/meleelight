@@ -1,3 +1,4 @@
+import {charAttributes, Vec2D, offsets, actionSounds, intangibility, hitboxObject, charObject, chars, hitbox, hitboxes} from "../../main/characters";
 /* eslint-disable */
 
 charAttributes[0] = {
@@ -45,7 +46,7 @@ charAttributes[0] = {
   shieldBreakVel : 2.5,
   multiJump : false,
   ecbScale : 1.8
-}
+};
 
 // start, length
 intangibility[0] = {
@@ -59,7 +60,7 @@ intangibility[0] = {
   "TECHN" : [1,20],
   "TECHB" : [1,20],
   "TECHF" : [1,20]
-}
+};
 
 frames[0] = {
   "WAIT" : 90,
@@ -133,7 +134,7 @@ frames[0] = {
   "FURASLEEPEND" : 60,
   "STOPCEIL" : 9,
   "TECHU" : 26
-}
+};
 
 actionSounds[0] = {
   "JUMP" : [[1,"jump"]],
@@ -148,7 +149,7 @@ actionSounds[0] = {
   "ESCAPEF" : [[33,"sworddraw"]],
   "ESCAPEN" : [[2,"airdodge"],[18,"sworddraw"]],
   "OTTOTTOWAIT" : [[0,"airdodge"]]
-}
+};
 
 // HITBOX OFFSETS
 
@@ -1093,7 +1094,7 @@ new Vec2D(6.79,10.47),
 new Vec2D(7.54,9.93),
 new Vec2D(7.98,9.67)]
 }
-}
+};
 
 hitboxes[0] = {
   fair : new hitboxObject(new hitbox(offsets[0].fair.id0,3.906,10,361,70,30,0,1,0,1,1),new hitbox(offsets[0].fair.id1,3.906,9,361,70,20,0,1,0,1,1),new hitbox(offsets[0].fair.id2,3.906,9,361,70,20,0,1,0,1,1),new hitbox(offsets[0].fair.id3,3.906,13,67,70,42,0,1,0,1,1)),

@@ -1,18 +1,23 @@
+import {playerType, player, cS, screenShake, drawVfx, gameMode, percentShake} from "../main/main";
+import {Vec2D, Segment2D} from "../main/characters";
+import {gameSettings} from "../settings";
+import {sounds} from "../main/sfx";
+import {turnOffHitboxes, aS} from "./actionStateShortcuts";
 /* eslint-disable */
 
-window.hitQueue = [];
-window.phantomQueue = [];
+export const hitQueue = [];
+export const phantomQueue = [];
 
 const angleConversion = Math.PI / 180;
 
-window.hitDetection = function(p){
+export const hitDetection = function(p){
   var attackerClank = false;
   for (var i=0;i<4;i++){
     if (playerType[i] > -1){
       if (i != p){
         // check if victim is already in hitList
           var inHitList = false;
-          for (var k=0;k<player[p].hitboxes.hitList.length;k++){
+          for (var k=0; k<player[p].hitboxes.hitList.length; k++){
             if (i == player[p].hitboxes.hitList[k]){
               inHitList = true;
               break;
@@ -122,14 +127,14 @@ window.hitDetection = function(p){
   }
 }
 
-window.setHasHit = function(p,j){
+export const setHasHit = function(p,j){
   // for turbo mode. if not a grab and not counter and not a midthrow hitbox.
   if (player[p].hitboxes.id[j].type != 2 && player[p].hitboxes.id[j].type != 6 && player[p].actionState.substr(0,5) != "THROW"){
     player[p].hasHit = true;
   }
 }
 
-window.hitHitCollision = function(i,p,j,k){
+export const hitHitCollision = function(i,p,j,k){
   var hbpos = new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x*player[p].phys.face),player[p].phys.pos.y+player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
   var hbpos2 = new Vec2D(player[i].phys.pos.x+(player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].x*player[i].phys.face),player[i].phys.pos.y+player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].y);
   var hitPoint = new Vec2D((hbpos.x+hbpos2.x)/2,(hbpos.y+hbpos2.y)/2);
@@ -137,7 +142,7 @@ window.hitHitCollision = function(i,p,j,k){
   return [(Math.pow(hbpos2.x-hbpos.x,2) + Math.pow(hbpos.y-hbpos2.y,2) <= Math.pow(player[p].hitboxes.id[j].size+player[i].hitboxes.id[k].size,2)),hitPoint];
 }
 
-window.hitShieldCollision = function(i,p,j,previous){
+export const hitShieldCollision = function(i,p,j,previous){
   if (previous){
     var hbpos = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   }
@@ -149,7 +154,7 @@ window.hitShieldCollision = function(i,p,j,previous){
   return (Math.pow(shieldpos.x-hbpos.x,2) + Math.pow(hbpos.y-shieldpos.y,2) <= Math.pow(player[p].hitboxes.id[j].size+player[i].phys.shieldSize,2));
 }
 
-window.interpolatedHitCircleCollision = function(circlePos,r,p,j){
+export const interpolatedHitCircleCollision = function(circlePos,r,p,j){
   var collision = false;
   var h1 = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   var h2 = new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x*player[p].phys.face),player[p].phys.pos.y+player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
@@ -170,7 +175,7 @@ window.interpolatedHitCircleCollision = function(circlePos,r,p,j){
   return collision;
 }
 
-window.segmentSegmentCollision = function(a1,a2,b1,b2){
+export const segmentSegmentCollision = function(a1,a2,b1,b2){
   var intersection = new Vec2D(0,0);
   var b = new Vec2D(a2.x-a1.x,a2.y-a1.y);
   var d = new Vec2D(b2.x-b1.x,b2.y-b1.y);
@@ -192,7 +197,7 @@ window.segmentSegmentCollision = function(a1,a2,b1,b2){
   return true;
 }
 
-window.interpolatedHitHurtCollision = function(i,p,j,phantom){
+export const interpolatedHitHurtCollision = function(i,p,j,phantom){
   // a1 is line1 start, a2 is line1 end, b1 is line2 start, b2 is line2 end
   phantom = phantom || false;
   var hurt = player[i].phys.hurtbox;
@@ -220,7 +225,7 @@ window.interpolatedHitHurtCollision = function(i,p,j,phantom){
   }
 }
 
-window.hitHurtCollision = function(i,p,j,previous,phantom){
+export const hitHurtCollision = function(i,p,j,previous,phantom){
   phantom = phantom || false;
   var offset = player[p].hitboxes.id[j].offset[player[p].hitboxes.frame];
   if (player[p].actionState == "DAMAGEFLYN"){
@@ -251,7 +256,7 @@ window.hitHurtCollision = function(i,p,j,previous,phantom){
   return (cornerDistance_sq <= (Math.pow(player[p].hitboxes.id[j].size-(phantom?gameSettings.phantomThreshold:0),2)));
 }
 
-window.executeHits = function(){
+export const executeHits = function(){
   var grabQueue = [];
   var ignoreGrabs = [false,false,false,false];
   for (var i=0;i<hitQueue.length;i++){
@@ -558,7 +563,7 @@ window.executeHits = function(){
   }
 }
 
-window.executeGrabTech = function(a,v){
+export const executeGrabTech = function(a,v){
   if (player[a].phys.pos.x < player[v].phys.pos.x){
     player[a].phys.face = 1;
     player[v].phys.face = -1;
@@ -578,7 +583,7 @@ window.executeGrabTech = function(a,v){
 }
 
 
-window.getKnockback = function(hb,damagestaled,damageunstaled,percent,weight,crouching,vCancel) {
+export const getKnockback = function(hb,damagestaled,damageunstaled,percent,weight,crouching,vCancel) {
   if (hb.sk == 0){
     var kb = ((0.01 * hb.kg) * ((1.4 * (((0.05 * (damageunstaled * (damagestaled + Math.floor(percent)))) + (damagestaled + Math.floor(percent)) * 0.1) * (2.0 - (2.0 * (weight * 0.01)) / (1.0 + (weight * 0.01))))) + 18) + hb.bk);
   }
@@ -599,7 +604,7 @@ window.getKnockback = function(hb,damagestaled,damageunstaled,percent,weight,cro
   return kb;
 }
 
-window.getLaunchAngle = function(trajectory, knockback, reverse, x, y, v) {
+export const getLaunchAngle = function(trajectory, knockback, reverse, x, y, v) {
   var deadzone = false;
   //console.log(trajectory);
   var diAngle;
@@ -698,7 +703,7 @@ window.getLaunchAngle = function(trajectory, knockback, reverse, x, y, v) {
   return newtraj;
 }
 
-window.getHorizontalVelocity = function(knockback, angle) {
+export const getHorizontalVelocity = function(knockback, angle) {
     var initialVelocity = knockback * 0.03;
     var horizontalAngle = Math.cos(angle * angleConversion);
     var horizontalVelocity = initialVelocity * horizontalAngle;
@@ -706,7 +711,7 @@ window.getHorizontalVelocity = function(knockback, angle) {
     return horizontalVelocity;
 }
 
-window.getVerticalVelocity = function(knockback, angle,grounded,trajectory) {
+export const getVerticalVelocity = function(knockback, angle,grounded,trajectory) {
     var initialVelocity = knockback * 0.03;
     var verticalAngle = Math.sin(angle * angleConversion);
     var verticalVelocity = initialVelocity * verticalAngle;
@@ -717,26 +722,26 @@ window.getVerticalVelocity = function(knockback, angle,grounded,trajectory) {
     return verticalVelocity;
 }
 
-window.getHorizontalDecay = function(angle) {
+export const getHorizontalDecay = function(angle) {
   var decay = 0.051 * Math.cos(angle * angleConversion)
   decay = Math.round(decay * 100000) / 100000;
   return decay;
 }
 
-window.getVerticalDecay = function(angle) {
+export const getVerticalDecay = function(angle) {
   var decay = 0.051 * Math.sin(angle * angleConversion)
   decay = Math.round(decay * 100000) / 100000;
   return decay;
 }
 
-window.getHitstun = function(knockback) {
+export const getHitstun = function(knockback) {
   //if (groundDownHitType == "Fly"){
     //knockback *= 1.25;
   //}
   return Math.floor(knockback * .4);
 }
 
-window.knockbackSounds = function(type,knockback,v){
+export const knockbackSounds = function(type,knockback,v){
   if (type == 4){
     sounds.firestronghit.play();
   }
@@ -833,7 +838,7 @@ window.knockbackSounds = function(type,knockback,v){
   }
 }
 
-window.checkPhantoms = function(){
+export const checkPhantoms = function(){
   for (var i=0;i<phantomQueue.length;i++){
     var v = phantomQueue[i][1]
     if (player[v].hit.hitlag == 0 && player[v].phys.hurtBoxState == 0){

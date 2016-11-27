@@ -1,45 +1,53 @@
+import {Box2D, Vec2D} from "../main/characters";
+import {player,ui, changeGamemode, setCookie, layers, clearScreen} from "../main/main";
+import {sounds} from "../main/sfx";
+import {handGrab, handOpen} from "../menus/css";
+import {twoPi} from "../main/render";
+import {startTargetGame} from "./targetplay";
+import {targetStages, customTargetStages} from "../stages/stages";
+import {boxFill, drawBackground} from "../stages/stagerender";
 /* eslint-disable */
 
-window.crossHairPos = new Vec2D(0,0);
-window.unGriddedCrossHairPos = new Vec2D(0,0);
-window.targetBuilder = 0;
-window.targetTool = 0;
-window.showingCode = false;
-window.toolInfoTimer = 0;
-window.toolInfo = ["Box","Platform","Ledge","Target","Move","Delete"];
-window.holdingA = false;
-window.drawingBox = new Box2D([0,0],[0,0]);
-window.drawingPlatform = [new Vec2D(0,0),new Vec2D(0,0)];
-window.editingStage = -1;
+export let crossHairPos = new Vec2D(0,0);
+export let unGriddedCrossHairPos = new Vec2D(0,0);
+export let targetBuilder = 0;
+export let targetTool = 0;
+export let showingCode = false;
+export let toolInfoTimer = 0;
+export let toolInfo = ["Box","Platform","Ledge","Target","Move","Delete"];
+export let holdingA = false;
+export let drawingBox = new Box2D([0,0],[0,0]);
+export let drawingPlatform = [new Vec2D(0,0),new Vec2D(0,0)];
+export let editingStage = -1;
 
-window.tooSmallTimer = 0;
-window.tooSmallPos = new Vec2D(0,0);
+export let tooSmallTimer = 0;
+export let tooSmallPos = new Vec2D(0,0);
 
-window.createTargetCode = function(){
-  var tCode = "";
+export let createTargetCode = function(){
+  let tCode = "";
   tCode += stageTemp.startingPoint.x+","+stageTemp.startingPoint.y+"~";
-  for (var i=0;i<stageTemp.box.length;i++){
+  for (let i=0;i<stageTemp.box.length;i++){
     tCode += stageTemp.box[i].min.x+","+stageTemp.box[i].min.y+","+stageTemp.box[i].max.x+","+stageTemp.box[i].max.y;
     if (i != stageTemp.box.length - 1){
       tCode += "#";
     }
   }
   tCode += "~";
-  for (var i=0;i<stageTemp.platform.length;i++){
+  for (let i=0;i<stageTemp.platform.length;i++){
     tCode += stageTemp.platform[i][0].x+","+stageTemp.platform[i][1].x+","+stageTemp.platform[i][0].y;
     if (i != stageTemp.platform.length - 1){
       tCode += "#";
     }
   }
   tCode += "~";
-  for (var i=0;i<stageTemp.ledge.length;i++){
+  for (let i=0;i<stageTemp.ledge.length;i++){
     tCode += stageTemp.ledge[i][0]+","+stageTemp.ledge[i][1];
     if (i != stageTemp.ledge.length - 1){
       tCode += "#";
     }
   }
   tCode += "~";
-  for (var i=0;i<stageTemp.target.length;i++){
+  for (let i=0;i<stageTemp.target.length;i++){
     tCode += stageTemp.target[i].x+","+stageTemp.target[i].y;
     if (i != stageTemp.target.length - 1){
       tCode += "#";
@@ -49,7 +57,7 @@ window.createTargetCode = function(){
   return tCode;
 }
 
-window.stageTemp = {
+export let stageTemp = {
   box : [],
   platform : [],
   ground : [],
@@ -85,10 +93,10 @@ let hoverToolbar = 1;
 const gridSizes = [80,40,20,10,0];
 let gridType = 1;
 
-window.undo = function(){
-  var num = undoList.length-1;
+export let undo = function(){
+  let num = undoList.length-1;
   if (num >= 0){
-    var item = undoList[num];
+    let item = undoList[num];
     stageTemp[item].pop();
     stageTemp.draw[item].pop();
     if (item == "box"){
@@ -105,59 +113,59 @@ window.undo = function(){
   }
 }
 
-window.createStageCode = function(){
-  var tCode = "s";
+export let createStageCode = function(){
+  let tCode = "s";
   tCode += stageTemp.startingPoint.x.toFixed(2)+","+stageTemp.startingPoint.y.toFixed(2)+"&b";
-  for (var i=0;i<stageTemp.box.length;i++){
+  for (let i=0;i<stageTemp.box.length;i++){
     tCode += stageTemp.box[i].min.x.toFixed(2)+","+stageTemp.box[i].min.y.toFixed(2)+","+stageTemp.box[i].max.x.toFixed(2)+","+stageTemp.box[i].max.y.toFixed(2);
     if (i != stageTemp.box.length - 1){
       tCode += ",";
     }
   }
   /*tCode += "&";
-  for (var i=0;i<stageTemp.ground.length;i++){
+  for (let i=0;i<stageTemp.ground.length;i++){
     tCode += "[new Vec2D("+stageTemp.ground[i][0].x+","+stageTemp.ground[i][0].y+"),new Vec2D("+stageTemp.ground[i][1].x+","+stageTemp.ground[i][1].y+")]";
     if (i != stageTemp.ground.length - 1){
       tCode += ",";
     }
   }
   tCode += "],ceiling:[";
-  for (var i=0;i<stageTemp.ceiling.length;i++){
+  for (let i=0;i<stageTemp.ceiling.length;i++){
     tCode += "[new Vec2D("+stageTemp.ceiling[i][0].x+","+stageTemp.ceiling[i][0].y+"),new Vec2D("+stageTemp.ceiling[i][1].x+","+stageTemp.ceiling[i][1].y+")]";
     if (i != stageTemp.ceiling.length - 1){
       tCode += ",";
     }
   }
   tCode += "],wallL:[";
-  for (var i=0;i<stageTemp.wallL.length;i++){
+  for (let i=0;i<stageTemp.wallL.length;i++){
     tCode += "[new Vec2D("+stageTemp.wallL[i][0].x+","+stageTemp.wallL[i][0].y+"),new Vec2D("+stageTemp.wallL[i][1].x+","+stageTemp.wallL[i][1].y+")]";
     if (i != stageTemp.wallL.length - 1){
       tCode += ",";
     }
   }
   tCode += "],wallR:[";
-  for (var i=0;i<stageTemp.wallR.length;i++){
+  for (let i=0;i<stageTemp.wallR.length;i++){
     tCode += "[new Vec2D("+stageTemp.wallR[i][0].x+","+stageTemp.wallR[i][0].y+"),new Vec2D("+stageTemp.wallR[i][1].x+","+stageTemp.wallR[i][1].y+")]";
     if (i != stageTemp.wallR.length - 1){
       tCode += ",";
     }
   }*/
   tCode += "&p";
-  for (var i=0;i<stageTemp.platform.length;i++){
+  for (let i=0;i<stageTemp.platform.length;i++){
     tCode += stageTemp.platform[i][0].x.toFixed(2)+","+stageTemp.platform[i][0].y.toFixed(2)+","+stageTemp.platform[i][1].x.toFixed(2)+","+stageTemp.platform[i][1].y.toFixed(2);
     if (i != stageTemp.platform.length - 1){
       tCode += ",";
     }
   }
   tCode += "&l";
-  for (var i=0;i<stageTemp.ledge.length;i++){
+  for (let i=0;i<stageTemp.ledge.length;i++){
     tCode += stageTemp.ledge[i][0]+","+stageTemp.ledge[i][1];
     if (i != stageTemp.ledge.length - 1){
       tCode += ",";
     }
   }
   tCode += "&t";
-  for (var i=0;i<stageTemp.target.length;i++){
+  for (let i=0;i<stageTemp.target.length;i++){
     tCode += stageTemp.target[i].x.toFixed(2)+","+stageTemp.target[i].y.toFixed(2);
     if (i != stageTemp.target.length - 1){
       tCode += ",";
@@ -167,59 +175,59 @@ window.createStageCode = function(){
   return tCode;
 }
 
-window.createStageObject = function(s){
-  var tCode = "{startingPoint:new Vec2D(";
+export let createStageObject = function(s){
+  let tCode = "{startingPoint:new Vec2D(";
   tCode += targetStages[s].startingPoint.x.toFixed(1)+","+targetStages[s].startingPoint.y.toFixed(1)+"),box:[";
-  for (var i=0;i<targetStages[s].box.length;i++){
+  for (let i=0;i<targetStages[s].box.length;i++){
     tCode += "new Box2D(["+targetStages[s].box[i].min.x.toFixed(1)+","+targetStages[s].box[i].min.y.toFixed(1)+"],["+targetStages[s].box[i].max.x.toFixed(1)+","+targetStages[s].box[i].max.y.toFixed(1)+"])";
     if (i != targetStages[s].box.length - 1){
       tCode += ",";
     }
   }
   tCode += "],ground:[";
-  for (var i=0;i<targetStages[s].ground.length;i++){
+  for (let i=0;i<targetStages[s].ground.length;i++){
     tCode += "[new Vec2D("+targetStages[s].ground[i][0].x.toFixed(1)+","+targetStages[s].ground[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].ground[i][1].x.toFixed(1)+","+targetStages[s].ground[i][1].y.toFixed(1)+")]";
     if (i != targetStages[s].ground.length - 1){
       tCode += ",";
     }
   }
   tCode += "],ceiling:[";
-  for (var i=0;i<targetStages[s].ceiling.length;i++){
+  for (let i=0;i<targetStages[s].ceiling.length;i++){
     tCode += "[new Vec2D("+targetStages[s].ceiling[i][0].x.toFixed(1)+","+targetStages[s].ceiling[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].ceiling[i][1].x.toFixed(1)+","+targetStages[s].ceiling[i][1].y.toFixed(1)+")]";
     if (i != targetStages[s].ceiling.length - 1){
       tCode += ",";
     }
   }
   tCode += "],wallL:[";
-  for (var i=0;i<targetStages[s].wallL.length;i++){
+  for (let i=0;i<targetStages[s].wallL.length;i++){
     tCode += "[new Vec2D("+targetStages[s].wallL[i][0].x.toFixed(1)+","+targetStages[s].wallL[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].wallL[i][1].x.toFixed(1)+","+targetStages[s].wallL[i][1].y.toFixed(1)+")]";
     if (i != targetStages[s].wallL.length - 1){
       tCode += ",";
     }
   }
   tCode += "],wallR:[";
-  for (var i=0;i<targetStages[s].wallR.length;i++){
+  for (let i=0;i<targetStages[s].wallR.length;i++){
     tCode += "[new Vec2D("+targetStages[s].wallR[i][0].x.toFixed(1)+","+targetStages[s].wallR[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].wallR[i][1].x.toFixed(1)+","+targetStages[s].wallR[i][1].y.toFixed(1)+")]";
     if (i != targetStages[s].wallR.length - 1){
       tCode += ",";
     }
   }
   tCode += "],platform:[";
-  for (var i=0;i<targetStages[s].platform.length;i++){
+  for (let i=0;i<targetStages[s].platform.length;i++){
     tCode += "[new Vec2D("+targetStages[s].platform[i][0].x.toFixed(1)+","+targetStages[s].platform[i][0].y.toFixed(1)+"),new Vec2D("+targetStages[s].platform[i][1].x.toFixed(1)+","+targetStages[s].platform[i][1].y.toFixed(1)+")]";
     if (i != targetStages[s].platform.length - 1){
       tCode += ",";
     }
   }
   tCode += "],ledge:[";
-  for (var i=0;i<targetStages[s].ledge.length;i++){
+  for (let i=0;i<targetStages[s].ledge.length;i++){
     tCode += "["+targetStages[s].ledge[i][0].toFixed(1)+","+targetStages[s].ledge[i][1].toFixed(1)+"]";
     if (i != targetStages[s].ledge.length - 1){
       tCode += ",";
     }
   }
   tCode += "],target:[";
-  for (var i=0;i<targetStages[s].target.length;i++){
+  for (let i=0;i<targetStages[s].target.length;i++){
     tCode += "new Vec2D("+targetStages[s].target[i].x.toFixed(1)+","+targetStages[s].target[i].y.toFixed(1)+")";
     if (i != targetStages[s].target.length - 1){
       tCode += ",";
@@ -229,18 +237,18 @@ window.createStageObject = function(s){
   return tCode;
 }
 
-window.targetBuilderControls = function(p){
+export let targetBuilderControls = function(p){
   if (!showingCode){
     if (!builderPaused){
       hoverItem = 0;
       ledgeHoverItem = 0;
       /*if (player[p].inputs.z[0] && !player[p].inputs.z[1]){
         // so i can create permanent stages
-        var code = createStageCode();
+        let code = createStageCode();
         console.log(code);
       }*/
       //hoverButton = -1;
-      var multi = (player[p].inputs.y[0] || player[p].inputs.x[0])?1:5;
+      let multi = (player[p].inputs.y[0] || player[p].inputs.x[0])?1:5;
       unGriddedCrossHairPos.x += player[p].inputs.lStickAxis[0].x*multi;
       unGriddedCrossHairPos.y += player[p].inputs.lStickAxis[0].y*multi;
       if (gridType == 4){
@@ -261,7 +269,7 @@ window.targetBuilderControls = function(p){
           crossHairPos.y = (Math.round(unGriddedCrossHairPos.y/(gridSizes[gridType]/-3)) * gridSizes[gridType]/-3)+(375%gridSizes[gridType])/3;
         }
       }
-      var realCrossHair = new Vec2D(crossHairPos.x*3+600,crossHairPos.y*-3+375)
+      let realCrossHair = new Vec2D(crossHairPos.x*3+600,crossHairPos.y*-3+375)
       /*if (realCrossHair.x >= 700 && realCrossHair.x <= 1110 && realCrossHair.y >= 650 && realCrossHair.y <= 710){
         hoverButton = Math.floor((realCrossHair.x-695)/70);
       }*/
@@ -335,14 +343,14 @@ window.targetBuilderControls = function(p){
               drawingBox.max = new Vec2D(realCrossHair.x,realCrossHair.y);
               if (Math.abs(drawingBox.min.x-drawingBox.max.x) >= 3.73*3 && Math.abs(drawingBox.min.y-drawingBox.max.y) >= 2.8*3){
                 stageTemp.draw.box.push(new Box2D([Math.min(drawingBox.min.x,drawingBox.max.x),Math.max(drawingBox.min.y,drawingBox.max.y)],[Math.max(drawingBox.min.x,drawingBox.max.x),Math.min(drawingBox.min.y,drawingBox.max.y)]));
-                var b = stageTemp.draw.box[stageTemp.draw.box.length-1];
+                let b = stageTemp.draw.box[stageTemp.draw.box.length-1];
                 stageTemp.draw.ground.push([new Vec2D(b.min.x,b.max.y),new Vec2D(b.max.x,b.max.y)]);
                 stageTemp.draw.ceiling.push([new Vec2D(b.min.x,b.min.y),new Vec2D(b.max.x,b.min.y)]);
                 stageTemp.draw.wallL.push([new Vec2D(b.min.x,b.max.y),new Vec2D(b.min.x,b.min.y)]);
                 stageTemp.draw.wallR.push([new Vec2D(b.max.x,b.max.y),new Vec2D(b.max.x,b.min.y)]);
 
                 stageTemp.box.push(new Box2D([(Math.min(drawingBox.min.x,drawingBox.max.x)-600)/3,(Math.max(drawingBox.min.y,drawingBox.max.y)-375)/-3],[(Math.max(drawingBox.min.x,drawingBox.max.x)-600)/3,(Math.min(drawingBox.min.y,drawingBox.max.y)-375)/-3]));
-                var b = stageTemp.box[stageTemp.box.length-1];
+                 b = stageTemp.box[stageTemp.box.length-1];
                 stageTemp.ground.push([new Vec2D(b.min.x,b.max.y),new Vec2D(b.max.x,b.max.y)]);
                 stageTemp.ceiling.push([new Vec2D(b.min.x,b.min.y),new Vec2D(b.max.x,b.min.y)]);
                 stageTemp.wallL.push([new Vec2D(b.min.x,b.max.y),new Vec2D(b.min.x,b.min.y)]);
@@ -403,7 +411,7 @@ window.targetBuilderControls = function(p){
         case 2:
         //LEDGE
           ledgeHoverItem = 0;
-          for (var i=0;i<stageTemp.box.length;i++){
+          for (let i=0;i<stageTemp.box.length;i++){
             if (realCrossHair.x >= stageTemp.draw.box[i].min.x-5 && realCrossHair.x <= stageTemp.draw.box[i].max.x+5 && realCrossHair.y >= stageTemp.draw.box[i].max.y-5 && realCrossHair.y <= stageTemp.draw.box[i].min.y+5){
               ledgeHoverItem = ["box",i];
               break;
@@ -417,8 +425,8 @@ window.targetBuilderControls = function(p){
               ledgeHoverItem.push(1);
             }
             if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]){
-              var alreadyExist = false;
-              for (var j=0;j<stageTemp.ledge.length;j++){
+              let alreadyExist = false;
+              for (let j=0;j<stageTemp.ledge.length;j++){
                 if (stageTemp.ledge[j][0] == ledgeHoverItem[1] && stageTemp.ledge[j][1] == ledgeHoverItem[2]){
                   stageTemp.ledge.splice(j,1);
                   alreadyExist = true;
@@ -518,16 +526,16 @@ window.targetBuilderControls = function(p){
                   sounds.menuBack.play();
                   break;
                 case "box":
-                  var ledgeDeleteQueue = [];
-                  for (var j=0;j<stageTemp.ledge.length;j++){
+                  let ledgeDeleteQueue = [];
+                  for (let j=0;j<stageTemp.ledge.length;j++){
                     if (stageTemp.ledge[j][0] == hoverItem[1]){
                       ledgeDeleteQueue.push(j);
                     }
                   }
-                  for (var k=0;k<ledgeDeleteQueue.length;k++){
+                  for (let k=0;k<ledgeDeleteQueue.length;k++){
                     stageTemp.ledge.splice(ledgeDeleteQueue[k]-k,1);
                   }
-                  for (var n=0;n<stageTemp.ledge.length;n++){
+                  for (let n=0;n<stageTemp.ledge.length;n++){
                     if (stageTemp.ledge[n][0] > hoverItem[1]){
                       stageTemp.ledge[n][0]--;
                     }
@@ -583,7 +591,7 @@ window.targetBuilderControls = function(p){
           case 1:
             sounds.menuForward.play();
             showingCode = true;
-            var code = createStageCode();
+            let code = createStageCode();
             $("#customStageContainer").show();
             $("#cStageEdit").select().val(code);
             $("#cStageTitleEdit").empty().append("Share this code");
@@ -634,16 +642,16 @@ window.targetBuilderControls = function(p){
 
 }
 
-window.drawTargetStage = function(){
+export let drawTargetStage = function(){
   ui.fillStyle = boxFill;
-  for (var i=0;i<stageTemp.draw.box.length;i++){
-    var b = stageTemp.draw.box[i];
+  for (let i=0;i<stageTemp.draw.box.length;i++){
+    let b = stageTemp.draw.box[i];
     ui.fillRect(b.min.x,b.max.y,Math.abs(b.max.x-b.min.x),Math.abs(b.max.y-b.min.y));
   }
-  for (var i=0;i<stageTemp.draw.target.length;i++){
-    var x = stageTemp.draw.target[i].x;
-    var y = stageTemp.draw.target[i].y;
-    for (var j=0;j<5;j++){
+  for (let i=0;i<stageTemp.draw.target.length;i++){
+    let x = stageTemp.draw.target[i].x;
+    let y = stageTemp.draw.target[i].y;
+    for (let j=0;j<5;j++){
       if (hoverItem[0] == "target" && hoverItem[1] == i){
         ui.fillStyle = (j%2)?"white":"rgb(241, 111, 111)";
       }
@@ -659,8 +667,8 @@ window.drawTargetStage = function(){
 
   ui.strokeStyle = "#db80cc";
   ui.lineWidth = 1;
-  for (var i=0;i<stageTemp.draw.ground.length;i++){
-    var g = stageTemp.draw.ground[i];
+  for (let i=0;i<stageTemp.draw.ground.length;i++){
+    let g = stageTemp.draw.ground[i];
     ui.beginPath();
     ui.moveTo(g[0].x,g[0].y);
     ui.lineTo(g[1].x,g[1].y);
@@ -668,8 +676,8 @@ window.drawTargetStage = function(){
     ui.stroke();
   }
   ui.strokeStyle = "#4794c6";
-  for (var i=0;i<stageTemp.draw.platform.length;i++){
-    var p = stageTemp.draw.platform[i];
+  for (let i=0;i<stageTemp.draw.platform.length;i++){
+    let p = stageTemp.draw.platform[i];
     ui.beginPath();
     ui.moveTo(p[0].x,p[0].y);
     ui.lineTo(p[1].x,p[1].y);
@@ -677,8 +685,8 @@ window.drawTargetStage = function(){
     ui.stroke();
   }
   ui.strokeStyle = "#47c648";
-  for (var i=0;i<stageTemp.draw.wallL.length;i++){
-    var w = stageTemp.draw.wallL[i];
+  for (let i=0;i<stageTemp.draw.wallL.length;i++){
+    let w = stageTemp.draw.wallL[i];
     ui.beginPath();
     ui.moveTo(w[0].x,w[0].y);
     ui.lineTo(w[1].x,w[1].y);
@@ -686,8 +694,8 @@ window.drawTargetStage = function(){
     ui.stroke();
   }
   ui.strokeStyle = "#9867de";
-  for (var i=0;i<stageTemp.draw.wallR.length;i++){
-    var w = stageTemp.draw.wallR[i];
+  for (let i=0;i<stageTemp.draw.wallR.length;i++){
+    let w = stageTemp.draw.wallR[i];
     ui.beginPath();
     ui.moveTo(w[0].x,w[0].y);
     ui.lineTo(w[1].x,w[1].y);
@@ -695,8 +703,8 @@ window.drawTargetStage = function(){
     ui.stroke();
   }
   ui.strokeStyle = "#f04c4c";
-  for (var i=0;i<stageTemp.draw.ceiling.length;i++){
-    var ce = stageTemp.draw.ceiling[i];
+  for (let i=0;i<stageTemp.draw.ceiling.length;i++){
+    let ce = stageTemp.draw.ceiling[i];
     ui.beginPath();
     ui.moveTo(ce[0].x,ce[0].y);
     ui.lineTo(ce[1].x,ce[1].y);
@@ -705,8 +713,8 @@ window.drawTargetStage = function(){
   }
   ui.strokeStyle = "#e7a44c";
   ui.lineWidth = 1;
-  for (var i=0;i<stageTemp.ledge.length;i++){
-    var e = stageTemp.ledge[i];
+  for (let i=0;i<stageTemp.ledge.length;i++){
+    let e = stageTemp.ledge[i];
     ui.beginPath();
     if (e[1]){
       ui.moveTo(stageTemp.draw.box[e[0]].max.x,stageTemp.draw.box[e[0]].max.y+Math.min(30,(stageTemp.draw.box[e[0]].min.y-stageTemp.draw.box[e[0]].max.y)/2));
@@ -723,18 +731,18 @@ window.drawTargetStage = function(){
   }
 }
 
-window.renderTargetBuilder = function(){
+export let renderTargetBuilder = function(){
   clearScreen();
   drawBackground();
   ui.strokeStyle = "rgba(255, 255, 255, 0.17)";
   ui.lineWidth = 2;
   if (gridType != 4){
     ui.beginPath();
-    for (var i=0;i<1200/gridSizes[gridType];i++){
+    for (let i=0;i<1200/gridSizes[gridType];i++){
       ui.moveTo(i*gridSizes[gridType],0);
       ui.lineTo(i*gridSizes[gridType],750);
     }
-    for (var i=0;i<750/gridSizes[gridType];i++){
+    for (let i=0;i<750/gridSizes[gridType];i++){
       ui.moveTo(0,i*gridSizes[gridType]);
       ui.lineTo(1200,i*gridSizes[gridType]);
     }
@@ -778,7 +786,7 @@ window.renderTargetBuilder = function(){
   }
   ui.textAlign = "center";
   ui.lineWidth = 2;
-  var spCol = ["rgb(0, 0, 0)","rgb(110, 255, 66)"];
+  let spCol = ["rgb(0, 0, 0)","rgb(110, 255, 66)"];
   if (hoverItem[0] == "startingPoint"){
     spCol = ["rgb(82, 82, 82)","rgb(171, 255, 145)"];
   }
@@ -792,11 +800,11 @@ window.renderTargetBuilder = function(){
   ui.font = "900 14px Arial";
   ui.fillText("START",stageTemp.draw.startingPoint.x,stageTemp.draw.startingPoint.y-12);
   //ui.strokeText("START",stageTemp.draw.startingPoint.x,stageTemp.draw.startingPoint.y-12);
-  var i = hoverItem[1];
+  let i = hoverItem[1];
   if (hoverItem[0] == "box"){
     ui.strokeStyle = "#e9bee2";
     ui.lineWidth = 3;
-    var g = stageTemp.draw.ground[i];
+    let g = stageTemp.draw.ground[i];
     ui.beginPath();
     ui.moveTo(g[0].x,g[0].y);
     ui.lineTo(g[1].x,g[1].y);
@@ -804,7 +812,7 @@ window.renderTargetBuilder = function(){
     ui.stroke();
 
     ui.strokeStyle = "#86df87";
-    var w = stageTemp.draw.wallL[i];
+    let w = stageTemp.draw.wallL[i];
     ui.beginPath();
     ui.moveTo(w[0].x,w[0].y);
     ui.lineTo(w[1].x,w[1].y);
@@ -812,7 +820,7 @@ window.renderTargetBuilder = function(){
     ui.stroke();
 
     ui.strokeStyle = "#b99fde";
-    var w = stageTemp.draw.wallR[i];
+     w = stageTemp.draw.wallR[i];
     ui.beginPath();
     ui.moveTo(w[0].x,w[0].y);
     ui.lineTo(w[1].x,w[1].y);
@@ -820,7 +828,7 @@ window.renderTargetBuilder = function(){
     ui.stroke();
 
     ui.strokeStyle = "#fa9292";
-    var ce = stageTemp.draw.ceiling[i];
+    let ce = stageTemp.draw.ceiling[i];
     ui.beginPath();
     ui.moveTo(ce[0].x,ce[0].y);
     ui.lineTo(ce[1].x,ce[1].y);
@@ -828,8 +836,8 @@ window.renderTargetBuilder = function(){
     ui.stroke();
 
     ui.strokeStyle = "#e8bd84";
-    for (var j=0;j<stageTemp.ledge.length;j++){
-      var e = stageTemp.ledge[j];
+    for (let j=0;j<stageTemp.ledge.length;j++){
+      let e = stageTemp.ledge[j];
       if (e[0] == i){
         ui.beginPath();
         if (e[1]){
@@ -850,7 +858,7 @@ window.renderTargetBuilder = function(){
   else if (hoverItem[0] == "platform"){
     ui.lineWidth = 3;
     ui.strokeStyle = "#7eb3d5";
-    var p = stageTemp.draw.platform[i];
+    let p = stageTemp.draw.platform[i];
     ui.beginPath();
     ui.moveTo(p[0].x,p[0].y);
     ui.lineTo(p[1].x,p[1].y);
@@ -878,7 +886,7 @@ window.renderTargetBuilder = function(){
   ui.fillStyle = "rgb(255,255,255)";
   ui.font = "13px Lucida Console, monaco, monospace";
 
-  for (var i=0;i<6;i++){
+  for (let i=0;i<6;i++){
     if (targetTool == i){
       if (toolInfoTimer > 0){
         ui.save();
@@ -980,7 +988,7 @@ window.renderTargetBuilder = function(){
   if (builderPaused){
     ui.fillStyle = "rgba(0,0,0,0.4)";
     ui.fillRect(0,0,layers.UI.width,layers.UI.height);
-    for (var i=0;i<3;i++){
+    for (let i=0;i<3;i++){
       if (builderPauseSelected == i){
         ui.fillStyle = "rgba(255,255,255,0.9)";
       }
@@ -997,9 +1005,9 @@ window.renderTargetBuilder = function(){
   }
 }
 
-window.findTarget = function(realCrossHair){
-  var found = false;
-  for (var i=0;i<stageTemp.target.length;i++){
+export let findTarget = function(realCrossHair){
+  let found = false;
+  for (let i=0;i<stageTemp.target.length;i++){
     if (Math.abs(realCrossHair.x - stageTemp.draw.target[i].x) <= 30 && Math.abs(realCrossHair.y - stageTemp.draw.target[i].y) <= 30){
       hoverItem = ["target",i];
       found = true;
@@ -1009,9 +1017,9 @@ window.findTarget = function(realCrossHair){
   return found;
 }
 
-window.findPlatform = function(realCrossHair){
-  var found = false;
-  for (var i=0;i<stageTemp.platform.length;i++){
+export let findPlatform = function(realCrossHair){
+  let found = false;
+  for (let i=0;i<stageTemp.platform.length;i++){
     if (Math.abs(realCrossHair.x - (stageTemp.draw.platform[i][0].x+stageTemp.draw.platform[i][1].x)/2) <= Math.abs(stageTemp.draw.platform[i][0].x-stageTemp.draw.platform[i][1].x)/2 + 10 && Math.abs(realCrossHair.y - stageTemp.draw.platform[i][0].y) <= 20){
       hoverItem = ["platform",i];
       found = true;
@@ -1021,9 +1029,9 @@ window.findPlatform = function(realCrossHair){
   return found;
 }
 
-window.findBox = function(realCrossHair){
-  var found = false;
-  for (var i=0;i<stageTemp.box.length;i++){
+export let findBox = function(realCrossHair){
+  let found = false;
+  for (let i=0;i<stageTemp.box.length;i++){
     if (realCrossHair.x >= stageTemp.draw.box[i].min.x-5 && realCrossHair.x <= stageTemp.draw.box[i].max.x+5 && realCrossHair.y >= stageTemp.draw.box[i].max.y-5 && realCrossHair.y <= stageTemp.draw.box[i].min.y+5){
       hoverItem = ["box",i];
       found = true;
@@ -1033,7 +1041,7 @@ window.findBox = function(realCrossHair){
   return found;
 }
 
-window.centerItem = function(item,realCrossHair){
+export let centerItem = function(item,realCrossHair){
   switch (item[0]){
     case "startingPoint":
       stageTemp.draw.startingPoint = new Vec2D(realCrossHair.x,realCrossHair.y);
@@ -1051,13 +1059,13 @@ window.centerItem = function(item,realCrossHair){
       break;
     case "box":
       var w = Math.abs((stageTemp.box[item[1]].max.x - stageTemp.box[item[1]].min.x))/2;
-      var h = Math.abs((stageTemp.box[item[1]].max.y - stageTemp.box[item[1]].min.y))/2;
+      let h = Math.abs((stageTemp.box[item[1]].max.y - stageTemp.box[item[1]].min.y))/2;
       var wd = Math.abs((stageTemp.draw.box[item[1]].max.x - stageTemp.draw.box[item[1]].min.x))/2;
-      var hd = Math.abs((stageTemp.draw.box[item[1]].min.y - stageTemp.draw.box[item[1]].max.y))/2;
+      let hd = Math.abs((stageTemp.draw.box[item[1]].min.y - stageTemp.draw.box[item[1]].max.y))/2;
       stageTemp.box[item[1]] = new Box2D([crossHairPos.x-w,crossHairPos.y-h],[crossHairPos.x+w,crossHairPos.y+h]);
       stageTemp.draw.box[item[1]] = new Box2D([realCrossHair.x-wd,realCrossHair.y+hd],[realCrossHair.x+wd,realCrossHair.y-hd]);
 
-      var b = stageTemp.draw.box[item[1]];
+      let b = stageTemp.draw.box[item[1]];
       stageTemp.draw.ground[item[1]] = [new Vec2D(b.min.x,b.max.y),new Vec2D(b.max.x,b.max.y)];
       stageTemp.draw.ceiling[item[1]] = [new Vec2D(b.min.x,b.min.y),new Vec2D(b.max.x,b.min.y)];
       stageTemp.draw.wallL[item[1]] = [new Vec2D(b.min.x,b.max.y),new Vec2D(b.min.x,b.min.y)];

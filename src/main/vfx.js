@@ -1,8 +1,12 @@
 /* eslint-disable */
-
+import {stage, vfxQueue, player, drawVfx, startTimer,fg2} from "./main";
+import {drawArrayPath, drawArrayPathNew} from "./render";
+import {Vec2D} from "./characters";
+import * as sounds from "jquery";
+import {swordSwings} from "./swordSwings";
 const twoPi = Math.PI * 2;
 
-window.vfx = {
+export const vfx = {
   impactLand : {
     name : "impactLand",
     //colour : "rgba(#ffffff,",
@@ -197,8 +201,8 @@ vfx.ceilingBounce.path = vfx.groundBounce.path;
 vfx.ceilingBounce.colour = vfx.groundBounce.colour;
 vfx.ceilingBounce.frames = vfx.groundBounce.frames;
 
-window.transparency = true;
-window.makeColour = function(r,g,b,a){
+export const transparency = true;
+export const makeColour = function(r,g,b,a){
   // maybe some hsl too
   if (transparency){
     return "rgba("+r+","+g+","+b+","+a+")";
@@ -208,9 +212,9 @@ window.makeColour = function(r,g,b,a){
   }
 }
 
-window.dVfx = {
+export const dVfx = {
   general : function(j,ang){
-    var col = makeColour(vfxQueue[j][0].colour[0],vfxQueue[j][0].colour[1],vfxQueue[j][0].colour[2],0.8*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
+    let col = makeColour(vfxQueue[j][0].colour[0], vfxQueue[j][0].colour[1], vfxQueue[j][0].colour[2], 0.8 * ((vfxQueue[j][0].frames - vfxQueue[j][1]) / vfxQueue[j][0].frames));
     fg2.save();
     fg2.translate((vfxQueue[j][2].x*stage.scale)+stage.offset[0],(vfxQueue[j][2].y*-stage.scale)+stage.offset[1]);
     fg2.rotate(ang);
@@ -219,21 +223,21 @@ window.dVfx = {
   },
   swing : function(j,draw){
     draw = draw || true;
-    var p = vfxQueue[j][4].pNum;
+    const p = vfxQueue[j][4].pNum;
     if (vfxQueue[j][4].posNow == undefined || vfxQueue[j][4].posNow == null){
       vfxQueue[j][4].posNow = new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y);
       vfxQueue[j][4].posPrev = new Vec2D(player[p].phys.posPrev.x,player[p].phys.posPrev.y);
     }
-    var frame = vfxQueue[j][4].frame;
-    var swingType = vfxQueue[j][4].swingType;
-    var swordPrev = swordSwings[swingType][frame];
-    var swordNow = swordSwings[swingType][frame+1];
-    var scale = player[p].charAttributes.charScale;
-    var pos = vfxQueue[j][4].posNow;
-    var posPrev = vfxQueue[j][4].posPrev;
-    var sc = stage.scale;
-    var soX = stage.offset[0];
-    var soY = stage.offset[1];
+    const frame = vfxQueue[j][4].frame;
+    const swingType = vfxQueue[j][4].swingType;
+    const swordPrev = swordSwings[swingType][frame];
+    const swordNow = swordSwings[swingType][frame+1];
+    const scale = player[p].charAttributes.charScale;
+    const pos = vfxQueue[j][4].posNow;
+    const posPrev = vfxQueue[j][4].posPrev;
+    const sc = stage.scale;
+    const soX = stage.offset[0];
+    const soY = stage.offset[1];
     if (draw){
       fg2.fillStyle = makeColour(46,217,255,(0.7-(0.7/5*vfxQueue[j][1])));
       fg2.beginPath();
@@ -249,9 +253,9 @@ window.dVfx = {
     dVfx.general(j,0);
   },
   circleDust : function(j){
-    for (var n=0;n<vfxQueue[j][0].circles.length;n++){
-      var x = ((vfxQueue[j][2].x+(vfxQueue[j][0].circles[n]*(1+(vfxQueue[j][1]/vfxQueue[j][0].frames))))*stage.scale) + stage.offset[0];
-      var y = ((vfxQueue[j][2].y+(4*(0+(vfxQueue[j][1]/vfxQueue[j][0].frames))))*-stage.scale) +stage.offset[1];
+    for (let n=0;n<vfxQueue[j][0].circles.length;n++){
+      const x = ((vfxQueue[j][2].x+(vfxQueue[j][0].circles[n]*(1+(vfxQueue[j][1]/vfxQueue[j][0].frames))))*stage.scale) + stage.offset[0];
+      const y = ((vfxQueue[j][2].y+(4*(0+(vfxQueue[j][1]/vfxQueue[j][0].frames))))*-stage.scale) +stage.offset[1];
       fg2.fillStyle = makeColour(255,255,255,0.7*((vfxQueue[j][0].frames-vfxQueue[j][1])/vfxQueue[j][0].frames));
       fg2.beginPath();
       fg2.arc(x,y,12*(stage.scale/4.5),twoPi,0);
@@ -981,7 +985,7 @@ window.dVfx = {
   }
 };
 
-window.drawHexagon = function(r,tX,tY,width){
+export const drawHexagon = function(r,tX,tY,width){
   fg2.save();
   fg2.translate(tX,tY);
   var a = r*Math.sin(Math.PI/6);

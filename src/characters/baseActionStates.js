@@ -1,8 +1,11 @@
+import {player, cS, drawVfx, screenShake, percentShake, finishGame, palettes, pPal,stage} from "../main/main";
+import {sounds} from "../main/sfx";
+import {Vec2D, actionSounds} from "../main/characters";
 /* eslint-disable */
 
 // BASE ActionStates
 
-window.baseActionStates = {
+export const baseActionStates = {
 
 "WAIT" : {
   name : "WAIT",

@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-window.keyText = [
+export const keyText = [
   "", // [0]
   "", // [1]
   "", // [2]

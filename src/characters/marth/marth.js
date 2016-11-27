@@ -1,3 +1,17 @@
+import {aS, turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump,
+    checkForDash
+    , checkForSmashTurn
+    , checkForTiltTurn
+    , tiltTurnDashBuffer
+    , fastfall
+    , airDrift
+    , checkForAerials
+    , randomShout
+} from "../../physics/actionStateShortcuts";
+import {baseActionStates} from "../baseActionStates";
+import {player, drawVfx, palettes, pPal, cS, stage} from "../../main/main";
+import {Vec2D} from "../../main/characters";
+import {sounds} from "../../main/sfx";
 /* eslint-disable */
 
 // action state object creation
@@ -28,7 +42,7 @@ marth.JAB1 = {
     player[p].actionState = "JAB1";
     player[p].timer = 0;
     player[p].phys.jabCombo = false;
-    turnOffHitboxes(p);
+    turnOffHitboxes(p);;
     player[p].hitboxes.id[0] = player[p].charHitboxes.jab1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.jab1.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.jab1.id2;
@@ -38,13 +52,13 @@ marth.JAB1 = {
   main : function(p){
     player[p].timer++;
     if (!marth.JAB1.interrupt(p)){
-      reduceByTraction(p,true);
+      reduceByTraction(p,true);;
       if (player[p].timer > 3 && player[p].timer < 15){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
           pNum:p,
           swingType:"JAB1",
           frame:player[p].timer-4
-        });
+        });;
       }
       if (player[p].timer > 2 && player[p].timer < 26 && player[p].inputs.a[0] && !player[p].inputs.a[1]){
         player[p].phys.jabCombo = true;
@@ -72,10 +86,10 @@ marth.JAB1 = {
       return true;
     }
     else if (player[p].timer > 26){
-      var b = checkForSpecials(p);
-      var t = checkForTilts(p);
-      var s = checkForSmashes(p);
-      var j = checkForJump(p);
+      var b = checkForSpecials(p);;
+      var t = checkForTilts(p);;
+      var s = checkForSmashes(p);;
+      var j = checkForJump(p);;
       if (j[0]){
         marth.KNEEBEND.init(p,j[1]);
         return true;
@@ -101,7 +115,7 @@ marth.JAB1 = {
         return true;
       }
       else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);;
         marth.TILTTURN.init(p);
         return true;
       }
@@ -111,13 +125,13 @@ marth.JAB1 = {
       }
       else {
         return false;
-      }
+      };;;
     }
     else {
       return false;
     }
   }
-}
+};
 
 marth.JAB2 = {
   name : "JAB2",
@@ -216,7 +230,7 @@ marth.JAB2 = {
       return false;
     }
   }
-}
+};
 
 marth.DOWNTILT = {
   name : "DOWNTILT",
@@ -307,7 +321,7 @@ marth.DOWNTILT = {
       return false;
     }
   }
-}
+};
 
 marth.UPTILT = {
   name : "UPTILT",
@@ -405,7 +419,7 @@ marth.UPTILT = {
       return false;
     }
   }
-}
+};
 
 marth.FORWARDTILT = {
   name : "FORWARDTILT",
@@ -454,7 +468,7 @@ marth.FORWARDTILT = {
       return false;
     }
   }
-}
+};
 
 // ---------- AERIALS --------------
 
@@ -481,8 +495,8 @@ marth.ATTACKAIRF = {
   main : function(p){
     player[p].timer++;
     if (!marth.ATTACKAIRF.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+      fastfall(p);;
+      airDrift(p);;
       if (player[p].timer > 2 && player[p].timer < 11){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
           pNum:p,
@@ -512,7 +526,7 @@ marth.ATTACKAIRF = {
       return true;
     }
     else if (player[p].timer > 29){
-      var a = checkForAerials(p);
+      var a = checkForAerials(p);;
       if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && !player[p].phys.doubleJumped){
         if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
           marth.JUMPAERIALB.init(p);
@@ -542,7 +556,7 @@ marth.ATTACKAIRF = {
       marth.LANDINGATTACKAIRF.init(p);
     }
   }
-}
+};
 
 marth.ATTACKAIRB = {
   name : "ATTACKAIRB",
@@ -631,7 +645,7 @@ marth.ATTACKAIRB = {
       marth.LANDINGATTACKAIRB.init(p);
     }
   }
-}
+};
 
 marth.ATTACKAIRU = {
   name : "ATTACKAIRU",
@@ -699,7 +713,7 @@ marth.ATTACKAIRU = {
       marth.LANDINGATTACKAIRU.init(p);
     }
   }
-}
+};
 
 marth.ATTACKAIRD = {
   name : "ATTACKAIRD",
@@ -767,7 +781,7 @@ marth.ATTACKAIRD = {
       marth.LANDINGATTACKAIRD.init(p);
     }
   }
-}
+};
 
 marth.ATTACKAIRN = {
   name : "ATTACKAIRN",
@@ -858,7 +872,7 @@ marth.ATTACKAIRN = {
       marth.LANDINGATTACKAIRN.init(p);
     }
   }
-}
+};
 
 // ----------------SMASHES -----------
 marth.FORWARDSMASH = {
@@ -978,7 +992,7 @@ marth.FORWARDSMASH = {
       return false;
     }
   }
-}
+};
 
 marth.UPSMASH = {
   name : "UPSMASH",
@@ -1092,7 +1106,7 @@ marth.UPSMASH = {
       return false;
     }
   }
-}
+};
 
 marth.DOWNSMASH = {
   name : "DOWNSMASH",
@@ -1233,7 +1247,7 @@ marth.DOWNSMASH = {
       return false;
     }
   }
-}
+};
 
 // OTHER
 
@@ -1278,7 +1292,7 @@ marth.GRAB = {
       return false;
     }
   }
-}
+};
 
 
 marth.ATTACKDASH = {
@@ -1379,7 +1393,7 @@ marth.ATTACKDASH = {
       return false;
     }
   }
-}
+};
 
 // -------- SPECIALS -----------
 
@@ -1394,7 +1408,7 @@ window.dancingBladeCombo = function(p,min,max){
       }
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND = {
   name : "SIDESPECIALGROUND",
@@ -1468,7 +1482,7 @@ marth.SIDESPECIALGROUND = {
       return false;
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND2FORWARD = {
   name : "SIDESPECIALGROUND2FORWARD",
@@ -1542,7 +1556,7 @@ marth.SIDESPECIALGROUND2FORWARD = {
       return false;
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND2UP = {
   name : "SIDESPECIALGROUND2UP",
@@ -1616,7 +1630,7 @@ marth.SIDESPECIALGROUND2UP = {
       return false;
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND3DOWN = {
   name : "SIDESPECIALGROUND3DOWN",
@@ -1691,7 +1705,7 @@ marth.SIDESPECIALGROUND3DOWN = {
       return false;
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND3FORWARD = {
   name : "SIDESPECIALGROUND3FORWARD",
@@ -1766,7 +1780,7 @@ marth.SIDESPECIALGROUND3FORWARD = {
       return false;
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND3UP = {
   name : "SIDESPECIALGROUND3UP",
@@ -1841,7 +1855,7 @@ marth.SIDESPECIALGROUND3UP = {
       return false;
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND4DOWN = {
   name : "SIDESPECIALGROUND4DOWN",
@@ -1919,7 +1933,7 @@ marth.SIDESPECIALGROUND4DOWN = {
       return false;
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND4FORWARD = {
   name : "SIDESPECIALGROUND4FORWARD",
@@ -1979,7 +1993,7 @@ marth.SIDESPECIALGROUND4FORWARD = {
       return false;
     }
   }
-}
+};
 
 marth.SIDESPECIALGROUND4UP = {
   name : "SIDESPECIALGROUND4UP",
@@ -2039,7 +2053,7 @@ marth.SIDESPECIALGROUND4UP = {
       return false;
     }
   }
-}
+};
 
 window.dancingBladeAirMobility = function(p){
   player[p].phys.cVel.y -= 0.06;
@@ -2058,7 +2072,7 @@ window.dancingBladeAirMobility = function(p){
       player[p].phys.cVel.x = 0
     }
   }
-}
+};
 
 marth.SIDESPECIALAIR = {
   name : "SIDESPECIALAIR",
@@ -2154,7 +2168,7 @@ marth.SIDESPECIALAIR = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND";
   }
-}
+};
 
 marth.SIDESPECIALAIR2FORWARD = {
   name : "SIDESPECIALAIR2FORWARD",
@@ -2232,7 +2246,7 @@ marth.SIDESPECIALAIR2FORWARD = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND2FORWARD";
   }
-}
+};
 
 marth.SIDESPECIALAIR2UP = {
   name : "SIDESPECIALAIR2UP",
@@ -2310,7 +2324,7 @@ marth.SIDESPECIALAIR2UP = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND2UP";
   }
-}
+};
 
 marth.SIDESPECIALAIR3DOWN = {
   name : "SIDESPECIALAIR3DOWN",
@@ -2389,7 +2403,7 @@ marth.SIDESPECIALAIR3DOWN = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND3DOWN";
   }
-}
+};
 
 marth.SIDESPECIALAIR3FORWARD = {
   name : "SIDESPECIALAIR3FORWARD",
@@ -2468,7 +2482,7 @@ marth.SIDESPECIALAIR3FORWARD = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND3FORWARD";
   }
-}
+};
 
 marth.SIDESPECIALAIR3UP = {
   name : "SIDESPECIALAIR3UP",
@@ -2547,7 +2561,7 @@ marth.SIDESPECIALAIR3UP = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND3UP";
   }
-}
+};
 
 marth.SIDESPECIALAIR4DOWN = {
   name : "SIDESPECIALAIR4DOWN",
@@ -2623,7 +2637,7 @@ marth.SIDESPECIALAIR4DOWN = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND4DOWN";
   }
-}
+};
 
 marth.SIDESPECIALAIR4FORWARD = {
   name : "SIDESPECIALAIR4FORWARD",
@@ -2687,7 +2701,7 @@ marth.SIDESPECIALAIR4FORWARD = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND4FORWARD";
   }
-}
+};
 
 marth.SIDESPECIALAIR4UP = {
   name : "SIDESPECIALAIR4UP",
@@ -2751,7 +2765,7 @@ marth.SIDESPECIALAIR4UP = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND4UP";
   }
-}
+};
 
 marth.DOWNSPECIALAIR = {
   name : "DOWNSPECIALAIR",
@@ -2832,7 +2846,7 @@ marth.DOWNSPECIALAIR = {
     player[p].colourOverlayBool = false;
     marth.DOWNSPECIALAIR2.init(p);
   }
-}
+};
 
 marth.DOWNSPECIALAIR2 = {
   name : "DOWNSPECIALAIR2",
@@ -2893,7 +2907,7 @@ marth.DOWNSPECIALAIR2 = {
       return false;
     }
   }
-}
+};
 
 marth.DOWNSPECIALGROUND = {
   name : "DOWNSPECIALGROUND",
@@ -2960,7 +2974,7 @@ marth.DOWNSPECIALGROUND = {
     player[p].colourOverlayBool = false;
     marth.DOWNSPECIALGROUND2.init(p);
   }
-}
+};
 
 marth.DOWNSPECIALGROUND2 = {
   name : "DOWNSPECIALGROUND2",
@@ -3016,7 +3030,7 @@ marth.DOWNSPECIALGROUND2 = {
       return false;
     }
   }
-}
+};
 
 marth.NEUTRALSPECIALAIR = {
   name : "NEUTRALSPECIALAIR",
@@ -3150,7 +3164,7 @@ marth.NEUTRALSPECIALAIR = {
   land : function(p){
     player[p].actionState = "NEUTRALSPECIALGROUND";
   }
-}
+};
 
 window.blendColours = function(start,end,opacity){
   var blended = [];
@@ -3161,7 +3175,7 @@ window.blendColours = function(start,end,opacity){
     blended[i] = start[i]+difference[i]*opacity;
   }
   return [Math.floor(blended[0]),Math.floor(blended[1]),Math.floor(blended[2])];
-}
+};
 
 marth.NEUTRALSPECIALGROUND = {
   name : "NEUTRALSPECIALGROUND",
@@ -3282,7 +3296,7 @@ marth.NEUTRALSPECIALGROUND = {
       return false;
     }
   }
-}
+};
 marth.UPSPECIAL = {
   name : "UPSPECIAL",
   canPassThrough : true,
@@ -3389,7 +3403,7 @@ marth.UPSPECIAL = {
       marth.LANDINGFALLSPECIAL.init(p);
     }
   }
-}
+};
 
 // --------------- THROWS ------------
 marth.THROWFORWARD = {
@@ -3431,7 +3445,7 @@ marth.THROWFORWARD = {
       return false;
     }
   }
-}
+};
 marth.THROWBACK = {
   name : "THROWBACK",
   canEdgeCancel : false,
@@ -3471,7 +3485,7 @@ marth.THROWBACK = {
       return false;
     }
   }
-}
+};
 marth.THROWUP = {
   name : "THROWUP",
   canEdgeCancel : false,
@@ -3511,7 +3525,7 @@ marth.THROWUP = {
       return false;
     }
   }
-}
+};
 marth.THROWDOWN = {
   name : "THROWDOWN",
   canEdgeCancel : false,
@@ -3552,7 +3566,7 @@ marth.THROWDOWN = {
       return false;
     }
   }
-}
+};
 
 //---------------------THROWNS--------
 marth.THROWNMARTHUP = {
@@ -3585,7 +3599,7 @@ marth.THROWNMARTHUP = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 
 marth.THROWNMARTHDOWN = {
@@ -3619,7 +3633,7 @@ marth.THROWNMARTHDOWN = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 
 marth.THROWNMARTHBACK = {
@@ -3653,7 +3667,7 @@ marth.THROWNMARTHBACK = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 
 marth.THROWNMARTHFORWARD = {
@@ -3686,7 +3700,7 @@ marth.THROWNMARTHFORWARD = {
   interrupt : function(p){
     return false;
   }
-}
+};
 marth.THROWNPUFFFORWARD = {
   name : "THROWNPUFFFORWARD",
   canEdgeCancel : false,
@@ -3716,7 +3730,7 @@ marth.THROWNPUFFFORWARD = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 marth.THROWNPUFFDOWN = {
   name : "THROWNPUFFDOWN",
@@ -3748,7 +3762,7 @@ marth.THROWNPUFFDOWN = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 marth.THROWNPUFFBACK = {
   name : "THROWNPUFFBACK",
@@ -3788,7 +3802,7 @@ marth.THROWNPUFFBACK = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 marth.THROWNPUFFUP = {
   name : "THROWNPUFFUP",
@@ -3819,7 +3833,7 @@ marth.THROWNPUFFUP = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 marth.THROWNFOXFORWARD = {
   name : "THROWNFOXFORWARD",
@@ -3851,7 +3865,7 @@ marth.THROWNFOXFORWARD = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 marth.THROWNFOXDOWN = {
   name : "THROWNFOXDOWN",
@@ -3883,7 +3897,7 @@ marth.THROWNFOXDOWN = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 marth.THROWNFOXBACK = {
   name : "THROWNFOXBACK",
@@ -3919,7 +3933,7 @@ marth.THROWNFOXBACK = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 marth.THROWNFOXUP = {
   name : "THROWNFOXUP",
@@ -3950,7 +3964,7 @@ marth.THROWNFOXUP = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 //------------CLIFF ACTIONS-----------
 
@@ -3994,7 +4008,7 @@ marth.CLIFFGETUPQUICK = {
       return false;
     }
   }
-}
+};
 
 marth.CLIFFGETUPSLOW = {
   name : "CLIFFGETUPSLOW",
@@ -4376,7 +4390,7 @@ marth.CATCHATTACK = {
       return false;
     }
   }
-}
+};
 marth.DOWNATTACK = {
   name : "DOWNATTACK",
   canEdgeCancel : false,
@@ -4435,7 +4449,7 @@ marth.DOWNATTACK = {
       return false;
     }
   }
-}
+};
 
 // UNIQUE ACTION STATES END
 

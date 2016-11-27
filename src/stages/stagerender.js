@@ -1,6 +1,11 @@
+import {transparency} from "../main/vfx";
+import {Vec2D} from "../main/characters";
+import {bg1,bg2,fg1,fg2,stage, layers} from "../main/main";
+import {targetDestroyed} from "../target/targetplay";
+import {rotateVector, twoPi} from "../main/render";
 /* eslint-disable */
 
-window.drawStageInit = function(){
+export const drawStageInit = function(){
   fg1.strokeStyle = "#db80cc";
   fg1.lineWidth = 1;
   for (var j=0;j<stage.ground.length;j++){
@@ -44,9 +49,9 @@ window.drawStageInit = function(){
       fg1.closePath();
       fg1.stroke();
   }
-}
+};
 
-window.drawStage = function(){
+export const drawStage = function(){
   if (stage.movingPlat > -1){
     fg2.strokeStyle = "#4794c6";
     fg2.beginPath();
@@ -94,14 +99,16 @@ window.drawStage = function(){
       }
     }
   }
-}
+};
 
-window.backgroundType = 0;
-
+export let backgroundType = 0;
+export const setBackgroundType = function(val){
+  backgroundType = val;
+};
 const bgPos = [[-30,500,300,500,900,500,1230,450,358],[-30,400,300,400,900,400,1230,350,179]];
 const direction = [[1,-1,1,-1,1,-1,1,-1,1],[-1,1,-1,1,-1,1,-1,1,-1]];
-window.boxFill = "rgba(0, 0, 0, 0.1)";
-window.bgStar = function(){
+export let boxFill = "rgba(0, 0, 0, 0.1)";
+export const bgStar = function(){
   var vSeed = Math.random();
   this.velocity = new Vec2D(5*vSeed*Math.sign(0.5-Math.random()),5*(1-vSeed)*Math.sign(0.5-Math.random()));
   if (transparency){
@@ -112,7 +119,7 @@ window.bgStar = function(){
   }
   this.pos = new Vec2D(0,0);
   this.life = 0;
-}
+};
 const bgStars = [];
 for (var p=0;p<20;p++){
   bgStars[p] = new bgStar();
@@ -120,12 +127,12 @@ for (var p=0;p<20;p++){
 }
 let bgSparkle = 3;
 let gridGrad = "rgba(94,173,255,0.2)";
-window.drawBackgroundInit = function(){
+export const drawBackgroundInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,0,500);
   bgGrad.addColorStop(0,"rgb(24, 17, 66)");
   bgGrad.addColorStop(1,"black");
   bg1.fillStyle=bgGrad;
-  bg1.fillRect(-100,-100,layers.BG1.width+200,layers.BG1.height+200);
+  bg1.fillRect(-100,-100,layers.BG1.width+200,layers.BG1.height+200);;
   if (backgroundType == 1){
     let gridGrad = bg2.createRadialGradient(600,375,1,600,375,800);
     gridGrad.addColorStop(0,"rgba(94, 173, 255, 0)");
@@ -133,23 +140,23 @@ window.drawBackgroundInit = function(){
     bg2.strokeStyle = gridGrad;
     boxFill = "rgba(94, 173, 255, 0.3)";
   }
-}
+};
 
-window.drawBackground = function(){
+export const drawBackground = function(){
   if (backgroundType == 0){
     drawStars();
   }
   else {
     drawTunnel();
   }
-}
+};
 
 const circleSize = [];
 for (var i=0;i<5;i++){
   circleSize[i] = i*40;
 }
 let ang = 0;
-window.drawTunnel = function(){
+export const drawTunnel = function(){
   bg2.lineWidth = 2;
   ang += 0.005;
   var angB = ang;
@@ -172,13 +179,13 @@ window.drawTunnel = function(){
     bg2.closePath();
     bg2.stroke();
   }
-}
+};
 
-window.drawStars = function(){
+export const drawStars = function(){
   bgSparkle--;
   for (var p=0;p<20;p++){
     if (bgStars[p].pos.x > 1250 || bgStars[p].pos.y > 800 || bgStars[p].pos.x < -50 || bgStars[p].pos.y < -50){
-      bgStars[p].pos = new Vec2D(600,375)
+      bgStars[p].pos = new Vec2D(600,375);
       bgStars[p].life = 0;
       var vSeed = Math.random();
       bgStars[p].velocity = new Vec2D(5*vSeed*Math.sign(0.5-Math.random()),5*(1-vSeed)*Math.sign(0.5-Math.random()));
@@ -194,7 +201,7 @@ window.drawStars = function(){
         bg2.globalAlpha = Math.min(bgStars[p].life/300,1);
       }
       bg2.beginPath();
-      bg2.arc(bgStars[p].pos.x,bgStars[p].pos.y,5,twoPi,0);
+      bg2.arc(bgStars[p].pos.x,bgStars[p].pos.y,5,twoPi,0);;
       bg2.fill();
 
     }
@@ -283,4 +290,4 @@ window.drawStars = function(){
     bg2.closePath();
     bg2.fill();
   }
-}
+};

@@ -1,16 +1,32 @@
+import {Vec2D} from "../main/characters";
+import {player, changeGamemode, vfxQueue, initializePlayers, matchTimer, startTimer, starting, drawVfx, findingPlayers,
+    playing
+    , getCookie,stage
+    , resetVfxQueue
+    , setMatchTimer
+    , addMatchTimer
+} from "../main/main";
+import {renderPlayer} from "../main/render";
+import {sounds} from "../main/sfx";
+import {stageTemp} from "./targetbuilder";
+import {backgroundType, setBackgroundType} from "../stages/stagerender";
+import {aArticles, articles, resetAArticles} from "../physics/article";
 /* eslint-disable */
 
-window.targetTesting = false;
-window.targetPlayer = 0;
-window.targetStagePlaying = 0;
-window.targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
-window.targetsDestroyed = 0;
-window.endTargetGame = false;
+export let targetTesting = false;
+export let targetPlayer = 0;
+export const setTargetPlayer = function(val){
+  targetPlayer = val;
+}
+export let targetStagePlaying = 0;
+export let targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
+export let targetsDestroyed = 0;
+export let endTargetGame = false;
 
-window.targetRecords = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]];
-window.devRecords = [[14.22,10.42,14.38,12.20,12.68,9.15,11.00,11.63,18.40,11.35],[15.80,13.93,22.45,14.85,14.40,10.22,14.68,14.55,22.70,12.80],[10.65,9.98,12.10,7.37,7.25,9.47,9.50,8.33,14.18,8.83]];
+export let targetRecords = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]];
+export let devRecords = [[14.22,10.42,14.38,12.20,12.68,9.15,11.00,11.63,18.40,11.35],[15.80,13.93,22.45,14.85,14.40,10.22,14.68,14.55,22.70,12.80],[10.65,9.98,12.10,7.37,7.25,9.47,9.50,8.33,14.18,8.83]];
 
-window.medalTimes = [[
+export let medalTimes = [[
   [30,21,17],
   [29,20,15],
   [35,24,19],
@@ -43,7 +59,7 @@ window.medalTimes = [[
   [28,19,11]]
 ];
 
-window.medalsEarned = [[
+export const medalsEarned = [[
   [false,false,false],
   [false,false,false],
   [false,false,false],
@@ -76,7 +92,7 @@ window.medalsEarned = [[
   [false,false,false]]
 ];
 
-window.getTargetCookies = function(){
+export const getTargetCookies = function(){
   for (var i=0;i<3;i++){
     for (var j=0;j<20;j++){
       var r = getCookie(i+"target"+j);
@@ -87,7 +103,7 @@ window.getTargetCookies = function(){
   }
 }
 
-window.giveMedals = function(){
+export const giveMedals = function(){
   for (var i=0;i<3;i++){
     for (var j=0;j<10;j++){
       for (var k=0;k<3;k++){
@@ -99,23 +115,23 @@ window.giveMedals = function(){
   }
 }
 
-window.startTargetGame = function(p,test){
+export const startTargetGame = function(p,test){
   endTargetGame = false;
   if (test){
     stage = stageTemp;
   }
   targetTesting = test;
-  backgroundType = Math.round(Math.random());
+    setBackgroundType(Math.round(Math.random()));
   changeGamemode(5);
   targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
   targetsDestroyed = 0;
-  vfxQueue = [];
-  aArticles = [];
+    resetVfxQueue();
+    resetAArticles();
   initializePlayers(p,true);
   renderPlayer(p);
 
   player[p].phys.pos = new Vec2D(stage.startingPoint.x,stage.startingPoint.y);
-  matchTimer = 0;
+  setMatchTimer(0);
   startTimer = 1.5;
   starting = true;
   drawVfx("start",new Vec2D(0,0));
@@ -126,7 +142,7 @@ window.startTargetGame = function(p,test){
   player[p].stocks = 1;
 }
 
-window.destroyTarget = function(i){
+export const destroyTarget = function(i){
   targetDestroyed[i] = true;
   targetsDestroyed++;
   drawVfx("targetDestroy",stage.target[i]);
@@ -136,7 +152,7 @@ window.destroyTarget = function(i){
   }
 }
 
-window.targetHitDetection = function(p){
+export const targetHitDetection = function(p){
   for (var i=0;i<stage.target.length;i++){
     if (!targetDestroyed[i]){
       for (var j=0;j<4;j++){
@@ -169,7 +185,7 @@ window.targetHitDetection = function(p){
   }
 }
 
-window.hitTargetCollision = function(p,j,t,previous){
+export const hitTargetCollision = function(p,j,t,previous){
   if (previous){
     var hbpos = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   }
@@ -181,7 +197,7 @@ window.hitTargetCollision = function(p,j,t,previous){
   return (Math.pow(targetPos.x-hbpos.x,2) + Math.pow(hbpos.y-targetPos.y,2) <= Math.pow(player[p].hitboxes.id[j].size+7,2));
 }
 
-window.articleTargetCollision = function(a,t,previous){
+export const articleTargetCollision = function(a,t,previous){
   if (previous){
     var hbpos = aArticles[a][2].posPrev;
   }
@@ -193,8 +209,8 @@ window.articleTargetCollision = function(a,t,previous){
   return (Math.pow(targetpos.x-hbpos.x,2) + Math.pow(hbpos.y-targetpos.y,2) <= Math.pow(aArticles[a][2].hb.size+7,2));
 }
 
-window.targetTimerTick = function(){
-  matchTimer += 0.016667;
+export const targetTimerTick = function(){
+  addMatchTimer(0.016667);
   $("#matchMinutes").empty().append(Math.floor(matchTimer/60));
   var sec = (matchTimer % 60).toFixed(2);
   $("#matchSeconds").empty().append(((sec.length<5)?"0"+sec:sec));

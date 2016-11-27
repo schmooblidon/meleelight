@@ -1,6 +1,7 @@
+import {Vec2D, chars, Box2D} from "./characters";
 /* eslint-disable */
 
-window.ActiveHitbox = function(size,offset,dmg,angle,kg,bk,sk,type){
+export const ActiveHitbox = function(size,offset,dmg,angle,kg,bk,sk,type){
   this.size = size;
   this.offset = offset;
   this.dmg = dmg;
@@ -9,16 +10,16 @@ window.ActiveHitbox = function(size,offset,dmg,angle,kg,bk,sk,type){
   this.bk = bk;
   this.sk = sk;
   this.type = type;
-}
+};
 
-window.hitboxes = function(){
+export const hitboxes = function(){
   this.active = [false,false,false,false];
   this.frame = 0;
   this.id = [new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0),new ActiveHitbox(0,new Vec2D(0,0),0,0,0,0,0,0)];
   this.hitList = [];
-}
+};
 
-window.physicsObject = function(pos,face){
+export const physicsObject = function(pos,face){
   this.cVel = new Vec2D(0,0);
   this.kVel = new Vec2D(0,0);
   this.kDec = new Vec2D(0,0);
@@ -94,9 +95,9 @@ window.physicsObject = function(pos,face){
   this.rollOutDistance = 0;
   this.bTurnaroundTimer = 0;
   this.bTurnaroundDirection = 1;
-}
+};
 
-window.inputObject = function(){
+export const inputObject = function(){
   this.lStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
   this.rawlStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
   this.cStickAxis = [new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0),new Vec2D(0,0)];
@@ -114,10 +115,10 @@ window.inputObject = function(){
   this.dpaddown = [false,false,false,false,false,false,false];
   this.dpadright = [false,false,false,false,false,false,false];
   this.dpadup = [false,false,false,false,false,false,false];
-}
+};
 
 
-window.playerObject = function(character,pos,face){
+export const playerObject = function(character,pos,face){
   this.phys = new physicsObject(pos,face);
   this.actionState = "ENTRANCE";
   this.prevActionState = "";
@@ -138,7 +139,7 @@ window.playerObject = function(character,pos,face){
     hitPoint : new Vec2D(0,0),
     powershield : false,
     shieldstun : 0
-  }
+  };
   this.percent = 0;
   this.stocks = 4;
   this.miniView = false;
@@ -159,4 +160,4 @@ window.playerObject = function(character,pos,face){
   this.hasHit = false;
   this.shocked = 0;
   this.burning = 0;
-}
+};

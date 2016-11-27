@@ -1,3 +1,4 @@
+import {charAttributes} from "../../main/characters";
 /* eslint-disable indent, camelcase */
 
 /* globals charAttributes, intangibility, frames, actionSounds, offsets,

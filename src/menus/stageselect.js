@@ -1,3 +1,8 @@
+import {sounds} from "../main/sfx";
+import {player, changeGamemode, stageSelect, bg1,fg1,bg2,ui, clearScreen, shine, startGame, layers, setShine, addShine,
+    setStage
+} from "../main/main";
+import {twoPi} from "../main/render";
 /* eslint-disable */
 
 let stageSelected = 4;
@@ -14,7 +19,7 @@ dlIcon.src = "assets/stage-icons/dl.png";
 var psIcon = new Image();
 psIcon.src = "assets/stage-icons/ps.png";
 
-window.sssControls = function(i){
+export const sssControls = function(i){
   stagePointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
   stagePointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
   if (stagePointerPos[1] >= 450 && stagePointerPos[1] <= 540){
@@ -43,7 +48,7 @@ window.sssControls = function(i){
     if (stageSelected == 4){
       stageSelected = Math.floor(Math.random()*3.99);
     }
-    stageSelect = stageSelected;
+    setStage(stageSelected);
     /*switch (stageSelected){
       case 0:
         stageSelect = "bf";
@@ -64,7 +69,7 @@ window.sssControls = function(i){
   }
 }
 
-window.drawSSSInit = function(){
+export const drawSSSInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(17, 11, 65)");
   bgGrad.addColorStop(1,"rgb(61, 8, 37)");
@@ -94,12 +99,12 @@ window.drawSSSInit = function(){
   fg1.drawImage(dlIcon,827,452,146,55);
 }
 
-window.drawSSS = function(){
+export const drawSSS = function(){
   clearScreen();
   bg2.lineWidth = 3;
-  shine += 0.01;
+  addShine(0.01);
   if (shine > 1.8){
-    shine = -0.8;
+   setShine(-0.8);
   }
   var opacity = (shine < 0)?(0.05+(0.25/0.8)*(0.8+shine)):((shine > 1)?(0.3-(0.25/0.8)*(shine-1)):0.3);
   var bgGrad =bg2.createLinearGradient(0,0,1200,750);

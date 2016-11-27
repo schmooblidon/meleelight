@@ -1,6 +1,12 @@
+import {player, cS, drawVfx, percentShake, stage, playerType, edgeOffset, versusMode, showDebug} from "../main/main";
+import {Vec2D, Box2D} from "../main/characters";
+import {sounds} from "../main/sfx";
+import {gameSettings} from "../settings";
+import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
+import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "./hitDetection";
 /* eslint-disable */
 
-window.land = function(i,y,t,j){
+export const land = function(i,y,t,j){
   player[i].phys.pos.y = y;
   player[i].phys.grounded = true;
   player[i].phys.doubleJumped = false;
@@ -58,7 +64,7 @@ window.land = function(i,y,t,j){
   player[i].hit.hitstun = 0;
 }
 
-window.physics = function(i){
+export const physics = function(i){
   player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y);
   player[i].phys.facePrev = player[i].phys.face;
   $.extend(true,player[i].phys.prevFrameHitboxes,player[i].hitboxes);
@@ -328,7 +334,7 @@ window.physics = function(i){
     player[i].phys.ECBp[0].y = 0+y;
   }
   if (!aS[cS[i]][player[i].actionState].ignoreCollision){
-  for (var j=0;j<stage.platform.length;j++){
+  for (var j=0; j<stage.platform.length; j++){
     if (player[i].phys.abovePlatforms[j] && player[i].phys.ECBp[0].y < stage.platform[j][0].y && player[i].phys.ECBp[0].x >= stage.platform[j][0].x && player[i].phys.ECBp[0].x <= stage.platform[j][1].x && ((player[i].inputs.lStickAxis[0].y > -0.56 && aS[cS[i]][player[i].actionState].canPassThrough) || !aS[cS[i]][player[i].actionState].canPassThrough)){
       if (player[i].hit.hitlag > 0){
         player[i].phys.pos.y = stage.platform[j][0].y;

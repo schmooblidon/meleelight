@@ -1,10 +1,17 @@
+import {player, setCookie, changeGamemode, ports, bg1, bg1 as fg1, layers, fg2 as bg2, bg1 as ui, clearScreen, shine,
+    getCookie
+    , addShine
+    , setShine
+} from "../main/main";
+import {sounds} from "../main/sfx";
+import {twoPi} from "../main/render";
 /* eslint-disable */
 
 // sounds, music
-window.masterVolume = [0.5,0.3];
+export const masterVolume = [0.5,0.3];
 const audioMenuNames = ["Sounds","Music"];
 let audioMenuSelected = 0;
-window.audioMenuControls = function(i){
+export const audioMenuControls = function(i){
   var menuMove = false;
   var audioLevelMoveUp = false;
   var audioLevelMoveDown = false;
@@ -119,14 +126,14 @@ window.audioMenuControls = function(i){
   }
 }
 
-window.drawAudioMenuInit = function(){
+export const drawAudioMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
   bg1.fillStyle=bgGrad;
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
 
-  fg1.fillStyle = "rgba(0,0,0,0.5)";
+  bg1.fillStyle = "rgba(0,0,0,0.5)";
   fg1.lineWidth = 10;
   fg1.strokeStyle = "rgba(255, 255, 255, 0.3)";
   fg1.strokeRect(95,125,1010,650);
@@ -140,12 +147,12 @@ window.drawAudioMenuInit = function(){
   fg1.fillText("Music",225,525);
 }
 
-window.drawAudioMenu = function(){
+export const drawAudioMenu = function(){
   clearScreen();
   bg2.lineWidth = 3;
-  shine += 0.01;
+  addShine(0.01);
   if (shine > 1.8){
-    shine = -0.8;
+   setShine(-0.8);
   }
   var opacity = (shine < 0)?(0.05+(0.25/0.8)*(0.8+shine)):((shine > 1)?(0.3-(0.25/0.8)*(shine-1)):0.3);
   var bgGrad =bg2.createLinearGradient(0,0,1200,750);
@@ -165,7 +172,7 @@ window.drawAudioMenu = function(){
   for (var i=0;i<2;i++){
     if (i == audioMenuSelected){
       //ui.fillStyle = "rgba(255, 255, 255, 0.7)";
-      ui.fillStyle = "rgba(255, 255, 255, 0.3)";
+      bg1.fillStyle = "rgba(255, 255, 255, 0.3)";
     }
     else {
       ui.fillStyle = "rgba(255, 255, 255, 0.1)";
@@ -209,7 +216,7 @@ window.drawAudioMenu = function(){
 
 }
 
-window.getAudioCookies = function(){
+export const getAudioCookies = function(){
   var s = getCookie("soundsLevel");
   if (s != null && s != undefined && s != "null"){
     masterVolume[0] = Number(s);

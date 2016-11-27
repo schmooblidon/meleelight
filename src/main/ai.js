@@ -1,3 +1,5 @@
+import {player, playerType, cS,stage} from "./main";
+import {gameSettings} from "../settings";
 /* eslint-disable */
 
 var a = 0;

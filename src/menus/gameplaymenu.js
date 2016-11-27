@@ -1,7 +1,12 @@
+import {player, changeGamemode, setCookie, ports, bg1, fg1, clearScreen,bg2, shine,ui, layers, getCookie, setShine,
+    addShine
+} from "../main/main";
+import {gameSettings} from "../settings";
+import {sounds} from "../main/sfx";
 /* eslint-disable */
 
-window.gameplayMenuSelected = 0;
-window.getGameplayCookies = function(){
+export let gameplayMenuSelected = 0;
+export const getGameplayCookies = function(){
   var keys = Object.keys(gameSettings);
   for (var j=0;j<keys.length;j++){
     var c = getCookie(keys[j]);
@@ -10,7 +15,7 @@ window.getGameplayCookies = function(){
     }
   }
 }
-window.gameplayMenuControls = function(i){
+export const gameplayMenuControls = function(i){
   var menuMove = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
@@ -96,7 +101,7 @@ window.gameplayMenuControls = function(i){
   }
 }
 
-window.drawGameplayMenuInit = function(){
+export const drawGameplayMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
@@ -113,12 +118,12 @@ window.drawGameplayMenuInit = function(){
   fg1.fillText("Flash on L-Cancel",75,395);
 }
 
-window.drawGameplayMenu = function(){
+export const drawGameplayMenu = function(){
   clearScreen();
-  bg2.lineWidth = 3;
-  shine += 0.01;
+  fg1.lineWidth = 3;
+  addShine(0.01);
   if (shine > 1.8){
-    shine = -0.8;
+    setShine(-0.8);
   }
   var opacity = (shine < 0)?(0.05+(0.25/0.8)*(0.8+shine)):((shine > 1)?(0.3-(0.25/0.8)*(shine-1)):0.3);
   var bgGrad =bg2.createLinearGradient(0,0,1200,750);

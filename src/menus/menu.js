@@ -1,3 +1,9 @@
+import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen} from "../main/main";
+import {sounds} from "../main/sfx";
+import {targetPlayer, setTargetPlayer} from "../target/targetplay";
+import {targetPointerPos} from "./targetselect";
+import {editingStage, targetBuilder} from "../target/targetbuilder";
+import {twoPi} from "../main/render";
 /* eslint-disable */
 
 window.menuSelected = 0;
@@ -30,7 +36,7 @@ window.menuMove = function(i){
         positionPlayersInCSS();
       }
       else if (menuSelected == 1){
-        targetPlayer = i;
+          setTargetPlayer(i);
         targetPointerPos = [178.5,137];
         player[i].inputs.a[1] = true;
         music.menu.stop();
@@ -62,7 +68,7 @@ window.menuMove = function(i){
       else if (menuSelected == 2){
         changeGamemode(12);
         //keyboard menu
-        keyBinding = false;
+        setKeyBinding(false);
       }
       else if (menuSelected == 3){
         //credits
@@ -152,7 +158,7 @@ window.menuMove = function(i){
 
 
 
-window.drawMainMenuInit = function(){
+export const drawMainMenuInit = function(){
   var bgGrad =bg1.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(12, 11, 54, 1)");
   bgGrad.addColorStop(1,"rgba(1, 2, 15, 1)");

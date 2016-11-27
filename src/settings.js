@@ -5,7 +5,7 @@
  0 = disabled
  Modifier item goes [ Keycode , X/L scale , Y/R scale ]
 */
-window.keyMap = {
+export const keyMap = {
   "lstick" : {
     "up" : [87,0],
     "right" : [68,0],
@@ -41,7 +41,7 @@ window.keyMap = {
   "dl" : [86],
 };
 
-window.gameSettings = {
+export const gameSettings = {
   turbo : 0,
   lCancelType : 0, // 0- normal | 1 - Auto | 2 - smash 64
   blastzoneWrapping : 0,
