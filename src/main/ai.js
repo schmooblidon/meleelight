@@ -348,7 +348,7 @@ function generalAI(i) {
 		return ;
 	}
 	if (player[i].currentAction != "WAVESHINEANY" && (player[i].actionState == "CAPTURECUT" || player[i].currentAction == "GRABRELEASE")) {
-		currentAction = "GRABRELEASE";
+		player[i].currentAction = "GRABRELEASE";
 		var inputs = CPUGrabRelease(player[i],i);
 		player[i].inputs.lStickAxis[0].x = inputs.lstickX;
         player[i].inputs.lStickAxis[0].y = inputs.lstickY;
