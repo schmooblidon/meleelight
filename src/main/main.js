@@ -1,5 +1,14 @@
 /* eslint-disable */
 
+import { button,
+         keyboardMap,
+         controllerMaps,
+         cd,
+         controllerNameFromIDnumber,
+         controllerIDNumberFromGamepadID
+       } from "main/input";
+
+
 window.player = [0,0,0,0];
 window.renderTime = [10,0,100,0];
 window.gamelogicTime = [5,0,100,0];
@@ -19,52 +28,11 @@ window.layers = {
 let gameEnd = false;
 const attemptingControllerReset = [false,false,false,false];
 
-window.customDeadzone = function(){
-  this.ls = new Vec2D(0,0);
-  this.cs = new Vec2D(0,0);
-  this.l = 0;
-  this.r = 0;
-}
-
-const keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,222],[109,219],71,78,66,86];
 let keyboardOccupied = false;
 
-const button = {
-  a   : 0,
-  b   : 1,
-  x   : 2,
-  y   : 3,
-  z   : 4,
-  r   : 5,
-  l   : 6,
-  s   : 7,  // start
-  du  : 8,  // d-pad up
-  dr  : 9,  // d-pad right
-  dd  : 10, // d-pad down
-  dl  : 11, // d-pad left
-  lsX : 12, // left analog stick left/right
-  lsY : 13, // left analog stick up/down
-  csX : 14, // c-stick left/right
-  csY : 15, // c-stick up/down
-  lA  : 16, // L button analog sensor
-  rA  : 17  // R button analog sensor
-};
-
-// controller IDs: 0 = mayflash, 1 = vJoy, 2 = raphnet N64, 3 = XBOX 360 (XInput Standard Gamepad), 4 = TigerGame 3 in 1, 5 = retrolink 
-// controller ID 10 is keyboard, and not included here)
-const mayflashMap  = [1,2,0,3,7,5,4,9,12,13,14,15,0,1,5,2,3,4];
-const vJoyMap      = [0,1,2,3,4,5,6,7,8,11,9,10,0,1,3,4,2,5];
-const raphnetMap   = [4,3,2,1,7,6,5,0,8,10,9,11,0,1,3,4,5,6];
-const xbox360Map   = [0,2,1,3,5,7,6,9,12,15,13,14,0,1,2,3,6,7];
-const tigergameMap = [0,1,2,3,6,5,4,7,11,9,10,8,0,1,2,3,5,4];
-const retrolinkMap = [2,3,1,0,6,5,4,9,10,11,8,7,0,1,2,5,3,4];
-
-const controllerMaps = [mayflashMap, vJoyMap, raphnetMap, xbox360Map, tigergameMap, retrolinkMap];
 
 
 window.mType = [0,0,0,0];
-
-window.cd = [new customDeadzone,new customDeadzone,new customDeadzone,new customDeadzone];
 
 window.currentPlayers = [];
 
@@ -352,38 +320,14 @@ window.findPlayers = function(){
     if (typeof gamepad != "undefined" &&  gamepad != null){
       var detected = false;
       var gType = 0;
-      if (gamepad.id[0] == "M" || (gamepad.id[0] == "1" && gamepad.id[1] == "a")){
-        detected ^= true;
-        console.log("You are using Mayflash");
+      let gamepadIDnumber = controllerIDNumberFromGamepadID(gamepad.id);
+      if (gamepadIDnumber == -1 ) {
+        console.log("error: controller detected but not supported");
       }
-      else if (gamepad.id[0] == "v" || gamepad.id[0] == "1"){
+      else {
         detected ^= true;
-        gType = 1;
-        console.log("You are using vJoy");
-      }
-      else if (gamepad.id[0] == "T" || gamepad.id.substring(0,4) == "0926"){
-        detected ^= true;
-        gType = 4;
-        console.log("You are using TigerGame 3 in 1");
-      }
-      // raphnet is :
-      //GC/N64 to USB, v2.9 (Vendor: 289b Product: 000c)
-      else if ((gamepad.id[0] == "G" && gamepad.id[1] == "C") || gamepad.id[0] == "2"){
-        detected ^= true;
-        gType = 2;
-        console.log("You are using raphnet");
-      }
-      // Xbox 360 Controller (XInput STANDARD GAMEPAD)
-      else if (gamepad.id[0] == "X" || gamepad.id[0] == "x" || gamepad.id[0] == "W"){
-        detected ^= true;
-        gType = 3;
-        console.log("You are using xbox 360");
-      }
-      else if (gamepad.id[0] == "G" && gamepad.id[1] == "e"){
-        detected ^= true;
-        //Retrolink
-        gType = 5;
-        console.log("You are using retrolink");
+        gType = gamepadIDnumber;
+        console.log("You are using ".concat(controllerNameFromIDnumber(gamepadIDnumber)));
       }
       if (detected){
         if (gameMode < 2 || gameMode == 20){
@@ -423,7 +367,7 @@ window.findPlayers = function(){
         }
       }
       else {
-        console.log("Controller is not supported");
+        console.log("No controller detected by browser");
       }
     }
   }
