@@ -260,14 +260,15 @@ window.addEventListener("gamepadconnected", function(e) {
 });
 if(navigator.getGamepads) console.log(navigator.getGamepads());
 
-const matchMinutesEl = document.getElementById("matchMinutes");
-const matchSecondsEl = document.getElementById("matchSeconds");
-
 window.matchTimerTick = function(){
   matchTimer -= 0.016667;
-  matchMinutesEl.innerHTML = Math.floor(matchTimer/60);
-  var sec = (matchTimer % 60).toFixed(2);
-  matchSecondsEl.innerHTML = sec.length < 5 ? `0${sec}` : sec;
+
+  if (dom.matchMinutes && dom.matchSeconds) {
+    var sec = (matchTimer % 60).toFixed(2);
+    dom.matchMinutes.innerHTML = Math.floor(matchTimer/60);
+    dom.matchSeconds.innerHTML = sec.length < 5 ? `0${sec}` : sec;
+  }
+
   if (matchTimer <= 0){
     finishGame();
   }
@@ -851,12 +852,15 @@ window.interpretInputs = function(i,active){
     }
   }
 
-  $("#lsAxisX"+i).empty().append(lstickX.toFixed(5));
-  $("#lsAxisY"+i).empty().append(lstickY.toFixed(5));
-  $("#csAxisX"+i).empty().append(cstickX.toFixed(5));
-  $("#csAxisY"+i).empty().append(cstickY.toFixed(5));
-  $("#lAnalog"+i).empty().append(lAnalog.toFixed(5));
-  $("#rAnalog"+i).empty().append(rAnalog.toFixed(5));
+  if (showDebug) {
+    $("#lsAxisX"+i).empty().append(lstickX.toFixed(5));
+    $("#lsAxisY"+i).empty().append(lstickY.toFixed(5));
+    $("#csAxisX"+i).empty().append(cstickX.toFixed(5));
+    $("#csAxisY"+i).empty().append(cstickY.toFixed(5));
+    $("#lAnalog"+i).empty().append(lAnalog.toFixed(5));
+    $("#rAnalog"+i).empty().append(rAnalog.toFixed(5));
+  }
+
   if (mType[i] == 10){
     /*for (var j=0;j<12;j++){
       if ((keyboardMap[j].length > 1)?(keys[keyboardMap[j][0]] || keys[keyboardMap[j][1]] || keys[keyboardMap[j][2]]):keys[keyboardMap[j]]){
@@ -974,11 +978,6 @@ let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
-const gamelogicAvgEl = document.getElementById("gamelogicAvg");
-const gamelogicHighEl = document.getElementById("gamelogicHigh");
-const gamelogicLowEl = document.getElementById("gamelogicLow");
-const gamelogicPeakEl = document.getElementById("gamelogicPeak");
-
 window.gameTick = function(){
   var start = performance.now();
   var diff = 0;
@@ -1078,22 +1077,25 @@ window.gameTick = function(){
         frameByFrameRender = true;
       }
       frameByFrame = false;
-      diff = performance.now() - start;
-      gamelogicTime[0] += diff;
-      gamelogicTime[0] /= 2;
-      if (diff >= 10){
-        gamelogicTime[3]++;
+
+      if (showDebug) {
+        diff = performance.now() - start;
+        gamelogicTime[0] += diff;
+        gamelogicTime[0] /= 2;
+        if (diff >= 10){
+          gamelogicTime[3]++;
+        }
+        if (diff < gamelogicTime[2]){
+          gamelogicTime[2] = diff;
+        }
+        if (diff > gamelogicTime[1]){
+          gamelogicTime[1] = diff;
+        }
+        dom.gamelogicAvg.innerHTML = Math.round(gamelogicTime[0]);
+        dom.gamelogicHigh.innerHTML = Math.round(gamelogicTime[1]);
+        dom.gamelogicLow.innerHTML = Math.round(gamelogicTime[2]);
+        dom.gamelogicPeak.innerHTML = gamelogicTime[3];
       }
-      if (diff < gamelogicTime[2]){
-        gamelogicTime[2] = diff;
-      }
-      if (diff > gamelogicTime[1]){
-        gamelogicTime[1] = diff;
-      }
-      gamelogicAvgEl.innerHTML = Math.round(gamelogicTime[0]);
-      gamelogicHighEl.innerHTML = Math.round(gamelogicTime[1]);
-      gamelogicLowEl.innerHTML = Math.round(gamelogicTime[2]);
-      gamelogicPeakEl.innerHTML = gamelogicTime[3];
     }
     else {
       if (!gameEnd){
@@ -1144,26 +1146,25 @@ window.gameTick = function(){
       frameByFrameRender = true;
     }
     frameByFrame = false;
-    diff = performance.now() - start;
-    gamelogicTime[0] += diff;
-    gamelogicTime[0] /= 2;
-    if (diff >= 10){
-      gamelogicTime[3]++;
-    }
-    if (diff < gamelogicTime[2]){
-      gamelogicTime[2] = diff;
-    }
-    if (diff > gamelogicTime[1]){
-      gamelogicTime[1] = diff;
-    }
-    $("#gamelogicAvg").empty().append(Math.round(gamelogicTime[0]));
-    $("#gamelogicHigh").empty().append(Math.round(gamelogicTime[1]));
-    $("#gamelogicLow").empty().append(Math.round(gamelogicTime[2]));
-    $("#gamelogicPeak").empty().append(gamelogicTime[3]);
 
-    //console.log("test1");
-    //console.log(diff);
-    //console.log(1000/60-diff);
+    if (showDebug) {
+      diff = performance.now() - start;
+      gamelogicTime[0] += diff;
+      gamelogicTime[0] /= 2;
+      if (diff >= 10){
+        gamelogicTime[3]++;
+      }
+      if (diff < gamelogicTime[2]){
+        gamelogicTime[2] = diff;
+      }
+      if (diff > gamelogicTime[1]){
+        gamelogicTime[1] = diff;
+      }
+      dom.gamelogicAvg.innerHTML = Math.round(gamelogicTime[0]);
+      dom.gamelogicHigh.innerHTML = Math.round(gamelogicTime[1]);
+      dom.gameLogicLow.innerHTML = Math.round(gamelogicTime[2]);
+      dom.gameLogicPeak.innerHTML = gamelogicTime[3];
+    }
   }
   else if (findingPlayers){
     findPlayers();
@@ -1211,11 +1212,6 @@ window.clearScreen = function(){
 
 let otherFrame = true;
 let fps30 = false;
-
-const renderAvgEl = document.getElementById("renderAvg");
-const renderHighEl = document.getElementById("renderHigh");
-const renderLowEl = document.getElementById("renderLow");
-const renderPeakEl = document.getElementById("renderPeak");
 
 window.renderTick = function(){
   window.requestAnimationFrame(renderTick);
@@ -1268,23 +1264,26 @@ window.renderTick = function(){
         renderArticles();
         renderVfx();
         renderOverlay(false);
-        var diff = performance.now() - rStart;
-        renderTime[0] += diff;
-        renderTime[0] /= 2;
-        if (diff >= 10){
-          renderTime[3]++;
-        }
-        if (diff > renderTime[1]){
-          renderTime[1] = diff;
-        }
-        if (diff < renderTime[2]){
-          renderTime[2] = diff;
-        }
 
-        renderAvgEl.innerHTML = Math.round(renderTime[0]);
-        renderHighEl.innerHTML = Math.round(renderTime[1]);
-        renderLowEl.innerHTML = Math.round(renderTime[2]);
-        renderPeakEl.innerHTML = renderTime[3];
+        if (showDebug) {
+          var diff = performance.now() - rStart;
+          renderTime[0] += diff;
+          renderTime[0] /= 2;
+          if (diff >= 10){
+            renderTime[3]++;
+          }
+          if (diff > renderTime[1]){
+            renderTime[1] = diff;
+          }
+          if (diff < renderTime[2]){
+            renderTime[2] = diff;
+          }
+
+          dom.renderAvg.innerHTML = Math.round(renderTime[0]);
+          dom.renderHigh.innerHTML = Math.round(renderTime[1]);
+          dom.renderLow.innerHTML = Math.round(renderTime[2]);
+          dom.renderPeak.innerHTML = renderTime[3];
+        }
       }
     }
     else if (playing || frameByFrameRender){
@@ -1306,23 +1305,26 @@ window.renderTick = function(){
       renderArticles();
       renderVfx();
       renderOverlay(true);
-      var diff = performance.now() - rStart;
-      renderTime[0] += diff;
-      renderTime[0] /= 2;
-      if (diff >= 10){
-        renderTime[3]++;
-      }
-      if (diff > renderTime[1]){
-        renderTime[1] = diff;
-      }
-      if (diff < renderTime[2]){
-        renderTime[2] = diff;
-      }
 
-      renderAvgEl.innerHTML = Math.round(renderTime[0]);
-      renderHighEl.innerHTML = Math.round(renderTime[1]);
-      renderLowEl.innerHTML = Math.round(renderTime[2]);
-      renderPeakEl.innerHTML = renderTime[3];
+      if (showDebug) {
+        var diff = performance.now() - rStart;
+        renderTime[0] += diff;
+        renderTime[0] /= 2;
+        if (diff >= 10){
+          renderTime[3]++;
+        }
+        if (diff > renderTime[1]){
+          renderTime[1] = diff;
+        }
+        if (diff < renderTime[2]){
+          renderTime[2] = diff;
+        }
+
+        dom.renderAvg.innerHTML = Math.round(renderTime[0]);
+        dom.renderHigh.innerHTML = Math.round(renderTime[1]);
+        dom.renderLow.innerHTML = Math.round(renderTime[2]);
+        dom.renderPeak.innerHTML = renderTime[3];
+      }
     }
     if (frameByFrameRender){
       renderForeground();
@@ -1540,6 +1542,7 @@ window.finishGame = function(){
 }
 
 window.start = function(){
+  cacheDom();
   getKeyboardCookie();
   getTargetCookies();
   giveMedals();
@@ -1705,3 +1708,24 @@ window.start = function(){
   });
   resize();
 }
+
+const dom = {};
+function cacheDom() {
+  const elementIds = [
+    "matchMinutes",
+    "matchSeconds",
+    "gamelogicAvg",
+    "gamelogicHigh",
+    "gamelogicLow",
+    "gamelogicPeak",
+    "renderAvg",
+    "renderHigh",
+    "renderLow",
+    "renderPeak",
+  ];
+
+  elementIds.forEach((id) => {
+    dom[id] = document.getElementById(id);
+  });
+};
+
