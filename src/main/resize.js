@@ -1,11 +1,15 @@
-mobile = false;
+/* eslint-disable */
+
+import $ from "jquery";
+
+window.mobile = false;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
  	mobile = true;
 }
-windwidth = 0;
-windheight = 0;
+let windwidth = 0;
+let windheight = 0;
 
-function resizeHeader(){
+window.resizeHeader = function(){
 		windwidth = $(window).width();
     windheight = $(window).height();
 		if (windwidth < 1500){
@@ -44,13 +48,13 @@ function resizeHeader(){
 		}
     $("#main").css("min-height",windheight-105+"px");
 }
-var showHeader = true;
+let showHeader = true;
 if (typeof offlineMode !== "undefined"){
   if (offlineMode){
     showHeader = false;
   }
 }
-function resize(){
+window.resize = function(){
   resizeHeader();
   var head = showHeader ? 95 : 31;
   if (showDebug){

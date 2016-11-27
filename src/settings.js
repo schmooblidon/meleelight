@@ -1,9 +1,11 @@
+/* eslint-disable */
+
 /*
  Use http://keycode.info/ to find keycodes
  0 = disabled
  Modifier item goes [ Keycode , X/L scale , Y/R scale ]
 */
-keyMap = {
+window.keyMap = {
   "lstick" : {
     "up" : [87,0],
     "right" : [68,0],
@@ -36,14 +38,14 @@ keyMap = {
   "du" : [71],
   "dr" : [78],
   "dd" : [66],
-  "dl" : [86]
-}
+  "dl" : [86],
+};
 
-gameSettings = {
+window.gameSettings = {
   turbo : 0,
   lCancelType : 0, // 0- normal | 1 - Auto | 2 - smash 64
   blastzoneWrapping : 0,
   flashOnLCancel : 0,
   dustLessPerfectWavedash : 0,
-  phantomThreshold : 0.01
-}
+  phantomThreshold : 0.01,
+};

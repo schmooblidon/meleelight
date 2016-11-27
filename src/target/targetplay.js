@@ -1,14 +1,16 @@
-targetTesting = false;
-targetPlayer = 0;
-targetStagePlaying = 0;
-targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
-targetsDestroyed = 0;
-endTargetGame = false;
+/* eslint-disable */
 
-targetRecords = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]];
-devRecords = [[14.22,10.42,14.38,12.20,12.68,9.15,11.00,11.63,18.40,11.35],[15.80,13.93,22.45,14.85,14.40,10.22,14.68,14.55,22.70,12.80],[10.65,9.98,12.10,7.37,7.25,9.47,9.50,8.33,14.18,8.83]];
+window.targetTesting = false;
+window.targetPlayer = 0;
+window.targetStagePlaying = 0;
+window.targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
+window.targetsDestroyed = 0;
+window.endTargetGame = false;
 
-medalTimes = [[
+window.targetRecords = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]];
+window.devRecords = [[14.22,10.42,14.38,12.20,12.68,9.15,11.00,11.63,18.40,11.35],[15.80,13.93,22.45,14.85,14.40,10.22,14.68,14.55,22.70,12.80],[10.65,9.98,12.10,7.37,7.25,9.47,9.50,8.33,14.18,8.83]];
+
+window.medalTimes = [[
   [30,21,17],
   [29,20,15],
   [35,24,19],
@@ -41,7 +43,7 @@ medalTimes = [[
   [28,19,11]]
 ];
 
-medalsEarned = [[
+window.medalsEarned = [[
   [false,false,false],
   [false,false,false],
   [false,false,false],
@@ -74,7 +76,7 @@ medalsEarned = [[
   [false,false,false]]
 ];
 
-function getTargetCookies(){
+window.getTargetCookies = function(){
   for (var i=0;i<3;i++){
     for (var j=0;j<20;j++){
       var r = getCookie(i+"target"+j);
@@ -85,7 +87,7 @@ function getTargetCookies(){
   }
 }
 
-function giveMedals(){
+window.giveMedals = function(){
   for (var i=0;i<3;i++){
     for (var j=0;j<10;j++){
       for (var k=0;k<3;k++){
@@ -97,7 +99,7 @@ function giveMedals(){
   }
 }
 
-function startTargetGame(p,test){
+window.startTargetGame = function(p,test){
   endTargetGame = false;
   if (test){
     stage = stageTemp;
@@ -124,7 +126,7 @@ function startTargetGame(p,test){
   player[p].stocks = 1;
 }
 
-function destroyTarget(i){
+window.destroyTarget = function(i){
   targetDestroyed[i] = true;
   targetsDestroyed++;
   drawVfx("targetDestroy",stage.target[i]);
@@ -134,7 +136,7 @@ function destroyTarget(i){
   }
 }
 
-function targetHitDetection(p){
+window.targetHitDetection = function(p){
   for (var i=0;i<stage.target.length;i++){
     if (!targetDestroyed[i]){
       for (var j=0;j<4;j++){
@@ -167,7 +169,7 @@ function targetHitDetection(p){
   }
 }
 
-function hitTargetCollision(p,j,t,previous){
+window.hitTargetCollision = function(p,j,t,previous){
   if (previous){
     var hbpos = new Vec2D(player[p].phys.posPrev.x+(player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x*player[p].phys.facePrev),player[p].phys.posPrev.y+player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y);
   }
@@ -179,7 +181,7 @@ function hitTargetCollision(p,j,t,previous){
   return (Math.pow(targetPos.x-hbpos.x,2) + Math.pow(hbpos.y-targetPos.y,2) <= Math.pow(player[p].hitboxes.id[j].size+7,2));
 }
 
-function articleTargetCollision(a,t,previous){
+window.articleTargetCollision = function(a,t,previous){
   if (previous){
     var hbpos = aArticles[a][2].posPrev;
   }
@@ -191,7 +193,7 @@ function articleTargetCollision(a,t,previous){
   return (Math.pow(targetpos.x-hbpos.x,2) + Math.pow(hbpos.y-targetpos.y,2) <= Math.pow(aArticles[a][2].hb.size+7,2));
 }
 
-function targetTimerTick(){
+window.targetTimerTick = function(){
   matchTimer += 0.016667;
   $("#matchMinutes").empty().append(Math.floor(matchTimer/60));
   var sec = (matchTimer % 60).toFixed(2);

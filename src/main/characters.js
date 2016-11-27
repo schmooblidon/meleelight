@@ -1,4 +1,6 @@
-function Vec2D(x,y){
+/* eslint-disable */
+
+window.Vec2D = function(x,y){
   this.x = x;
   this.y = y;
   this.dot = function(vector){
@@ -6,7 +8,7 @@ function Vec2D(x,y){
   }
 }
 
-function Segment2D(x,y,vecx,vecy){
+window.Segment2D = function(x,y,vecx,vecy){
   this.x = x;
   this.y = y;
   this.vecx = vecx;
@@ -31,31 +33,31 @@ function Segment2D(x,y,vecx,vecy){
   }
 }
 
-function Box2D(min,max){
+window.Box2D = function(min,max){
   this.min = new Vec2D(min[0],min[1]);
   this.max = new Vec2D(max[0],max[1]);
 }
 
-offsets = [];
-charAttributes = [];
-intangibility = [];
-frames = [];
-actionSounds = [];
+window.offsets = [];
+window.charAttributes = [];
+window.intangibility = [];
+window.frames = [];
+window.actionSounds = [];
 
-function charObject(num){
+window.charObject = function(num){
   this.attributes = charAttributes[num];
   this.animations = 0;
   this.hitboxes = hitboxes[num];
 }
 
-function hitboxObject(id0,id1,id2,id3){
+window.hitboxObject = function(id0,id1,id2,id3){
   this.id0 = id0;
   this.id1 = id1;
   this.id2 = id2;
   this.id3 = id3;
 }
 
-function hitbox(offset,size,dmg,angle,kg,bk,sk,type,clank,hG,hA){
+window.hitbox = function(offset,size,dmg,angle,kg,bk,sk,type,clank,hG,hA){
   this.offset = offset;
   this.size = size;
   this.dmg = dmg;
@@ -70,9 +72,9 @@ function hitbox(offset,size,dmg,angle,kg,bk,sk,type,clank,hG,hA){
   this.hitAirborne = hA;
 }
 
-hitboxes = [];
+window.hitboxes = [];
 
-chars = [];
+window.chars = [];
 
 /*
 char id:

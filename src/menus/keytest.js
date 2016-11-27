@@ -1,4 +1,6 @@
-var keyText = [
+/* eslint-disable */
+
+window.keyText = [
   "", // [0]
   "", // [1]
   "", // [2]

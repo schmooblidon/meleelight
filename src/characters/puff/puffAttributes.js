@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 charAttributes[1] = {
   dashFrameMin : 12,
   dashFrameMax : 23,

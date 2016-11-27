@@ -1,4 +1,8 @@
-creditsPlayer = 0;
+/* eslint-disable */
+
+window.creditsPlayer = 0;
+
+const twoPi = Math.pi * 2;
 //scrolling top down
 var shoot_cooldown = 0;
 var initc = true; //whether or not credits should be initialized. Should be set to true every time credits is activated
@@ -17,7 +21,7 @@ var cScrollingMax = 2800;// max scrolling distance in y coords. Can change this 
 var cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
 var lastHit = [0,0,false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
-function ScrollingText(text,yPos,position,information) {
+window.ScrollingText = function(text,yPos,position,information) {
   this.Text = text;
 	this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
   this.yPos = yPos;
@@ -58,10 +62,9 @@ function ScrollingText(text,yPos,position,information) {
 var creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
 
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
-function credits(p){ //called once every frame
+window.credits = function(p){ //called once every frame
   if (initc) {
 	  lastHit = [0,0,false]; //see notes above
-	  shootcooldown = 0;
 		creditNames = [
 			new ScrollingText("Schmoo",800,"Creator, Main Developer","Made the game."),
 			new ScrollingText("Tatatat0",900,"Programmer","Created the AI and credits."),
@@ -84,7 +87,7 @@ function credits(p){ //called once every frame
   	yDif = Math.round(cScrollingSpeed);
   }
   // iterate through creditNames and change y pos based on y dif
-  for (i = 0; i < creditNames.length; i++) {
+  for (var i = 0; i < creditNames.length; i++) {
     creditNames[i].scrollY(yDif); //scrolls credit names
   	creditNames[i].checkIfShouldRender(cYSize); //updates render state
   }
@@ -131,7 +134,7 @@ function credits(p){ //called once every frame
   for (var n=0;n<cShots.length;n++){
     if (cShots[n].life == 15){
       var madeShot = [false,0];
-      for (i = 0; i < creditNames.length; i++) {
+      for (var i = 0; i < creditNames.length; i++) {
         if (!(creditNames[i].isShot)) {
             if (creditNames[i].checkIfShot(cShots[n].target.x,750-cShots[n].target.y)) {
                  madeShot = [true,i];
@@ -160,7 +163,7 @@ function credits(p){ //called once every frame
   }
 }
 
-function drawCreditsInit(){
+window.drawCreditsInit = function(){
   bg2.clearRect(0,0,1200,750);
   fg1.clearRect(0,0,1200,750);
   fg2.clearRect(0,0,1200,750);
@@ -168,7 +171,7 @@ function drawCreditsInit(){
   drawCreditsInfo();
 }
 
-function cStar(){
+window.cStar = function(){
   this.vel = 4+Math.random()*4;
   this.life = Math.round(Math.random()*100+10*(this.vel-4));
   this.angle = twoPi*Math.random();
@@ -181,7 +184,7 @@ for (var n=0;n<100;n++){
 }
 
 var cShots = [];
-function cShot(target,position,type){
+window.cShot = function(target,position,type){
   this.vel = 0.3;
   this.life = 0;
   this.target = new Vec2D(target.x,750-target.y);
@@ -195,7 +198,7 @@ function cShot(target,position,type){
   this.distance = Math.sqrt(Math.pow(this.target.y-this.position.y,2)+Math.pow(this.target.x-this.position.x,2));
 }
 
-function drawCreditsInfo(){
+window.drawCreditsInfo = function(){
   ui.clearRect(0,0,1200,750);
   ui.font = "900 40px Consolas";
   ui.strokeStyle = "rgba(255, 255, 255, 0.7)";
@@ -224,7 +227,7 @@ function drawCreditsInfo(){
   ui.fillText(cScore+" Hit",1075,85);
 }
 
-function drawCredits(){
+window.drawCredits = function(){
   fg1.clearRect(0,0,1200,750);
   bg2.fillStyle = "rgba(0,0,0,0.4)";
   bg2.fillRect(0,0,1200,750);

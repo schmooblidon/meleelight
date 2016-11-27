@@ -1,5 +1,14 @@
+/* eslint-disable */
 
-layers = {
+window.player = [0,0,0,0];
+window.renderTime = [10,0,100,0];
+window.gamelogicTime = [5,0,100,0];
+window.framerate = [0,0,0];
+window.cS = [0,0,0,0];
+window.vfxQueue = [];
+window.shine = 0.5;
+
+window.layers = {
   BG1 : 0,
   BG2 : 0,
   FG1 : 0,
@@ -7,26 +16,18 @@ layers = {
   UI : 0
 };
 
-player = [0,0,0,0];
+let gameEnd = false;
+const attemptingControllerReset = [false,false,false,false];
 
-renderTime = [10,0,100,0];
-gamelogicTime = [5,0,100,0];
-framerate = [0,0,0];
-
-gameEnd = false;
-
-attemptingControllerReset = [false,false,false,false];
-
-function customDeadzone(){
+window.customDeadzone = function(){
   this.ls = new Vec2D(0,0);
   this.cs = new Vec2D(0,0);
   this.l = 0;
   this.r = 0;
 }
 
-keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,222],[109,219],71,78,66,86];
-
-keyboardOccupied = false;
+const keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,222],[109,219],71,78,66,86];
+let keyboardOccupied = false;
 
 /*xbox one controller
 A : 0
@@ -59,7 +60,7 @@ l : 4
 r : 5
 z : 7
 */
-map = {
+const map = {
   a : [1,0,4,0,0,2],
   b : [2,1,3,2,1,3],
   x : [0,2,2,1,2,1],
@@ -81,32 +82,32 @@ map = {
 }
 
 
-mType = [0,0,0,0];
+window.mType = [0,0,0,0];
 
-cd = [new customDeadzone,new customDeadzone,new customDeadzone,new customDeadzone];
+window.cd = [new customDeadzone,new customDeadzone,new customDeadzone,new customDeadzone];
 
-currentPlayers = [];
+window.currentPlayers = [];
 
-playerAmount = 0;
+window.playerAmount = 0;
 
-playerType = [-1,-1,-1,-1];
+window.playerType = [-1,-1,-1,-1];
 
-cpuDifficulty = [3,3,3,3];
+window.cpuDifficulty = [3,3,3,3];
 
-ports = 0;
-activePorts = [];
+window.ports = 0;
+window.activePorts = [];
 
-playing = false;
+window.playing = false;
 
-frameByFrame = false;
-frameByFrameRender = false;
+window.frameByFrame = false;
+window.frameByFrameRender = false;
 
-findingPlayers = true;
+window.findingPlayers = true;
 
-showVfx = true;
-showDebug = false;
+window.showVfx = true;
+window.showDebug = false;
 
-gameMode = 20;
+window.gameMode = 20;
 // 20:Startup
 // 13:Data Menu
 // 12:Keyboard Controls
@@ -123,15 +124,11 @@ gameMode = 20;
 // 1:Main Menu
 // 0:Title Screen
 
-versusMode = 0;
+window.versusMode = 0;
 
-cS = [0,0,0,0];
+window.randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
 
-randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
-
-vfxQueue = [];
-
-palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
+window.palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
 ["rgb(4, 255, 134)","rgb(154, 254, 170)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
 ["rgb(5, 195, 255)","rgb(121, 223, 255)","rgba(218, 96, 254, ","rgb(231, 134, 255)","rgba(230, 144, 255, "],
 ["rgb(255, 187, 70)","rgb(248, 255, 122)","rgba(80, 182, 255, ","rgb(255, 142, 70)","rgba(139, 203, 249, "],
@@ -139,40 +136,40 @@ palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb
 ["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgb(255, 112, 66)","rgba(111, 214, 168, "],
 ["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgb(191, 119, 119)","rgba(175, 172, 172, "]];
 
-hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
+window.hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
 
-hasTag = [false,false,false,false];
-tagText = ["","","",""];
+window.hasTag = [false,false,false,false];
+window.tagText = ["","","",""];
 
-pPal = [0,1,2,3];
+window.pPal = [0,1,2,3];
 
-costumeTimeout = [];
+window.costumeTimeout = [];
 
-colours = ["rgba(4, 255, 82, 0.62)","rgba(117, 20, 255, 0.63)","rgba(255, 20, 20, 0.63)","rgba(255, 232, 20, 0.63)"];
+window.colours = ["rgba(4, 255, 82, 0.62)","rgba(117, 20, 255, 0.63)","rgba(255, 20, 20, 0.63)","rgba(255, 232, 20, 0.63)"];
 
-pause = [[true,true],[true,true],[true,true],[true,true]];
-frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
+window.pause = [[true,true],[true,true],[true,true],[true,true]];
+window.frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
 
-startingPoint = [[-50,50],[50,50],[-25,5],[25,5]];
-startingFace = [1,-1,1,-1];
+window.startingPoint = [[-50,50],[50,50],[-25,5],[25,5]];
+window.startingFace = [1,-1,1,-1];
 
-ground = [[-68.4,0],[68.4,0]];
+window.ground = [[-68.4,0],[68.4,0]];
 
-platforms = [[[-57.6,27.2],[-20,27.2]],[[20,27.2],[57.6,27.2]],[[-18.8,54.4],[18.8,54.4]]];
+window.platforms = [[[-57.6,27.2],[-20,27.2]],[[20,27.2],[57.6,27.2]],[[-18.8,54.4],[18.8,54.4]]];
 
-wallsL = [[[-68.4,0],[-68.4,-108.8]]];
-wallsR = [[[68.4,0],[68.4,-108.8]]];
+window.wallsL = [[[-68.4,0],[-68.4,-108.8]]];
+window.wallsR = [[[68.4,0],[68.4,-108.8]]];
 
-edges = [[[-68.4,0],[-63.4,0]],[[68.4,0],[63.4,0]]];
+window.edges = [[[-68.4,0],[-63.4,0]],[[68.4,0],[63.4,0]]];
 
 //edgeOffset = [[-71.3,-23.7],[71.3,-23.7]];
-edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
+window.edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
 
-edgeOrientation = [1,-1];
+window.edgeOrientation = [1,-1];
 
-respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
+window.respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
 
-stage = {
+window.stage = {
   box : [new Box2D([-68.4,-108.8],[68.4,0])],
   platform : [[new Vec2D(-57.6,27.2),new Vec2D(-20,27.2)],[new Vec2D(20,27.2),new Vec2D(57.6,27.2)],[new Vec2D(-18.8,54.4),new Vec2D(18.8,54.4)]],
   ground : [[new Vec2D(-68.4,0),new Vec2D(68.4,0)]],
@@ -187,20 +184,20 @@ stage = {
   ledge : [[0,0],[0,1]],
   ledgePos : [new Vec2D(-68.4,0),new Vec2D(68.4,0)],
   scale : 4.5,
-  offset : [600,480]
-}
+  offset : [600,480],
+};
 
-stageSelect = 0;
+window.stageSelect = 0;
 
-blastzone = new Box2D([-224,200],[224,-108.8]);
+window.blastzone = new Box2D([-224,200],[224,-108.8]);
 
-starting = true;
-startTimer = 1.5;
+window.starting = true;
+window.startTimer = 1.5;
 
 //matchTimer = 5999.99;
-matchTimer = 480;
+window.matchTimer = 480;
 
-usingLocalStorage = false;
+window.usingLocalStorage = false;
 if (typeof(Storage) !== "undefined") {
     // Code for localStorage/sessionStorage.
     usingLocalStorage = true;
@@ -210,7 +207,7 @@ if (typeof(Storage) !== "undefined") {
     console.log("local storage does not work");
 }
 
-function setCookie(cname, cvalue, exdays) {
+window.setCookie = function(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var exp = "expires="+d.toUTCString();
@@ -218,7 +215,7 @@ function setCookie(cname, cvalue, exdays) {
     localStorage.setItem(cname, cvalue);
 }
 
-function getCookie(cname) {
+window.getCookie = function(cname) {
   if (usingLocalStorage){
     return localStorage.getItem(cname);
   }
@@ -234,12 +231,10 @@ function getCookie(cname) {
   }
 }
 
-document.onkeydown = overrideKeyboardEvent;
-document.onkeyup = overrideKeyboardEvent;
-var keys = {};
-keyBind = 0;
-keyBinding = false;
-function overrideKeyboardEvent(e){
+window.keys = {};
+window.keyBind = 0;
+window.keyBinding = false;
+window.overrideKeyboardEvent = function(e){
   if (choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116){
     switch(e.type){
       case "keydown":
@@ -276,8 +271,9 @@ function overrideKeyboardEvent(e){
     }
     return true;
   }
-}
-function disabledEventPropagation(e){
+};
+
+window.disabledEventPropagation = function(e){
   if(e){
     if(e.stopPropagation){
       e.stopPropagation();
@@ -285,7 +281,10 @@ function disabledEventPropagation(e){
       window.event.cancelBubble = true;
     }
   }
-}
+};
+
+document.onkeydown = overrideKeyboardEvent;
+document.onkeyup = overrideKeyboardEvent;
 
 /*var keys = [];
 window.onkeyup = function(e) {
@@ -295,7 +294,7 @@ window.onkeydown = function(e) {
   keys[e.keyCode]=true;
 }*/
 
-function SVG(tag)
+window.SVG = function(tag)
 {
    return document.createElementNS('http://www.w3.org/2000/svg', tag);
 }
@@ -313,7 +312,7 @@ window.addEventListener("gamepadconnected", function(e) {
 });
 if(navigator.getGamepads) console.log(navigator.getGamepads());
 
-function matchTimerTick(){
+window.matchTimerTick = function(){
   matchTimer -= 0.016667;
   $("#matchMinutes").empty().append(Math.floor(matchTimer/60));
   var sec = (matchTimer % 60).toFixed(2);
@@ -323,7 +322,7 @@ function matchTimerTick(){
   }
 }
 
-function screenShake(kb){
+window.screenShake = function(kb){
   var seed = [Math.random(),Math.random(),Math.random(),Math.random()];
   fg1.translate(kb*0.1*seed[0],kb*0.1*seed[1]);
   setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1])},20);
@@ -332,7 +331,7 @@ function screenShake(kb){
   setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},80);
 }
 
-function percentShake(kb,i){
+window.percentShake = function(kb,i){
   player[i].percentShake = new Vec2D(kb*0.1*Math.random(),kb*0.1*Math.random());
   setTimeout(function(){player[i].percentShake = new Vec2D(kb*0.05*Math.random(),kb*0.05*Math.random())},20);
   setTimeout(function(){player[i].percentShake = new Vec2D(-kb*0.1*Math.random(),-kb*0.1*Math.random())},40);
@@ -340,7 +339,7 @@ function percentShake(kb,i){
   setTimeout(function(){player[i].percentShake = new Vec2D(0,0)},80);
 }
 
-function findPlayers(){
+window.findPlayers = function(){
   var gps = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
   /*if (typeof gps != "undefined"){
     console.log(gps);
@@ -451,14 +450,14 @@ function findPlayers(){
 }
 
 
-function addPlayer(gamepad,gType){
+window.addPlayer = function(gamepad,gType){
   ports++;
   currentPlayers[ports-1] = gamepad;
   playerType[ports-1] = 0;
   mType[ports-1] = gType;
 }
 
-function togglePort(i){
+window.togglePort = function(i){
   playerType[i]++;
   if (playerType[i] == 2){
     playerType[i] = -1;
@@ -468,7 +467,7 @@ function togglePort(i){
   }
 }
 
-function positionPlayersInCSS(){
+window.positionPlayersInCSS = function(){
   for (var i=0;i<4;i++){
       var x = (-80+i*50)*2/3;
       var y = -30;
@@ -493,7 +492,7 @@ function positionPlayersInCSS(){
 // 1:Main Menu
 // 0:Title Screen
 
-function changeGamemode(newGamemode){
+window.changeGamemode = function(newGamemode){
   bg1.fillStyle = "black";
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
@@ -558,7 +557,7 @@ function changeGamemode(newGamemode){
 }
 
 
-/*function addPlayer(i,gType,pType){
+/*window.addPlayer = function(i,gType,pType){
   console.log(i,gType,pType);
 
   currentPlayers.push(i);
@@ -589,12 +588,12 @@ function changeGamemode(newGamemode){
   playerAmount++;
 }
 
-function removePlayer(i){
+window.removePlayer = function(i){
   playerType[i] = -1;
   playerAmount--;
 }*/
 
-function interpretInputs(i,active){
+window.interpretInputs = function(i,active){
   if (mType[i] == 10){
     // keyboard controls
     var stickR = 1;
@@ -965,14 +964,14 @@ function interpretInputs(i,active){
   }
 }
 
-bg1 = 0;
-bg2 = 0;
-fg1 = 0;
-fg2 = 0;
-ui = 0;
-c = 0;
-canvasMain = 0;
-layerSwitches = {
+window.bg1 = 0;
+window.bg2 = 0;
+window.fg1 = 0;
+window.fg2 = 0;
+window.ui = 0;
+window.c = 0;
+window.canvasMain = 0;
+window.layerSwitches = {
   BG1 : true,
   BG2 : true,
   FG1 : true,
@@ -980,7 +979,7 @@ layerSwitches = {
   UI : true
 };
 
-function renderToMain(){
+window.renderToMain = function(){
   var keys = Object.keys(layers);
   for (var i=0;i<keys.length;i++){
     if (layerSwitches[keys[i]]){
@@ -989,7 +988,7 @@ function renderToMain(){
   }
 }
 
-function renderVfx(otherFrame){
+window.renderVfx = function(otherFrame){
   otherFrame = otherFrame || false;
   var popQueue = [];
   for (var j=0;j<vfxQueue.length;j++){
@@ -1014,7 +1013,7 @@ function renderVfx(otherFrame){
   }
 }
 
-function drawVfx(name,pos,face,f){
+window.drawVfx = function(name,pos,face,f){
   if (typeof(f)==='undefined') f = -1;
   var instance = {};
   $.extend(true,instance,vfx[name]);
@@ -1028,7 +1027,7 @@ function drawVfx(name,pos,face,f){
   vfxQueue.push([instance,0,newPos,face,f]);
 }
 
-function update(i){
+window.update = function(i){
   if (!starting){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
@@ -1044,11 +1043,11 @@ function update(i){
   physics(i);
 }
 
-delta = 0;
-lastFrameTimeMs = 0;
-lastUpdate = performance.now();
+let delta = 0;
+let lastFrameTimeMs = 0;
+let lastUpdate = performance.now();
 
-function gameTick(){
+window.gameTick = function(){
   var start = performance.now();
   var diff = 0;
   if (gameMode == 0 || gameMode == 20){
@@ -1269,7 +1268,7 @@ function gameTick(){
   setTimeout(gameTick,16-diff);
 }
 
-function clearScreen(){
+window.clearScreen = function(){
   //bg1.fillStyle = "rgb(0, 0, 0)";
   //bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   bg2.clearRect(0,0,layers.BG2.width,layers.BG2.height);
@@ -1278,9 +1277,9 @@ function clearScreen(){
   ui.clearRect(0,0,layers.UI.width,layers.UI.height);
 }
 
-otherFrame = true;
-fps30 = false;
-function renderTick(){
+let otherFrame = true;
+let fps30 = false;
+window.renderTick = function(){
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
   if ((fps30 && otherFrame) || !fps30){
@@ -1402,7 +1401,7 @@ function renderTick(){
   }
 }
 
-function buildPlayerObject(i){
+window.buildPlayerObject = function(i){
   player[i] = new playerObject(cS[i],startingPoint[i],startingFace[i]);
   player[i].phys.ECB1 = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
   player[i].phys.ECBp = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
@@ -1415,7 +1414,7 @@ for (var i=0;i<4;i++){
   player[i].actionState = "WAIT";
 }
 
-function initializePlayers(i,target){
+window.initializePlayers = function(i,target){
   buildPlayerObject(i);
   if (target){
     drawVfx("entrance",new Vec2D(stage.startingPoint.x,stage.startingPoint.y));
@@ -1425,7 +1424,7 @@ function initializePlayers(i,target){
   }
 }
 
-function startGame(){
+window.startGame = function(){
   stage = stages[stageSelect];
   backgroundType = Math.round(Math.random());
   changeGamemode(3);
@@ -1469,7 +1468,7 @@ function startGame(){
   playing = true;
 }
 
-function endGame(){
+window.endGame = function(){
   gameEnd = false;
   lostStockQueue = [];
   phantomQueue = [];
@@ -1513,7 +1512,7 @@ function endGame(){
   }
 }
 
-function finishGame(){
+window.finishGame = function(){
   endTargetGame = false;
   gameEnd = true;
   playing = false;
@@ -1603,7 +1602,7 @@ function finishGame(){
   setTimeout(function(){endGame()},2500);
 }
 
-function start(){
+window.start = function(){
   getKeyboardCookie();
   getTargetCookies();
   giveMedals();
