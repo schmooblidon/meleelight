@@ -1,5 +1,9 @@
 /* eslint-disable */
 
+import { inverseMatrix,
+         multMatVect
+       } from "main/linAlg";
+
 export const button = {
   a   : 0,
   b   : 1,
@@ -49,7 +53,7 @@ export function controllerNameFromIDnumber ( number ) {
     else if (number == 4) { return "TigerGame 3-in-1"; }
     else if (number == 5) { return "Retrolink controller"; }
     else { return "error: controller detected but not supported"; }
-}
+};
 
 export function controllerIDNumberFromGamepadID ( gamepadID ) {
          if (gamepadID[0] == "M" || gamepadID.substring(0,2) == "1a") 
@@ -65,4 +69,29 @@ export function controllerIDNumberFromGamepadID ( gamepadID ) {
     else if (gamepadID.substring(0,2) == "Ge")
             { return 5; } // Retrolink controller
     else    { return -1; }
-}
+};
+
+
+// The following function renormalises axis input,
+// so that corners (l = left, r = right, d=down, u=up) are mapped to the respective corners of the unit square.
+// This function assumes that ALL coordinates have already been centered.
+// Return type: [xnew,ynew]
+export function renormaliseAxisInput ([lx,ly],[rx,ry],[dx,dy],[ux,uy],[x,y]) {
+         if ((x*ry - y*rx <= 0) && (x*uy - y*ux >= 0)) // quadrant 1
+            { let invMat = inverseMatrix ( [[rx,ux],[ry,uy]] );
+              return multMatVect (invMat,[x,y]); 
+            }
+    else if ((x*uy - y*ux <= 0) && (x*ly - y*lx >= 0)) // quadrant 2
+            { let invMat = inverseMatrix ( [[-lx,ux],[-ly,uy]] );
+              return multMatVect (invMat,[x,y]); 
+            }
+    else if ((x*ly - y*lx <= 0) && (x*dy - y*dx >= 0)) // quadrant 3
+            { let invMat = inverseMatrix ( [[-lx,-dx],[-ly,-dy]] );
+              return multMatVect (invMat,[x,y]); 
+            }
+    else                                               // quadrant 4
+            { let invMat = inverseMatrix ( [[dx,-rx],[dy,-ry]] );
+              return multMatVect (invMat,[x,y]); 
+            }
+};
+
