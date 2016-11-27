@@ -37,7 +37,7 @@ const button = {
   z   : 4,
   r   : 5,
   l   : 6,
-  s   : 7,
+  s   : 7,  // start
   du  : 8,  // d-pad up
   dr  : 9,  // d-pad right
   dd  : 10, // d-pad down
