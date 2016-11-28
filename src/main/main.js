@@ -612,14 +612,23 @@ export function interpretInputs (i,active){
 
     var lsticks = scaleToMeleeAxes ( gamepad.axes[controllerMaps[mType[i]][button.lsX]],    // x-axis data
                                      gamepad.axes[controllerMaps[mType[i]][button.lsY]]*-1, // y-axis data, need to flip up/down
-                                     -custcent[i].ls.x, // x-axis "custom deadzone" offset
-                                     -custcent[i].ls.y, // y-axis "custom deadzone" offset
-                                     4/3, 4/3);   // scale factors
-    var csticks = scaleToMeleeAxes ( gamepad.axes[controllerMaps[mType[i]][button.csX]],    // x-axis data
-                                     gamepad.axes[controllerMaps[mType[i]][button.csY]]*-1, // y-axis data, need to flip up/down
-                                     -custcent[i].cs.x, // x-axis "custom deadzone" offset
-                                     -custcent[i].cs.y, // y-axis "custom deadzone" offset
-                                     4/3, 4/3);   // scale factors
+                                     -custcent[i][i].ls.x, // x-axis "custom deadzone" offset
+                                     -custcent[i][i].ls.y, // y-axis "custom deadzone" offset
+                                     4/3, 4/3, // scale factors
+                                     true);   // true: deadzones
+    var csticks = scaleToMeleeAxes ( gamepad.axes[controllerMaps[mType[i]][button.csX]],
+                                     gamepad.axes[controllerMaps[mType[i]][button.csY]]*-1,
+                                     -custcent[i][i].cs.x,
+                                     -custcent[i][i].cs.y,
+                                     4/3, 4/3
+                                     , true);
+    [player[i].inputs.rawlStickAxis[0].x,player[i].inputs.rawlStickAxis[0].y] = 
+                  scaleToMeleeAxes ( gamepad.axes[controllerMaps[mType[i]][button.lsX]],   
+                                     gamepad.axes[controllerMaps[mType[i]][button.lsY]]*-1, 
+                                     -custcent[i][i].ls.x,
+                                     -custcent[i][i].ls.y,
+                                     4/3, 4/3,
+                                     false);   // false: no deadzones
     var lstickX = lsticks[0];
     var lstickY = lsticks[1];
     var cstickX = csticks[0];

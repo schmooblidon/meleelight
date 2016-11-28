@@ -294,3 +294,64 @@ export function scaleToMeleeAxes ( x, y, offsetX, offsetY, scaleX, scaleY ) {
     let ynew = meleeYAxisRescale (scaleToGCYAxis ( y, offsetY, scaleY ));
     return  (nonLinearRescale ( [xnew, ynew] )).map(meleeRound);
 };
+
+
+// Melee GC controller simulation
+// data courtesy of ARTIFICE
+// horizontal: 19 -- 122 -- 232
+const meleeXMin  = 19 ;
+const meleeXOrig = 122;
+const meleeXMax  = 232;
+// vertical  : 32 -- 134 -- 246
+const meleeYMin  = 32 ;
+const meleeYOrig = 134;
+const meleeYMax  = 232;
+
+const steps = 80;
+
+const deadzoneConst = 0.28;
+
+function axisRescale ( x, min, orig, max, bool ) {
+  // the following line is equivalent to checking that the result of this function lies in the deadzone
+  // no need to check for deadzones later
+    if (bool && x < steps*deadzoneConst/(max-orig) && x > steps*deadzoneConst/(min-orig)) {
+      return 0;
+    }
+    else if (x < 0) {
+      return x*(orig-min)/steps;
+    }
+    else {
+      return x*(max-orig)/steps;
+    }
+};
+
+function meleeXAxisRescale (x, bool) {
+  return axisRescale ( x, meleeXMin, meleeXOrig, meleeXMax, bool);
+};
+
+function meleeYAxisRescale (y, bool) {
+  return axisRescale ( y, meleeYMin, meleeYOrig, meleeYMax, bool);
+};
+
+function nonLinearRescale ( [x,y] ) {
+  let norm = Math.sqrt(x*x + y*y);
+  if (norm < 1) {
+    return ([x,y]);
+  }
+  else if (Math.abs(y) <= Math.abs(x)/3){ // constants (i.e. 1, 1/3) maybe not exact
+    return ([toInterval(x),y]);
+  }
+  else {
+    return ( [x/norm, y/norm]);
+  }
+};
+
+function meleeClamp (x) {
+  return Math.round(steps*x)/steps;
+};
+
+export function scaleToMeleeAxes ( x, y, offsetx, offsety, scalex, scaley, bool ) {
+    let xnew = meleeXAxisRescale (scaleToGCAxis ( x, offsetx, scalex ), bool);
+    let ynew = meleeYAxisRescale (scaleToGCAxis ( y, offsety, scaley ), bool);
+    return  (nonLinearRescale ( [xnew, ynew] )).map(meleeClamp);
+};
