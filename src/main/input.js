@@ -86,12 +86,13 @@ export function controllerIDNumberFromGamepadID(gamepadID) {
   else if (gamepadID[0] == "X" || gamepadID[0] == "x" || gamepadID[0] == "W") {
     return 3;
   } // XBOX 360 controller, or general XInput standard gamepad
-  else if (gamepadID[0] == "T" || gamepadID.substring(0, 4) == "0926") {
-    return 4;
-  } // TigerGame 3-in-1 adapter        
-  else if (gamepadID.substring(0, 2) == "Ge") {
-    return 5;
-  } // Retrolink controller
+  else if (gamepadID.substring(0,9) == "TigerGame" || gamepadID.substring(0, 9) == "0926-2526") {
+    return 4; // TigerGame 3-in-1 adapter
+  }           // text ID: TigerGame XBOX+PS2+GC Game Controller Adapter (Vendor: 0926 Product:2526)  
+  else if (gamepadID.substring(0,7) == "Generic" || gamepadID.substring(0,9) == "0079-0006") {
+    return 5; // Retrolink adapter
+  }           // text ID: Generic USB Joystick (Vendor: 0079 Product: 0006)
+    
   else {
     return -1;
   }
