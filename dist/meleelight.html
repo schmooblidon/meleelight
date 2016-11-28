@@ -10,7 +10,7 @@
       <div id="loadPercent"><p><span id="loadPercentEdit">0</span>%</p></div>
       <div id="loadText"><p id="loadTextEdit">Loading...</p></div>
     </div>
-    <div id="topButtonContainer">
+    <div id="topButtonContainer" onmouseover="restore()" onmouseout="wipe()">
       <a href=""><div id="downloadButton" class="topButton"><div class="buttonDetails"><p>Download Melee Light</p></div></div></a>
         <div id="keyboardButton" class="topButton"><img id="keyboardControlsImg" width="860" height="616" src="http://i.imgur.com/vdfvaII.png"/><div class="buttonDetails"><p>Default Keyboard Controls</p></div></div><div id="controllerButton" class="topButton"><div id="controllerSupportContainer">
           <div class="controllerBox">
@@ -254,6 +254,9 @@
     </div>
   </div>
   <script>
+    var cont = document.getElementById("topButtonContainer");
+    var icn = document.querySelectorAll(".topButton");
+    wipe();
     window.offlineMode = true;
 
     var scripts = [
@@ -277,6 +280,31 @@
       document.body.appendChild(script);
       script.src = src;
     });
+
+    function restore() {
+      var i;
+      for (i = 0; i < icn.length; i++) {
+        icn[i].style.height = "25px";
+      }
+      cont.style.height = "31px";
+      cont.style.transition = "opacity 0.5s linear 0s";
+      cont.style.opacity = 1;
+    }
+
+    function wipe() {
+      setTimeout(function(){
+        cont.style.transition = "opacity 0.5s linear 0s";
+        cont.style.opacity = 0;
+      }, 10000);
+      setTimeout(function(){
+        var i;
+        for (i = 0; i < icn.length; i++) {
+          icn[i].style.height = "5px";
+        }
+        cont.style.height = "5px";
+      }, 10500);
+    }
+
   </script>
   </body>
 </html>
