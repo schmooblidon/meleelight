@@ -145,7 +145,7 @@ export function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x,
 
 // Analog sticks.
 // x = axis input
-export function scaleToGCAxis ( x, offset ) {
+export function scaleToGCAxis ( x, offset, bool ) {
     let xnew = (x+offset) / 0.75;
     if (xnew > 1) {
       return 1;
@@ -153,7 +153,7 @@ export function scaleToGCAxis ( x, offset ) {
     else if (xnew < -1) {
       return -1;
     }
-    else if (Math.abs(xnew) < 0.28){
+    else if (bool & Math.abs(xnew) < 0.28){
       return 0;
     } 
     else {
