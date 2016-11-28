@@ -209,7 +209,7 @@ const meleeXMax  = 232;
 // vertical  : 32 -- 134 -- 246
 const meleeYMin  = 32 ;
 const meleeYOrig = 134;
-const meleeYMax  = 232;
+const meleeYMax  = 246;
 
 // rescales -1 -- 0 -- 1 to min -- orig -- max, and rounds to nearest integer
 function discretise (x, min, orig, max) {
