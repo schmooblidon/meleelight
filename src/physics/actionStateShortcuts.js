@@ -325,25 +325,25 @@ window.checkForTilts = function(p, reverse) {
 window.checkForSpecials = function(p) {
   if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
     if (player[p].phys.grounded) {
-      if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.58 || (player[p].inputs.lStickAxis[0].y > 0.58 && Math.abs(
+      if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.59 || (player[p].inputs.lStickAxis[0].y > 0.54 && Math.abs(
           player[p].inputs.lStickAxis[0].x) > player[p].inputs.lStickAxis[0].y - 0.2)) {
         player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
         return [true, "SIDESPECIALGROUND"];
-      } else if (player[p].inputs.lStickAxis[0].y > 0.58) {
+      } else if (player[p].inputs.lStickAxis[0].y > 0.54) {
         return [true, "UPSPECIAL"];
-      } else if (player[p].inputs.lStickAxis[0].y < -0.58) {
+      } else if (player[p].inputs.lStickAxis[0].y < -0.54) {
         return [true, "DOWNSPECIALGROUND"];
       } else {
         return [true, "NEUTRALSPECIALGROUND"];
       }
     } else {
-      if (player[p].inputs.lStickAxis[0].y > 0.58 || (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.58 && player[p].inputs
+      if (player[p].inputs.lStickAxis[0].y > 0.54 || (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.59 && player[p].inputs
           .lStickAxis[0].y > Math.abs(player[p].inputs.lStickAxis[0].x) - 0.2)) {
         return [true, "UPSPECIAL"];
-      } else if (player[p].inputs.lStickAxis[0].y < -0.58 || (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.58 && -
+      } else if (player[p].inputs.lStickAxis[0].y < -0.54 || (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.59 && -
           player[p].inputs.lStickAxis[0].y > Math.abs(player[p].inputs.lStickAxis[0].x) - 0.2)) {
         return [true, "DOWNSPECIALAIR"];
-      } else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.58) {
+      } else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.59) {
         player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
         return [true, "SIDESPECIALAIR"];
       } else {
