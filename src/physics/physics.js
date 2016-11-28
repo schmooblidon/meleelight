@@ -118,7 +118,7 @@ window.physics = function(i) {
 		    if (!((player[i].inputs.lStickAxis[0].x * player[i].inputs.lStickAxis[0].x) + (player[i].inputs.lStickAxis[0].y * player[i].inputs.lStickAxis[0].y) < (0.49))) {
               player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x*6;
               player[i].phys.pos.y += player[i].phys.grounded ? 0 : player[i].inputs.lStickAxis[0].y*6;
-            } 
+            }
             }
         } else {
           player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x * 3;
@@ -849,30 +849,37 @@ window.physics = function(i) {
       }
       var opp = Math.sin(x) * player[i].hitboxes.id[j].size;
       var adj = Math.cos(x) * player[i].hitboxes.id[j].size;
-      // creating phantom test hitbox
-      var oppPhan = Math.sin(x) * player[i].hitboxes.id[j].size - gameSettings.phantomThreshold;
-      var adjPhan = Math.cos(x) * player[i].hitboxes.id[j].size - gameSettings.phantomThreshold;
-      var sigma = [h1.x, h1.y];
-      if ((a > 0 && b > 0) || (a <= 0 && b <= 0)) {
-        var alpha = new Vec2D((sigma[0] + adj), (sigma[1] - opp));
-        var beta = new Vec2D((sigma[0] - adj), (sigma[1] + opp));
-        player[i].phys.interPolatedHitbox[j] = [alpha, new Vec2D((alpha.x + a), (alpha.y + b)), beta, new Vec2D((beta
-          .x + a), (beta.y + b))];
-        var alphaP = new Vec2D((sigma[0] + adjPhan), (sigma[1] - oppPhan));
-        var betaP = new Vec2D((sigma[0] - adjPhan), (sigma[1] + oppPhan));
-        player[i].phys.interPolatedHitboxPhantom[j] = [alphaP, new Vec2D((alphaP.x + a), (alphaP.y + b)), betaP, new Vec2D(
-          (betaP.x + a), (betaP.y + b))];
-      } else {
-        var alpha = new Vec2D((sigma[0] - adj), (sigma[1] - opp));
-        var beta = new Vec2D((sigma[0] + adj), (sigma[1] + opp));
-        player[i].phys.interPolatedHitbox[j] = [alpha, new Vec2D((alpha.x + a), (alpha.y + b)), beta, new Vec2D((beta
-          .x + a), (beta.y + b))];
-        var alphaP = new Vec2D((sigma[0] - adjPhan), (sigma[1] - oppPhan));
-        var betaP = new Vec2D((sigma[0] + adjPhan), (sigma[1] + oppPhan));
-        player[i].phys.interPolatedHitboxPhantom[j] = [alphaP, new Vec2D((alphaP.x + a), (alphaP.y + b)), betaP, new Vec2D(
-          (betaP.x + a), (betaP.y + b))];
+      var sigma = [h1.x,h1.y];
+      if ((a>0 && b>0) || (a<=0 && b<=0)){
+        var alpha1 = new Vec2D((sigma[0] + adj),(sigma[1] - opp));
+        var alpha2 = new Vec2D((alpha1.x + a), (alpha1.y + b));
+        var beta1 = new Vec2D((sigma[0] - adj),(sigma[1] + opp));
+        var beta2 = new Vec2D((beta1.x + a),(beta1.y + b));
       }
-      //player[i].phys.interPolatedHitbox[j] = [alpha1,alpha2,beta2,beta1];
+      else {
+        var alpha1 = new Vec2D((sigma[0] - adj),(sigma[1] - opp));
+        var alpha2 = new Vec2D((alpha1.x + a), (alpha1.y + b));
+        var beta1 = new Vec2D((sigma[0] + adj),(sigma[1] + opp));
+        var beta2 = new Vec2D((beta1.x + a),(beta1.y + b));
+      }
+      player[i].phys.interPolatedHitbox[j] = [alpha1,alpha2,beta2,beta1];
+
+      var opp = Math.sin(x) * player[i].hitboxes.id[j].size - gameSettings.phantomThreshold;
+      var adj = Math.cos(x) * player[i].hitboxes.id[j].size - gameSettings.phantomThreshold;
+      var sigma = [h1.x,h1.y];
+      if ((a>0 && b>0) || (a<=0 && b<=0)){
+        var alpha1 = new Vec2D((sigma[0] + adj),(sigma[1] - opp));
+        var alpha2 = new Vec2D((alpha1.x + a), (alpha1.y + b));
+        var beta1 = new Vec2D((sigma[0] - adj),(sigma[1] + opp));
+        var beta2 = new Vec2D((beta1.x + a),(beta1.y + b));
+      }
+      else {
+        var alpha1 = new Vec2D((sigma[0] - adj),(sigma[1] - opp));
+        var alpha2 = new Vec2D((alpha1.x + a), (alpha1.y + b));
+        var beta1 = new Vec2D((sigma[0] + adj),(sigma[1] + opp));
+        var beta2 = new Vec2D((beta1.x + a),(beta1.y + b));
+      }
+      player[i].phys.interPolatedHitboxPhantom[j] = [alpha1,alpha2,beta2,beta1];
       player[i].phys.isInterpolated = true;
     }
   }
