@@ -1886,6 +1886,9 @@ puff.UPSPECIAL = {
   init : function(p){
     player[p].actionState = "UPSPECIAL";
     player[p].timer = 0;
+    //23
+    //71
+    //122
     if (player[p].phys.grounded){
       if (player[p].phys.cVel.x > 0){
         player[p].phys.cVel.x -= 0.1;
@@ -1907,6 +1910,9 @@ puff.UPSPECIAL = {
   main : function(p){
     player[p].timer++;
     if (!puff.UPSPECIAL.interrupt(p)){
+      if (player[p].timer == 23 || player[p].timer == 71 || player[p].timer == 122){
+        drawVfx("sing",new Vec2D(0,0),p);
+      }
       if (player[p].phys.grounded){
         reduceByTraction(p);
       }
