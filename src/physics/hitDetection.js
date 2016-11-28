@@ -433,7 +433,7 @@ window.executeHits = function() {
                 } else {
                   player[v].hit.reverse = true;
                 }
-                if (!jabReset) {
+                if (!jabReset && player[v].phys.grabbedBy == -1) {
                   player[v].phys.face = player[v].hit.reverse ? 1 : -1;
                 }
               } else {
@@ -480,10 +480,6 @@ window.executeHits = function() {
                   aS[cS[v]].DAMAGEN2.init(v);
                 }
               } else {
-                // reverse a reverse hit if you are being wobbled
-                if (player[v].hit.reverse) {
-                  player[v].phys.face *= -1;
-                }
                 if (player[v].actionState != "THROWNPUFFDOWN") {
                   aS[cS[v]].CAPTUREDAMAGE.init(v);
                 }
