@@ -153,7 +153,7 @@ export function scaleToGCAxis ( x, offset, bool ) {
     else if (xnew < -1) {
       return -1;
     }
-    else if (bool & Math.abs(xnew) < 0.28){
+    else if (bool && Math.abs(xnew) < 0.28){
       return 0;
     } 
     else {
