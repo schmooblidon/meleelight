@@ -1185,8 +1185,8 @@ window.gameTick = function() {
       }
       dom.gamelogicAvg.innerHTML = Math.round(gamelogicTime[0]);
       dom.gamelogicHigh.innerHTML = Math.round(gamelogicTime[1]);
-      dom.gameLogicLow.innerHTML = Math.round(gamelogicTime[2]);
-      dom.gameLogicPeak.innerHTML = gamelogicTime[3];
+      dom.gamelogicLow.innerHTML = Math.round(gamelogicTime[2]);
+      dom.gamelogicPeak.innerHTML = gamelogicTime[3];
     }
   } else if (findingPlayers) {
     findPlayers();
@@ -1288,7 +1288,6 @@ window.renderTick = function() {
           if (diff < renderTime[2]) {
             renderTime[2] = diff;
           }
-
           dom.renderAvg.innerHTML = Math.round(renderTime[0]);
           dom.renderHigh.innerHTML = Math.round(renderTime[1]);
           dom.renderLow.innerHTML = Math.round(renderTime[2]);
