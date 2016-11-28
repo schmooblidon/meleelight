@@ -225,7 +225,9 @@ window.shieldDepletion = function(p) {
   player[p].phys.shieldHP -= 0.28 * input - ((1 - input) / 10);
   if (player[p].phys.shieldHP <= 0) {
     player[p].phys.shielding = false;
-    player[p].phys.cVel.y = player[p].charAttributes.shieldBreakVel;
+    player[p].phys.kVel.y = player[p].charAttributes.shieldBreakVel;
+    player[p].phys.kDec.y = 0.051;
+    player[p].phys.kDec.x = 0;
     player[p].phys.grounded = false;
     player[p].phys.shieldHP = 0;
     drawVfx("breakShield", player[p].phys.pos, player[p].phys.face);
