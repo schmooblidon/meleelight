@@ -12,6 +12,8 @@ import {baseActionStates} from "../baseActionStates";
 import {player, drawVfx, palettes, pPal, cS, stage, deepCopyObject} from "../../main/main";
 import {Vec2D} from "../../main/characters";
 import {sounds} from "../../main/sfx";
+
+import {hitQueue} from '../../physics/hitdetection';
 /* eslint-disable */
 
 // action state object creation

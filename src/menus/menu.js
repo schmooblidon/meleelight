@@ -2,9 +2,9 @@ import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBin
     setCreditsPlayer
 } from "../main/main";
 import {sounds} from "../main/sfx";
-import {targetPlayer, setTargetPlayer} from "../target/targetplay";
-import {targetPointerPos, setTargetPointerPos} from "./targetselect";
-import {editingStage, targetBuilder, setEditingStage, setTargetBuilder} from "../target/targetbuilder";
+import { setTargetPlayer} from "../target/targetplay";
+import { setTargetPointerPos} from "./targetselect";
+import {  setEditingStage, setTargetBuilder} from "../target/targetbuilder";
 import {twoPi} from "../main/render";
 /* eslint-disable */
 

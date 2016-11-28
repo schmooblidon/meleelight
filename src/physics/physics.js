@@ -4,7 +4,7 @@ import {sounds} from "../main/sfx";
 import {gameSettings} from "../settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "./hitDetection";
-import {lostStockQueue, setLostStockQueue} from '../main/render';
+import {lostStockQueue} from '../main/render';
 /* eslint-disable */
 
 export function land (i,y,t,j){

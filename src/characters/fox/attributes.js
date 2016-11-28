@@ -1,4 +1,4 @@
-import {  intangibility, actionSounds, offsets, hitboxes, Vec2D, createHitboxObject, createHitbox,
+import {    offsets,  Vec2D, createHitboxObject, createHitbox,
     setCharAttributes
     , CHARIDS
     , charObject

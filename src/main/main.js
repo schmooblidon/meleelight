@@ -16,7 +16,7 @@ import {drawCreditsInit, credits, drawCredits} from "../menus/credits";
 import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "./render";
 import {vfx, dVfx, setTransparency, transparency} from "./vfx";
 import {aS} from "../physics/actionStateShortcuts";
-import {executeHits, hitDetection, hitQueue, checkPhantoms, resetHitQueue, setPhantonQueue} from "../physics/hitDetection";
+import {executeHits, hitDetection, checkPhantoms, resetHitQueue, setPhantonQueue} from "../physics/hitDetection";
 import {targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned, targetRecords, targetsDestroyed,
     targetStagePlaying
     , getTargetCookies

@@ -1,6 +1,5 @@
 import {Vec2D} from "../main/characters";
-import {player, changeGamemode, vfxQueue, initializePlayers, matchTimer, startTimer, starting, drawVfx, findingPlayers,
-    playing
+import {player, changeGamemode,  initializePlayers, matchTimer,  drawVfx
     , getCookie,stage
     , resetVfxQueue
     , setMatchTimer
@@ -15,8 +14,8 @@ import {player, changeGamemode, vfxQueue, initializePlayers, matchTimer, startTi
 } from "../main/main";
 import {renderPlayer} from "../main/render";
 import {sounds} from "../main/sfx";
-import {stageTemp, setStageTemp} from "./targetbuilder";
-import {backgroundType, setBackgroundType} from "../stages/stagerender";
+import {stageTemp} from "./targetbuilder";
+import { setBackgroundType} from "../stages/stagerender";
 import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision} from "../physics/article";
 import {interpolatedHitCircleCollision} from "../physics/hitDetection";
 /* eslint-disable */

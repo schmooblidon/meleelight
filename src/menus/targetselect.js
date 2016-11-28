@@ -1,12 +1,12 @@
-import {player, cS, changeGamemode, setCookie, getCookie, stage, bg1,fg1,ui,bg2, layers, clearScreen, shine, setStage,
+import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine, setStage,
     addShine
     , setShine
     , deepCopyObject
 } from "../main/main";
-import {targetRecords, targetStagePlaying, startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords,
+import {targetRecords,  startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords,
     setTargetStagePlaying
 } from "../target/targetplay";
-import {showingCode, stageTemp, targetBuilder, editingStage, setShowingCode, resetStageTemp, setTargetBuilder,
+import {showingCode, stageTemp,  setShowingCode, resetStageTemp, setTargetBuilder,
     setEditingStage
     , setStageTemp
 } from "../target/targetbuilder";
