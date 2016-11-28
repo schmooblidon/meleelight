@@ -115,9 +115,11 @@ window.physics = function(i) {
               .lStickAxis[0].x < -0.7 && player[i].inputs.lStickAxis[1].x > -0.7) || (player[i].inputs.lStickAxis[0].y >
               0.7 && player[i].inputs.lStickAxis[1].y < 0.7) || (player[i].inputs.lStickAxis[0].y < -0.7 && player[i]
               .inputs.lStickAxis[1].y > -0.7)) {
-            player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x * 6;
-            player[i].phys.pos.y += player[i].phys.grounded ? 0 : player[i].inputs.lStickAxis[0].y * 6;
-          }
+		    if (!((player[i].inputs.lStickAxis[0].x * player[i].inputs.lStickAxis[0].x) + (player[i].inputs.lStickAxis[0].y * player[i].inputs.lStickAxis[0].y) < (0.49))) {
+              player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x*6;
+              player[i].phys.pos.y += player[i].phys.grounded ? 0 : player[i].inputs.lStickAxis[0].y*6;
+            } 
+            }
         } else {
           player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x * 3;
           player[i].phys.pos.y += player[i].phys.grounded ? 0 : player[i].inputs.lStickAxis[0].y * 3;
@@ -225,7 +227,9 @@ window.physics = function(i) {
   }
 
   if (player[i].phys.outOfCameraTimer >= 60) {
-    player[i].percent++;
+    if (player[i].percent < 150) {
+	  player[i].percent++;
+	}
     percentShake(40, i);
     sounds.outofcamera.play();
     player[i].phys.outOfCameraTimer = 0;
