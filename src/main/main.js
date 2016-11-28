@@ -669,6 +669,8 @@ window.interpretInputs = function(i, active) {
 
     var lstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], -cd[i].ls.x);
     var lstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], -cd[i].ls.y) * -1; // need to flip up/down
+    player[i].inputs.rawlStickAxis[0].x = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], 0);     // no deadzones
+    player[i].inputs.rawlStickAxis[0].y = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], 0) * -1; // need to flip up/down
     var cstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csX]], -cd[i].cs.x);
     var cstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csY]], -cd[i].cs.y) * -1; // need to flip up/down
     if (mType[i] == 3){
