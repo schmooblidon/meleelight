@@ -194,10 +194,47 @@ function toInterval (x) {
   }
 };
 
+
+
+// Melee GC controller simulation
+// data courtesy of ARTIFICE
+
+const steps = 80;
+const deadzoneConst = 0.28;
+
+// horizontal: 19 -- 122 -- 232
+const meleeXMin  = 19 ;
+const meleeXOrig = 122;
+const meleeXMax  = 232;
+// vertical  : 32 -- 134 -- 246
+const meleeYMin  = 32 ;
+const meleeYOrig = 134;
+const meleeYMax  = 232;
+
+// rescales -1 -- 0 -- 1 to min -- orig -- max, and rounds to nearest integer
+function discretise (x, min, orig, max) {
+  if (x < 0) {
+    return Math.round((x*(orig-min)+orig));
+  }
+  else if (x > 0) {
+    return Math.round((x*(max-orig)+orig));
+  }
+  else {
+    return orig;
+  }
+};
+
 // Analog sticks.
-// x = axis input
-export function scaleToGCAxis ( x, offset, scale ) {
+function scaleToGCAxis ( x, offset, scale ) {
     return toInterval((x+offset) * scale);
+};
+
+function scaleToGCXAxis (x, offsetX, scaleX) {
+  return discretise(scaleToGCAxis(x, offsetX, scaleX), meleeXMin, meleeXOrig, meleeXMax);
+};
+
+function scaleToGCYAxis (y, offsetY, scaleY) {
+  return discretise(scaleToGCAxis(y, offsetY, scaleY), meleeYMin, meleeYOrig, meleeYMax);
 };
 
 // Analog triggers.
@@ -215,42 +252,24 @@ export function scaleToGCTrigger ( t, offset, scale ) {
     }
 };
 
-
-// Melee GC controller simulation
-// data courtesy of ARTIFICE
-// horizontal: 19 -- 122 -- 232
-const meleeXMin  = 19 ;
-const meleeXOrig = 122;
-const meleeXMax  = 232;
-// vertical  : 32 -- 134 -- 246
-const meleeYMin  = 32 ;
-const meleeYOrig = 134;
-const meleeYMax  = 232;
-
-const steps = 80;
-
-const deadzoneConst = 0.28;
-
-function axisRescale ( x, min, orig, max) {
+// basic mapping from 0 -- 255 back to -1 -- 1 done by Melee
+function axisRescale ( x, orig) {
   // the following line is equivalent to checking that the result of this function lies in the deadzone
   // no need to check for deadzones later
-    if (x < steps*deadzoneConst/(max-orig) && x > steps*deadzoneConst/(min-orig)) {
+    if ( Math.abs (x+1-orig) < deadzoneConst * steps) {
       return 0;
     }
-    else if (x < 0) {
-      return x*(orig-min)/steps;
-    }
     else {
-      return x*(max-orig)/steps;
+      return (x-orig+1) / steps; // +1 apparently needed
     }
 };
 
 function meleeXAxisRescale (x) {
-  return axisRescale ( x, meleeXMin, meleeXOrig, meleeXMax);
+  return axisRescale ( x, meleeXOrig );
 };
 
 function meleeYAxisRescale (y) {
-  return axisRescale ( y, meleeYMin, meleeYOrig, meleeYMax);
+  return axisRescale ( y, meleeYOrig );
 };
 
 function nonLinearRescale ( [x,y] ) {
@@ -258,7 +277,7 @@ function nonLinearRescale ( [x,y] ) {
   if (norm < 1) {
     return ([x,y]);
   }
-  else if (Math.abs(y) <= Math.abs(x)/3){ // constants (i.e. 1, 1/3) maybe not exact
+  else if (Math.abs(y) <= Math.abs(x)/6){ // constants (norm < 1 above, 1/6 here) may not be proper
     return ([toInterval(x),y]);
   }
   else {
@@ -266,12 +285,12 @@ function nonLinearRescale ( [x,y] ) {
   }
 };
 
-function meleeClamp (x) {
+function meleeRound (x) {
   return Math.round(steps*x)/steps;
 };
 
-export function scaleToMeleeAxes ( x, y, offsetx, offsety, scalex, scaley ) {
-    let xnew = meleeXAxisRescale (scaleToGCAxis ( x, offsetx, scalex ));
-    let ynew = meleeYAxisRescale (scaleToGCAxis ( y, offsety, scaley ));
-    return  (nonLinearRescale ( [xnew, ynew] )).map(meleeClamp);
+export function scaleToMeleeAxes ( x, y, offsetX, offsetY, scaleX, scaleY ) {
+    let xnew = meleeXAxisRescale (scaleToGCXAxis ( x, offsetX, scaleX ));
+    let ynew = meleeYAxisRescale (scaleToGCYAxis ( y, offsetY, scaleY ));
+    return  (nonLinearRescale ( [xnew, ynew] )).map(meleeRound);
 };
