@@ -75,11 +75,13 @@ export function controllerNameFromIDnumber(number) {
 
 export function controllerIDNumberFromGamepadID(gamepadID) {
   if (gamepadID[0] == "M" || 
+      gamepadID.substring(0,9) == "0079-1843" ||
       gamepadID.substring(0,7) == "NEXILUX" || 
       gamepadID.substring(0,2) == "1a" || 
       gamepadID.substring(0,9) == "0079-1845") {
     return 0;
   } // Mayflash Wii-U 4-way adapter
+    // text ID:  MAYFLASH GameCube Controller Adapter (Vendor: 0079, Product:1843)
     // OR
     // Nexilux adapter
     // text ID: NEXILUX GAMECUBE Controller Adapter (Vendor: 0079, Product: 1845)
