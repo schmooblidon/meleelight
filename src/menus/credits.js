@@ -107,9 +107,9 @@ window.credits = function(p) { //called once every frame
   }
 
   //l stick to pos
-  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[0].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX -
+  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[p].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX -
     cXSize) / 2));
-  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[0].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY -
+  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[p].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY -
     cYSize) / 2));
   //cast positions to canvas size
   if (cPlayerXPos < 0) {
