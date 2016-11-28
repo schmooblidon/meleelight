@@ -30,6 +30,9 @@ window.ScrollingText = function(text, yPos, position, information) {
   this.position = position; //position in development
   this.information = information; //more information?
   this.isShot = false; //whether or not it has been shot
+  this.xMax = Math.floor((Math.random() * 150) + 50);
+  this.xVal = 0;
+  this.xDirection = Math.floor(Math.random() + 1);
   this.canRender = false;
   this.size = function() {
     return ([
@@ -59,6 +62,13 @@ window.ScrollingText = function(text, yPos, position, information) {
     }
   }
   this.scrollY = function(y) {
+	if ((this.xVal == this.xMax) && this.xDirection == 1) {
+		this.xDirection = 0;
+	} else if ((this.xVal == -1 * this.xMax) && this.xDirection == 0) {
+		this.xDirection = 1;
+	}
+	this.xPos += -1 + (2 * this.xDirection);
+	this.xVal += -1 + (2 * this.xDirection);
     this.yPos += y;
   }
 }
