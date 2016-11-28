@@ -667,25 +667,25 @@ window.interpretInputs = function(i, active) {
     var gamepad = navigator.getGamepads()[currentPlayers[i]];
     //console.log(gamepad.axes);
 
-    var lstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], cd[i].ls.x);
-    var lstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], cd[i].ls.y) * -1; // need to flip up/down
-    var cstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csX]], cd[i].cs.x);
-    var cstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csY]], cd[i].cs.y) * -1; // need to flip up/down
+    var lstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], -cd[i].ls.x);
+    var lstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], -cd[i].ls.y) * -1; // need to flip up/down
+    var cstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csX]], -cd[i].cs.x);
+    var cstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csY]], -cd[i].cs.y) * -1; // need to flip up/down
     if (mType[i] == 3){
       //console.log(gamepad.buttons[map.rA[mType[i]]]);
       //-cd[i].l
       //-cd[i].r
       // FOR XBOX CONTROLLERS
-      var lAnalog = scaleToGCTrigger(gamepad.buttons[controllerMaps[mType[i]][button.lA]].value, cd[i].l, 0.2, 1); // shifted by +0.2
-      var rAnalog = scaleToGCTrigger(gamepad.buttons[controllerMaps[mType[i]][button.rA]].value, cd[i].r, 0.2, 1); // shifted by +0.2
+      var lAnalog = scaleToGCTrigger(gamepad.buttons[controllerMaps[mType[i]][button.lA]].value, 0.2-cd[i].l, 1); // shifted by +0.2
+      var rAnalog = scaleToGCTrigger(gamepad.buttons[controllerMaps[mType[i]][button.rA]].value, 0.2-cd[i].r, 1); // shifted by +0.2
     }
     else if (mType[i] == 2){
-      var lAnalog = scaleToGCTrigger(gamepad.axes[controllerMaps[mType[i]][button.lA]],-cd[i].l, 0.867, -1); // shifted by +0.867, flipped
-      var rAnalog = scaleToGCTrigger(gamepad.axes[controllerMaps[mType[i]][button.rA]],-cd[i].r, 0.867, -1); // shifted by +0.867, flipped
+      var lAnalog = scaleToGCTrigger(gamepad.axes[controllerMaps[mType[i]][button.lA]],0.867-cd[i].l, -1); // shifted by +0.867, flipped
+      var rAnalog = scaleToGCTrigger(gamepad.axes[controllerMaps[mType[i]][button.rA]],0.867-cd[i].r, -1); // shifted by +0.867, flipped
     }
     else {
-      var lAnalog = scaleToGCTrigger(gamepad.axes[controllerMaps[mType[i]][button.lA]],-cd[i].l, 0.867, 1); // shifted by +0.867
-      var rAnalog = scaleToGCTrigger(gamepad.axes[controllerMaps[mType[i]][button.rA]],-cd[i].r, 0.867, 1); // shifted by +0.867
+      var lAnalog = scaleToGCTrigger(gamepad.axes[controllerMaps[mType[i]][button.lA]],0.867-cd[i].l, 1); // shifted by +0.867
+      var rAnalog = scaleToGCTrigger(gamepad.axes[controllerMaps[mType[i]][button.rA]],0.867-cd[i].r, 1); // shifted by +0.867
     }
   }
 
