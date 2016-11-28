@@ -74,33 +74,53 @@ export function controllerNameFromIDnumber(number) {
 };
 
 export function controllerIDNumberFromGamepadID(gamepadID) {
-  if (gamepadID[0] == "M" || 
-      gamepadID.substring(0,9) == "0079-1843" ||
-      gamepadID.substring(0,7) == "NEXILUX" || 
-      gamepadID.substring(0,2) == "1a" || 
-      gamepadID.substring(0,9) == "0079-1845") {
+  if (gamepadID[0] == "M" ||
+      gamepadID.substring(0, 9) == "0079-1843" ||
+      gamepadID.substring(0, 7) == "Wii U G" ||
+      gamepadID.substring(0, 7) == "NEXILUX" ||
+      gamepadID.substring(0, 9) == "0079-1845" ||
+      gamepadID.substring(0, 3) == "USB" ||
+      gamepadID.substring(0, 9) == "1a34-f705") {
     return 0;
   } // Mayflash Wii-U 4-way adapter
-    // text ID:  MAYFLASH GameCube Controller Adapter (Vendor: 0079, Product:1843)
+    // text ID on Chrome: MAYFLASH GameCube Controller Adapter (Vendor: 0079, Product:1843)
+    // text ID on Firefox:
+    // text ID on Linux: Wii U GameCube Adapter Port 4 (Vendor: 0000 Product: 0000)
     // OR
     // Nexilux adapter
     // text ID: NEXILUX GAMECUBE Controller Adapter (Vendor: 0079, Product: 1845)
-  else if (gamepadID[0] == "v" || gamepadID[0] == "1") {
+    // OR
+    // Mayflash 2 port
+    // text ID: USB GamePad (Vendor: 1a34 Product: f705)
+  else if (gamepadID.substring(0, 4) == "vJoy" ||
+           gamepadID.substring(0, 9) == "1234-bead") {
     return 1;
   } // vJoy
-  else if (gamepadID.substring(0, 2) == "GC" || gamepadID[0] == "2") {
+    // text ID Firefox: 1234-bead-vJoy - Virtual Joystick
+    // text ID Chrome: vJoy - Virtual Joystick (Vendor: 1234 Product: bead)
+  else if (gamepadID.substring(0, 2) == "GC" ||
+           gamepadID.substring(0, 9) == "289b-000c") {
     return 2;
   } // raphnet N64 adapter
-  else if (gamepadID[0] == "X" || gamepadID[0] == "x" || gamepadID[0] == "W") {
+    // text ID: GC/N64 to USB, v2.9 (Vendor: 289b Product: 000c)
+  else if (gamepadID[0] == "X" ||
+           gamepadID[0] == "x" ||
+           gamepadID.substring(0, 8) == "Wireless" ||
+           gamepadID.substring(0, 9) == "045e-02d1") {
     return 3;
   } // XBOX 360 controller, or general XInput standard gamepad
-  else if (gamepadID.substring(0,9) == "TigerGame" || gamepadID.substring(0, 9) == "0926-2526") {
+    // text ID: Xbox 360 Controller (XInput STANDARD GAMEPAD)
+    // text ID on Mac: Wireless 360 Controller (STANDARD GAMEPAD Vendor: 045e Product: 028e)
+    // XboxOne Controller (same mapping) text ID on Linux FireFox: 045e-02d1-Microsoft X-Box One pad Chromium: Microsoft Controller (Vendor: 045e Product: 02d1)
+  else if (gamepadID.substring(0, 9) == "TigerGame" ||
+           gamepadID.substring(0, 9) == "0926-2526") {
     return 4; // TigerGame 3-in-1 adapter
-  }           // text ID: TigerGame XBOX+PS2+GC Game Controller Adapter (Vendor: 0926 Product:2526)  
-  else if (gamepadID.substring(0,7) == "Generic" || gamepadID.substring(0,9) == "0079-0006") {
+  }           // text ID: TigerGame XBOX+PS2+GC Game Controller Adapter (Vendor: 0926 Product:2526)
+  else if (gamepadID.substring(0, 7) == "Generic" ||
+           gamepadID.substring(0, 9) == "0079-0006") {
     return 5; // Retrolink adapter
   }           // text ID: Generic USB Joystick (Vendor: 0079 Product: 0006)
-    
+
   else {
     return -1;
   }
@@ -157,7 +177,7 @@ export function scaleToGCAxis ( x, offset, bool ) {
     }
     else if (bool && Math.abs(xnew) < 0.28){
       return 0;
-    } 
+    }
     else {
       return (Math.round (xnew*80)/80);
     }
@@ -175,5 +195,5 @@ export function scaleToGCTrigger ( t, offset, scale ) {
     }
     else {
       return tnew;
-    }    
+    }
 };
