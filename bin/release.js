@@ -79,13 +79,13 @@ catch(err) {
 }
 
 
-// Checkout the gh-pages branch
+// Checkout the download branch
 try {
-  console.log("Switching to the gh-pages branch...");
-  cmd("git checkout gh-pages");
+  console.log("Switching to the download branch...");
+  cmd("git checkout download");
 }
 catch(err) {
-  printError(err, "Unable to checkout branch 'gh-pages'!");
+  printError(err, "Unable to checkout branch 'download'!");
   removeTmpDir();
   process.exit();
 }

@@ -12,9 +12,11 @@ export function ActiveHitbox(size, offset, dmg, angle, kg, bk, sk, type) {
   this.type = type;
 }
 export function createHitboxes() {
-  this.active = [false, false, false, false];
+    this.active = [false, false, false, false];
   this.frame = 0;
-  this.id = [new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0)];
+  this.id = [new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0,
+    0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0,
+    0, 0, 0)];
   this.hitList = [];
 }
 export function physicsObject(pos, face) {
@@ -95,9 +97,13 @@ export function physicsObject(pos, face) {
   this.bTurnaroundDirection = 1;
 }
 export function inputObject() {
-  this.lStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0)];
-  this.rawlStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0)];
-  this.cStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0)];
+
+  this.lStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0,
+    0), new Vec2D(0, 0), new Vec2D(0, 0)];
+  this.rawlStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(
+    0, 0), new Vec2D(0, 0), new Vec2D(0, 0)];
+  this.cStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0,
+    0), new Vec2D(0, 0), new Vec2D(0, 0)];
   this.lAnalog = [0, 0, 0, 0, 0, 0, 0, 0];
   this.rAnalog = [0, 0, 0, 0, 0, 0, 0, 0];
   this.s = [false, false, false, false, false, false, false, false];

@@ -26,17 +26,20 @@ let lastHit = [0, 0, false]; //[timer,index of creditNames] timer is set wheneve
 //lasthit[2] is for whether or not bottom bar is cleared.
 export function ScrollingText (text,yPos,position,information) {
   this.Text = text;
-	this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
+  this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
   this.yPos = yPos;
   this.fontSize = 36;
-  	//this.fontSize = fontSize; //font should always be Consolas. Font size IS 36px
+  //this.fontSize = fontSize; //font should always be Consolas. Font size IS 36px
   this.position = position; //position in development
-	this.information = information; //more information?
-	this.isShot = false; //whether or not it has been shot
-	this.canRender = false;
-  this.size = function(){
-	  return ([[this.xPos, this.xPos + (20 * this.Text.length)],[this.yPos-23,this.yPos]]); //returns [[xMin,xMax],[yMin,yMax]]
-  };
+  this.information = information; //more information?
+  this.isShot = false; //whether or not it has been shot
+  this.canRender = false;
+  this.size = function() {
+    return ([
+      [this.xPos, this.xPos + (20 * this.Text.length)],
+      [this.yPos - 23, this.yPos]
+    ]); //returns [[xMin,xMax],[yMin,yMax]]
+  }
   this.checkIfShouldRender = function(cY) { //                      SEE PLEASE?:  takes cYPos. if it can actually access that variable inside this scope, remove arguments.
     const size = this.size();
 	  if (size[1][0] < cY && size[1][1] > 0) { //can render
@@ -59,7 +62,7 @@ export function ScrollingText (text,yPos,position,information) {
 	  }
   };
   this.scrollY = function(y) {
-	  this.yPos += y;
+    this.yPos += y;
   }
 }
 let creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
@@ -67,68 +70,72 @@ let creditNames = []; //list of scrollingText objects SEE PLEASE:               
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
 export function credits (p){ //called once every frame
   if (initc) {
-	  lastHit = [0,0,false]; //see notes above
-		creditNames = [
-			new ScrollingText("Schmoo",800,"Creator, Main Developer","Made the game."),
-			new ScrollingText("Tatatat0",900,"Programmer","Created the AI and credits."),
-			new ScrollingText("bites",1000,"Animation Assistant, Level Design","Helped develop animation process & designed target stages."),
-      new ScrollingText("WwwWario",1100,"Support","Helping users troubleshoot and being a homie!"),
-			new ScrollingText("zircon",1200,"Musician","Smash Superstars (Menu Theme)"),
-			new ScrollingText("Buoy",1300,"Musician","Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
-			new ScrollingText("Tom Mauritzon",1400,"Musician","Mega Helix (PStadium Theme)"),
-			new ScrollingText("Rozen",1500,"Musician","Kumite (Battlefield Theme)"),
-			new ScrollingText("Zack Parrish",1600,"Musician","Sunny Side Up (Dreamland Theme)")
-		  ];
-	  cScore = 0;
-	  initc = false;
+    lastHit = [0, 0, false]; //see notes above
+    creditNames = [
+      new ScrollingText("Schmoo", 800, "Creator, Main Developer", "Made the game."),
+      new ScrollingText("Tatatat0", 900, "Programmer", "Created the AI and credits."),
+      new ScrollingText("bites", 1000, "Animation Assistant, Level Design",
+        "Helped develop animation process & designed target stages."),
+      new ScrollingText("WwwWario", 1100, "Support", "Helping users troubleshoot and being a homie!"),
+      new ScrollingText("zircon", 1200, "Musician", "Smash Superstars (Menu Theme)"),
+      new ScrollingText("Buoy", 1300, "Musician",
+        "Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
+      new ScrollingText("Tom Mauritzon", 1400, "Musician", "Mega Helix (PStadium Theme)"),
+      new ScrollingText("Rozen", 1500, "Musician", "Kumite (Battlefield Theme)"),
+      new ScrollingText("Zack Parrish", 1600, "Musician", "Sunny Side Up (Dreamland Theme)")
+    ];
+    cScore = 0;
+    initc = false;
   }
   let yDif = 0;
   if (player[p].inputs.s[0]) {
-  //is holding down start. Should increase speed
-  	yDif = Math.round(cScrollingSpeed * 1.5);
+    //is holding down start. Should increase speed
+    yDif = Math.round(cScrollingSpeed * 1.5);
   } else {
-  	yDif = Math.round(cScrollingSpeed);
+    yDif = Math.round(cScrollingSpeed);
   }
   // iterate through creditNames and change y pos based on y dif
   for (var i = 0; i < creditNames.length; i++) {
     creditNames[i].scrollY(yDif); //scrolls credit names
-  	creditNames[i].checkIfShouldRender(cYSize); //updates render state
+    creditNames[i].checkIfShouldRender(cYSize); //updates render state
   }
   //draw credit information
   if (lastHit[0] > 0) {
-	  lastHit[0] -= 1;
+    lastHit[0] -= 1;
   } else { //credit information timer is up
-	  if (lastHit[2] == false) {
-		  //CLEAR BOTTOM BAR. Do this yourself.
-		  lastHit[2] = true;
-	  }
+    if (lastHit[2] == false) {
+      //CLEAR BOTTOM BAR. Do this yourself.
+      lastHit[2] = true;
+    }
   }
 
   //l stick to pos
-  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[0].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX - cXSize) / 2));
-  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[0].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY - cYSize) / 2));
+  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[0].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX -
+    cXSize) / 2));
+  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[0].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY -
+    cYSize) / 2));
   //cast positions to canvas size
   if (cPlayerXPos < 0) {
-      cPlayerXPos = 0;
+    cPlayerXPos = 0;
   }
   if (cPlayerXPos > cXSize) {
-      cPlayerXPos = cXSize;
+    cPlayerXPos = cXSize;
   }
   if (cPlayerYPos < 0) {
-      cPlayerYPos = 0;
+    cPlayerYPos = 0;
   }
   if (cPlayerYPos > cYSize) {
-      cPlayerYPos = cYSize;
+    cPlayerYPos = cYSize;
   }
 
   if (shoot_cooldown == 0) {
 
     if (player[p].inputs.a[0] && !(player[p].inputs.a[1])) {
-	  //is shooting
+      //is shooting
       sounds.foxlaserfire.play();
-      cShots.push(new cShot(new Vec2D(cPlayerXPos,cPlayerYPos),new Vec2D(0,0),0));
-      cShots.push(new cShot(new Vec2D(cPlayerXPos,cPlayerYPos),new Vec2D(1200,0),1));
-  	  shoot_cooldown = 5;
+      cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
+      cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(1200, 0), 1));
+      shoot_cooldown = 5;
     }
   } else {
     shoot_cooldown -= 1;
@@ -139,9 +146,9 @@ export function credits (p){ //called once every frame
       let madeShot = [false, 0];
       for (var i = 0; i < creditNames.length; i++) {
         if (!(creditNames[i].isShot)) {
-            if (creditNames[i].checkIfShot(cShots[n].target.x,750-cShots[n].target.y)) {
-                 madeShot = [true,i];
-            }
+          if (creditNames[i].checkIfShot(cShots[n].target.x, 750 - cShots[n].target.y)) {
+            madeShot = [true, i];
+          }
         }
       }
       if (madeShot[0]) {
@@ -155,12 +162,12 @@ export function credits (p){ //called once every frame
     }
   }
 
-  if (player[p].inputs.b[0] && !player[p].inputs.b[1]){
+  if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
     initc = true;
     sounds.menuBack.play();
     player[p].inputs.b[1] = true;
     cShots = [];
-    lastHit = [0,0,false];
+    lastHit = [0, 0, false];
     creditNames = [];
     changeGamemode(1);
   }
@@ -190,15 +197,16 @@ var cShots = [];
 export function cShot (target,position,type){
   this.vel = 0.3;
   this.life = 0;
-  this.target = new Vec2D(target.x,750-target.y);
+  this.target = new Vec2D(target.x, 750 - target.y);
   this.position = position;
   this.lastPosition = position;
   this.lastPosition2 = position;
-  this.angle = Math.atan((this.target.y-this.position.y)/(this.target.x-this.position.x));
-  if (type){
+  this.angle = Math.atan((this.target.y - this.position.y) / (this.target.x - this.position.x));
+  if (type) {
     this.angle = Math.PI + this.angle;
   }
-  this.distance = Math.sqrt(Math.pow(this.target.y-this.position.y,2)+Math.pow(this.target.x-this.position.x,2));
+  this.distance = Math.sqrt(Math.pow(this.target.y - this.position.y, 2) + Math.pow(this.target.x - this.position.x,
+    2));
 }
 
 export function drawCreditsInfo (){
@@ -207,27 +215,27 @@ export function drawCreditsInfo (){
   ui.strokeStyle = "rgba(255, 255, 255, 0.7)";
   ui.lineWidth = 2;
   ui.fillStyle = "rgba(0,0,0,0.7)";
-  ui.fillRect(100,640,1000,60);
-  ui.strokeRect(100,640,1000,60);
-  ui.fillRect(100,560,330,70);
-  ui.fillRect(430,560,670,70);
-  ui.strokeRect(100,560,330,70);
-  ui.strokeRect(430,560,670,70);
-  ui.fillRect(1000,50,150,50);
-  ui.strokeRect(1000,50,150,50);
+  ui.fillRect(100, 640, 1000, 60);
+  ui.strokeRect(100, 640, 1000, 60);
+  ui.fillRect(100, 560, 330, 70);
+  ui.fillRect(430, 560, 670, 70);
+  ui.strokeRect(100, 560, 330, 70);
+  ui.strokeRect(430, 560, 670, 70);
+  ui.fillRect(1000, 50, 150, 50);
+  ui.strokeRect(1000, 50, 150, 50);
   ui.fillStyle = "white";
   ui.textAlign = "center";
-  if (!lastHit[2]){
-    if (typeof creditNames[lastHit[1]] != "undefined"){
-      ui.fillText(creditNames[lastHit[1]].Text,265,610);
+  if (!lastHit[2]) {
+    if (typeof creditNames[lastHit[1]] != "undefined") {
+      ui.fillText(creditNames[lastHit[1]].Text, 265, 610);
       ui.font = "900 35px Consolas";
-      ui.fillText(creditNames[lastHit[1]].position,765,610);
+      ui.fillText(creditNames[lastHit[1]].position, 765, 610);
       ui.font = "900 25px Consolas";
-      ui.fillText(creditNames[lastHit[1]].information,600,680);
+      ui.fillText(creditNames[lastHit[1]].information, 600, 680);
     }
   }
   ui.font = "900 35px Consolas";
-  ui.fillText(cScore+" Hit",1075,85);
+  ui.fillText(cScore + " Hit", 1075, 85);
 }
 
 export function drawCredits (){
@@ -236,11 +244,12 @@ export function drawCredits (){
   bg2.fillRect(0,0,1200,750);
   for (let n=0; n<100; n++){
     cStars[n].life++;
-    if (cStars[n].life == 200){
-      cStars[n].vel = 4+Math.random()*4;
-      cStars[n].life = Math.round(10*(cStars[n].vel-4));
-      cStars[n].angle = twoPi*Math.random();
-      cStars[n].pos = new Vec2D(600+cStars[n].vel*Math.cos(cStars[n].angle)*cStars[n].life,375+cStars[n].vel*Math.sin(cStars[n].angle)*cStars[n].life);
+    if (cStars[n].life == 200) {
+      cStars[n].vel = 4 + Math.random() * 4;
+      cStars[n].life = Math.round(10 * (cStars[n].vel - 4));
+      cStars[n].angle = twoPi * Math.random();
+      cStars[n].pos = new Vec2D(600 + cStars[n].vel * Math.cos(cStars[n].angle) * cStars[n].life, 375 + cStars[n].vel *
+        Math.sin(cStars[n].angle) * cStars[n].life);
     }
     cStars[n].pos.x += cStars[n].vel*Math.cos(cStars[n].angle);
     cStars[n].pos.y += cStars[n].vel*Math.sin(cStars[n].angle);
@@ -258,13 +267,12 @@ export function drawCredits (){
     cShots[m].position.y += cShots[m].vel*cShots[m].distance*Math.sin(cShots[m].angle);
     if (cShots[m].life == 25){
       cShotDestroyQueue.push(m);
-    }
-    else {
-      bg2.lineWidth = Math.max(1,(20-cShots[m].life));
+    } else {
+      bg2.lineWidth = Math.max(1, (20 - cShots[m].life));
       bg2.strokeStyle = "rgb(5, 255, 15)";
       bg2.beginPath();
-      bg2.moveTo(cShots[m].lastPosition2.x,750-cShots[m].lastPosition2.y);
-      bg2.lineTo(cShots[m].position.x,750-cShots[m].position.y);
+      bg2.moveTo(cShots[m].lastPosition2.x, 750 - cShots[m].lastPosition2.y);
+      bg2.lineTo(cShots[m].position.x, 750 - cShots[m].position.y);
       bg2.closePath();
       bg2.stroke();
     }
@@ -282,25 +290,24 @@ export function drawCredits (){
     if (creditNames[i].canRender){
       if (creditNames[i].isShot){
         fg1.fillStyle = "rgb(227, 89, 89)";
-      }
-      else {
+      } else {
         fg1.fillStyle = "white";
       }
-      fg1.fillText(creditNames[i].Text,creditNames[i].xPos,creditNames[i].yPos);
+      fg1.fillText(creditNames[i].Text, creditNames[i].xPos, creditNames[i].yPos);
     }
   }
   fg1.strokeStyle = "rgba(255, 255, 255, 0.7)";
   fg1.lineWidth = 9;
   fg1.beginPath();
-  fg1.arc(cPlayerXPos,cPlayerYPos,35,0,twoPi);
-  fg1.moveTo(cPlayerXPos,cPlayerYPos+35);
-  fg1.lineTo(cPlayerXPos,cPlayerYPos+10);
-  fg1.moveTo(cPlayerXPos,cPlayerYPos-35);
-  fg1.lineTo(cPlayerXPos,cPlayerYPos-10);
-  fg1.moveTo(cPlayerXPos+35,cPlayerYPos);
-  fg1.lineTo(cPlayerXPos+10,cPlayerYPos);
-  fg1.moveTo(cPlayerXPos-35,cPlayerYPos);
-  fg1.lineTo(cPlayerXPos-10,cPlayerYPos);
+  fg1.arc(cPlayerXPos, cPlayerYPos, 35, 0, twoPi);
+  fg1.moveTo(cPlayerXPos, cPlayerYPos + 35);
+  fg1.lineTo(cPlayerXPos, cPlayerYPos + 10);
+  fg1.moveTo(cPlayerXPos, cPlayerYPos - 35);
+  fg1.lineTo(cPlayerXPos, cPlayerYPos - 10);
+  fg1.moveTo(cPlayerXPos + 35, cPlayerYPos);
+  fg1.lineTo(cPlayerXPos + 10, cPlayerYPos);
+  fg1.moveTo(cPlayerXPos - 35, cPlayerYPos);
+  fg1.lineTo(cPlayerXPos - 10, cPlayerYPos);
   fg1.closePath();
   fg1.stroke();
 }

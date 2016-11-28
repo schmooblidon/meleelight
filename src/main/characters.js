@@ -18,20 +18,20 @@ export function Segment2D(x, y, vecx, vecy) {
   this.y = y;
   this.vecx = vecx;
   this.vecy = vecy;
-  this.segLength = function () {
-    const dx = this.vecx;
-    const dy = this.vecy;
+  this.segLength = function() {
+    var dx = this.vecx;
+    var dy = this.vecy;
     return Math.sqrt(dx * dx + dy * dy);
-  };
-  this.project = function (seg_onto) {
-    const vec = new Vec2D(this.vecx, this.vecy);
-    const onto = new Vec2D(seg_onto.vecx, seg_onto.vecy);
-    const d = onto.dot(onto);
+  }
+  this.project = function(seg_onto) {
+    var vec = new Vec2D(this.vecx, this.vecy);
+    var onto = new Vec2D(seg_onto.vecx, seg_onto.vecy);
+    var d = onto.dot(onto);
     if (0 < d) {
-      const dp = vec.dot(onto);
-      const multiplier = dp / d;
-      const rx = onto.x * multiplier;
-      const ry = onto.y * multiplier;
+      var dp = vec.dot(onto);
+      var multiplier = dp / d;
+      var rx = onto.x * multiplier;
+      var ry = onto.y * multiplier;
       return new Vec2D(rx, ry);
     }
     return new Vec2D(0, 0);

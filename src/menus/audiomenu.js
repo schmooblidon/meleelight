@@ -19,13 +19,12 @@ export function audioMenuControls (i){
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
     sounds.menuBack.play();
     player[i].inputs.b[1] = true;
-    setCookie("soundsLevel",masterVolume[0],36500);
-    setCookie("musicLevel",masterVolume[1],36500);
+    setCookie("soundsLevel", masterVolume[0], 36500);
+    setCookie("musicLevel", masterVolume[1], 36500);
     changeGamemode(1);
-  }
-  else if (player[i].inputs.lStickAxis[0].y > 0.7){
+  } else if (player[i].inputs.lStickAxis[0].y > 0.7) {
     stickHoldEach[i] = true;
-    if (stickHold == 0){
+    if (stickHold == 0) {
       audioMenuSelected--;
       menuMove = true;
       increaseStick();
@@ -37,10 +36,9 @@ export function audioMenuControls (i){
         menuMove = true;
       }
     }
-  }
-  else if (player[i].inputs.lStickAxis[0].y < -0.7){
+  } else if (player[i].inputs.lStickAxis[0].y < -0.7) {
     stickHoldEach[i] = true;
-    if (stickHold == 0){
+    if (stickHold == 0) {
       audioMenuSelected++;
       menuMove = true;
       increaseStick();
@@ -52,10 +50,9 @@ export function audioMenuControls (i){
         menuMove = true;
       }
     }
-  }
-  else if (player[i].inputs.lStickAxis[0].x > 0.7){
+  } else if (player[i].inputs.lStickAxis[0].x > 0.7) {
     stickHoldEach[i] = true;
-    if (stickHold == 0){
+    if (stickHold == 0) {
       audioLevelMoveUp = true;
       increaseStick();
     }
@@ -65,10 +62,9 @@ export function audioMenuControls (i){
         audioLevelMoveUp = true;
       }
     }
-  }
-  else if (player[i].inputs.lStickAxis[0].x < -0.7){
+  } else if (player[i].inputs.lStickAxis[0].x < -0.7) {
     stickHoldEach[i] = true;
-    if (stickHold == 0){
+    if (stickHold == 0) {
       audioLevelMoveDown = true;
       increaseStick();
     }
@@ -78,8 +74,7 @@ export function audioMenuControls (i){
         audioLevelMoveDown = true;
       }
     }
-  }
-  else {
+  } else {
     stickHoldEach[i] = false;
     if (i == ports-1){
       let stickHoldAll = false;
@@ -94,35 +89,31 @@ export function audioMenuControls (i){
       }
     }
   }
-  if (menuMove){
+  if (menuMove) {
     sounds.menuSelect.play();
-    if (audioMenuSelected == -1){
+    if (audioMenuSelected == -1) {
       audioMenuSelected = 1;
-    }
-    else if (audioMenuSelected == 2){
+    } else if (audioMenuSelected == 2) {
       audioMenuSelected = 0;
     }
-  }
-  else if (audioLevelMoveUp){
+  } else if (audioLevelMoveUp) {
     sounds.menuSelect.play();
     masterVolume[audioMenuSelected] += 0.1;
-    if (masterVolume[audioMenuSelected] > 1){
+    if (masterVolume[audioMenuSelected] > 1) {
       masterVolume[audioMenuSelected] = 1;
     }
-  }
-  else if (audioLevelMoveDown){
+  } else if (audioLevelMoveDown) {
     sounds.menuSelect.play();
     masterVolume[audioMenuSelected] -= 0.1;
-    if (masterVolume[audioMenuSelected] < 0){
+    if (masterVolume[audioMenuSelected] < 0) {
       masterVolume[audioMenuSelected] = 0;
     }
   }
-  if (audioLevelMoveDown || audioLevelMoveUp){
-    if (audioMenuSelected == 0){
-      changeVolume(sounds,masterVolume[0],0);
-    }
-    else {
-      changeVolume(music,masterVolume[1],1);
+  if (audioLevelMoveDown || audioLevelMoveUp) {
+    if (audioMenuSelected == 0) {
+      changeVolume(sounds, masterVolume[0], 0);
+    } else {
+      changeVolume(music, masterVolume[1], 1);
     }
   }
 }
@@ -137,15 +128,15 @@ export function drawAudioMenuInit (){
   bg1.fillStyle = "rgba(0,0,0,0.5)";
   fg1.lineWidth = 10;
   fg1.strokeStyle = "rgba(255, 255, 255, 0.3)";
-  fg1.strokeRect(95,125,1010,650);
-  fg1.fillRect(95,125,1010,650);
+  fg1.strokeRect(95, 125, 1010, 650);
+  fg1.fillRect(95, 125, 1010, 650);
   fg1.textAlign = "center";
   fg1.fillStyle = "rgba(255, 255, 255, 0.5)";
   fg1.font = "italic 900 80px Arial";
-  fg1.fillText("Audio",600,100);
+  fg1.fillText("Audio", 600, 100);
   fg1.font = "italic 900 50px Arial";
-  fg1.fillText("Sounds",225,275);
-  fg1.fillText("Music",225,525);
+  fg1.fillText("Sounds", 225, 275);
+  fg1.fillText("Music", 225, 525);
 }
 
 export function drawAudioMenu (){
@@ -163,54 +154,52 @@ export function drawAudioMenu (){
   //ui.strokeStyle = "rgba(255,255,255,0.13)";
   bg2.strokeStyle = bgGrad;
   bg2.beginPath();
-  for (var i=0;i<60;i++){
-    bg2.moveTo(0+(i*30),0);
-    bg2.lineTo(0+(i*30),750);
-    bg2.moveTo(0,0+(i*30));
-    bg2.lineTo(1200,0+(i*30));
+  for (var i = 0; i < 60; i++) {
+    bg2.moveTo(0 + (i * 30), 0);
+    bg2.lineTo(0 + (i * 30), 750);
+    bg2.moveTo(0, 0 + (i * 30));
+    bg2.lineTo(1200, 0 + (i * 30));
   }
   bg2.stroke();
-  for (var i=0;i<2;i++){
-    if (i == audioMenuSelected){
+  for (var i = 0; i < 2; i++) {
+    if (i == audioMenuSelected) {
       //ui.fillStyle = "rgba(255, 255, 255, 0.7)";
-      bg1.fillStyle = "rgba(255, 255, 255, 0.3)";
-    }
-    else {
+      ui.fillStyle = "rgba(255, 255, 255, 0.3)";
+    } else {
       ui.fillStyle = "rgba(255, 255, 255, 0.1)";
       //ui.fillStyle = "rgba(0, 0, 0, 0.8)";
     }
     ui.beginPath();
-    ui.moveTo(200,350+i*250);
-    ui.lineTo(1000,200+i*250);
-    ui.lineTo(1000,350+i*250);
+    ui.moveTo(200, 350 + i * 250);
+    ui.lineTo(1000, 200 + i * 250);
+    ui.lineTo(1000, 350 + i * 250);
     ui.closePath();
     ui.fill();
-    if (i == 0){
-      var bgGrad =ui.createLinearGradient(200,0,1200,0);
-      bgGrad.addColorStop(0,"rgb(12, 75, 13)");
-      bgGrad.addColorStop(1,"rgb(15, 75, 255)");
-      ui.fillStyle=bgGrad;
-    }
-    else {
-      var bgGrad =ui.createLinearGradient(200,0,1200,0);
-      bgGrad.addColorStop(0,"rgb(11, 13, 65)");
-      bgGrad.addColorStop(1,"rgb(255, 15, 73)");
-      ui.fillStyle=bgGrad;
+    if (i == 0) {
+      var bgGrad = ui.createLinearGradient(200, 0, 1200, 0);
+      bgGrad.addColorStop(0, "rgb(12, 75, 13)");
+      bgGrad.addColorStop(1, "rgb(15, 75, 255)");
+      ui.fillStyle = bgGrad;
+    } else {
+      var bgGrad = ui.createLinearGradient(200, 0, 1200, 0);
+      bgGrad.addColorStop(0, "rgb(11, 13, 65)");
+      bgGrad.addColorStop(1, "rgb(255, 15, 73)");
+      ui.fillStyle = bgGrad;
     }
     ui.beginPath();
-    ui.moveTo(200,350+i*250);
-    ui.lineTo(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*150));
-    ui.lineTo(200+(masterVolume[i]*800),350+i*250);
+    ui.moveTo(200, 350 + i * 250);
+    ui.lineTo(200 + (masterVolume[i] * 800), 350 + i * 250 - (masterVolume[i] * 150));
+    ui.lineTo(200 + (masterVolume[i] * 800), 350 + i * 250);
     ui.closePath();
     ui.fill();
-    if (i == audioMenuSelected){
+    if (i == audioMenuSelected) {
       ui.fillStyle = "rgba(255, 255, 255, 1)";
-    }
-    else {
+    } else {
       ui.fillStyle = "rgba(136, 136, 136, 1)";
     }
     ui.beginPath();
-    ui.arc(200+(masterVolume[i]*800),350+i*250-(masterVolume[i]*75),15+(masterVolume[i]*65),0,twoPi);
+    ui.arc(200 + (masterVolume[i] * 800), 350 + i * 250 - (masterVolume[i] * 75), 15 + (masterVolume[i] * 65), 0,
+      twoPi);
     ui.closePath();
     ui.fill();
   }
@@ -221,11 +210,11 @@ export function getAudioCookies (){
   const s = getCookie("soundsLevel");
   if (s != null && s != undefined && s != "null"){
     masterVolume[0] = Number(s);
-    changeVolume(sounds,masterVolume[0],0);
+    changeVolume(sounds, masterVolume[0], 0);
   }
   const m = getCookie("musicLevel");
   if (m != null && m != undefined && m != "null"){
     masterVolume[1] = Number(m);
-    changeVolume(music,masterVolume[1],1);
+    changeVolume(music, masterVolume[1], 1);
   }
 }
