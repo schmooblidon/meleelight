@@ -442,7 +442,7 @@ export function executeHits (){
                 } else {
                   player[v].hit.reverse = true;
                 }
-                if (!jabReset) {
+                if (!jabReset && player[v].phys.grabbedBy == -1) {
                   player[v].phys.face = player[v].hit.reverse ? 1 : -1;
                 }
               } else {
@@ -468,8 +468,17 @@ export function executeHits (){
 
               player[v].percent += damage;
 
-              if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)) {
+              // if victim is grabbing someone, put the victim's grab victim into a grab release
+              if (player[v].phys.grabbing > -1) {
+                player[player[v].phys.grabbing].phys.grabbedBy = -1;
+                aS[cS[player[v].phys.grabbing]].CAPTURECUT.init(player[v].phys.grabbing);
+              }
 
+              if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)) {
+                if (player[v].phys.grabbedBy > -1) {
+                  player[player[v].phys.grabbedBy].phys.grabbing = -1;
+                  aS[cS[player[v].phys.grabbedBy]].WAIT.init(player[v].phys.grabbedBy);
+                }
                 player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
                 //console.log(player[v].hit.reverse);
                 if (jabReset) {

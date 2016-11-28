@@ -613,10 +613,12 @@ export function interpretInputs (i,active){
     var gamepad = navigator.getGamepads()[currentPlayers[i]];
     //console.log(gamepad.axes);
 
-    var lstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], -cd[i].ls.x);
-    var lstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], -cd[i].ls.y) * -1; // need to flip up/down
-    var cstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csX]], -cd[i].cs.x);
-    var cstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csY]], -cd[i].cs.y) * -1; // need to flip up/down
+    var lstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], -cd[i].ls.x, true);
+    var lstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], -cd[i].ls.y, true ) * -1; // need to flip up/down
+    player[i].inputs.rawlStickAxis[0].x = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], -cd[i].ls.x, false);     // no deadzones
+    player[i].inputs.rawlStickAxis[0].y = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], -cd[i].ls.y, false) * -1;
+    var cstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csX]], -cd[i].cs.x, true);
+    var cstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csY]], -cd[i].cs.y, true) * -1; // need to flip up/down
     if (mType[i] == 3){
       //console.log(gamepad.buttons[map.rA[mType[i]]]);
       //-cd[i].l
@@ -1138,8 +1140,8 @@ export function gameTick (){
       }
       dom.gamelogicAvg.innerHTML = Math.round(gamelogicTime[0]);
       dom.gamelogicHigh.innerHTML = Math.round(gamelogicTime[1]);
-      dom.gameLogicLow.innerHTML = Math.round(gamelogicTime[2]);
-      dom.gameLogicPeak.innerHTML = gamelogicTime[3];
+      dom.gamelogicLow.innerHTML = Math.round(gamelogicTime[2]);
+      dom.gamelogicPeak.innerHTML = gamelogicTime[3];
     }
   } else if (findingPlayers) {
     findPlayers();
@@ -1240,7 +1242,6 @@ export function renderTick (){
           if (diff < renderTime[2]) {
             renderTime[2] = diff;
           }
-
           dom.renderAvg.innerHTML = Math.round(renderTime[0]);
           dom.renderHigh.innerHTML = Math.round(renderTime[1]);
           dom.renderLow.innerHTML = Math.round(renderTime[2]);
