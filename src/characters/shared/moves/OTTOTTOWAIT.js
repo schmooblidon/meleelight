@@ -1,3 +1,12 @@
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat, checkForJump,
+    checkForSmashes
+    , checkForTilts
+    , checkForSpecials
+    , aS
+} from "../../../physics/actionStateShortcuts";
+import {actionSounds} from "../../../main/characters";
+import {sounds} from "../../../main/sfx";
+import {cS, player} from "../../../main/main";
 export default {
   name : "OTTOTTOWAIT",
   canEdgeCancel : false,

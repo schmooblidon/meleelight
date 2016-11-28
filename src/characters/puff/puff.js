@@ -10,8 +10,9 @@ import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, c
 } from "../../physics/actionStateShortcuts";
 import {baseActionStates} from "../baseActionStates";
 import {sounds} from "../../main/sfx";
-import {player, cS, stage, drawVfx} from "../../main/main";
+import {player, cS, stage, drawVfx, deepCopyObject} from "../../main/main";
 import {Vec2D} from "../../main/characters";
+import $ from "jquery";
 /* eslint-disable */
 
 // action state object creation
@@ -20,7 +21,7 @@ aS[1]={};
 var keys = Object.keys(baseActionStates);
 for (var i=0;i<keys.length;i++){
   aS[1][keys[i]] = {};
-  $.extend(true,aS[1][keys[i]],baseActionStates[keys[i]]);;
+    deepCopyObject(true,aS[1][keys[i]],baseActionStates[keys[i]]);
 }
 // set pointer for readibility
 var puff = aS[1];

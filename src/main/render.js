@@ -13,14 +13,17 @@ import {
     hasTag,
     tagText
     , gameMode
+    , startTimer
 } from "./main";
 import {gameSettings} from "../settings";
 import {makeColour} from "./vfx";
+import {aS} from "../physics/actionStateShortcuts";
 /* eslint-disable */
 
+export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
 export const twoPi = Math.PI * 2;
 
-export const lostStockQueue = [];
+export let lostStockQueue = [];
 export function rotateVector(vecx, vecy, ang) {
     return new Vec2D(
         vecx * Math.cos(ang) - vecy * Math.sin(ang),
@@ -544,4 +547,10 @@ export function renderForeground() {
     ui.font = "900 18px Arial";
     ui.fillText("FRAME ADVANCE", -685, -584);
     ui.restore();
+}
+export function setLostStockQueue(index,val){
+    lostStockQueue[index]=val;
+}
+export function resetLostStockQueue(){
+    lostStockQueue = [];
 }

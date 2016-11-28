@@ -1,18 +1,22 @@
 import {player, cS, changeGamemode, setCookie, getCookie, stage, bg1,fg1,ui,bg2, layers, clearScreen, shine, setStage,
     addShine
     , setShine
+    , deepCopyObject
 } from "../main/main";
 import {targetRecords, targetStagePlaying, startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords,
     setTargetStagePlaying
 } from "../target/targetplay";
-import {showingCode, stageTemp, targetBuilder, editingStage} from "../target/targetbuilder";
+import {showingCode, stageTemp, targetBuilder, editingStage, setShowingCode, resetStageTemp, setTargetBuilder,
+    setEditingStage
+    , setStageTemp
+} from "../target/targetbuilder";
 import {sounds} from "../main/sfx";
 import {Vec2D, Box2D} from "../main/characters";
 import {twoPi} from "../main/render";
 import {foxPic, puffPic, marthPic} from "./css";
-import {customTargetStages, targetStages} from "../stages/stages";
+import {customTargetStages, targetStages, setCustomTargetStages} from "../stages/stages";
 /* eslint-disable */
-
+let text;
 export let targetSelected = 0;
 export let targetSelectTimer = 0;
 export let promptType = 0;
@@ -75,7 +79,7 @@ export function tssControls (i){
             setCookie(j+"target"+customTargetStages.length,null,36500);
           }
 
-          customTargetStages.splice(targetSelected-10,1);
+            setCustomTargetStages(customTargetStages.splice(targetSelected-10,1));
           redrawCustomStageBoxes();
           return;
         }
@@ -83,8 +87,8 @@ export function tssControls (i){
           //dupe
           if (customTargetStages.length < 10){
             setCookie("custom"+customTargetStages.length,getCookie("custom"+(targetSelected-10)),36500);
-            customTargetStages.push({});
-            $.extend(true,customTargetStages[customTargetStages.length-1],customTargetStages[targetSelected-10]);
+              setCustomTargetStages(customTargetStages.length,{});
+              setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],customTargetStages[targetSelected-10]));
           }
           else {
             promptTimer = 60;
@@ -95,10 +99,10 @@ export function tssControls (i){
         }
         else if (player[i].inputs.y[0] && !player[i].inputs.y[1]){
           //edit
-          stageTemp = {};
-          $.extend(true,stageTemp,customTargetStages[targetSelected-10]);
-          targetBuilder = i;
-          editingStage = targetSelected-10;
+            resetStageTemp();
+            setStageTemp(deepCopyObject(true,stageTemp,customTargetStages[targetSelected-10]));
+            setTargetBuilder(i);
+            setEditingStage(targetSelected-10);
           player[i].inputs.a[1] = true;
           changeGamemode(4);
           music.targettest.stop();
@@ -110,7 +114,7 @@ export function tssControls (i){
         sounds.menuForward.play();
         if (targetSelected == 10+customTargetStages.length){
           // ADD CODE
-          showingCode = true;
+            setShowingCode( true);
           $("#customStageContainer").show();
           $("#cStageEdit").select().val("");
           $("#cStageTitleEdit").empty().append("Paste in your code");
@@ -131,7 +135,7 @@ export function tssControls (i){
   }
   else {
     if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
-      showingCode = false;
+        setShowingCode(false);
       let code = $("#cStageEdit").val();
       let newStage = parseStage(code);
       if (newStage == 0){
@@ -141,8 +145,8 @@ export function tssControls (i){
       }
       else {
         setCookie("custom"+customTargetStages.length,code,36500);
-        customTargetStages[customTargetStages.length] = {};
-        $.extend(true,customTargetStages[customTargetStages.length-1],newStage);
+          setCustomTargetStages(customTargetStages.length, {});
+          setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
         redrawCustomStageBoxes();
       }
       $("#customStageContainer").hide();
@@ -595,10 +599,10 @@ export function drawTSS (){
     ui.font = "700 38px Arial";
     ui.textAlign = "center";
     if (promptType == 0){
-      let text = "Invalid code";
+       text = "Invalid code";
     }
     else {
-      let text = "Limit reached";
+       text = "Limit reached";
     }
     ui.fillText(text,600,385);
   }
@@ -613,8 +617,8 @@ export function getTargetStageCookies (){
         console.log(i+" invalid code");
       }
       else {
-        customTargetStages[customTargetStages.length] = {};
-        $.extend(true,customTargetStages[customTargetStages.length-1],newStage);
+          setCustomTargetStages(customTargetStages.length,  {});
+          setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
       }
     }
   }

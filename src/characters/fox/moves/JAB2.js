@@ -1,6 +1,3 @@
-/* globals player, turnOffHitboxes, reduceByTraction, sounds, checkForJump,
-checkForTilts, checkForDash, checkForSmashes, checkForSmashes, checkForSpecials,
-checkForTiltTurn, checkForSmashTurn, tiltTurnDashBuffer */
 
 import MOVES from "./index";
 import JAB3 from "./JAB3";
@@ -10,6 +7,13 @@ import DASH from "characters/shared/moves/DASH";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
 import SMASHTURN from "characters/shared/moves/SMASHTURN";
 import TILTTURN from "characters/shared/moves/TILTTURN";
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForJump, checkForSmashes,
+    checkForTilts
+    , checkForSpecials
+    , turnOffHitboxes
+} from "../../../physics/actionStateShortcuts";
+import {sounds} from "../../../main/sfx";
+import {player} from "../../../main/main";
 
 export default {
   name : "JAB2",

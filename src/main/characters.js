@@ -1,4 +1,10 @@
 /* eslint-disable */
+export const CHARIDS = {
+    MARTH_ID : 0,
+    PUFF_ID : 1,
+    FOX_ID : 2
+};
+
 
 export function Vec2D(x, y) {
   this.x = x;
@@ -36,23 +42,35 @@ export function Box2D(min, max) {
   this.max = new Vec2D(max[0], max[1]);
 }
 export const offsets = [];
+export function setOffsets(charId,val){
+  offsets[charId] = val;
+}
 export const charAttributes = [];
+export function setCharAttributes(charId,val){
+  charAttributes[charId] = val;
+}
 export const intangibility = [];
+export function setIntangibility(charId,val){
+  intangibility[charId] =val;
+}
 export const frames = [];
 export const actionSounds = [];
+export function setActionSounds(charId,val){
+  actionSounds[charId] =val;
+}
 
 export function charObject(num) {
   this.attributes = charAttributes[num];
   this.animations = 0;
   this.hitboxes = hitboxes[num];
 }
-export function hitboxObject(id0, id1, id2, id3) {
+export function createHitboxObject(id0, id1, id2, id3) {
   this.id0 = id0;
   this.id1 = id1;
   this.id2 = id2;
   this.id3 = id3;
 }
-export function hitbox(offset, size, dmg, angle, kg, bk, sk, type, clank, hG, hA) {
+export function createHitbox(offset, size, dmg, angle, kg, bk, sk, type, clank, hG, hA) {
   this.offset = offset;
   this.size = size;
   this.dmg = dmg;
@@ -67,8 +85,13 @@ export function hitbox(offset, size, dmg, angle, kg, bk, sk, type, clank, hG, hA
   this.hitAirborne = hA;
 }
 export const hitboxes = [];
-
-export const chars = [];
+export function setHitBoxes(index,val){
+    hitboxes[index] = val;
+}
+export let chars = [];
+export function setChars(index,val){
+  chars[index] = val;
+}
 
 /*
  char id:

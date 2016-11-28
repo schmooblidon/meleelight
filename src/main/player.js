@@ -11,7 +11,7 @@ export function ActiveHitbox(size, offset, dmg, angle, kg, bk, sk, type) {
   this.sk = sk;
   this.type = type;
 }
-export function hitboxes() {
+export function createHitboxes() {
   this.active = [false, false, false, false];
   this.frame = 0;
   this.id = [new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0)];
@@ -78,7 +78,7 @@ export function physicsObject(pos, face) {
   this.thrownHitboxOwner = -1;
   this.landingMultiplier = 15;
   this.wallJumpCount = 0;
-  this.prevFrameHitboxes = new hitboxes();
+  this.prevFrameHitboxes = new createHitboxes();
   this.interPolatedHitbox = [];
   this.interPolatedHitboxPhantom = [];
   this.isInterpolated = false;
@@ -125,7 +125,7 @@ export function playerObject(character, pos, face) {
   this.showECB = false;
   this.showHitbox = false;
   this.spawnWaitTime = 0;
-  this.hitboxes = new hitboxes();
+  this.hitboxes = new createHitboxes();
   this.hit = {
     knockback: 0,
     hitlag: 0,

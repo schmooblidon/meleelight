@@ -1,9 +1,13 @@
-/* globals player, aS, cS, turnOffHitboxes, frames, randomShout, articles,
-sounds, drawVfx, Vec2D, hitQueue */
 
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
+import {Vec2D} from "../../../main/characters";
+import {drawVfx, cS, player} from "../../../main/main";
+import {sounds} from "../../../main/sfx";
+import {articles} from "../../../physics/article";
+import {randomShout, turnOffHitboxes, aS} from "../../../physics/actionStateShortcuts";
 
+import {hitQueue} from '../../../physics/hitdetection';
 export default {
   name : "THROWBACK",
   canEdgeCancel : false,

@@ -3,6 +3,7 @@ import {player, changeGamemode, setCookie, ports, bg1, fg1, clearScreen,bg2, shi
 } from "../main/main";
 import {gameSettings} from "../settings";
 import {sounds} from "../main/sfx";
+import {stickHold, stickHoldEach, increaseStick, resetStick} from "./menu";
 /* eslint-disable */
 
 export let gameplayMenuSelected = 0;
@@ -50,10 +51,10 @@ export function gameplayMenuControls (i){
     if (stickHold == 0){
       gameplayMenuSelected--;
       menuMove = true;
-      stickHold++;
+      increaseStick();
     }
     else {
-      stickHold++;
+      increaseStick();
       if (stickHold % 10 == 0){
         gameplayMenuSelected--;
         menuMove = true;
@@ -65,10 +66,10 @@ export function gameplayMenuControls (i){
     if (stickHold == 0){
       gameplayMenuSelected++;
       menuMove = true;
-      stickHold++;
+      increaseStick();
     }
     else {
-      stickHold++;
+      increaseStick();
       if (stickHold % 10 == 0){
         gameplayMenuSelected++;
         menuMove = true;
@@ -86,7 +87,7 @@ export function gameplayMenuControls (i){
         }
       }
       if (!stickHoldAll){
-        stickHold = 0;
+        resetStick();
       }
     }
   }

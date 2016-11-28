@@ -1,10 +1,10 @@
 import {Box2D, Vec2D} from "../main/characters";
-import {player,ui, changeGamemode, setCookie, layers, clearScreen} from "../main/main";
+import {player,ui, changeGamemode, setCookie, layers, clearScreen, deepCopyObject} from "../main/main";
 import {sounds} from "../main/sfx";
 import {handGrab, handOpen} from "../menus/css";
 import {twoPi} from "../main/render";
 import {startTargetGame} from "./targetplay";
-import {targetStages, customTargetStages} from "../stages/stages";
+import {targetStages, customTargetStages, setCustomTargetStages} from "../stages/stages";
 import {boxFill, drawBackground} from "../stages/stagerender";
 /* eslint-disable */
 
@@ -23,7 +23,7 @@ export let editingStage = -1;
 export let tooSmallTimer = 0;
 export let tooSmallPos = new Vec2D(0,0);
 
-export let stageTemp = {
+export var stageTemp = {
   box : [],
   platform : [],
   ground : [],
@@ -48,7 +48,6 @@ export let stageTemp = {
     ledge : []
   }
 };
-
 let grabbedItem = 0;
 let hoverItem = 0;
 let ledgeHoverItem = 0;
@@ -598,15 +597,15 @@ export function targetBuilderControls (p){
             // deep copy temp stage into custom stage array
             if (editingStage > -1){
               setCookie("custom"+editingStage,code,36500);
-              customTargetStages[editingStage] = {};
-              $.extend(true,customTargetStages[editingStage],stageTemp);
+                setCustomTargetStages(customTargetStages[editingStage],{});
+                setCustomTargetStages(customTargetStages[editingStage],deepCopyObject(true,customTargetStages[editingStage],stageTemp));
               $("#cStageInfoEdit").empty().append("Custom stage "+(editingStage+1)+" updated!");
             }
             else {
               if (customTargetStages.length < 10){
                 setCookie("custom"+customTargetStages.length,code,36500);
-                customTargetStages[customTargetStages.length] = {};
-                $.extend(true,customTargetStages[customTargetStages.length-1],stageTemp);
+                  setCustomTargetStages(customTargetStages[customTargetStages.length], {});
+                  setCustomTargetStages(customTargetStages[customTargetStages.length],deepCopyObject(true,customTargetStages[customTargetStages.length-1],stageTemp));
                 $("#cStageInfoEdit").empty().append("Saved as Custom stage "+customTargetStages.length);
               }
               else {
@@ -1080,4 +1079,19 @@ export function centerItem (item,realCrossHair){
       break;
   }
 
+}
+export function setEditingStage(val){
+    editingStage = val;
+}
+export function setShowingCode(val){
+  showingCode = val;
+}
+export function setTargetBuilder(val){
+    targetBuilder = val;
+}
+export function resetStageTemp(){
+  stageTemp = {};
+}
+export function setStageTemp(val){
+  stageTemp = val;
 }

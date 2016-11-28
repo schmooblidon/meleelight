@@ -1,8 +1,10 @@
-import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen} from "../main/main";
+import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen,
+    setCreditsPlayer
+} from "../main/main";
 import {sounds} from "../main/sfx";
 import {targetPlayer, setTargetPlayer} from "../target/targetplay";
 import {targetPointerPos, setTargetPointerPos} from "./targetselect";
-import {editingStage, targetBuilder} from "../target/targetbuilder";
+import {editingStage, targetBuilder, setEditingStage, setTargetBuilder} from "../target/targetbuilder";
 import {twoPi} from "../main/render";
 /* eslint-disable */
 
@@ -11,7 +13,7 @@ import {twoPi} from "../main/render";
 const menuText = [["VS. Melee","Target Test","Target Builder","Options"],["Audio","Gameplay","Keyboard Controls","Credits"]];
 const menuExplanation = [["Multiplayer Battles!","Smash ten targets!","Build target test stages!","Game setup."],["Select audio levels.","Change gameplay settings.","Customize keyboard controls.","Who did this?"]];
 const menuTitle = ["Main Menu","Options"];
-
+let menuColourOffset = 0;
 const menuColours = [238,358,117,55];
 let menuCurColour = 238;
 //hsl(55, 100%, 50%)
@@ -43,8 +45,8 @@ export function menuMove (i){
         changeGamemode(7);
       }
       else if (menuSelected == 2){
-        editingStage = -1;
-        targetBuilder = i;
+       setEditingStage(-1);
+        setTargetBuilder(i);
         player[i].inputs.a[1] = true;
         changeGamemode(4);
       }
@@ -71,7 +73,7 @@ export function menuMove (i){
       }
       else if (menuSelected == 3){
         //credits
-        creditsPlayer = i;
+          setCreditsPlayer(i);
         changeGamemode(13);
       }
     }
@@ -426,4 +428,10 @@ export function drawMainMenu (){
     }
   }
   ui.restore();
+}
+export function increaseStick(){
+  stickHold++;
+}
+export function resetStick(){
+  stickHold = 0;
 }

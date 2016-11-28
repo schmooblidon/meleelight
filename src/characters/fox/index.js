@@ -1,8 +1,9 @@
-/* globals aS, baseActionStates, animations */
 
 import moves from "./moves";
 import "./attributes";
 import "./ecb";
+import {baseActionStates} from "../baseActionStates";
+import {aS} from "../../physics/actionStateShortcuts";
 
 const Fox = {
   moves,

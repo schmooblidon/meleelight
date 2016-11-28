@@ -5,9 +5,14 @@ import {sounds} from "../main/sfx";
 import {turnOffHitboxes, aS} from "./actionStateShortcuts";
 /* eslint-disable */
 
-export const hitQueue = [];
-export const phantomQueue = [];
-
+export let hitQueue = [];
+export function resetHitQueue(){
+  hitQueue =[];
+}
+export let phantomQueue = [];
+export function setPhantonQueue(val){
+  phantomQueue = val;
+}
 const angleConversion = Math.PI / 180;
 
 export function hitDetection (p){

@@ -11,6 +11,7 @@ import {cpuDifficulty, cS, player, changeGamemode, playerType,bg1,ui, palettes, 
 import {Vec2D, chars} from "../main/characters";
 import {drawArrayPathCompress, twoPi} from "../main/render";
 import {sounds} from "../main/sfx";
+import {aS} from "../physics/actionStateShortcuts";
 /* eslint-disable */
 
 export const marthPic = new Image();

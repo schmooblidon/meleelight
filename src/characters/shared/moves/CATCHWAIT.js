@@ -1,5 +1,5 @@
-/* globals player, aS, cS, turnOffHitboxes, frames */
-
+import {cS, player} from "../../../main/main";
+import {aS, turnOffHitboxes} from "../../../physics/actionStateShortcuts";
 export default {
   name : "CATCHWAIT",
   canEdgeCancel : false,

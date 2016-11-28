@@ -1,6 +1,24 @@
 import {player, cS, drawVfx, screenShake, percentShake, finishGame, palettes, pPal,stage} from "../main/main";
 import {sounds} from "../main/sfx";
 import {Vec2D, actionSounds} from "../main/characters";
+import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForAerials,
+    checkForDash
+    , checkForSmashTurn
+    , checkForTiltTurn
+    , tiltTurnDashBuffer
+    , getAngle
+    , airDrift
+    , fastfall
+    , executeIntangibility
+    , playSounds
+    , shieldTilt
+    , shieldSize
+    , isFinalDeath
+    , turnOffHitboxes
+    , mashOut
+    , checkForSquat
+    , shieldDepletion
+} from "../physics/actionStateShortcuts";
 /* eslint-disable */
 
 // BASE ActionStates

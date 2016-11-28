@@ -1,4 +1,4 @@
-import {Vec2D, hitbox, Segment2D} from "../main/characters";
+import {Vec2D, createHitbox, Segment2D} from "../main/characters";
 import {player, fg2, stage, playerType, drawVfx, cS, screenShake, percentShake} from "../main/main";
 import {rotateVector} from "../main/render";
 import {sounds} from "../main/sfx";
@@ -31,7 +31,7 @@ export const articles = {
       posPrev2 : new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y),
       posPrev3 : new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y),
       posPrev : new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y),
-      hb : new hitbox(new Vec2D(0,0),1.172,3,361,0,0,0,0,0,1,1),
+      hb : new createHitbox(new Vec2D(0,0),1.172,3,361,0,0,0,0,0,1,1),
       ecb : [new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y-10),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face)+10,player[p].phys.pos.y+y),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face),player[p].phys.pos.y+y+10),new Vec2D(player[p].phys.pos.x+(x*player[p].phys.face)-10,player[p].phys.pos.y+y)]
     };
     aArticles.push(["LASER",p,obj]);
@@ -108,7 +108,7 @@ export const articles = {
       timer : 0,
       pos : new Vec2D(player[p].phys.posPrev.x,player[p].phys.posPrev.y+5),
       posPrev : new Vec2D(player[p].phys.posPrev.x,player[p].phys.posPrev.y+5),
-      hb : new hitbox(new Vec2D(0,0),4.160,7,80,60,68,0,1,1,1,1),
+      hb : new createHitbox(new Vec2D(0,0),4.160,7,80,60,68,0,1,1,1,1),
       ecb : [new Vec2D(player[p].phys.posPrev.x,player[p].phys.posPrev.y-10),new Vec2D(player[p].phys.posPrev.x+10,player[p].phys.posPrev.y),new Vec2D(player[p].phys.posPrev.x,player[p].phys.posPrev.y+10),new Vec2D(player[p].phys.posPrev.x-10,player[p].phys.posPrev.y)]
     };
     // if ground

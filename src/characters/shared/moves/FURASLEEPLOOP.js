@@ -1,3 +1,5 @@
+import {pPal, palettes, cS, player} from "../../../main/main";
+import {aS} from "../../../physics/actionStateShortcuts";
 export default {
   name : "FURASLEEPLOOP",
   canEdgeCancel : true,

@@ -1,7 +1,37 @@
 /* eslint-disable */
 import {Vec2D,Box2D} from "./characters";
-import {choosingTag} from '../menus/css';
-import {makeColour} from './vfx'
+import {choosingTag, drawCSSInit, cssControls, drawCSS} from '../menus/css';
+import {playerObject} from './player';
+import {keyMap} from '../settings';
+import {drawStartUp} from '../menus/startup';
+import {menuMove, drawMainMenuInit, drawMainMenu} from "../menus/menu";
+import {sounds} from "./sfx";
+import {drawStartScreenInit, drawStartScreen} from "../menus/startscreen";
+import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType} from "../stages/stagerender";
+import {drawSSSInit, sssControls, drawSSS} from "../menus/stageselect";
+import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "../menus/audiomenu";
+import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "../menus/gameplaymenu";
+import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "../menus/keyboardmenu";
+import {drawCreditsInit, credits, drawCredits} from "../menus/credits";
+import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "./render";
+import {vfx, dVfx, setTransparency, transparency} from "./vfx";
+import {aS} from "../physics/actionStateShortcuts";
+import {executeHits, hitDetection, hitQueue, checkPhantoms, resetHitQueue, setPhantonQueue} from "../physics/hitDetection";
+import {targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned, targetRecords, targetsDestroyed,
+    targetStagePlaying
+    , getTargetCookies
+    , giveMedals
+    , medalTimes
+} from "../target/targetplay";
+import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../menus/targetselect";
+import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "../target/targetbuilder";
+import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "../physics/article";
+import {stages} from "../stages/stages";
+import {runAI} from "./ai";
+import {physics} from "../physics/physics";
+import $ from 'jquery';
+/*globals performance*/
+
 export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
@@ -10,8 +40,9 @@ export const cS = [0,0,0,0];
 export let vfxQueue = [];
 export var shine = 0.5;
 
-let menuColourOffset = 0;
-export const creditsPlayer = 0;
+export let endTargetGame = false;
+
+export let creditsPlayer = 0;
 let gameEnd = false;
 const attemptingControllerReset = [false,false,false,false];
 const keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,222],[109,219],71,78,66,86];
@@ -103,7 +134,6 @@ export const palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206
 ["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgb(255, 112, 66)","rgba(111, 214, 168, "],
 ["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgb(191, 119, 119)","rgba(175, 172, 172, "]];
 
-export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
 
 export const hasTag = [false,false,false,false];
 export const tagText = ["","","",""];
@@ -136,7 +166,7 @@ export const edgeOrientation = [1,-1];
 
 export const respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
 
-export let stage = {
+export var stage = {
   box : [new Box2D([-68.4,-108.8],[68.4,0])],
   platform : [[new Vec2D(-57.6,27.2),new Vec2D(-20,27.2)],[new Vec2D(20,27.2),new Vec2D(57.6,27.2)],[new Vec2D(-18.8,54.4),new Vec2D(18.8,54.4)]],
   ground : [[new Vec2D(-68.4,0),new Vec2D(68.4,0)]],
@@ -154,15 +184,18 @@ export let stage = {
   offset : [600,480],
 };
 
-export let stageSelect = 0;
+export var stageSelect = 0;
 
-export function setStage (val){
+export function setStageSelect (val){
   stageSelect = val;
 }
 
 export const blastzone = new Box2D([-224,200],[224,-108.8]);
 
 export let starting = true;
+export function setStarting(val){
+    starting = val;
+}
 export let startTimer = 1.5;
 export function setStartTimer (val){
   startTimer = val;
@@ -1010,7 +1043,7 @@ export function renderVfx (otherFrame){
 export function drawVfx (name,pos,face,f){
   if (typeof(f)==='undefined') f = -1;
   var instance = {};
-  $.extend(true,instance,vfx[name]);
+  deepCopyObject(true,instance,vfx[name]);
   if (instance.name == "circleDust"){
     instance.circles[0] = Math.random()*-2;
     instance.circles[1] = (Math.random()*-stage.scale)-2;
@@ -1091,7 +1124,7 @@ export function gameTick (){
       }
     }
     executeHits();
-    hitQueue = [];
+      resetHitQueue();
     findPlayers();
   }
   else if (gameMode == 6){
@@ -1175,7 +1208,7 @@ export function gameTick (){
     //console.log(dt);
     lastUpdate = now;
 
-    hitQueue = [];
+      resetHitQueue();
     stage.movingPlatforms();
     destroyArticles();
     executeArticles();
@@ -1402,11 +1435,7 @@ export function buildPlayerObject (i){
   player[i].difficulty = cpuDifficulty[i];
 }
 
-for (var i=0;i<4;i++){
-  buildPlayerObject(i);
-  player[i].phys.face = 1;
-  player[i].actionState = "WAIT";
-}
+
 
 export function initializePlayers (i,target){
   buildPlayerObject(i);
@@ -1464,9 +1493,9 @@ export function startGame (){
 
 export function endGame (){
   gameEnd = false;
-  lostStockQueue = [];
-  phantomQueue = [];
-  aArticles = [];
+  resetLostStockQueue();
+    setPhantonQueue([]);
+    resetAArticles();
   music.battlefield.stop();
   music.yStory.stop();
   music.pStadium.stop();
@@ -1507,7 +1536,7 @@ export function endGame (){
 }
 
 export function finishGame (){
-  endTargetGame = false;
+    setEndTargetGame(false);
   gameEnd = true;
   playing = false;
   fg2.save();
@@ -1597,12 +1626,17 @@ export function finishGame (){
 }
 
 export function start (){
-  getKeyboardCookie();
-  getTargetCookies();
-  giveMedals();
-  getTargetStageCookies();
-  getAudioCookies();
-  getGameplayCookies();
+    for (var i=0;i<4;i++){
+        buildPlayerObject(i);
+        player[i].phys.face = 1;
+        player[i].actionState = "WAIT";
+    }
+    getKeyboardCookie();
+    getTargetCookies();
+    giveMedals();
+    getTargetStageCookies();
+    getAudioCookies();
+    getGameplayCookies();
   $("#keyboardButton").click(function(){
     $("#keyboardControlsImg").toggle();
   });
@@ -1651,7 +1685,7 @@ export function start (){
     else {
       $("#alphaButtonEdit").empty().append("ON");
     }
-    transparency ^= true;
+      setTransparency(!transparency);
   });
 
   $("#layerButton").hover(function(){
@@ -1762,7 +1796,7 @@ export function start (){
   });
   resize();
 }
-
+window.start = start;
 export function resetVfxQueue  (){
     vfxQueue =[];
 }
@@ -1778,4 +1812,22 @@ export function addShine (val){
 }
 export function setShine (val){
     shine = val;
+}
+export function setFindingPlayers(val){
+  findingPlayers = val;
+}
+export function setPlaying(val){
+  playing = val;
+}
+export function setEndTargetGame(val){
+    endTargetGame = val;
+}
+export function setCreditsPlayer(val){
+  creditsPlayer =val;
+}
+export function deepCopyObject(deep,target,...object){
+  return $.extend(deep,target,...object)
+}
+export function setStage(val){
+  stage = val;
 }

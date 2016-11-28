@@ -1,3 +1,12 @@
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat, checkForSmashes,
+    checkForTilts
+    , checkForJump
+    , reduceByTraction
+    , playSounds
+    , aS
+} from "../../../physics/actionStateShortcuts";
+import {cS, player} from "../../../main/main";
+import {sounds} from "../../../main/sfx";
 export default {
   name : "GUARDOFF",
   canEdgeCancel : true,

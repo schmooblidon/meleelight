@@ -9,7 +9,7 @@ import {aS, turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, 
     , randomShout
 } from "../../physics/actionStateShortcuts";
 import {baseActionStates} from "../baseActionStates";
-import {player, drawVfx, palettes, pPal, cS, stage} from "../../main/main";
+import {player, drawVfx, palettes, pPal, cS, stage, deepCopyObject} from "../../main/main";
 import {Vec2D} from "../../main/characters";
 import {sounds} from "../../main/sfx";
 /* eslint-disable */
@@ -20,7 +20,7 @@ aS[0]={};
 var keys = Object.keys(baseActionStates);
 for (var i=0;i<keys.length;i++){
   aS[0][keys[i]] = {};
-  $.extend(true,aS[0][keys[i]],baseActionStates[keys[i]]);
+    deepCopyObject(true,aS[0][keys[i]],baseActionStates[keys[i]]);
 }
 // set pointer for readibility
 var marth = aS[0];
@@ -42,8 +42,8 @@ marth.JAB1 = {
     player[p].actionState = "JAB1";
     player[p].timer = 0;
     player[p].phys.jabCombo = false;
-    turnOffHitboxes(p);;
-    player[p].hitboxes.id[0] = player[p].charHitboxes.jab1.id0;
+      turnOffHitboxes(p);
+      player[p].hitboxes.id[0] = player[p].charHitboxes.jab1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.jab1.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.jab1.id2;
     player[p].hitboxes.id[3] = player[p].charHitboxes.jab1.id3;
@@ -52,13 +52,13 @@ marth.JAB1 = {
   main : function(p){
     player[p].timer++;
     if (!marth.JAB1.interrupt(p)){
-      reduceByTraction(p,true);;
+      reduceByTraction(p,true);
       if (player[p].timer > 3 && player[p].timer < 15){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
           pNum:p,
           swingType:"JAB1",
           frame:player[p].timer-4
-        });;
+        });
       }
       if (player[p].timer > 2 && player[p].timer < 26 && player[p].inputs.a[0] && !player[p].inputs.a[1]){
         player[p].phys.jabCombo = true;
@@ -86,11 +86,11 @@ marth.JAB1 = {
       return true;
     }
     else if (player[p].timer > 26){
-      var b = checkForSpecials(p);;
-      var t = checkForTilts(p);;
-      var s = checkForSmashes(p);;
-      var j = checkForJump(p);;
-      if (j[0]){
+      var b = checkForSpecials(p);
+      var t = checkForTilts(p);
+        var s = checkForSmashes(p);
+        var j = checkForJump(p);
+        if (j[0]){
         marth.KNEEBEND.init(p,j[1]);
         return true;
       }
@@ -115,8 +115,8 @@ marth.JAB1 = {
         return true;
       }
       else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);;
-        marth.TILTTURN.init(p);
+          player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
+          marth.TILTTURN.init(p);
         return true;
       }
       else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
@@ -125,7 +125,7 @@ marth.JAB1 = {
       }
       else {
         return false;
-      };;;
+      }
     }
     else {
       return false;
@@ -495,9 +495,9 @@ marth.ATTACKAIRF = {
   main : function(p){
     player[p].timer++;
     if (!marth.ATTACKAIRF.interrupt(p)){
-      fastfall(p);;
-      airDrift(p);;
-      if (player[p].timer > 2 && player[p].timer < 11){
+        fastfall(p);
+        airDrift(p);
+        if (player[p].timer > 2 && player[p].timer < 11){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
           pNum:p,
           swingType:"FAIR",
@@ -526,8 +526,8 @@ marth.ATTACKAIRF = {
       return true;
     }
     else if (player[p].timer > 29){
-      var a = checkForAerials(p);;
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && !player[p].phys.doubleJumped){
+        var a = checkForAerials(p);
+        if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && !player[p].phys.doubleJumped){
         if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
           marth.JUMPAERIALB.init(p);
         }

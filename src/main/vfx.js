@@ -2,8 +2,8 @@
 import {stage, vfxQueue, player, drawVfx, startTimer,fg2} from "./main";
 import {drawArrayPath, drawArrayPathNew} from "./render";
 import {Vec2D} from "./characters";
-import * as sounds from "jquery";
 import {swordSwings} from "./swordSwings";
+import {sounds} from "./sfx";
 const twoPi = Math.PI * 2;
 
 export const vfx = {
@@ -201,7 +201,11 @@ vfx.ceilingBounce.path = vfx.groundBounce.path;
 vfx.ceilingBounce.colour = vfx.groundBounce.colour;
 vfx.ceilingBounce.frames = vfx.groundBounce.frames;
 
-export const transparency = true;
+export let transparency = true;
+
+export function setTransparency(val){
+  transparency = val;
+}
 
 export const dVfx = {
   general : function(j,ang){

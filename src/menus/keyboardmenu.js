@@ -10,6 +10,7 @@ import {keyMap} from "../settings";
 import {sounds} from "../main/sfx";
 import {keyText} from "./keytest";
 import {twoPi} from "../main/render";
+import {stickHold, stickHoldEach, increaseStick, resetStick} from "./menu";
 /* eslint-disable */
 
 export let keymapItems = {
@@ -293,10 +294,10 @@ export function keyboardMenuControls (i){
       if (stickHold == 0){
         moveD = "u";
         menuMove = true;
-        stickHold++;
+        increaseStick();
       }
       else {
-        stickHold++;
+        increaseStick();
         if (stickHold % menuScrollSpeed == 0){
           moveD = "u";
           menuMove = true;
@@ -308,10 +309,10 @@ export function keyboardMenuControls (i){
       if (stickHold == 0){
         moveD = "d";
         menuMove = true;
-        stickHold++;
+        increaseStick();
       }
       else {
-        stickHold++;
+        increaseStick();
         if (stickHold % menuScrollSpeed == 0){
           moveD = "d";
           menuMove = true;
@@ -323,10 +324,10 @@ export function keyboardMenuControls (i){
       if (stickHold == 0){
         moveD = "r";
         menuMove = true;
-        stickHold++;
+        increaseStick();
       }
       else {
-        stickHold++;
+        increaseStick();
         if (stickHold % menuScrollSpeed == 0){
           moveD = "r";
           menuMove = true;
@@ -338,10 +339,10 @@ export function keyboardMenuControls (i){
       if (stickHold == 0){
         menuMove = true;
         moveD = "l";
-        stickHold++;
+        increaseStick();
       }
       else {
-        stickHold++;
+        increaseStick();
         if (stickHold % menuScrollSpeed == 0){
           moveD = "l";
           menuMove = true;
@@ -359,7 +360,7 @@ export function keyboardMenuControls (i){
           }
         }
         if (!stickHoldAll){
-          stickHold = 0;
+          resetStick();
         }
       }
     }

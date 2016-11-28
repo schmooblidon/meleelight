@@ -6,12 +6,19 @@ import {player, changeGamemode, vfxQueue, initializePlayers, matchTimer, startTi
     , setMatchTimer
     , addMatchTimer
     , setStartTimer
+    , setStarting
+    , setFindingPlayers
+    , setPlaying
+
+    , setEndTargetGame
+    , setStage
 } from "../main/main";
 import {renderPlayer} from "../main/render";
 import {sounds} from "../main/sfx";
-import {stageTemp} from "./targetbuilder";
+import {stageTemp, setStageTemp} from "./targetbuilder";
 import {backgroundType, setBackgroundType} from "../stages/stagerender";
-import {aArticles, articles, resetAArticles} from "../physics/article";
+import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision} from "../physics/article";
+import {interpolatedHitCircleCollision} from "../physics/hitDetection";
 /* eslint-disable */
 
 export let targetTesting = false;
@@ -19,7 +26,6 @@ export let targetPlayer = 0;
 export let targetStagePlaying = 0;
 export let targetDestroyed = [false,false,false,false,false,false,false,false,false,false];
 export let targetsDestroyed = 0;
-export let endTargetGame = false;
 
 export let targetRecords = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]];
 export let devRecords = [[14.22,10.42,14.38,12.20,12.68,9.15,11.00,11.63,18.40,11.35],[15.80,13.93,22.45,14.85,14.40,10.22,14.68,14.55,22.70,12.80],[10.65,9.98,12.10,7.37,7.25,9.47,9.50,8.33,14.18,8.83]];
@@ -120,9 +126,9 @@ export function giveMedals (){
 }
 
 export function startTargetGame (p,test){
-  endTargetGame = false;
+    setEndTargetGame(false);
   if (test){
-    stage = stageTemp;
+      setStage(stageTemp);
   }
   targetTesting = test;
     setBackgroundType(Math.round(Math.random()));
@@ -137,10 +143,10 @@ export function startTargetGame (p,test){
   player[p].phys.pos = new Vec2D(stage.startingPoint.x,stage.startingPoint.y);
   setMatchTimer(0);
     setStartTimer(1.5);
-  starting = true;
+    setStarting(true);
   drawVfx("start",new Vec2D(0,0));
-  findingPlayers = false;
-  playing = true;
+    setFindingPlayers(false);
+    setPlaying(true);
 
   player[p].inCSS = false;
   player[p].stocks = 1;
@@ -152,7 +158,7 @@ export function destroyTarget (i){
   drawVfx("targetDestroy",stage.target[i]);
   sounds.targetBreak.play();
   if (targetsDestroyed == stage.target.length){
-    endTargetGame = true;
+      setEndTargetGame(true);
   }
 }
 

@@ -1,3 +1,6 @@
+import {sounds, sounds} from "../../../main/sfx";
+import {executeIntangibility, playSounds, aS} from "../../../physics/actionStateShortcuts";
+import {cS, player} from "../../../main/main";
 export default {
   name : "ESCAPEB",
   setVelocities : [],

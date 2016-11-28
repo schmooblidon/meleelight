@@ -1,4 +1,4 @@
-import {player,ui,fg1,bg2, changeGamemode} from "../main/main";
+import {player,ui,fg1,bg2, changeGamemode,fg2} from "../main/main";
 import {Vec2D} from "../main/characters";
 import {sounds} from "../main/sfx";
 /* eslint-disable */

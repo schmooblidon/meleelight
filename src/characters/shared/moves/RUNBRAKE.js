@@ -1,3 +1,6 @@
+import {checkForSquat, checkForJump, reduceByTraction, aS} from "../../../physics/actionStateShortcuts";
+import {cS, player} from "../../../main/main";
+import {sounds} from "../../../main/sfx";
 export default {
   name : "RUNBRAKE",
   canEdgeCancel : true,

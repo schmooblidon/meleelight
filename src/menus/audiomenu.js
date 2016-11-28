@@ -5,6 +5,7 @@ import {player, setCookie, changeGamemode, ports, bg1, bg1 as fg1, layers, fg2 a
 } from "../main/main";
 import {sounds} from "../main/sfx";
 import {twoPi} from "../main/render";
+import {stickHoldEach, stickHold, increaseStick, resetStick} from "./menu";
 /* eslint-disable */
 
 // sounds, music
@@ -27,10 +28,10 @@ export function audioMenuControls (i){
     if (stickHold == 0){
       audioMenuSelected--;
       menuMove = true;
-      stickHold++;
+      increaseStick();
     }
     else {
-      stickHold++;
+      increaseStick();
       if (stickHold % 10 == 0){
         audioMenuSelected--;
         menuMove = true;
@@ -42,10 +43,10 @@ export function audioMenuControls (i){
     if (stickHold == 0){
       audioMenuSelected++;
       menuMove = true;
-      stickHold++;
+      increaseStick();
     }
     else {
-      stickHold++;
+      increaseStick();
       if (stickHold % 10 == 0){
         audioMenuSelected++;
         menuMove = true;
@@ -56,10 +57,10 @@ export function audioMenuControls (i){
     stickHoldEach[i] = true;
     if (stickHold == 0){
       audioLevelMoveUp = true;
-      stickHold++;
+      increaseStick();
     }
     else {
-      stickHold++;
+      increaseStick();
       if (stickHold % 10 == 0){
         audioLevelMoveUp = true;
       }
@@ -69,10 +70,10 @@ export function audioMenuControls (i){
     stickHoldEach[i] = true;
     if (stickHold == 0){
       audioLevelMoveDown = true;
-      stickHold++;
+      increaseStick();
     }
     else {
-      stickHold++;
+      increaseStick();
       if (stickHold % 10 == 0){
         audioLevelMoveDown = true;
       }
@@ -89,7 +90,7 @@ export function audioMenuControls (i){
         }
       }
       if (!stickHoldAll){
-        stickHold = 0;
+          resetStick()
       }
     }
   }

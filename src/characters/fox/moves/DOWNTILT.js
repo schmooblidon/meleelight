@@ -1,6 +1,3 @@
-/* globals player, turnOffHitboxes, reduceByTraction, sounds, checkForJump,
-checkForTilts, checkForDash, checkForSmashes, checkForSpecials,
-checkForSmashTurn, tiltTurnDashBuffer */
 
 import MOVES from "./index";
 import DASH from "characters/shared/moves/DASH";
@@ -9,6 +6,12 @@ import TILTTURN from "characters/shared/moves/TILTTURN";
 import WALK from "characters/shared/moves/WALK";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
 import SQUATWAIT from "characters/shared/moves/SQUATWAIT";
+import {player} from "../../../main/main";
+import {turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForDash,
+    checkForSmashTurn
+    , tiltTurnDashBuffer
+} from "../../../physics/actionStateShortcuts";
+import {sounds} from "../../../main/sfx";
 
 export default {
   name : "DOWNTILT",

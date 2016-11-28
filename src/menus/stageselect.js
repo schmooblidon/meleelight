@@ -1,6 +1,7 @@
 import {sounds} from "../main/sfx";
-import {player, changeGamemode, stageSelect, bg1,fg1,bg2,ui, clearScreen, shine, startGame, layers, setShine, addShine,
+import {player, changeGamemode, bg1,fg1,bg2,ui, clearScreen, shine, startGame, layers, setShine, addShine,
     setStage
+    , setStageSelect
 } from "../main/main";
 import {twoPi} from "../main/render";
 /* eslint-disable */
@@ -48,7 +49,7 @@ export function sssControls (i){
     if (stageSelected == 4){
       stageSelected = Math.floor(Math.random()*3.99);
     }
-    setStage(stageSelected);
+      setStageSelect(stageSelected);
     /*switch (stageSelected){
       case 0:
         stageSelect = "bf";
