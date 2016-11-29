@@ -1927,8 +1927,14 @@ puff.UPSPECIAL = {
   main : function(p){
     player[p].timer++;
     if (!puff.UPSPECIAL.interrupt(p)){
-      if (player[p].timer == 23 || player[p].timer == 71 || player[p].timer == 122){
+      if (player[p].timer == 23) {
         drawVfx("sing",new Vec2D(0,0),p);
+      }
+      else if (player[p].timer == 71) {
+        drawVfx("sing2",new Vec2D(0,0),p);
+      }
+      else if (player[p].timer == 122) {
+        drawVfx("sing3",new Vec2D(0,0),p);
       }
       if (player[p].phys.grounded){
         reduceByTraction(p);

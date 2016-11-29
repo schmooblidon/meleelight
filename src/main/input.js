@@ -48,14 +48,14 @@ const raphnetV3_2Map = [0, 1, 7, 8, 2, 5, 4, 3, 10, 13, 11, 12, 0, 1, 3, 4, 5, 2
 
 export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map];
 
-const customDeadzone = function() {
+const customCenters = function() {
   this.ls = new Vec2D(0, 0);
   this.cs = new Vec2D(0, 0);
   this.l = 0;
   this.r = 0;
 };
 
-export const cd = [new customDeadzone, new customDeadzone, new customDeadzone, new customDeadzone];
+export const custcent = [new customCenters, new customCenters, new customCenters, new customCenters];
 
 
 //--CONTROLLER IDs-------------------------------------
@@ -172,8 +172,8 @@ export function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x,
   } else // quadrant 4
   {
     let invMat = inverseMatrix([
-      [dx, -rx],
-      [dy, -ry]
+      [rx, -dx],
+      [ry, -dy]
     ]);
     return multMatVect(invMat, [x, y]);
   }
