@@ -200,6 +200,14 @@ window.vfx = {
       [27.18,28.27,34.18,38.64,19.64,43.36],
       [5.09,48.09,3.91,27.55,25.91,27.82],
       [25.91,27.82,26.00,4.64,26.00,4.64]]
+  },
+  sing2 : {
+    name : "sing2",
+    frames : 31 // reuses path from sing
+  },
+  sing3 : {
+    name : "sing3",
+    frames : 31 // reuses path from sing
   }
 };
 
@@ -1060,25 +1068,44 @@ window.dVfx = {
         .offset[0], (vfxQueue[j][2].y * -stage.scale) + stage.offset[1], vfx.illusion.path, 0.35 * (stage.scale /
           4.5), 0.35 * (stage.scale / 4.5), 0, 0, 0);
     }
-  },
+  },   
   sing : function(j){
+    singGen(j, 2, 6, 0, 4.5,0.5); // see singGen function for meaning of parameters
+  },
+  sing2 : function(j){
+    singGen(j, 3, 8, 3.5, -5,1.3);
+  },
+  sing3 : function(j){
+    singGen(j, 5, 10, 7.1, 0.2,0);
+  }
+};
+
+// singGen produces sing vfx according to different parameters
+// rMin: initial note radius
+// rMax: final note radius
+// notePhase: angle offset for notes
+// posScale: modifier to account for how much the sing vfx should move left to right to follow the animation
+// posPhase : phase offset for the sing vfx left/right movement
+function singGen (j, rMin, rMax, notePhase, posScale, posPhase){
     fg2.save();
     var p = vfxQueue[j][3];
-    var pos = new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+8);
-    fg2.translate((pos.x * stage.scale) + stage.offset[0], (pos.y * -stage.scale) + stage.offset[1]);
-    // total 31
+     // total 31
     // fade out on 26
     // 5 frames of fade in, full opacity on frame 6
     var frame = vfxQueue[j][1];
+    var pos = new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+8);
+    let lrScaling = posScale * player[p].phys.face;
+    fg2.translate((pos.x * stage.scale) + stage.offset[0] + lrScaling*Math.cos(frame/6.5+posPhase), (pos.y * -stage.scale) + stage.offset[1] - 2.5*Math.sin(frame/8));
+    // cos/sin functions account for the character animation moving the sing vfx
+    const opaqMultiplier = 0.8;
+    var opaq = 1*opaqMultiplier;  //opacity
     if (frame < 6) {
-      fg2.strokeStyle = "rgba(244, 212, 45,"+(frame/6)+")";
+      opaq = opaqMultiplier*frame/6;
     }
     else if (frame > 25) {
-      fg2.strokeStyle = "rgba(244, 212, 45,"+(1-((frame-25)/6))+")";
+      opaq = opaqMultiplier*(1-((frame-25)/6));
     }
-    else {
-      fg2.strokeStyle = "rgb(244, 212, 45)";
-    }
+    fg2.strokeStyle = "rgba(244, 212, 45,"+opaq+")";
     fg2.lineWidth = 3;
     for (var i=0;i<5;i++){
       fg2.beginPath();
@@ -1086,17 +1113,18 @@ window.dVfx = {
       fg2.closePath();
       fg2.stroke();
     }
-    var angles = [0+frame*0.1,2*Math.PI/3+frame*0.1,4*Math.PI/3+frame*0.1];
-    var col = ["rgb(255,0,0)","rgb(0,255,0)","rgb(0,0,255)"];
-    var r = frame/3;
+    var angles = [notePhase+frame*0.1,notePhase+2*Math.PI/3+frame*0.1,notePhase+4*Math.PI/3+frame*0.1];
+    var r = rMax; // distance of notes from center
+    if (frame < 15) {
+      r = rMin + frame*(rMax-rMin)/15;
+    }
+    var col = ["rgba(175,39,17,"+opaq+")","rgba(116,164,16,"+opaq+")","rgba(17,75,112,"+opaq+")"];
     for (var i=0;i<3;i++){
       drawArrayPathNew(fg2, col[i], 1, ((r*Math.cos(angles[i])-3) * stage.scale),((r*Math.sin(angles[i])+3)*-stage.scale), vfx.sing.path, 0.7 * (stage.scale /
           4.5), 0.7 * (stage.scale / 4.5), 0, 0, 0);
-    }
-
+    }    
     fg2.restore();
-  }
-};
+  };
 
 window.drawHexagon = function(r, tX, tY, width) {
   fg2.save();
