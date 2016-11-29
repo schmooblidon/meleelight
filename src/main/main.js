@@ -17,11 +17,9 @@ import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from
 import {vfx, dVfx, setTransparency, transparency} from "main/vfx";
 import {aS} from "physics/actionStateShortcuts";
 import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
-import {targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned, targetRecords, targetsDestroyed,
-    targetStagePlaying
-    , getTargetCookies
-    , giveMedals
-    , medalTimes
+import {
+  targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned,
+  targetRecords, targetsDestroyed, targetStagePlaying , getTargetCookies , giveMedals, medalTimes
 } from "target/targetplay";
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "menus/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
@@ -30,9 +28,7 @@ import {stages} from "stages/stages";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, button, controllerMaps, scaleToGCAxis,
-    scaleToGCTrigger
-} from "main/input";
+import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, button, controllerMaps, scaleToGCAxis, scaleToGCTrigger, custcent} from "main/input";
 /*globals performance*/
 
 export const player = [0,0,0,0];

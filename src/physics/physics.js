@@ -1,4 +1,4 @@
-import {player, cS, drawVfx, percentShake, stage, playerType, edgeOffset, versusMode, showDebug, deepCopyObject} from "main/main";
+import {player, cS, drawVfx, percentShake, stage, playerType, edgeOffset, versusMode, showDebug, deepCopyObject, gameMode} from "main/main";
 import {Vec2D, Box2D} from "main/characters";
 import {sounds} from "main/sfx";
 import {gameSettings} from "settings";
