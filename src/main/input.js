@@ -171,8 +171,8 @@ export function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x,
   } else // quadrant 4
   {
     let invMat = inverseMatrix([
-      [dx, -rx],
-      [dy, -ry]
+      [rx, -dx],
+      [ry, -dy]
     ]);
     return multMatVect(invMat, [x, y]);
   }
