@@ -194,7 +194,9 @@ window.articleTargetCollision = function(a,t,previous){
 }
 
 window.targetTimerTick = function(){
-  matchTimer += 0.016667;
+  if (matchTimer + 0.016667 < 6000) {
+    matchTimer += 0.016667;
+  }
   $("#matchMinutes").empty().append(Math.floor(matchTimer/60));
   var sec = (matchTimer % 60).toFixed(2);
   $("#matchSeconds").empty().append(((sec.length<5)?"0"+sec:sec));
