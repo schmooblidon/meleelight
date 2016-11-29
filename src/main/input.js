@@ -37,14 +37,15 @@ export const keyboardMap = [
   [109, 219], 71, 78, 66, 86
 ];
 
-const mayflashMap  = [1, 2, 0, 3, 7, 5, 4, 9, 12, 13, 14, 15, 0, 1, 5, 2, 3, 4]; // ID 0, Mayflash Wii U 4-way adapter
-const vJoyMap      = [0, 1, 2, 3, 4, 5, 6, 7, 8 , 11, 9 , 10, 0, 1, 3, 4, 2, 5]; // ID 1, vJoy
-const raphnetMap   = [4, 3, 2, 1, 7, 6, 5, 0, 8 , 10, 9 , 11, 0, 1, 3, 4, 5, 6]; // ID 2, raphnet N64 adapter
-const xbox360Map   = [0, 2, 1, 3, 5, 7, 6, 9, 12, 15, 13, 14, 0, 1, 2, 3, 6, 7]; // ID 3, XBOX 360 (XInput Standard Gamepad)
-const tigergameMap = [0, 1, 2, 3, 6, 5, 4, 7, 11, 9 , 10, 8 , 0, 1, 2, 3, 5, 4]; // ID 4, TigerGame 3-in-1 adapter
-const retrolinkMap = [2, 3, 1, 0, 6, 5, 4, 9, 10, 11, 8 , 7 , 0, 1, 2, 5, 3, 4]; // ID 5, Retrolink controller
+const mayflashMap   = [1, 2, 0, 3, 7, 5, 4, 9, 12, 13, 14, 15, 0, 1, 5, 2, 3, 4]; // ID 0, Mayflash Wii U 4-way adapter
+const vJoyMap       = [0, 1, 2, 3, 4, 5, 6, 7, 8 , 11, 9 , 10, 0, 1, 3, 4, 2, 5]; // ID 1, vJoy
+const raphnetV2_9Map    = [4, 3, 2, 1, 7, 6, 5, 0, 8 , 10, 9 , 11, 0, 1, 3, 4, 5, 6]; // ID 2, raphnet v.2.9 N64 adapter
+const xbox360Map    = [0, 2, 1, 3, 5, 7, 6, 9, 12, 15, 13, 14, 0, 1, 2, 3, 6, 7]; // ID 3, XBOX 360 (XInput Standard Gamepad)
+const tigergameMap  = [0, 1, 2, 3, 6, 5, 4, 7, 11, 9 , 10, 8 , 0, 1, 2, 3, 5, 4]; // ID 4, TigerGame 3-in-1 adapter
+const retrolinkMap  = [2, 3, 1, 0, 6, 5, 4, 9, 10, 11, 8 , 7 , 0, 1, 2, 5, 3, 4]; // ID 5, Retrolink controller
+const raphnetV3_2Map = [0, 1, 7, 8, 2, 5, 4, 3, 10, 13, 11, 12, 0, 1, 3, 4, 5, 2]; // ID 6, Raphnet v 3.2,3.3
 
-export const controllerMaps = [mayflashMap, vJoyMap, raphnetMap, xbox360Map, tigergameMap, retrolinkMap];
+export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map];
 
 const customDeadzone = function() {
   this.ls = new Vec2D(0, 0);
@@ -61,13 +62,15 @@ export function controllerNameFromIDnumber(number) {
   } else if (number == 1) {
     return "vJoy";
   } else if (number == 2) {
-    return "raphnet N64 adapter";
+    return "raphnet v2.9 N64 adapter";
   } else if (number == 3) {
     return "XBOX 360 compatible controller";
   } else if (number == 4) {
     return "TigerGame 3-in-1";
   } else if (number == 5) {
     return "Retrolink controller";
+  } else if (number == 6) {
+    return "raphnet v3.2+ N64 adapter";
   } else {
     return "error: controller detected but not supported";
   }
@@ -98,10 +101,10 @@ export function controllerIDNumberFromGamepadID(gamepadID) {
   } // vJoy
     // text ID Firefox: 1234-bead-vJoy - Virtual Joystick
     // text ID Chrome: vJoy - Virtual Joystick (Vendor: 1234 Product: bead)
-  else if (gamepadID.substring(0, 2) == "GC" ||
+  else if (gamepadID.substring(0, 17) == "GC/N64 to USB, v2." ||
            gamepadID.substring(0, 9) == "289b-000c") {
     return 2;
-  } // raphnet N64 adapter
+  } // raphnet N64 adapter V2.9
     // text ID: GC/N64 to USB, v2.9 (Vendor: 289b Product: 000c)
   else if (gamepadID[0] == "X" ||
            gamepadID[0] == "x" ||
@@ -120,7 +123,12 @@ export function controllerIDNumberFromGamepadID(gamepadID) {
            gamepadID.substring(0, 9) == "0079-0006") {
     return 5; // Retrolink adapter
   }           // text ID: Generic USB Joystick (Vendor: 0079 Product: 0006)
-
+  else if (gamepadID.substring(0, 17) == "GC/N64 to USB, v3." ||
+           gamepadID.substring(0, 9) == "289b-001d") {
+    return 6;
+  } // raphnet N64 adapter V3.2+
+    // text ID: GC/N64 to USB v3.2 (Vendor: 289b Product: 001d)
+    // text ID: GC/N64 to USB v3.3 (Vendor: 289b Product: 001d)
   else {
     return -1;
   }
