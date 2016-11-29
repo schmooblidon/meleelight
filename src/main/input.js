@@ -124,7 +124,7 @@ export function controllerIDNumberFromGamepadID(gamepadID) {
            gamepadID.substring(0, 9) == "0079-0006") {
     return 5; // Retrolink adapter
   }           // text ID: Generic USB Joystick (Vendor: 0079 Product: 0006)
-  else if (gamepadID.substring(0, 18) == "GC/N64 to USB, v3." ||
+  else if (gamepadID.substring(0, 17) == "GC/N64 to USB v3." ||
            gamepadID.substring(0, 9) == "289b-001d") {
     return 6;
   } // raphnet N64 adapter V3.2+
