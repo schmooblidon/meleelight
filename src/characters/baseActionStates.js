@@ -3410,10 +3410,9 @@ export const baseActionStates = {
     if (!aS[cS[p]].CAPTUREWAIT.interrupt(p)){
       player[p].phys.stuckTimer--;
       if (mashOut(p)){
-        player[p].phys.stuckTimer -= 3;
+        player[p].phys.stuckTimer -= 6;
         player[p].phys.pos.x += 0.5*Math.sign(Math.random()-0.5);
-      }
-      else {
+      } else {
         player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-9.04298*player[p].phys.face);
       }
     }
