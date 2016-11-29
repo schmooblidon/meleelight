@@ -1086,7 +1086,7 @@ window.dVfx = {
 // notePhase: angle offset for notes
 // posScale: modifier to account for how much the sing vfx should move left to right to follow the animation
 // posPhase : phase offset for the sing vfx left/right movement
-export function singGen (j, rMin, rMax, notePhase, posScale, posPhase){
+function singGen (j, rMin, rMax, notePhase, posScale, posPhase){
     fg2.save();
     var p = vfxQueue[j][3];
      // total 31
