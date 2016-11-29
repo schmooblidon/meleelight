@@ -1508,6 +1508,7 @@ export function start (){
         player[i].phys.face = 1;
         player[i].actionState = "WAIT";
     }
+    cacheDom();
     getKeyboardCookie();
     getTargetCookies();
     giveMedals();
