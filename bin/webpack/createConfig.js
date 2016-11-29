@@ -3,6 +3,7 @@ function createConfig(options) {
   const webpack = require("webpack");
   const WebpackNotifierPlugin = require("webpack-notifier");
 
+  var SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
   const { isMinified } = options;
 
   const srcDir = path.join(process.cwd(), "src");
@@ -49,6 +50,20 @@ function createConfig(options) {
           "NODE_ENV": '"dev"'
         }
       })
+    );
+
+    plugins.push(
+        new SWPrecacheWebpackPlugin(
+            {
+              cacheId: 'meleelight',
+              filename: 'service-worker.js',
+              maximumFileSizeToCacheInBytes: 4194304,
+              runtimeCaching: [{
+                handler: 'cacheFirst',
+                urlPattern: /.*/,
+              }],
+            }
+        )
     );
   }
 
