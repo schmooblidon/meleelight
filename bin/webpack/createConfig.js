@@ -2,6 +2,7 @@ function createConfig(options) {
   const path = require("path");
   const webpack = require("webpack");
   const WebpackNotifierPlugin = require("webpack-notifier");
+  var HappyPack = require('happypack');
 
   var SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
   const { isMinified } = options;
@@ -65,6 +66,14 @@ function createConfig(options) {
             }
         )
     );
+    plugins.push(
+        new HappyPack({
+          // loaders is the only required parameter:
+          loaders: [ 'babel?presets[]=es2015' ],
+          threads:8
+
+        })
+    );
   }
 
   /// MODULES (LOADERS) ///
@@ -85,7 +94,7 @@ function createConfig(options) {
       exclude: [
         /node_modules/,
       ],
-      loader: "babel",
+      loader: "happypack/loader",
     }],
   };
 
