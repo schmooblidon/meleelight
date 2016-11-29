@@ -829,7 +829,7 @@ window.physics = function(i) {
     player[i].phys.ECB1 = [new Vec2D(0+x,4+y),new Vec2D(3+x,9+y),new Vec2D(0+x,14+y),new Vec2D(-3+x,9+y)];
   }*/
 
-  if (player[i].phys.posPrev.y > -80 && player[i].phys.pos.y <= -80) {
+  if (gameMode == 3 && player[i].phys.posPrev.y > -80 && player[i].phys.pos.y <= -80) {
     sounds.lowdown.play();
   }
   player[i].phys.isInterpolated = false;
