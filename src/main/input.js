@@ -130,16 +130,21 @@ export function controllerNameFromIDnumber(number) {
   }
 };
 
+
+function fromCardinals([origx, origy], l, r, d,u) {
+    return [[origx, origy], [l,origy], [r,origy], [origx,d], [origx, u]];
+};
+
 // the following function gives an approximation to the extreme raw axis data for a given controller
 // of course, this varies between controllers, but this serves as a useful first approximation
 // function output: [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]]
 function axisDataFromIDNumber(number) {
   if (number == 4) { // TigerGame 3-in-1
     let orig = 0.05098;
-    return [[orig, -orig], [-0.7098, -orig], [0.85098, -orig], [orig, 0.73333], [orig, -0.8588]];
-    }
+    return ( fromCardinals ( [orig, -orig], -0.7098, 0.85098, 0.73333, -0.8588) );
+  }
   else {
-    return [[0,0],[-0.75,0],[0.75,0],[0,0.75],[0,-0.75]]; // default
+    return ( fromCardinals ( [0, 0], -0.75, 0.75, 0.75, -0.75) ); // default
   }
 };
 
