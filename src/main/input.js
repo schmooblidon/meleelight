@@ -130,6 +130,22 @@ export function controllerNameFromIDnumber(number) {
   }
 };
 
+<<<<<<< HEAD
+=======
+// the following function gives an approximation to the extreme raw axis data for a given controller
+// of course, this varies between controllers, but this serves as a useful first approximation
+// function output: [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]]
+function axisDataFromIDNumber(number) {
+  if (number == 4) { // TigerGame 3-in-1
+    let orig = 0.05098;
+    return [[orig, -orig], [-0.7098, -orig], [0.85098, -orig], [orig, 0.73333], [orig, -0.8588]];
+    }
+  else {
+    return [[0,0],[-0.75,0],[0.75,0],[0,0.75],[0,-0.75]]; // default
+  }
+};
+
+>>>>>>> changed function return type for readability
 export function controllerIDNumberFromGamepadID(gamepadID) {
   var output = -1;
   for (var [possibleID, val] of controllerIDMap.entries()) {
@@ -226,18 +242,27 @@ function discretise (x, min, orig, max) {
 
 // Analog sticks.
 
-function scaleToGCAxis ( x, offset, scale ) {
-    return toInterval((x+offset) * scale);
+// Rescales controller input to -1 -- 0 -- 1 in both axes
+function scaleToUnitAxes ( x,y, number, customCenterX, customCenterY ) { // number = gamepad ID number
+    let [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]] = axisDataFromIDNumber(number);
+    origx += customCenterX;
+    origy += customCenterY;
+    let [xnew, ynew] = renormaliseAxisInput([lx-origx, ly-origy], [rx-origx, ry-origy], [dx-origx, dy-origy], [ux-origx, uy-origy], [x-origx, y-origy]);
+    return [toInterval(xnew), toInterval(ynew)];
 };
 
-function scaleToGCXAxis (x, offsetX, scaleX) {
-  return discretise(scaleToGCAxis(x, offsetX, scaleX), meleeXMin, meleeXOrig, meleeXMax);
+// Rescales -1 -- 1 input to 0 -- 255 values to simulate a GC controller
+function scaleUnitToGCAxes (x, y) {
+  let xnew = discretise(x, meleeXMin, meleeXOrig, meleeXMax);
+  let ynew = discretise(y, meleeYMin, meleeYOrig, meleeYMax);
+  return [xnew, ynew];
 };
 
-function scaleToGCYAxis (y, offsetY, scaleY) {
-  return discretise(scaleToGCAxis(y, offsetY, scaleY), meleeYMin, meleeYOrig, meleeYMax);
-};
-
+// Rescales controller input to 0 -- 255 values to simulate a GC controller
+function scaleToGCAxes (x, y, number, customCenterX, customCenterY) {
+  let [xnew, ynew] = scaleToUnitAxes (x, y, number, customCenterX, customCenterY);
+  return scaleUnitToGCAxes(xnew, ynew);
+}
 // Analog triggers.
 // t = trigger input
 export function scaleToGCTrigger ( t, offset, scale ) {
@@ -313,16 +338,15 @@ function axisRescale ( x, orig, bool) {
     }
 };
 
-
-function meleeXAxisRescale (x, bool) {
+function meleeXAxisLinearRescale (x, bool) {
   return axisRescale ( x, meleeXOrig, bool );
 };
 
-function meleeYAxisRescale (y, bool) {
+function meleeYAxisLinearRescale (y, bool) {
   return axisRescale ( y, meleeYOrig, bool );
 };
 
-function nonLinearRescale ( [x,y] ) {
+function meleeAxisNonLinearRescale ( [x,y] ) {
   let norm = Math.sqrt(x*x + y*y);
   if (norm < 1) {
     return ([x,y]);
@@ -335,12 +359,17 @@ function nonLinearRescale ( [x,y] ) {
   }
 };
 
+function meleeAxisRescale ( [x,y], bool ) {
+    let xnew = meleeXAxisLinearRescale (x, bool);
+    let ynew = meleeYAxisLinearRescale (y, bool);
+    return meleeAxisNonLinearRescale( [xnew, ynew]);
+}
+
 function meleeRound (x) {
   return Math.round(steps*x)/steps;
 };
 
-export function scaleToMeleeAxes ( x, y, offsetX, offsetY, scaleX, scaleY, bool ) {
-    let xnew = meleeXAxisRescale (scaleToGCXAxis ( x, offsetX, scaleX ), bool);
-    let ynew = meleeYAxisRescale (scaleToGCYAxis ( y, offsetY, scaleY ), bool);
-    return  (nonLinearRescale ( [xnew, ynew] )).map(meleeRound);
+export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCenterY ) {
+    let [xnew, ynew] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
+    return (meleeAxisRescale ( [xnew, ynew], bool )).map(meleeRound);
 };
