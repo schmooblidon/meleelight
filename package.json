@@ -4,9 +4,9 @@
   "description": "Melee Light Platform Fighter",
   "main": "app.js",
   "scripts": {
-    "build": "./node_modules/.bin/webpack --progress --colors --config=bin/webpack/build.config.js",
-    "dev": "./node_modules/.bin/webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
-    "animations": "./node_modules/.bin/webpack --progress --colors --config=bin/webpack/animations.config.js",
+    "build": "webpack --progress --colors --config=bin/webpack/build.config.js",
+    "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
+    "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
     "release": "node bin/release.js"
   },
   "engines": {
