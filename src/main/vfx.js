@@ -211,8 +211,6 @@ window.vfx = {
   }
 };
 
-const singNotePath = 
-
 vfx.wallBounce.path = vfx.groundBounce.path;
 vfx.wallBounce.colour = vfx.groundBounce.colour;
 vfx.wallBounce.frames = vfx.groundBounce.frames;
