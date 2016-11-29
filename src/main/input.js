@@ -1,4 +1,4 @@
-/* eslint-disable */
+/*eslint-disable*/
 
 import {
   inverseMatrix,
@@ -17,7 +17,10 @@ export const button = {
   du: 8, // d-pad up
   dr: 9, // d-pad right
   dd: 10, // d-pad down
-  dl: 11, // d-pad left
+  dl: 11 // d-pad left
+}
+
+export const axis = {
   lsX: 12, // left analog stick left/right
   lsY: 13, // left analog stick up/down
   csX: 14, // c-stick left/right
@@ -55,6 +58,20 @@ const customCenters = function() {
 };
 
 export const custcent = [new customCenters, new customCenters, new customCenters, new customCenters];
+
+
+export function checkAllInputs ( gamepad, gamepadIDNumber ) {
+    for (var but in button) {
+      if (gamepad.buttons[controllerMaps[gamepadIDNumber][button.but]] == "null" ) {
+        gamepad.buttons[controllerMaps[gamepadIDNumber][button.but]] = false;
+      }
+    }
+    for (var ax in axis) {
+      if (gamepad.axes[controllerMaps[gamepadIDNumber][axis.ax]] == "null" ) {
+        gamepad.axes[controllerMaps[gamepadIDNumber][axis.ax]] = 0;
+      }
+    }
+};    
 
 
 //--CONTROLLER IDs-------------------------------------
@@ -110,15 +127,15 @@ controllerIDMap.set("289b-001d", 6);
     
 
 export function controllerNameFromIDnumber(number) {
-  if (number == 0) {
+  if (number === 0) {
     return "Mayflash Wii-U adapter";
-  } else if (number == 1) {
+  } else if (number === 1) {
     return "vJoy";
   } else if (number == 2) {
     return "raphnet v2.9 N64 adapter";
   } else if (number == 3) {
     return "XBOX 360 compatible controller";
-  } else if (number == 4) {
+  } else if (number === 4) {
     return "TigerGame 3-in-1";
   } else if (number == 5) {
     return "Retrolink adapter";
