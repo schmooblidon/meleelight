@@ -1,6 +1,8 @@
-/* globals player, turnOffHitboxes, reduceByTraction, cS, randomShout, sounds */
 
 import WAIT from "characters/shared/moves/WAIT";
+import {cS, player} from "main/main";
+import {randomShout, reduceByTraction, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 
 export default {
   name : "UPSMASH",

@@ -1,3 +1,20 @@
+import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForDash,
+    checkForSmashTurn
+    , checkForTiltTurn
+    , tiltTurnDashBuffer
+    , reduceByTraction
+    , fastfall
+    , airDrift
+    , randomShout
+    , checkForAerials
+} from "physics/actionStateShortcuts";
+import {baseActionStates} from "characters/baseActionStates";
+import {sounds} from "main/sfx";
+import {player, cS, stage, drawVfx, deepCopyObject} from "main/main";
+import {Vec2D} from "main/characters";
+
+import {hitQueue} from 'physics/hitDetection';
+
 /* eslint-disable */
 
 // action state object creation
@@ -6,7 +23,7 @@ aS[1]={};
 var keys = Object.keys(baseActionStates);
 for (var i=0;i<keys.length;i++){
   aS[1][keys[i]] = {};
-  $.extend(true,aS[1][keys[i]],baseActionStates[keys[i]]);
+    deepCopyObject(true,aS[1][keys[i]],baseActionStates[keys[i]]);
 }
 // set pointer for readibility
 var puff = aS[1];
@@ -19,20 +36,20 @@ puff.FURAFURA = {
     puff.WAIT.init(p);
     //*cough*BITES*cough*
   }
-}
+};
 
 puff.JUMPAERIALF = {
   name : "JUMPAERIALF",
   init : function(p){
     puffNextJump(p);
   }
-}
+};
 puff.JUMPAERIALB = {
   name : "JUMPAERIALB",
   init : function(p){
     puffNextJump(p);
   }
-}
+};
 
 // OVERWRITES END
 
@@ -71,7 +88,7 @@ puff.JAB1 = {
         player[p].hitboxes.frame++;
       }
       if (player[p].timer == 7){
-        turnOffHitboxes(p);
+        turnOffHitboxes(p);;
       }
     }
   },
@@ -85,10 +102,10 @@ puff.JAB1 = {
       return true;
     }
     else if (player[p].timer > 15){
-      var b = checkForSpecials(p);
-      var t = checkForTilts(p);
-      var s = checkForSmashes(p);
-      var j = checkForJump(p);
+      var b = checkForSpecials(p);;
+      var t = checkForTilts(p);;
+      var s = checkForSmashes(p);;
+      var j = checkForJump(p);;
       if (j[0]){
         puff.KNEEBEND.init(p,j[1]);
         return true;
@@ -114,7 +131,7 @@ puff.JAB1 = {
         return true;
       }
       else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);;
         puff.TILTTURN.init(p);
         return true;
       }
@@ -124,13 +141,13 @@ puff.JAB1 = {
       }
       else {
         return false;
-      }
+      };;;
     }
     else {
       return false;
     }
   }
-}
+};
 
 puff.JAB2 = {
   name : "JAB2",
@@ -214,7 +231,7 @@ puff.JAB2 = {
       return false;
     }
   }
-}
+};
 
 puff.DOWNTILT = {
   name : "DOWNTILT",
@@ -232,7 +249,7 @@ puff.DOWNTILT = {
   main : function(p){
     player[p].timer++;
     if (!puff.DOWNTILT.interrupt(p)){
-      reduceByTraction(p,true);
+      reduceByTraction(p,true);;
       if (player[p].timer == 10){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
@@ -297,7 +314,7 @@ puff.DOWNTILT = {
       return false;
     }
   }
-}
+};
 
 puff.UPTILT = {
   name : "UPTILT",
@@ -346,7 +363,7 @@ puff.UPTILT = {
       return false;
     }
   }
-}
+};
 
 puff.FORWARDTILT = {
   name : "FORWARDTILT",
@@ -386,7 +403,7 @@ puff.FORWARDTILT = {
       return false;
     }
   }
-}
+};
 
 // AERIALS
 puff.ATTACKAIRF = {
@@ -410,8 +427,8 @@ puff.ATTACKAIRF = {
   main : function(p){
     player[p].timer++;
     if (!puff.ATTACKAIRF.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+      fastfall(p);;
+      airDrift(p);;
 
       if (player[p].timer == 7){
         player[p].hitboxes.active = [true,true,false,false];
@@ -470,7 +487,7 @@ puff.ATTACKAIRF = {
       puff.LANDINGATTACKAIRF.init(p);
     }
   }
-}
+};
 
 puff.ATTACKAIRB = {
   name : "ATTACKAIRB",
@@ -547,7 +564,7 @@ puff.ATTACKAIRB = {
       puff.LANDINGATTACKAIRB.init(p);
     }
   }
-}
+};
 
 puff.ATTACKAIRU = {
   name : "ATTACKAIRU",
@@ -621,7 +638,7 @@ puff.ATTACKAIRU = {
       puff.LANDINGATTACKAIRU.init(p);
     }
   }
-}
+};
 
 puff.ATTACKAIRD = {
   name : "ATTACKAIRD",
@@ -691,7 +708,7 @@ puff.ATTACKAIRD = {
       puff.LANDINGATTACKAIRD.init(p);
     }
   }
-}
+};
 
 puff.ATTACKAIRN = {
   name : "ATTACKAIRN",
@@ -764,7 +781,7 @@ puff.ATTACKAIRN = {
       puff.LANDINGATTACKAIRN.init(p);
     }
   }
-}
+};
 // SMASH ATTACKS
 
 puff.FORWARDSMASH = {
@@ -839,7 +856,7 @@ puff.FORWARDSMASH = {
       return false;
     }
   }
-}
+};
 
 puff.UPSMASH = {
   name : "UPSMASH",
@@ -946,7 +963,7 @@ puff.UPSMASH = {
       return false;
     }
   }
-}
+};
 
 puff.DOWNSMASH = {
   name : "DOWNSMASH",
@@ -1054,7 +1071,7 @@ puff.DOWNSMASH = {
       return false;
     }
   }
-}
+};
 
 // OTHER
 puff.ATTACKDASH = {
@@ -1149,7 +1166,7 @@ puff.ATTACKDASH = {
       return false;
     }
   }
-}
+};
 
 // ----------------SPECIALS-------------
 puff.NEUTRALSPECIALAIR = {
@@ -1299,13 +1316,13 @@ puff.NEUTRALSPECIALAIR = {
     player[p].phys.rollOutPlayerHit = true;
     player[p].phys.rollOutPlayerHitTimer = 0;
     player[p].phys.cVel.x *= -0.13;
-    player[p].phys.cVel.y = 1.6
+    player[p].phys.cVel.y = 1.6;
     player[p].phys.grounded = false;
     sounds.rollouthit.play();
     player[p].colourOverlayBool = false;
     turnOffHitboxes(p);
   }
-}
+};
 
 puff.NEUTRALSPECIALGROUND = {
   name : "NEUTRALSPECIALGROUND",
@@ -1431,7 +1448,7 @@ puff.NEUTRALSPECIALGROUND = {
     player[p].actionState = "NEUTRALSPECIALAIR";
     puff.NEUTRALSPECIALAIR.onPlayerHit(p);
   }
-}
+};
 
 puff.NEUTRALSPECIALGROUNDTURN = {
   name : "NEUTRALSPECIALGROUNDTURN",
@@ -1489,7 +1506,7 @@ puff.NEUTRALSPECIALGROUNDTURN = {
     player[p].actionState = "NEUTRALSPECIALAIR";
     puff.NEUTRALSPECIALAIR.onPlayerHit(p);
   }
-}
+};
 
 puff.SIDESPECIALAIR = {
   name : "SIDESPECIALAIR",
@@ -1593,7 +1610,7 @@ puff.SIDESPECIALAIR = {
   land : function(p){
     player[p].actionState = "SIDESPECIALGROUND";
   }
-}
+};
 puff.SIDESPECIALGROUND = {
   name : "SIDESPECIALGROUND",
   canPassThrough : false,
@@ -1692,7 +1709,7 @@ puff.SIDESPECIALGROUND = {
       return false;
     }
   }
-}
+};
 puff.DOWNSPECIALAIR = {
   name : "DOWNSPECIALAIR",
   canPassThrough : false,
@@ -1782,7 +1799,7 @@ puff.DOWNSPECIALAIR = {
   land : function(p){
     //player[p].actionState = 109;
   }
-}
+};
 
 puff.DOWNSPECIALGROUND = {
   name : "DOWNSPECIALGROUND",
@@ -1873,7 +1890,7 @@ puff.DOWNSPECIALGROUND = {
   land : function(p){
     //player[p].actionState = 109;
   }
-}
+};
 
 puff.UPSPECIAL = {
   name : "UPSPECIAL",
@@ -1985,7 +2002,7 @@ puff.UPSPECIAL = {
   land : function(p){
 
   }
-}
+};
 
 // ---------- THROWS -----------
 
@@ -2036,7 +2053,7 @@ puff.THROWFORWARD = {
       return false;
     }
   }
-}
+};
 
 puff.THROWBACK = {
   name : "THROWBACK",
@@ -2081,7 +2098,7 @@ puff.THROWBACK = {
       return false;
     }
   }
-}
+};
 puff.THROWUP = {
   name : "THROWUP",
   canEdgeCancel : false,
@@ -2121,7 +2138,7 @@ puff.THROWUP = {
       return false;
     }
   }
-}
+};
 
 puff.THROWDOWN = {
   name : "THROWDOWN",
@@ -2174,7 +2191,7 @@ puff.THROWDOWN = {
       return false;
     }
   }
-}
+};
 
 //-----------THROWNS------------
 
@@ -2208,7 +2225,7 @@ puff.THROWNMARTHUP = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 
 puff.THROWNMARTHDOWN = {
@@ -2243,7 +2260,7 @@ puff.THROWNMARTHDOWN = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 
 puff.THROWNMARTHBACK = {
@@ -2278,7 +2295,7 @@ puff.THROWNMARTHBACK = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 
 puff.THROWNMARTHFORWARD = {
@@ -2311,7 +2328,7 @@ puff.THROWNMARTHFORWARD = {
   interrupt : function(p){
     return false;
   }
-}
+};
 puff.THROWNPUFFFORWARD = {
   name : "THROWNPUFFFORWARD",
   canEdgeCancel : false,
@@ -2341,7 +2358,7 @@ puff.THROWNPUFFFORWARD = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 puff.THROWNPUFFDOWN = {
   name : "THROWNPUFFDOWN",
@@ -2373,7 +2390,7 @@ puff.THROWNPUFFDOWN = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 puff.THROWNPUFFBACK = {
   name : "THROWNPUFFBACK",
@@ -2413,7 +2430,7 @@ puff.THROWNPUFFBACK = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 puff.THROWNPUFFUP = {
   name : "THROWNPUFFUP",
@@ -2444,7 +2461,7 @@ puff.THROWNPUFFUP = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 puff.THROWNFOXFORWARD = {
   name : "THROWNFOXFORWARD",
@@ -2476,7 +2493,7 @@ puff.THROWNFOXFORWARD = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 puff.THROWNFOXDOWN = {
   name : "THROWNFOXDOWN",
@@ -2508,7 +2525,7 @@ puff.THROWNFOXDOWN = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 puff.THROWNFOXBACK = {
   name : "THROWNFOXBACK",
@@ -2544,7 +2561,7 @@ puff.THROWNFOXBACK = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 puff.THROWNFOXUP = {
   name : "THROWNFOXUP",
@@ -2575,7 +2592,7 @@ puff.THROWNFOXUP = {
   interrupt : function(p){
     return false;
   }
-}
+};
 
 
 // --------------CLIFF ACTIONS--------
@@ -2620,7 +2637,7 @@ puff.CLIFFGETUPQUICK = {
       return false;
     }
   }
-}
+};
 
 puff.CLIFFGETUPSLOW = {
   name : "CLIFFGETUPSLOW",
@@ -2663,7 +2680,7 @@ puff.CLIFFGETUPSLOW = {
       return false;
     }
   }
-}
+};
 
 puff.CLIFFESCAPEQUICK = {
   name : "CLIFFESCAPEQUICK",
@@ -2707,7 +2724,7 @@ puff.CLIFFESCAPEQUICK = {
     }
   }
 
-}
+};
 
 puff.CLIFFESCAPESLOW = {
   name : "CLIFFESCAPESLOW",
@@ -2750,7 +2767,7 @@ puff.CLIFFESCAPESLOW = {
       return false;
     }
   }
-}
+};
 
 puff.CLIFFATTACKSLOW = {
   name : "CLIFFATTACKSLOW",
@@ -2808,7 +2825,7 @@ puff.CLIFFATTACKSLOW = {
       return false;
     }
   }
-}
+};
 
 puff.CLIFFATTACKQUICK = {
   name : "CLIFFATTACKQUICK",
@@ -2866,7 +2883,7 @@ puff.CLIFFATTACKQUICK = {
     }
   }
 
-}
+};
 
 puff.CLIFFJUMPQUICK = {
   name : "CLIFFJUMPQUICK",
@@ -2906,7 +2923,7 @@ puff.CLIFFJUMPQUICK = {
       return false;
     }
   }
-}
+};
 
 puff.CLIFFJUMPSLOW = {
   name : "CLIFFJUMPSLOW",
@@ -2946,7 +2963,7 @@ puff.CLIFFJUMPSLOW = {
       return false;
     }
   }
-}
+};
 // --------------- MISC -------------
 puff.CATCHATTACK = {
   name : "CATCHATTACK",
@@ -2980,7 +2997,7 @@ puff.CATCHATTACK = {
       return false;
     }
   }
-}
+};
 puff.GRAB = {
   name : "GRAB",
   canEdgeCancel : false,
@@ -3021,7 +3038,7 @@ puff.GRAB = {
       return false;
     }
   }
-}
+};
 puff.DOWNATTACK = {
   name : "DOWNATTACK",
   canEdgeCancel : false,
@@ -3080,7 +3097,7 @@ puff.DOWNATTACK = {
       return false;
     }
   }
-}
+};
 
 // ------- PUFF JUMPS ---------
 window.puffMultiJumpDrift = function(p){
@@ -3124,7 +3141,7 @@ window.puffMultiJumpDrift = function(p){
       }
     }
   }
-}
+};
 
 window.puffNextJump = function(p){
   if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3 && Math.sign(player[p].inputs.lStickAxis[0].x) != player[p].phys.face){
@@ -3133,7 +3150,7 @@ window.puffNextJump = function(p){
   else {
     puff["JUMPAERIAL"+(1+player[p].phys.jumpsUsed)].init(p);
   }
-}
+};
 
 puff.JUMPAERIAL1 = {
   name : "JUMPAERIAL1",
@@ -3187,7 +3204,7 @@ puff.JUMPAERIAL1 = {
       return false;
     }
   }
-}
+};
 puff.JUMPAERIAL2 = {
   name : "JUMPAERIAL2",
   canPassThrough : true,
@@ -3241,7 +3258,7 @@ puff.JUMPAERIAL2 = {
       return false;
     }
   }
-}
+};
 puff.JUMPAERIAL3 = {
   name : "JUMPAERIAL3",
   canPassThrough : true,
@@ -3296,7 +3313,7 @@ puff.JUMPAERIAL3 = {
       return false;
     }
   }
-}
+};
 puff.JUMPAERIAL4 = {
   name : "JUMPAERIAL4",
   canPassThrough : true,
@@ -3351,7 +3368,7 @@ puff.JUMPAERIAL4 = {
       return false;
     }
   }
-}
+};
 puff.JUMPAERIAL5 = {
   name : "JUMPAERIAL5",
   canPassThrough : true,
@@ -3402,7 +3419,7 @@ puff.JUMPAERIAL5 = {
       return false;
     }
   }
-}
+};
 
 puff.AERIALTURN1 = {
   name : "AERIALTURN1",
@@ -3458,7 +3475,7 @@ puff.AERIALTURN1 = {
       return false;
     }
   }
-}
+};
 puff.AERIALTURN2 = {
   name : "AERIALTURN2",
   canPassThrough : true,
@@ -3514,7 +3531,7 @@ puff.AERIALTURN2 = {
       return false;
     }
   }
-}
+};
 puff.AERIALTURN3 = {
   name : "AERIALTURN3",
   canPassThrough : true,
@@ -3571,7 +3588,7 @@ puff.AERIALTURN3 = {
       return false;
     }
   }
-}
+};
 puff.AERIALTURN4 = {
   name : "AERIALTURN4",
   canPassThrough : true,
@@ -3628,7 +3645,7 @@ puff.AERIALTURN4 = {
       return false;
     }
   }
-}
+};
 puff.AERIALTURN5 = {
   name : "AERIALTURN5",
   canPassThrough : true,
@@ -3685,7 +3702,7 @@ puff.AERIALTURN5 = {
       return false;
     }
   }
-}
+};
 // UNIQUE ACTION STATES END
 
 // SET VELOCITIES AND POSITIONS

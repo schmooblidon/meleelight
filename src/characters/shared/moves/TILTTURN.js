@@ -1,5 +1,5 @@
-/* globals player, aS, cS, frames, reduceByTraction, checkForSmashes, checkForJump, checkForTilts */
-
+import {checkForJump, checkForSmashes, checkForTilts, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "TILTTURN",
   canEdgeCancel : true,

@@ -1,3 +1,5 @@
+import {airDrift, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {drawVfx, cS, player} from "main/main";
 export default {
   name : "STOPCEIL",
   canPassThrough : true,

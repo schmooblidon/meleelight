@@ -1,3 +1,6 @@
+import {executeIntangibility, reduceByTraction, playSounds, aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, drawVfx, player} from "main/main";
 export default {
   name : "ESCAPEN",
   canEdgeCancel : false,

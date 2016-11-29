@@ -1,3 +1,5 @@
+import {executeIntangibility, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "DOWNSTANDN",
   canEdgeCancel : true,

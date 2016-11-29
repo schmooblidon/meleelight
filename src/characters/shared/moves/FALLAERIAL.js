@@ -1,3 +1,5 @@
+import {checkForSpecials, checkForAerials, airDrift, fastfall, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "FALLAERIAL",
   canPassThrough : true,

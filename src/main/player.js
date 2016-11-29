@@ -1,6 +1,7 @@
+import {Vec2D, chars, Box2D} from "main/characters";
 /* eslint-disable */
 
-window.ActiveHitbox = function(size, offset, dmg, angle, kg, bk, sk, type) {
+export function ActiveHitbox(size, offset, dmg, angle, kg, bk, sk, type) {
   this.size = size;
   this.offset = offset;
   this.dmg = dmg;
@@ -10,17 +11,15 @@ window.ActiveHitbox = function(size, offset, dmg, angle, kg, bk, sk, type) {
   this.sk = sk;
   this.type = type;
 }
-
-window.hitboxes = function() {
-  this.active = [false, false, false, false];
+export function createHitboxes() {
+    this.active = [false, false, false, false];
   this.frame = 0;
   this.id = [new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0,
     0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0, 0, 0, 0), new ActiveHitbox(0, new Vec2D(0, 0), 0, 0, 0,
     0, 0, 0)];
   this.hitList = [];
 }
-
-window.physicsObject = function(pos, face) {
+export function physicsObject(pos, face) {
   this.cVel = new Vec2D(0, 0);
   this.kVel = new Vec2D(0, 0);
   this.kDec = new Vec2D(0, 0);
@@ -81,7 +80,7 @@ window.physicsObject = function(pos, face) {
   this.thrownHitboxOwner = -1;
   this.landingMultiplier = 15;
   this.wallJumpCount = 0;
-  this.prevFrameHitboxes = new hitboxes();
+  this.prevFrameHitboxes = new createHitboxes();
   this.interPolatedHitbox = [];
   this.interPolatedHitboxPhantom = [];
   this.isInterpolated = false;
@@ -97,8 +96,8 @@ window.physicsObject = function(pos, face) {
   this.bTurnaroundTimer = 0;
   this.bTurnaroundDirection = 1;
 }
+export function inputObject() {
 
-window.inputObject = function() {
   this.lStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0,
     0), new Vec2D(0, 0), new Vec2D(0, 0)];
   this.rawlStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(
@@ -120,9 +119,7 @@ window.inputObject = function() {
   this.dpadright = [false, false, false, false, false, false, false];
   this.dpadup = [false, false, false, false, false, false, false];
 }
-
-
-window.playerObject = function(character, pos, face) {
+export function playerObject(character, pos, face) {
   this.phys = new physicsObject(pos, face);
   this.actionState = "ENTRANCE";
   this.prevActionState = "";
@@ -134,7 +131,7 @@ window.playerObject = function(character, pos, face) {
   this.showECB = false;
   this.showHitbox = false;
   this.spawnWaitTime = 0;
-  this.hitboxes = new hitboxes();
+  this.hitboxes = new createHitboxes();
   this.hit = {
     knockback: 0,
     hitlag: 0,
@@ -143,7 +140,7 @@ window.playerObject = function(character, pos, face) {
     hitPoint: new Vec2D(0, 0),
     powershield: false,
     shieldstun: 0
-  }
+  };
   this.percent = 0;
   this.stocks = 4;
   this.miniView = false;

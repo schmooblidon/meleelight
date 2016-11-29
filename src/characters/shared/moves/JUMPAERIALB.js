@@ -1,5 +1,6 @@
-/* globals player, aS, cS, frames, drawVfx, sounds, playSounds, fastfall, airDrift, checkForAerials, checkForSpecials */
-
+import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, aS} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
 export default {
   name : "JUMPAERIALB",
   canPassThrough : true,

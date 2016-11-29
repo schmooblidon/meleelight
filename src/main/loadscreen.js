@@ -1,6 +1,7 @@
 /* globals start */
 
 import $ from "jquery";
+import * as main from "main/main";
 
 function drawHexagonLoading(r, tX, tY, width) {
   let a = r * Math.sin(Math.PI / 6);
@@ -56,7 +57,7 @@ function loadScript() {
         loadScript();
       } else {
         loading = false;
-        start();
+        main.start();
       }
     })
     .fail((jqxhr, settings, exception) => {

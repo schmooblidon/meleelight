@@ -1,5 +1,6 @@
-/* globals player, aS, cS, frames, drawVfx, reduceByTraction, sounds */
-
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
 export default {
   name : "LANDINGATTACKAIRU",
   canEdgeCancel : true,

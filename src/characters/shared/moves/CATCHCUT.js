@@ -1,5 +1,5 @@
-/* globals player, aS, cS, reduceByTraction, frames */
-
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "CATCHCUT",
   canEdgeCancel : false,

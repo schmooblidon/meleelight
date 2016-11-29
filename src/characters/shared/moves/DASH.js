@@ -1,5 +1,6 @@
-/* globals player, aS, cS, frames, sounds, reduceByTraction, checkForJump, checkForSmashTurn, drawVfx */
-
+import {checkForSmashTurn, checkForJump, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {drawVfx, cS, player} from "main/main";
+import {sounds} from "main/sfx";
 export default {
   name : "DASH",
   canEdgeCancel : true,

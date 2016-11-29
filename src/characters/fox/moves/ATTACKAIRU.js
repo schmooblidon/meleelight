@@ -1,11 +1,13 @@
-/* globals player, turnOffHitboxes, fastfall, airDrift, checkForAerials, sounds */
 
-import MOVES from "./index";
+import MOVES from "characters/fox/moves/index";
 import LANDING from "characters/shared/moves/LANDING";
 import LANDINGATTACKAIRU from "characters/shared/moves/LANDINGATTACKAIRU";
 import JUMPAERIALB from "characters/shared/moves/JUMPAERIALB";
 import JUMPAERIALF from "characters/shared/moves/JUMPAERIALF";
 import FALL from "characters/shared/moves/FALL";
+import {player} from "main/main";
+import {turnOffHitboxes, fastfall, airDrift, checkForAerials} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 
 export default {
   name : "ATTACKAIRU",

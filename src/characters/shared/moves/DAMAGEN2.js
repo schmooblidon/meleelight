@@ -1,3 +1,14 @@
+import {checkForAerials, tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat,
+    checkForJump
+    , checkForSmashes
+    , checkForTilts
+    , checkForSpecials
+    , reduceByTraction
+    , aS
+    , turnOffHitboxes
+} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {Vec2D} from "main/characters";
 export default {
   name : "DAMAGEN2",
   canEdgeCancel : true,

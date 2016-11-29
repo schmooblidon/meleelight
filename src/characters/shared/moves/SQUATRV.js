@@ -1,3 +1,5 @@
+import {checkForSmashTurn, checkForJump, checkForSmashes, checkForTilts, checkForSpecials, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "SQUATRV",
   canEdgeCancel : true,

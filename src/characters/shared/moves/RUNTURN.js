@@ -1,3 +1,5 @@
+import {checkForJump, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "RUNTURN",
   canEdgeCancel : false,

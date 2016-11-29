@@ -1,14 +1,19 @@
-/* globals player, turnOffHitboxes, sounds, cS, checkForJump, checkForTilts,
-checkForSmashes, checkForDash, checkForSmashTurn, checkForTiltTurn, randomShout,
-tiltTurnDashBuffer, reduceByTraction, checkForSpecials, fox */
 
-import MOVES from "./index";
+import MOVES from "characters/fox/moves/index";
 import DASH from "characters/shared/moves/DASH";
 import SMASHTURN from "characters/shared/moves/SMASHTURN";
 import TILTTURN from "characters/shared/moves/TILTTURN";
 import WALK from "characters/shared/moves/WALK";
 import WAIT from "characters/shared/moves/WAIT";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
+import {player, cS} from "main/main";
+import {sounds} from "main/sfx";
+import {reduceByTraction, randomShout, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump,
+    checkForDash
+    , checkForSmashTurn
+    , checkForTiltTurn
+    , tiltTurnDashBuffer
+} from "physics/actionStateShortcuts";
 
 export default {
   name : "DOWNSMASH",

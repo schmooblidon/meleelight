@@ -1,7 +1,11 @@
-/* globals player, aS, cS, frames, reduceByTraction, checkForSpecials,
-checkForTilts, checkForSmashes, checkForJump, checkForSquat, checkForDash,
-checkForSmashTurn, checkForTilts, checkForTiltTurn, tiltTurnDashBuffer */
-
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat, checkForTilts,
+    checkForSpecials
+    , checkForJump
+    , checkForSmashes
+    , reduceByTraction
+    , aS
+} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "WAIT",
   canEdgeCancel : true,

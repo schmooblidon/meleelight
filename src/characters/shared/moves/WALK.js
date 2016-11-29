@@ -1,7 +1,12 @@
-/* globals player, aS, cS, frames, checkForSpecials, checkForTilts,
-checkForSmashes, checkForSquat, checkForDash, checkForSmashTurn,
-checkForTiltTurn, checkForJump, tiltTurnDashBuffer, sounds, reduceByTraction */
-
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat, checkForJump,
+    checkForSmashes
+    , checkForTilts
+    , checkForSpecials
+    , reduceByTraction
+    , aS
+} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, player} from "main/main";
 export default {
   name : "WALK",
   canEdgeCancel : true,

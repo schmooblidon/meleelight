@@ -1,7 +1,13 @@
+import {player, changeGamemode, setCookie, ports, bg1, fg1, clearScreen,bg2, shine,ui, layers, getCookie, setShine,
+    addShine
+} from "main/main";
+import {gameSettings} from "settings";
+import {sounds} from "main/sfx";
+import {stickHold, stickHoldEach, increaseStick, resetStick} from "menus/menu";
 /* eslint-disable */
 
-window.gameplayMenuSelected = 0;
-window.getGameplayCookies = function() {
+export let gameplayMenuSelected = 0;
+export function getGameplayCookies (){
   var keys = Object.keys(gameSettings);
   for (var j = 0; j < keys.length; j++) {
     var c = getCookie(keys[j]);
@@ -10,7 +16,7 @@ window.getGameplayCookies = function() {
     }
   }
 }
-window.gameplayMenuControls = function(i) {
+export function gameplayMenuControls (i){
   var menuMove = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
     sounds.menuBack.play();
@@ -43,10 +49,11 @@ window.gameplayMenuControls = function(i) {
     if (stickHold == 0) {
       gameplayMenuSelected--;
       menuMove = true;
-      stickHold++;
-    } else {
-      stickHold++;
-      if (stickHold % 10 == 0) {
+      increaseStick();
+    }
+    else {
+      increaseStick();
+      if (stickHold % 10 == 0){
         gameplayMenuSelected--;
         menuMove = true;
       }
@@ -56,10 +63,11 @@ window.gameplayMenuControls = function(i) {
     if (stickHold == 0) {
       gameplayMenuSelected++;
       menuMove = true;
-      stickHold++;
-    } else {
-      stickHold++;
-      if (stickHold % 10 == 0) {
+      increaseStick();
+    }
+    else {
+      increaseStick();
+      if (stickHold % 10 == 0){
         gameplayMenuSelected++;
         menuMove = true;
       }
@@ -74,8 +82,8 @@ window.gameplayMenuControls = function(i) {
           break;
         }
       }
-      if (!stickHoldAll) {
-        stickHold = 0;
+      if (!stickHoldAll){
+        resetStick();
       }
     }
   }
@@ -89,12 +97,12 @@ window.gameplayMenuControls = function(i) {
   }
 }
 
-window.drawGameplayMenuInit = function() {
-  var bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
-  bgGrad.addColorStop(0, "rgb(11, 65, 39)");
-  bgGrad.addColorStop(1, "rgb(8, 20, 61)");
-  bg1.fillStyle = bgGrad;
-  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
+export function drawGameplayMenuInit (){
+  var bgGrad =bg1.createLinearGradient(0,0,1200,750);
+  bgGrad.addColorStop(0,"rgb(11, 65, 39)");
+  bgGrad.addColorStop(1,"rgb(8, 20, 61)");
+  bg1.fillStyle=bgGrad;
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   fg1.textAlign = "center";
   fg1.fillStyle = "rgba(255, 255, 255, 0.65)";
   fg1.font = "italic 900 80px Arial";
@@ -106,12 +114,12 @@ window.drawGameplayMenuInit = function() {
   fg1.fillText("Flash on L-Cancel", 75, 395);
 }
 
-window.drawGameplayMenu = function() {
+export function drawGameplayMenu (){
   clearScreen();
-  bg2.lineWidth = 3;
-  shine += 0.01;
-  if (shine > 1.8) {
-    shine = -0.8;
+  fg1.lineWidth = 3;
+  addShine(0.01);
+  if (shine > 1.8){
+    setShine(-0.8);
   }
   var opacity = (shine < 0) ? (0.05 + (0.25 / 0.8) * (0.8 + shine)) : ((shine > 1) ? (0.3 - (0.25 / 0.8) * (shine - 1)) :
     0.3);

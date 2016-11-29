@@ -258,7 +258,11 @@
     var icn = document.querySelectorAll(".topButton");
     wipe();
     window.offlineMode = true;
-
+    (function() {
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('js/service-worker.js');
+      }
+    })();
     var scripts = [
       "./js/main.js",
       "./js/animations.js",

@@ -1,6 +1,13 @@
+import {player, cS, drawVfx, percentShake, stage, playerType, edgeOffset, versusMode, showDebug, deepCopyObject, gameMode} from "main/main";
+import {Vec2D, Box2D} from "main/characters";
+import {sounds} from "main/sfx";
+import {gameSettings} from "settings";
+import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
+import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
+import {lostStockQueue} from 'main/render';
 /* eslint-disable */
 
-window.land = function(i, y, t, j) {
+export function land (i,y,t,j){
   player[i].phys.pos.y = y;
   player[i].phys.grounded = true;
   player[i].phys.doubleJumped = false;
@@ -54,11 +61,11 @@ window.land = function(i, y, t, j) {
   player[i].hit.hitstun = 0;
 }
 
-window.physics = function(i) {
-  player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x, player[i].phys.pos.y);
+export function physics (i){
+  player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y);
   player[i].phys.facePrev = player[i].phys.face;
-  $.extend(true, player[i].phys.prevFrameHitboxes, player[i].hitboxes);
-  if (player[i].hit.hitlag > 0) {
+    deepCopyObject(true,player[i].phys.prevFrameHitboxes,player[i].hitboxes);
+  if (player[i].hit.hitlag > 0){
     player[i].hit.hitlag--;
     if (player[i].hit.hitlag == 0 && player[i].hit.knockback > 0) {
       if (player[i].phys.grabbedBy == -1 || player[i].hit.knockback > 50) {
@@ -866,8 +873,8 @@ window.physics = function(i) {
       turnOffHitboxes(i);
       player[i].stocks--;
       player[i].colourOverlayBool = false;
-      lostStockQueue.push([i, player[i].stocks, 0]);
-      if (player[i].stocks == 0 && versusMode) {
+        lostStockQueue.push([i,player[i].stocks,0]);
+      if (player[i].stocks == 0 && versusMode){
         player[i].stocks = 1;
       }
       aS[cS[i]][state].init(i);

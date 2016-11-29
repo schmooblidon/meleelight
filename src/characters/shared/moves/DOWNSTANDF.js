@@ -1,3 +1,5 @@
+import {executeIntangibility, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "DOWNSTANDF",
   canEdgeCancel : false,
