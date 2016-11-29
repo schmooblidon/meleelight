@@ -47,14 +47,67 @@ const raphnetV3_2Map = [0, 1, 7, 8, 2, 5, 4, 3, 10, 13, 11, 12, 0, 1, 3, 4, 5, 2
 
 export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map];
 
-const customDeadzone = function() {
+const customCenters = function() {
   this.ls = new Vec2D(0, 0);
   this.cs = new Vec2D(0, 0);
   this.l = 0;
   this.r = 0;
 };
 
-export const cd = [new customDeadzone, new customDeadzone, new customDeadzone, new customDeadzone];
+export const custcent = [new customCenters, new customCenters, new customCenters, new customCenters];
+
+
+//--CONTROLLER IDs-------------------------------------
+var controllerIDMap = new Map();
+
+
+// ID 0, Mayflash Wii-U adapter & variants
+controllerIDMap.set("Mayflash", 0); // Mayflash 4 port, ID: MAYFLASH GameCube Controller Adapter
+controllerIDMap.set("0079-1843", 0);
+
+controllerIDMap.set("NEXILUX", 0); // NEXILUX GAMECUBE Controller Adapter
+controllerIDMap.set("0079-1845", 0);
+
+controllerIDMap.set("Wii U GameCube Adapter", 0); // Mayflash 4 port on Linux, no vendor/product ID?
+
+controllerIDMap.set("USB GamePad", 0); // Mayflash 2 port, ID: USB GamePad, TODO: should check vendor & product
+controllerIDMap.set("1a34-f705", 0);
+
+// ID 1, vJoy
+controllerIDMap.set("vJoy", 1);
+controllerIDMap.set("1234-bead", 1);
+
+// ID 2, raphnet n64 adapter, version 2.9 (and below?)
+controllerIDMap.set("GC/N64 to USB, v2.", 2);
+controllerIDMap.set("GC/N64 to USB v2.", 2);
+controllerIDMap.set("289b-000c", 2);
+
+// ID 3, XBOX 360 or XInput standard gamepad
+controllerIDMap.set("Microsoft Controller", 3); // XBOX 360 & XBOX One controllers
+controllerIDMap.set("XBOX 360", 3); // ID: Xbox 360 Controller 
+controllerIDMap.set("Microsoft X-Box One", 3); // ID: Microsoft X-Box One pad
+controllerIDMap.set("XInput", 3);
+controllerIDMap.set("Standard Gamepad", 3);
+controllerIDMap.set("045e-02d1", 3);
+
+controllerIDMap.set("Wireless 360 Controller", 3); // XBOX 360 controller on Mac
+controllerIDMap.set("045e-028e", 3);
+
+// ID 4, TigerGame 3-in-1 adapter
+controllerIDMap.set("TigerGame", 4); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
+controllerIDMap.set("0926-2526", 4);
+
+// ID 5, Retrolink adapter
+controllerIDMap.set("Generic USB Joystick", 5); // ID: Generic USB Joystick, TODO: should check ID and vendor...
+controllerIDMap.set("0079-0006", 5);
+
+// ID 6, raphnet n64 adapter, version 3.0 and above
+controllerIDMap.set("GC/N64 to USB v3.", 6); // "v3.2" and "v3.3"
+controllerIDMap.set("GC/N64 to USB, v3.", 6);
+controllerIDMap.set("289b-001d", 6);
+
+//--END OF CONTROLLER IDs-------------------------------------
+    
 
 export function controllerNameFromIDnumber(number) {
   if (number == 0) {
@@ -77,62 +130,15 @@ export function controllerNameFromIDnumber(number) {
 };
 
 export function controllerIDNumberFromGamepadID(gamepadID) {
-  if (gamepadID[0] == "M" ||
-      gamepadID.substring(0, 9) == "0079-1843" ||
-      gamepadID.substring(0, 7) == "Wii U G" ||
-      gamepadID.substring(0, 7) == "NEXILUX" ||
-      gamepadID.substring(0, 9) == "0079-1845" ||
-      gamepadID.substring(0, 3) == "USB" ||
-      gamepadID.substring(0, 9) == "1a34-f705") {
-    return 0;
-  } // Mayflash Wii-U 4-way adapter
-    // text ID on Chrome: MAYFLASH GameCube Controller Adapter (Vendor: 0079, Product:1843)
-    // text ID on Linux: Wii U GameCube Adapter Port 4 (Vendor: 0000 Product: 0000)
-    // OR
-    // Nexilux adapter
-    // text ID: NEXILUX GAMECUBE Controller Adapter (Vendor: 0079, Product: 1845)
-    // OR
-    // Mayflash 2 port
-    // text ID: USB GamePad (Vendor: 1a34 Product: f705)
-  else if (gamepadID.substring(0, 4) == "vJoy" ||
-           gamepadID.substring(0, 9) == "1234-bead") {
-    return 1;
-  } // vJoy
-    // text ID Firefox: 1234-bead-vJoy - Virtual Joystick
-    // text ID Chrome: vJoy - Virtual Joystick (Vendor: 1234 Product: bead)
-  else if (gamepadID.substring(0, 18) == "GC/N64 to USB, v2." ||
-           gamepadID.substring(0, 9) == "289b-000c") {
-    return 2;
-  } // raphnet N64 adapter V2.9
-    // text ID: GC/N64 to USB, v2.9 (Vendor: 289b Product: 000c)
-  else if (gamepadID[0] == "X" ||
-           gamepadID[0] == "x" ||
-           gamepadID.substring(0,20) == "Microsoft Controller" ||
-           gamepadID.substring(0, 8) == "Wireless" ||
-           gamepadID.substring(0, 9) == "045e-02d1" ||
-           gamepadID.substring(0, 9) == "045e-028e") {
-    return 3;
-  } // XBOX 360 controller, or general XInput standard gamepad
-    // text ID: Xbox 360 Controller (XInput STANDARD GAMEPAD)
-    // text ID on Mac: Wireless 360 Controller (STANDARD GAMEPAD Vendor: 045e Product: 028e)
-    // XboxOne Controller (same mapping) text ID on Linux FireFox: 045e-02d1-Microsoft X-Box One pad Chromium: Microsoft Controller (Vendor: 045e Product: 02d1)
-  else if (gamepadID.substring(0, 9) == "TigerGame" ||
-           gamepadID.substring(0, 9) == "0926-2526") {
-    return 4; // TigerGame 3-in-1 adapter
-  }           // text ID: TigerGame XBOX+PS2+GC Game Controller Adapter (Vendor: 0926 Product:2526)
-  else if (gamepadID.substring(0, 7) == "Generic" ||
-           gamepadID.substring(0, 9) == "0079-0006") {
-    return 5; // Retrolink adapter
-  }           // text ID: Generic USB Joystick (Vendor: 0079 Product: 0006)
-  else if (gamepadID.substring(0, 18) == "GC/N64 to USB, v3." ||
-           gamepadID.substring(0, 9) == "289b-001d") {
-    return 6;
-  } // raphnet N64 adapter V3.2+
-    // text ID: GC/N64 to USB v3.2 (Vendor: 289b Product: 001d)
-    // text ID: GC/N64 to USB v3.3 (Vendor: 289b Product: 001d)
-  else {
-    return -1;
+  var output = -1;
+  for (var [possibleID, val] of controllerIDMap.entries()) {
+    let l = possibleID.length;
+    if (gamepadID.toLowerCase().substring(0,l) === possibleID.toLowerCase()) {
+      output = val;
+      break;
+    }
   }
+  return output;
 };
 
 
@@ -165,8 +171,8 @@ export function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x,
   } else // quadrant 4
   {
     let invMat = inverseMatrix([
-      [dx, -rx],
-      [dy, -ry]
+      [rx, -dx],
+      [ry, -dy]
     ]);
     return multMatVect(invMat, [x, y]);
   }
