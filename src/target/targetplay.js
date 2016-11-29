@@ -219,7 +219,9 @@ export function articleTargetCollision (a,t,previous){
 }
 
 export function targetTimerTick (){
+  if (matchTimer + 0.016667 < 6000) {
   addMatchTimer(0.016667);
+  }
   $("#matchMinutes").empty().append(Math.floor(matchTimer/60));
   var sec = (matchTimer % 60).toFixed(2);
   $("#matchSeconds").empty().append(((sec.length<5)?"0"+sec:sec));
