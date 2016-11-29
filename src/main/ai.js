@@ -566,7 +566,6 @@ export function marthAI(i) {
 }
 
 export function jiggsAI(i) {
-function jiggsAI(i) {
   const paction = player[i].actionState;
   const px = player[i].phys.pos.x;
   const py = player[i].phys.pos.y;
