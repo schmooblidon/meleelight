@@ -371,7 +371,21 @@ function meleeRound (x) {
   return Math.round(steps*x)/steps;
 };
 
+// scales raw input data to the data Melee uses for the simulation
+// number : controller ID, to rescale axes dependent on controller raw input
+// bool == false means no deadzone, bool == true means deadzone
 export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCenterY ) {
     let [xnew, ynew] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
     return (meleeAxesRescale ( [xnew, ynew], bool )).map(meleeRound);
 };
+
+// scales -1 -- 1 data to the data Melee uses for the simulation
+// bool == false means no deadzone, bool == true means deadzone
+export function meleeRescale ( x, y, bool = false) {
+    let [xnew, ynew] = scaleUnitToGCAxes (x, y);
+    return (meleeAxesREscale ( [xnew, ynew], bool)).map(meleeRound);
+}
+
+export function dolphinRescale (x, y, bool = false) {
+    return meleeAxesRescale(x,y).map(meleeRound);
+}
