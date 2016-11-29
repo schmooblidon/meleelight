@@ -1699,7 +1699,29 @@ export function setCreditsPlayer(val){
   creditsPlayer =val;
 }
 export function deepCopyObject(deep,target,...object){
-  return $.extend(deep,target,...object)
+   if(deep) {
+       target = target || {};
+
+       for (var i = 2; i < arguments.length; i++) {
+           var obj = arguments[i];
+
+           if (!obj)
+               continue;
+
+           for (var key in obj) {
+               if (obj.hasOwnProperty(key)) {
+                   if (typeof obj[key] === 'object')
+                       target[key] = deepCopyObject(deep,target[key], obj[key]);
+                   else
+                       target[key] = obj[key];
+               }
+           }
+       }
+
+       return target;
+   }else {
+      return Object.assign(target, ...object)
+   }
 }
 export function setStage(val){
   stage = val;
