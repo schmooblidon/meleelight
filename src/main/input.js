@@ -225,6 +225,7 @@ function discretise (x, min, orig, max) {
 };
 
 // Analog sticks.
+
 function scaleToGCAxis ( x, offset, scale ) {
     return toInterval((x+offset) * scale);
 };
@@ -296,14 +297,19 @@ export function scaleToMeleeAxes ( x, y, offsetX, offsetY, scaleX, scaleY ) {
 };
 
 // basic mapping from 0 -- 255 back to -1 -- 1 done by Melee
+// boolean value: true = deadzones, false = no deadzones
 function axisRescale ( x, orig, bool) {
+    var magicOffset = 1; // don't ask
+    if ( ! bool) {
+      magicOffset = 0;
+    }
   // the following line is equivalent to checking that the result of this function lies in the deadzone
   // no need to check for deadzones later
-    if ( bool && Math.abs (x+1-orig) < deadzoneConst * steps) {
+    if ( bool && Math.abs (x+magicOffset-orig) < deadzoneConst * steps) {
       return 0;
     }
     else {
-      return (x-orig+1) / steps; // +1 apparently needed
+      return (x-orig+magicOffset) / steps;
     }
 };
 
