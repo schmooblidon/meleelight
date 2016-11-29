@@ -1,10 +1,14 @@
 # meleelight
 Melee Light Platform Fighter
 
-Play Stable Build: http://ikneedata.com/meleelitebeta
-Join the discussion on Discord: https://discord.gg/qagFayt
-Smashboards Thread: https://smashboards.com/threads/melee-light-browser-based-melee-clone-play-the-beta.439646/
+![Starting Scene](https://raw.githubusercontent.com/amilajack/meleelight/master/screenshots/starting.png)
+![Gameplay Scene](https://raw.githubusercontent.com/amilajack/meleelight/master/screenshots/scene.png)
 
+Play Stable Build: http://ikneedata.com/meleelight
+
+Join the discussion on Discord: https://discord.gg/qagFayt
+
+Smashboards Thread: https://smashboards.com/threads/melee-light-browser-based-melee-clone-play-the-beta.439646/
 
 
 ## Table of Contents
@@ -52,7 +56,8 @@ All commands are run like `npm run <name>` from the root of the project.
 ### Project Layout
 
 ```
-├── webpack                  # All scripts related to the Webpack build process
+├── bin                      # All scripts that are run offline by devs
+│   └── webpack              # Webpack-specific scripts
 ├── dist                     # Where the compiled code goes to be played
 └── src                      # Application source code
     ├── index.js             # The entry point for the application. A lean file that loads additional code
@@ -81,12 +86,12 @@ all of the characters can't make it in.
 Ask Schmoo or WwwWario on Discord and they will try their best to help you.
 
 ### Why doesn't the official adapter work on Chrome?
-Because Chrome won't allow direct input. Try Firefox instead.
+Because Chrome has a bug with the vJoy drivers, it is beyond our control.
 
 ### Why does my screen get stuck on the loading screen in the downloaded game?
-If you downloaded the game, you need to run meleelightdebug.html, if it still
-doesn't load, join Discord and we'll try to help. It helps if you can post
-any console output.
+If you downloaded the game, you need to run index.html (meleelightdebug.html
+on older downloads), if it still doesn't load, join Discord and we'll try
+to help. It helps if you can post any console output.
 
 ### You can go through the walls on Target Test Stages! Do you guys know about this?
 This is a known issue.

@@ -2,31 +2,31 @@
 
 import $ from "jquery";
 
-function drawHexagonLoading(r,tX,tY,width) {
-  let a = r*Math.sin(Math.PI/6);
-  let b = r*Math.cos(Math.PI/6);
+function drawHexagonLoading(r, tX, tY, width) {
+  let a = r * Math.sin(Math.PI / 6);
+  let b = r * Math.cos(Math.PI / 6);
 
   lc.save();
-  lc.translate(tX,tY);
+  lc.translate(tX, tY);
   lc.beginPath();
-  lc.moveTo(0,r);
-  lc.lineTo(b,r-a);
-  lc.lineTo(b,-r+a);
-  lc.lineTo(0,-r);
-  lc.lineTo(-b,-r+a);
-  lc.lineTo(-b,r-a);
-  lc.lineTo(0,r);
+  lc.moveTo(0, r);
+  lc.lineTo(b, r - a);
+  lc.lineTo(b, -r + a);
+  lc.lineTo(0, -r);
+  lc.lineTo(-b, -r + a);
+  lc.lineTo(-b, r - a);
+  lc.lineTo(0, r);
 
-  const rs = r-width;
-  a = rs*Math.sin(Math.PI/6);
-  b = rs*Math.cos(Math.PI/6);
-  lc.moveTo(0,rs);
-  lc.lineTo(-b,rs-a);
-  lc.lineTo(-b,-rs+a);
-  lc.lineTo(0,-rs);
-  lc.lineTo(b,-rs+a);
-  lc.lineTo(b,rs-a);
-  lc.lineTo(0,rs);
+  const rs = r - width;
+  a = rs * Math.sin(Math.PI / 6);
+  b = rs * Math.cos(Math.PI / 6);
+  lc.moveTo(0, rs);
+  lc.lineTo(-b, rs - a);
+  lc.lineTo(-b, -rs + a);
+  lc.lineTo(0, -rs);
+  lc.lineTo(b, -rs + a);
+  lc.lineTo(b, rs - a);
+  lc.lineTo(0, rs);
   lc.closePath();
   lc.fill();
   lc.restore();
@@ -46,16 +46,15 @@ const loadText = [
   "Loading core"
 ];
 
-let sNum=0;
+let sNum = 0;
 
-function loadScript(){
+function loadScript() {
   $.getScript(scriptNames[sNum])
     .done(() => {
-      if (sNum < scriptNames.length - 1){
+      if (sNum < scriptNames.length - 1) {
         sNum++;
         loadScript();
-      }
-      else {
+      } else {
         loading = false;
         start();
       }
@@ -65,28 +64,25 @@ function loadScript(){
     });
 };
 
-function drawLoading(){
-  lc.clearRect(0,0,loadCanvas.width,loadCanvas.height);
+function drawLoading() {
+  lc.clearRect(0, 0, loadCanvas.width, loadCanvas.height);
   lc.fillStyle = "rgb(143, 228, 255)";
 
-  const part = sNum%3+1;
-  if (part === 1){
-    drawHexagonLoading(40,150,100,14*2);
-  }
-  else if (part === 2){
-    drawHexagonLoading(60,150,100,14*2);
-  }
-  else if (part === 3){
-    drawHexagonLoading(80,150,100,14*2);
+  const part = sNum % 3 + 1;
+  if (part === 1) {
+    drawHexagonLoading(40, 150, 100, 14 * 2);
+  } else if (part === 2) {
+    drawHexagonLoading(60, 150, 100, 14 * 2);
+  } else if (part === 3) {
+    drawHexagonLoading(80, 150, 100, 14 * 2);
   }
 
-  $("#loadTextEdit").empty().append(loadText[Math.round(sNum/6.5)]);
-  $("#loadPercentEdit").empty().append(Math.round(((sNum+1)/scriptNames.length)*100));
+  $("#loadTextEdit").empty().append(loadText[Math.round(sNum / 6.5)]);
+  $("#loadPercentEdit").empty().append(Math.round(((sNum + 1) / scriptNames.length) * 100));
 
-  if (loading){
+  if (loading) {
     requestAnimationFrame(drawLoading);
-  }
-  else {
+  } else {
     $("#loadScreen").fadeOut();
   }
 };

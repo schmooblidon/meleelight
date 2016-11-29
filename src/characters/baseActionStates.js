@@ -11,6 +11,7 @@ window.baseActionStates = {
   init : function(p){
     player[p].actionState = "WAIT";
     player[p].timer = 1;
+	player[p].cStickJump = false;
     aS[cS[p]].WAIT.main(p);
   },
   main : function(p){
@@ -92,6 +93,7 @@ window.baseActionStates = {
   init : function(p){
     player[p].actionState = "DASH";
     player[p].timer = 0;
+	player[p].cStickJump = false;
     sounds.dash.play();
     aS[cS[p]].DASH.main(p);
   },
@@ -204,6 +206,7 @@ window.baseActionStates = {
     player[p].actionState = "RUN";
     player[p].timer = 1;
     aS[cS[p]].RUN.main(p);
+	player[p].cStickJump = false;
   },
   main : function(p){
     if (player[p].timer > frames[cS[p]].RUN){
@@ -300,6 +303,7 @@ window.baseActionStates = {
     player[p].timer = 0;
     player[p].phys.face *= -1;
     aS[cS[p]].SMASHTURN.main(p);
+	player[p].cStickJump = false;
   },
   main : function(p){
     player[p].timer++;
@@ -362,6 +366,7 @@ window.baseActionStates = {
   init : function(p){
     player[p].actionState = "TILTTURN";
     player[p].timer = 0;
+	player[p].cStickJump = false;
     aS[cS[p]].TILTTURN.main(p);
   },
   main : function(p){
@@ -436,6 +441,7 @@ window.baseActionStates = {
     player[p].actionState = "RUNBRAKE";
     player[p].timer = 0;
     sounds.runbrake.play();
+	player[p].cStickJump = false;
     aS[cS[p]].RUNBRAKE.main(p);
   },
   main : function(p){
@@ -475,6 +481,7 @@ window.baseActionStates = {
   init : function(p){
     player[p].actionState = "RUNTURN";
     player[p].timer = 0;
+	player[p].cStickJump = false;
     aS[cS[p]].RUNTURN.main(p);
   },
   main : function(p){
@@ -536,6 +543,7 @@ window.baseActionStates = {
   init : function(p,addInitV){
     player[p].actionState = "WALK";
     player[p].timer = 1;
+	player[p].cStickJump = false;
     if (addInitV){
       var tempInit = player[p].charAttributes.walkInitV * player[p].phys.face;
       if ((tempInit > 0 && player[p].phys.cVel.x < tempInit) || (tempInit < 0 && player[p].phys.cVel.x > tempInit)){
@@ -687,7 +695,7 @@ window.baseActionStates = {
       aS[cS[p]].GRAB.init(p);
       return true;
     }
-    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lStickAxis[0].y >= 0.8 && player[p].inputs.lStickAxis[3].y < 0.3) || (player[p].inputs.cStickAxis[0].y >= 0.8 && player[p].inputs.cStickAxis[3].y < 0.3)){
+    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lStickAxis[0].y >= 0.8 && player[p].inputs.lStickAxis[3].y < 0.3) || (!(player[p].cStickJump) && (player[p].inputs.cStickAxis[0].y >= 0.8 && player[p].inputs.cStickAxis[3].y < 0.3))){
       aS[cS[p]].UPSMASH.init(p);
       return true;
     }
@@ -1175,6 +1183,7 @@ window.baseActionStates = {
   init : function(p){
     player[p].actionState = "SQUAT";
     player[p].timer = 0;
+	player[p].shouldDropThrough = 0;
     aS[cS[p]].SQUAT.main(p);
   },
   main : function(p){
@@ -1188,10 +1197,30 @@ window.baseActionStates = {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer == 4 && (player[p].inputs.lStickAxis[0].y < -0.65 || player[p].inputs.lStickAxis[1].y < -0.65 || player[p].inputs.lStickAxis[2].y < -0.65) && player[p].inputs.lStickAxis[6].y > -0.3 && player[p].phys.onSurface[0] == 1){
-      aS[cS[p]].PASS.init(p);
+    if ((player[p].timer == 4 || player[p].timer == 5) && (player[p].inputs.lStickAxis[0].y < -0.65 || player[p].inputs.lStickAxis[1].y < -0.65 || player[p].inputs.lStickAxis[2].y < -0.65) && player[p].inputs.lStickAxis[6].y > -0.3 && player[p].phys.onSurface[0] == 1){
+      if(player[p].timer == 5 && player[p].shouldDropThrough == 0) {
+		player[p].shouldDropThrough = 7;
+		return false;
+	  } else {
+	  if (player[p].shouldDropThrough == 0) {
+	  if (player[p].inputs.lStickAxis[2].y < -0.65) {
+	  aS[cS[p]].PASS.init(p);
       return true;
-    }
+	  }
+	  if (!(player[p].inputs.lStickAxis[1].y < -0.65) && (player[p].inputs.lStickAxis[0].y < -0.65)) {
+	  player[p].shouldDropThrough = 6;
+	  return false;
+	  } else if (player[p].inputs.lStickAxis[1].y < -0.65) {
+	  player[p].shouldDropThrough = 5;
+	  return false;
+	  }
+	  }
+	  }
+	  }
+	if (player[p].timer == player[p].shouldDropThrough && player[p].shouldDropThrough != 0) {
+	  aS[cS[p]].PASS.init(p);
+      return true;
+	}
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
       aS[cS[p]].GUARDON.init(p);
       return true;
@@ -1553,6 +1582,7 @@ window.baseActionStates = {
     player[p].phys.shielding = true;
     player[p].phys.shieldPosition = new Vec2D(0,0);
     player[p].phys.powerShielded = false;
+	player[p].cStickJump = false;
     shieldSize(p,true);
     if (Math.max(player[p].inputs.lAnalog[0],player[p].inputs.rAnalog[0]) == 1){
       player[p].phys.powerShieldActive = true;
@@ -1599,6 +1629,7 @@ window.baseActionStates = {
       var j = checkForJump(p);
       if (j[0] || player[p].inputs.cStickAxis[0].y > 0.65){
         player[p].phys.shielding = false;
+		player[p].cStickJump = true;
         aS[cS[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
@@ -1655,6 +1686,7 @@ window.baseActionStates = {
   init : function(p){
     player[p].actionState = "GUARD";
     player[p].timer = 0;
+	player[p].cStickJump = false;
     player[p].phys.powerShieldActive = false;
     player[p].phys.powerShieldReflectActive = false;
     aS[cS[p]].GUARD.main(p);
@@ -1681,6 +1713,7 @@ window.baseActionStates = {
       var j = checkForJump(p);
       if (j[0] || player[p].inputs.cStickAxis[0].y > 0.66){
         player[p].phys.shielding = false;
+		player[p].cStickJump = true;
         aS[cS[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
@@ -1747,6 +1780,7 @@ window.baseActionStates = {
   init : function(p){
     player[p].actionState = "GUARDOFF";
     player[p].timer = 0;
+	player[p].cStickJump = false;
     sounds.shieldoff.play();
     aS[cS[p]].GUARDOFF.main(p);
   },
@@ -2257,7 +2291,7 @@ window.baseActionStates = {
   landType : 2,
   init : function(p,drawStuff){
     player[p].actionState = "DAMAGEFLYN";
-    player[p].tumbleJumpBuffer = 0;
+	player[p].tumbleJumpBuffer = 0;
     player[p].timer = 0;
     player[p].phys.grabbing = -1;
     player[p].phys.grabbedBy = -1;
@@ -2265,14 +2299,21 @@ window.baseActionStates = {
     player[p].rotation = 0;
     player[p].rotationPoint = new Vec2D(0,0);
     player[p].colourOverlayBool = false;
+    if (drawStuff){
+      // drawVfx("hitSparks",player[p].hit.hitPoint,player[p].phys.face);
+      // drawVfx("hitFlair",player[p].hit.hitPoint,player[p].phys.face);
+      // drawVfx("hitCurve",player[p].hit.hitPoint,player[p].phys.face,player[p].hit.angle);
+    }
     player[p].hitboxes.id[0] = player[p].charHitboxes.thrown.id0;
+    /*player[p].phys.grounded = false;
+    player[p].phys.pos.y += 0.0001;*/
     turnOffHitboxes(p);
     aS[cS[p]].DAMAGEFLYN.main(p);
   },
-  main : function(p){
+  main : function(p){                                                //look here tata
     if (player[p].tumbleJumpBuffer > 0) {
-      player[p].tumbleJumpBuffer--;
-    }
+		player[p].tumbleJumpBuffer--;
+	}
     if (player[p].phys.thrownHitbox){
       if (player[p].timer == 1 && player[p].phys.cVel.y+player[p].phys.kVel.y > 0){
         player[p].hitboxes.active = [true,false,false,false];
@@ -2307,21 +2348,20 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if(checkForJump(p)[0]) {
-      player[p].tumbleJumpBuffer = 20;
-    }
-
-  	if (player[p].timer > 1 && player[p].hit.hitstun == 0 && player[p].tumbleJumpBuffer > 0) {
-  	   if (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump)) {
-         if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
-           aS[cS[p]].JUMPAERIALB.init(p);
-           return true;
-         } else {
-           aS[cS[p]].JUMPAERIALF.init(p);
-           return true;
-         }
-      }
-    }
+	if(checkForJump(p)[0]) {
+		player[p].tumbleJumpBuffer = 20;
+	}
+	if (player[p].timer > 1 && player[p].hit.hitstun == 0 && player[p].tumbleJumpBuffer > 0) {
+	  if (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump)) {
+		if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+        aS[cS[p]].JUMPAERIALB.init(p);
+		return true;
+        } else {
+        aS[cS[p]].JUMPAERIALF.init(p);
+		return true;
+        }
+	    }
+	}
     if (player[p].timer > 1 && player[p].hit.hitstun == 0){
       aS[cS[p]].DAMAGEFALL.init(p);
       player[p].phys.thrownHitbox = false;
@@ -2350,9 +2390,9 @@ window.baseActionStates = {
   },
   main : function(p){
     player[p].timer++;
-    fastfall(p);
+	fastfall(p); //can fastfall damagefall
     if (!aS[cS[p]].DAMAGEFALL.interrupt(p)){
-
+      fastfall(p);
       airDrift(p);
     }
   },
@@ -2362,8 +2402,7 @@ window.baseActionStates = {
     if (a[0]){
       aS[cS[p]][a[1]].init(p);
       return true;
-    }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+    } else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
@@ -2371,20 +2410,16 @@ window.baseActionStates = {
         aS[cS[p]].JUMPAERIALF.init(p);
       }
       return true;
-    }
-    else if (b[0]){
+    } else if (b[0]){
       aS[cS[p]][b[1]].init(p);
       return true;
-    }
-    else if ((player[p].inputs.lStickAxis[0].x > 0.7 && player[p].inputs.lStickAxis[1].x < 0.7) || (player[p].inputs.lStickAxis[0].x < -0.7 && player[p].inputs.lStickAxis[1].x > -0.7) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y < 0.7) || (player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y > -0.7)){
+    } else if ((player[p].inputs.lStickAxis[0].x > 0.7 && player[p].inputs.lStickAxis[1].x < 0.7) || (player[p].inputs.lStickAxis[0].x < -0.7 && player[p].inputs.lStickAxis[1].x > -0.7)) {// || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y < 0.7) || (player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y > -0.7)){
       aS[cS[p]].FALL.init(p);
       return true;
-    }
-    else if (player[p].timer > frames[cS[p]].DAMAGEFALL){
+    } else if (player[p].timer > frames[cS[p]].DAMAGEFALL){
       aS[cS[p]].DAMAGEFALL.init(p);
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -3354,10 +3389,9 @@ window.baseActionStates = {
     if (!aS[cS[p]].CAPTUREWAIT.interrupt(p)){
       player[p].phys.stuckTimer--;
       if (mashOut(p)){
-        player[p].phys.stuckTimer -= 3;
+        player[p].phys.stuckTimer -= 6;
         player[p].phys.pos.x += 0.5*Math.sign(Math.random()-0.5);
-      }
-      else {
+      } else {
         player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-9.04298*player[p].phys.face);
       }
     }
@@ -3400,7 +3434,7 @@ window.baseActionStates = {
       aS[cS[p]].CATCHATTACK.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7) || (player[p].inputs.cStickAxis[0].y > 0.7 && player[p].inputs.cStickAxis[1].y <= 0.7)){
+    else if ((player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) {
       aS[cS[p]].THROWUP.init(p);
       return true;
     }
@@ -3408,11 +3442,11 @@ window.baseActionStates = {
       aS[cS[p]].THROWDOWN.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.7) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.7)){
+    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.7)) {// || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.7)){
       aS[cS[p]].THROWBACK.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.7) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.7)){
+    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.7)) {// || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.7)){
       aS[cS[p]].THROWFORWARD.init(p);
       return true;
     }

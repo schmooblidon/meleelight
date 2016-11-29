@@ -1,20 +1,32 @@
 {
   "name": "meleelight",
   "version": "0.0.1",
-  "description": "Melee written in JS",
+  "description": "Melee Light Platform Fighter",
+  "main": "app.js",
   "scripts": {
-    "build": "./node_modules/.bin/webpack --progress --colors --config=webpack/build.config.js",
-    "dev": "./node_modules/.bin/webpack --progress --colors --watch --config=webpack/dev.config.js",
-    "animations": "./node_modules/.bin/webpack --progress --colors --config=webpack/animations.config.js"
+    "build": "webpack --progress --colors --config=bin/webpack/build.config.js",
+    "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
+    "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
+    "release": "node bin/release.js"
   },
   "engines": {
     "node": "7.2.0",
     "npm": "3.10.9",
     "yarn": "0.17.8"
   },
-  "repository": "git@github.com:schmooblidon/meleelight.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schmooblidon/meleelight.git"
+  },
+  "keywords": [
+    "melee"
+  ],
   "author": "schmooblidon",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/schmooblidon/meleelight/issues"
+  },
+  "homepage": "https://github.com/schmooblidon/meleelight#readme",
   "dependencies": {
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
@@ -23,12 +35,15 @@
     "babel-preset-stage-2": "^6.18.0",
     "eslint": "^3.10.2",
     "eslint-loader": "^1.6.1",
+    "express": "^4.14.0",
+    "fs-extra": "^1.0.0",
     "howler": "^2.0.1",
     "jquery": "1.11.3",
     "webpack": "^1.13.3",
     "webpack-notifier": "^1.4.1",
     "yargs": "^6.4.0"
   },
+  "devDependencies": {},
   "babel": {
     "presets": [
       "es2015",
