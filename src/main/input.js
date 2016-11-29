@@ -130,8 +130,6 @@ export function controllerNameFromIDnumber(number) {
   }
 };
 
-<<<<<<< HEAD
-=======
 // the following function gives an approximation to the extreme raw axis data for a given controller
 // of course, this varies between controllers, but this serves as a useful first approximation
 // function output: [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]]
@@ -145,7 +143,6 @@ function axisDataFromIDNumber(number) {
   }
 };
 
->>>>>>> changed function return type for readability
 export function controllerIDNumberFromGamepadID(gamepadID) {
   var output = -1;
   for (var [possibleID, val] of controllerIDMap.entries()) {
@@ -346,7 +343,7 @@ function meleeYAxisLinearRescale (y, bool) {
   return axisRescale ( y, meleeYOrig, bool );
 };
 
-function meleeAxisNonLinearRescale ( [x,y] ) {
+function meleeAxesNonLinearRescale ( [x,y] ) {
   let norm = Math.sqrt(x*x + y*y);
   if (norm < 1) {
     return ([x,y]);
@@ -359,10 +356,10 @@ function meleeAxisNonLinearRescale ( [x,y] ) {
   }
 };
 
-function meleeAxisRescale ( [x,y], bool ) {
+function meleeAxesRescale ( [x,y], bool ) {
     let xnew = meleeXAxisLinearRescale (x, bool);
     let ynew = meleeYAxisLinearRescale (y, bool);
-    return meleeAxisNonLinearRescale( [xnew, ynew]);
+    return meleeAxesNonLinearRescale( [xnew, ynew]);
 }
 
 function meleeRound (x) {
@@ -371,5 +368,5 @@ function meleeRound (x) {
 
 export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCenterY ) {
     let [xnew, ynew] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
-    return (meleeAxisRescale ( [xnew, ynew], bool )).map(meleeRound);
+    return (meleeAxesRescale ( [xnew, ynew], bool )).map(meleeRound);
 };
