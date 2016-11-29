@@ -4,8 +4,8 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     , checkForSmashes
     , reduceByTraction
     , aS
-} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
+} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "WAIT",
   canEdgeCancel : true,

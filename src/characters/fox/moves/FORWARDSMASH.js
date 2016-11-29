@@ -1,8 +1,8 @@
 
 import WAIT from "characters/shared/moves/WAIT";
-import {player, cS} from "../../../main/main";
-import {turnOffHitboxes, reduceByTraction, randomShout} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
+import {player, cS} from "main/main";
+import {turnOffHitboxes, reduceByTraction, randomShout} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 
 export default {
   name : "FORWARDSMASH",

@@ -1,11 +1,11 @@
 import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen,
     setCreditsPlayer
-} from "../main/main";
-import {sounds} from "../main/sfx";
-import { setTargetPlayer} from "../target/targetplay";
-import { setTargetPointerPos} from "./targetselect";
-import {  setEditingStage, setTargetBuilder} from "../target/targetbuilder";
-import {twoPi} from "../main/render";
+} from "main/main";
+import {sounds} from "main/sfx";
+import { setTargetPlayer} from "target/targetplay";
+import { setTargetPointerPos} from "menus/targetselect";
+import {  setEditingStage, setTargetBuilder} from "target/targetbuilder";
+import {twoPi} from "main/render";
 /* eslint-disable */
 
  let menuSelected = 0;

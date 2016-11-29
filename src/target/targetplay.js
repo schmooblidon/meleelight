@@ -1,4 +1,4 @@
-import {Vec2D} from "../main/characters";
+import {Vec2D} from "main/characters";
 import {player, changeGamemode,  initializePlayers, matchTimer,  drawVfx
     , getCookie,stage
     , resetVfxQueue
@@ -11,13 +11,13 @@ import {player, changeGamemode,  initializePlayers, matchTimer,  drawVfx
 
     , setEndTargetGame
     , setStage
-} from "../main/main";
-import {renderPlayer} from "../main/render";
-import {sounds} from "../main/sfx";
-import {stageTemp} from "./targetbuilder";
-import { setBackgroundType} from "../stages/stagerender";
-import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision} from "../physics/article";
-import {interpolatedHitCircleCollision} from "../physics/hitDetection";
+} from "main/main";
+import {renderPlayer} from "main/render";
+import {sounds} from "main/sfx";
+import {stageTemp} from "target/targetbuilder";
+import { setBackgroundType} from "stages/stagerender";
+import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision} from "physics/article";
+import {interpolatedHitCircleCollision} from "physics/hitDetection";
 /* eslint-disable */
 
 export let targetTesting = false;

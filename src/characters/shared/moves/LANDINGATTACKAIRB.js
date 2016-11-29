@@ -1,6 +1,6 @@
-import {reduceByTraction, aS} from "../../../physics/actionStateShortcuts";
-import {cS, drawVfx, player} from "../../../main/main";
-import {sounds} from "../../../main/sfx";
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
 export default {
   name : "LANDINGATTACKAIRB",
   canEdgeCancel : true,

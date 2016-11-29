@@ -1,10 +1,10 @@
-import {player, cS, drawVfx, percentShake, stage, playerType, edgeOffset, versusMode, showDebug, deepCopyObject} from "../main/main";
-import {Vec2D, Box2D} from "../main/characters";
-import {sounds} from "../main/sfx";
-import {gameSettings} from "../settings";
+import {player, cS, drawVfx, percentShake, stage, playerType, edgeOffset, versusMode, showDebug, deepCopyObject} from "main/main";
+import {Vec2D, Box2D} from "main/characters";
+import {sounds} from "main/sfx";
+import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
-import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "./hitDetection";
-import {lostStockQueue} from '../main/render';
+import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
+import {lostStockQueue} from 'main/render';
 /* eslint-disable */
 
 export function land (i,y,t,j){

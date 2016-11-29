@@ -1,6 +1,6 @@
 
-import MOVES from "./index";
-import JAB3 from "./JAB3";
+import MOVES from "characters/fox/moves/index";
+import JAB3 from "characters/fox/moves/JAB3";
 import WAIT from "characters/shared/moves/WAIT";
 import WALK from "characters/shared/moves/WALK";
 import DASH from "characters/shared/moves/DASH";
@@ -11,9 +11,9 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     checkForTilts
     , checkForSpecials
     , turnOffHitboxes
-} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
-import {player} from "../../../main/main";
+} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {player} from "main/main";
 
 export default {
   name : "JAB2",

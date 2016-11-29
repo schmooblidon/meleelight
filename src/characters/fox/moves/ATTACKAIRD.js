@@ -2,9 +2,9 @@
 import LANDING from "characters/shared/moves/LANDING";
 import LANDINGATTACKAIRD from "characters/shared/moves/LANDINGATTACKAIRD";
 import FALL from "characters/shared/moves/FALL";
-import {player} from "../../../main/main";
-import {turnOffHitboxes, fastfall, airDrift} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
+import {player} from "main/main";
+import {turnOffHitboxes, fastfall, airDrift} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 
 export default {
   name : "ATTACKAIRD",

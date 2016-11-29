@@ -2,10 +2,10 @@ import {player, setCookie, changeGamemode, ports, bg1, bg1 as fg1, layers, fg2 a
     getCookie
     , addShine
     , setShine
-} from "../main/main";
-import {sounds} from "../main/sfx";
-import {twoPi} from "../main/render";
-import {stickHoldEach, stickHold, increaseStick, resetStick} from "./menu";
+} from "main/main";
+import {sounds} from "main/sfx";
+import {twoPi} from "main/render";
+import {stickHoldEach, stickHold, increaseStick, resetStick} from "menus/menu";
 /* eslint-disable */
 
 // sounds, music

@@ -1,5 +1,5 @@
-import {Vec2D} from "../../../main/characters";
-import {player} from "../../../main/main";
+import {Vec2D} from "main/characters";
+import {player} from "main/main";
 export default {
   name : "THROWNPUFFDOWN",
   canEdgeCancel : false,

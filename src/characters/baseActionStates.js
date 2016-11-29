@@ -1,6 +1,6 @@
-import {player, cS, drawVfx, screenShake, percentShake, finishGame, palettes, pPal,stage} from "../main/main";
-import {sounds} from "../main/sfx";
-import {Vec2D, actionSounds} from "../main/characters";
+import {player, cS, drawVfx, screenShake, percentShake, finishGame, palettes, pPal,stage} from "main/main";
+import {sounds} from "main/sfx";
+import {Vec2D, actionSounds} from "main/characters";
 import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForAerials,
     checkForDash
     , checkForSmashTurn
@@ -18,7 +18,7 @@ import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, 
     , mashOut
     , checkForSquat
     , shieldDepletion
-} from "../physics/actionStateShortcuts";
+} from "physics/actionStateShortcuts";
 /* eslint-disable */
 
 // BASE ActionStates

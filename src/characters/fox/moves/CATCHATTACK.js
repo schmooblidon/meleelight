@@ -1,7 +1,7 @@
 
 import CATCHWAIT from "characters/shared/moves/CATCHWAIT";
-import {player} from "../../../main/main";
-import {turnOffHitboxes} from "../../../physics/actionStateShortcuts";
+import {player} from "main/main";
+import {turnOffHitboxes} from "physics/actionStateShortcuts";
 
 export default {
   name : "CATCHATTACK",

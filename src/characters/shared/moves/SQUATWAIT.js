@@ -1,8 +1,8 @@
 import {checkForSmashTurn, checkForDash, checkForJump, checkForSmashes, checkForTilts, checkForSpecials,
     reduceByTraction
     , aS
-} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
+} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "SQUATWAIT",
   canEdgeCancel : true,

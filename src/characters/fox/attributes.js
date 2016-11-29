@@ -6,7 +6,7 @@ import {    offsets,  Vec2D, createHitboxObject, createHitbox,
     , setHitBoxes
     , setIntangibility
     , setActionSounds
-} from "../../main/characters";
+} from "main/characters";
 /* eslint-disable indent, camelcase */
 
 

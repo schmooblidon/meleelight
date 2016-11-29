@@ -3,8 +3,8 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     , checkForTilts
     , checkForSpecials
     , aS
-} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
+} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "OTTOTTO",
   canEdgeCancel : false,

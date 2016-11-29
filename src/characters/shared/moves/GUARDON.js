@@ -1,7 +1,7 @@
-import {checkForJump, shieldDepletion, playSounds, shieldTilt, reduceByTraction, aS, shieldSize} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
-import {cS, player} from "../../../main/main";
-import {Vec2D} from "../../../main/characters";
+import {checkForJump, shieldDepletion, playSounds, shieldTilt, reduceByTraction, aS, shieldSize} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, player} from "main/main";
+import {Vec2D} from "main/characters";
 export default {
   name : "GUARDON",
   canEdgeCancel : true,

@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "DOWNWAIT",
   canEdgeCancel : true,

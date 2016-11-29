@@ -1,9 +1,9 @@
 
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
-import {randomShout, turnOffHitboxes, aS} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
-import {hitQueue} from '../../../physics/hitdetection';
+import {randomShout, turnOffHitboxes, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {hitQueue} from 'physics/hitDetection';
 export default {
   name : "THROWFORWARD",
   canEdgeCancel : false,

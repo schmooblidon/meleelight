@@ -1,5 +1,5 @@
-import {Box2D, Vec2D} from "../main/characters";
-import {stage, player} from "../main/main";
+import {Box2D, Vec2D} from "main/characters";
+import {stage, player} from "main/main";
 /* eslint-disable */
 
 export const stages = [{

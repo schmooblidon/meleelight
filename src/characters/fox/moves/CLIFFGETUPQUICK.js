@@ -1,7 +1,7 @@
 
 import WAIT from "characters/shared/moves/WAIT";
-import {player, stage} from "../../../main/main";
-import {Vec2D} from "../../../main/characters";
+import {player, stage} from "main/main";
+import {Vec2D} from "main/characters";
 
 export default {
   name : "CLIFFGETUPQUICK",

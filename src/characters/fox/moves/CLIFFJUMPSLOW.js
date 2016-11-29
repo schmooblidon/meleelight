@@ -1,8 +1,8 @@
 
 import FALL from "characters/shared/moves/FALL";
-import {player, stage} from "../../../main/main";
-import {Vec2D} from "../../../main/characters";
-import {airDrift, fastfall} from "../../../physics/actionStateShortcuts";
+import {player, stage} from "main/main";
+import {Vec2D} from "main/characters";
+import {airDrift, fastfall} from "physics/actionStateShortcuts";
 
 export default {
   name : "CLIFFJUMPSLOW",

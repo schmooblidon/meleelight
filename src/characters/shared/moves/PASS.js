@@ -1,5 +1,5 @@
-import {checkForSpecials, checkForAerials, airDrift, fastfall, aS} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
+import {checkForSpecials, checkForAerials, airDrift, fastfall, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "PASS",
   canPassThrough : true,

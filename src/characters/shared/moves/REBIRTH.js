@@ -1,6 +1,6 @@
-import {cS, player} from "../../../main/main";
-import {aS} from "../../../physics/actionStateShortcuts";
-import {stage} from "../../../main/main";
+import {cS, player} from "main/main";
+import {aS} from "physics/actionStateShortcuts";
+import {stage} from "main/main";
 export default {
   name : "REBIRTH",
   canBeGrabbed : false,

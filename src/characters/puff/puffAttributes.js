@@ -9,7 +9,7 @@ import { offsets, Vec2D, createHitboxObject, createHitbox, charObject,  setChars
     ,
     setIntangibility
     , setActionSounds
-} from "../../main/characters";
+} from "main/characters";
 /* eslint-disable */
 
 setCharAttributes(CHARIDS.PUFF_ID, {

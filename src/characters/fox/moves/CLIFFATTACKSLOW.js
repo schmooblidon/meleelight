@@ -1,9 +1,9 @@
 
 import WAIT from "characters/shared/moves/WAIT";
-import {player, stage, cS} from "../../../main/main";
-import {turnOffHitboxes, randomShout} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
-import {Vec2D} from "../../../main/characters";
+import {player, stage, cS} from "main/main";
+import {turnOffHitboxes, randomShout} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {Vec2D} from "main/characters";
 
 export default {
   name : "CLIFFATTACKSLOW",

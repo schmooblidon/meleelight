@@ -1,8 +1,8 @@
-import {sounds} from "../main/sfx";
+import {sounds} from "main/sfx";
 import {player, changeGamemode, bg1,fg1,bg2,ui, clearScreen, shine, startGame, layers, setShine, addShine
     , setStageSelect
-} from "../main/main";
-import {twoPi} from "../main/render";
+} from "main/main";
+import {twoPi} from "main/render";
 /* eslint-disable */
 
 let stageSelected = 4;

@@ -2,19 +2,19 @@ import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layer
     addShine
     , setShine
     , deepCopyObject
-} from "../main/main";
+} from "main/main";
 import {targetRecords,  startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords,
     setTargetStagePlaying
-} from "../target/targetplay";
+} from "target/targetplay";
 import {showingCode, stageTemp,  setShowingCode, resetStageTemp, setTargetBuilder,
     setEditingStage
     , setStageTemp
-} from "../target/targetbuilder";
-import {sounds} from "../main/sfx";
-import {Vec2D, Box2D} from "../main/characters";
-import {twoPi} from "../main/render";
-import {foxPic, puffPic, marthPic} from "./css";
-import {customTargetStages, targetStages, setCustomTargetStages} from "../stages/stages";
+} from "target/targetbuilder";
+import {sounds} from "main/sfx";
+import {Vec2D, Box2D} from "main/characters";
+import {twoPi} from "main/render";
+import {foxPic, puffPic, marthPic} from "menus/css";
+import {customTargetStages, targetStages, setCustomTargetStages} from "stages/stages";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;

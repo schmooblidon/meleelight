@@ -1,6 +1,6 @@
-import {checkForJump, aS} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
-import {cS, player} from "../../../main/main";
+import {checkForJump, aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, player} from "main/main";
 export default {
   name : "RUN",
   canEdgeCancel : true,

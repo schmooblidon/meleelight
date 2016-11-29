@@ -1,8 +1,8 @@
-import {playerType, player, cS, screenShake, drawVfx, gameMode, percentShake} from "../main/main";
-import {Vec2D, Segment2D} from "../main/characters";
-import {gameSettings} from "../settings";
-import {sounds} from "../main/sfx";
-import {turnOffHitboxes, aS} from "./actionStateShortcuts";
+import {playerType, player, cS, screenShake, drawVfx, gameMode, percentShake} from "main/main";
+import {Vec2D, Segment2D} from "main/characters";
+import {gameSettings} from "settings";
+import {sounds} from "main/sfx";
+import {turnOffHitboxes, aS} from "physics/actionStateShortcuts";
 /* eslint-disable */
 
 export let hitQueue = [];
@@ -15,7 +15,7 @@ export function setPhantonQueue(val){
 }
 const angleConversion = Math.PI / 180;
 
-export function hitDetection (p){
+export function hitDetect (p){
     var attackerClank = false;
     for (var i = 0; i < 4; i++) {
         if (playerType[i] > -1) {

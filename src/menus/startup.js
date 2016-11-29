@@ -1,5 +1,5 @@
-import {changeGamemode,ui, layers, bg1} from "../main/main";
-import {drawArrayPathCompress} from "../main/render";
+import {changeGamemode,ui, layers, bg1} from "main/main";
+import {drawArrayPathCompress} from "main/render";
 /* eslint-disable */
 
 export let startUpTimer = 0;

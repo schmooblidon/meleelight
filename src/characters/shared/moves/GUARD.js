@@ -1,5 +1,5 @@
-import {checkForJump, shieldSize, shieldDepletion, shieldTilt, reduceByTraction, aS} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
+import {checkForJump, shieldSize, shieldDepletion, shieldTilt, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "GUARD",
   canEdgeCancel : true,

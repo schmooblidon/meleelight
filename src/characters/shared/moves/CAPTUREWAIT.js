@@ -1,6 +1,6 @@
-import {mashOut, aS} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
-import {Vec2D} from "../../../main/characters";
+import {mashOut, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {Vec2D} from "main/characters";
 export default {
   name : "CAPTUREWAIT",
   canEdgeCancel : false,

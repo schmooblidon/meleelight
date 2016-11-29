@@ -1,8 +1,8 @@
 
 import WAIT from "characters/shared/moves/WAIT";
-import {player} from "../../../main/main";
-import {turnOffHitboxes, reduceByTraction} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
+import {player} from "main/main";
+import {turnOffHitboxes, reduceByTraction} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 
 export default {
   name : "DOWNATTACK",

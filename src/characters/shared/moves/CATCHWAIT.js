@@ -1,5 +1,5 @@
-import {cS, player} from "../../../main/main";
-import {aS, turnOffHitboxes} from "../../../physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {aS, turnOffHitboxes} from "physics/actionStateShortcuts";
 export default {
   name : "CATCHWAIT",
   canEdgeCancel : false,

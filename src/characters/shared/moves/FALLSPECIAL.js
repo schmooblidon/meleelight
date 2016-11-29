@@ -1,5 +1,5 @@
-import {airDrift, fastfall, aS} from "../../../physics/actionStateShortcuts";
-import {cS, player} from "../../../main/main";
+import {airDrift, fastfall, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "FALLSPECIAL",
   canPassThrough : true,

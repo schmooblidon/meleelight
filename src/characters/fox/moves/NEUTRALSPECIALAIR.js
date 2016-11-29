@@ -1,10 +1,10 @@
 
 import FALL from "characters/shared/moves/FALL";
-import {articles} from "../../../physics/article";
-import {Vec2D} from "../../../main/characters";
-import {drawVfx, player} from "../../../main/main";
-import {sounds} from "../../../main/sfx";
-import {airDrift, fastfall} from "../../../physics/actionStateShortcuts";
+import {articles} from "physics/article";
+import {Vec2D} from "main/characters";
+import {drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
+import {airDrift, fastfall} from "physics/actionStateShortcuts";
 
 export default {
   name : "NEUTRALSPECIALAIR",

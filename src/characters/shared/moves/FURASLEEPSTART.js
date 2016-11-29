@@ -1,6 +1,6 @@
-import {pPal, palettes, cS, player} from "../../../main/main";
-import {reduceByTraction, aS} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
+import {pPal, palettes, cS, player} from "main/main";
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 export default {
   name : "FURASLEEPSTART",
   canEdgeCancel : true,

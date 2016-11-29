@@ -12,7 +12,7 @@ import { Vec2D, offsets,   createHitboxObject, charObject,  createHitbox,
     setIntangibility
     ,
     setActionSounds
-} from "../../main/characters";
+} from "main/characters";
 /* eslint-disable */
 
  setCharAttributes(CHARIDS.MARTH_ID, {

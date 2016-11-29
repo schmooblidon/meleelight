@@ -4,9 +4,9 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     , checkForSpecials
     , reduceByTraction
     , aS
-} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
-import {cS, player} from "../../../main/main";
+} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, player} from "main/main";
 export default {
   name : "WALK",
   canEdgeCancel : true,

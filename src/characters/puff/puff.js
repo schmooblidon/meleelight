@@ -7,13 +7,13 @@ import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, c
     , airDrift
     , randomShout
     , checkForAerials
-} from "../../physics/actionStateShortcuts";
-import {baseActionStates} from "../baseActionStates";
-import {sounds} from "../../main/sfx";
-import {player, cS, stage, drawVfx, deepCopyObject} from "../../main/main";
-import {Vec2D} from "../../main/characters";
+} from "physics/actionStateShortcuts";
+import {baseActionStates} from "characters/baseActionStates";
+import {sounds} from "main/sfx";
+import {player, cS, stage, drawVfx, deepCopyObject} from "main/main";
+import {Vec2D} from "main/characters";
 
-import {hitQueue} from '../../physics/hitdetection';
+import {hitQueue} from 'physics/hitDetection';
 
 /* eslint-disable */
 

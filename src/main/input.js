@@ -4,7 +4,7 @@ import {
   inverseMatrix,
   multMatVect
 } from "main/linAlg";
-import {Vec2D} from "./characters";
+import {Vec2D} from "main/characters";
 
 export const button = {
   a: 0,

@@ -1,5 +1,5 @@
-import {player, cS} from "../../../main/main";
-import {aS} from "../../../physics/actionStateShortcuts";
+import {player, cS} from "main/main";
+import {aS} from "physics/actionStateShortcuts";
 export default {
   name : "CAPTUREDAMAGE",
   canEdgeCancel : false,

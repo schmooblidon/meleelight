@@ -1,4 +1,4 @@
-import {Vec2D} from "./characters";
+import {Vec2D} from "main/characters";
 import {
     player,
     cS,
@@ -14,10 +14,10 @@ import {
     tagText
     , gameMode
     , startTimer
-} from "./main";
-import {gameSettings} from "../settings";
-import {makeColour} from "./vfx";
-import {aS} from "../physics/actionStateShortcuts";
+} from "main/main";
+import {gameSettings} from "settings";
+import {makeColour} from "main/vfx";
+import {aS} from "physics/actionStateShortcuts";
 /* eslint-disable */
 
 export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];

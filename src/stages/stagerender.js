@@ -1,8 +1,8 @@
-import {transparency} from "../main/vfx";
-import {Vec2D} from "../main/characters";
-import {bg1, bg2, fg1, fg2, stage, layers} from "../main/main";
-import {targetDestroyed} from "../target/targetplay";
-import {rotateVector, twoPi} from "../main/render";
+import {transparency} from "main/vfx";
+import {Vec2D} from "main/characters";
+import {bg1, bg2, fg1, fg2, stage, layers} from "main/main";
+import {targetDestroyed} from "target/targetplay";
+import {rotateVector, twoPi} from "main/render";
 /* eslint-disable */
 
 const bgPos = [[-30, 500, 300, 500, 900, 500, 1230, 450, 358], [-30, 400, 300, 400, 900, 400, 1230, 350, 179]];

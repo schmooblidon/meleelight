@@ -1,8 +1,8 @@
 
 import WAIT from "characters/shared/moves/WAIT";
-import {sounds} from "../../../main/sfx";
-import {reduceByTraction, turnOffHitboxes} from "../../../physics/actionStateShortcuts";
-import {player} from "../../../main/main";
+import {sounds} from "main/sfx";
+import {reduceByTraction, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {player} from "main/main";
 
 export default {
   name : "JAB3",

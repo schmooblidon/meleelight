@@ -1,5 +1,5 @@
-import {cS, player} from "../../../main/main";
-import {aS} from "../../../physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {aS} from "physics/actionStateShortcuts";
 export default {
   name : "CLIFFWAIT",
   canGrabLedge : false,

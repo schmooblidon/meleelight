@@ -1,9 +1,9 @@
 /* eslint-disable */
-import {stage, vfxQueue, player, drawVfx, startTimer,fg2} from "./main";
-import {drawArrayPath, drawArrayPathNew} from "./render";
-import {Vec2D} from "./characters";
-import {swordSwings} from "./swordSwings";
-import {sounds} from "./sfx";
+import {stage, vfxQueue, player, drawVfx, startTimer,fg2} from "main/main";
+import {drawArrayPath, drawArrayPathNew} from "main/render";
+import {Vec2D} from "main/characters";
+import {swordSwings} from "main/swordSwings";
+import {sounds} from "main/sfx";
 const twoPi = Math.PI * 2;
 
 export const vfx = {

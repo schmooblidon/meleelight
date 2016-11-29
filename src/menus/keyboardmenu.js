@@ -4,13 +4,13 @@ import {getCookie, player, setCookie, keyBinding, keyBind, keys, changeGamemode,
     , addShine
     , setShine
     , setKeyBinding
-} from "../main/main";
-import {Vec2D} from "../main/characters";
-import {keyMap} from "../settings";
-import {sounds} from "../main/sfx";
-import {keyText} from "./keytest";
-import {twoPi} from "../main/render";
-import {stickHold, stickHoldEach, increaseStick, resetStick} from "./menu";
+} from "main/main";
+import {Vec2D} from "main/characters";
+import {keyMap} from "settings";
+import {sounds} from "main/sfx";
+import {keyText} from "menus/keytest";
+import {twoPi} from "main/render";
+import {stickHold, stickHoldEach, increaseStick, resetStick} from "menus/menu";
 /* eslint-disable */
 
 export let keymapItems = {

@@ -1,13 +1,13 @@
 
-import DOWNSPECIALGROUND from "./DOWNSPECIALGROUND";
+import DOWNSPECIALGROUND from "characters/fox/moves/DOWNSPECIALGROUND";
 import JUMPAERIALB from "characters/shared/moves/JUMPAERIALB";
 import JUMPAERIALF from "characters/shared/moves/JUMPAERIALF";
 import WAIT from "characters/shared/moves/WAIT";
 import FALL from "characters/shared/moves/FALL";
-import {player, drawVfx} from "../../../main/main";
-import {sounds} from "../../../main/sfx";
-import {turnOffHitboxes} from "../../../physics/actionStateShortcuts";
-import {Vec2D} from "../../../main/characters";
+import {player, drawVfx} from "main/main";
+import {sounds} from "main/sfx";
+import {turnOffHitboxes} from "physics/actionStateShortcuts";
+import {Vec2D} from "main/characters";
 
 export default {
   name : "DOWNSPECIALAIR",

@@ -1,5 +1,5 @@
-import {bg1,bg2, clearScreen, layers,ui} from "../main/main";
-import {twoPi} from "../main/render";
+import {bg1,bg2, clearScreen, layers,ui} from "main/main";
+import {twoPi} from "main/render";
 /* eslint-disable */
 
 export let angB = 0;

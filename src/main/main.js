@@ -1,38 +1,38 @@
 /* eslint-disable */
-import {Vec2D,Box2D} from "./characters";
-import {choosingTag, drawCSSInit, cssControls, drawCSS} from '../menus/css';
-import {playerObject} from './player';
-import {keyMap} from '../settings';
-import {drawStartUp} from '../menus/startup';
-import {menuMove, drawMainMenuInit, drawMainMenu} from "../menus/menu";
-import {sounds} from "./sfx";
-import {drawStartScreenInit, drawStartScreen} from "../menus/startscreen";
-import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType} from "../stages/stagerender";
-import {drawSSSInit, sssControls, drawSSS} from "../menus/stageselect";
-import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "../menus/audiomenu";
-import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "../menus/gameplaymenu";
-import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "../menus/keyboardmenu";
-import {drawCreditsInit, credits, drawCredits} from "../menus/credits";
-import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "./render";
-import {vfx, dVfx, setTransparency, transparency} from "./vfx";
-import {aS} from "../physics/actionStateShortcuts";
-import {executeHits, hitDetection, checkPhantoms, resetHitQueue, setPhantonQueue} from "../physics/hitDetection";
+import {Vec2D,Box2D} from "main/characters";
+import {choosingTag, drawCSSInit, cssControls, drawCSS} from 'menus/css';
+import {playerObject} from 'main/player';
+import {keyMap} from 'settings';
+import {drawStartUp} from 'menus/startup';
+import {menuMove, drawMainMenuInit, drawMainMenu} from "menus/menu";
+import {sounds} from "main/sfx";
+import {drawStartScreenInit, drawStartScreen} from "menus/startscreen";
+import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType} from "stages/stagerender";
+import {drawSSSInit, sssControls, drawSSS} from "menus/stageselect";
+import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "menus/audiomenu";
+import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "menus/gameplaymenu";
+import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
+import {drawCreditsInit, credits, drawCredits} from "menus/credits";
+import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
+import {vfx, dVfx, setTransparency, transparency} from "main/vfx";
+import {aS} from "physics/actionStateShortcuts";
+import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
 import {targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned, targetRecords, targetsDestroyed,
     targetStagePlaying
     , getTargetCookies
     , giveMedals
     , medalTimes
-} from "../target/targetplay";
-import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../menus/targetselect";
-import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "../target/targetbuilder";
-import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "../physics/article";
-import {stages} from "../stages/stages";
-import {runAI} from "./ai";
-import {physics} from "../physics/physics";
+} from "target/targetplay";
+import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "menus/targetselect";
+import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
+import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
+import {stages} from "stages/stages";
+import {runAI} from "main/ai";
+import {physics} from "physics/physics";
 import $ from 'jquery';
 import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, button, controllerMaps, scaleToGCAxis,
     scaleToGCTrigger
-} from "./input";
+} from "main/input";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -1010,7 +1010,7 @@ export function gameTick (){
     }
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetection(i);
+        hitDetect(i);
       }
     }
     executeHits();
@@ -1106,7 +1106,7 @@ export function gameTick (){
     checkPhantoms();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetection(i);
+        hitDetect(i);
       }
     }
     executeHits();

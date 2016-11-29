@@ -1,5 +1,5 @@
 
-import MOVES from "./index";
+import MOVES from "characters/fox/moves/index";
 import WAIT from "characters/shared/moves/WAIT";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
 import DASH from "characters/shared/moves/DASH";
@@ -10,9 +10,9 @@ import {tiltTurnDashBuffer, checkForSmashTurn, checkForDash, checkForJump, check
     checkForSpecials
     , reduceByTraction
     , turnOffHitboxes
-} from "../../../physics/actionStateShortcuts";
-import {sounds} from "../../../main/sfx";
-import {player} from "../../../main/main";
+} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {player} from "main/main";
 
 export default {
   name : "UPTILT",

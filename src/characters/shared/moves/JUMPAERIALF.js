@@ -1,6 +1,6 @@
-import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, aS} from "../../../physics/actionStateShortcuts";
-import {cS, drawVfx, player} from "../../../main/main";
-import {sounds} from "../../../main/sfx";
+import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, aS} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
 export default {
   name : "JUMPAERIALF",
   canPassThrough : true,
