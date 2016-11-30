@@ -50,8 +50,9 @@ const tigergameMap   = [ 0, 1, 2, 3, 6, 5 , 4 , 7, 11, 9 , 10, 8 ,  0,   1,   2,
 const retrolinkMap   = [ 2, 3, 1, 0, 6, 5 , 4 , 9, 10, 11, 8 , 7 ,  0,   1,   2,   5,  3,  4  ]; // ID 5, Retrolink adapter
 const raphnetV3_2Map = [ 0, 1, 7, 8, 2, 5 , 4 , 3, 10, 13, 11, 12,  0,   1,   3,   4,  5,  2  ]; // ID 6, Raphnet v 3.2,3.3
 const brookMap       = [ 0, 1, 2, 3, 4, 10, 11, 8, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 7, Brook adapter (d-pad values might be wrong, user had broken d-pad)
+const ps4Map         = [ 0, 1, 2, 3, 4, 10, 11, 8, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 8, PS4 controller
 
-export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap];
+export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map];
 
 
 // Checking gamepad inputs are well defined
@@ -150,6 +151,10 @@ controllerIDMap.set("289b-001d", 6);
 controllerIDMap.set("Wii U GameCube Controller Adapter", 7);
 controllerIDMap.set("0e8f-0003", 7);
 
+// ID 8, PS4 controller
+controllerIDMap.set("Wireless Controller", 8); // should check ID and vendor...
+controllerIDMap.set("054c-05c4", 8);
+
 //--END OF CONTROLLER IDs-------------------------------------
     
 
@@ -158,18 +163,20 @@ export function controllerNameFromIDnumber(number) {
     return "Mayflash Wii-U adapter";
   } else if (number === 1) {
     return "vJoy";
-  } else if (number == 2) {
+  } else if (number === 2) {
     return "raphnet v2.9 N64 adapter";
-  } else if (number == 3) {
+  } else if (number === 3) {
     return "XBOX 360 compatible controller";
   } else if (number === 4) {
     return "TigerGame 3-in-1";
-  } else if (number == 5) {
+  } else if (number === 5) {
     return "Retrolink adapter";
-  } else if (number == 6) {
+  } else if (number === 6) {
     return "raphnet v3.2+ N64 adapter";
-  } else if (number == 7) {
+  } else if (number === 7) {
     return "Brook adapter";
+  } else if (number === 8) {
+    return "PS4 controller";
   } else {
     return "error: controller detected but not supported";
   }
