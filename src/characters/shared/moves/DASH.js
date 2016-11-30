@@ -1,6 +1,8 @@
 import {checkForSmashTurn, checkForJump, reduceByTraction, aS} from "physics/actionStateShortcuts";
 import {drawVfx, cS, player} from "main/main";
 import {sounds} from "main/sfx";
+
+import {framesData} from 'main/characters';
 export default {
   name : "DASH",
   canEdgeCancel : true,
@@ -103,7 +105,7 @@ export default {
       aS[cS[p]].RUN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].DASH){
+    else if (player[p].timer > framesData[cS[p]].DASH){
       aS[cS[p]].WAIT.init(p);
       return true;
     }

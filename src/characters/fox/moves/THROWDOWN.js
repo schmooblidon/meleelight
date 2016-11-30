@@ -1,7 +1,7 @@
 
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
-import {Vec2D} from "main/characters";
+import {Vec2D,framesData} from "main/characters";
 import {drawVfx, cS, player} from "main/main";
 import {sounds} from "main/sfx";
 import {articles} from "physics/article";
@@ -16,7 +16,7 @@ export default {
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNFOXDOWN.init(player[p].phys.grabbing);
-    const frame = frames[cS[player[p].phys.grabbing]].THROWNFOXDOWN;
+    const frame = framesData[cS[player[p].phys.grabbing]].THROWNFOXDOWN;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;

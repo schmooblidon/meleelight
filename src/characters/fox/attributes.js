@@ -5,7 +5,7 @@ import {    offsets,  Vec2D, createHitboxObject, createHitbox,
     , setChars
     , setHitBoxes
     , setIntangibility
-    , setActionSounds
+    , setActionSounds,setFrames, setOffsets
 } from "main/characters";
 /* eslint-disable indent, camelcase */
 
@@ -71,7 +71,7 @@ setIntangibility(CHARIDS.FOX_ID, {
   "TECHF" : [1,20],
 });
 
-frames[CHARIDS.FOX_ID] = {
+setFrames(CHARIDS.FOX_ID, {
   "WAIT" : 120,
   "DASH" : 21,
   "RUN" : 25,
@@ -143,7 +143,7 @@ frames[CHARIDS.FOX_ID] = {
   "FURASLEEPEND" : 60,
   "STOPCEIL" : 9,
   "TECHU" : 26,
-};
+});
 
 setActionSounds(CHARIDS.FOX_ID, {
   "JUMP" : [],
@@ -162,7 +162,7 @@ setActionSounds(CHARIDS.FOX_ID, {
 
 // HITBOX OFFSETS
 
-offsets[CHARIDS.FOX_ID] = {
+setOffsets(CHARIDS.FOX_ID, {
   ledgegetupquick : {
     id0 : [
       new Vec2D(-58.14+63.41,6.74),
@@ -667,7 +667,7 @@ new Vec2D(5.92-1.03,7.53)]
   thrown : {
     id0 : [new Vec2D(0,12)]
   }
-};
+});
 
 for (let k = 0; k < 4; k++) {
   offsets[CHARIDS.FOX_ID].nair1.id0.push(new Vec2D(-0.96,6.53));

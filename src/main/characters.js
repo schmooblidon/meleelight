@@ -53,7 +53,10 @@ export const intangibility = [];
 export function setIntangibility(charId,val){
   intangibility[charId] =val;
 }
-export const frames = [];
+export const framesData = [];
+export function setFrames(charId,val){
+  framesData[charId] = val;
+}
 export const actionSounds = [];
 export function setActionSounds(charId,val){
   actionSounds[charId] =val;

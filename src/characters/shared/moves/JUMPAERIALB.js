@@ -1,6 +1,7 @@
 import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, aS} from "physics/actionStateShortcuts";
 import {cS, drawVfx, player} from "main/main";
 import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "JUMPAERIALB",
   canPassThrough : true,
@@ -46,7 +47,7 @@ export default {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPAERIALB){
+    else if (player[p].timer > framesData[cS[p]].JUMPAERIALB){
       aS[cS[p]].FALLAERIAL.init(p);
       return true;
     }

@@ -7,6 +7,7 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
 } from "physics/actionStateShortcuts";
 import {cS, player} from "main/main";
 import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "GUARDOFF",
   canEdgeCancel : true,
@@ -33,7 +34,7 @@ export default {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].GUARDOFF){
+    else if (player[p].timer > framesData[cS[p]].GUARDOFF){
       aS[cS[p]].WAIT.init(p);
       return true;
     }

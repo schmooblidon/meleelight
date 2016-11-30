@@ -8,7 +8,7 @@ import { offsets, Vec2D, createHitboxObject, createHitbox, charObject,  setChars
     setOffsets
     ,
     setIntangibility
-    , setActionSounds
+    , setActionSounds,setFrames
 } from "main/characters";
 /* eslint-disable */
 
@@ -57,7 +57,7 @@ setCharAttributes(CHARIDS.PUFF_ID, {
   shieldBreakVel : 10,
   multiJump : true,
   ecbscale : 2.6
-})
+});
 
   // start, length
 setIntangibility(CHARIDS.PUFF_ID,{
@@ -71,9 +71,9 @@ setIntangibility(CHARIDS.PUFF_ID,{
   "TECHN" : [1,20],
   "TECHB" : [1,20],
   "TECHF" : [1,20]
-  })
+  });
 
-  frames[1] = {
+setFrames(CHARIDS.PUFF_ID , {
   "WAIT" : 464,
   "DASH" : 23,
   "RUN" : 16,
@@ -145,7 +145,7 @@ setIntangibility(CHARIDS.PUFF_ID,{
   "FURASLEEPEND" : 76,
   "STOPCEIL" : 8,
   "TECHU" : 25
-  }
+  });
 
 setActionSounds(CHARIDS.PUFF_ID, {
   "JUMP" : [],
@@ -160,7 +160,7 @@ setActionSounds(CHARIDS.PUFF_ID, {
   "ESCAPEF" : [],
   "ESCAPEN" : [],
   "OTTOTTOWAIT" : []
-  })
+  });
 
 // HITBOX OFFSETS
 
@@ -566,7 +566,7 @@ new Vec2D(8.18-0.96,0.97)]
     id1 : [new Vec2D(-3.67,5.14)],
     id2 : [new Vec2D(3.67,5.14)]
   }
-})
+});
 
 setHitBoxes(CHARIDS.PUFF_ID, {
   fair1 : new createHitboxObject(new createHitbox(offsets[1].fair1.id0,3.515,12,361,100,10,0,0,0,1,1),new createHitbox(offsets[1].fair1.id1,4.687,10,361,100,10,0,0,0,1,1)),
@@ -609,7 +609,7 @@ setHitBoxes(CHARIDS.PUFF_ID, {
   throwforward : new createHitboxObject(new createHitbox(new Vec2D(10.8537,0.01),0,5,55,30,100,0,0,0,1,1)),
   throwforwardextra : new createHitboxObject(new createHitbox(offsets[1].throwforwardextra.id0,8.593,7,361,110,40,0,0,0,1,1)),
   thrown : new createHitboxObject(new createHitbox(offsets[1].thrown.id0,3.906,4,361,50,20,0,1,0,1,1))
-})
+});
 
 for (var l=0;l<20;l++){
   offsets[1].thrown.id0.push(new Vec2D(0,12));

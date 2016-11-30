@@ -10,7 +10,7 @@ import {aS, turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, 
 } from "physics/actionStateShortcuts";
 import {baseActionStates} from "characters/baseActionStates";
 import {player, drawVfx, palettes, pPal, cS, stage, deepCopyObject} from "main/main";
-import {Vec2D} from "main/characters";
+import {Vec2D,framesData} from "main/characters";
 import {sounds} from "main/sfx";
 
 import {hitQueue} from 'physics/hitDetection';
@@ -3419,7 +3419,7 @@ marth.THROWFORWARD = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
     randomShout(cS[p]);
-    var frame = frames[cS[player[p].phys.grabbing]].THROWNMARTHFORWARD;
+    var frame = framesData[cS[player[p].phys.grabbing]].THROWNMARTHFORWARD;
     player[p].phys.releaseFrame = frame+1;
     marth.THROWFORWARD.main(p);
   },
@@ -3459,7 +3459,7 @@ marth.THROWBACK = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
     randomShout(cS[p]);
-    var frame = frames[cS[player[p].phys.grabbing]].THROWNMARTHBACK;
+    var frame = framesData[cS[player[p].phys.grabbing]].THROWNMARTHBACK;
     player[p].phys.releaseFrame = frame+1;
     marth.THROWBACK.main(p);
   },
@@ -3498,7 +3498,7 @@ marth.THROWUP = {
     aS[cS[player[p].phys.grabbing]].THROWNMARTHUP.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
-    var frame = frames[cS[player[p].phys.grabbing]].THROWNMARTHUP;
+    var frame = framesData[cS[player[p].phys.grabbing]].THROWNMARTHUP;
     player[p].phys.releaseFrame = frame+1;
     randomShout(cS[p]);
     marth.THROWUP.main(p);
@@ -3539,7 +3539,7 @@ marth.THROWDOWN = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
     randomShout(cS[p]);
-    var frame = frames[cS[player[p].phys.grabbing]].THROWNMARTHDOWN;
+    var frame = framesData[cS[player[p].phys.grabbing]].THROWNMARTHDOWN;
     player[p].phys.releaseFrame = frame+1;
     marth.THROWDOWN.main(p);
   },

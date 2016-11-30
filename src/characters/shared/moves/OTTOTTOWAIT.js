@@ -4,7 +4,7 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     , checkForSpecials
     , aS
 } from "physics/actionStateShortcuts";
-import {actionSounds} from "main/characters";
+import {actionSounds,framesData} from "main/characters";
 import {sounds} from "main/sfx";
 import {cS, player} from "main/main";
 export default {
@@ -22,7 +22,7 @@ export default {
   },
   main : function(p){
     player[p].timer++;
-    if (player[p].timer > frames[cS[p]].OTTOTTOWAIT){
+    if (player[p].timer > framesData[cS[p]].OTTOTTOWAIT){
       player[p].timer = 0
     }
     if (!aS[cS[p]].OTTOTTOWAIT.interrupt(p)){

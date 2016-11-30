@@ -1,4 +1,4 @@
-import {Vec2D} from "main/characters";
+import {Vec2D,framesData} from "main/characters";
 import {
     player,
     cS,
@@ -103,8 +103,8 @@ export function renderPlayer(i) {
     if (frame == 0) {
         frame = 1;
     }
-    if (frame > frames[cS[i]][player[i].actionState]) {
-        frame = frames[cS[i]][player[i].actionState];
+    if (frame > framesData[cS[i]][player[i].actionState]) {
+        frame = framesData[cS[i]][player[i].actionState];
     }
 
     var model = animations[cS[i]][player[i].actionState][frame - 1];

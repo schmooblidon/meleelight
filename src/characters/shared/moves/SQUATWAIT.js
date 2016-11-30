@@ -3,6 +3,7 @@ import {checkForSmashTurn, checkForDash, checkForJump, checkForSmashes, checkFor
     , aS
 } from "physics/actionStateShortcuts";
 import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "SQUATWAIT",
   canEdgeCancel : true,
@@ -61,7 +62,7 @@ export default {
       aS[cS[p]].SMASHTURN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].SQUATWAIT){
+    else if (player[p].timer > framesData[cS[p]].SQUATWAIT){
       aS[cS[p]].SQUATWAIT.init(p);
     }
     else {

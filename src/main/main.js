@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {Vec2D,Box2D} from "main/characters";
+import {Vec2D,Box2D,framesData} from "main/characters";
 import {choosingTag, drawCSSInit, cssControls, drawCSS} from 'menus/css';
 import {playerObject} from 'main/player';
 import {keyMap} from 'settings';

@@ -1,5 +1,5 @@
 import {player, cS, drawVfx, percentShake, stage, playerType, edgeOffset, versusMode, showDebug, deepCopyObject, gameMode} from "main/main";
-import {Vec2D, Box2D} from "main/characters";
+import {Vec2D, Box2D,framesData} from "main/characters";
 import {sounds} from "main/sfx";
 import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
@@ -335,8 +335,8 @@ export function physics (i){
   if (frame == 0) {
     frame = 1;
   }
-  if (frame > frames[cS[i]][player[i].actionState]) {
-    frame = frames[cS[i]][player[i].actionState];
+  if (frame > framesData[cS[i]][player[i].actionState]) {
+    frame = framesData[cS[i]][player[i].actionState];
   }
   //console.log(aS[cS[i]][player[i].actionState].name+" "+(frame-1));
   var ecbOffset = ecb[cS[i]][player[i].actionState][frame - 1];

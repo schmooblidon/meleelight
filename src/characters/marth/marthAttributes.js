@@ -11,7 +11,7 @@ import { Vec2D, offsets,   createHitboxObject, charObject,  createHitbox,
     ,
     setIntangibility
     ,
-    setActionSounds
+    setActionSounds,setFrames
 } from "main/characters";
 /* eslint-disable */
 
@@ -76,7 +76,7 @@ setIntangibility(CHARIDS.MARTH_ID, {
   "TECHF" : [1,20]
 });
 
-frames[CHARIDS.MARTH_ID] = {
+setFrames(CHARIDS.MARTH_ID, {
   "WAIT" : 90,
   "DASH" : 27,
   "RUN" : 23,
@@ -148,7 +148,7 @@ frames[CHARIDS.MARTH_ID] = {
   "FURASLEEPEND" : 60,
   "STOPCEIL" : 9,
   "TECHU" : 26
-};
+});
 
 setActionSounds(CHARIDS.MARTH_ID, {
   "JUMP" : [[1,"jump"]],

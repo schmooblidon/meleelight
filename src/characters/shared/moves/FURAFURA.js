@@ -1,5 +1,5 @@
 import {mashOut, reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {actionSounds, Vec2D} from "main/characters";
+import {actionSounds, Vec2D,framesData} from "main/characters";
 import {cS, drawVfx, player} from "main/main";
 import {sounds} from "main/sfx";
 export default {
@@ -42,7 +42,7 @@ export default {
       aS[cS[p]].WAIT.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FURAFURA){
+    else if (player[p].timer > framesData[cS[p]].FURAFURA){
       player[p].timer = 1;
       return false;
     }

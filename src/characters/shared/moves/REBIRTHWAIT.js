@@ -1,5 +1,6 @@
 import {cS, player} from "main/main";
 import {aS} from "physics/actionStateShortcuts";
+import {framesData} from 'main/characters';
 export default {
   name : "REBIRTHWAIT",
   canBeGrabbed : false,
@@ -16,7 +17,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].WAIT){
+    if (player[p].timer > framesData[cS[p]].WAIT){
       aS[cS[p]].REBIRTHWAIT.init(p);
       return true;
     }

@@ -11,7 +11,7 @@ import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, c
 import {baseActionStates} from "characters/baseActionStates";
 import {sounds} from "main/sfx";
 import {player, cS, stage, drawVfx, deepCopyObject} from "main/main";
-import {Vec2D} from "main/characters";
+import {Vec2D,framesData} from "main/characters";
 
 import {hitQueue} from 'physics/hitDetection';
 
@@ -2014,7 +2014,7 @@ puff.THROWFORWARD = {
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNPUFFFORWARD.init(player[p].phys.grabbing);
-    var frame = frames[cS[player[p].phys.grabbing]].THROWNPUFFFORWARD;
+    var frame = framesData[cS[player[p].phys.grabbing]].THROWNPUFFFORWARD;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
@@ -2064,7 +2064,7 @@ puff.THROWBACK = {
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNPUFFBACK.init(player[p].phys.grabbing);
-    var frame = frames[cS[player[p].phys.grabbing]].THROWNPUFFBACK;
+    var frame = framesData[cS[player[p].phys.grabbing]].THROWNPUFFBACK;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
@@ -2108,7 +2108,7 @@ puff.THROWUP = {
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNPUFFUP.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
-    var frame = frames[cS[player[p].phys.grabbing]].THROWNPUFFUP;
+    var frame = framesData[cS[player[p].phys.grabbing]].THROWNPUFFUP;
     player[p].phys.releaseFrame = frame+1;
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
     puff.THROWUP.main(p);
@@ -2148,7 +2148,7 @@ puff.THROWDOWN = {
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNPUFFDOWN.init(player[p].phys.grabbing);
-    var frame = frames[cS[player[p].phys.grabbing]].THROWNPUFFDOWN;
+    var frame = framesData[cS[player[p].phys.grabbing]].THROWNPUFFDOWN;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdownextra.id0;
