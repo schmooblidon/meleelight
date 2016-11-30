@@ -7,7 +7,8 @@
     "build": "webpack --progress --colors --config=bin/webpack/build.config.js",
     "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
     "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
-    "release": "node bin/release.js"
+    "release": "node bin/release.js",
+    "serve":"node app"
   },
   "engines": {
     "node": "7.2.0",

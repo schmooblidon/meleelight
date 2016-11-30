@@ -83,7 +83,7 @@ function createConfig(options) {
               runtimeCaching: [{
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
-              }],
+              }]
             }
         )
     );

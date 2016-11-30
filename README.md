@@ -52,6 +52,7 @@ All commands are run like `npm run <name>` from the root of the project.
 |`dev`        |Run webpack and build the dev version, watches for changes      |
 |`build`      |Run webpack once and build the optimized production version     |
 |`animations` |This compiles the animations, run once before playing           |
+|`serve`      |Lets you play it locally at by default localhost:3000           |
 
 ### Project Layout
 
