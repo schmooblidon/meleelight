@@ -192,13 +192,13 @@ export function generalAI(i) {
     } else {
       //is shielding
       var inputs = CPUShield(player[i], i);
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
@@ -234,14 +234,13 @@ export function generalAI(i) {
     } else {
       var inputs = CPULedge(player[i], i);
       //do inputs
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = inputs.cstickY;
-      player[i].inputs.a[0] = inputs.a;
+      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
       }
@@ -252,15 +251,15 @@ export function generalAI(i) {
     var inputs = CPUSDItoStage(player[i], i);
     player[i].inputs.lAnalog[0] = 1;
     player[i].inputs.l[0] = true;
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     return;
   }
   if (!(player[i].grounded) && isOffstage(player[i]) && player[i].currentAction == "NONE") {
     var inputs = CPUrecover(player[i], i);
     //do inputs
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     player[i].inputs.x[0] = inputs.x;
     player[i].inputs.b[0] = inputs.b;
   }
@@ -322,7 +321,7 @@ export function generalAI(i) {
     //console.log("SS");
     player[i].currentAction = "TECH";
     var inputs = CPUTech(player[i], i);
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
     player[i].inputs.l[0] = inputs.l;
     if (player[i].inputs.l[0]) {
       player[i].inputs.lAnalog[0] = 1;
@@ -337,8 +336,8 @@ export function generalAI(i) {
   if (paction == "DOWNWAIT") { //missed tech options
     player[i].currentAction = "MISSEDTECH";
     var inputs = CPUMissedTech(player[i], i);
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     player[i].inputs.a[0] = inputs.a;
   }
   if (paction != "DOWNWAIT") {
@@ -368,8 +367,8 @@ export function generalAI(i) {
       }
     if (player[i].currentAction == "WAVESHINEANY") {
       var inputs = CPUWaveshineAny(player[i], i);
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
@@ -382,13 +381,13 @@ export function generalAI(i) {
         "GRABRELEASE")) {
       player[i].currentAction = "GRABRELEASE";
       var inputs = CPUGrabRelease(player[i], i);
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
@@ -412,13 +411,13 @@ export function generalAI(i) {
         "TOURNAMENTWINNER")) {
       var inputs = CPULedge(player[i], i);
       //do inputs
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
@@ -555,7 +554,7 @@ export function marthAI(i) {
             } else if (randomSeed <= 25 && Math.abs(px - player[nearest].phys.pos.x) < 12.5 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].inputs.l[0] = true;
                 player[i].inputs.lAnalog[0] = 1.0;
-                player[i].inputs.a[0] = true;				
+                player[i].inputs.a[0] = true;
 			}
           }
         }
@@ -662,7 +661,7 @@ export function jiggsAI(i) {
             } else if (randomSeed <= 20 && Math.abs(px - player[nearest].phys.pos.x) < 8 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].inputs.l[0] = true;
                 player[i].inputs.lAnalog[0] = 1.0;
-                player[i].inputs.a[0] = true;				
+                player[i].inputs.a[0] = true;
 			}
           }
         }
@@ -839,7 +838,7 @@ export function foxAI(i) {
             } else if (randomSeed <= 20 && Math.abs(px - player[nearest].phys.pos.x) < 8 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].inputs.l[0] = true;
                 player[i].inputs.lAnalog[0] = 1.0;
-                player[i].inputs.a[0] = true;				
+                player[i].inputs.a[0] = true;
 			}
           }
         }
@@ -1146,6 +1145,7 @@ function CPUSDItoStage(cpu, p) {
     lStickY: 0.0
   };
   if (cpu.timer % 2 == 0) {
+    var imperfection = 0;
     var theta = Math.atan(((closest.y - 3.5) - cpu.phys.pos.y) / (closest.x - cpu.phys.pos.x)) + imperfection; //some trig to get angles //(cpu.phys.ledgeSnapBoxF.max.y-cpu.phys.ledgeSnapBoxF.min.y)/2
     var newX = Math.cos(theta); //* Math.sqrt(2);
     var newY = Math.sin(theta); //* Math.sqrt(2);
@@ -1162,8 +1162,7 @@ function CPUSDItoStage(cpu, p) {
   } else {
     var imperfection = 0;
     var theta = Math.atan(((closest.y - 3.5) - cpu.phys.pos.y) / (closest.x - cpu.phys.pos.x)) + imperfection; //some trig to get angles //(cpu.phys.ledgeSnapBoxF.max.y-cpu.phys.ledgeSnapBoxF.min.y)/2
-    theta = theta + 0.25 * ((Math.floor((Math.random() * 2) + 1) - 1) * -1.0) *
-      3.14159265358979323846264338327950288419716939937510582097494459230781;
+    theta = theta + 0.25 * ((Math.floor((Math.random() * 2) + 1) - 1) * -1.0) * Math.PI;
     var newX = Math.cos(theta); //* Math.sqrt(2);
     var newY = Math.sin(theta); //* Math.sqrt(2);
     if (closest.x < cpu.phys.pos.x) {
@@ -1192,7 +1191,7 @@ function CPUShield(cpu, p) {
     cstickY: 0.0,
   };
   let shouldDoSomething = false;
-  const doSomethingChance = Math.min(100, 25 * Math.tan((3.1415926535 / 121) * (60 - cpu.phys.shieldHP)));
+  const doSomethingChance = Math.min(100, 25 * Math.tan((Math.PI / 121) * (60 - cpu.phys.shieldHP)));
   //console.log(doSomethingChance);
   var randomSeed = Math.floor((Math.random() * 100) + 1);
   if (randomSeed <= doSomethingChance) { //do something
@@ -1290,7 +1289,7 @@ function CPULedge(cpu, p) {
       //	console.log(1.0 * Math.sign(cpu.phys.face));
       //returnInput.lstickX = cpu.phys.face;
       //returnInput.lstickY = -1.0;
-      //returnInput.l = true;	
+      //returnInput.l = true;
       //}
 
       /*if (cpu.timer == 18) {//ledgedash?
@@ -1485,7 +1484,7 @@ export function CPUrecover (cpu,p) {
       if (cS[p] == 0 && ((Math.abs(closest.x - cpu.phys.pos.x) > 25) && (!cpu.phys.doubleJumped || (cpu.phys.jumpsUsed <
           5 && cpu.charAttributes.multiJump)) && ((closest.y - cpu.phys.pos.y < 5) || ((closest.y - cpu.phys.pos.y <
           30 && Math.abs(closest.x - cpu.phys.pos.x) > 40))))) {
-        //side-b  
+        //side-b
         //console.log("HI");
         if (Math.abs(cpu.phys.cVel.x) > 0.8) {
           if (cpu.phys.pos.x < closest.x) {
