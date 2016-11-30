@@ -68,7 +68,7 @@ export function gpdaxis ( gpd, gpdID, ax ) { // gpd.axes[n] but checking axis in
 export function gpdbutton ( gpd, gpdID, but ) { // gpd.buttons[n] but checking button index is in range
   let number = controllerMaps[gpdID][button[but]];
   if (number > gpd.buttons.length) {
-    return 0;
+    return false;
   }
   else {
     return gpd.buttons[number];
