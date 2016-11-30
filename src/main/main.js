@@ -35,7 +35,7 @@ export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
 export const framerate = [0,0,0];
-export const cS = [0,0,0,0];
+export let cS = [0,0,0,0];
 export let vfxQueue = [];
 export var shine = 0.5;
 
@@ -1501,13 +1501,13 @@ export function finishGame (){
     endGame()
   }, 2500);
 }
-
+for (var i=0;i<4;i++){
+  buildPlayerObject(i);
+  player[i].phys.face = 1;
+  player[i].actionState = "WAIT";
+}
 export function start (){
-    for (var i=0;i<4;i++){
-        buildPlayerObject(i);
-        player[i].phys.face = 1;
-        player[i].actionState = "WAIT";
-    }
+
     cacheDom();
     getKeyboardCookie();
     getTargetCookies();
@@ -1725,7 +1725,7 @@ export function setStage(val){
 }
 const dom = {};
 
-function cacheDom() {
+export function cacheDom() {
   const elementIds = [
     "matchMinutes",
     "matchSeconds",
@@ -1743,3 +1743,7 @@ function cacheDom() {
     dom[id] = document.getElementById(id);
   });
 };
+
+export function setCS(index,val){
+  cS[index] = val;
+}

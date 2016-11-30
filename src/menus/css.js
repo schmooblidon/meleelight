@@ -12,6 +12,7 @@ import {Vec2D, chars} from "main/characters";
 import {drawArrayPathCompress, twoPi} from "main/render";
 import {sounds} from "main/sfx";
 import {aS} from "physics/actionStateShortcuts";
+import {setCS} from "../main/main";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -49,7 +50,7 @@ export let rtfFlash = 25;
 export let rtfFlashD = 1;
 
 export function changeCharacter (i,c){
-  cS[i] = c;
+  setCS(c);
   player[i].actionState = "WAIT";
   player[i].timer = 0;
   player[i].charAttributes = chars[cS[i]].attributes;

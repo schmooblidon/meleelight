@@ -15,6 +15,7 @@ import {Vec2D, Box2D} from "main/characters";
 import {twoPi} from "main/render";
 import {foxPic, puffPic, marthPic} from "menus/css";
 import {customTargetStages, targetStages, setCustomTargetStages} from "stages/stages";
+import {setCS} from "../main/main";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;
@@ -42,16 +43,16 @@ export function tssControls (i){
     }
     if ((player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]) || (player[i].inputs.l[0] && !player[i].inputs.l[
         1])) {
-      cS[i]--;
+      setCS(i,cS[i]- 1);
       if (cS[i] < 0) {
-        cS[i] = 2;
+        setCS(i, 2);
       }
       sounds.menuSelect.play();
     } else if ((player[i].inputs.dpaddown[0] && !player[i].inputs.dpaddown[1]) || (player[i].inputs.r[0] && !player[i]
         .inputs.r[1])) {
-      cS[i]++;
+      setCS(i,cS[i]+ 1);
       if (cS[i] > 2) {
-        cS[i] = 0;
+        setCS(i, 0);
       }
       sounds.menuSelect.play();
     }
