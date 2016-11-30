@@ -1070,7 +1070,7 @@ export const dVfx = {
         .offset[0], (vfxQueue[j][2].y * -stage.scale) + stage.offset[1], vfx.illusion.path, 0.35 * (stage.scale /
           4.5), 0.35 * (stage.scale / 4.5), 0, 0, 0);
     }
-  },   
+  },
   sing : function(j){
     singGen(j, 2, 6, 0, 4.5,0.5); // see singGen function for meaning of parameters
   },
@@ -1120,11 +1120,12 @@ function singGen (j, rMin, rMax, notePhase, posScale, posPhase){
     if (frame < 15) {
       r = rMin + frame*(rMax-rMin)/15;
     }
-    var col = ["rgba(175,39,17,"+opaq+")","rgba(116,164,16,"+opaq+")","rgba(17,75,112,"+opaq+")"];
+    opaq += 0.2;
+    var col = ["rgba(255,1,2,"+opaq+")","rgba(5,255,0,"+opaq+")","rgba(12,0,255,"+opaq+")"];
     for (var i=0;i<3;i++){
       drawArrayPathNew(fg2, col[i], 1, ((r*Math.cos(angles[i])-3) * stage.scale),((r*Math.sin(angles[i])+3)*-stage.scale), vfx.sing.path, 0.7 * (stage.scale /
           4.5), 0.7 * (stage.scale / 4.5), 0, 0, 0);
-    }    
+    }
     fg2.restore();
   };
 
