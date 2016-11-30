@@ -652,6 +652,10 @@ window.interpretInputs = function(i, active) {
       var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, -1); // shifted by +0.867, flipped
       var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, -1); // shifted by +0.867, flipped
     }
+    else if (mType[i] == 7) { //Brook adapter has no L/R analog information, just light presses
+      var lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
+      var rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
+    }
     else {
       var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, 1); // shifted by +0.867
       var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, 1); // shifted by +0.867

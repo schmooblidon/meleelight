@@ -41,37 +41,48 @@ export const keyboardMap = [
   [109, 219], 71, 78, 66, 86
 ];
 
-                    //   a  b  x  y  z  r  l  s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
-const mayflashMap    = [ 1, 2, 0, 3, 7, 5, 4, 9, 12, 13, 14, 15,  0,   1,   5,   2,  3,  4  ]; // ID 0, Mayflash Wii U 4-way adapter, NEXILUX adapter
-const vJoyMap        = [ 0, 1, 2, 3, 4, 5, 6, 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 1, vJoy
-const raphnetV2_9Map = [ 4, 3, 2, 1, 7, 6, 5, 0, 8 , 10, 9 , 11,  0,   1,   3,   4,  5,  6  ]; // ID 2, raphnet v.2.9 N64 adapter
-const xbox360Map     = [ 0, 2, 1, 3, 5, 7, 6, 9, 12, 15, 13, 14,  0,   1,   2,   3,  6,  7  ]; // ID 3, XBOX 360 (XInput Standard Gamepad)
-const tigergameMap   = [ 0, 1, 2, 3, 6, 5, 4, 7, 11, 9 , 10, 8 ,  0,   1,   2,   3,  5,  4  ]; // ID 4, TigerGame 3-in-1 adapter
-const retrolinkMap   = [ 2, 3, 1, 0, 6, 5, 4, 9, 10, 11, 8 , 7 ,  0,   1,   2,   5,  3,  4  ]; // ID 5, Retrolink adapter
-const raphnetV3_2Map = [ 0, 1, 7, 8, 2, 5, 4, 3, 10, 13, 11, 12,  0,   1,   3,   4,  5,  2  ]; // ID 6, Raphnet v 3.2,3.3
+                    //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
+const mayflashMap    = [ 1, 2, 0, 3, 7, 5 , 4 , 9, 12, 13, 14, 15,  0,   1,   5,   2,  3,  4  ]; // ID 0, Mayflash Wii U 4-way adapter, NEXILUX adapter
+const vJoyMap        = [ 0, 1, 2, 3, 4, 5 , 6 , 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 1, vJoy
+const raphnetV2_9Map = [ 4, 3, 2, 1, 7, 6 , 5 , 0, 8 , 10, 9 , 11,  0,   1,   3,   4,  5,  6  ]; // ID 2, raphnet v.2.9 N64 adapter
+const xbox360Map     = [ 0, 2, 1, 3, 5, 7 , 6 , 9, 12, 15, 13, 14,  0,   1,   2,   3,  6,  7  ]; // ID 3, XBOX 360 (XInput Standard Gamepad)
+const tigergameMap   = [ 0, 1, 2, 3, 6, 5 , 4 , 7, 11, 9 , 10, 8 ,  0,   1,   2,   3,  5,  4  ]; // ID 4, TigerGame 3-in-1 adapter
+const retrolinkMap   = [ 2, 3, 1, 0, 6, 5 , 4 , 9, 10, 11, 8 , 7 ,  0,   1,   2,   5,  3,  4  ]; // ID 5, Retrolink adapter
+const raphnetV3_2Map = [ 0, 1, 7, 8, 2, 5 , 4 , 3, 10, 13, 11, 12,  0,   1,   3,   4,  5,  2  ]; // ID 6, Raphnet v 3.2,3.3
+const brookMap       = [ 0, 1, 2, 3, 4, 10, 11, 8, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 7, Brook adapter (d-pad values might be wrong, user had broken d-pad)
 
-export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map];
+export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap];
 
 
-// Checking gamepad inputs are in allowable range
-
+// Checking gamepad inputs are well defined
 export function gpdaxis ( gpd, gpdID, ax ) { // gpd.axes[n] but checking axis index is in range
   let number = controllerMaps[gpdID][axis[ax]];
   if (number > gpd.axes.length) {
    return 0;
   }
   else {
-    return gpd.axes[number];
+    const output = gpd.axes[number];
+    if ( output === null || output == undefined) {
+      return 0;
+    }
+    else {
+      return output;
+    }
   }
 };
-
 export function gpdbutton ( gpd, gpdID, but ) { // gpd.buttons[n] but checking button index is in range
   let number = controllerMaps[gpdID][button[but]];
   if (number > gpd.buttons.length) {
     return false;
   }
   else {
-    return gpd.buttons[number];
+    const output = gpd.buttons[number];
+    if ( output == null || output === undefined) {
+      return false;
+    }
+    else {
+      return output;
+    }
   }
 };
 
@@ -135,6 +146,10 @@ controllerIDMap.set("GC/N64 to USB v3.", 6); // "v3.2" and "v3.3"
 controllerIDMap.set("GC/N64 to USB, v3.", 6);
 controllerIDMap.set("289b-001d", 6);
 
+// ID 7, Brook adapter
+controllerIDMap.set("Wii U GameCube Controller Adapter", 7);
+controllerIDMap.set("0e8f-0003", 7);
+
 //--END OF CONTROLLER IDs-------------------------------------
     
 
@@ -153,6 +168,8 @@ export function controllerNameFromIDnumber(number) {
     return "Retrolink adapter";
   } else if (number == 6) {
     return "raphnet v3.2+ N64 adapter";
+  } else if (number == 7) {
+    return "Brook adapter";
   } else {
     return "error: controller detected but not supported";
   }
