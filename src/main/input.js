@@ -191,9 +191,11 @@ function fromCardinals([origx, origy], l, r, d,u) {
 // of course, this varies between controllers, but this serves as a useful first approximation
 // function output: [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]]
 function axisDataFromIDNumber(number) {
-  if (number == 4) { // TigerGame 3-in-1
-    let orig = 0.05098;
-    return ( fromCardinals ( [orig, -orig], -0.7098, 0.85098, 0.73333, -0.8588) );
+  if (number === 4) { // TigerGame 3-in-1
+    return ( fromCardinals ( [0, 0], -0.7, 0.85, 0.7, -0.85) );
+  }
+  else if (number === 8) { // PS4 controller
+    return ( fromCardinals ( [0, 0], -1, 1, 1, -1) );
   }
   else {
     return ( fromCardinals ( [0, 0], -0.75, 0.75, 0.75, -0.75) ); // default
