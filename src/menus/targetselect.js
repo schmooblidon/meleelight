@@ -486,7 +486,7 @@ export function drawTSS (){
       text = "--:--:--";
     }
     else {
-      let text = "0"+Math.floor(targetRecords[cS[targetPlayer]][targetSelected]/60)+":";
+      text = "0"+Math.floor(targetRecords[cS[targetPlayer]][targetSelected]/60)+":";
       let sec = (targetRecords[cS[targetPlayer]][targetSelected] % 60).toFixed(2);
       text += ((sec.length<5)?"0"+sec:sec);
     }
