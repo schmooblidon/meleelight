@@ -3354,7 +3354,7 @@ marth.UPSPECIAL = {
       }
       if (player[p].timer == 6){
         player[p].phys.grounded = false;
-        if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.7){
+        if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.28){
           player[p].phys.face *= -1;
         }
       }
