@@ -1,3 +1,6 @@
+import {cS, player} from "main/main";
+import {aS} from "physics/actionStateShortcuts";
+import {framesData} from 'main/characters';
 export default {
   name : "SHIELDBREAKFALL",
   canPassThrough : false,
@@ -19,7 +22,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].SHIELDBREAKFALL){
+    if (player[p].timer > framesData[cS[p]].SHIELDBREAKFALL){
       aS[cS[p]].SHIELDBREAKFALL.init(p);
       return true;
     }

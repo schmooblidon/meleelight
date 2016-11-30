@@ -1,15 +1,19 @@
-/* globals player, turnOffHitboxes, sounds, checkForJump, checkForTilts,
-checkForDash, checkForSpecials, checkForSmashes, checkForTilts,
-checkForTiltTurn, checkForSmashTurn, tiltTurnDashBuffer */
 
-import MOVES from "./index";
-import GRAB from "./GRAB";
+import MOVES from "characters/fox/moves/index";
+import GRAB from "characters/fox/moves/GRAB";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
 import DASH from "characters/shared/moves/DASH";
 import SMASHTURN from "characters/shared/moves/SMASHTURN";
 import TILTTURN from "characters/shared/moves/TILTTURN";
 import WALK from "characters/shared/moves/WALK";
 import WAIT from "characters/shared/moves/WAIT";
+import {player} from "main/main";
+import {turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForDash,
+    checkForSmashTurn
+    , checkForTiltTurn
+    , tiltTurnDashBuffer
+} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 
 export default {
   name : "ATTACKDASH",

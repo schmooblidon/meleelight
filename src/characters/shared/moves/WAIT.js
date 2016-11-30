@@ -1,7 +1,12 @@
-/* globals player, aS, cS, frames, reduceByTraction, checkForSpecials,
-checkForTilts, checkForSmashes, checkForJump, checkForSquat, checkForDash,
-checkForSmashTurn, checkForTilts, checkForTiltTurn, tiltTurnDashBuffer */
-
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat, checkForTilts,
+    checkForSpecials
+    , checkForJump
+    , checkForSmashes
+    , reduceByTraction
+    , aS
+} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "WAIT",
   canEdgeCancel : true,
@@ -15,7 +20,7 @@ export default {
     player[p].timer += 1;
     if (!aS[cS[p]].WAIT.interrupt(p)){
       reduceByTraction(p,false);
-      if (player[p].timer > frames[cS[p]].WAIT){
+      if (player[p].timer > framesData[cS[p]].WAIT){
         aS[cS[p]].WAIT.init(p);
       }
     }

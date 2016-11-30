@@ -1,3 +1,7 @@
+import {airDrift, fastfall, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "TECHU",
   canPassThrough : true,
@@ -29,7 +33,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHU){
+    if (player[p].timer > framesData[cS[p]].TECHU){
       aS[cS[p]].FALL.init(p);
       return true;
     }

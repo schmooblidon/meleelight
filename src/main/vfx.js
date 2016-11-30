@@ -1,8 +1,12 @@
 /* eslint-disable */
-
+import {stage, vfxQueue, player, drawVfx, startTimer,fg2} from "main/main";
+import {drawArrayPath, drawArrayPathNew} from "main/render";
+import {Vec2D} from "main/characters";
+import {swordSwings} from "main/swordSwings";
+import {sounds} from "main/sfx";
 const twoPi = Math.PI * 2;
 
-window.vfx = {
+export const vfx = {
   impactLand : {
     name : "impactLand",
     //colour : "rgba(#ffffff,",
@@ -218,17 +222,15 @@ vfx.ceilingBounce.path = vfx.groundBounce.path;
 vfx.ceilingBounce.colour = vfx.groundBounce.colour;
 vfx.ceilingBounce.frames = vfx.groundBounce.frames;
 
-window.transparency = true;
-window.makeColour = function(r, g, b, a) {
-  // maybe some hsl too
-  if (transparency) {
-    return "rgba(" + r + "," + g + "," + b + "," + a + ")";
-  } else {
-    return "rgb(" + r + "," + g + "," + b + ")";
-  }
+export let transparency = true;
+
+
+export function setTransparency(val){
+  transparency = val;
 }
 
-window.dVfx = {
+
+export const dVfx = {
   general: function(j, ang) {
     var col = makeColour(vfxQueue[j][0].colour[0], vfxQueue[j][0].colour[1], vfxQueue[j][0].colour[2], 0.8 * ((
       vfxQueue[j][0].frames - vfxQueue[j][1]) / vfxQueue[j][0].frames));
@@ -1126,7 +1128,16 @@ function singGen (j, rMin, rMax, notePhase, posScale, posPhase){
     fg2.restore();
   };
 
-window.drawHexagon = function(r, tX, tY, width) {
+export function makeColour (r,g,b,a){
+    // maybe some hsl too
+    if (transparency){
+        return "rgba("+r+","+g+","+b+","+a+")";
+    }
+    else {
+        return "rgb("+r+","+g+","+b+")";
+    }
+}
+export function drawHexagon (r,tX,tY,width){
   fg2.save();
   fg2.translate(tX, tY);
   var a = r * Math.sin(Math.PI / 6);

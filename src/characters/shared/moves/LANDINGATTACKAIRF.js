@@ -1,5 +1,7 @@
-/* globals player, aS, cS, frames, drawVfx, sounds, reduceByTraction */
-
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "LANDINGATTACKAIRF",
   canEdgeCancel : true,
@@ -24,7 +26,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRF){
+    if (player[p].timer > framesData[cS[p]].LANDINGATTACKAIRF){
       aS[cS[p]].WAIT.init(p);
       return true;
     }

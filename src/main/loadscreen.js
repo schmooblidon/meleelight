@@ -56,7 +56,7 @@ function loadScript() {
         loadScript();
       } else {
         loading = false;
-        start();
+        window.start();
       }
     })
     .fail((jqxhr, settings, exception) => {

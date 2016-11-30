@@ -1,6 +1,18 @@
+import { offsets, Vec2D, createHitboxObject, createHitbox, charObject,  setChars,
+    CHARIDS
+    ,
+    setHitBoxes
+    ,
+    setCharAttributes
+    ,
+    setOffsets
+    ,
+    setIntangibility
+    , setActionSounds,setFrames
+} from "main/characters";
 /* eslint-disable */
 
-charAttributes[1] = {
+setCharAttributes(CHARIDS.PUFF_ID, {
   dashFrameMin : 12,
   dashFrameMax : 23,
   dInitV : 1.31,
@@ -45,10 +57,10 @@ charAttributes[1] = {
   shieldBreakVel : 10,
   multiJump : true,
   ecbscale : 2.6
-}
+});
 
   // start, length
-  intangibility[1] = {
+setIntangibility(CHARIDS.PUFF_ID,{
   "ESCAPEAIR" : [4,25],
   "ESCAPEB" : [4,16],
   "ESCAPEF" : [2,17],
@@ -59,9 +71,9 @@ charAttributes[1] = {
   "TECHN" : [1,20],
   "TECHB" : [1,20],
   "TECHF" : [1,20]
-  }
+  });
 
-  frames[1] = {
+setFrames(CHARIDS.PUFF_ID , {
   "WAIT" : 464,
   "DASH" : 23,
   "RUN" : 16,
@@ -133,9 +145,9 @@ charAttributes[1] = {
   "FURASLEEPEND" : 76,
   "STOPCEIL" : 8,
   "TECHU" : 25
-  }
+  });
 
-  actionSounds[1] = {
+setActionSounds(CHARIDS.PUFF_ID, {
   "JUMP" : [],
   "ESCAPEAIR" : [],
   "JUMPAERIAL" : [],
@@ -148,11 +160,11 @@ charAttributes[1] = {
   "ESCAPEF" : [],
   "ESCAPEN" : [],
   "OTTOTTOWAIT" : []
-  }
+  });
 
 // HITBOX OFFSETS
 
-offsets[1] = {
+setOffsets(CHARIDS.PUFF_ID, {
   fair1 : {
     id0 : [new Vec2D(6.14,3.93),
     new Vec2D(9.40,3.66)],
@@ -554,53 +566,53 @@ new Vec2D(8.18-0.96,0.97)]
     id1 : [new Vec2D(-3.67,5.14)],
     id2 : [new Vec2D(3.67,5.14)]
   }
-}
+});
 
-hitboxes[1] = {
-  fair1 : new hitboxObject(new hitbox(offsets[1].fair1.id0,3.515,12,361,100,10,0,0,0,1,1),new hitbox(offsets[1].fair1.id1,4.687,10,361,100,10,0,0,0,1,1)),
-  fair2 : new hitboxObject(new hitbox(offsets[1].fair2.id0,3.515,7,361,80,10,0,0,0,1,1),new hitbox(offsets[1].fair2.id1,4.687,7,361,80,10,0,0,0,1,1)),
-  bair : new hitboxObject(new hitbox(offsets[1].bair.id0,3.906,12,361,100,10,0,0,0,1,1),new hitbox(offsets[1].bair.id1,3.906,12,361,100,10,0,0,0,1,1),new hitbox(offsets[1].bair.id2,4.297,12,361,100,10,0,0,0,1,1)),
-  nair1 : new hitboxObject(new hitbox(offsets[1].nair1.id0,5.078,12,361,70,10,0,0,0,1,1),new hitbox(offsets[1].nair1.id1,3.906,12,361,70,10,0,0,0,1,1)),
-  nair2 : new hitboxObject(new hitbox(offsets[1].nair2.id0,4.687,9,361,80,10,0,0,0,1,1),new hitbox(offsets[1].nair2.id1,3.515,9,361,80,10,0,0,0,1,1)),
-  dair : new hitboxObject(new hitbox(offsets[1].dair.id0,5.078,2,270,100,20,0,0,0,1,0),new hitbox(offsets[1].dair.id1,4.297,2,270,100,20,0,0,0,1,0),new hitbox(offsets[1].dair.id2,5.078,2,30,100,10,0,0,0,0,1),new hitbox(offsets[1].dair.id3,4.297,2,30,100,10,0,0,0,0,1)),
-  upair : new hitboxObject(new hitbox(offsets[1].upair.id0,5.468,12,90,100,30,0,0,0,1,1)),
-  upb : new hitboxObject(new hitbox(offsets[1].upspecial.id0,10.937,0,361,100,0,0,5,0,1,0)),
+setHitBoxes(CHARIDS.PUFF_ID, {
+  fair1 : new createHitboxObject(new createHitbox(offsets[1].fair1.id0,3.515,12,361,100,10,0,0,0,1,1),new createHitbox(offsets[1].fair1.id1,4.687,10,361,100,10,0,0,0,1,1)),
+  fair2 : new createHitboxObject(new createHitbox(offsets[1].fair2.id0,3.515,7,361,80,10,0,0,0,1,1),new createHitbox(offsets[1].fair2.id1,4.687,7,361,80,10,0,0,0,1,1)),
+  bair : new createHitboxObject(new createHitbox(offsets[1].bair.id0,3.906,12,361,100,10,0,0,0,1,1),new createHitbox(offsets[1].bair.id1,3.906,12,361,100,10,0,0,0,1,1),new createHitbox(offsets[1].bair.id2,4.297,12,361,100,10,0,0,0,1,1)),
+  nair1 : new createHitboxObject(new createHitbox(offsets[1].nair1.id0,5.078,12,361,70,10,0,0,0,1,1),new createHitbox(offsets[1].nair1.id1,3.906,12,361,70,10,0,0,0,1,1)),
+  nair2 : new createHitboxObject(new createHitbox(offsets[1].nair2.id0,4.687,9,361,80,10,0,0,0,1,1),new createHitbox(offsets[1].nair2.id1,3.515,9,361,80,10,0,0,0,1,1)),
+  dair : new createHitboxObject(new createHitbox(offsets[1].dair.id0,5.078,2,270,100,20,0,0,0,1,0),new createHitbox(offsets[1].dair.id1,4.297,2,270,100,20,0,0,0,1,0),new createHitbox(offsets[1].dair.id2,5.078,2,30,100,10,0,0,0,0,1),new createHitbox(offsets[1].dair.id3,4.297,2,30,100,10,0,0,0,0,1)),
+  upair : new createHitboxObject(new createHitbox(offsets[1].upair.id0,5.468,12,90,100,30,0,0,0,1,1)),
+  upb : new createHitboxObject(new createHitbox(offsets[1].upspecial.id0,10.937,0,361,100,0,0,5,0,1,0)),
   /*upb1 : new hitboxObject(new hitbox(offsets[1].upspecial1.id0,10.937,0,361,100,0,0,5,0,1,0)),
   upb2 : new hitboxObject(new hitbox(offsets[1].upspecial2.id0,10.937,0,361,100,0,0,5,0,1,0)),
   upb3 : new hitboxObject(new hitbox(offsets[1].upspecial3.id0,12.890,0,361,100,0,0,5,0,1,0)),*/
-  dtilt : new hitboxObject(new hitbox(offsets[1].dtilt.id0,3.515,10,20,30,40,0,0,1,1,1),new hitbox(offsets[1].dtilt.id1,3.515,10,20,30,40,0,0,1,1,1),new hitbox(offsets[1].dtilt.id2,3.906,10,20,30,40,0,0,1,1,1)),
-  uptilt1 : new hitboxObject(new hitbox(offsets[1].uptilt1.id0,3.125,9,96,120,40,0,0,1,1,1),new hitbox(offsets[1].uptilt1.id1,4.297,9,96,120,40,0,0,1,1,1)),
-  uptilt2 : new hitboxObject(new hitbox(offsets[1].uptilt2.id0,3.125,8,88,120,40,0,0,1,1,1),new hitbox(offsets[1].uptilt2.id1,3.515,8,88,120,40,0,0,1,1,1)),
-  ftilt : new hitboxObject(new hitbox(offsets[1].ftilt.id0,2.734,10,361,100,8,0,0,1,1,1),new hitbox(offsets[1].ftilt.id1,3.125,10,361,100,8,0,0,1,1,1)),
-  dashattack1 : new hitboxObject(new hitbox(offsets[1].dashattack1.id0,4.687,12,361,100,16,0,0,1,1,1)),
-  dashattack2 : new hitboxObject(new hitbox(offsets[1].dashattack2.id0,4.687,8,361,100,8,0,0,1,1,1)),
-  jab1 : new hitboxObject(new hitbox(offsets[1].jab1.id0,3.515,3,361,50,8,0,0,1,1,1),new hitbox(offsets[1].jab1.id1,3.515,3,361,50,8,0,0,1,1,1),new hitbox(offsets[1].jab1.id2,3.515,3,361,50,8,0,0,1,1,1)),
-  jab2 : new hitboxObject(new hitbox(offsets[1].jab2.id0,3.515,3,361,50,16,0,0,1,1,1),new hitbox(offsets[1].jab2.id1,3.515,3,361,50,16,0,0,1,1,1),new hitbox(offsets[1].jab2.id2,3.515,3,361,50,16,0,0,1,1,1)),
-  sidespecial : new hitboxObject(new hitbox(offsets[1].sidespecial.id0,3.515,13,90,75,52,0,0,0,1,1),new hitbox(offsets[1].sidespecial.id1,3.515,13,120,75,52,0,0,0,1,1)),
-  fsmash1 : new hitboxObject(new hitbox(offsets[1].fsmash1.id0,4.297,17,361,118,10,0,0,1,1,1),new hitbox(offsets[1].fsmash1.id1,4.297,17,361,118,10,0,0,1,1,1)),
-  fsmash2 : new hitboxObject(new hitbox(offsets[1].fsmash2.id0,3.515,13,361,105,6,0,0,1,1,1),new hitbox(offsets[1].fsmash2.id1,3.515,13,361,105,6,0,0,1,1,1)),
-  upsmash : new hitboxObject(new hitbox(offsets[1].upsmash.id0,5.859,14,90,110,20,0,0,1,1,1),new hitbox(offsets[1].upsmash.id1,3.906,14,90,110,20,0,0,1,1,1)),
-  dsmash : new hitboxObject(new hitbox(offsets[1].dsmash.id0,3.906,12,0,66,34,0,0,1,1,1),new hitbox(offsets[1].dsmash.id1,3.906,12,0,66,34,0,0,1,1,1),new hitbox(offsets[1].dsmash.id2,4.687,12,0,66,34,0,0,1,1,1),new hitbox(offsets[1].dsmash.id3,4.687,12,0,66,34,0,0,1,1,1)),
-  grab : new hitboxObject(new hitbox(offsets[1].grab.id0,3.906,0,361,100,0,0,2,3,1,1),new hitbox(offsets[1].grab.id1,3.125,0,361,100,0,0,2,3,1,1)),
-  downattack1 : new hitboxObject(new hitbox(offsets[1].downattack1.id0,4.687,8,361,50,80,0,0,1,1,1),new hitbox(offsets[1].downattack1.id1,2.344,6,361,50,80,0,0,1,1,1),new hitbox(offsets[1].downattack1.id2,2.344,6,361,50,80,0,0,1,1,1),new hitbox(offsets[1].downattack1.id3,2.344,6,361,50,80,0,0,1,1,1)),
-  downattack2 : new hitboxObject(new hitbox(offsets[1].downattack2.id0,4.687,8,361,50,80,0,0,1,1,1),new hitbox(offsets[1].downattack2.id1,2.344,6,361,50,80,0,0,1,1,1),new hitbox(offsets[1].downattack2.id2,2.344,6,361,50,80,0,0,1,1,1),new hitbox(offsets[1].downattack2.id3,2.344,6,361,50,80,0,0,1,1,1)),
-  downspecial : new hitboxObject(new hitbox(offsets[1].downspecial.id0,1.953,28,361,120,78,0,3,0,1,1)),
-  ledgegetupquick : new hitboxObject(new hitbox(offsets[1].ledgegetupquick.id0,3.906,6,361,100,0,90,0,1,1,1),new hitbox(offsets[1].ledgegetupquick.id1,4.687,6,361,100,0,90,0,1,1,1)),
-  ledgegetupslow : new hitboxObject(new hitbox(offsets[1].ledgegetupslow.id0,5.859,6,361,100,0,90,0,1,1,1),new hitbox(offsets[1].ledgegetupslow.id1,5.859,6,361,100,0,90,0,1,1,1)),
-  neutralspecialground : new hitboxObject(new hitbox(offsets[1].neutralspecialground.id0,1.953,10,20,120,30,0,0,0,1,1),new hitbox(offsets[1].neutralspecialground.id1,2.734,10,20,120,30,0,0,0,1,1),new hitbox(offsets[1].neutralspecialground.id2,2.734,10,20,120,30,0,0,0,1,1)),
-  neutralspecialair : new hitboxObject(new hitbox(offsets[1].neutralspecialair.id0,1.953,10,90,102,30,0,0,0,1,1)),
-  pummel : new hitboxObject(new hitbox(offsets[1].pummel.id0,4.687,3,361,100,0,30,0,0,1,1)),
-  throwup : new hitboxObject(new hitbox(new Vec2D(-4.44533,0.66545),0,11,90,25,130,0,0,0,1,1)),
-  throwdown : new hitboxObject(new hitbox(new Vec2D(0.56941,0),0,2,80,45,100,0,0,0,1,1)),
-  throwdownextra : new hitboxObject(new hitbox(offsets[1].throwdownextra.id0,3.515,1,361,100,0,30,0,0,1,1)),
-  throwback : new hitboxObject(new hitbox(new Vec2D(-14.20273+7.52,0),0,10,135,25,90,0,0,0,1,1)),
-  throwforward : new hitboxObject(new hitbox(new Vec2D(10.8537,0.01),0,5,55,30,100,0,0,0,1,1)),
-  throwforwardextra : new hitboxObject(new hitbox(offsets[1].throwforwardextra.id0,8.593,7,361,110,40,0,0,0,1,1)),
-  thrown : new hitboxObject(new hitbox(offsets[1].thrown.id0,3.906,4,361,50,20,0,1,0,1,1))
-}
+  dtilt : new createHitboxObject(new createHitbox(offsets[1].dtilt.id0,3.515,10,20,30,40,0,0,1,1,1),new createHitbox(offsets[1].dtilt.id1,3.515,10,20,30,40,0,0,1,1,1),new createHitbox(offsets[1].dtilt.id2,3.906,10,20,30,40,0,0,1,1,1)),
+  uptilt1 : new createHitboxObject(new createHitbox(offsets[1].uptilt1.id0,3.125,9,96,120,40,0,0,1,1,1),new createHitbox(offsets[1].uptilt1.id1,4.297,9,96,120,40,0,0,1,1,1)),
+  uptilt2 : new createHitboxObject(new createHitbox(offsets[1].uptilt2.id0,3.125,8,88,120,40,0,0,1,1,1),new createHitbox(offsets[1].uptilt2.id1,3.515,8,88,120,40,0,0,1,1,1)),
+  ftilt : new createHitboxObject(new createHitbox(offsets[1].ftilt.id0,2.734,10,361,100,8,0,0,1,1,1),new createHitbox(offsets[1].ftilt.id1,3.125,10,361,100,8,0,0,1,1,1)),
+  dashattack1 : new createHitboxObject(new createHitbox(offsets[1].dashattack1.id0,4.687,12,361,100,16,0,0,1,1,1)),
+  dashattack2 : new createHitboxObject(new createHitbox(offsets[1].dashattack2.id0,4.687,8,361,100,8,0,0,1,1,1)),
+  jab1 : new createHitboxObject(new createHitbox(offsets[1].jab1.id0,3.515,3,361,50,8,0,0,1,1,1),new createHitbox(offsets[1].jab1.id1,3.515,3,361,50,8,0,0,1,1,1),new createHitbox(offsets[1].jab1.id2,3.515,3,361,50,8,0,0,1,1,1)),
+  jab2 : new createHitboxObject(new createHitbox(offsets[1].jab2.id0,3.515,3,361,50,16,0,0,1,1,1),new createHitbox(offsets[1].jab2.id1,3.515,3,361,50,16,0,0,1,1,1),new createHitbox(offsets[1].jab2.id2,3.515,3,361,50,16,0,0,1,1,1)),
+  sidespecial : new createHitboxObject(new createHitbox(offsets[1].sidespecial.id0,3.515,13,90,75,52,0,0,0,1,1),new createHitbox(offsets[1].sidespecial.id1,3.515,13,120,75,52,0,0,0,1,1)),
+  fsmash1 : new createHitboxObject(new createHitbox(offsets[1].fsmash1.id0,4.297,17,361,118,10,0,0,1,1,1),new createHitbox(offsets[1].fsmash1.id1,4.297,17,361,118,10,0,0,1,1,1)),
+  fsmash2 : new createHitboxObject(new createHitbox(offsets[1].fsmash2.id0,3.515,13,361,105,6,0,0,1,1,1),new createHitbox(offsets[1].fsmash2.id1,3.515,13,361,105,6,0,0,1,1,1)),
+  upsmash : new createHitboxObject(new createHitbox(offsets[1].upsmash.id0,5.859,14,90,110,20,0,0,1,1,1),new createHitbox(offsets[1].upsmash.id1,3.906,14,90,110,20,0,0,1,1,1)),
+  dsmash : new createHitboxObject(new createHitbox(offsets[1].dsmash.id0,3.906,12,0,66,34,0,0,1,1,1),new createHitbox(offsets[1].dsmash.id1,3.906,12,0,66,34,0,0,1,1,1),new createHitbox(offsets[1].dsmash.id2,4.687,12,0,66,34,0,0,1,1,1),new createHitbox(offsets[1].dsmash.id3,4.687,12,0,66,34,0,0,1,1,1)),
+  grab : new createHitboxObject(new createHitbox(offsets[1].grab.id0,3.906,0,361,100,0,0,2,3,1,1),new createHitbox(offsets[1].grab.id1,3.125,0,361,100,0,0,2,3,1,1)),
+  downattack1 : new createHitboxObject(new createHitbox(offsets[1].downattack1.id0,4.687,8,361,50,80,0,0,1,1,1),new createHitbox(offsets[1].downattack1.id1,2.344,6,361,50,80,0,0,1,1,1),new createHitbox(offsets[1].downattack1.id2,2.344,6,361,50,80,0,0,1,1,1),new createHitbox(offsets[1].downattack1.id3,2.344,6,361,50,80,0,0,1,1,1)),
+  downattack2 : new createHitboxObject(new createHitbox(offsets[1].downattack2.id0,4.687,8,361,50,80,0,0,1,1,1),new createHitbox(offsets[1].downattack2.id1,2.344,6,361,50,80,0,0,1,1,1),new createHitbox(offsets[1].downattack2.id2,2.344,6,361,50,80,0,0,1,1,1),new createHitbox(offsets[1].downattack2.id3,2.344,6,361,50,80,0,0,1,1,1)),
+  downspecial : new createHitboxObject(new createHitbox(offsets[1].downspecial.id0,1.953,28,361,120,78,0,3,0,1,1)),
+  ledgegetupquick : new createHitboxObject(new createHitbox(offsets[1].ledgegetupquick.id0,3.906,6,361,100,0,90,0,1,1,1),new createHitbox(offsets[1].ledgegetupquick.id1,4.687,6,361,100,0,90,0,1,1,1)),
+  ledgegetupslow : new createHitboxObject(new createHitbox(offsets[1].ledgegetupslow.id0,5.859,6,361,100,0,90,0,1,1,1),new createHitbox(offsets[1].ledgegetupslow.id1,5.859,6,361,100,0,90,0,1,1,1)),
+  neutralspecialground : new createHitboxObject(new createHitbox(offsets[1].neutralspecialground.id0,1.953,10,20,120,30,0,0,0,1,1),new createHitbox(offsets[1].neutralspecialground.id1,2.734,10,20,120,30,0,0,0,1,1),new createHitbox(offsets[1].neutralspecialground.id2,2.734,10,20,120,30,0,0,0,1,1)),
+  neutralspecialair : new createHitboxObject(new createHitbox(offsets[1].neutralspecialair.id0,1.953,10,90,102,30,0,0,0,1,1)),
+  pummel : new createHitboxObject(new createHitbox(offsets[1].pummel.id0,4.687,3,361,100,0,30,0,0,1,1)),
+  throwup : new createHitboxObject(new createHitbox(new Vec2D(-4.44533,0.66545),0,11,90,25,130,0,0,0,1,1)),
+  throwdown : new createHitboxObject(new createHitbox(new Vec2D(0.56941,0),0,2,80,45,100,0,0,0,1,1)),
+  throwdownextra : new createHitboxObject(new createHitbox(offsets[1].throwdownextra.id0,3.515,1,361,100,0,30,0,0,1,1)),
+  throwback : new createHitboxObject(new createHitbox(new Vec2D(-14.20273+7.52,0),0,10,135,25,90,0,0,0,1,1)),
+  throwforward : new createHitboxObject(new createHitbox(new Vec2D(10.8537,0.01),0,5,55,30,100,0,0,0,1,1)),
+  throwforwardextra : new createHitboxObject(new createHitbox(offsets[1].throwforwardextra.id0,8.593,7,361,110,40,0,0,0,1,1)),
+  thrown : new createHitboxObject(new createHitbox(offsets[1].thrown.id0,3.906,4,361,50,20,0,1,0,1,1))
+});
 
 for (var l=0;l<20;l++){
   offsets[1].thrown.id0.push(new Vec2D(0,12));
 }
 
-chars[1] = new charObject(1);
+setChars(CHARIDS.PUFF_ID,new charObject(1));

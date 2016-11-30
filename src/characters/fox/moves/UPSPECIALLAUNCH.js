@@ -1,8 +1,11 @@
-/* globals player, sounds, Vec2D, drawVfx, reduceByTraction, fastfall, airDrift, turnOffHitboxes */
 
 import WAIT from "characters/shared/moves/WAIT";
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
-import FIREFOXBOUNCE from "./FIREFOXBOUNCE";
+import FIREFOXBOUNCE from "characters/fox/moves/FIREFOXBOUNCE";
+import {turnOffHitboxes, airDrift, fastfall, reduceByTraction} from "physics/actionStateShortcuts";
+import {drawVfx, player} from "main/main";
+import {Vec2D} from "main/characters";
+import {sounds} from "main/sfx";
 
 export default {
   name : "UPSPECIALLAUNCH",

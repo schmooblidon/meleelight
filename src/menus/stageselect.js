@@ -1,3 +1,8 @@
+import {sounds} from "main/sfx";
+import {player, changeGamemode, bg1,fg1,bg2,ui, clearScreen, shine, startGame, layers, setShine, addShine
+    , setStageSelect
+} from "main/main";
+import {twoPi} from "main/render";
 /* eslint-disable */
 
 let stageSelected = 4;
@@ -14,13 +19,13 @@ dlIcon.src = "assets/stage-icons/dl.png";
 var psIcon = new Image();
 psIcon.src = "assets/stage-icons/ps.png";
 
-window.sssControls = function(i) {
-  stagePointerPos[0] += player[i].inputs.lStickAxis[0].x * 15;
-  stagePointerPos[1] += player[i].inputs.lStickAxis[0].y * -15;
-  if (stagePointerPos[1] >= 450 && stagePointerPos[1] <= 540) {
-    for (var j = 0; j < 4; j++) {
-      if (stagePointerPos[0] >= 225 + j * 200 && stagePointerPos[0] <= 375 + j * 200) {
-        if (stageSelected != j) {
+export function sssControls (i){
+  stagePointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
+  stagePointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
+  if (stagePointerPos[1] >= 450 && stagePointerPos[1] <= 540){
+    for (var j=0;j<4;j++){
+      if (stagePointerPos[0] >= 225+j*200 && stagePointerPos[0] <= 375+j*200){
+        if (stageSelected != j){
           sounds.menuSelect.play();
         }
         stageSelected = j;
@@ -42,7 +47,7 @@ window.sssControls = function(i) {
     if (stageSelected == 4) {
       stageSelected = Math.floor(Math.random() * 3.99);
     }
-    stageSelect = stageSelected;
+      setStageSelect(stageSelected);
     /*switch (stageSelected){
       case 0:
         stageSelect = "bf";
@@ -63,12 +68,12 @@ window.sssControls = function(i) {
   }
 }
 
-window.drawSSSInit = function() {
-  var bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
-  bgGrad.addColorStop(0, "rgb(17, 11, 65)");
-  bgGrad.addColorStop(1, "rgb(61, 8, 37)");
-  bg1.fillStyle = bgGrad;
-  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
+export function drawSSSInit (){
+  var bgGrad =bg1.createLinearGradient(0,0,1200,750);
+  bgGrad.addColorStop(0,"rgb(17, 11, 65)");
+  bgGrad.addColorStop(1,"rgb(61, 8, 37)");
+  bg1.fillStyle=bgGrad;
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
 
   fg1.lineWidth = 4;
   fg1.strokeStyle = "rgba(255, 255, 255, 0.57)";
@@ -93,12 +98,12 @@ window.drawSSSInit = function() {
   fg1.drawImage(dlIcon, 827, 452, 146, 55);
 }
 
-window.drawSSS = function() {
+export function drawSSS (){
   clearScreen();
   bg2.lineWidth = 3;
-  shine += 0.01;
-  if (shine > 1.8) {
-    shine = -0.8;
+  addShine(0.01);
+  if (shine > 1.8){
+   setShine(-0.8);
   }
   var opacity = (shine < 0) ? (0.05 + (0.25 / 0.8) * (0.8 + shine)) : ((shine > 1) ? (0.3 - (0.25 / 0.8) * (shine - 1)) :
     0.3);

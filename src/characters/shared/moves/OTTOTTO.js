@@ -1,3 +1,11 @@
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat, checkForJump,
+    checkForSmashes
+    , checkForTilts
+    , checkForSpecials
+    , aS
+} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "OTTOTTO",
   canEdgeCancel : false,
@@ -19,7 +27,7 @@ export default {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].OTTOTTO){
+    if (player[p].timer > framesData[cS[p]].OTTOTTO){
       aS[cS[p]].OTTOTTOWAIT.init(p);
       return true;
     }

@@ -1,3 +1,7 @@
+import {player, cS} from "main/main";
+import {aS} from "physics/actionStateShortcuts";
+
+import {framesData} from 'main/characters';
 export default {
   name : "CAPTUREDAMAGE",
   canEdgeCancel : false,
@@ -16,7 +20,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CAPTUREDAMAGE){
+    if (player[p].timer > framesData[cS[p]].CAPTUREDAMAGE){
       aS[cS[p]].CAPTUREWAIT.init(p);
       return true;
     }

@@ -1,7 +1,11 @@
-/* globals player, aS, cS, frames, drawVfx, sounds, reduceByTraction,
-checkForJump, checkForTilts, checkForSpecials, checkForSmashes, checkForDash,
-checkForTiltTurn, checkForSmashTurn, tiltTurnDashBuffer */
-
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForJump, checkForSmashes,
+    checkForTilts
+    , checkForSpecials
+    , reduceByTraction
+    , aS
+} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
 export default {
   name : "LANDING",
   canEdgeCancel : true,

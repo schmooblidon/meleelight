@@ -1,3 +1,7 @@
+import {checkForJump, aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "RUN",
   canEdgeCancel : true,
@@ -8,7 +12,7 @@ export default {
     aS[cS[p]].RUN.main(p);
   },
   main : function(p){
-    if (player[p].timer > frames[cS[p]].RUN){
+    if (player[p].timer > framesData[cS[p]].RUN){
       player[p].timer = 1;
     }
     if (!aS[cS[p]].RUN.interrupt(p)){
@@ -35,7 +39,7 @@ export default {
       if (time > 0){
         player[p].timer += time;
       }
-      if (player[p].timer > frames[cS[p]].RUN){
+      if (player[p].timer > framesData[cS[p]].RUN){
         player[p].timer = 1;
       }
       if ((footstep[0] && player[p].timer >= 2) || (footstep[1] && player[p].timer >= 10)){

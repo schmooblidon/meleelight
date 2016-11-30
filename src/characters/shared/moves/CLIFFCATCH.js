@@ -1,3 +1,6 @@
+import {playSounds, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {cS, stage, drawVfx, player} from "main/main";
+import {Vec2D} from "main/characters";
 export default {
   name : "CLIFFCATCH",
   canGrabLedge : false,

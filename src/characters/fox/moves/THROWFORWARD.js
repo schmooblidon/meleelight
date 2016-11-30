@@ -1,8 +1,10 @@
-/* globals player, aS, cS, randomShout, frames, turnOffHitboxes, hitQueue */
 
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
-
+import {randomShout, turnOffHitboxes, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
+import {hitQueue} from 'physics/hitDetection';
 export default {
   name : "THROWFORWARD",
   canEdgeCancel : false,
@@ -12,7 +14,7 @@ export default {
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNFOXFORWARD.init(player[p].phys.grabbing);
-    const frame = frames[cS[player[p].phys.grabbing]].THROWNFOXFORWARD;
+    const frame = framesData[cS[player[p].phys.grabbing]].THROWNFOXFORWARD;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;

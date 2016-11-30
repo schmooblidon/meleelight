@@ -1,3 +1,8 @@
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
+
+import {framesData} from 'main/characters';
 export default {
   name : "DOWNBOUND",
   canEdgeCancel : true,
@@ -25,7 +30,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNBOUND){
+    if (player[p].timer > framesData[cS[p]].DOWNBOUND){
       aS[cS[p]].DOWNWAIT.init(p);
       return true;
     }

@@ -1,3 +1,7 @@
+import {checkForSpecials, checkForAerials, airDrift, fastfall, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+
+import {framesData} from 'main/characters';
 export default {
   name : "DAMAGEFALL",
   canPassThrough : false,
@@ -48,7 +52,7 @@ export default {
       aS[cS[p]].FALL.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].DAMAGEFALL){
+    else if (player[p].timer > framesData[cS[p]].DAMAGEFALL){
       aS[cS[p]].DAMAGEFALL.init(p);
       return true;
     }

@@ -1,9 +1,10 @@
-/* eslint-disable */
+/*eslint-disable*/
 
 import {
   inverseMatrix,
   multMatVect
 } from "main/linAlg";
+import {Vec2D} from "main/characters";
 
 export const button = {
   a: 0,
@@ -110,15 +111,15 @@ controllerIDMap.set("289b-001d", 6);
     
 
 export function controllerNameFromIDnumber(number) {
-  if (number == 0) {
+  if (number === 0) {
     return "Mayflash Wii-U adapter";
-  } else if (number == 1) {
+  } else if (number === 1) {
     return "vJoy";
   } else if (number == 2) {
     return "raphnet v2.9 N64 adapter";
   } else if (number == 3) {
     return "XBOX 360 compatible controller";
-  } else if (number == 4) {
+  } else if (number === 4) {
     return "TigerGame 3-in-1";
   } else if (number == 5) {
     return "Retrolink adapter";

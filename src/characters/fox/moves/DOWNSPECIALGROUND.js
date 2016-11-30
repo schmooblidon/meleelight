@@ -1,9 +1,12 @@
-/* globals player, turnOffHitboxes, sounds, drawVfx, Vec2D, checkForJump, reduceByTraction */
 
-import DOWNSPECIALAIR from "./DOWNSPECIALAIR";
+import DOWNSPECIALAIR from "characters/fox/moves/DOWNSPECIALAIR";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
 import WAIT from "characters/shared/moves/WAIT";
 import FALL from "characters/shared/moves/FALL";
+import {player, drawVfx} from "main/main";
+import {sounds} from "main/sfx";
+import {turnOffHitboxes, reduceByTraction, checkForJump} from "physics/actionStateShortcuts";
+import {Vec2D} from "main/characters";
 
 export default {
   name : "DOWNSPECIALGROUND",

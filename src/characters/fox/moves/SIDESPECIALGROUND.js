@@ -1,8 +1,11 @@
-/* globals player, aS, cS, drawVfx, turnOffHitboxes, sounds, articles */
 
-import SIDESPECIALAIR from "./SIDESPECIALAIR";
+import SIDESPECIALAIR from "characters/fox/moves/SIDESPECIALAIR";
 import WAIT from "characters/shared/moves/WAIT";
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
+import {articles} from "physics/article";
+import {sounds} from "main/sfx";
+import {turnOffHitboxes} from "physics/actionStateShortcuts";
+import {drawVfx, player} from "main/main";
 
 export default {
   name : "SIDESPECIALGROUND",

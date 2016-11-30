@@ -1,3 +1,7 @@
+import {drawVfx, cS, player} from "main/main";
+import {Vec2D} from "main/characters";
+import {aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 export default {
   name : "CAPTUREPULLED",
   canEdgeCancel : false,

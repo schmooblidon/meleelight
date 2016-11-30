@@ -1,8 +1,13 @@
-/* globals player, aS, cS, turnOffHitboxes, drawVfx, Vec2D, sounds, frames, articles, hitQueue */
 
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
+import {Vec2D,framesData} from "main/characters";
+import {drawVfx, cS, player} from "main/main";
+import {articles} from "physics/article";
+import {sounds} from "main/sfx";
+import {turnOffHitboxes, aS} from "physics/actionStateShortcuts";
 
+import {hitQueue} from 'physics/hitDetection';
 export default {
   name : "THROWUP",
   canEdgeCancel : false,
@@ -12,7 +17,7 @@ export default {
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNFOXUP.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
-    const frame = frames[cS[player[p].phys.grabbing]].THROWNFOXUP;
+    const frame = framesData[cS[player[p].phys.grabbing]].THROWNFOXUP;
     player[p].phys.releaseFrame = frame+1;
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
     this.main(p);

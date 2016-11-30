@@ -1,3 +1,5 @@
+import {playSounds, executeIntangibility, fastfall, airDrift, aS, getAngle} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "ESCAPEAIR",
   canPassThrough : false,

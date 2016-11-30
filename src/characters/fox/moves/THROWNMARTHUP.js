@@ -1,5 +1,5 @@
-/* globals player, Vec2D */
-
+import {Vec2D} from "main/characters";
+import {player} from "main/main";
 export default {
   name : "THROWNMARTHUP",
   canEdgeCancel : false,

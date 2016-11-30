@@ -1,5 +1,7 @@
-/* globals player, aS, cS, turnOffHitboxes, frames */
+import {cS, player} from "main/main";
+import {aS, turnOffHitboxes} from "physics/actionStateShortcuts";
 
+import {framesData} from 'main/characters';
 export default {
   name : "CATCHWAIT",
   canEdgeCancel : false,
@@ -38,7 +40,7 @@ export default {
       aS[cS[p]].THROWFORWARD.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CATCHWAIT){
+    else if (player[p].timer > framesData[cS[p]].CATCHWAIT){
       aS[cS[p]].CATCHWAIT.init(p);
       return true;
     }

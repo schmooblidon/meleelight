@@ -1,3 +1,6 @@
+import {airDrift, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {drawVfx, cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "STOPCEIL",
   canPassThrough : true,
@@ -40,13 +43,13 @@ export default {
     if (player[p].timer > 5 && player[p].hit.hitstun <= 0){
       aS[cS[p]].FALL.init(p);
     }
-    else if (player[p].timer > frames[cS[p]].STOPCEIL){
+    else if (player[p].timer > framesData[cS[p]].STOPCEIL){
       if (player[p].hit.hitstun <= 0){
         aS[cS[p]].DAMAGEFALL.init(p);
         return true;
       }
       else {
-        player[p].timer = frames[cS[p]].STOPCEIL;
+        player[p].timer = framesData[cS[p]].STOPCEIL;
         return false;
       }
     }

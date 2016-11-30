@@ -1,8 +1,29 @@
+import {player, cS, drawVfx, screenShake, percentShake, finishGame, palettes, pPal,stage} from "main/main";
+import {sounds} from "main/sfx";
+import {Vec2D, actionSounds,framesData} from "main/characters";
+import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForAerials,
+    checkForDash
+    , checkForSmashTurn
+    , checkForTiltTurn
+    , tiltTurnDashBuffer
+    , getAngle
+    , airDrift
+    , fastfall
+    , executeIntangibility
+    , playSounds
+    , shieldTilt
+    , shieldSize
+    , isFinalDeath
+    , turnOffHitboxes
+    , mashOut
+    , checkForSquat
+    , shieldDepletion
+} from "physics/actionStateShortcuts";
 /* eslint-disable */
 
 // BASE ActionStates
 
-window.baseActionStates = {
+export const baseActionStates = {
 
 "WAIT" : {
   name : "WAIT",
@@ -18,7 +39,7 @@ window.baseActionStates = {
     player[p].timer += 1;
     if (!aS[cS[p]].WAIT.interrupt(p)){
       reduceByTraction(p,false);
-      if (player[p].timer > frames[cS[p]].WAIT){
+      if (player[p].timer > framesData[cS[p]].WAIT){
         aS[cS[p]].WAIT.init(p);
       }
     }
@@ -188,7 +209,7 @@ window.baseActionStates = {
       aS[cS[p]].RUN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].DASH){
+    else if (player[p].timer > framesData[cS[p]].DASH){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -209,7 +230,7 @@ window.baseActionStates = {
 	player[p].cStickJump = false;
   },
   main : function(p){
-    if (player[p].timer > frames[cS[p]].RUN){
+    if (player[p].timer > framesData[cS[p]].RUN){
       player[p].timer = 1;
     }
     if (!aS[cS[p]].RUN.interrupt(p)){
@@ -236,7 +257,7 @@ window.baseActionStates = {
       if (time > 0){
         player[p].timer += time;
       }
-      if (player[p].timer > frames[cS[p]].RUN){
+      if (player[p].timer > framesData[cS[p]].RUN){
         player[p].timer = 1;
       }
       if ((footstep[0] && player[p].timer >= 2) || (footstep[1] && player[p].timer >= 10)){
@@ -464,7 +485,7 @@ window.baseActionStates = {
       aS[cS[p]].RUNTURN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].RUNBRAKE){
+    else if (player[p].timer > framesData[cS[p]].RUNBRAKE){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -521,7 +542,7 @@ window.baseActionStates = {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].RUNTURN){
+    else if (player[p].timer > framesData[cS[p]].RUNTURN){
       if(player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.6){
         aS[cS[p]].RUN.init(p);
       }
@@ -592,7 +613,7 @@ window.baseActionStates = {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].WALK){
+    if (player[p].timer > framesData[cS[p]].WALK){
       aS[cS[p]].WALK.init(p,false);
       return true;
     }
@@ -771,7 +792,7 @@ window.baseActionStates = {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPF){
+    else if (player[p].timer > framesData[cS[p]].JUMPF){
       aS[cS[p]].FALL.init(p);
       return true;
     }
@@ -842,7 +863,7 @@ window.baseActionStates = {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPB){
+    else if (player[p].timer > framesData[cS[p]].JUMPB){
       aS[cS[p]].FALL.init(p);
       return true;
     }
@@ -1073,7 +1094,7 @@ window.baseActionStates = {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FALL){
+    else if (player[p].timer > framesData[cS[p]].FALL){
       aS[cS[p]].FALL.init(p);
       return true;
     }
@@ -1128,7 +1149,7 @@ window.baseActionStates = {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FALLAERIAL){
+    else if (player[p].timer > framesData[cS[p]].FALLAERIAL){
       aS[cS[p]].FALLAERIAL.init(p);
       return true;
     }
@@ -1161,7 +1182,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].FALLSPECIAL){
+    if (player[p].timer > framesData[cS[p]].FALLSPECIAL){
       aS[cS[p]].FALLSPECIAL.init(p);
       return true;
     }
@@ -1241,7 +1262,7 @@ window.baseActionStates = {
       aS[cS[p]][t[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].SQUAT){
+    else if (player[p].timer > framesData[cS[p]].SQUAT){
       aS[cS[p]].SQUATWAIT.init(p);
       return true;
     }
@@ -1313,7 +1334,7 @@ window.baseActionStates = {
       aS[cS[p]].SMASHTURN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].SQUATWAIT){
+    else if (player[p].timer > framesData[cS[p]].SQUATWAIT){
       aS[cS[p]].SQUATWAIT.init(p);
     }
     else {
@@ -1344,7 +1365,7 @@ window.baseActionStates = {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].SQUATRV){
+    if (player[p].timer > framesData[cS[p]].SQUATRV){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -1435,7 +1456,7 @@ window.baseActionStates = {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPAERIALF){
+    else if (player[p].timer > framesData[cS[p]].JUMPAERIALF){
       aS[cS[p]].FALLAERIAL.init(p);
       return true;
     }
@@ -1490,7 +1511,7 @@ window.baseActionStates = {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPAERIALB){
+    else if (player[p].timer > framesData[cS[p]].JUMPAERIALB){
       aS[cS[p]].FALLAERIAL.init(p);
       return true;
     }
@@ -1561,7 +1582,7 @@ window.baseActionStates = {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].PASS){
+    else if (player[p].timer > framesData[cS[p]].PASS){
       aS[cS[p]].FALL.init(p);
       return true;
     }
@@ -1658,7 +1679,7 @@ window.baseActionStates = {
         aS[cS[p]].PASS.init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].GUARDON){
+      else if (player[p].timer > framesData[cS[p]].GUARDON){
         aS[cS[p]].GUARD.init(p);
         return true;
       }
@@ -1799,7 +1820,7 @@ window.baseActionStates = {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].GUARDOFF){
+    else if (player[p].timer > framesData[cS[p]].GUARDOFF){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -1895,7 +1916,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CLIFFCATCH){
+    if (player[p].timer > framesData[cS[p]].CLIFFCATCH){
       aS[cS[p]].CLIFFWAIT.init(p);
       return true;
     }
@@ -1972,7 +1993,7 @@ window.baseActionStates = {
       aS[cS[p]].DAMAGEFALL.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CLIFFWAIT){
+    else if (player[p].timer > framesData[cS[p]].CLIFFWAIT){
       aS[cS[p]].CLIFFWAIT.init(p);
       return true;
     }
@@ -2258,7 +2279,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].WAIT){
+    if (player[p].timer > framesData[cS[p]].WAIT){
       aS[cS[p]].REBIRTHWAIT.init(p);
       return true;
     }
@@ -2326,7 +2347,7 @@ window.baseActionStates = {
         turnOffHitboxes(p);
       }
     }
-    if (player[p].timer < frames[cS[p]].DAMAGEFLYN){
+    if (player[p].timer < framesData[cS[p]].DAMAGEFLYN){
       player[p].timer++;
     }
     if (player[p].hit.hitstun % 10 == 0){
@@ -2416,7 +2437,7 @@ window.baseActionStates = {
     } else if ((player[p].inputs.lStickAxis[0].x > 0.7 && player[p].inputs.lStickAxis[1].x < 0.7) || (player[p].inputs.lStickAxis[0].x < -0.7 && player[p].inputs.lStickAxis[1].x > -0.7)) {// || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y < 0.7) || (player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y > -0.7)){
       aS[cS[p]].FALL.init(p);
       return true;
-    } else if (player[p].timer > frames[cS[p]].DAMAGEFALL){
+    } else if (player[p].timer > framesData[cS[p]].DAMAGEFALL){
       aS[cS[p]].DAMAGEFALL.init(p);
       return true;
     } else {
@@ -2470,7 +2491,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DAMAGEN2){
+    if (player[p].timer > framesData[cS[p]].DAMAGEN2){
       if (player[p].hit.hitstun > 0){
         player[p].timer--;
         return false;
@@ -2608,7 +2629,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRN){
+    if (player[p].timer > framesData[cS[p]].LANDINGATTACKAIRN){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -2642,7 +2663,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRF){
+    if (player[p].timer > framesData[cS[p]].LANDINGATTACKAIRF){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -2676,7 +2697,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRB){
+    if (player[p].timer > framesData[cS[p]].LANDINGATTACKAIRB){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -2710,7 +2731,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRD){
+    if (player[p].timer > framesData[cS[p]].LANDINGATTACKAIRD){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -2744,7 +2765,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRU){
+    if (player[p].timer > framesData[cS[p]].LANDINGATTACKAIRU){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -2777,7 +2798,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].ESCAPEB){
+    if (player[p].timer > framesData[cS[p]].ESCAPEB){
       player[p].phys.cVel.x = 0;
       aS[cS[p]].WAIT.init(p);
       return true;
@@ -2811,7 +2832,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].ESCAPEF){
+    if (player[p].timer > framesData[cS[p]].ESCAPEF){
       player[p].phys.cVel.x = 0;
       player[p].phys.face *= -1;
       aS[cS[p]].WAIT.init(p);
@@ -2846,7 +2867,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].ESCAPEN){
+    if (player[p].timer > framesData[cS[p]].ESCAPEN){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -2883,7 +2904,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNBOUND){
+    if (player[p].timer > framesData[cS[p]].DOWNBOUND){
       aS[cS[p]].DOWNWAIT.init(p);
       return true;
     }
@@ -2914,7 +2935,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNWAIT){
+    if (player[p].timer > framesData[cS[p]].DOWNWAIT){
       aS[cS[p]].DOWNWAIT.init(p);
       return true;
     }
@@ -3035,7 +3056,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNSTANDN){
+    if (player[p].timer > framesData[cS[p]].DOWNSTANDN){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -3063,7 +3084,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNSTANDB){
+    if (player[p].timer > framesData[cS[p]].DOWNSTANDB){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -3091,7 +3112,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNSTANDF){
+    if (player[p].timer > framesData[cS[p]].DOWNSTANDF){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -3120,7 +3141,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHN){
+    if (player[p].timer > framesData[cS[p]].TECHN){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -3150,7 +3171,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHB){
+    if (player[p].timer > framesData[cS[p]].TECHB){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -3180,7 +3201,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHF){
+    if (player[p].timer > framesData[cS[p]].TECHF){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -3211,7 +3232,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].SHIELDBREAKFALL){
+    if (player[p].timer > framesData[cS[p]].SHIELDBREAKFALL){
       aS[cS[p]].SHIELDBREAKFALL.init(p);
       return true;
     }
@@ -3250,7 +3271,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].SHIELDBREAKDOWNBOUND){
+    if (player[p].timer > framesData[cS[p]].SHIELDBREAKDOWNBOUND){
       aS[cS[p]].SHIELDBREAKSTAND.init(p);
       return true;
     }
@@ -3277,7 +3298,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].SHIELDBREAKSTAND){
+    if (player[p].timer > framesData[cS[p]].SHIELDBREAKSTAND){
       aS[cS[p]].FURAFURA.init(p);
       return true;
     }
@@ -3327,7 +3348,7 @@ window.baseActionStates = {
       aS[cS[p]].WAIT.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FURAFURA){
+    else if (player[p].timer > framesData[cS[p]].FURAFURA){
       player[p].timer = 1;
       return false;
     }
@@ -3402,7 +3423,7 @@ window.baseActionStates = {
       aS[cS[p]].CAPTURECUT.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CAPTUREWAIT){
+    else if (player[p].timer > framesData[cS[p]].CAPTUREWAIT){
       aS[cS[p]].CAPTUREWAIT.init(p);
       return true;
     }
@@ -3450,7 +3471,7 @@ window.baseActionStates = {
       aS[cS[p]].THROWFORWARD.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CATCHWAIT){
+    else if (player[p].timer > framesData[cS[p]].CATCHWAIT){
       aS[cS[p]].CATCHWAIT.init(p);
       return true;
     }
@@ -3484,7 +3505,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CAPTURECUT){
+    if (player[p].timer > framesData[cS[p]].CAPTURECUT){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -3514,7 +3535,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CATCHCUT){
+    if (player[p].timer > framesData[cS[p]].CATCHCUT){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -3542,7 +3563,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CAPTUREDAMAGE){
+    if (player[p].timer > framesData[cS[p]].CAPTUREDAMAGE){
       aS[cS[p]].CAPTUREWAIT.init(p);
       return true;
     }
@@ -3586,7 +3607,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].WALLDAMAGE){
+    if (player[p].timer > framesData[cS[p]].WALLDAMAGE){
       aS[cS[p]].DAMAGEFALL.init(p);
       return true;
     }
@@ -3671,7 +3692,7 @@ window.baseActionStates = {
         aS[cS[p]][b[1]].init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].WALLTECH){
+      else if (player[p].timer > framesData[cS[p]].WALLTECH){
         aS[cS[p]].FALL.init(p);
         return true;
       }
@@ -3750,7 +3771,7 @@ window.baseActionStates = {
         aS[cS[p]][b[1]].init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].WALLJUMP){
+      else if (player[p].timer > framesData[cS[p]].WALLJUMP){
         aS[cS[p]].FALL.init(p);
         return true;
       }
@@ -3840,7 +3861,7 @@ window.baseActionStates = {
         aS[cS[p]][b[1]].init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].WALLJUMP){
+      else if (player[p].timer > framesData[cS[p]].WALLJUMP){
         aS[cS[p]].FALL.init(p);
         return true;
       }
@@ -3875,7 +3896,7 @@ window.baseActionStates = {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].OTTOTTO){
+    if (player[p].timer > framesData[cS[p]].OTTOTTO){
       aS[cS[p]].OTTOTTOWAIT.init(p);
       return true;
     }
@@ -3944,7 +3965,7 @@ window.baseActionStates = {
   },
   main : function(p){
     player[p].timer++;
-    if (player[p].timer > frames[cS[p]].OTTOTTOWAIT){
+    if (player[p].timer > framesData[cS[p]].OTTOTTOWAIT){
       player[p].timer = 0
     }
     if (!aS[cS[p]].OTTOTTOWAIT.interrupt(p)){
@@ -4081,7 +4102,7 @@ window.baseActionStates = {
       aS[cS[p]].FURASLEEPEND.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FURASLEEPSTART){
+    else if (player[p].timer > framesData[cS[p]].FURASLEEPSTART){
       player[p].colourOverlayBool = false;
       aS[cS[p]].FURASLEEPLOOP.init(p);
       return true;
@@ -4131,7 +4152,7 @@ window.baseActionStates = {
       aS[cS[p]].FURASLEEPEND.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FURASLEEPLOOP){
+    else if (player[p].timer > framesData[cS[p]].FURASLEEPLOOP){
       player[p].timer = 1;
       player[p].colourOverlayBool = false;
       return false;
@@ -4158,7 +4179,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].FURASLEEPEND){
+    if (player[p].timer > framesData[cS[p]].FURASLEEPEND){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -4210,13 +4231,13 @@ window.baseActionStates = {
     if (player[p].timer > 5 && player[p].hit.hitstun <= 0){
       aS[cS[p]].FALL.init(p);
     }
-    else if (player[p].timer > frames[cS[p]].STOPCEIL){
+    else if (player[p].timer > framesData[cS[p]].STOPCEIL){
       if (player[p].hit.hitstun <= 0){
         aS[cS[p]].DAMAGEFALL.init(p);
         return true;
       }
       else {
-        player[p].timer = frames[cS[p]].STOPCEIL;
+        player[p].timer = framesData[cS[p]].STOPCEIL;
         return false;
       }
     }
@@ -4278,7 +4299,7 @@ window.baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHU){
+    if (player[p].timer > framesData[cS[p]].TECHU){
       aS[cS[p]].FALL.init(p);
       return true;
     }

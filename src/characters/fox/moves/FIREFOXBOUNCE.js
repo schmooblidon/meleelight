@@ -1,6 +1,6 @@
-/* globals player */
 
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
+import {player} from "main/main";
 
 export default {
   name : "FIREFOXBOUNCE",

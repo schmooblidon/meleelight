@@ -1,26 +1,21 @@
+import {bg1,bg2, clearScreen, layers,ui} from "main/main";
+import {twoPi} from "main/render";
 /* eslint-disable */
 
-window.angB = 0;
-window.angR = 0;
-window.angles = [0, Math.PI];
-window.mlVel = 0;
-window.mlPos = 0;
-window.mlDir = 1;
-window.circlePos = [
-  [200, 0, 0.4, 1, 200],
-  [600, 240, 0.21, 1, 250],
-  [10, 600, 0.7, -1, 150],
-  [350, 500, 0.65, -1, 270],
-  [1000, 50, 0.9, 1, 200],
-  [900, 400, 0.1, -1, 260]
-];
+export let angB = 0;
+export let angR = 0;
+export let angles = [0,Math.PI];
+export let mlVel = 0;
+export let mlPos = 0;
+export let mlDir = 1;
+export let circlePos = [[200,0,0.4,1,200],[600,240,0.21,1,250],[10,600,0.7,-1,150],[350,500,0.65,-1,270],[1000,50,0.9,1,200],[900,400,0.1,-1,260]];
 
 const lightDust = [];
 for (var k = 0; k < 20; k++) {
   lightDust[k] = [Math.random() * 3 + 2, 330 + (k * 26 + 26 * Math.random()), 520, 0.2];
 }
 
-window.drawStartScreenInit = function() {
+export function drawStartScreenInit (){
   bg1.fillStyle = "rgba(46, 8, 154, 1)";
   var grd = bg1.createRadialGradient(600, 375, 5, 600, 375, 750);
   grd.addColorStop(0, "#27005b");
@@ -49,7 +44,7 @@ window.drawStartScreenInit = function() {
   bg1.restore();
 }
 
-window.drawStartScreen = function() {
+export function drawStartScreen (){
   clearScreen();
   bg2.save();
   bg2.lineWidth = 60;

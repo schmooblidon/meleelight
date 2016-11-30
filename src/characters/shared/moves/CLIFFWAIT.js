@@ -1,3 +1,7 @@
+import {cS, player} from "main/main";
+import {aS} from "physics/actionStateShortcuts";
+
+import {framesData} from 'main/characters';
 export default {
   name : "CLIFFWAIT",
   canGrabLedge : false,
@@ -65,7 +69,7 @@ export default {
       aS[cS[p]].DAMAGEFALL.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CLIFFWAIT){
+    else if (player[p].timer > framesData[cS[p]].CLIFFWAIT){
       aS[cS[p]].CLIFFWAIT.init(p);
       return true;
     }

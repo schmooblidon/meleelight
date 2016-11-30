@@ -1,64 +1,83 @@
 /* eslint-disable */
-
+import {Vec2D,Box2D,framesData} from "main/characters";
+import {choosingTag, drawCSSInit, cssControls, drawCSS} from 'menus/css';
+import {playerObject} from 'main/player';
+import {keyMap} from 'settings';
+import {drawStartUp} from 'menus/startup';
+import {menuMove, drawMainMenuInit, drawMainMenu} from "menus/menu";
+import {sounds} from "main/sfx";
+import {drawStartScreenInit, drawStartScreen} from "menus/startscreen";
+import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType} from "stages/stagerender";
+import {drawSSSInit, sssControls, drawSSS} from "menus/stageselect";
+import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "menus/audiomenu";
+import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "menus/gameplaymenu";
+import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
+import {drawCreditsInit, credits, drawCredits} from "menus/credits";
+import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
+import {vfx, dVfx, setTransparency, transparency} from "main/vfx";
+import {aS} from "physics/actionStateShortcuts";
+import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
 import {
-  button,
-  keyboardMap,
-  controllerMaps,
-  custcent,
-  controllerNameFromIDnumber,
-  controllerIDNumberFromGamepadID,
-  scaleToGCAxis,
-  scaleToGCTrigger
-} from "main/input";
+  targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned,
+  targetRecords, targetsDestroyed, targetStagePlaying , getTargetCookies , giveMedals, medalTimes
+} from "target/targetplay";
+import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "menus/targetselect";
+import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
+import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
+import {stages} from "stages/stages";
+import {runAI} from "main/ai";
+import {physics} from "physics/physics";
+import $ from 'jquery';
+import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, button, controllerMaps, scaleToGCAxis, scaleToGCTrigger, custcent} from "main/input";
+/*globals performance*/
 
+export const player = [0,0,0,0];
+export const renderTime = [10,0,100,0];
+export const gamelogicTime = [5,0,100,0];
+export const framerate = [0,0,0];
+export let cS = [0,0,0,0];
+export let vfxQueue = [];
+export var shine = 0.5;
 
-window.player = [0, 0, 0, 0];
-window.renderTime = [10, 0, 100, 0];
-window.gamelogicTime = [5, 0, 100, 0];
-window.framerate = [0, 0, 0];
-window.cS = [0, 0, 0, 0];
-window.vfxQueue = [];
-window.shine = 0.5;
+export let endTargetGame = false;
 
-window.layers = {
-  BG1: 0,
-  BG2: 0,
-  FG1: 0,
-  FG2: 0,
-  UI: 0
-};
-
+export let creditsPlayer = 0;
 let gameEnd = false;
-const attemptingControllerReset = [false, false, false, false];
-
+const attemptingControllerReset = [false,false,false,false];
+const keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,222],[109,219],71,78,66,86];
 let keyboardOccupied = false;
 
 
 
 window.mType = [0, 0, 0, 0];
 
-window.currentPlayers = [];
 
-window.playerAmount = 0;
+export const mType = [0,0,0,0];
 
-window.playerType = [-1, -1, -1, -1];
+export const cd = [new customDeadzone,new customDeadzone,new customDeadzone,new customDeadzone];
 
-window.cpuDifficulty = [3, 3, 3, 3];
+export const currentPlayers = [];
 
-window.ports = 0;
-window.activePorts = [];
+export const playerAmount = 0;
 
-window.playing = false;
+export const playerType = [-1,-1,-1,-1];
 
-window.frameByFrame = false;
-window.frameByFrameRender = false;
+export const cpuDifficulty = [3,3,3,3];
 
-window.findingPlayers = true;
+export let ports = 0;
+export const activePorts = [];
 
-window.showVfx = true;
-window.showDebug = false;
+export let playing = false;
 
-window.gameMode = 20;
+export let frameByFrame = false;
+export let frameByFrameRender = false;
+
+export let findingPlayers = true;
+
+export let showVfx = true;
+export let showDebug = false;
+
+export let gameMode = 20;
 // 20:Startup
 // 13:Data Menu
 // 12:Keyboard Controls
@@ -74,161 +93,95 @@ window.gameMode = 20;
 // 2:CSS
 // 1:Main Menu
 // 0:Title Screen
+export let versusMode = 0;
 
-window.versusMode = 0;
+export const randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
 
-window.randomTags = ["NEO!", "SELF", "NOVA", "PNDA", "Panda", "LFFN", "Scorp", "AZ", "AXE", "Tempo", "TMPO", "[A]rmada",
-  "WBALLZ", "Westballz", "PPMD", "Kreygasm", "M2K", "Mang0", "USA", "SCAR", "TOPH", "(.Y.)", "HBOX", "HungryBox",
-  "PLUP", "Shroomed", "SFAT", "Wizz", "Lucky", "S2J", "SilentWolf", "aMSa", "S2J", "Hax$"
-];
+export const palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
+["rgb(4, 255, 134)","rgb(154, 254, 170)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
+["rgb(5, 195, 255)","rgb(121, 223, 255)","rgba(218, 96, 254, ","rgb(231, 134, 255)","rgba(230, 144, 255, "],
+["rgb(255, 187, 70)","rgb(248, 255, 122)","rgba(80, 182, 255, ","rgb(255, 142, 70)","rgba(139, 203, 249, "],
+["rgb(177, 89, 255)","rgb(203, 144, 255)","rgba(144, 255, 110, ","rgb(247, 126, 250)","rgba(190, 255, 170, "],
+["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgb(255, 112, 66)","rgba(111, 214, 168, "],
+["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgb(191, 119, 119)","rgba(175, 172, 172, "]];
 
-window.palettes = [
-  ["rgb(250, 89, 89)", "rgb(255, 170, 170)", "rgba(255, 206, 111, ", "rgb(244, 68, 68)", "rgba(255, 225, 167, "],
-  ["rgb(4, 255, 134)", "rgb(154, 254, 170)", "rgba(252, 95, 95, ", "rgb(255, 182, 96)", "rgba(254, 141, 141, "],
-  ["rgb(5, 195, 255)", "rgb(121, 223, 255)", "rgba(218, 96, 254, ", "rgb(231, 134, 255)", "rgba(230, 144, 255, "],
-  ["rgb(255, 187, 70)", "rgb(248, 255, 122)", "rgba(80, 182, 255, ", "rgb(255, 142, 70)", "rgba(139, 203, 249, "],
-  ["rgb(177, 89, 255)", "rgb(203, 144, 255)", "rgba(144, 255, 110, ", "rgb(247, 126, 250)", "rgba(190, 255, 170, "],
-  ["rgb(182, 131, 70)", "rgb(252, 194, 126)", "rgba(47, 186, 123, ", "rgb(255, 112, 66)", "rgba(111, 214, 168, "],
-  ["rgb(166, 166, 166)", "rgb(255, 255, 255)", "rgba(255, 255, 255, ", "rgb(191, 119, 119)", "rgba(175, 172, 172, "]
-];
 
-window.hurtboxColours = [makeColour(255, 237, 70, 0.6), makeColour(42, 57, 255, 0.6), makeColour(54, 255, 37, 0.6)];
+export const hasTag = [false,false,false,false];
+export const tagText = ["","","",""];
 
-window.hasTag = [false, false, false, false];
-window.tagText = ["", "", "", ""];
+export const pPal = [0,1,2,3];
 
-window.pPal = [0, 1, 2, 3];
+export const costumeTimeout = [];
 
-window.costumeTimeout = [];
+export const colours = ["rgba(4, 255, 82, 0.62)","rgba(117, 20, 255, 0.63)","rgba(255, 20, 20, 0.63)","rgba(255, 232, 20, 0.63)"];
 
-window.colours = ["rgba(4, 255, 82, 0.62)", "rgba(117, 20, 255, 0.63)", "rgba(255, 20, 20, 0.63)",
-  "rgba(255, 232, 20, 0.63)"
-];
+export let pause = [[true,true],[true,true],[true,true],[true,true]];
+export let frameAdvance = [[true,true],[true,true],[true,true],[true,true]];
 
-window.pause = [
-  [true, true],
-  [true, true],
-  [true, true],
-  [true, true]
-];
-window.frameAdvance = [
-  [true, true],
-  [true, true],
-  [true, true],
-  [true, true]
-];
+export const startingPoint = [[-50,50],[50,50],[-25,5],[25,5]];
+export const startingFace = [1,-1,1,-1];
 
-window.startingPoint = [
-  [-50, 50],
-  [50, 50],
-  [-25, 5],
-  [25, 5]
-];
-window.startingFace = [1, -1, 1, -1];
+export const ground = [[-68.4,0],[68.4,0]];
 
-window.ground = [
-  [-68.4, 0],
-  [68.4, 0]
-];
+export const platforms = [[[-57.6,27.2],[-20,27.2]],[[20,27.2],[57.6,27.2]],[[-18.8,54.4],[18.8,54.4]]];
 
-window.platforms = [
-  [
-    [-57.6, 27.2],
-    [-20, 27.2]
-  ],
-  [
-    [20, 27.2],
-    [57.6, 27.2]
-  ],
-  [
-    [-18.8, 54.4],
-    [18.8, 54.4]
-  ]
-];
+export const wallsL = [[[-68.4,0],[-68.4,-108.8]]];
+export const wallsR = [[[68.4,0],[68.4,-108.8]]];
 
-window.wallsL = [
-  [
-    [-68.4, 0],
-    [-68.4, -108.8]
-  ]
-];
-window.wallsR = [
-  [
-    [68.4, 0],
-    [68.4, -108.8]
-  ]
-];
-
-window.edges = [
-  [
-    [-68.4, 0],
-    [-63.4, 0]
-  ],
-  [
-    [68.4, 0],
-    [63.4, 0]
-  ]
-];
+export const edges = [[[-68.4,0],[-63.4,0]],[[68.4,0],[63.4,0]]];
 
 //edgeOffset = [[-71.3,-23.7],[71.3,-23.7]];
-window.edgeOffset = [
-  [-2.9, -23.7],
-  [2.9, -23.7]
-];
+export const edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
 
-window.edgeOrientation = [1, -1];
+export const edgeOrientation = [1,-1];
 
-window.respawnPoints = [
-  [-50, 50, 1],
-  [50, 50, -1],
-  [25, 35, 1],
-  [-25, 35, -1]
-];
+export const respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
 
-window.stage = {
-  box: [new Box2D([-68.4, -108.8], [68.4, 0])],
-  platform: [
-    [new Vec2D(-57.6, 27.2), new Vec2D(-20, 27.2)],
-    [new Vec2D(20, 27.2), new Vec2D(57.6, 27.2)],
-    [new Vec2D(-18.8, 54.4), new Vec2D(18.8, 54.4)]
-  ],
-  ground: [
-    [new Vec2D(-68.4, 0), new Vec2D(68.4, 0)]
-  ],
-  ceiling: [
-    [new Vec2D(-68.4, -108.8), new Vec2D(68.4, -108.8)]
-  ],
-  wallL: [
-    [new Vec2D(-68.4, 0), new Vec2D(-68.4, -108.8)]
-  ],
-  wallR: [
-    [new Vec2D(68.4, 0), new Vec2D(68.4, -108.8)]
-  ],
-  startingPoint: [new Vec2D(-50, 50), new Vec2D(50, 50), new Vec2D(-25, 5), new Vec2D(25, 5)],
-  startingFace: [1, -1, 1, -1],
-  respawnPoints: [new Vec2D(-50, 50), new Vec2D(50, 50), new Vec2D(-25, 35), new Vec2D(25, 35)],
-  respawnFace: [1, -1, 1, -1],
-  blastzone: new Box2D([-224, -108.8], [224, 200]),
-  ledge: [
-    [0, 0],
-    [0, 1]
-  ],
-  ledgePos: [new Vec2D(-68.4, 0), new Vec2D(68.4, 0)],
-  scale: 4.5,
-  offset: [600, 480],
+export var stage = {
+  box : [new Box2D([-68.4,-108.8],[68.4,0])],
+  platform : [[new Vec2D(-57.6,27.2),new Vec2D(-20,27.2)],[new Vec2D(20,27.2),new Vec2D(57.6,27.2)],[new Vec2D(-18.8,54.4),new Vec2D(18.8,54.4)]],
+  ground : [[new Vec2D(-68.4,0),new Vec2D(68.4,0)]],
+  ceiling : [[new Vec2D(-68.4,-108.8),new Vec2D(68.4,-108.8)]],
+  wallL : [[new Vec2D(-68.4,0),new Vec2D(-68.4,-108.8)]],
+  wallR : [[new Vec2D(68.4,0),new Vec2D(68.4,-108.8)]],
+  startingPoint : [new Vec2D(-50,50),new Vec2D(50,50),new Vec2D(-25,5),new Vec2D(25,5)],
+  startingFace : [1,-1,1,-1],
+  respawnPoints : [new Vec2D(-50,50),new Vec2D(50,50),new Vec2D(-25,35),new Vec2D(25,35)],
+  respawnFace : [1,-1,1,-1],
+  blastzone : new Box2D([-224,-108.8],[224,200]),
+  ledge : [[0,0],[0,1]],
+  ledgePos : [new Vec2D(-68.4,0),new Vec2D(68.4,0)],
+  scale : 4.5,
+  offset : [600,480],
 };
 
-window.stageSelect = 0;
+export var stageSelect = 0;
 
-window.blastzone = new Box2D([-224, 200], [224, -108.8]);
+export function setStageSelect (val){
+  stageSelect = val;
+}
 
-window.starting = true;
-window.startTimer = 1.5;
+export const blastzone = new Box2D([-224,200],[224,-108.8]);
 
+export let starting = true;
+export function setStarting(val){
+    starting = val;
+}
+export let startTimer = 1.5;
+export function setStartTimer (val){
+  startTimer = val;
+}
 //matchTimer = 5999.99;
-window.matchTimer = 480;
+export let matchTimer = 480;
 
-window.usingLocalStorage = false;
+export function addMatchTimer (val){
+  matchTimer += val;
+}
+export function setMatchTimer (val){
+  matchTimer = val;
+}
+
+export let usingLocalStorage = false;
 if (typeof(Storage) !== "undefined") {
   // Code for localStorage/sessionStorage.
   usingLocalStorage = true;
@@ -238,16 +191,18 @@ if (typeof(Storage) !== "undefined") {
   console.log("local storage does not work");
 }
 
-window.setCookie = function(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-  var exp = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + "; " + exp;
-  localStorage.setItem(cname, cvalue);
+export function setCookie (cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var exp = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + exp;
+    localStorage.setItem(cname, cvalue);
 }
-
-window.getCookie = function(cname) {
-  if (usingLocalStorage) {
+export function setVersusMode (val){
+  versusMode = val;
+}
+export function getCookie (cname) {
+  if (usingLocalStorage){
     return localStorage.getItem(cname);
   } else {
     var name = cname + "=";
@@ -261,12 +216,15 @@ window.getCookie = function(cname) {
   }
 }
 
-window.keys = {};
-window.keyBind = 0;
-window.keyBinding = false;
-window.overrideKeyboardEvent = function(e) {
-  if (choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116) {
-    switch (e.type) {
+export const keys = {};
+export let keyBind = 0;
+export let keyBinding = false;
+export function setKeyBinding (val){
+  keyBinding = val;
+}
+export function overrideKeyboardEvent (e){
+  if (choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116){
+    switch(e.type){
       case "keydown":
         if (!keys[e.keyCode]) {
           keys[e.keyCode] = true;
@@ -302,12 +260,12 @@ window.overrideKeyboardEvent = function(e) {
   }
 };
 
-window.disabledEventPropagation = function(e) {
-  if (e) {
-    if (e.stopPropagation) {
+export function disabledEventPropagation (e){
+  if(e){
+    if(e.stopPropagation){
       e.stopPropagation();
-    } else if (window.event) {
-      window.event.cancelBubble = true;
+    } else if(event){
+       event.cancelBubble = true;
     }
   }
 };
@@ -316,15 +274,16 @@ document.onkeydown = overrideKeyboardEvent;
 document.onkeyup = overrideKeyboardEvent;
 
 /*var keys = [];
-window.onkeyup = function(e) {
+export const onkeyup (e) {
   keys[e.keyCode]=false;
 }
-window.onkeydown = function(e) {
+export const onkeydown (e) {
   keys[e.keyCode]=true;
 }*/
 
-window.SVG = function(tag) {
-  return document.createElementNS('http://www.w3.org/2000/svg', tag);
+export function SVG (tag)
+{
+   return document.createElementNS('http://www.w3.org/2000/svg', tag);
 }
 
 /*if (Gamepad.supported) {
@@ -340,7 +299,7 @@ window.addEventListener("gamepadconnected", function(e) {
 });
 if (navigator.getGamepads) console.log(navigator.getGamepads());
 
-window.matchTimerTick = function() {
+export function matchTimerTick (){
   matchTimer -= 0.016667;
 
   if (dom.matchMinutes && dom.matchSeconds) {
@@ -354,43 +313,26 @@ window.matchTimerTick = function() {
   }
 }
 
-window.screenShake = function(kb) {
-  var seed = [Math.random(), Math.random(), Math.random(), Math.random()];
-  fg1.translate(kb * 0.1 * seed[0], kb * 0.1 * seed[1]);
-  setTimeout(function() {
-    fg1.translate(-kb * 0.05 * seed[0], -kb * 0.05 * seed[1])
-  }, 20);
-  setTimeout(function() {
-    fg1.translate(-kb * 0.05 * seed[0], -kb * 0.05 * seed[1]);
-    fg1.translate(-kb * 0.1 * seed[2], -kb * 0.1 * seed[3])
-  }, 40);
-  setTimeout(function() {
-    fg1.translate(kb * 0.05 * seed[2], kb * 0.05 * seed[3])
-  }, 60);
-  setTimeout(function() {
-    fg1.translate(kb * 0.05 * seed[2], kb * 0.05 * seed[3])
-  }, 80);
+export function screenShake (kb){
+  var seed = [Math.random(),Math.random(),Math.random(),Math.random()];
+  fg1.translate(kb*0.1*seed[0],kb*0.1*seed[1]);
+  setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1])},20);
+  setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1]);fg1.translate(-kb*0.1*seed[2],-kb*0.1*seed[3])},40);
+  setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},60);
+  setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},80);
 }
 
-window.percentShake = function(kb, i) {
-  player[i].percentShake = new Vec2D(kb * 0.1 * Math.random(), kb * 0.1 * Math.random());
-  setTimeout(function() {
-    player[i].percentShake = new Vec2D(kb * 0.05 * Math.random(), kb * 0.05 * Math.random())
-  }, 20);
-  setTimeout(function() {
-    player[i].percentShake = new Vec2D(-kb * 0.1 * Math.random(), -kb * 0.1 * Math.random())
-  }, 40);
-  setTimeout(function() {
-    player[i].percentShake = new Vec2D(-kb * 0.05 * Math.random(), -kb * 0.05 * Math.random())
-  }, 60);
-  setTimeout(function() {
-    player[i].percentShake = new Vec2D(0, 0)
-  }, 80);
+export function percentShake (kb,i){
+  player[i].percentShake = new Vec2D(kb*0.1*Math.random(),kb*0.1*Math.random());
+  setTimeout(function(){player[i].percentShake = new Vec2D(kb*0.05*Math.random(),kb*0.05*Math.random())},20);
+  setTimeout(function(){player[i].percentShake = new Vec2D(-kb*0.1*Math.random(),-kb*0.1*Math.random())},40);
+  setTimeout(function(){player[i].percentShake = new Vec2D(-kb*0.05*Math.random(),-kb*0.05*Math.random())},60);
+  setTimeout(function(){player[i].percentShake = new Vec2D(0,0)},80);
 }
 
-window.findPlayers = function() {
-  var gps = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
-    []);
+
+export function findPlayers (){
+  var gps = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
   /*if (typeof gps != "undefined"){
     console.log(gps);
   }*/
@@ -473,14 +415,14 @@ window.findPlayers = function() {
 }
 
 
-window.addPlayer = function(gamepad, gType) {
+export function addPlayer (gamepad,gType){
   ports++;
   currentPlayers[ports - 1] = gamepad;
   playerType[ports - 1] = 0;
   mType[ports - 1] = gType;
 }
 
-window.togglePort = function(i) {
+export function togglePort (i){
   playerType[i]++;
   if (playerType[i] == 2) {
     playerType[i] = -1;
@@ -490,12 +432,12 @@ window.togglePort = function(i) {
   }
 }
 
-window.positionPlayersInCSS = function() {
-  for (var i = 0; i < 4; i++) {
-    var x = (-80 + i * 50) * 2 / 3;
-    var y = -30;
-    player[i].phys.pos = new Vec2D(x, y);
-    player[i].phys.hurtbox = new Box2D([-4 + x, 18 + y], [4 + x, y]);
+export function positionPlayersInCSS (){
+  for (var i=0;i<4;i++){
+      var x = (-80+i*50)*2/3;
+      var y = -30;
+      player[i].phys.pos = new Vec2D(x,y);
+      player[i].phys.hurtbox = new Box2D([-4+x,18+y],[4+x,y]);
   }
 }
 
@@ -515,7 +457,7 @@ window.positionPlayersInCSS = function() {
 // 1:Main Menu
 // 0:Title Screen
 
-window.changeGamemode = function(newGamemode) {
+export function changeGamemode (newGamemode){
   bg1.fillStyle = "black";
   bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
   fg1.clearRect(0, 0, layers.FG1.width, layers.FG1.height);
@@ -580,7 +522,7 @@ window.changeGamemode = function(newGamemode) {
 }
 
 
-/*window.addPlayer = function(i,gType,pType){
+/*export const addPlayer (i,gType,pType){
   console.log(i,gType,pType);
 
   currentPlayers.push(i);
@@ -611,13 +553,13 @@ window.changeGamemode = function(newGamemode) {
   playerAmount++;
 }
 
-window.removePlayer = function(i){
+export const removePlayer (i){
   playerType[i] = -1;
   playerAmount--;
 }*/
 
-window.interpretInputs = function(i, active) {
-  if (mType[i] == 10) {
+export function interpretInputs (i,active){
+  if (mType[i] == 10){
     // keyboard controls
     var stickR = 1;
     var stickL = 1;
@@ -934,22 +876,30 @@ window.interpretInputs = function(i, active) {
   }
 }
 
-window.bg1 = 0;
-window.bg2 = 0;
-window.fg1 = 0;
-window.fg2 = 0;
-window.ui = 0;
-window.c = 0;
-window.canvasMain = 0;
-window.layerSwitches = {
-  BG1: true,
-  BG2: true,
-  FG1: true,
-  FG2: true,
-  UI: true
+
+export let bg1 = 0;
+export let bg2 = 0;
+export let fg1 = 0;
+export let fg2 = 0;
+export let ui = 0;
+export const c = 0;
+export const canvasMain = 0;
+export const layers = {
+  BG1 : 0,
+  BG2 : 0,
+  FG1 : 0,
+  FG2 : 0,
+  UI : 0
+};
+export const layerSwitches = {
+  BG1 : true,
+  BG2 : true,
+  FG1 : true,
+  FG2 : true,
+  UI : true
 };
 
-window.renderToMain = function() {
+export function renderToMain (){
   var keys = Object.keys(layers);
   for (var i = 0; i < keys.length; i++) {
     if (layerSwitches[keys[i]]) {
@@ -958,7 +908,7 @@ window.renderToMain = function() {
   }
 }
 
-window.renderVfx = function(otherFrame) {
+export function renderVfx (otherFrame){
   otherFrame = otherFrame || false;
   var popQueue = [];
   for (var j = 0; j < vfxQueue.length; j++) {
@@ -982,27 +932,28 @@ window.renderVfx = function(otherFrame) {
   }
 }
 
-window.drawVfx = function(name, pos, face, f) {
-  if (typeof(f) === 'undefined') f = -1;
+export function drawVfx (name,pos,face,f){
+  if (typeof(f)==='undefined') f = -1;
   var instance = {};
-  $.extend(true, instance, vfx[name]);
-  if (instance.name == "circleDust") {
-    instance.circles[0] = Math.random() * -2;
-    instance.circles[1] = (Math.random() * -stage.scale) - 2;
-    instance.circles[2] = Math.random() * 2;
-    instance.circles[3] = (Math.random() * stage.scale) + 2;
+  deepCopyObject(true,instance,vfx[name]);
+  if (instance.name == "circleDust"){
+    instance.circles[0] = Math.random()*-2;
+    instance.circles[1] = (Math.random()*-stage.scale)-2;
+    instance.circles[2] = Math.random()*2;
+    instance.circles[3] = (Math.random()*stage.scale)+2;
   }
   var newPos = new Vec2D(pos.x, pos.y);
   vfxQueue.push([instance, 0, newPos, face, f]);
 }
 
-window.update = function(i) {
-  if (!starting) {
-    if (currentPlayers[i] != -1) {
-      if (playerType[i] == 0) {
-        interpretInputs(i, true);
-      } else {
-        if (player[i].actionState != "SLEEP") {
+export function update (i){
+  if (!starting){
+    if (currentPlayers[i] != -1){
+      if (playerType[i] == 0){
+        interpretInputs(i,true);
+      }
+      else {
+        if (player[i].actionState != "SLEEP"){
           runAI(i);
         }
       }
@@ -1015,7 +966,7 @@ let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
-window.gameTick = function() {
+export function gameTick (){
   var start = performance.now();
   var diff = 0;
   if (gameMode == 0 || gameMode == 20) {
@@ -1055,11 +1006,11 @@ window.gameTick = function() {
     }
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetection(i);
+        hitDetect(i);
       }
     }
     executeHits();
-    hitQueue = [];
+      resetHitQueue();
     findPlayers();
   } else if (gameMode == 6) {
     // stage select
@@ -1139,7 +1090,7 @@ window.gameTick = function() {
     //console.log(dt);
     lastUpdate = now;
 
-    hitQueue = [];
+      resetHitQueue();
     stage.movingPlatforms();
     destroyArticles();
     executeArticles();
@@ -1151,7 +1102,7 @@ window.gameTick = function() {
     checkPhantoms();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetection(i);
+        hitDetect(i);
       }
     }
     executeHits();
@@ -1222,7 +1173,7 @@ window.gameTick = function() {
   setTimeout(gameTick, 16 - diff);
 }
 
-window.clearScreen = function() {
+export function clearScreen (){
   //bg1.fillStyle = "rgb(0, 0, 0)";
   //bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   bg2.clearRect(0, 0, layers.BG2.width, layers.BG2.height);
@@ -1233,8 +1184,7 @@ window.clearScreen = function() {
 
 let otherFrame = true;
 let fps30 = false;
-
-window.renderTick = function() {
+export function renderTick (){
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
   if ((fps30 && otherFrame) || !fps30) {
@@ -1347,24 +1297,16 @@ window.renderTick = function() {
   }
 }
 
-window.buildPlayerObject = function(i) {
-  player[i] = new playerObject(cS[i], startingPoint[i], startingFace[i]);
-  player[i].phys.ECB1 = [new Vec2D(startingPoint[i].x, startingPoint[i].y), new Vec2D(startingPoint[i].x,
-    startingPoint[i].y), new Vec2D(startingPoint[i].x, startingPoint[i].y), new Vec2D(startingPoint[i].x,
-    startingPoint[i].y)];
-  player[i].phys.ECBp = [new Vec2D(startingPoint[i].x, startingPoint[i].y), new Vec2D(startingPoint[i].x,
-    startingPoint[i].y), new Vec2D(startingPoint[i].x, startingPoint[i].y), new Vec2D(startingPoint[i].x,
-    startingPoint[i].y)];
+export function buildPlayerObject (i){
+  player[i] = new playerObject(cS[i],startingPoint[i],startingFace[i]);
+  player[i].phys.ECB1 = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
+  player[i].phys.ECBp = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
   player[i].difficulty = cpuDifficulty[i];
 }
 
-for (var i = 0; i < 4; i++) {
-  buildPlayerObject(i);
-  player[i].phys.face = 1;
-  player[i].actionState = "WAIT";
-}
 
-window.initializePlayers = function(i, target) {
+
+export function initializePlayers (i,target){
   buildPlayerObject(i);
   if (target) {
     drawVfx("entrance", new Vec2D(stage.startingPoint.x, stage.startingPoint.y));
@@ -1373,9 +1315,9 @@ window.initializePlayers = function(i, target) {
   }
 }
 
-window.startGame = function() {
+export function startGame (){
   stage = stages[stageSelect];
-  backgroundType = Math.round(Math.random());
+    setBackgroundType(Math.round(Math.random()));
   changeGamemode(3);
   vfxQueue = [];
   for (var n = 0; n < 4; n++) {
@@ -1417,11 +1359,11 @@ window.startGame = function() {
   playing = true;
 }
 
-window.endGame = function() {
+export function endGame (){
   gameEnd = false;
-  lostStockQueue = [];
-  phantomQueue = [];
-  aArticles = [];
+  resetLostStockQueue();
+    setPhantonQueue([]);
+    resetAArticles();
   music.battlefield.stop();
   music.yStory.stop();
   music.pStadium.stop();
@@ -1469,8 +1411,8 @@ window.endGame = function() {
   }
 }
 
-window.finishGame = function() {
-  endTargetGame = false;
+export function finishGame (){
+    setEndTargetGame(false);
   gameEnd = true;
   playing = false;
   fg2.save();
@@ -1559,16 +1501,21 @@ window.finishGame = function() {
     endGame()
   }, 2500);
 }
+for (var i=0;i<4;i++){
+  buildPlayerObject(i);
+  player[i].phys.face = 1;
+  player[i].actionState = "WAIT";
+}
+export function start (){
 
-window.start = function() {
-  cacheDom();
-  getKeyboardCookie();
-  getTargetCookies();
-  giveMedals();
-  getTargetStageCookies();
-  getAudioCookies();
-  getGameplayCookies();
-  $("#keyboardButton").click(function() {
+    cacheDom();
+    getKeyboardCookie();
+    getTargetCookies();
+    giveMedals();
+    getTargetStageCookies();
+    getAudioCookies();
+    getGameplayCookies();
+  $("#keyboardButton").click(function(){
     $("#keyboardControlsImg").toggle();
   });
   $("#controllerButton").click(function() {
@@ -1613,7 +1560,7 @@ window.start = function() {
     } else {
       $("#alphaButtonEdit").empty().append("ON");
     }
-    transparency ^= true;
+      setTransparency(!transparency);
   });
 
   $("#layerButton").hover(function() {
@@ -1719,10 +1666,66 @@ window.start = function() {
   });
   resize();
 }
+window.start = start;
+export function resetVfxQueue  (){
+    vfxQueue =[];
+}
+export function customDeadzone (){
+    this.ls = new Vec2D(0,0);
+    this.cs = new Vec2D(0,0);
+    this.l = 0;
+    this.r = 0;
+}
 
+export function addShine (val){
+    shine += val;
+}
+export function setShine (val){
+    shine = val;
+}
+export function setFindingPlayers(val){
+  findingPlayers = val;
+}
+export function setPlaying(val){
+  playing = val;
+}
+export function setEndTargetGame(val){
+    endTargetGame = val;
+}
+export function setCreditsPlayer(val){
+  creditsPlayer =val;
+}
+export function deepCopyObject(deep,target,...object){
+   if(deep) {
+       target = target || {};
+
+       for (var i = 2; i < arguments.length; i++) {
+           var obj = arguments[i];
+
+           if (!obj)
+               continue;
+
+           for (var key in obj) {
+               if (obj.hasOwnProperty(key)) {
+                   if (typeof obj[key] === 'object')
+                       target[key] = deepCopyObject(deep,target[key], obj[key]);
+                   else
+                       target[key] = obj[key];
+               }
+           }
+       }
+
+       return target;
+   }else {
+      return Object.assign(target, ...object)
+   }
+}
+export function setStage(val){
+  stage = val;
+}
 const dom = {};
 
-function cacheDom() {
+export function cacheDom() {
   const elementIds = [
     "matchMinutes",
     "matchSeconds",
@@ -1740,3 +1743,7 @@ function cacheDom() {
     dom[id] = document.getElementById(id);
   });
 };
+
+export function setCS(index,val){
+  cS[index] = val;
+}

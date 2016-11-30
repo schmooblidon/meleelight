@@ -1,3 +1,6 @@
+import {checkForJump, checkForSmashes, checkForTilts, checkForSpecials, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "SQUAT",
   canEdgeCancel : true,
@@ -44,7 +47,7 @@ export default {
       aS[cS[p]][t[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].SQUAT){
+    else if (player[p].timer > framesData[cS[p]].SQUAT){
       aS[cS[p]].SQUATWAIT.init(p);
       return true;
     }

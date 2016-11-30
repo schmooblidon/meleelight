@@ -1,169 +1,145 @@
+import {getCookie, player, setCookie, keyBinding, keyBind, keys, changeGamemode, ports, bg1,fg1, clearScreen,bg2,ui,
+    shine
+    , layers
+    , addShine
+    , setShine
+    , setKeyBinding
+} from "main/main";
+import {Vec2D} from "main/characters";
+import {keyMap} from "settings";
+import {sounds} from "main/sfx";
+import {keyText} from "menus/keytest";
+import {twoPi} from "main/render";
+import {stickHold, stickHoldEach, increaseStick, resetStick} from "menus/menu";
 /* eslint-disable */
 
-window.getKeyboardCookie = function() {
-  var keys = Object.keys(keymapItems);
-  for (var i = 0; i < keys.length; i++) {
-    var keymapData = getCookie(keys[i]);
-    if (keymapData != undefined && keymapData != null && keymapData != "") {
-      if (keymapItems[keys[i]].type == 1) {
-        // if modifier
-        var modVal = keymapData.split("-");
-        keymapItems[keys[i]].binding[keymapItems[keys[i]].index][0] = parseInt(modVal[0]);
-        keymapItems[keys[i]].binding[keymapItems[keys[i]].index][1] = parseFloat(modVal[1]);
-        keymapItems[keys[i]].binding[keymapItems[keys[i]].index][2] = parseFloat(modVal[2]);
-      } else if (keymapItems[keys[i]].type == 2) {
-        // if range
-        keymapItems[keys[i]].binding[keymapItems[keys[i]].index] = parseFloat(getCookie(keys[i]));
-      } else {
-        // if button
-        keymapItems[keys[i]].binding[keymapItems[keys[i]].index] = parseInt(getCookie(keys[i]));
-      }
-    }
-  }
-}
-
-window.setKeyboardCookie = function() {
-  var keys = Object.keys(keymapItems);
-  for (var i = 0; i < keys.length; i++) {
-    if (keymapItems[keys[i]].type == 1) {
-      var modVal = keymapItems[keys[i]].binding[keymapItems[keys[i]].index];
-      setCookie(keys[i], "" + modVal[0] + "-" + modVal[1] + "-" + modVal[2], 36500);
-    } else {
-      setCookie(keys[i], keymapItems[keys[i]].binding[keymapItems[keys[i]].index], 36500);
-    }
-  }
-  console.log(document.cookie);
-  console.log(localStorage);
-}
-
-window.keymapItem = function(type, pos, value, binding, index, above, toRight, below, toLeft, modType) {
-  this.type = type;
-  // 0 = keys, 1 = modifier
-  this.pos = pos;
-  this.value = value;
-  this.binding = binding;
-  this.index = index;
-  this.above = above;
-  this.toRight = toRight;
-  this.below = below;
-  this.toLeft = toLeft;
-  this.modType = modType || 0;
-}
-
-window.keymapItems = {
-  "lstickUp1": new keymapItem(0, new Vec2D(150, 120), 87, keyMap.lstick.up, 0, "shoulderMod3", "lstickUp2",
-    "lstickRight1", "cstickUp2"),
-  "lstickUp2": new keymapItem(0, new Vec2D(230, 120), 0, keyMap.lstick.up, 1, "shoulderMod5", "lstickRangeUp",
-    "lstickRight2", "lstickUp1"),
-  "lstickRight1": new keymapItem(0, new Vec2D(150, 190), 68, keyMap.lstick.right, 0, "lstickUp1", "lstickRight2",
-    "lstickLeft1", "cstickRight2"),
-  "lstickRight2": new keymapItem(0, new Vec2D(230, 190), 0, keyMap.lstick.right, 1, "lstickUp2", "lstickRangeRight",
-    "lstickLeft2", "lstickRight1"),
-  "lstickLeft1": new keymapItem(0, new Vec2D(150, 260), 65, keyMap.lstick.left, 0, "lstickRight1", "lstickLeft2",
-    "lstickDown1", "cstickLeft2"),
-  "lstickLeft2": new keymapItem(0, new Vec2D(230, 260), 0, keyMap.lstick.left, 1, "lstickRight2", "lstickRangeLeft",
-    "lstickDown2", "lstickLeft1"),
-  "lstickDown1": new keymapItem(0, new Vec2D(150, 330), 83, keyMap.lstick.down, 0, "lstickLeft1", "lstickDown2",
-    "lstickMod3", "cstickDown2"),
-  "lstickDown2": new keymapItem(0, new Vec2D(230, 330), 0, keyMap.lstick.down, 1, "lstickLeft2", "lstickRangeDown",
-    "lstickMod5", "lstickDown1"),
-  "lstickRangeUp": new keymapItem(2, new Vec2D(310, 120), 1.00, keyMap.lstick.ranges, 0, "shoulderMod5", "a1",
-    "lstickRangeRight", "lstickUp2"),
-  "lstickRangeRight": new keymapItem(2, new Vec2D(310, 190), 1.00, keyMap.lstick.ranges, 1, "lstickRangeUp", "b1",
-    "lstickRangeLeft", "lstickRight2"),
-  "lstickRangeLeft": new keymapItem(2, new Vec2D(310, 260), 1.00, keyMap.lstick.ranges, 2, "lstickRangeRight", "x1",
-    "lstickRangeDown", "lstickLeft2"),
-  "lstickRangeDown": new keymapItem(2, new Vec2D(310, 330), 1.00, keyMap.lstick.ranges, 3, "lstickRangeLeft", "y1",
-    "lstickMod5", "lstickDown2"),
-  "lstickMod1": new keymapItem(1, new Vec2D(100, 430), 32, keyMap.lstick.modifiers, 0, "lstickDown1", "lstickMod2",
-    "lAnalog1", "cstickDown2", 0),
-  "lstickMod2": new keymapItem(1, new Vec2D(150, 430), 0, keyMap.lstick.modifiers, 1, "lstickDown1", "lstickMod3",
-    "lAnalog1", "lstickMod1", 0),
-  "lstickMod3": new keymapItem(1, new Vec2D(200, 430), 0, keyMap.lstick.modifiers, 2, "lstickDown1", "lstickMod4",
-    "lAnalog1", "lstickMod2", 0),
-  "lstickMod4": new keymapItem(1, new Vec2D(250, 430), 0, keyMap.lstick.modifiers, 3, "lstickDown2", "lstickMod5",
-    "lAnalog2", "lstickMod3", 0),
-  "lstickMod5": new keymapItem(1, new Vec2D(300, 430), 0, keyMap.lstick.modifiers, 4, "lstickRangeDown", "y1",
-    "shoulderRangeL", "lstickMod4", 0),
-  "lAnalog1": new keymapItem(0, new Vec2D(150, 520), 111, keyMap.shoulders.lAnalog, 0, "lstickMod3", "lAnalog2",
-    "rAnalog1", "dpadRight"),
-  "lAnalog2": new keymapItem(0, new Vec2D(230, 520), 0, keyMap.shoulders.lAnalog, 1, "lstickMod5", "shoulderRangeL",
-    "rAnalog2", "lAnalog1"),
-  "rAnalog1": new keymapItem(0, new Vec2D(150, 590), 106, keyMap.shoulders.rAnalog, 0, "lAnalog1", "rAnalog2",
-    "shoulderMod3", "dpadLeft"),
-  "rAnalog2": new keymapItem(0, new Vec2D(230, 590), 0, keyMap.shoulders.rAnalog, 1, "lAnalog2", "shoulderRangeR",
-    "shoulderMod5", "rAnalog1"),
-  "shoulderRangeL": new keymapItem(2, new Vec2D(310, 520), 1.00, keyMap.shoulders.ranges, 0, "lstickMod5", "l1",
-    "shoulderRangeR", "lAnalog2"),
-  "shoulderRangeR": new keymapItem(2, new Vec2D(310, 590), 1.00, keyMap.shoulders.ranges, 1, "shoulderRangeL", "r1",
-    "shoulderMod5", "rAnalog2"),
-  "shoulderMod1": new keymapItem(1, new Vec2D(100, 690), 0, keyMap.shoulders.modifiers, 0, "rAnalog1", "shoulderMod2",
-    "lstickUp1", "dpadDown", 1),
-  "shoulderMod2": new keymapItem(1, new Vec2D(150, 690), 0, keyMap.shoulders.modifiers, 1, "rAnalog1", "shoulderMod3",
-    "lstickUp1", "shoulderMod1", 1),
-  "shoulderMod3": new keymapItem(1, new Vec2D(200, 690), 0, keyMap.shoulders.modifiers, 2, "rAnalog2", "shoulderMod4",
-    "lstickUp2", "shoulderMod2", 1),
-  "shoulderMod4": new keymapItem(1, new Vec2D(250, 690), 0, keyMap.shoulders.modifiers, 3, "rAnalog2", "shoulderMod5",
-    "lstickUp2", "shoulderMod3", 1),
-  "shoulderMod5": new keymapItem(1, new Vec2D(300, 690), 0, keyMap.shoulders.modifiers, 4, "shoulderRangeR", "s1",
-    "lstickUp2", "shoulderMod4", 1),
-  "a1": new keymapItem(0, new Vec2D(550, 145), 76, keyMap.a, 0, "s1", "a2", "b1", "lstickRangeRight"),
-  "a2": new keymapItem(0, new Vec2D(630, 145), 101, keyMap.a, 1, "s2", "cstickRight1", "b2", "a1"),
-  "b1": new keymapItem(0, new Vec2D(550, 215), 75, keyMap.b, 0, "a1", "b2", "x1", "lstickRangeLeft"),
-  "b2": new keymapItem(0, new Vec2D(630, 215), 100, keyMap.b, 1, "a2", "cstickLeft1", "x2", "b1"),
-  "x1": new keymapItem(0, new Vec2D(550, 285), 186, keyMap.x, 0, "b1", "x2", "y1", "lstickRangeDown"),
-  "x2": new keymapItem(0, new Vec2D(630, 285), 102, keyMap.x, 1, "b2", "cstickDown1", "y2", "x1"),
-  "y1": new keymapItem(0, new Vec2D(550, 355), 79, keyMap.y, 0, "x1", "y2", "z1", "lstickMod5"),
-  "y2": new keymapItem(0, new Vec2D(630, 355), 104, keyMap.y, 1, "x2", "cstickDown1", "z2", "y1"),
-  "z1": new keymapItem(0, new Vec2D(550, 425), 192, keyMap.z, 0, "y1", "z2", "l1", "lstickMod5"),
-  "z2": new keymapItem(0, new Vec2D(630, 425), 107, keyMap.z, 1, "y2", "dpadUp", "l2", "z1"),
-  "l1": new keymapItem(0, new Vec2D(550, 495), 73, keyMap.l, 0, "z1", "l2", "r1", "shoulderRangeL"),
-  "l2": new keymapItem(0, new Vec2D(630, 495), 103, keyMap.l, 1, "z2", "dpadRight", "r2", "l1"),
-  "r1": new keymapItem(0, new Vec2D(550, 565), 80, keyMap.r, 0, "l1", "r2", "s1", "shoulderRangeR"),
-  "r2": new keymapItem(0, new Vec2D(630, 565), 105, keyMap.r, 1, "l2", "dpadLeft", "s2", "r1"),
-  "s1": new keymapItem(0, new Vec2D(550, 635), 219, keyMap.s, 0, "r1", "s2", "a1", "shoulderMod5"),
-  "s2": new keymapItem(0, new Vec2D(630, 635), 109, keyMap.s, 1, "r2", "dpadDown", "a2", "s1"),
-  "cstickUp1": new keymapItem(0, new Vec2D(950, 120), 38, keyMap.cstick.up, 0, "dpadDown", "cstickUp2",
-    "cstickRight1", "a2"),
-  "cstickUp2": new keymapItem(0, new Vec2D(1030, 120), 0, keyMap.cstick.up, 1, "dpadDown", "lstickUp1",
-    "cstickRight2", "cstickUp1"),
-  "cstickRight1": new keymapItem(0, new Vec2D(950, 190), 39, keyMap.cstick.right, 0, "cstickUp1", "cstickRight2",
-    "cstickLeft1", "b2"),
-  "cstickRight2": new keymapItem(0, new Vec2D(1030, 190), 0, keyMap.cstick.right, 1, "cstickUp2", "lstickRight1",
-    "cstickLeft2", "cstickRight1"),
-  "cstickLeft1": new keymapItem(0, new Vec2D(950, 260), 37, keyMap.cstick.left, 0, "cstickRight1", "cstickLeft2",
-    "cstickDown1", "x2"),
-  "cstickLeft2": new keymapItem(0, new Vec2D(1030, 260), 0, keyMap.cstick.left, 1, "cstickRight2", "lstickLeft1",
-    "cstickDown2", "cstickLeft1"),
-  "cstickDown1": new keymapItem(0, new Vec2D(950, 330), 40, keyMap.cstick.down, 0, "cstickLeft1", "cstickDown2",
-    "dpadUp", "y2"),
-  "cstickDown2": new keymapItem(0, new Vec2D(1030, 330), 0, keyMap.cstick.down, 1, "cstickLeft2", "lstickDown1",
-    "dpadUp", "cstickDown1"),
-  "dpadUp": new keymapItem(0, new Vec2D(950, 440), 71, keyMap.du, 0, "cstickDown1", "lAnalog1", "dpadRight", "z2"),
-  "dpadRight": new keymapItem(0, new Vec2D(950, 510), 78, keyMap.dr, 0, "dpadUp", "lAnalog1", "dpadLeft", "l2"),
-  "dpadLeft": new keymapItem(0, new Vec2D(950, 580), 86, keyMap.dl, 0, "dpadRight", "rAnalog1", "dpadDown", "r2"),
-  "dpadDown": new keymapItem(0, new Vec2D(950, 650), 66, keyMap.dd, 0, "dpadLeft", "shoulderMod1", "cstickUp1", "s2")
+export let keymapItems = {
+  "lstickUp1" : new KeymapItem(0,new Vec2D(150,120),87,keyMap.lstick.up,0,"shoulderMod3","lstickUp2","lstickRight1","cstickUp2"),
+  "lstickUp2" : new KeymapItem(0,new Vec2D(230,120),0,keyMap.lstick.up,1,"shoulderMod5","lstickRangeUp","lstickRight2","lstickUp1"),
+  "lstickRight1" : new KeymapItem(0,new Vec2D(150,190),68,keyMap.lstick.right,0,"lstickUp1","lstickRight2","lstickLeft1","cstickRight2"),
+  "lstickRight2" : new KeymapItem(0,new Vec2D(230,190),0,keyMap.lstick.right,1,"lstickUp2","lstickRangeRight","lstickLeft2","lstickRight1"),
+  "lstickLeft1" : new KeymapItem(0,new Vec2D(150,260),65,keyMap.lstick.left,0,"lstickRight1","lstickLeft2","lstickDown1","cstickLeft2"),
+  "lstickLeft2" : new KeymapItem(0,new Vec2D(230,260),0,keyMap.lstick.left,1,"lstickRight2","lstickRangeLeft","lstickDown2","lstickLeft1"),
+  "lstickDown1" : new KeymapItem(0,new Vec2D(150,330),83,keyMap.lstick.down,0,"lstickLeft1","lstickDown2","lstickMod3","cstickDown2"),
+  "lstickDown2" : new KeymapItem(0,new Vec2D(230,330),0,keyMap.lstick.down,1,"lstickLeft2","lstickRangeDown","lstickMod5","lstickDown1"),
+  "lstickRangeUp" : new KeymapItem(2,new Vec2D(310,120),1.00,keyMap.lstick.ranges,0,"shoulderMod5","a1","lstickRangeRight","lstickUp2"),
+  "lstickRangeRight" : new KeymapItem(2,new Vec2D(310,190),1.00,keyMap.lstick.ranges,1,"lstickRangeUp","b1","lstickRangeLeft","lstickRight2"),
+  "lstickRangeLeft" : new KeymapItem(2,new Vec2D(310,260),1.00,keyMap.lstick.ranges,2,"lstickRangeRight","x1","lstickRangeDown","lstickLeft2"),
+  "lstickRangeDown" : new KeymapItem(2,new Vec2D(310,330),1.00,keyMap.lstick.ranges,3,"lstickRangeLeft","y1","lstickMod5","lstickDown2"),
+  "lstickMod1" : new KeymapItem(1,new Vec2D(100,430),32,keyMap.lstick.modifiers,0,"lstickDown1","lstickMod2","lAnalog1","cstickDown2",0),
+  "lstickMod2" : new KeymapItem(1,new Vec2D(150,430),0,keyMap.lstick.modifiers,1,"lstickDown1","lstickMod3","lAnalog1","lstickMod1",0),
+  "lstickMod3" : new KeymapItem(1,new Vec2D(200,430),0,keyMap.lstick.modifiers,2,"lstickDown1","lstickMod4","lAnalog1","lstickMod2",0),
+  "lstickMod4" : new KeymapItem(1,new Vec2D(250,430),0,keyMap.lstick.modifiers,3,"lstickDown2","lstickMod5","lAnalog2","lstickMod3",0),
+  "lstickMod5" : new KeymapItem(1,new Vec2D(300,430),0,keyMap.lstick.modifiers,4,"lstickRangeDown","y1","shoulderRangeL","lstickMod4",0),
+  "lAnalog1" : new KeymapItem(0,new Vec2D(150,520),111,keyMap.shoulders.lAnalog,0,"lstickMod3","lAnalog2","rAnalog1","dpadRight"),
+  "lAnalog2" : new KeymapItem(0,new Vec2D(230,520),0,keyMap.shoulders.lAnalog,1,"lstickMod5","shoulderRangeL","rAnalog2","lAnalog1"),
+  "rAnalog1" : new KeymapItem(0,new Vec2D(150,590),106,keyMap.shoulders.rAnalog,0,"lAnalog1","rAnalog2","shoulderMod3","dpadLeft"),
+  "rAnalog2" : new KeymapItem(0,new Vec2D(230,590),0,keyMap.shoulders.rAnalog,1,"lAnalog2","shoulderRangeR","shoulderMod5","rAnalog1"),
+  "shoulderRangeL" : new KeymapItem(2,new Vec2D(310,520),1.00,keyMap.shoulders.ranges,0,"lstickMod5","l1","shoulderRangeR","lAnalog2"),
+  "shoulderRangeR" : new KeymapItem(2,new Vec2D(310,590),1.00,keyMap.shoulders.ranges,1,"shoulderRangeL","r1","shoulderMod5","rAnalog2"),
+  "shoulderMod1" : new KeymapItem(1,new Vec2D(100,690),0,keyMap.shoulders.modifiers,0,"rAnalog1","shoulderMod2","lstickUp1","dpadDown",1),
+  "shoulderMod2" : new KeymapItem(1,new Vec2D(150,690),0,keyMap.shoulders.modifiers,1,"rAnalog1","shoulderMod3","lstickUp1","shoulderMod1",1),
+  "shoulderMod3" : new KeymapItem(1,new Vec2D(200,690),0,keyMap.shoulders.modifiers,2,"rAnalog2","shoulderMod4","lstickUp2","shoulderMod2",1),
+  "shoulderMod4" : new KeymapItem(1,new Vec2D(250,690),0,keyMap.shoulders.modifiers,3,"rAnalog2","shoulderMod5","lstickUp2","shoulderMod3",1),
+  "shoulderMod5" : new KeymapItem(1,new Vec2D(300,690),0,keyMap.shoulders.modifiers,4,"shoulderRangeR","s1","lstickUp2","shoulderMod4",1),
+  "a1" : new KeymapItem(0,new Vec2D(550,145),76,keyMap.a,0,"s1","a2","b1","lstickRangeRight"),
+  "a2" : new KeymapItem(0,new Vec2D(630,145),101,keyMap.a,1,"s2","cstickRight1","b2","a1"),
+  "b1" : new KeymapItem(0,new Vec2D(550,215),75,keyMap.b,0,"a1","b2","x1","lstickRangeLeft"),
+  "b2" : new KeymapItem(0,new Vec2D(630,215),100,keyMap.b,1,"a2","cstickLeft1","x2","b1"),
+  "x1" : new KeymapItem(0,new Vec2D(550,285),186,keyMap.x,0,"b1","x2","y1","lstickRangeDown"),
+  "x2" : new KeymapItem(0,new Vec2D(630,285),102,keyMap.x,1,"b2","cstickDown1","y2","x1"),
+  "y1" : new KeymapItem(0,new Vec2D(550,355),79,keyMap.y,0,"x1","y2","z1","lstickMod5"),
+  "y2" : new KeymapItem(0,new Vec2D(630,355),104,keyMap.y,1,"x2","cstickDown1","z2","y1"),
+  "z1" : new KeymapItem(0,new Vec2D(550,425),192,keyMap.z,0,"y1","z2","l1","lstickMod5"),
+  "z2" : new KeymapItem(0,new Vec2D(630,425),107,keyMap.z,1,"y2","dpadUp","l2","z1"),
+  "l1" : new KeymapItem(0,new Vec2D(550,495),73,keyMap.l,0,"z1","l2","r1","shoulderRangeL"),
+  "l2" : new KeymapItem(0,new Vec2D(630,495),103,keyMap.l,1,"z2","dpadRight","r2","l1"),
+  "r1" : new KeymapItem(0,new Vec2D(550,565),80,keyMap.r,0,"l1","r2","s1","shoulderRangeR"),
+  "r2" : new KeymapItem(0,new Vec2D(630,565),105,keyMap.r,1,"l2","dpadLeft","s2","r1"),
+  "s1" : new KeymapItem(0,new Vec2D(550,635),219,keyMap.s,0,"r1","s2","a1","shoulderMod5"),
+  "s2" : new KeymapItem(0,new Vec2D(630,635),109,keyMap.s,1,"r2","dpadDown","a2","s1"),
+  "cstickUp1" : new KeymapItem(0,new Vec2D(950,120),38,keyMap.cstick.up,0,"dpadDown","cstickUp2","cstickRight1","a2"),
+  "cstickUp2" : new KeymapItem(0,new Vec2D(1030,120),0,keyMap.cstick.up,1,"dpadDown","lstickUp1","cstickRight2","cstickUp1"),
+  "cstickRight1" : new KeymapItem(0,new Vec2D(950,190),39,keyMap.cstick.right,0,"cstickUp1","cstickRight2","cstickLeft1","b2"),
+  "cstickRight2" : new KeymapItem(0,new Vec2D(1030,190),0,keyMap.cstick.right,1,"cstickUp2","lstickRight1","cstickLeft2","cstickRight1"),
+  "cstickLeft1" : new KeymapItem(0,new Vec2D(950,260),37,keyMap.cstick.left,0,"cstickRight1","cstickLeft2","cstickDown1","x2"),
+  "cstickLeft2" : new KeymapItem(0,new Vec2D(1030,260),0,keyMap.cstick.left,1,"cstickRight2","lstickLeft1","cstickDown2","cstickLeft1"),
+  "cstickDown1" : new KeymapItem(0,new Vec2D(950,330),40,keyMap.cstick.down,0,"cstickLeft1","cstickDown2","dpadUp","y2"),
+  "cstickDown2" : new KeymapItem(0,new Vec2D(1030,330),0,keyMap.cstick.down,1,"cstickLeft2","lstickDown1","dpadUp","cstickDown1"),
+  "dpadUp" : new KeymapItem(0,new Vec2D(950,440),71,keyMap.du,0,"cstickDown1","lAnalog1","dpadRight","z2"),
+  "dpadRight" : new KeymapItem(0,new Vec2D(950,510),78,keyMap.dr,0,"dpadUp","lAnalog1","dpadLeft","l2"),
+  "dpadLeft" : new KeymapItem(0,new Vec2D(950,580),86,keyMap.dl,0,"dpadRight","rAnalog1","dpadDown","r2"),
+  "dpadDown" : new KeymapItem(0,new Vec2D(950,650),66,keyMap.dd,0,"dpadLeft","shoulderMod1","cstickUp1","s2")
 };
 
-window.kMenuSelected = "lstickUp1";
-window.kMenuKeyFlash = 0;
-window.keyListen = false;
-window.settingModifier = false;
-window.settingModifierPart = 0;
-window.settingRange = false;
-window.enterHeld = false;
-window.enterHeldTimer = 0;
-window.menuScrollSpeed = 10;
-window.keyboardPromptTimer = 0;
-window.keyboardPrompt = "";
-window.disableStick = [false, false, false, false];
-window.keyboardMenuControls = function(i) {
+export let kMenuSelected = "lstickUp1";
+export let kMenuKeyFlash = 0;
+export let keyListen = false;
+export let settingModifier = false;
+export let settingModifierPart = 0;
+export let settingRange = false;
+export let enterHeld = false;
+export let enterHeldTimer = 0;
+export let menuScrollSpeed = 10;
+export let keyboardPromptTimer = 0;
+export let keyboardPrompt = "";
+export let disableStick = [false,false,false,false];
+
+export function getKeyboardCookie (){
+    var keys = Object.keys(keymapItems);
+    for (var i = 0; i < keys.length; i++) {
+        var keymapData = getCookie(keys[i]);
+        if (keymapData != undefined && keymapData != null && keymapData != "") {
+            if (keymapItems[keys[i]].type == 1) {
+                // if modifier
+                var modVal = keymapData.split("-");
+                keymapItems[keys[i]].binding[keymapItems[keys[i]].index][0] = parseInt(modVal[0]);
+                keymapItems[keys[i]].binding[keymapItems[keys[i]].index][1] = parseFloat(modVal[1]);
+                keymapItems[keys[i]].binding[keymapItems[keys[i]].index][2] = parseFloat(modVal[2]);
+            } else if (keymapItems[keys[i]].type == 2) {
+                // if range
+                keymapItems[keys[i]].binding[keymapItems[keys[i]].index] = parseFloat(getCookie(keys[i]));
+            } else {
+                // if button
+                keymapItems[keys[i]].binding[keymapItems[keys[i]].index] = parseInt(getCookie(keys[i]));
+            }
+        }
+    }
+}
+export function setKeyboardCookie (){
+    var keys = Object.keys(keymapItems);
+    for (var i = 0; i < keys.length; i++) {
+        if (keymapItems[keys[i]].type == 1) {
+            var modVal = keymapItems[keys[i]].binding[keymapItems[keys[i]].index];
+            setCookie(keys[i], "" + modVal[0] + "-" + modVal[1] + "-" + modVal[2], 36500);
+        } else {
+            setCookie(keys[i], keymapItems[keys[i]].binding[keymapItems[keys[i]].index], 36500);
+        }
+    }
+    console.log(document.cookie);
+    console.log(localStorage);
+}
+export function KeymapItem (type, pos, value, binding, index, above, toRight, below, toLeft, modType){
+    this.type = type;
+    // 0 = keys, 1 = modifier
+    this.pos = pos;
+    this.value = value;
+    this.binding = binding;
+    this.index = index;
+    this.above = above;
+    this.toRight = toRight;
+    this.below = below;
+    this.toLeft = toLeft;
+    this.modType = modType || 0;
+}
+
+export function keyboardMenuControls (i){
   var menuMove = false;
   var moveD = "";
   if (player[i].inputs.lStickAxis[0].x == 0 && player[i].inputs.lStickAxis[0].y == 0) {
     disableStick[i] = false;
   }
-  if (keyboardPromptTimer > 0) {
+    if (keyboardPromptTimer > 0){
     keyboardPromptTimer--;
   }
   kMenuKeyFlash++;
@@ -267,10 +243,11 @@ window.keyboardMenuControls = function(i) {
       disableStick[i] = true;
       keyListen = false;
     }
-  } else {
-    keyBinding = false;
-    if (keys[13] && !keyListen && !enterHeld) {
-      if (settingModifierPart > 0) {
+  }
+  else {
+    setKeyBinding(false);
+    if (keys[13] && !keyListen && !enterHeld){
+      if (settingModifierPart > 0){
         settingModifierPart++;
         if (settingModifierPart > 2) {
           settingModifierPart = 0;
@@ -305,10 +282,11 @@ window.keyboardMenuControls = function(i) {
       if (stickHold == 0) {
         moveD = "u";
         menuMove = true;
-        stickHold++;
-      } else {
-        stickHold++;
-        if (stickHold % menuScrollSpeed == 0) {
+        increaseStick();
+      }
+      else {
+        increaseStick();
+        if (stickHold % menuScrollSpeed == 0){
           moveD = "u";
           menuMove = true;
         }
@@ -318,10 +296,11 @@ window.keyboardMenuControls = function(i) {
       if (stickHold == 0) {
         moveD = "d";
         menuMove = true;
-        stickHold++;
-      } else {
-        stickHold++;
-        if (stickHold % menuScrollSpeed == 0) {
+        increaseStick();
+      }
+      else {
+        increaseStick();
+        if (stickHold % menuScrollSpeed == 0){
           moveD = "d";
           menuMove = true;
         }
@@ -331,10 +310,11 @@ window.keyboardMenuControls = function(i) {
       if (stickHold == 0) {
         moveD = "r";
         menuMove = true;
-        stickHold++;
-      } else {
-        stickHold++;
-        if (stickHold % menuScrollSpeed == 0) {
+        increaseStick();
+      }
+      else {
+        increaseStick();
+        if (stickHold % menuScrollSpeed == 0){
           moveD = "r";
           menuMove = true;
         }
@@ -344,10 +324,11 @@ window.keyboardMenuControls = function(i) {
       if (stickHold == 0) {
         menuMove = true;
         moveD = "l";
-        stickHold++;
-      } else {
-        stickHold++;
-        if (stickHold % menuScrollSpeed == 0) {
+        increaseStick();
+      }
+      else {
+        increaseStick();
+        if (stickHold % menuScrollSpeed == 0){
           moveD = "l";
           menuMove = true;
         }
@@ -362,8 +343,8 @@ window.keyboardMenuControls = function(i) {
             break;
           }
         }
-        if (!stickHoldAll) {
-          stickHold = 0;
+        if (!stickHoldAll){
+          resetStick();
         }
       }
     }
@@ -435,13 +416,12 @@ window.keyboardMenuControls = function(i) {
     enterHeldTimer = 0;
   }
 }
-
-window.drawKeyboardMenuInit = function() {
-  var bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
-  bgGrad.addColorStop(0, "rgb(11, 65, 39)");
-  bgGrad.addColorStop(1, "rgb(8, 20, 61)");
-  bg1.fillStyle = bgGrad;
-  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
+export function drawKeyboardMenuInit (){
+  var bgGrad =bg1.createLinearGradient(0,0,1200,750);
+  bgGrad.addColorStop(0,"rgb(11, 65, 39)");
+  bgGrad.addColorStop(1,"rgb(8, 20, 61)");
+  bg1.fillStyle=bgGrad;
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
 
   fg1.lineWidth = 3;
   fg1.textAlign = "center";
@@ -472,14 +452,14 @@ window.drawKeyboardMenuInit = function() {
     fg1.fillText("Left", directionPlacements[i].x, directionPlacements[i].y + 140);
     fg1.fillText("Down", directionPlacements[i].x, directionPlacements[i].y + 210);
   }
-}
+};
 
-window.drawKeyboardMenu = function() {
+export function drawKeyboardMenu (){
   clearScreen();
   bg2.lineWidth = 3;
-  shine += 0.01;
-  if (shine > 1.8) {
-    shine = -0.8;
+  addShine(0.01);
+  if (shine > 1.8){
+    setShine(-0.8);
   }
   var opacity = (shine < 0) ? (0.05 + (0.25 / 0.8) * (0.8 + shine)) : ((shine > 1) ? (0.3 - (0.25 / 0.8) * (shine - 1)) :
     0.3);
@@ -628,4 +608,4 @@ window.drawKeyboardMenu = function() {
     ui.font = "italic 900 40px Arial";
     ui.fillText(keyboardPrompt, 600, 360);
   }
-}
+};

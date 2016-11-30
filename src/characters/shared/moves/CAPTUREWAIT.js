@@ -1,3 +1,6 @@
+import {mashOut, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {Vec2D,framesData} from "main/characters";
 export default {
   name : "CAPTUREWAIT",
   canEdgeCancel : false,
@@ -28,7 +31,7 @@ export default {
       aS[cS[p]].CAPTURECUT.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CAPTUREWAIT){
+    else if (player[p].timer > framesData[cS[p]].CAPTUREWAIT){
       aS[cS[p]].CAPTUREWAIT.init(p);
       return true;
     }
