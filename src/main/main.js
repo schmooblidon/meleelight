@@ -620,6 +620,12 @@ window.removePlayer = function(i){
 }*/
 
 window.interpretInputs = function(i, active) {
+  function axisData (gpd, ax) {
+    return gpdaxis ( gpd, mType[i], ax );
+  };
+  function buttonData (gpd, but) {
+    return gpdbutton (gpd, mType[i], but);
+  };
 
   if (mType[i] == 10) {
     // keyboard controls
@@ -670,35 +676,28 @@ window.interpretInputs = function(i, active) {
   } else {
     var gamepad = navigator.getGamepads()[currentPlayers[i]];
     //console.log(gamepad.axes);
-
-    function axisData (ax) {
-      return gpdaxis ( gamepad, mType[i], ax );
-    };
-    function buttonData (but) {
-      return gpdbutton (gamepad, mType[i], but);
-    };
     
-    var lstickX = scaleToGCAxis (axisData("lsX"), -custcent[i].ls.x, true);
-    var lstickY = scaleToGCAxis (axisData("lsY"), -custcent[i].ls.y, true ) * -1; // need to flip up/down
-    player[i].inputs.rawlStickAxis[0].x = scaleToGCAxis (axisData("lsX"), -custcent[i].ls.x, false);     // no deadzones
-    player[i].inputs.rawlStickAxis[0].y = scaleToGCAxis (axisData("lsY"), -custcent[i].ls.y, false) * -1;
-    var cstickX = scaleToGCAxis (axisData("csX"), -custcent[i].cs.x, true);
-    var cstickY = scaleToGCAxis (axisData("csX"), -custcent[i].cs.y, true) * -1; // need to flip up/down
+    var lstickX = scaleToGCAxis (axisData(gamepad,"lsX"), -custcent[i].ls.x, true);
+    var lstickY = scaleToGCAxis (axisData(gamepad,"lsY"), -custcent[i].ls.y, true ) * -1; // need to flip up/down
+    player[i].inputs.rawlStickAxis[0].x = scaleToGCAxis (axisData(gamepad,"lsX"), -custcent[i].ls.x, false);     // no deadzones
+    player[i].inputs.rawlStickAxis[0].y = scaleToGCAxis (axisData(gamepad,"lsY"), -custcent[i].ls.y, false) * -1;
+    var cstickX = scaleToGCAxis (axisData(gamepad,"csX"), -custcent[i].cs.x, true);
+    var cstickY = scaleToGCAxis (axisData(gamepad,"csX"), -custcent[i].cs.y, true) * -1; // need to flip up/down
     if (mType[i] == 3){
       //console.log(gamepad.buttons[map.rA[mType[i]]]);
       //-custcent[i].l
       //-custcent[i].r
       // FOR XBOX CONTROLLERS
-      var lAnalog = scaleToGCTrigger(axisData("lA").value, 0.2-custcent[i].l, 1); // shifted by +0.2
-      var rAnalog = scaleToGCTrigger(axisData("rA").value, 0.2-custcent[i].r, 1); // shifted by +0.2
+      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA").value, 0.2-custcent[i].l, 1); // shifted by +0.2
+      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA").value, 0.2-custcent[i].r, 1); // shifted by +0.2
     }
     else if (mType[i] == 2){
-      var lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[i].l, -1); // shifted by +0.867, flipped
-      var rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[i].r, -1); // shifted by +0.867, flipped
+      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, -1); // shifted by +0.867, flipped
+      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, -1); // shifted by +0.867, flipped
     }
     else {
-      var lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[i].l, 1); // shifted by +0.867
-      var rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[i].r, 1); // shifted by +0.867
+      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, 1); // shifted by +0.867
+      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, 1); // shifted by +0.867
     }
   }
 
@@ -718,19 +717,12 @@ window.interpretInputs = function(i, active) {
     }
   } else {
   
-    // unfortunately the following two functions have to be called again, fix pending
-    function axisData (ax) {
-      return gpdaxis ( gamepad, mType[i], ax );
-    };
-    function buttonData (but) {
-      return gpdbutton (gamepad, mType[i], but);
-    };
-    if (buttonData("s").pressed || buttonData("du").pressed && gameMode == 5) {
+    if (buttonData(gamepad,"s").pressed || buttonData(gamepad,"du").pressed && gameMode == 5) {
       pause[i][0] = true;
     } else {
       pause[i][0] = false
     }
-    if (buttonData("z").pressed) {
+    if (buttonData(gamepad,"z").pressed) {
       frameAdvance[i][0] = true;
     } else {
       frameAdvance[i][0] = false
@@ -779,43 +771,36 @@ window.interpretInputs = function(i, active) {
       player[i].inputs.dpadright[0] = keys[keyMap.dr[0]];
       player[i].inputs.dpadup[0] = keys[keyMap.du[0]];
     } else {
-      // unfortunately the following function has to be called again
-      function buttonData (but) {
-        return gpdbutton (gamepad, mType[i], but);
-      };
-      player[i].inputs.s[0] = buttonData("s").pressed;
-      player[i].inputs.x[0] = buttonData("x").pressed;
-      player[i].inputs.a[0] = buttonData("a").pressed;
-      player[i].inputs.b[0] = buttonData("b").pressed;
-      player[i].inputs.y[0] = buttonData("y").pressed;
+
+      player[i].inputs.s[0] = buttonData(gamepad,"s").pressed;
+      player[i].inputs.x[0] = buttonData(gamepad,"x").pressed;
+      player[i].inputs.a[0] = buttonData(gamepad,"a").pressed;
+      player[i].inputs.b[0] = buttonData(gamepad,"b").pressed;
+      player[i].inputs.y[0] = buttonData(gamepad,"y").pressed;
       if (mType[i] == 3) {
         // FOR XBOX CONTROLLERS
-        player[i].inputs.r[0] = buttonData("r").value == 1 ? true : false;
-        player[i].inputs.l[0] = buttonData("l").value == 1 ? true : false;
+        player[i].inputs.r[0] = buttonData(gamepad,"r").value == 1 ? true : false;
+        player[i].inputs.l[0] = buttonData(gamepad,"l").value == 1 ? true : false;
 
         // 4 is lB, 5 is RB
         if (gamepad.buttons[4].pressed) {
           player[i].inputs.l[0] = true;
         }
       } else {
-        player[i].inputs.r[0] = buttonData("r").pressed;
-        player[i].inputs.l[0] = buttonData("l").pressed;
+        player[i].inputs.r[0] = buttonData(gamepad,"r").pressed;
+        player[i].inputs.l[0] = buttonData(gamepad,"l").pressed;
       }
-      player[i].inputs.dpadleft[0]  = buttonData("dl").pressed;
-      player[i].inputs.dpaddown[0]  = buttonData("dd").pressed;
-      player[i].inputs.dpadright[0] = buttonData("dr").pressed;
-      player[i].inputs.dpadup[0]    = buttonData("du").pressed;
+      player[i].inputs.dpadleft[0]  = buttonData(gamepad,"dl").pressed;
+      player[i].inputs.dpaddown[0]  = buttonData(gamepad,"dd").pressed;
+      player[i].inputs.dpadright[0] = buttonData(gamepad,"dr").pressed;
+      player[i].inputs.dpadup[0]    = buttonData(gamepad,"du").pressed;
     }
 
     if (!frameByFrame) {
       if (mType[i] == 10) {
         player[i].inputs.z[0] = keys[keyMap.z[0]] || keys[keyMap.z[1]];
       } else {
-        // and called again...
-        function buttonData (but) {
-          return gpdbutton (gamepad, mType[i], but);
-        };
-        player[i].inputs.z[0] = buttonData("z").pressed;
+        player[i].inputs.z[0] = buttonData(gamepad,"z").pressed;
       }
       if (player[i].inputs.z[0]) {
         player[i].inputs.lAnalog[0] = 0.35;
@@ -839,21 +824,17 @@ window.interpretInputs = function(i, active) {
         }
       }
     } else {
-      // and yet again...
-      function buttonData (but) {
-        return gpdbutton (gamepad, mType[i], but);
-      };
       if (mType[i] == 3) {
-        if (buttonData("a").pressed && buttonData("l").value == 1 && buttonData("r").value == 1 && buttonData("s").pressed) {
-          if (buttonData("b").pressed) {
+        if (buttonData(gamepad,"a").pressed && buttonData(gamepad,"l").value == 1 && buttonData(gamepad,"r").value == 1 && buttonData(gamepad,"s").pressed) {
+          if (buttonData(gamepad,"b").pressed) {
             startGame();
           } else {
             endGame();
           }
         }
       } else {
-        if (buttonData("a").pressed && buttonData("l").pressed && buttonData("r").pressed && buttonData("s").pressed) {
-          if (buttonData("b").pressed) {
+        if (buttonData(gamepad,"a").pressed && buttonData(gamepad,"l").pressed && buttonData(gamepad,"r").pressed && buttonData(gamepad,"s").pressed) {
+          if (buttonData(gamepad,"b").pressed) {
             startGame();
           } else {
             endGame();
@@ -875,21 +856,14 @@ window.interpretInputs = function(i, active) {
     player[i].showHitbox ^= true;
   }
   if (mType[i] != 10) {
-    // and again...
-      function axisData (ax) {
-        return gpdaxis ( gamepad, mType[i], ax );
-      };
-      function buttonData (but) {
-        return gpdbutton (gamepad, mType[i], but);
-      };
-    if ((buttonData("z").pressed || buttonData("du").pressed) && buttonData("x").pressed && buttonData("y").pressed && !attemptingControllerReset[i]) {
+    if ((buttonData(gamepad,"z").pressed || buttonData(gamepad,"du").pressed) && buttonData(gamepad,"x").pressed && buttonData(gamepad,"y").pressed && !attemptingControllerReset[i]) {
       attemptingControllerReset[i] = true;
       setTimeout(function() {
-        if (buttonData("du").pressed && buttonData("x").pressed && buttonData("y").pressed) {
-          custcent[i].ls = new Vec2D(axisData("lsX"), axisData("lsY") * -1);
-          custcent[i].cs = new Vec2D(axisData("lsX"), axisData("lsY") * -1);
-          custcent[i].l = axisData("lA") + 0.8;
-          custcent[i].r = axisData("RA") + 0.8;
+        if (buttonData(gamepad,"du").pressed && buttonData(gamepad,"x").pressed && buttonData(gamepad,"y").pressed) {
+          custcent[i].ls = new Vec2D(axisData(gamepad,"lsX"), axisData(gamepad,"lsY") * -1);
+          custcent[i].cs = new Vec2D(axisData(gamepad,"lsX"), axisData(gamepad,"lsY") * -1);
+          custcent[i].l = axisData(gamepad,"lA") + 0.8;
+          custcent[i].r = axisData(gamepad,"RA") + 0.8;
           console.log("Controller Reset!");
           $("#resetIndicator" + i).fadeIn(100);
           $("#resetIndicator" + i).fadeOut(500);
