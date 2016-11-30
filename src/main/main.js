@@ -1501,13 +1501,13 @@ export function finishGame (){
     endGame()
   }, 2500);
 }
-for (var i=0;i<4;i++){
-  buildPlayerObject(i);
-  player[i].phys.face = 1;
-  player[i].actionState = "WAIT";
-}
-export function start (){
 
+export function start (){
+  for (var i=0;i<4;i++){
+    buildPlayerObject(i);
+    player[i].phys.face = 1;
+    player[i].actionState = "WAIT";
+  }
     cacheDom();
     getKeyboardCookie();
     getTargetCookies();
