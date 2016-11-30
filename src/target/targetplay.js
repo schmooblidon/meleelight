@@ -16,7 +16,7 @@ import {renderPlayer} from "main/render";
 import {sounds} from "main/sfx";
 import {stageTemp} from "target/targetbuilder";
 import { setBackgroundType} from "stages/stagerender";
-import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision} from "physics/article";
+import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision, destroyArticleQueue} from "physics/article";
 import {interpolatedHitCircleCollision} from "physics/hitDetection";
 /* eslint-disable */
 
