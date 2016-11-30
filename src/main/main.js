@@ -628,7 +628,7 @@ window.interpretInputs = function(i, active) {
                                      true,
                                      custcent[i].cs.x,
                                      custcent[i].cs.y);
-    [player[i].inputs.rawlStickAxis[0].x,player[i].inputs.rawlStickAxis[0].y] = 
+    [player[i].inputs.rawlStickAxis[0].x,player[i].inputs.rawlStickAxis[0].y] =
                   scaleToMeleeAxes ( axisData(gamepad,"lsX"),
                                      axisData(gamepad,"lsY"),
                                      mType[i],
@@ -677,7 +677,7 @@ window.interpretInputs = function(i, active) {
       frameAdvance[i][0] = false
     }
   } else {
-  
+
     if (buttonData(gamepad,"s").pressed || buttonData(gamepad,"du").pressed && gameMode == 5) {
       pause[i][0] = true;
     } else {
@@ -1725,6 +1725,10 @@ export function deepCopyObject(deep,target,...object){
                    else
                        target[key] = obj[key];
                }
+           }
+           // adds length property for arrays
+           if (obj instanceof Array){
+               target.length = obj.length;
            }
        }
 
