@@ -14,10 +14,12 @@ import {Vec2D,framesData} from "main/characters";
 import {sounds} from "main/sfx";
 
 import {hitQueue} from 'physics/hitDetection';
+import {setAS} from "../../physics/actionStateShortcuts";
+import {CHARIDS} from "../../main/characters";
 /* eslint-disable */
 
 // action state object creation
-aS[0]={};
+setAS(CHARIDS.MARTH_ID,{});
 // base action states added
 var keys = Object.keys(baseActionStates);
 for (var i=0;i<keys.length;i++){

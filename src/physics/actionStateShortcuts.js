@@ -529,6 +529,9 @@ export function turboGroundedInterrupt (p){
 }
 
 export const aS = [];
+export function setAS(index,val){
+  aS[index] = val;
+}
 
 /* char id:
 0 - marth

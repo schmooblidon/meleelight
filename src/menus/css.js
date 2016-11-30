@@ -50,7 +50,7 @@ export let rtfFlash = 25;
 export let rtfFlashD = 1;
 
 export function changeCharacter (i,c){
-  setCS(c);
+  setCS(i,c);
   player[i].actionState = "WAIT";
   player[i].timer = 0;
   player[i].charAttributes = chars[cS[i]].attributes;

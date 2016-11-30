@@ -43,14 +43,16 @@ export function tssControls (i){
     }
     if ((player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]) || (player[i].inputs.l[0] && !player[i].inputs.l[
         1])) {
-      setCS(i,cS[i]- 1);
+      let cSelected = cS[i];
+      setCS(i,cSelected- 1);
       if (cS[i] < 0) {
         setCS(i, 2);
       }
       sounds.menuSelect.play();
     } else if ((player[i].inputs.dpaddown[0] && !player[i].inputs.dpaddown[1]) || (player[i].inputs.r[0] && !player[i]
         .inputs.r[1])) {
-      setCS(i,cS[i]+ 1);
+      let elseSelected = cS[i];
+      setCS(i,elseSelected + 1);
       if (cS[i] > 2) {
         setCS(i, 0);
       }

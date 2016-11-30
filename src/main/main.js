@@ -35,7 +35,7 @@ export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
 export const framerate = [0,0,0];
-export let cS = [0,0,0,0];
+export var cS = [0,0,0,0];
 export let vfxQueue = [];
 export var shine = 0.5;
 

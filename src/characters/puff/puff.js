@@ -14,11 +14,13 @@ import {player, cS, stage, drawVfx, deepCopyObject} from "main/main";
 import {Vec2D,framesData} from "main/characters";
 
 import {hitQueue} from 'physics/hitDetection';
+import {setAS} from "../../physics/actionStateShortcuts";
+import {CHARIDS} from "../../main/characters";
 
 /* eslint-disable */
 
 // action state object creation
-aS[1]={};
+setAS(CHARIDS.PUFF_ID,{});
 // base action states added
 var keys = Object.keys(baseActionStates);
 for (var i=0;i<keys.length;i++){
