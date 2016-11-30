@@ -632,7 +632,7 @@ window.interpretInputs = function(i, active) {
                   scaleToMeleeAxes ( axisData(gamepad,"lsX"),
                                      axisData(gamepad,"lsY"),
                                      mType[i],
-                                     false, // false: deadzones
+                                     false, // false: no deadzones
                                      custcent[i].ls.x,
                                      custcent[i].ls.y);
     var lstickX = lsticks[0];
