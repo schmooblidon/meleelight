@@ -241,6 +241,7 @@ export function generalAI(i) {
       player[i].inputs.l[0] = inputs.l;
       player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
       player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
+      player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
       }
