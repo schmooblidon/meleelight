@@ -28,7 +28,7 @@ import {stages} from "stages/stages";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, button, controllerMaps, scaleToGCAxis, scaleToGCTrigger, custcent} from "main/input";
+import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, button, keyboardMap, controllerMaps, scaleToMeleeAxes, scaleToGCTrigger, custcent} from "main/input";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -42,9 +42,9 @@ export var shine = 0.5;
 export let endTargetGame = false;
 
 export let creditsPlayer = 0;
+
 let gameEnd = false;
 const attemptingControllerReset = [false,false,false,false];
-const keyboardMap = [[102,186],[101,76],[100,75],[104,79],[103,73],[105,80],[107,192,222],[109,219],71,78,66,86];
 let keyboardOccupied = false;
 
 
@@ -609,12 +609,30 @@ export function interpretInputs (i,active){
     var gamepad = navigator.getGamepads()[currentPlayers[i]];
     //console.log(gamepad.axes);
 
-    var lstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], -custcent[i].ls.x, true);
-    var lstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], -custcent[i].ls.y, true ) * -1; // need to flip up/down
-    player[i].inputs.rawlStickAxis[0].x = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsX]], -custcent[i].ls.x, false);     // no deadzones
-    player[i].inputs.rawlStickAxis[0].y = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.lsY]], -custcent[i].ls.y, false) * -1;
-    var cstickX = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csX]], -custcent[i].cs.x, true);
-    var cstickY = scaleToGCAxis (gamepad.axes[controllerMaps[mType[i]][button.csY]], -custcent[i].cs.y, true) * -1; // need to flip up/down
+    var lsticks = scaleToMeleeAxes ( gamepad.axes[controllerMaps[mType[i]][button.lsX]],  // x-axis data
+                                     gamepad.axes[controllerMaps[mType[i]][button.lsY]], // y-axis data
+                                     mType[i],
+                                     true, // true: deadzones
+                                     custcent[i].ls.x, // x-axis "custom center" offset
+                                     custcent[i].ls.y); // y-axis "custom center" offset
+    var csticks = scaleToMeleeAxes ( gamepad.axes[controllerMaps[mType[i]][button.csX]],
+                                     gamepad.axes[controllerMaps[mType[i]][button.csY]],
+                                     mType[i],
+                                     true,
+                                     custcent[i].cs.x,
+                                     custcent[i].cs.y);
+    [player[i].inputs.rawlStickAxis[0].x,player[i].inputs.rawlStickAxis[0].y] = 
+                  scaleToMeleeAxes ( gamepad.axes[controllerMaps[mType[i]][button.lsX]],
+                                     gamepad.axes[controllerMaps[mType[i]][button.lsY]],
+                                     mType[i],
+                                     false, // false: deadzones
+                                     custcent[i].ls.x,
+                                     custcent[i].ls.y);
+    var lstickX = lsticks[0];
+    var lstickY = lsticks[1];
+    var cstickX = csticks[0];
+    var cstickY = csticks[1];
+
     if (mType[i] == 3){
       //console.log(gamepad.buttons[map.rA[mType[i]]]);
       //-custcent[i].l
