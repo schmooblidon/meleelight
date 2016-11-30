@@ -1,3 +1,6 @@
+import {drawVfx, cS, player} from "main/main";
+import {aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {Vec2D,framesData} from "main/characters";
 export default {
   name : "DAMAGEFLYN",
   canPassThrough : false,
@@ -39,7 +42,7 @@ export default {
         turnOffHitboxes(p);
       }
     }
-    if (player[p].timer < frames[cS[p]].DAMAGEFLYN){
+    if (player[p].timer < framesData[cS[p]].DAMAGEFLYN){
       player[p].timer++;
     }
     if (player[p].hit.hitstun % 10 == 0){

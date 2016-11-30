@@ -1,5 +1,6 @@
-/* globals player, aS, cS, frames, fastfall, airDrift */
-
+import {airDrift, fastfall, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "FALLSPECIAL",
   canPassThrough : true,
@@ -22,7 +23,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].FALLSPECIAL){
+    if (player[p].timer > framesData[cS[p]].FALLSPECIAL){
       aS[cS[p]].FALLSPECIAL.init(p);
       return true;
     }

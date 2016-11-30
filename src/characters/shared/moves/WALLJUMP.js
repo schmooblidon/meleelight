@@ -1,3 +1,7 @@
+import {checkForSpecials, checkForAerials, airDrift, fastfall, aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, drawVfx, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "WALLJUMP",
   canPassThrough : true,
@@ -63,7 +67,7 @@ export default {
         aS[cS[p]][b[1]].init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].WALLJUMP){
+      else if (player[p].timer > framesData[cS[p]].WALLJUMP){
         aS[cS[p]].FALL.init(p);
         return true;
       }

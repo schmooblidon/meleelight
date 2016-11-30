@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-window.sounds = {
+export const sounds = {
   menuBack: new Howl({
     src: ['sfx/menu-back.wav']
   }),

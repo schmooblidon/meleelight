@@ -1,3 +1,6 @@
+import {checkForSmashTurn, checkForJump, checkForSmashes, checkForTilts, checkForSpecials, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "SQUATRV",
   canEdgeCancel : true,
@@ -20,7 +23,7 @@ export default {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].SQUATRV){
+    if (player[p].timer > framesData[cS[p]].SQUATRV){
       aS[cS[p]].WAIT.init(p);
       return true;
     }

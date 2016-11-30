@@ -1,3 +1,6 @@
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "DOWNWAIT",
   canEdgeCancel : true,
@@ -19,7 +22,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNWAIT){
+    if (player[p].timer > framesData[cS[p]].DOWNWAIT){
       aS[cS[p]].DOWNWAIT.init(p);
       return true;
     }

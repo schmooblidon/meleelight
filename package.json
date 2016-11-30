@@ -43,7 +43,10 @@
     "webpack-notifier": "^1.4.1",
     "yargs": "^6.4.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "happypack": "^3.0.0",
+    "sw-precache-webpack-plugin": "^0.6.3"
+  },
   "babel": {
     "presets": [
       "es2015",

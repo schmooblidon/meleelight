@@ -1,14 +1,17 @@
+import {player, playerType, cS,stage} from "main/main";
+import {gameSettings} from "settings";
 /* eslint-disable */
 
-function NearestEnemy(cpu, p) {
-  var nearestEnemy = -1;
-  var enemyDistance = 100000;
-  for (var i = 0; i < 4; i++) {
+let a = 0;
+export function NearestEnemy(cpu,p){
+  let nearestEnemy = -1;
+  let enemyDistance = 100000;
+  for (let i = 0; i < 4; i++) {
     if (playerType[i] > -1) {
       if (playerType[i] > -1 && i != p && player[i].actionState != "SLEEP") {
         if (i != p) {
-          var dist = Math.pow(cpu.phys.pos.x - player[i].phys.pos.x, 2) + Math.pow(cpu.phys.pos.y - player[i].phys.pos.y,
-            2);
+          const dist = Math.pow(cpu.phys.pos.x - player[i].phys.pos.x, 2) + Math.pow(cpu.phys.pos.y - player[i].phys.pos.y,
+                  2);
           if (dist < enemyDistance) {
             enemyDistance = dist;
             nearestEnemy = i;
@@ -24,8 +27,7 @@ function NearestEnemy(cpu, p) {
   }
   return nearestEnemy;
 }
-
-function generalAI(i) {
+export function generalAI(i) {
   player[i].inputs.lStickAxis[0].x = 0;
   player[i].inputs.lStickAxis[0].y = 0;
   player[i].inputs.x[0] = false;
@@ -190,13 +192,13 @@ function generalAI(i) {
     } else {
       //is shielding
       var inputs = CPUShield(player[i], i);
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
@@ -232,13 +234,13 @@ function generalAI(i) {
     } else {
       var inputs = CPULedge(player[i], i);
       //do inputs
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
@@ -250,15 +252,15 @@ function generalAI(i) {
     var inputs = CPUSDItoStage(player[i], i);
     player[i].inputs.lAnalog[0] = 1;
     player[i].inputs.l[0] = true;
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     return;
   }
   if (!(player[i].grounded) && isOffstage(player[i]) && player[i].currentAction == "NONE") {
     var inputs = CPUrecover(player[i], i);
     //do inputs
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     player[i].inputs.x[0] = inputs.x;
     player[i].inputs.b[0] = inputs.b;
   }
@@ -302,7 +304,7 @@ function generalAI(i) {
     //if ((px - (1.5 * player[i].phys.kVel.y)) - NearestFloor(player[i]) < 0) {
     //if (px - NearestFloor(player[i]) < 5 && player[i].phys.kVel > 0) {
     if (player[i].hit.hitstun <= 0) {
-      var extra = 0;
+      let extra = 0;
       if (!player[i].phys.doubleJumped || (player[i].phys.jumpsUsed < 5 && player[i].charAttributes.multiJump)) {
         extra = 3
       }
@@ -320,7 +322,7 @@ function generalAI(i) {
     //console.log("SS");
     player[i].currentAction = "TECH";
     var inputs = CPUTech(player[i], i);
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
     player[i].inputs.l[0] = inputs.l;
     if (player[i].inputs.l[0]) {
       player[i].inputs.lAnalog[0] = 1;
@@ -335,8 +337,8 @@ function generalAI(i) {
   if (paction == "DOWNWAIT") { //missed tech options
     player[i].currentAction = "MISSEDTECH";
     var inputs = CPUMissedTech(player[i], i);
-    player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     player[i].inputs.a[0] = inputs.a;
   }
   if (paction != "DOWNWAIT") {
@@ -366,8 +368,8 @@ function generalAI(i) {
       }
     if (player[i].currentAction == "WAVESHINEANY") {
       var inputs = CPUWaveshineAny(player[i], i);
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
@@ -380,13 +382,13 @@ function generalAI(i) {
         "GRABRELEASE")) {
       player[i].currentAction = "GRABRELEASE";
       var inputs = CPUGrabRelease(player[i], i);
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
@@ -410,13 +412,13 @@ function generalAI(i) {
         "TOURNAMENTWINNER")) {
       var inputs = CPULedge(player[i], i);
       //do inputs
-      player[i].inputs.lStickAxis[0].x = inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = inputs.lstickY;
+      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = inputs.cstickY;
+      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
@@ -440,11 +442,10 @@ function generalAI(i) {
     //console.log(player[i].currentAction);
   }
   //run character specific stuff
-  var ais = [marthAI, jiggsAI, foxAI];
+  const ais = [marthAI, jiggsAI, foxAI];
   ais[cS[i]](i); //calls that character's AI.
 }
-
-function marthAI(i) {
+export function marthAI(i) {
   const paction = player[i].actionState;
   const px = player[i].phys.pos.x;
   const py = player[i].phys.pos.y;
@@ -478,7 +479,7 @@ function marthAI(i) {
       return;
     }
   }
-  var nearest = NearestEnemy(player[i], i);
+  const nearest = NearestEnemy(player[i], i);
   if (player[i].currentAction == "NONE") {
     var distx = px - player[nearest].phys.pos.x;
     var disty = py - player[nearest].phys.pos.y;
@@ -505,7 +506,7 @@ function marthAI(i) {
 				  player[i].inputs.a = true;
 				  */
           } else if (randomSeed <= 25) { //tilt
-            var randomSeed1 = Math.floor((Math.random() * 100) + 1);
+            const randomSeed1 = Math.floor((Math.random() * 100) + 1);
             if (randomSeed1 <= 25) { //f-tilt
               player[i].inputs.lStickAxis[0].x = 0.50;
             } else if (randomSeed1 <= 50) { //d-tilt
@@ -554,7 +555,7 @@ function marthAI(i) {
             } else if (randomSeed <= 25 && Math.abs(px - player[nearest].phys.pos.x) < 12.5 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].inputs.l[0] = true;
                 player[i].inputs.lAnalog[0] = 1.0;
-                player[i].inputs.a[0] = true;				
+                player[i].inputs.a[0] = true;
 			}
           }
         }
@@ -564,7 +565,7 @@ function marthAI(i) {
   }
 }
 
-function jiggsAI(i) {
+export function jiggsAI(i) {
   const paction = player[i].actionState;
   const px = player[i].phys.pos.x;
   const py = player[i].phys.pos.y;
@@ -611,7 +612,7 @@ function jiggsAI(i) {
 				  player[i].inputs.a = true;
 				  */
             } else if (randomSeed <= 25) { //tilt
-              var randomSeed1 = Math.floor((Math.random() * 100) + 1);
+              const randomSeed1 = Math.floor((Math.random() * 100) + 1);
               if (randomSeed1 <= 25) { //f-tilt
                 player[i].inputs.lStickAxis[0].x = 0.50;
               } else if (randomSeed1 <= 50) { //d-tilt
@@ -661,7 +662,7 @@ function jiggsAI(i) {
             } else if (randomSeed <= 20 && Math.abs(px - player[nearest].phys.pos.x) < 8 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].inputs.l[0] = true;
                 player[i].inputs.lAnalog[0] = 1.0;
-                player[i].inputs.a[0] = true;				
+                player[i].inputs.a[0] = true;
 			}
           }
         }
@@ -671,7 +672,7 @@ function jiggsAI(i) {
   }
 }
 
-function foxAI(i) {
+export function foxAI(i) {
   const paction = player[i].actionState;
   const px = player[i].phys.pos.x;
   const py = player[i].phys.pos.y;
@@ -705,9 +706,9 @@ function foxAI(i) {
       return;
     }
   }
-  var isDead = false;
-  var deadDude = "NONE";
-  for (var aa = 0; aa < 4; aa++) {
+  let isDead = false;
+  let deadDude = "NONE";
+  for (let aa = 0; aa < 4; aa++) {
     if (playerType[aa] != -1 && !(i == aa)) {
       if (player[aa].actionState.substr(0, 4) == "DEAD" || player[aa].actionState.substr(0, 7) == "REBIRTH") { //"DEADDOWN","REBIRTH","REBIRTHWAIT"]) {
         isDead = true;
@@ -792,7 +793,7 @@ function foxAI(i) {
             if (randomSeed <= 10) { //grab
               player[i].inputs.z = true;
             } else if (randomSeed <= 25) { //tilt
-              var randomSeed1 = Math.floor((Math.random() * 100) + 1);
+              const randomSeed1 = Math.floor((Math.random() * 100) + 1);
               if (randomSeed1 <= 25) { //f-tilt
                 player[i].inputs.lStickAxis[0].x = 0.50;
               } else if (randomSeed1 <= 50) { //d-tilt
@@ -838,7 +839,7 @@ function foxAI(i) {
             } else if (randomSeed <= 20 && Math.abs(px - player[nearest].phys.pos.x) < 8 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].inputs.l[0] = true;
                 player[i].inputs.lAnalog[0] = 1.0;
-                player[i].inputs.a[0] = true;				
+                player[i].inputs.a[0] = true;
 			}
           }
         }
@@ -847,31 +848,31 @@ function foxAI(i) {
   }
   }
   if (player[i].currentAction == "SHDL") {
-    var inputs = CPUSHDL(player[i], i);
+    const inputs = CPUSHDL(player[i], i);
     player[i].inputs.x[0] = inputs.x;
     player[i].inputs.b[0] = inputs.b;
   }
 }
 
 
-window.runAI = function(i) {
+export function runAI (i){
   generalAI(i); //calls general AI
   //console.log(player[i].difficulty);
   //These are the player Inputs
 }
+export function isEnemyApproaching(cpu,player) {
 
-function isEnemyApproaching(cpu, player) {
   if (Math.abs(cpu.phys.pos.x - (player.phys.pos.x + player.phys.cVel.x)) < Math.abs(cpu.phys.pos.x - player.phys.pos.x)) {
     return true;
   } else {
     return false;
   }
 }
+export function NearestLedge(cpu) {
 
-function NearestLedge(cpu) {
-  var closest = [0, 10000]; //used to measure which ledge is closer
-  for (var i = 0; i < stage.ledgePos.length; i++) {
-    var closeness = Math.abs(cpu.phys.pos.x - stage.ledgePos[i].x) + Math.abs(cpu.phys.pos.y - stage.ledgePos[i].y); //distance from ledge
+  let closest = [0, 10000]; //used to measure which ledge is closer
+  for (let i = 0; i < stage.ledgePos.length; i++) {
+    const closeness = Math.abs(cpu.phys.pos.x - stage.ledgePos[i].x) + Math.abs(cpu.phys.pos.y - stage.ledgePos[i].y); //distance from ledge
     if (closeness < closest[1]) { //if closer to that ledge than others, update closest.
       closest = [i, closeness];
     }
@@ -881,10 +882,10 @@ function NearestLedge(cpu) {
   return closest;
 }
 
-function NearestFloor(cpu) {
+export function NearestFloor(cpu) {
   // for each platform
-  var nearestDist = 1000;
-  var nearestY = -1000;
+  let nearestDist = 1000;
+  let nearestY = -1000;
   for (var i = 0; i < stage.platform.length; i++) {
     // if cpu is above platform
     if (cpu.phys.pos.y > stage.platform[i][0].y && cpu.phys.pos.x >= stage.platform[i][0].x && cpu.phys.pos.x <= stage.platform[
@@ -908,10 +909,10 @@ function NearestFloor(cpu) {
   return nearestY;
 }
 
-window.isAboveGround = function(x, y) {
-  var returnValue = [false, "none", 0];
-  var closest = 1000;
-  var dist;
+export function isAboveGround (x,y) {
+  let returnValue = [false, "none", 0];
+  let closest = 1000;
+  let dist;
   for (var i = 0; i < stage.ground.length; i++) {
     if (x >= stage.ground[i][0].x && x <= stage.ground[i][1].x && y >= stage.ground[i][0].y) {
       dist = y - stage.ground[i][0].y;
@@ -933,7 +934,7 @@ window.isAboveGround = function(x, y) {
   return returnValue;
 }
 
-window.isOffstage = function(cpu) {
+export function isOffstage (cpu){
   // if on a ledge
   if (cpu.phys.onLedge > -1) {
     return false;
@@ -954,11 +955,11 @@ window.isOffstage = function(cpu) {
   }
   return true;
 }
-window.CPUSHDL = function(cpu, p) {
-  var returnInput = {
+export function CPUSHDL (cpu, p) {
+  const returnInput = {
     x: false,
     b: false
-  }
+  };
   if (cpu.actionState == "WAIT" || cpu.actionState == "DASH" || (cpu.actionState == "LANDING" && cpu.timer > 3)) { //jump
     returnInput.x = true;
   } else if (cpu.actionState == "KNEEBEND" && cpu.timer >= 3) {
@@ -973,8 +974,8 @@ window.CPUSHDL = function(cpu, p) {
   }
   return returnInput;
 }
-window.CPUTech = function(cpu, p) {
-  var returnInput = {
+export function CPUTech (cpu, p) {
+  const returnInput = {
     lstickX: 0.0,
     l: false,
     lAnalog: 0.0
@@ -984,8 +985,8 @@ window.CPUTech = function(cpu, p) {
   //console.log("nearest" , NearestFloor(cpu));
   if (cpu.phys.pos.y - NearestFloor(cpu) <= 3 && cpu.phys.kVel.y + cpu.phys.cVel.y <= 0) {
     //console.log("trying to tech");
-    var MissedTechPercent = 85 - (cpu.difficulty * 20); //how often the CPU miss techs. difficulty: {1: 65%,2: 45%,3: 25%,4: 5%}
-    var randomSeed = Math.floor((Math.random() * (100 + MissedTechPercent)) + 1);
+    const MissedTechPercent = 85 - (cpu.difficulty * 20); //how often the CPU miss techs. difficulty: {1: 65%,2: 45%,3: 25%,4: 5%}
+    const randomSeed = Math.floor((Math.random() * (100 + MissedTechPercent)) + 1);
     if (randomSeed <= 34) { //inplace
       returnInput.lstickX = 0.0;
       returnInput.l = true;
@@ -1007,21 +1008,21 @@ window.CPUTech = function(cpu, p) {
   return returnInput;
 
 }
-window.CPUMissedTech = function(cpu, p) {
-  var returnInput = {
+export function CPUMissedTech (cpu,p) {
+  const returnInput = {
     lstickX: 0.0,
     lstickY: 0.0,
     a: false
   };
   //console.log(randomSeed);
-  var randomSeed = Math.floor((Math.random() * 10) + 1);
+  const randomSeed = Math.floor((Math.random() * 10) + 1);
   //console.log(randomSeed);
   //console.log("2");
   if (randomSeed <= 2) { //getup attack
     returnInput.a = true;
     //returnInput.lstickX = -1.0;
   } else if (randomSeed <= 4) { //roll
-    var randomSeeds = Math.floor((Math.random() * 2) + 1);
+    const randomSeeds = Math.floor((Math.random() * 2) + 1);
     if (randomSeeds == 1) { //left
       returnInput.lstickX = -1.0;
     } else { //right
@@ -1033,14 +1034,14 @@ window.CPUMissedTech = function(cpu, p) {
   //console.log("3");
   return returnInput;
 }
-window.CPUWaveshineAny = function(cpu, p) {
-  var returnInput = {
+export function CPUWaveshineAny (cpu,p) {
+  const returnInput = {
     lstickX: 0.0,
     lstickY: 0.0,
     x: false,
     b: false,
     l: false,
-  }
+  };
 
   if (cpu.actionState == "WAIT") {
     returnInput.lstickY = -1.0;
@@ -1051,7 +1052,7 @@ window.CPUWaveshineAny = function(cpu, p) {
       returnInput.x = true;
     }
   } else if (cpu.actionState == "KNEEBEND" && (cpu.timer == 3)) {
-    var randomSeed = Math.floor((Math.random() * 3) + 1);
+    const randomSeed = Math.floor((Math.random() * 3) + 1);
     if (randomSeed == 1) { //foward
       returnInput.lstickX = cpu.phys.face * 0.75;
       returnInput.lstickY = -1.0;
@@ -1071,8 +1072,8 @@ window.CPUWaveshineAny = function(cpu, p) {
   }
   return returnInput;
 }
-window.CPUGrabRelease = function(cpu, p) {
-  var returnInput = {
+export function CPUGrabRelease(cpu,p) {
+  const returnInput = {
     lstickX: 0.0,
     lstickY: 0.0,
     x: false,
@@ -1139,12 +1140,13 @@ window.CPUGrabRelease = function(cpu, p) {
 
 
 function CPUSDItoStage(cpu, p) {
-  var closest = NearestLedge(cpu);
-  var returnInput = {
+  const closest = NearestLedge(cpu);
+  const returnInput = {
     lStickX: 0.0,
     lStickY: 0.0
-  }
+  };
   if (cpu.timer % 2 == 0) {
+    var imperfection = 0;
     var theta = Math.atan(((closest.y - 3.5) - cpu.phys.pos.y) / (closest.x - cpu.phys.pos.x)) + imperfection; //some trig to get angles //(cpu.phys.ledgeSnapBoxF.max.y-cpu.phys.ledgeSnapBoxF.min.y)/2
     var newX = Math.cos(theta); //* Math.sqrt(2);
     var newY = Math.sin(theta); //* Math.sqrt(2);
@@ -1161,8 +1163,7 @@ function CPUSDItoStage(cpu, p) {
   } else {
     var imperfection = 0;
     var theta = Math.atan(((closest.y - 3.5) - cpu.phys.pos.y) / (closest.x - cpu.phys.pos.x)) + imperfection; //some trig to get angles //(cpu.phys.ledgeSnapBoxF.max.y-cpu.phys.ledgeSnapBoxF.min.y)/2
-    theta = theta + 0.25 * ((Math.floor((Math.random() * 2) + 1) - 1) * -1.0) *
-      3.14159265358979323846264338327950288419716939937510582097494459230781;
+    theta = theta + 0.25 * ((Math.floor((Math.random() * 2) + 1) - 1) * -1.0) * Math.PI;
     var newX = Math.cos(theta); //* Math.sqrt(2);
     var newY = Math.sin(theta); //* Math.sqrt(2);
     if (closest.x < cpu.phys.pos.x) {
@@ -1180,7 +1181,7 @@ function CPUSDItoStage(cpu, p) {
 }
 
 function CPUShield(cpu, p) {
-  var returnInput = {
+  const returnInput = {
     lstickX: 0.0,
     lstickY: 0.0,
     x: false,
@@ -1190,13 +1191,13 @@ function CPUShield(cpu, p) {
     cstickX: 0.0,
     cstickY: 0.0,
   };
-  var shouldDoSomething = false;
-  var doSomethingChance = Math.min(100, 25 * Math.tan((3.1415926535 / 121) * (60 - cpu.phys.shieldHP)));
+  let shouldDoSomething = false;
+  const doSomethingChance = Math.min(100, 25 * Math.tan((Math.PI / 121) * (60 - cpu.phys.shieldHP)));
   //console.log(doSomethingChance);
   var randomSeed = Math.floor((Math.random() * 100) + 1);
   if (randomSeed <= doSomethingChance) { //do something
     returnInput.l = false;
-    var extra = Math.max(0, 15 - cpu.difficulty);
+    const extra = Math.max(0, 15 - cpu.difficulty);
     var randomSeed = Math.floor((Math.random() * 30) + 1) + extra;
     if (randomSeed <= 30) { //jump or shield drop
       if (isAboveGround(cpu.phys.pos.x, cpu.phys.pos.x)[1] == "platform" && cpu.difficulty >= 3) {
@@ -1220,7 +1221,7 @@ function CPUShield(cpu, p) {
 }
 function CPULedge(cpu, p) {
   //var returnInput = [0.0,0.0,false,false,0.0,0.0,0.0,false];
-  var returnInput = {
+  const returnInput = {
     lstickX: 0.0,
     lstickY: 0.0,
     x: false,
@@ -1289,7 +1290,7 @@ function CPULedge(cpu, p) {
       //	console.log(1.0 * Math.sign(cpu.phys.face));
       //returnInput.lstickX = cpu.phys.face;
       //returnInput.lstickY = -1.0;
-      //returnInput.l = true;	
+      //returnInput.l = true;
       //}
 
       /*if (cpu.timer == 18) {//ledgedash?
@@ -1432,10 +1433,10 @@ function CPULedge(cpu, p) {
 //cpu is a reference to the current cpu. Replace it if you want
 //expect cases of jigglypuff's accidently battlefielding themselves sometimes.
 //Fox angles should be perfectly imperfect.
-window.CPUrecover = function(cpu, p) {
+export function CPUrecover (cpu,p) {
     //Where ledges is a list of the ledges on the current stage in the following format. [[ledge1XPos, ledge1YPos],[ledge2XPos,ledge3Ypos],[...]...]
     //ledgepos is where a character can grab the ledge
-    var closest = NearestLedge(cpu);
+    const closest = NearestLedge(cpu);
     var returnInput = [0.0, 0.0, false, false];
     var returnInput = {
       lstickX: 0.0,
@@ -1451,10 +1452,10 @@ window.CPUrecover = function(cpu, p) {
         returnInput.lStickY = 0.0;
         if ((cpu.timer >= 40 && cpu.timer <= 43)) {
           //var imperfection = Math.floor(((Math.random() * 20) + 1) - 10) / 2000;
-          var imperfection = 0;
-          var theta = Math.atan(((closest.y - 3.5) - cpu.phys.pos.y) / (closest.x - cpu.phys.pos.x)) + imperfection; //some trig to get angles //(cpu.phys.ledgeSnapBoxF.max.y-cpu.phys.ledgeSnapBoxF.min.y)/2
-          var newX = Math.cos(theta); //* Math.sqrt(2);
-          var newY = Math.sin(theta); //* Math.sqrt(2);
+          const imperfection = 0;
+          const theta = Math.atan(((closest.y - 3.5) - cpu.phys.pos.y) / (closest.x - cpu.phys.pos.x)) + imperfection; //some trig to get angles //(cpu.phys.ledgeSnapBoxF.max.y-cpu.phys.ledgeSnapBoxF.min.y)/2
+          let newX = Math.cos(theta); //* Math.sqrt(2);
+          let newY = Math.sin(theta); //* Math.sqrt(2);
           if (closest.x < cpu.phys.pos.x) {
             newX *= -1;
             newY *= -1;
@@ -1484,7 +1485,7 @@ window.CPUrecover = function(cpu, p) {
       if (cS[p] == 0 && ((Math.abs(closest.x - cpu.phys.pos.x) > 25) && (!cpu.phys.doubleJumped || (cpu.phys.jumpsUsed <
           5 && cpu.charAttributes.multiJump)) && ((closest.y - cpu.phys.pos.y < 5) || ((closest.y - cpu.phys.pos.y <
           30 && Math.abs(closest.x - cpu.phys.pos.x) > 40))))) {
-        //side-b  
+        //side-b
         //console.log("HI");
         if (Math.abs(cpu.phys.cVel.x) > 0.8) {
           if (cpu.phys.pos.x < closest.x) {

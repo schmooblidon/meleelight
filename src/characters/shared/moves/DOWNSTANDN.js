@@ -1,3 +1,6 @@
+import {executeIntangibility, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "DOWNSTANDN",
   canEdgeCancel : true,
@@ -16,7 +19,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNSTANDN){
+    if (player[p].timer > framesData[cS[p]].DOWNSTANDN){
       aS[cS[p]].WAIT.init(p);
       return true;
     }

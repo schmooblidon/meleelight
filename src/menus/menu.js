@@ -1,7 +1,14 @@
+import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen,
+    setCreditsPlayer
+} from "main/main";
+import {sounds} from "main/sfx";
+import { setTargetPlayer} from "target/targetplay";
+import { setTargetPointerPos} from "menus/targetselect";
+import {  setEditingStage, setTargetBuilder} from "target/targetbuilder";
+import {twoPi} from "main/render";
 /* eslint-disable */
 
-window.menuSelected = 0;
-window.menuColourOffset = 0;
+ let menuSelected = 0;
 
 const menuText = [
   ["VS. Melee", "Target Test", "Target Builder", "Options"],
@@ -12,7 +19,7 @@ const menuExplanation = [
   ["Select audio levels.", "Change gameplay settings.", "Customize keyboard controls.", "Who did this?"]
 ];
 const menuTitle = ["Main Menu", "Options"];
-
+let menuColourOffset = 0;
 const menuColours = [238, 358, 117, 55];
 let menuCurColour = 238;
 //hsl(55, 100%, 50%)
@@ -23,9 +30,9 @@ let menuGlobalTimer = 0;
 let menuAngle = 0;
 let menuRandomBox = [Math.random(), Math.random(), Math.random(), Math.random()];
 
-window.stickHoldEach = [];
-window.stickHold = 0;
-window.menuMove = function(i) {
+export let stickHoldEach = [];
+export let stickHold = 0;
+export function menuMove (i){
   var menuMove = false;
   var previousMenuS = menuSelected;
   if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
@@ -34,16 +41,18 @@ window.menuMove = function(i) {
       if (menuSelected == 0) {
         changeGamemode(2);
         positionPlayersInCSS();
-      } else if (menuSelected == 1) {
-        targetPlayer = i;
-        targetPointerPos = [178.5, 137];
+      }
+      else if (menuSelected == 1){
+          setTargetPlayer(i);
+          setTargetPointerPos([178.5,137]);
         player[i].inputs.a[1] = true;
         music.menu.stop();
         music.targettest.play("targettestStart");
         changeGamemode(7);
-      } else if (menuSelected == 2) {
-        editingStage = -1;
-        targetBuilder = i;
+      }
+      else if (menuSelected == 2){
+       setEditingStage(-1);
+        setTargetBuilder(i);
         player[i].inputs.a[1] = true;
         changeGamemode(4);
       } else if (menuSelected == 3) {
@@ -62,10 +71,11 @@ window.menuMove = function(i) {
       } else if (menuSelected == 2) {
         changeGamemode(12);
         //keyboard menu
-        keyBinding = false;
-      } else if (menuSelected == 3) {
+        setKeyBinding(false);
+      }
+      else if (menuSelected == 3){
         //credits
-        creditsPlayer = i;
+          setCreditsPlayer(i);
         changeGamemode(13);
       }
     }
@@ -143,12 +153,12 @@ window.menuMove = function(i) {
 
 
 
-window.drawMainMenuInit = function() {
-  var bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
-  bgGrad.addColorStop(0, "rgba(12, 11, 54, 1)");
-  bgGrad.addColorStop(1, "rgba(1, 2, 15, 1)");
-  bg1.fillStyle = bgGrad;
-  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
+export function drawMainMenuInit (){
+  var bgGrad =bg1.createLinearGradient(0,0,1200,750);
+  bgGrad.addColorStop(0,"rgba(12, 11, 54, 1)");
+  bgGrad.addColorStop(1,"rgba(1, 2, 15, 1)");
+  bg1.fillStyle=bgGrad;
+  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
 
   fg1.lineWidth = 5;
   fg1.strokeStyle = "rgb(0, 0, 0)";
@@ -191,7 +201,7 @@ window.drawMainMenuInit = function() {
   fg1.stroke();
 }
 
-window.drawMainMenu = function() {
+export function drawMainMenu (){
   clearScreen();
   menuGlobalTimer++;
   if (menuGlobalTimer > 600) {
@@ -412,4 +422,10 @@ window.drawMainMenu = function() {
     }
   }
   ui.restore();
+}
+export function increaseStick(){
+  stickHold++;
+}
+export function resetStick(){
+  stickHold = 0;
 }

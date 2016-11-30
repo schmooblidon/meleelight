@@ -1,3 +1,14 @@
+import {checkForAerials, tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat,
+    checkForJump
+    , checkForSmashes
+    , checkForTilts
+    , checkForSpecials
+    , reduceByTraction
+    , aS
+    , turnOffHitboxes
+} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {Vec2D,framesData} from "main/characters";
 export default {
   name : "DAMAGEN2",
   canEdgeCancel : true,
@@ -43,7 +54,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DAMAGEN2){
+    if (player[p].timer > framesData[cS[p]].DAMAGEN2){
       if (player[p].hit.hitstun > 0){
         player[p].timer--;
         return false;

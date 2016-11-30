@@ -1,3 +1,7 @@
+import {checkForJump, shieldDepletion, playSounds, shieldTilt, reduceByTraction, aS, shieldSize} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, player} from "main/main";
+import {Vec2D,framesData} from "main/characters";
 export default {
   name : "GUARDON",
   canEdgeCancel : true,
@@ -83,7 +87,7 @@ export default {
         aS[cS[p]].PASS.init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].GUARDON){
+      else if (player[p].timer > framesData[cS[p]].GUARDON){
         aS[cS[p]].GUARD.init(p);
         return true;
       }

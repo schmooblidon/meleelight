@@ -1,3 +1,7 @@
+import {checkForSquat, checkForJump, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "RUNBRAKE",
   canEdgeCancel : true,
@@ -28,7 +32,7 @@ export default {
       aS[cS[p]].RUNTURN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].RUNBRAKE){
+    else if (player[p].timer > framesData[cS[p]].RUNBRAKE){
       aS[cS[p]].WAIT.init(p);
       return true;
     }

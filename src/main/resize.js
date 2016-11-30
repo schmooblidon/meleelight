@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import $ from "jquery";
+import {showDebug} from "main/main";
 
 window.mobile = false;
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {

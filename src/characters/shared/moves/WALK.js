@@ -1,7 +1,13 @@
-/* globals player, aS, cS, frames, checkForSpecials, checkForTilts,
-checkForSmashes, checkForSquat, checkForDash, checkForSmashTurn,
-checkForTiltTurn, checkForJump, tiltTurnDashBuffer, sounds, reduceByTraction */
-
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat, checkForJump,
+    checkForSmashes
+    , checkForTilts
+    , checkForSpecials
+    , reduceByTraction
+    , aS
+} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "WALK",
   canEdgeCancel : true,
@@ -56,7 +62,7 @@ export default {
     const t = checkForTilts(p);
     const s = checkForSmashes(p);
     const j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].WALK){
+    if (player[p].timer > framesData[cS[p]].WALK){
       aS[cS[p]].WALK.init(p,false);
       return true;
     }

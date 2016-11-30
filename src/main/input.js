@@ -4,6 +4,7 @@ import {
   inverseMatrix,
   multMatVect
 } from "main/linAlg";
+import {Vec2D} from "main/characters";
 
 export const button = {
   "a" : 0, 
@@ -156,6 +157,24 @@ export function controllerNameFromIDnumber(number) {
   }
 };
 
+
+function fromCardinals([origx, origy], l, r, d,u) {
+    return [[origx, origy], [l,origy], [r,origy], [origx,d], [origx, u]];
+};
+
+// the following function gives an approximation to the extreme raw axis data for a given controller
+// of course, this varies between controllers, but this serves as a useful first approximation
+// function output: [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]]
+function axisDataFromIDNumber(number) {
+  if (number == 4) { // TigerGame 3-in-1
+    let orig = 0.05098;
+    return ( fromCardinals ( [orig, -orig], -0.7098, 0.85098, 0.73333, -0.8588) );
+  }
+  else {
+    return ( fromCardinals ( [0, 0], -0.75, 0.75, 0.75, -0.75) ); // default
+  }
+};
+
 export function controllerIDNumberFromGamepadID(gamepadID) {
   var output = -1;
   for (var [possibleID, val] of controllerIDMap.entries()) {
@@ -207,23 +226,72 @@ export function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x,
 
 // The following functions renormalise input to mimic GC controllers.
 
-// Analog sticks.
-// x = axis input
-export function scaleToGCAxis ( x, offset, bool ) {
-    let xnew = (x+offset) / 0.75;
-    if (xnew > 1) {
-      return 1;
-    }
-    else if (xnew < -1) {
-      return -1;
-    }
-    else if (bool && Math.abs(xnew) < 0.28){
-      return 0;
-    }
-    else {
-      return (Math.round (xnew*80)/80);
-    }
+// clamps a value between -1 and 1
+function toInterval (x) {
+  if (x < -1) {
+    return -1;
+  }
+  else if (x > 1) {
+    return 1;
+  }
+  else {
+    return x;
+  }
 };
+
+
+
+// Melee GC controller simulation
+
+const steps = 80;
+const deadzoneConst = 0.28;
+
+// data courtesy of ARTIFICE
+// horizontal: 19 -- 122 -- 232
+const meleeXMin  = 19 ;
+const meleeXOrig = 122;
+const meleeXMax  = 232;
+// vertical  : 32 -- 134 -- 246
+const meleeYMin  = 32 ;
+const meleeYOrig = 134;
+const meleeYMax  = 246;
+
+// rescales -1 -- 0 -- 1 to min -- orig -- max, and rounds to nearest integer
+function discretise (x, min, orig, max) {
+  if (x < 0) {
+    return Math.round((x*(orig-min)+orig));
+  }
+  else if (x > 0) {
+    return Math.round((x*(max-orig)+orig));
+  }
+  else {
+    return orig;
+  }
+};
+
+// Analog sticks.
+
+// Rescales controller input to -1 -- 0 -- 1 in both axes
+function scaleToUnitAxes ( x,y, number, customCenterX, customCenterY ) { // number = gamepad ID number
+    let [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]] = axisDataFromIDNumber(number);
+    origx += customCenterX;
+    origy += customCenterY;
+    let [xnew, ynew] = renormaliseAxisInput([lx-origx, ly-origy], [rx-origx, ry-origy], [dx-origx, dy-origy], [ux-origx, uy-origy], [x-origx, y-origy]);
+    return [toInterval(xnew), toInterval(ynew)];
+};
+
+// Rescales -1 -- 1 input to 0 -- 255 values to simulate a GC controller
+function scaleUnitToGCAxes (x, y) {
+  let xnew = discretise(x, meleeXMin, meleeXOrig, meleeXMax);
+  let ynew = discretise(y, meleeYMin, meleeYOrig, meleeYMax);
+  return [xnew, ynew];
+};
+
+// Rescales controller input to 0 -- 255 values to simulate a GC controller
+function scaleToGCAxes (x, y, number, customCenterX, customCenterY) {
+  let [xnew, ynew] = scaleToUnitAxes (x, y, number, customCenterX, customCenterY);
+  return scaleUnitToGCAxes(xnew, ynew);
+}
 
 // Analog triggers.
 // t = trigger input
@@ -239,3 +307,72 @@ export function scaleToGCTrigger ( t, offset, scale ) {
       return tnew;
     }
 };
+
+// basic mapping from 0 -- 255 back to -1 -- 1 done by Melee
+// boolean value: true = deadzones, false = no deadzones
+function axisRescale ( x, orig, bool) {
+    var magicOffset = 1; // don't ask
+    if ( ! bool) {
+      magicOffset = 0;
+    }
+  // the following line is equivalent to checking that the result of this function lies in the deadzone
+  // no need to check for deadzones later
+    if ( bool && Math.abs (x+magicOffset-orig) < deadzoneConst * steps) {
+      return 0;
+    }
+    else {
+      return (x-orig+magicOffset) / steps;
+    }
+};
+
+function meleeXAxisLinearRescale (x, bool) {
+  return axisRescale ( x, meleeXOrig, bool );
+};
+
+function meleeYAxisLinearRescale (y, bool) {
+  return axisRescale ( y, meleeYOrig, bool );
+};
+
+function meleeAxesNonLinearRescale ( [x,y] ) {
+  let norm = Math.sqrt(x*x + y*y);
+  if (norm < 1) {
+    return ([x,y]);
+  }
+  else if (Math.abs(y) <= Math.abs(x)/6){ // constants (norm < 1 above, 1/6 here) may not be proper
+    return ([toInterval(x),y]);
+  }
+  else {
+    return ( [x/norm, y/norm]);
+  }
+};
+
+function meleeAxesRescale ( [x,y], bool ) {
+    let xnew = meleeXAxisLinearRescale (x, bool);
+    let ynew = meleeYAxisLinearRescale (y, bool);
+    return meleeAxesNonLinearRescale( [xnew, ynew]);
+}
+
+function meleeRound (x) {
+  return Math.round(steps*x)/steps;
+};
+
+
+// this is the main input rescaling function
+// it scales raw input data to the data Melee uses for the simulation
+// number : controller ID, to rescale axes dependent on controller raw input
+// bool == false means no deadzone, bool == true means deadzone
+export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCenterY ) {
+    let [xnew, ynew] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
+    return (meleeAxesRescale ( [xnew, ynew], bool )).map(meleeRound);
+};
+
+// scales -1 -- 1 data to the data Melee uses for the simulation
+// bool == false means no deadzone, bool == true means deadzone
+export function meleeRescale ( x, y, bool = false) {
+    let [xnew, ynew] = scaleUnitToGCAxes (x, y);
+    return (meleeAxesRescale ( [xnew, ynew], bool)).map(meleeRound);
+}
+
+export function dolphinRescale (x, y, bool = false) {
+    return meleeAxesRescale(x,y).map(meleeRound);
+}

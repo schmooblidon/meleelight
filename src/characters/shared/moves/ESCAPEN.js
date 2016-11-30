@@ -1,3 +1,7 @@
+import {executeIntangibility, reduceByTraction, playSounds, aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {cS, drawVfx, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "ESCAPEN",
   canEdgeCancel : false,
@@ -21,7 +25,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].ESCAPEN){
+    if (player[p].timer > framesData[cS[p]].ESCAPEN){
       aS[cS[p]].WAIT.init(p);
       return true;
     }

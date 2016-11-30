@@ -1,3 +1,6 @@
+import {checkForSpecials, checkForAerials, airDrift, fastfall, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "PASS",
   canPassThrough : true,
@@ -59,7 +62,7 @@ export default {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].PASS){
+    else if (player[p].timer > framesData[cS[p]].PASS){
       aS[cS[p]].FALL.init(p);
       return true;
     }

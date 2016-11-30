@@ -1,3 +1,6 @@
+import {checkForJump, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "RUNTURN",
   canEdgeCancel : false,
@@ -44,7 +47,7 @@ export default {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].RUNTURN){
+    else if (player[p].timer > framesData[cS[p]].RUNTURN){
       if(player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.6){
         aS[cS[p]].RUN.init(p);
       }

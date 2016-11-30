@@ -1,6 +1,8 @@
-/* globals player, reduceByTraction, turnOffHitboxes, sounds */
 
 import WAIT from "characters/shared/moves/WAIT";
+import {player} from "main/main";
+import {turnOffHitboxes, reduceByTraction} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
 
 export default {
   name : "FORWARDTILT",

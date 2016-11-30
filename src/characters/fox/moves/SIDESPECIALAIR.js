@@ -1,8 +1,11 @@
-/* globals player, turnOffHitboxes, drawVfx, sounds, articles */
 
 import WAIT from "characters/shared/moves/WAIT";
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import LANDINGFALLSPECIAL from "characters/shared/moves/LANDINGFALLSPECIAL";
+import {articles} from "physics/article";
+import {sounds} from "main/sfx";
+import {turnOffHitboxes} from "physics/actionStateShortcuts";
+import {drawVfx, player} from "main/main";
 
 export default {
   name : "SIDESPECIALAIR",

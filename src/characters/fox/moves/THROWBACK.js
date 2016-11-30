@@ -1,9 +1,13 @@
-/* globals player, aS, cS, turnOffHitboxes, frames, randomShout, articles,
-sounds, drawVfx, Vec2D, hitQueue */
 
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
+import {Vec2D,framesData} from "main/characters";
+import {drawVfx, cS, player} from "main/main";
+import {sounds} from "main/sfx";
+import {articles} from "physics/article";
+import {randomShout, turnOffHitboxes, aS} from "physics/actionStateShortcuts";
 
+import {hitQueue} from 'physics/hitDetection';
 export default {
   name : "THROWBACK",
   canEdgeCancel : false,
@@ -12,7 +16,7 @@ export default {
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
     aS[cS[player[p].phys.grabbing]].THROWNFOXBACK.init(player[p].phys.grabbing);
-    const frame = frames[cS[player[p].phys.grabbing]].THROWNFOXBACK;
+    const frame = framesData[cS[player[p].phys.grabbing]].THROWNFOXBACK;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;

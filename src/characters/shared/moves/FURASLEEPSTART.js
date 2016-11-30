@@ -1,3 +1,7 @@
+import {pPal, palettes, cS, player} from "main/main";
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "FURASLEEPSTART",
   canEdgeCancel : true,
@@ -40,7 +44,7 @@ export default {
       aS[cS[p]].FURASLEEPEND.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FURASLEEPSTART){
+    else if (player[p].timer > framesData[cS[p]].FURASLEEPSTART){
       player[p].colourOverlayBool = false;
       aS[cS[p]].FURASLEEPLOOP.init(p);
       return true;

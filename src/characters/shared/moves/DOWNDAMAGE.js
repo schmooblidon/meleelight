@@ -1,3 +1,5 @@
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "DOWNDAMAGE",
   canEdgeCancel : true,

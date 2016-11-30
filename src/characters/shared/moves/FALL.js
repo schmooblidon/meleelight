@@ -1,5 +1,6 @@
-/* globals player, aS, cS, frames, turnOffHitboxes, airDrift, fastfall, checkForAerials, checkForSpecials */
-
+import {checkForSpecials, checkForAerials, fastfall, airDrift, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "FALL",
   canPassThrough : true,
@@ -53,7 +54,7 @@ export default {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FALL){
+    else if (player[p].timer > framesData[cS[p]].FALL){
       aS[cS[p]].FALL.init(p);
       return true;
     }

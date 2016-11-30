@@ -1,8 +1,11 @@
-/* globals aS, baseActionStates, animations */
 
-import moves from "./moves";
-import "./attributes";
-import "./ecb";
+import moves from "characters/fox/moves";
+import "characters/fox/attributes";
+import "characters/fox/ecb";
+import {baseActionStates} from "characters/baseActionStates";
+import {aS} from "physics/actionStateShortcuts";
+import {setAS} from "../../physics/actionStateShortcuts";
+import {CHARIDS} from "../../main/characters";
 
 const Fox = {
   moves,
@@ -13,10 +16,10 @@ const Fox = {
 export default Fox;
 
 // Remove when actionStates are figured out.
-aS[2] = {
+setAS(CHARIDS.FOX_ID, {
   ...baseActionStates,
   ...Fox.moves,
-};
+});
 
 aS[2].ESCAPEB.setVelocities = [0,0,0,0,0,0,-0.46222,-1.31556,-2.06222,-5.76,-2.36391,-1.47609,-1.19896,-0.97833,-1.10208,-1.37792,-1.50167,-1.51354,-1.47984,-1.53891,-1.75248,-1.86955,-1.70572,-1.261,-0.73878,-0.42036,-0.24296,-0.20661,-0.31128,-0.58266,-0.37734];
 aS[2].ESCAPEF.setVelocities = [0,0,0,0,0,0,2.4,4.32,4.8,1.0299,0.89,1.08094,1.74377,1.86418,1.80236,1.70153,1.68123,1.658,1.63183,1.60272,1.44005,1.16476,0.9179,0.69951,0.50956,0.34806,0.21502,0.11042,0.03427,-0.01343,-0.03268];

@@ -1,5 +1,7 @@
-/* globals player, aS, cS, reduceByTraction, frames */
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 
+import {framesData} from 'main/characters';
 export default {
   name : "CATCHCUT",
   canEdgeCancel : false,
@@ -20,7 +22,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CATCHCUT){
+    if (player[p].timer > framesData[cS[p]].CATCHCUT){
       aS[cS[p]].WAIT.init(p);
       return true;
     }

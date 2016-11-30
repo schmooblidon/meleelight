@@ -1,3 +1,7 @@
+import {checkForSpecials, checkForAerials, airDrift, fastfall, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "JUMPB",
   canPassThrough : true,
@@ -59,7 +63,7 @@ export default {
       aS[cS[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPB){
+    else if (player[p].timer > framesData[cS[p]].JUMPB){
       aS[cS[p]].FALL.init(p);
       return true;
     }

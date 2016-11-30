@@ -1,3 +1,12 @@
+import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, checkForSquat, checkForJump,
+    checkForSmashes
+    , checkForTilts
+    , checkForSpecials
+    , aS
+} from "physics/actionStateShortcuts";
+import {actionSounds,framesData} from "main/characters";
+import {sounds} from "main/sfx";
+import {cS, player} from "main/main";
 export default {
   name : "OTTOTTOWAIT",
   canEdgeCancel : false,
@@ -13,7 +22,7 @@ export default {
   },
   main : function(p){
     player[p].timer++;
-    if (player[p].timer > frames[cS[p]].OTTOTTOWAIT){
+    if (player[p].timer > framesData[cS[p]].OTTOTTOWAIT){
       player[p].timer = 0
     }
     if (!aS[cS[p]].OTTOTTOWAIT.interrupt(p)){

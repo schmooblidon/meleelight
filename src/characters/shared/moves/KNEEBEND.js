@@ -1,5 +1,5 @@
-/* globals player, aS, cS, frames, reduceByTraction */
-
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
 export default {
   name : "KNEEBEND",
   canEdgeCancel : true,

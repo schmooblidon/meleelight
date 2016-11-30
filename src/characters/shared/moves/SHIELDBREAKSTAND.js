@@ -1,3 +1,6 @@
+import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {cS, player} from "main/main";
+import {framesData} from 'main/characters';
 export default {
   name : "SHIELDBREAKSTAND",
   canEdgeCancel : true,
@@ -15,7 +18,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].SHIELDBREAKSTAND){
+    if (player[p].timer > framesData[cS[p]].SHIELDBREAKSTAND){
       aS[cS[p]].FURAFURA.init(p);
       return true;
     }

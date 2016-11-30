@@ -1,3 +1,7 @@
+import {drawVfx, cS, player} from "main/main";
+import {aS} from "physics/actionStateShortcuts";
+import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "WALLDAMAGE",
   canPassThrough : false,
@@ -31,7 +35,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].WALLDAMAGE){
+    if (player[p].timer > framesData[cS[p]].WALLDAMAGE){
       aS[cS[p]].DAMAGEFALL.init(p);
       return true;
     }

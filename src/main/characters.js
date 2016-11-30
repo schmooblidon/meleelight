@@ -1,14 +1,19 @@
 /* eslint-disable */
+export const CHARIDS = {
+    MARTH_ID : 0,
+    PUFF_ID : 1,
+    FOX_ID : 2
+};
 
-window.Vec2D = function(x, y) {
+
+export function Vec2D(x, y) {
   this.x = x;
   this.y = y;
-  this.dot = function(vector) {
+  this.dot = function (vector) {
     return this.x * vector.x + this.y * vector.y;
   }
 }
-
-window.Segment2D = function(x, y, vecx, vecy) {
+export function Segment2D(x, y, vecx, vecy) {
   this.x = x;
   this.y = y;
   this.vecx = vecx;
@@ -32,32 +37,43 @@ window.Segment2D = function(x, y, vecx, vecy) {
     return new Vec2D(0, 0);
   }
 }
-
-window.Box2D = function(min, max) {
+export function Box2D(min, max) {
   this.min = new Vec2D(min[0], min[1]);
   this.max = new Vec2D(max[0], max[1]);
 }
+export const offsets = [];
+export function setOffsets(charId,val){
+  offsets[charId] = val;
+}
+export const charAttributes = [];
+export function setCharAttributes(charId,val){
+  charAttributes[charId] = val;
+}
+export const intangibility = [];
+export function setIntangibility(charId,val){
+  intangibility[charId] =val;
+}
+export const framesData = [];
+export function setFrames(charId,val){
+  framesData[charId] = val;
+}
+export const actionSounds = [];
+export function setActionSounds(charId,val){
+  actionSounds[charId] =val;
+}
 
-window.offsets = [];
-window.charAttributes = [];
-window.intangibility = [];
-window.frames = [];
-window.actionSounds = [];
-
-window.charObject = function(num) {
+export function charObject(num) {
   this.attributes = charAttributes[num];
   this.animations = 0;
   this.hitboxes = hitboxes[num];
 }
-
-window.hitboxObject = function(id0, id1, id2, id3) {
+export function createHitboxObject(id0, id1, id2, id3) {
   this.id0 = id0;
   this.id1 = id1;
   this.id2 = id2;
   this.id3 = id3;
 }
-
-window.hitbox = function(offset, size, dmg, angle, kg, bk, sk, type, clank, hG, hA) {
+export function createHitbox(offset, size, dmg, angle, kg, bk, sk, type, clank, hG, hA) {
   this.offset = offset;
   this.size = size;
   this.dmg = dmg;
@@ -71,14 +87,18 @@ window.hitbox = function(offset, size, dmg, angle, kg, bk, sk, type, clank, hG, 
   this.hitGrounded = hG;
   this.hitAirborne = hA;
 }
-
-window.hitboxes = [];
-
-window.chars = [];
+export const hitboxes = [];
+export function setHitBoxes(index,val){
+    hitboxes[index] = val;
+}
+export let chars = [];
+export function setChars(index,val){
+  chars[index] = val;
+}
 
 /*
-char id:
-0 - marth
-1 - jiggs
-2 - fox
-*/
+ char id:
+ 0 - marth
+ 1 - jiggs
+ 2 - fox
+ */

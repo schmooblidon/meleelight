@@ -1,3 +1,7 @@
+import {executeIntangibility, aS} from "physics/actionStateShortcuts";
+import {cS, drawVfx, player} from "main/main";
+import {sounds} from "main/sfx";
+import {framesData} from 'main/characters';
 export default {
   name : "TECHF",
   canEdgeCancel : false,
@@ -18,7 +22,7 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHF){
+    if (player[p].timer > framesData[cS[p]].TECHF){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
