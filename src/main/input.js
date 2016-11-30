@@ -6,27 +6,27 @@ import {
 } from "main/linAlg";
 
 export const button = {
-  a: 0,
-  b: 1,
-  x: 2,
-  y: 3,
-  z: 4,
-  r: 5,
-  l: 6,
-  s: 7, // start
-  du: 8, // d-pad up
-  dr: 9, // d-pad right
-  dd: 10, // d-pad down
-  dl: 11 // d-pad left
+  "a" : 0, 
+  "b" : 1,
+  "x" : 2,
+  "y" : 3,
+  "z" : 4,
+  "r" : 5,
+  "l" : 6,
+  "s" : 7,  // start
+  "du": 8,  // d-pad up
+  "dr": 9,  // d-pad right
+  "dd": 10, // d-pad down
+  "dl": 11  // d-pad left
 }
 
 export const axis = {
-  lsX: 12, // left analog stick left/right
-  lsY: 13, // left analog stick up/down
-  csX: 14, // c-stick left/right
-  csY: 15, // c-stick up/down
-  lA: 16, // L button analog sensor
-  rA: 17 // R button analog sensor
+  "lsX": 12, // left analog stick left/right
+  "lsY": 13, // left analog stick up/down
+  "csX": 14, // c-stick left/right
+  "csY": 15, // c-stick up/down
+  "lA" : 16, // L button analog sensor
+  "rA" : 17  // R button analog sensor
 };
 
 export const keyboardMap = [
@@ -50,6 +50,30 @@ const raphnetV3_2Map = [0, 1, 7, 8, 2, 5, 4, 3, 10, 13, 11, 12, 0, 1, 3, 4, 5, 2
 
 export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map];
 
+
+// Checking gamepad inputs are in allowable range
+
+export function gpdaxis ( gpd, gpdID, ax ) { // gpd.axes[n] but checking axis index is in range
+  let number = controllerMaps[gpdID][axis[ax]];
+  if (number > gpd.axes.length) {
+   return 0;
+  }
+  else {
+    return gpd.axes[number];
+  }
+};
+
+export function gpdbutton ( gpd, gpdID, but ) { // gpd.buttons[n] but checking button index is in range
+  let number = controllerMaps[gpdID][button[but]];
+  if (number > gpd.buttons.length) {
+    return 0;
+  }
+  else {
+    return gpd.buttons[number];
+  }
+};
+
+
 const customCenters = function() {
   this.ls = new Vec2D(0, 0);
   this.cs = new Vec2D(0, 0);
@@ -58,20 +82,6 @@ const customCenters = function() {
 };
 
 export const custcent = [new customCenters, new customCenters, new customCenters, new customCenters];
-
-
-export function checkAllInputs ( gamepad, gamepadIDNumber ) {
-    for (var but in button) {
-      if (gamepad.buttons[controllerMaps[gamepadIDNumber][button.but]] == "null" ) {
-        gamepad.buttons[controllerMaps[gamepadIDNumber][button.but]] = false;
-      }
-    }
-    for (var ax in axis) {
-      if (gamepad.axes[controllerMaps[gamepadIDNumber][axis.ax]] == "null" ) {
-        gamepad.axes[controllerMaps[gamepadIDNumber][axis.ax]] = 0;
-      }
-    }
-};    
 
 
 //--CONTROLLER IDs-------------------------------------
