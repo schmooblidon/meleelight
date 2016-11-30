@@ -120,6 +120,7 @@ export function getAngle (x,y){
   if (x != 0 || y != 0) {
     angle = Math.atan2(y, x);
   }
+  return angle;
 }
 //aC = 180/Math.PI;
 export function turnOffHitboxes (p){
