@@ -1,97 +1,77 @@
-/* globals start */
+let scriptsLoaded = 0;
+const scripts = [{
+  // path: "./js/main.js",
+  path: "https://raw.githubusercontent.com/schmooblidon/meleelight/download/js/main.js",
+  text: "core code",
+  size: 1.8 * 1024 * 1024,
+  loaded: 0,
+}, {
+  // path: "./js/animations.js",
+  path: "https://raw.githubusercontent.com/schmooblidon/meleelight/download/js/animations.js",
+  text: "animations",
+  size: 17.2 * 1024 * 1024,
+  loaded: 0,
+}];
 
-import $ from "jquery";
+const totalSize = scripts.reduce((prev, script) => prev + script.size, 0);
 
-function drawHexagonLoading(r, tX, tY, width) {
-  let a = r * Math.sin(Math.PI / 6);
-  let b = r * Math.cos(Math.PI / 6);
+let screenEl;
+let textEl;
+let percentEl;
 
-  lc.save();
-  lc.translate(tX, tY);
-  lc.beginPath();
-  lc.moveTo(0, r);
-  lc.lineTo(b, r - a);
-  lc.lineTo(b, -r + a);
-  lc.lineTo(0, -r);
-  lc.lineTo(-b, -r + a);
-  lc.lineTo(-b, r - a);
-  lc.lineTo(0, r);
+function loadNextScript() {
+  const script = scripts[scriptsLoaded];
+  updateLoadingText(`Loading ${script.text}`);
 
-  const rs = r - width;
-  a = rs * Math.sin(Math.PI / 6);
-  b = rs * Math.cos(Math.PI / 6);
-  lc.moveTo(0, rs);
-  lc.lineTo(-b, rs - a);
-  lc.lineTo(-b, -rs + a);
-  lc.lineTo(0, -rs);
-  lc.lineTo(b, -rs + a);
-  lc.lineTo(b, rs - a);
-  lc.lineTo(0, rs);
-  lc.closePath();
-  lc.fill();
-  lc.restore();
+  const req = new XMLHttpRequest();
+
+  // Report progress
+  req.addEventListener("progress", (ev) => {
+    script.loaded = ev.loaded;
+    updateLoadingPct(script.loaded / totalSize);
+  });
+
+  // Drop in to a script tag
+  req.addEventListener("load", (ev) => {
+    scriptsLoaded++;
+    script.loaded = script.size;
+
+    const finished = scriptsLoaded >= scripts.length;
+    const scriptTag = document.createElement("script");
+    scriptTag.innerHTML = ev.target.responseText;
+
+    if (finished) {
+      updateLoadingText("Initializing");
+      setTimeout(() => {
+        document.body.appendChild(scriptTag);
+        screenEl.className = "fadeout";
+        window.start();
+        setTimeout(() => {
+          screenEl.remove();
+        }, 300);
+      }, 50);
+    }
+    else {
+      document.body.appendChild(scriptTag);
+      loadNextScript();
+    }
+  });
+
+  req.open("GET", script.path);
+  req.send();
 };
 
-let loading = true;
-const scriptNames = [
-  "./js/main.js",
-  "./js/animations.js",
-];
+function updateLoadingText(text) {
+  textEl.innerHTML = `${text}...`;
+}
 
-const loadText = [
-  "Loading audio",
-  "Loading animations",
-  "Loading characters",
-  "Loading menus",
-  "Loading core"
-];
+function updateLoadingPct(pct) {
+  percentEl.innerHTML = parseInt(pct * 100, 10);
+}
 
-let sNum = 0;
-
-function loadScript() {
-  $.getScript(scriptNames[sNum])
-    .done(() => {
-      if (sNum < scriptNames.length - 1) {
-        sNum++;
-        loadScript();
-      } else {
-        loading = false;
-        start();
-      }
-    })
-    .fail((jqxhr, settings, exception) => {
-      console.error(`Failed to load ${scriptNames[sNum]}`, exception);
-    });
-};
-
-function drawLoading() {
-  lc.clearRect(0, 0, loadCanvas.width, loadCanvas.height);
-  lc.fillStyle = "rgb(143, 228, 255)";
-
-  const part = sNum % 3 + 1;
-  if (part === 1) {
-    drawHexagonLoading(40, 150, 100, 14 * 2);
-  } else if (part === 2) {
-    drawHexagonLoading(60, 150, 100, 14 * 2);
-  } else if (part === 3) {
-    drawHexagonLoading(80, 150, 100, 14 * 2);
-  }
-
-  $("#loadTextEdit").empty().append(loadText[Math.round(sNum / 6.5)]);
-  $("#loadPercentEdit").empty().append(Math.round(((sNum + 1) / scriptNames.length) * 100));
-
-  if (loading) {
-    requestAnimationFrame(drawLoading);
-  } else {
-    $("#loadScreen").fadeOut();
-  }
-};
-
-let loadCanvas;
-let lc;
-$(document).ready(() => {
-  loadCanvas = document.getElementById("loadCanvas");
-  lc = loadCanvas.getContext("2d");
-  drawLoading();
-  loadScript();
+document.addEventListener("DOMContentLoaded", () => {
+  screenEl = document.getElementById("loadScreen");
+  textEl = document.getElementById("loadTextEdit");
+  percentEl = document.getElementById("loadPercentEdit");
+  loadNextScript();
 });
