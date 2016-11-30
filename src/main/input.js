@@ -41,13 +41,14 @@ export const keyboardMap = [
   [109, 219], 71, 78, 66, 86
 ];
 
-const mayflashMap    = [1, 2, 0, 3, 7, 5, 4, 9, 12, 13, 14, 15, 0, 1, 5, 2, 3, 4]; // ID 0, Mayflash Wii U 4-way adapter, NEXILUX adapter
-const vJoyMap        = [0, 1, 2, 3, 4, 5, 6, 7, 8 , 11, 9 , 10, 0, 1, 3, 4, 2, 5]; // ID 1, vJoy
-const raphnetV2_9Map = [4, 3, 2, 1, 7, 6, 5, 0, 8 , 10, 9 , 11, 0, 1, 3, 4, 5, 6]; // ID 2, raphnet v.2.9 N64 adapter
-const xbox360Map     = [0, 2, 1, 3, 5, 7, 6, 9, 12, 15, 13, 14, 0, 1, 2, 3, 6, 7]; // ID 3, XBOX 360 (XInput Standard Gamepad)
-const tigergameMap   = [0, 1, 2, 3, 6, 5, 4, 7, 11, 9 , 10, 8 , 0, 1, 2, 3, 5, 4]; // ID 4, TigerGame 3-in-1 adapter
-const retrolinkMap   = [2, 3, 1, 0, 6, 5, 4, 9, 10, 11, 8 , 7 , 0, 1, 2, 5, 3, 4]; // ID 5, Retrolink adapter
-const raphnetV3_2Map = [0, 1, 7, 8, 2, 5, 4, 3, 10, 13, 11, 12, 0, 1, 3, 4, 5, 2]; // ID 6, Raphnet v 3.2,3.3
+                    //   a  b  x  y  z  r  l  s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
+const mayflashMap    = [ 1, 2, 0, 3, 7, 5, 4, 9, 12, 13, 14, 15,  0,   1,   5,   2,  3,  4  ]; // ID 0, Mayflash Wii U 4-way adapter, NEXILUX adapter
+const vJoyMap        = [ 0, 1, 2, 3, 4, 5, 6, 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 1, vJoy
+const raphnetV2_9Map = [ 4, 3, 2, 1, 7, 6, 5, 0, 8 , 10, 9 , 11,  0,   1,   3,   4,  5,  6  ]; // ID 2, raphnet v.2.9 N64 adapter
+const xbox360Map     = [ 0, 2, 1, 3, 5, 7, 6, 9, 12, 15, 13, 14,  0,   1,   2,   3,  6,  7  ]; // ID 3, XBOX 360 (XInput Standard Gamepad)
+const tigergameMap   = [ 0, 1, 2, 3, 6, 5, 4, 7, 11, 9 , 10, 8 ,  0,   1,   2,   3,  5,  4  ]; // ID 4, TigerGame 3-in-1 adapter
+const retrolinkMap   = [ 2, 3, 1, 0, 6, 5, 4, 9, 10, 11, 8 , 7 ,  0,   1,   2,   5,  3,  4  ]; // ID 5, Retrolink adapter
+const raphnetV3_2Map = [ 0, 1, 7, 8, 2, 5, 4, 3, 10, 13, 11, 12,  0,   1,   3,   4,  5,  2  ]; // ID 6, Raphnet v 3.2,3.3
 
 export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map];
 
