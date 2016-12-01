@@ -16,7 +16,7 @@ import {
     , startTimer
 } from "main/main";
 import {gameSettings} from "settings";
-import {makeColour} from "main/vfx";
+import {makeColour} from "main/vfxutil";
 import {aS} from "physics/actionStateShortcuts";
 /* eslint-disable */
 
@@ -29,30 +29,7 @@ export function rotateVector(vecx, vecy, ang) {
         vecx * Math.cos(ang) - vecy * Math.sin(ang),
         vecx * Math.sin(ang) + vecy * Math.cos(ang));
 }
-export function drawArrayPathNew (can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
-    can.save();
-    can.translate(tX - rpX, tY - rpY);
-    can.rotate(rotate);
-    for (var j = 0; j < path.length; j++) {
-        var x = (path[j][0] * scaleX * face) + rpX;
-        var y = (path[j][1] * scaleY) + rpY;
-        if (j == 0) {
-            can.fillStyle = col;
-            can.beginPath();
-            can.moveTo(x, y);
-        } else {
-            if (path[j].length == 2) {
-                can.moveTo(x, y);
-            } else {
-                can.bezierCurveTo(x, y, (path[j][2] * scaleX * face) + rpX, (path[j][3] * scaleY) + rpY, (path[j][4] * scaleX *
-                    face) + rpX, (path[j][5] * scaleY) + rpY);
-            }
-        }
-    }
-    can.closePath();
-    can.fill();
-    can.restore();
-}
+
 export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
     can.save();
     can.translate(tX - rpX, tY - rpY);
@@ -79,21 +56,6 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
 }
 
 
-export function drawArrayPath(can, col, face, tX, tY, path, scaleX, scaleY) {
-  for (var j = 0; j < path.length; j++) {
-    var x = (path[j][0] * scaleX * face) + tX;
-    var y = (path[j][1] * scaleY) + tY;
-    if (j == 0) {
-      can.fillStyle = col;
-      can.beginPath();
-      can.moveTo(x, y);
-    } else {
-      can.lineTo(x, y);
-    }
-  }
-  can.closePath();
-  can.fill();
-}
 
 export function renderPlayer(i) {
     var temX = (player[i].phys.pos.x * stage.scale) + stage.offset[0];

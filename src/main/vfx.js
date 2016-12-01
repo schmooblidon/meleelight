@@ -1,9 +1,9 @@
 /* eslint-disable */
 import {stage, vfxQueue, player, drawVfx, startTimer,fg2} from "main/main";
-import {drawArrayPath, drawArrayPathNew} from "main/render";
 import {Vec2D} from "main/characters";
 import {swordSwings} from "main/swordSwings";
 import {sounds} from "main/sfx";
+import {makeColour,drawArrayPath,drawArrayPathNew} from "main/vfxutil";
 const twoPi = Math.PI * 2;
 
 export const vfx = {
@@ -222,12 +222,6 @@ vfx.ceilingBounce.path = vfx.groundBounce.path;
 vfx.ceilingBounce.colour = vfx.groundBounce.colour;
 vfx.ceilingBounce.frames = vfx.groundBounce.frames;
 
-export let transparency = true;
-
-
-export function setTransparency(val){
-  transparency = val;
-}
 
 
 export const dVfx = {
@@ -1129,15 +1123,7 @@ function singGen (j, rMin, rMax, notePhase, posScale, posPhase){
     fg2.restore();
   };
 
-export function makeColour (r,g,b,a){
-    // maybe some hsl too
-    if (transparency){
-        return "rgba("+r+","+g+","+b+","+a+")";
-    }
-    else {
-        return "rgb("+r+","+g+","+b+")";
-    }
-}
+
 export function drawHexagon (r,tX,tY,width){
   fg2.save();
   fg2.translate(tX, tY);

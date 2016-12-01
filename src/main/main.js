@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {Vec2D,Box2D,framesData} from "main/characters";
+import {Vec2D,Box2D} from "main/characters";
 import {choosingTag, drawCSSInit, cssControls, drawCSS} from 'menus/css';
 import {playerObject} from 'main/player';
 import {keyMap} from 'settings';
@@ -14,7 +14,7 @@ import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGamepla
 import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
 import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
-import {vfx, dVfx, setTransparency, transparency} from "main/vfx";
+import {vfx, dVfx} from "main/vfx";
 import {aS} from "physics/actionStateShortcuts";
 import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
 import {
@@ -28,7 +28,8 @@ import {stages} from "stages/stages";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, scaleToGCTrigger, custcent} from "main/input";
+import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, button, gpdaxis, gpdbutton, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, scaleToGCTrigger, custcent} from "main/input";
+import {toggleTransparency,getTransparency} from "main/vfxutil";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -1580,12 +1581,12 @@ export function start (){
   });
 
   $("#alphaButton").click(function() {
-    if (transparency) {
+    if (getTransparency()) {
       $("#alphaButtonEdit").empty().append("OFF");
     } else {
       $("#alphaButtonEdit").empty().append("ON");
     }
-      setTransparency(!transparency);
+      toggleTransparency();
   });
 
   $("#layerButton").hover(function() {

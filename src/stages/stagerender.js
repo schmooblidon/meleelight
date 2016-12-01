@@ -1,8 +1,9 @@
-import {transparency} from "main/vfx";
+import {getTransparency} from "main/vfxutil";
 import {Vec2D} from "main/characters";
 import {bg1, bg2, fg1, fg2, stage, layers} from "main/main";
 import {targetDestroyed} from "target/targetplay";
 import {rotateVector, twoPi} from "main/render";
+
 /* eslint-disable */
 
 const bgPos = [[-30, 500, 300, 500, 900, 500, 1230, 450, 358], [-30, 400, 300, 400, 900, 400, 1230, 350, 179]];
@@ -127,7 +128,7 @@ export function setBackgroundType(val) {
 export function bgStar() {
     var vSeed = Math.random();
     this.velocity = new Vec2D(5 * vSeed * Math.sign(0.5 - Math.random()), 5 * (1 - vSeed) * Math.sign(0.5 - Math.random()));
-    if (transparency) {
+    if (getTransparency()) {
         this.colour = "hsl(" + 358 * Math.random() + ", 100%, 50%)";
     }
     else {
@@ -202,7 +203,7 @@ export function drawStars() {
 
         if (bgSparkle == 0) {
             bg2.fillStyle = bgStars[p].colour;
-            if (transparency) {
+            if (getTransparency()) {
                 bg2.globalAlpha = Math.min(bgStars[p].life / 300, 1);
             }
             bg2.beginPath();
@@ -275,7 +276,7 @@ export function drawStars() {
                     break;
             }
         }
-        if (transparency) {
+        if (getTransparency()) {
             boxFill = "hsla(" + bgPos[k][8] + ", 100%, 50%, " + (0.15 - k * 0.07) + ")";
         }
         else {
