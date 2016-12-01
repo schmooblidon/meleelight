@@ -556,10 +556,35 @@ export const removePlayer (i){
   playerAmount--;
 }*/
 
+function copyInputs(i){ // inputs should be put in an object instead of being dealt with one by one
+  for (var j = 0; j < 7; j++) {
+    player[i].inputs.lStickAxis[7 - j].x = player[i].inputs.lStickAxis[6 - j].x;
+    player[i].inputs.lStickAxis[7 - j].y = player[i].inputs.lStickAxis[6 - j].y;
+    player[i].inputs.rawlStickAxis[7 - j].x = player[i].inputs.rawlStickAxis[6 - j].x;
+    player[i].inputs.rawlStickAxis[7 - j].y = player[i].inputs.rawlStickAxis[6 - j].y;
+    player[i].inputs.cStickAxis[7 - j].x = player[i].inputs.cStickAxis[6 - j].x;
+    player[i].inputs.cStickAxis[7 - j].y = player[i].inputs.cStickAxis[6 - j].y;
+    player[i].inputs.lAnalog[7 - j] = player[i].inputs.lAnalog[6 - j];
+    player[i].inputs.rAnalog[7 - j] = player[i].inputs.rAnalog[6 - j];
+    player[i].inputs.s[7 - j] = player[i].inputs.s[6 - j];
+    player[i].inputs.z[7 - j] = player[i].inputs.z[6 - j];
+    player[i].inputs.a[7 - j] = player[i].inputs.a[6 - j];
+    player[i].inputs.b[7 - j] = player[i].inputs.b[6 - j];
+    player[i].inputs.x[7 - j] = player[i].inputs.x[6 - j];
+    player[i].inputs.y[7 - j] = player[i].inputs.y[6 - j];
+    player[i].inputs.r[7 - j] = player[i].inputs.r[6 - j];
+    player[i].inputs.l[7 - j] = player[i].inputs.l[6 - j];
+    player[i].inputs.dpadleft[7 - j] = player[i].inputs.dpadleft[6 - j];
+    player[i].inputs.dpaddown[7 - j] = player[i].inputs.dpaddown[6 - j];
+    player[i].inputs.dpadright[7 - j] = player[i].inputs.dpadright[6 - j];
+    player[i].inputs.dpadup[7 - j] = player[i].inputs.dpadup[6 - j];
+    }
+};
+
+
 window.interpretInputs = function(i, active) {
   pause[i][1] = pause[i][0];
   frameAdvance[i][1] = frameAdvance[i][0];
-
 
   if (mType[i] == 10) { // keyboard controls
     let stickR = 1;
@@ -622,28 +647,7 @@ window.interpretInputs = function(i, active) {
     frameByFrame = true;
     }
     if (active) {
-      for (var j = 0; j < 7; j++) {
-        player[i].inputs.lStickAxis[7 - j].x = player[i].inputs.lStickAxis[6 - j].x;
-        player[i].inputs.lStickAxis[7 - j].y = player[i].inputs.lStickAxis[6 - j].y;
-        player[i].inputs.rawlStickAxis[7 - j].x = player[i].inputs.rawlStickAxis[6 - j].x;
-        player[i].inputs.rawlStickAxis[7 - j].y = player[i].inputs.rawlStickAxis[6 - j].y;
-        player[i].inputs.cStickAxis[7 - j].x = player[i].inputs.cStickAxis[6 - j].x;
-        player[i].inputs.cStickAxis[7 - j].y = player[i].inputs.cStickAxis[6 - j].y;
-        player[i].inputs.lAnalog[7 - j] = player[i].inputs.lAnalog[6 - j];
-        player[i].inputs.rAnalog[7 - j] = player[i].inputs.rAnalog[6 - j];
-        player[i].inputs.s[7 - j] = player[i].inputs.s[6 - j];
-        player[i].inputs.z[7 - j] = player[i].inputs.z[6 - j];
-        player[i].inputs.a[7 - j] = player[i].inputs.a[6 - j];
-        player[i].inputs.b[7 - j] = player[i].inputs.b[6 - j];
-        player[i].inputs.x[7 - j] = player[i].inputs.x[6 - j];
-        player[i].inputs.y[7 - j] = player[i].inputs.y[6 - j];
-        player[i].inputs.r[7 - j] = player[i].inputs.r[6 - j];
-        player[i].inputs.l[7 - j] = player[i].inputs.l[6 - j];
-        player[i].inputs.dpadleft[7 - j] = player[i].inputs.dpadleft[6 - j];
-        player[i].inputs.dpaddown[7 - j] = player[i].inputs.dpaddown[6 - j];
-        player[i].inputs.dpadright[7 - j] = player[i].inputs.dpadright[6 - j];
-        player[i].inputs.dpadup[7 - j] = player[i].inputs.dpadup[6 - j];
-      }
+      copyInputs(i);
       player[i].inputs.lStickAxis[0].x = lstickX;
       player[i].inputs.lStickAxis[0].y = lstickY;
       player[i].inputs.cStickAxis[0].x = cstickX;
@@ -675,6 +679,7 @@ window.interpretInputs = function(i, active) {
           player[i].inputs.a[0] = true;
         }
       }
+      
       if (player[i].inputs.dpadleft[0] && !player[i].inputs.dpadleft[1]) {
        player[i].showLedgeGrabBox ^= true;
       }
@@ -695,7 +700,7 @@ window.interpretInputs = function(i, active) {
       }
     }
     
-    sharedInterpretInputs(i);
+    interpretPause(i);
     
     if (showDebug) {
     $("#lsAxisX" + i).empty().append(lstickX.toFixed(5));
@@ -771,7 +776,7 @@ window.interpretInputs = function(i, active) {
     } else {
       pause[i][0] = false
     }
-    if (buttonData("z").pressed) {
+    if (buttonData("z").pressed ) {
       frameAdvance[i][0] = true;
     } else {
       frameAdvance[i][0] = false
@@ -804,28 +809,7 @@ window.interpretInputs = function(i, active) {
       //----------------------------------------------------------------
       
 
-      for (var j = 0; j < 7; j++) {
-        player[i].inputs.lStickAxis[7 - j].x = player[i].inputs.lStickAxis[6 - j].x;
-        player[i].inputs.lStickAxis[7 - j].y = player[i].inputs.lStickAxis[6 - j].y;
-        player[i].inputs.rawlStickAxis[7 - j].x = player[i].inputs.rawlStickAxis[6 - j].x;
-        player[i].inputs.rawlStickAxis[7 - j].y = player[i].inputs.rawlStickAxis[6 - j].y;
-        player[i].inputs.cStickAxis[7 - j].x = player[i].inputs.cStickAxis[6 - j].x;
-        player[i].inputs.cStickAxis[7 - j].y = player[i].inputs.cStickAxis[6 - j].y;
-        player[i].inputs.lAnalog[7 - j] = player[i].inputs.lAnalog[6 - j];
-        player[i].inputs.rAnalog[7 - j] = player[i].inputs.rAnalog[6 - j];
-        player[i].inputs.s[7 - j] = player[i].inputs.s[6 - j];
-        player[i].inputs.z[7 - j] = player[i].inputs.z[6 - j];
-        player[i].inputs.a[7 - j] = player[i].inputs.a[6 - j];
-        player[i].inputs.b[7 - j] = player[i].inputs.b[6 - j];
-        player[i].inputs.x[7 - j] = player[i].inputs.x[6 - j];
-        player[i].inputs.y[7 - j] = player[i].inputs.y[6 - j];
-        player[i].inputs.r[7 - j] = player[i].inputs.r[6 - j];
-        player[i].inputs.l[7 - j] = player[i].inputs.l[6 - j];
-        player[i].inputs.dpadleft[7 - j] = player[i].inputs.dpadleft[6 - j];
-        player[i].inputs.dpaddown[7 - j] = player[i].inputs.dpaddown[6 - j];
-        player[i].inputs.dpadright[7 - j] = player[i].inputs.dpadright[6 - j];
-        player[i].inputs.dpadup[7 - j] = player[i].inputs.dpadup[6 - j];
-      }
+      copyInputs(i);
       player[i].inputs.lStickAxis[0].x = lstickX;
       player[i].inputs.lStickAxis[0].y = lstickY;
       player[i].inputs.cStickAxis[0].x = cstickX;
@@ -906,7 +890,7 @@ window.interpretInputs = function(i, active) {
       }, 2000);
     }
     
-    sharedInterpretInputs(i);
+    interpretPause(i);
     
     for (var j = 0; j < 12; j++) {
       var bNum = j;
@@ -940,7 +924,7 @@ window.interpretInputs = function(i, active) {
   }
 };
   
-function sharedInterpretInputs(i) {  
+function interpretPause(i) {  
   if (pause[i][0] && !pause[i][1]) {
     if (gameMode == 3 || gameMode == 5) {
       playing ^= true;
