@@ -782,7 +782,7 @@ window.interpretInputs = function(i, active) {
       frameAdvance[i][0] = false
     }
     
-    if (frameAdvance[i][0] && !frameAdvance[i][1]) {
+    if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing) {
     frameByFrame = true;
     }
     
