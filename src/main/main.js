@@ -604,9 +604,9 @@ window.interpretInputs = function(i, active) {
       keyMap.lstick.down[1]]) ? 0 : stickU) : ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? -
       stickD : 0);
 
-    var lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? keyMap.shoulders.ranges[
+    let lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? keyMap.shoulders.ranges[
       0] : 0;
-    var rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? keyMap.shoulders.ranges[
+    let rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? keyMap.shoulders.ranges[
       1] : 0;
     if (gameMode == 3 || gameMode == 5) {
       for (var j = 0; j < 5; j++) {
@@ -721,13 +721,13 @@ window.interpretInputs = function(i, active) {
       return gpdbutton (gamepad, mType[i], but);
     };
 
-    var lsticks = scaleToMeleeAxes ( axisData("lsX"),  // x-axis data
+    let lsticks = scaleToMeleeAxes ( axisData("lsX"),  // x-axis data
                                      axisData("lsY"), // y-axis data
                                      mType[i],
                                      true, // true: deadzones
                                      custcent[i].ls.x, // x-axis "custom center" offset
                                      custcent[i].ls.y); // y-axis "custom center" offset
-    var csticks = scaleToMeleeAxes ( axisData("csX"),
+    let csticks = scaleToMeleeAxes ( axisData("csX"),
                                      axisData("csY"),
                                      mType[i],
                                      true,
@@ -739,10 +739,10 @@ window.interpretInputs = function(i, active) {
                                     mType[i],
                                     custcent[i].ls.x,
                                     custcent[i].ls.y);
-    var lstickX = lsticks[0];
-    var lstickY = lsticks[1];
-    var cstickX = csticks[0];
-    var cstickY = csticks[1];
+    let lstickX = lsticks[0];
+    let lstickY = lsticks[1];
+    let cstickX = csticks[0];
+    let cstickY = csticks[1];
 
     //----------------------------------------------------------------
     //-- Below: should be moved to inputs.js
@@ -752,20 +752,20 @@ window.interpretInputs = function(i, active) {
       //-custcent[i].l
       //-custcent[i].r
       // FOR XBOX CONTROLLERS
-      var lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[i].l, 1); // shifted by +0.2
-      var rAnalog = scaleToGCTrigger(buttonData("r").value, 0.2-custcent[i].r, 1); // shifted by +0.2
+      let lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[i].l, 1); // shifted by +0.2
+      let rAnalog = scaleToGCTrigger(buttonData("r").value, 0.2-custcent[i].r, 1); // shifted by +0.2
     }
     else if (mType[i] == 2){
-      var lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[i].l, -0.6); // shifted by +0.867, flipped
-      var rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[i].r, -0.6); // shifted by +0.867, flipped
+      let lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[i].l, -0.6); // shifted by +0.867, flipped
+      let rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[i].r, -0.6); // shifted by +0.867, flipped
     }
     else if (mType[i] == 7) { //Brook adapter has no L/R analog information, just light presses
-      var lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
-      var rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
+      let lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
+      let rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
     }
     else {
-      var lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[i].l, 0.6); // shifted by +0.867
-      var rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[i].r, 0.6); // shifted by +0.867
+      let lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[i].l, 0.6); // shifted by +0.867
+      let rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[i].r, 0.6); // shifted by +0.867
     }
     
     //-- Above: should be moved to inputs.js
