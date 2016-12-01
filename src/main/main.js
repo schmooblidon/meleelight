@@ -559,11 +559,8 @@ export const removePlayer (i){
 window.interpretInputs = function(i, active) {
   pause[i][1] = pause[i][0];
   frameAdvance[i][1] = frameAdvance[i][0];
-  
-  if (frameAdvance[i][0] && !frameAdvance[i][1]) {
-      frameByFrame = true;
-  }
-  
+
+
   if (mType[i] == 10) { // keyboard controls
     let stickR = 1;
     let stickL = 1;
@@ -620,6 +617,9 @@ window.interpretInputs = function(i, active) {
       frameAdvance[i][0] = true;
     } else {
       frameAdvance[i][0] = false
+    }
+    if (frameAdvance[i][0] && !frameAdvance[i][1]) {
+    frameByFrame = true;
     }
     if (active) {
       for (var j = 0; j < 7; j++) {
@@ -777,6 +777,10 @@ window.interpretInputs = function(i, active) {
       frameAdvance[i][0] = false
     }
     
+    if (frameAdvance[i][0] && !frameAdvance[i][1]) {
+    frameByFrame = true;
+    }
+    
     if (active) {
       
       //----------------------------------------------------------------
@@ -799,10 +803,7 @@ window.interpretInputs = function(i, active) {
       //-- Above: should be moved to inputs.js
       //----------------------------------------------------------------
       
-      player[i].inputs.dpadleft[0]  = buttonData("dl").pressed;
-      player[i].inputs.dpaddown[0]  = buttonData("dd").pressed;
-      player[i].inputs.dpadright[0] = buttonData("dr").pressed;
-      player[i].inputs.dpadup[0]    = buttonData("du").pressed;
+
       for (var j = 0; j < 7; j++) {
         player[i].inputs.lStickAxis[7 - j].x = player[i].inputs.lStickAxis[6 - j].x;
         player[i].inputs.lStickAxis[7 - j].y = player[i].inputs.lStickAxis[6 - j].y;
@@ -836,6 +837,10 @@ window.interpretInputs = function(i, active) {
       player[i].inputs.a[0] = buttonData("a").pressed;
       player[i].inputs.b[0] = buttonData("b").pressed;
       player[i].inputs.y[0] = buttonData("y").pressed;
+      player[i].inputs.dpadleft[0]  = buttonData("dl").pressed;
+      player[i].inputs.dpaddown[0]  = buttonData("dd").pressed;
+      player[i].inputs.dpadright[0] = buttonData("dr").pressed;
+      player[i].inputs.dpadup[0]    = buttonData("du").pressed;
       
       if (player[i].inputs.l[0]) {
         player[i].inputs.lAnalog[0] = 1;
