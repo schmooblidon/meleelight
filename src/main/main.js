@@ -824,21 +824,23 @@ window.interpretInputs = function(i, active) {
       player[i].inputs.a[0] = buttonData("a").pressed;
       player[i].inputs.b[0] = buttonData("b").pressed;
       player[i].inputs.y[0] = buttonData("y").pressed;
-      player[i].inputs.dpadleft[0]  = buttonData("dl").pressed;
-      player[i].inputs.dpaddown[0]  = buttonData("dd").pressed;
-      player[i].inputs.dpadright[0] = buttonData("dr").pressed;
-      player[i].inputs.dpadup[0]    = buttonData("du").pressed;
 
       //----------------------------------------------------------------
       //-- Below: should be moved to inputs.js
-      /*
+
       if (mType[i] == 9) { // Rock Candy controller, parameters to be confirmed
         player[i].inputs.dpadleft[0]  = gamepad.axes[6] < -0.5 ? true : false;
         player[i].inputs.dpadright[0] = gamepad.axes[6] >  0.5 ? true : false;
         player[i].inputs.dpaddown[0]  = gamepad.axes[7] >  0.5 ? true : false;
         player[i].inputs.dpadup[0]    = gamepad.axes[7] < -0.5 ? true : false;
       }
-      */
+      else {
+        player[i].inputs.dpadleft[0]  = buttonData("dl").pressed;
+        player[i].inputs.dpaddown[0]  = buttonData("dd").pressed;
+        player[i].inputs.dpadright[0] = buttonData("dr").pressed;
+        player[i].inputs.dpadup[0]    = buttonData("du").pressed;
+      }
+
       //-- Above: should be moved to inputs.js
       //----------------------------------------------------------------
       
