@@ -54,3 +54,4 @@ yarn-error.log*
 # Built files
 dist/js
 .tmp
+.happypack
