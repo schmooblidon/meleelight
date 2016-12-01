@@ -738,10 +738,16 @@ window.interpretInputs = function(i, active) {
       player[i].inputs.y[0] = buttonData(gamepad,"y").pressed;
       if (mType[i] == 3) {
         // FOR XBOX CONTROLLERS
-        player[i].inputs.r[0] = buttonData(gamepad,"r").value == 1 ? true : false;
-        player[i].inputs.l[0] = buttonData(gamepad,"l").value == 1 ? true : false;
+        player[i].inputs.r[0] = buttonData(gamepad,"r").value > 0.95 ? true : false;
+        player[i].inputs.l[0] = buttonData(gamepad,"l").value > 0.95 ? true : false;
 
         // 4 is lB, 5 is RB
+        if (gamepad.buttons[4].pressed) {
+          player[i].inputs.l[0] = true;
+        }
+      } else if (mType[i] == 9) { // Rock Candy controller
+        player[i].inputs.r[0] = axisData(gamepad,"rA").value > 0.95 ? true : false;
+        player[i].inputs.l[0] = axisData(gamepad,"lA").value > 0.95 ? true : false;
         if (gamepad.buttons[4].pressed) {
           player[i].inputs.l[0] = true;
         }
@@ -749,10 +755,18 @@ window.interpretInputs = function(i, active) {
         player[i].inputs.r[0] = buttonData(gamepad,"r").pressed;
         player[i].inputs.l[0] = buttonData(gamepad,"l").pressed;
       }
-      player[i].inputs.dpadleft[0]  = buttonData(gamepad,"dl").pressed;
-      player[i].inputs.dpaddown[0]  = buttonData(gamepad,"dd").pressed;
-      player[i].inputs.dpadright[0] = buttonData(gamepad,"dr").pressed;
-      player[i].inputs.dpadup[0]    = buttonData(gamepad,"du").pressed;
+      if (mType[i] == 9) { // Rock Candy controller, parameters to be confirmed
+        player[i].inputs.dpadleft[0]  = gamepad.axes[6] < -0.5 ? true : false;
+        player[i].inputs.dpadright[0] = gamepad.axes[6] >  0.5 ? true : false;
+        player[i].inputs.dpaddown[0]  = gamepad.axes[7] >  0.5 ? true : false;
+        player[i].inputs.dpadup[0]    = gamepad.axes[7] < -0.5 ? true : false;
+      }
+      else {
+        player[i].inputs.dpadleft[0]  = buttonData(gamepad,"dl").pressed;
+        player[i].inputs.dpaddown[0]  = buttonData(gamepad,"dd").pressed;
+        player[i].inputs.dpadright[0] = buttonData(gamepad,"dr").pressed;
+        player[i].inputs.dpadup[0]    = buttonData(gamepad,"du").pressed;
+      }
     }
 
     if (!frameByFrame) {
