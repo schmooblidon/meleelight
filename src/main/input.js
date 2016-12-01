@@ -45,15 +45,18 @@ export const keyboardMap = [
 const mayflashMap    = [ 1, 2, 0, 3, 7, 5 , 4 , 9, 12, 13, 14, 15,  0,   1,   5,   2,  3,  4  ]; // ID 0, Mayflash Wii U 4-way adapter, NEXILUX adapter
 const vJoyMap        = [ 0, 1, 2, 3, 4, 5 , 6 , 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 1, vJoy
 const raphnetV2_9Map = [ 4, 3, 2, 1, 7, 6 , 5 , 0, 8 , 10, 9 , 11,  0,   1,   3,   4,  5,  6  ]; // ID 2, raphnet v.2.9 N64 adapter
-const xbox360Map     = [ 0, 2, 1, 3, 5, 7 , 6 , 9, 12, 15, 13, 14,  0,   1,   2,   3,  6,  7  ]; // ID 3, XBOX 360 (XInput Standard Gamepad)
+const xbox360Map     = [ 0, 1, 2, 3, 5, 7 , 6 , 9, 12, 15, 13, 14,  0,   1,   2,   3,  6,  7  ]; // ID 3, Xbox 360 (XInput Standard Gamepad)
 const tigergameMap   = [ 0, 1, 2, 3, 6, 5 , 4 , 7, 11, 9 , 10, 8 ,  0,   1,   2,   3,  5,  4  ]; // ID 4, TigerGame 3-in-1 adapter
 const retrolinkMap   = [ 2, 3, 1, 0, 6, 5 , 4 , 9, 10, 11, 8 , 7 ,  0,   1,   2,   5,  3,  4  ]; // ID 5, Retrolink adapter
 const raphnetV3_2Map = [ 0, 1, 7, 8, 2, 5 , 4 , 3, 10, 13, 11, 12,  0,   1,   3,   4,  5,  2  ]; // ID 6, Raphnet v 3.2,3.3
 const brookMap       = [ 0, 1, 2, 3, 4, 10, 11, 8, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 7, Brook adapter (d-pad values might be wrong, user had broken d-pad)
-const ps4Map         = [ 1, 0, 2, 3, 5, 7 ,  6, 9, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 8, PS4 controller
+const ps4Map         = [ 1, 0, 2, 3, 5, 7 , 6 , 9, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 8, PS4 controller
+const rockx360Map    = [ 0, 1, 2, 3, 5, 4 , 4 , 7, 12, 15, 13, 14,  0,   6,   1,   3,  4,  8  ]; // ID 9, Rock Candy Xbox 360 controller (d-pad are axes not buttons)
+                    //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
+// ID number 10 reserved for keyboard
 
-export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map];
 
+export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map, rockx360Map];
 
 // Checking gamepad inputs are well defined
 export function gpdaxis ( gpd, gpdID, ax ) { // gpd.axes[n] but checking axis index is in range
@@ -155,30 +158,37 @@ controllerIDMap.set("0e8f-0003", 7);
 controllerIDMap.set("Wireless Controller", 8); // should check ID and vendor...
 controllerIDMap.set("054c-05c4", 8);
 
+// ID 9, Rock Candy Xbox 360 controller
+controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 360", 8);
+controllerIDMap.set("0e6f-011f", 8);
+
 //--END OF CONTROLLER IDs-------------------------------------
     
 
 export function controllerNameFromIDnumber(number) {
-  if (number === 0) {
-    return "Mayflash Wii-U adapter";
-  } else if (number === 1) {
-    return "vJoy";
-  } else if (number === 2) {
-    return "raphnet v2.9 N64 adapter";
-  } else if (number === 3) {
-    return "XBOX 360 compatible controller";
-  } else if (number === 4) {
-    return "TigerGame 3-in-1";
-  } else if (number === 5) {
-    return "Retrolink adapter";
-  } else if (number === 6) {
-    return "raphnet v3.2+ N64 adapter";
-  } else if (number === 7) {
-    return "Brook adapter";
-  } else if (number === 8) {
-    return "PS4 controller";
-  } else {
-    return "error: controller detected but not supported";
+  switch (number) {
+    case 0:
+      return "Mayflash Wii-U adapter";
+    case 1:
+      return "vJoy";
+    case 2:
+      return "raphnet v2.9 N64 adapter";
+    case 3:
+      return "Xbox 360 compatible controller";
+    case 4:
+      return "TigerGame 3-in-1";
+    case 5:
+      return "Retrolink adapter";
+    case 6:
+      return "raphnet v3.2+ N64 adapter";
+    case 7:
+      return "Brook adapter";
+    case 8:
+      return "PS4 controller";
+    case 9:
+      return "Xbox 360 (Rock Candy) controller";
+    default:
+      return "error: controller detected but not supported";
   }
 };
 
@@ -191,14 +201,13 @@ function fromCardinals([origx, origy], l, r, d,u) {
 // of course, this varies between controllers, but this serves as a useful first approximation
 // function output: [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]]
 function axisDataFromIDNumber(number) {
-  if (number === 4) { // TigerGame 3-in-1
-    return ( fromCardinals ( [0, 0], -0.7, 0.85, 0.7, -0.85) );
-  }
-  else if (number === 8) { // PS4 controller
-    return ( fromCardinals ( [0, 0], -1, 1, 1, -1) );
-  }
-  else {
-    return ( fromCardinals ( [0, 0], -0.75, 0.75, 0.75, -0.75) ); // default
+  switch (number) {
+    case 4 : // TigerGame 3-in-1
+      return ( fromCardinals ( [0, 0], -0.7, 0.85, 0.7, -0.85) );
+    case 8: // PS4 controller
+      return ( fromCardinals ( [0, 0], -1, 1, 1, -1) );
+    default:
+      return ( fromCardinals ( [0, 0], -0.75, 0.75, 0.75, -0.75) );
   }
 };
 
@@ -219,7 +228,7 @@ export function controllerIDNumberFromGamepadID(gamepadID) {
 // so that corners (l = left, r = right, d=down, u=up) are mapped to the respective corners of the unit square.
 // This function assumes that ALL coordinates have already been centered.
 // Return type: [xnew,ynew]
-export function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x, y]) {
+function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x, y]) {
   if ((x * ry - y * rx <= 0) && (x * uy - y * ux >= 0)) // quadrant 1
   {
     let invMat = inverseMatrix([
@@ -299,7 +308,7 @@ function discretise (x, min, orig, max) {
 // Analog sticks.
 
 // Rescales controller input to -1 -- 0 -- 1 in both axes
-function scaleToUnitAxes ( x,y, number, customCenterX, customCenterY ) { // number = gamepad ID number
+export function scaleToUnitAxes ( x,y, number, customCenterX, customCenterY ) { // number = gamepad ID number
     let [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]] = axisDataFromIDNumber(number);
     origx += customCenterX;
     origy += customCenterY;

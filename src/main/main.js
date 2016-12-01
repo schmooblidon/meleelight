@@ -28,7 +28,7 @@ import {stages} from "stages/stages";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToMeleeAxes, scaleToGCTrigger, custcent} from "main/input";
+import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, scaleToGCTrigger, custcent} from "main/input";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -565,7 +565,6 @@ window.interpretInputs = function(i, active) {
   function buttonData (gpd, but) {
     return gpdbutton (gpd, mType[i], but);
   };
-
   if (mType[i] == 10) {
     // keyboard controls
     var stickR = 1;
@@ -629,12 +628,11 @@ window.interpretInputs = function(i, active) {
                                      custcent[i].cs.x,
                                      custcent[i].cs.y);
     [player[i].inputs.rawlStickAxis[0].x,player[i].inputs.rawlStickAxis[0].y] =
-                  scaleToMeleeAxes ( axisData(gamepad,"lsX"),
-                                     axisData(gamepad,"lsY"),
-                                     mType[i],
-                                     false, // false: no deadzones
-                                     custcent[i].ls.x,
-                                     custcent[i].ls.y);
+                  scaleToUnitAxes ( axisData(gamepad,"lsX"),
+                                    axisData(gamepad,"lsY"),
+                                    mType[i],
+                                    custcent[i].ls.x,
+                                    custcent[i].ls.y);
     var lstickX = lsticks[0];
     var lstickY = lsticks[1];
     var cstickX = csticks[0];
