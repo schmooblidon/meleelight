@@ -169,24 +169,34 @@ export function controllerNameFromIDnumber(number) {
   switch (number) {
     case 0:
       return "Mayflash Wii-U adapter";
+      break;
     case 1:
       return "vJoy";
+      break;
     case 2:
       return "raphnet v2.9 N64 adapter";
+      break;
     case 3:
       return "Xbox 360 compatible controller";
+      break;
     case 4:
       return "TigerGame 3-in-1";
+      break;
     case 5:
       return "Retrolink adapter";
+      break;
     case 6:
       return "raphnet v3.2+ N64 adapter";
+      break;
     case 7:
       return "Brook adapter";
+      break;
     case 8:
       return "PS4 controller";
+      break;
     case 9:
       return "Xbox 360 (Rock Candy) controller";
+      break;
     default:
       return "error: controller detected but not supported";
   }
@@ -204,8 +214,12 @@ function axisDataFromIDNumber(number) {
   switch (number) {
     case 4 : // TigerGame 3-in-1
       return ( fromCardinals ( [0, 0], -0.7, 0.85, 0.7, -0.85) );
-    case 8: // PS4 controller
+      break;
+    case 3: // XInput controllers
+    case 8: // PS4 controller    
+    case 9: // Rock Candy Xbox 360 controller
       return ( fromCardinals ( [0, 0], -1, 1, 1, -1) );
+      break;
     default:
       return ( fromCardinals ( [0, 0], -0.75, 0.75, 0.75, -0.75) );
   }

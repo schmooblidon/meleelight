@@ -643,20 +643,20 @@ window.interpretInputs = function(i, active) {
       //-custcent[i].l
       //-custcent[i].r
       // FOR XBOX CONTROLLERS
-      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA").value, 0.2-custcent[i].l, 1); // shifted by +0.2
-      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA").value, 0.2-custcent[i].r, 1); // shifted by +0.2
+      var lAnalog = scaleToGCTrigger(buttonData(gamepad,"l").value, 0.2-custcent[i].l, 1); // shifted by +0.2
+      var rAnalog = scaleToGCTrigger(buttonData(gamepad,"r").value, 0.2-custcent[i].r, 1); // shifted by +0.2
     }
     else if (mType[i] == 2){
-      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, -1); // shifted by +0.867, flipped
-      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, -1); // shifted by +0.867, flipped
+      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, -0.6); // shifted by +0.867, flipped
+      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, -0.6); // shifted by +0.867, flipped
     }
     else if (mType[i] == 7) { //Brook adapter has no L/R analog information, just light presses
       var lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
       var rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
     }
     else {
-      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, 1); // shifted by +0.867
-      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, 1); // shifted by +0.867
+      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, 0.6); // shifted by +0.867
+      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, 0.6); // shifted by +0.867
     }
   }
 
