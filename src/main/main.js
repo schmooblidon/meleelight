@@ -788,6 +788,8 @@ window.interpretInputs = function(i, active) {
     
     if (active) {
       
+      copyInputs(i);
+      
       //----------------------------------------------------------------
       //-- Below: should be moved to inputs.js
       
@@ -808,8 +810,6 @@ window.interpretInputs = function(i, active) {
       //-- Above: should be moved to inputs.js
       //----------------------------------------------------------------
       
-
-      copyInputs(i);
       player[i].inputs.lStickAxis[0].x = lstickX;
       player[i].inputs.lStickAxis[0].y = lstickY;
       player[i].inputs.cStickAxis[0].x = cstickX;
@@ -820,7 +820,7 @@ window.interpretInputs = function(i, active) {
       player[i].inputs.x[0] = buttonData("x").pressed;
       player[i].inputs.a[0] = buttonData("a").pressed;
       player[i].inputs.b[0] = buttonData("b").pressed;
-      player[i].inputs.y[0] = buttonData("y").pressed;
+      player[i].inputs.y[0] = buttonData("y").pressed;      
       player[i].inputs.dpadleft[0]  = buttonData("dl").pressed;
       player[i].inputs.dpaddown[0]  = buttonData("dd").pressed;
       player[i].inputs.dpadright[0] = buttonData("dr").pressed;
