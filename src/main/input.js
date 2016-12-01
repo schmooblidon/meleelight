@@ -166,10 +166,10 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
   return input;
 }
 
-function pollGamepadInputs(controllerType, playerNo, playerNo2, frameByFrame) {
+function pollGamepadInputs(controllerType, playerSlot, controllerIndex, frameByFrame) {
   let input = nullInput;
   
-  let gamepad = navigator.getGamepads()[playerNo2];
+  let gamepad = navigator.getGamepads()[controllerIndex];
     
   function axisData (ax) {
     return gpdaxis (gamepad, controllerType, ax );
@@ -185,20 +185,20 @@ function pollGamepadInputs(controllerType, playerNo, playerNo2, frameByFrame) {
                                    lsYData, // y-axis data
                                    controllerType,
                                    true, // true: deadzones
-                                   custcent[playerNo].ls.x,  // x-axis "custom center" offset
-                                   custcent[playerNo].ls.y); // y-axis "custom center" offset
+                                   custcent[playerSlot].ls.x,  // x-axis "custom center" offset
+                                   custcent[playerSlot].ls.y); // y-axis "custom center" offset
   let csticks = scaleToMeleeAxes ( axisData("csX"),
                                    axisData("csY"),
                                    controllerType,
                                    true,
-                                   custcent[playerNo].cs.x,
-                                   custcent[playerNo].cs.y);
+                                   custcent[playerSlot].cs.x,
+                                   custcent[playerSlot].cs.y);
    let rawlsticks =
                 scaleToUnitAxes ( lsXData,
                                   lsYData,
                                   controllerType,
-                                  custcent[playerNo].ls.x,
-                                  custcent[playerNo].ls.y);
+                                  custcent[playerSlot].ls.x,
+                                  custcent[playerSlot].ls.y);
   let lstickX = lsticks[0];
   let lstickY = lsticks[1];
   let cstickX = csticks[0];
@@ -213,20 +213,20 @@ function pollGamepadInputs(controllerType, playerNo, playerNo2, frameByFrame) {
   //-- Below: should be moved to inputs.js
   
   if (controllerType == 3){    
-    lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[playerNo].l, 1); // shifted by +0.2
-    rAnalog = scaleToGCTrigger(buttonData("r").value, 0.2-custcent[playerNo].r, 1); // shifted by +0.2
+    lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[playerSlot].l, 1); // shifted by +0.2
+    rAnalog = scaleToGCTrigger(buttonData("r").value, 0.2-custcent[playerSlot].r, 1); // shifted by +0.2
   }
   else if (controllerType == 2){
-    lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerNo].l, -0.6); // shifted by +0.867, flipped
-    rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerNo].r, -0.6); // shifted by +0.867, flipped
+    lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, -0.6); // shifted by +0.867, flipped
+    rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, -0.6); // shifted by +0.867, flipped
   }
   else if (controllerType == 7) { //Brook adapter has no L/R analog information, just light presses
     lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
     rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
   }
   else {
-    lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerNo].l, 0.6); // shifted by +0.867
-    rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerNo].r, 0.6); // shifted by +0.867
+    lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, 0.6); // shifted by +0.867
+    rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, 0.6); // shifted by +0.867
   }
   
   //-- Above: should be moved to inputs.js
