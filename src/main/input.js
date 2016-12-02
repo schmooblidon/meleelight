@@ -31,7 +31,7 @@ export const axis = {
   "rA" : 17  // R button analog sensor
 };
 
-export function inputData ( list ) {
+export function inputData ( list = [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0] ) {
   this.a   = list[button["a"  ]];
   this.b   = list[button["b"  ]];
   this.x   = list[button["x"  ]];
@@ -54,16 +54,16 @@ export function inputData ( list ) {
   this.rawY = list[19];
 };
 
-const nullInput = new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0]);
+const nullInput = new inputData ();
 
-export const nullInputs = [ new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0])
-                          , new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0])
-                          , new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0])
-                          , new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0])
-                          , new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0])
-                          , new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0])
-                          , new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0])
-                          , new inputData ( [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0])
+export const nullInputs = [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
                           ];
 
 
