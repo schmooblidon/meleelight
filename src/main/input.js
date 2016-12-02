@@ -69,14 +69,14 @@ export const nullInputs = [ new inputData ( )
 
 // should be able to move out the "frameByFrame" aspect of the following function
 // it is only used to make z button mean "left trigger value = 0.35" + "A = true".
-export function pollInputs (gameMode, frameByFrame, controllerType, playerNo, playerNo2, keys) {
+export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, controllerIndex, keys) {
   // input is the input for player i in the current frame
   let input = nullInput; // initialise with default values
   if (controllerType == 10) { // keyboard controls
     input = pollKeyboardInputs(gameMode, frameByFrame, keys);
   }
   else {
-    input = pollGamepadInputs(controllerType, playerNo, playerNo2, frameByFrame);
+    input = pollGamepadInputs(controllerType, playerSlot, controllerIndex, frameByFrame);
   }
   return input;
 }
