@@ -133,10 +133,10 @@ export function KeymapItem (type, pos, value, binding, index, above, toRight, be
     this.modType = modType || 0;
 }
 
-export function keyboardMenuControls (i){
+export function keyboardMenuControls (i, input){
   var menuMove = false;
   var moveD = "";
-  if (player[i].inputs.lStickAxis[0].x == 0 && player[i].inputs.lStickAxis[0].y == 0) {
+  if (input[0].lsX == 0 && input[0].lsY == 0) {
     disableStick[i] = false;
   }
     if (keyboardPromptTimer > 0){
@@ -238,8 +238,8 @@ export function keyboardMenuControls (i){
           keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index] = keyBind;
         }
       }
-      player[i].inputs.b[0] = true;
-      player[i].inputs.b[1] = true;
+      //player[i].inputs.b[0] = true;
+      //player[i].inputs.b[1] = true;
       disableStick[i] = true;
       keyListen = false;
     }
@@ -270,14 +270,14 @@ export function keyboardMenuControls (i){
         }
       }
       sounds.menuForward.play();
-    } else if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
+    } else if (input[0].b && !input[1].b) {
       if (!settingModifier && !settingRange) {
         sounds.menuBack.play();
         player[i].inputs.b[1] = true;
         changeGamemode(1);
         setKeyboardCookie();
       }
-    } else if (player[i].inputs.lStickAxis[0].y > 0.7 && !disableStick[i]) {
+    } else if (input[0].lsY > 0.7 && !disableStick[i]) {
       stickHoldEach[i] = true;
       if (stickHold == 0) {
         moveD = "u";
@@ -291,7 +291,7 @@ export function keyboardMenuControls (i){
           menuMove = true;
         }
       }
-    } else if (player[i].inputs.lStickAxis[0].y < -0.7 && !disableStick[i]) {
+    } else if (input[0].lsY < -0.7 && !disableStick[i]) {
       stickHoldEach[i] = true;
       if (stickHold == 0) {
         moveD = "d";
@@ -305,7 +305,7 @@ export function keyboardMenuControls (i){
           menuMove = true;
         }
       }
-    } else if (player[i].inputs.lStickAxis[0].x > 0.7 && !disableStick[i]) {
+    } else if (input[0].lsX > 0.7 && !disableStick[i]) {
       stickHoldEach[i] = true;
       if (stickHold == 0) {
         moveD = "r";
@@ -319,7 +319,7 @@ export function keyboardMenuControls (i){
           menuMove = true;
         }
       }
-    } else if (player[i].inputs.lStickAxis[0].x < -0.7 && !disableStick[i]) {
+    } else if (input[0].lsX < -0.7 && !disableStick[i]) {
       stickHoldEach[i] = true;
       if (stickHold == 0) {
         menuMove = true;

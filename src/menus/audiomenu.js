@@ -12,17 +12,17 @@ import {stickHoldEach, stickHold, increaseStick, resetStick} from "menus/menu";
 export const masterVolume = [0.5,0.3];
 const audioMenuNames = ["Sounds","Music"];
 let audioMenuSelected = 0;
-export function audioMenuControls (i){
+export function audioMenuControls (i, input){
   let menuMove = false;
   let audioLevelMoveUp = false;
   let audioLevelMoveDown = false;
-  if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
+  if (input[0].b && !input[1].b){
     sounds.menuBack.play();
-    player[i].inputs.b[1] = true;
+    //player[i].inputs.b[1] = true;
     setCookie("soundsLevel", masterVolume[0], 36500);
     setCookie("musicLevel", masterVolume[1], 36500);
     changeGamemode(1);
-  } else if (player[i].inputs.lStickAxis[0].y > 0.7) {
+  } else if (input[0].lsY > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioMenuSelected--;
@@ -36,7 +36,7 @@ export function audioMenuControls (i){
         menuMove = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].y < -0.7) {
+  } else if (input[0].lsY < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioMenuSelected++;
@@ -50,7 +50,7 @@ export function audioMenuControls (i){
         menuMove = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].x > 0.7) {
+  } else if (input[0].lsX > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioLevelMoveUp = true;
@@ -62,7 +62,7 @@ export function audioMenuControls (i){
         audioLevelMoveUp = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].x < -0.7) {
+  } else if (input[0].lsX < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioLevelMoveDown = true;

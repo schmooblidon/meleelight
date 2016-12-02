@@ -16,17 +16,17 @@ export function getGameplayCookies (){
     }
   }
 }
-export function gameplayMenuControls (i){
+export function gameplayMenuControls (i, input){
   var menuMove = false;
-  if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
+  if (input[0].b && !input[1].b) {
     sounds.menuBack.play();
-    player[i].inputs.b[1] = true;
+    //player[i].inputs.b[1] = true;
     var keys = Object.keys(gameSettings);
     for (var j = 0; j < keys.length; j++) {
       setCookie(keys[j], gameSettings[keys[j]], 36500);
     }
     changeGamemode(1);
-  } else if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+  } else if (input[0].a && !input[1].a) {
     sounds.menuSelect.play();
     switch (gameplayMenuSelected) {
       case 0:
@@ -44,7 +44,7 @@ export function gameplayMenuControls (i){
       default:
         break;
     }
-  } else if (player[i].inputs.lStickAxis[0].y > 0.7) {
+  } else if (input[0].lsY > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       gameplayMenuSelected--;
@@ -58,7 +58,7 @@ export function gameplayMenuControls (i){
         menuMove = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].y < -0.7) {
+  } else if (input[0].lsY < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       gameplayMenuSelected++;
