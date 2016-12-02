@@ -207,6 +207,7 @@ function fromCardinals([origx, origy], l, r, d,u) {
     return [[origx, origy], [l,origy], [r,origy], [origx,d], [origx, u]];
 };
 
+// parameters for GC controller simulation
 // the following function gives an approximation to the extreme raw axis data for a given controller
 // of course, this varies between controllers, but this serves as a useful first approximation
 // function output: [[origx, origy], [lx, ly], [rx, ry], [dx, dy], [ux, uy]]
@@ -291,9 +292,6 @@ function toInterval (x) {
 
 
 
-// --------------------------------
-// Melee GC controller simulation
-
 
 // Analog triggers.
 
@@ -313,7 +311,8 @@ export function scaleToGCTrigger ( t, offset, scale ) {
 
 
 
-// Analog sticks.
+// ---------------------------
+// GC controller simulation
 
 const steps = 80;
 const deadzoneConst = 0.28;
@@ -360,17 +359,14 @@ function scaleToGCAxes (x, y, number, customCenterX, customCenterY) {
 }
 
 
+// ---------------------------------
+// Melee input rescaling functions
+
+
 // basic mapping from 0 -- 255 back to -1 -- 1 done by Melee
 // boolean value: true = deadzones, false = no deadzones
-function axisRescale ( x, orig = meleeOrig, bool = false) {
-  // the following line is equivalent to checking that the result of this function lies in the deadzone
-  // no need to check for deadzones later
-    if ( bool && Math.abs (x-orig) < deadzoneConst * steps) {
-      return 0;
-    }
-    else {
-      return (x-orig) / steps;
-    }
+function axisRescale ( x, orig = meleeOrig) {
+  return (x-orig) / steps;
 };
 
 function unitRetract ( [x,y] ) {
@@ -386,7 +382,16 @@ function unitRetract ( [x,y] ) {
 function meleeAxesRescale ( [x,y], bool ) {
     let xnew = axisRescale (x, meleeOrig, bool);
     let ynew = axisRescale (y, meleeOrig, bool);
-    return unitRetract( [xnew, ynew] );
+    let [xnew2, ynew2] = unitRetract( [xnew, ynew] );
+    if (bool) {
+      if (Math.abs(xnew2) < deadzoneConst) {
+         xnew2 = 0;
+      }
+      if (Math.abs(ynew2) < deadzoneConst) {
+        ynew2 = 0;
+      }
+    }
+    return [xnew2, ynew2];
 }
 
 function meleeRound (x) {
@@ -399,8 +404,16 @@ function meleeRound (x) {
 // number : controller ID, to rescale axes dependent on controller raw input
 // bool == false means no deadzone, bool == true means deadzone
 export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCenterY ) {
-    let [xnew, ynew] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
-    return (meleeAxesRescale ( [xnew, ynew], bool )).map(meleeRound);
+    if (number === 0 || number == 4 || number === 5 || number === 7) { // gamecube controllers
+         x = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
+         y = (-y+customCenterY+1)*255/2; // y incurs a sign flip
+         //console.log("You are using raw GC controller data.");
+    }
+    else { // convert raw input to 0 -- 255 by GC controller simulation
+      [x, y] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
+      //console.log("You are using GC controller simulation.");
+    }
+    return (meleeAxesRescale ( [x,y], bool )).map(meleeRound);
 };
 
 // scales -1 -- 1 data to the data Melee uses for the simulation
