@@ -78,7 +78,7 @@ export function ScrollingText (text,yPos,position,information) {
 let creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
 
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
-export function credits (p){ //called once every frame
+export function credits (p, input){ //called once every frame
   if (initc) {
     lastHit = [0, 0, false]; //see notes above
     creditNames = [
@@ -98,7 +98,7 @@ export function credits (p){ //called once every frame
     initc = false;
   }
   let yDif = 0;
-  if (player[p].inputs.s[0]) {
+  if (input[0].s) {
     //is holding down start. Should increase speed
     yDif = Math.round(cScrollingSpeed * 1.5);
   } else {
@@ -120,9 +120,9 @@ export function credits (p){ //called once every frame
   }
 
   //l stick to pos
-  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[p].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX -
+  cPlayerXPos = Math.round(((cBoundX / 2) + ((input[0].rawX) * (cBoundX / 2))) - ((cBoundX -
     cXSize) / 2));
-  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[p].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY -
+  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * input[0].rawY) * (cBoundY / 2))) - ((cBoundY -
     cYSize) / 2));
   //cast positions to canvas size
   if (cPlayerXPos < 0) {
@@ -140,7 +140,7 @@ export function credits (p){ //called once every frame
 
   if (shoot_cooldown == 0) {
 
-    if (player[p].inputs.a[0] && !(player[p].inputs.a[1])) {
+    if (input[0].a && !input[1].a) {
       //is shooting
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
@@ -172,7 +172,7 @@ export function credits (p){ //called once every frame
     }
   }
 
-  if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
+  if (input[0].b && !input[1].b) {
     initc = true;
     sounds.menuBack.play();
     player[p].inputs.b[1] = true;

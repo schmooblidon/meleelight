@@ -26,10 +26,10 @@ export let targetPointerPos = [600,635];
 export function setTargetPointerPos(val){
   targetPointerPos = val;
 }
-export function tssControls (i){
+export function tssControls (i, input){
   if (!showingCode){
-    targetPointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
-    targetPointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
+    targetPointerPos[0] += input[0].lsX*15;
+    targetPointerPos[1] += input[0].lsY*-15;
     if (targetPointerPos[1] >= 45 && targetPointerPos[1] <= 420){
       for (let j=0;j<Math.min(20,11+customTargetStages.length);j++){
         if (targetPointerPos[0] >= 50+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[0] <= 300+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[1] >= 110+(j%5)*60 && targetPointerPos[1] <= 160+(j%5)*60){
@@ -41,16 +41,14 @@ export function tssControls (i){
         }
       }
     }
-    if ((player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]) || (player[i].inputs.l[0] && !player[i].inputs.l[
-        1])) {
+    if ((input[0].du && !input[1].du) || (input[0].l && !input[1].l)) {
       let cSelected = cS[i];
       setCS(i,cSelected- 1);
       if (cS[i] < 0) {
         setCS(i, 2);
       }
       sounds.menuSelect.play();
-    } else if ((player[i].inputs.dpaddown[0] && !player[i].inputs.dpaddown[1]) || (player[i].inputs.r[0] && !player[i]
-        .inputs.r[1])) {
+    } else if ((input[0].dd && !input[1].dd) || (input[0].r && !input[1].r)) {
       let elseSelected = cS[i];
       setCS(i,elseSelected + 1);
       if (cS[i] > 2) {
@@ -58,7 +56,7 @@ export function tssControls (i){
       }
       sounds.menuSelect.play();
     }
-    if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
+    if (input[0].b && !input[1].b) {
       sounds.menuBack.play();
       music.targettest.stop();
       music.menu.play("menuStart");
@@ -66,7 +64,7 @@ export function tssControls (i){
       return;
     } else {
       if (targetSelected > 9 && targetSelected != 10 + customTargetStages.length) {
-        if (player[i].inputs.z[0] && !player[i].inputs.z[1]) {
+        if (input[0].z && !input[1].z) {
           //delete
           for (var n = targetSelected - 10; n < customTargetStages.length; n++) {
             setCookie("custom" + n, getCookie("custom" + (n + 1)), 36500);
@@ -85,7 +83,7 @@ export function tssControls (i){
           customTargetStages.splice(targetSelected - 10, 1);
           redrawCustomStageBoxes();
           return;
-        } else if (player[i].inputs.x[0] && !player[i].inputs.x[1]) {
+        } else if (input[0].x && !input[1].x) {
           //dupe
           if (customTargetStages.length < 10){
             setCookie("custom"+customTargetStages.length,getCookie("custom"+(targetSelected-10)),36500);
@@ -98,20 +96,20 @@ export function tssControls (i){
           }
           redrawCustomStageBoxes();
           return;
-        } else if (player[i].inputs.y[0] && !player[i].inputs.y[1]) {
+        } else if (input[0].y && !input[1].y) {
           //edit
             resetStageTemp();
             setStageTemp(deepCopyObject(true,stageTemp,customTargetStages[targetSelected-10]));
             setTargetBuilder(i);
             setEditingStage(targetSelected-10);
-          player[i].inputs.a[1] = true;
+          //player[i].inputs.a[1] = true;
           changeGamemode(4);
           music.targettest.stop();
           music.menu.play("menuStart");
           return;
         }
       }
-      if ((player[i].inputs.s[0] && !player[i].inputs.s[1]) || (player[i].inputs.a[0] && !player[i].inputs.a[1])) {
+      if ((input[0].s && !input[1].s) || (input[0].a && !input[1].a)) {
         sounds.menuForward.play();
         if (targetSelected == 10 + customTargetStages.length) {
           // ADD CODE
@@ -135,7 +133,7 @@ export function tssControls (i){
     }
   }
   else {
-    if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
+    if (input[0].a && !input[1].a){
         setShowingCode(false);
       let code = $("#cStageEdit").val();
       let newStage = parseStage(code);

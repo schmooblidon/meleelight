@@ -32,10 +32,10 @@ let menuRandomBox = [Math.random(), Math.random(), Math.random(), Math.random()]
 
 export let stickHoldEach = [];
 export let stickHold = 0;
-export function menuMove (i){
+export function menuMove (i, input){
   var menuMove = false;
   var previousMenuS = menuSelected;
-  if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+  if (input[0].a && !input[1].a) {
     sounds.menuForward.play();
     if (menuMode == 0) {
       if (menuSelected == 0) {
@@ -45,7 +45,7 @@ export function menuMove (i){
       else if (menuSelected == 1){
           setTargetPlayer(i);
           setTargetPointerPos([178.5,137]);
-        player[i].inputs.a[1] = true;
+        //player[i].inputs.a[1] = true;
         music.menu.stop();
         music.targettest.play("targettestStart");
         changeGamemode(7);
@@ -53,7 +53,7 @@ export function menuMove (i){
       else if (menuSelected == 2){
        setEditingStage(-1);
         setTargetBuilder(i);
-        player[i].inputs.a[1] = true;
+        //player[i].inputs.a[1] = true;
         changeGamemode(4);
       } else if (menuSelected == 3) {
         // options
@@ -79,14 +79,14 @@ export function menuMove (i){
         changeGamemode(13);
       }
     }
-  } else if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
+  } else if (input[0].b && !input[1].b) {
     if (menuMode == 1) {
       menuMode = 0;
       menuSelected = 3;
       menuMove = true;
       sounds.menuBack.play();
     }
-  } else if (player[i].inputs.lStickAxis[0].y > 0.7) {
+  } else if (input[0].lsY > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuSelected--;
@@ -99,7 +99,7 @@ export function menuMove (i){
         menuMove = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].y < -0.7) {
+  } else if (input[0].lsY < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuSelected++;

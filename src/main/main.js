@@ -750,6 +750,8 @@ window.interpretInputs = function(i, active) {
     player[i].inputs.dpadup[k] = input[k].du;
   }
   
+  return input;
+
 };
   
 function interpretPause(i) {  
@@ -860,38 +862,40 @@ let lastUpdate = performance.now();
 export function gameTick (){
   var start = performance.now();
   var diff = 0;
+
+  let input = [nullInputs, nullInputs, nullInputs, nullInputs]; // need to change this
   
   if (gameMode == 0 || gameMode == 20) {
     findPlayers();
   } else if (gameMode == 1) {
     //console.log(playerType);
     for (var i = 0; i < ports; i++) {
-      interpretInputs(i, true);
-      menuMove(i);
+      input[i] = interpretInputs(i, true);
+      menuMove(i, input[i]);
     }
   } else if (gameMode == 10) {
     for (var i = 0; i < ports; i++) {
-      interpretInputs(i, true);
-      audioMenuControls(i);
+      input[i] = interpretInputs(i, true);
+      audioMenuControls(i, input[i]);
     }
   } else if (gameMode == 11) {
     for (var i = 0; i < ports; i++) {
-      interpretInputs(i, true);
-      gameplayMenuControls(i);
+      input[i] = interpretInputs(i, true);
+      gameplayMenuControls(i, input[i]);
     }
   } else if (gameMode == 12) {
     for (var i = 0; i < ports; i++) {
-      interpretInputs(i, true);
-      keyboardMenuControls(i);
+      input[i] = interpretInputs(i, true);
+      keyboardMenuControls(i, input[i]);
     }
   } else if (gameMode == 13) {
-    interpretInputs(creditsPlayer, true);
-    credits(creditsPlayer);
+    input[i] = interpretInputs(creditsPlayer, true);
+    credits(creditsPlayer, input[i]);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
-        interpretInputs(i, true);
-        cssControls(i);
+        input[i] = interpretInputs(i, true);
+        cssControls(i, input[i]);
       }
 
       aS[cS[i]][player[i].actionState].main(i);
@@ -908,17 +912,17 @@ export function gameTick (){
     // stage select
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
-        interpretInputs(i, true);
-        sssControls(i);
+        input[i] = interpretInputs(i, true);
+        sssControls(i, input[i]);
       }
     }
   } else if (gameMode == 7) {
     // stage select
-    interpretInputs(targetPlayer, true);
-    tssControls(targetPlayer);
+    input[i] = interpretInputs(targetPlayer, true);
+    tssControls(targetPlayer, input[i]);
   } else if (gameMode == 4) {
-    interpretInputs(targetBuilder, true);
-    targetBuilderControls(targetBuilder);
+    input[i] = interpretInputs(targetBuilder, true);
+    targetBuilderControls(targetBuilder, input[i]);
   } else if (gameMode == 5) {
     if (endTargetGame) {
       finishGame();
@@ -967,7 +971,7 @@ export function gameTick (){
       }
     } else {
       if (!gameEnd) {
-        interpretInputs(targetBuilder, false);
+        input[i] = interpretInputs(targetBuilder, false);
       }
     }
   } else if (playing || frameByFrame) {
