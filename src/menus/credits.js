@@ -24,8 +24,15 @@ let cScrollingMax = 2800;// max scrolling distance in y coords. Can change this 
 const cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
 let lastHit = [0, 0, false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
-var lclr ="rgb(255, 15, 5)";
-let num = 0;
+let currentLaserColor = 0;//laser color vars
+const laserColors = [
+  "rgb(255, 15, 5)",
+  "rgb(15, 5, 255)",
+  "rgb(5, 255, 15)",
+  "rgb(255, 85, 3)"
+];
+let laserColor = laserColors[currentLaserColor];
+
 export function ScrollingText (text,yPos,position,information) {
   this.Text = text;
   this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
@@ -82,11 +89,8 @@ let creditNames = []; //list of scrollingText objects SEE PLEASE:               
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
 export function credits (p){ //called once every frame
   if (player[p].inputs.x[0] && !player[p].inputs.x[1]) {
-    num++;
-    console.log(num);
-    if (num>3){
-      num = 0;
-    }
+    currentLaserColor = (currentLaserColor === laserColors.length - 1) ? 0 : currentLaserColor + 1;
+    laserColor = laserColors[currentLaserColor];
   }
   if (initc) {
     lastHit = [0, 0, false]; //see notes above
@@ -151,18 +155,6 @@ export function credits (p){ //called once every frame
 
     if (player[p].inputs.a[0] && !(player[p].inputs.a[1])) {
       //is shooting
-      if (num==0){
-        lclr = "rgb(255, 15, 5)";
-      }
-      if (num==1){
-        lclr = "rgb(15, 5, 255)";
-      }
-      if (num==2){
-        lclr = "rgb(5, 255, 15)";
-      }
-      if (num==3){
-        lclr = "rgb(255, 85, 3)";
-      }
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(1200, 0), 1));
@@ -300,7 +292,7 @@ export function drawCredits (){
       cShotDestroyQueue.push(m);
     } else {
       bg2.lineWidth = Math.max(1, (20 - cShots[m].life));
-      bg2.strokeStyle = lclr;
+      bg2.strokeStyle = laserColor;
       bg2.beginPath();
       bg2.moveTo(cShots[m].lastPosition2.x, 750 - cShots[m].lastPosition2.y);
       bg2.lineTo(cShots[m].position.x, 750 - cShots[m].position.y);
