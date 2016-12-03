@@ -143,6 +143,7 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
   input.y   = keys[keyMap.y[0]] || keys[keyMap.y[1]];
   input.r   = keys[keyMap.r[0]] || keys[keyMap.r[1]];
   input.l   = keys[keyMap.l[0]] || keys[keyMap.l[1]];
+  input.z   = keys[keyMap.z[0]] || keys[keyMap.z[1]];
   input.dl  = keys[keyMap.dl[0]];
   input.dd  = keys[keyMap.dd[0]];
   input.dr  = keys[keyMap.dr[0]];
@@ -155,8 +156,7 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
     input.rA = 1;
   }
    
-  if (!frameByFrame) {
-    input.z = keys[keyMap.z[0]] || keys[keyMap.z[1]];
+  if (!frameByFrame && gameMode != 4) { // not in target builder or frame by frame mode
     if (input.z) {
       input.lA = 0.35;
       input.a = true;

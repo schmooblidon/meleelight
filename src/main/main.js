@@ -600,7 +600,7 @@ window.interpretInputs = function(i, active) {
     } else {
       frameAdvance[i][0] = false
     }
-    if (frameAdvance[i][0] && !frameAdvance[i][1]) {
+    if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode != 4) {
     frameByFrame = true;
     }
     if (active) {
