@@ -2,6 +2,7 @@ import {pPal, palettes, cS, player} from "main/main";
 import {reduceByTraction, aS} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
+import {blendColours} from "main/vfx/blendColours";
 export default {
   name : "FURASLEEPSTART",
   canEdgeCancel : true,

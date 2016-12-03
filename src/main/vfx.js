@@ -1,15 +1,13 @@
-/* eslint-disable */
-
-import  vfxData from 'main/vfx/vfxData/index';
-import  dVfx from 'main/vfx/dVfx/index';
+import vfxData from 'main/vfx/vfxData';
+import dVfxData from 'main/vfx/dVfx';
 const twoPi = Math.PI * 2;
 
 export let showVfx = true;
 
-export function getShowSFX(){
+export function getShowSFX() {
   return showVfx;
 }
-export function toggleShowSFX(){
+export function toggleShowSFX() {
   showVfx = !showVfx;
 }
 
@@ -26,9 +24,8 @@ vfx.ceilingBounce.colour = vfx.groundBounce.colour;
 vfx.ceilingBounce.frames = vfx.groundBounce.frames;
 
 
-
- export const dVfx = {
-   ...dVfx
+export const dVfx = {
+  ...dVfxData
 };
 
 

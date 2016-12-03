@@ -4,7 +4,7 @@ import {sounds} from "main/sfx";
 import {handGrab, handOpen} from "menus/css";
 import {twoPi} from "main/render";
 import {startTargetGame} from "target/targetplay";
-import {targetStages, customTargetStages, setCustomTargetStages} from "customtargetstages.js";
+import {targetStages, customTargetStages, setCustomTargetStages} from "stages/customtargetstages";
 import {boxFill, drawBackground} from "stages/stagerender";
 import {deepCopyObject} from "main/util/deepCopyObject";
 /* eslint-disable */

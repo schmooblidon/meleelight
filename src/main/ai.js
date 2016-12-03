@@ -1,5 +1,6 @@
-import {player, playerType, cS,activeStage} from "main/main";
+import {player, playerType, cS} from "main/main";
 import {gameSettings} from "settings";
+import {activeStage} from "stages/activeStage";
 /* eslint-disable */
 
 let a = 0;

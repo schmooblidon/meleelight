@@ -1,10 +1,11 @@
 import {Vec2D, Segment2D, createHitbox} from "main/characters";
-import {player, fg2, activeStage, playerType, cS, screenShake, percentShake} from "main/main";
+import {player, fg2, playerType, cS, screenShake, percentShake} from "main/main";
 import {rotateVector} from "main/render";
 import {sounds} from "main/sfx";
 import {knockbackSounds, segmentSegmentCollision, getKnockback, getHitstun} from "physics/hitDetection";
 import {aS} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
+import {activeStage} from "stages/activeStage";
 /* eslint-disable */
 
 export let aArticles = [];

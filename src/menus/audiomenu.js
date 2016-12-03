@@ -6,6 +6,7 @@ import {player, setCookie, changeGamemode, ports, bg1, bg1 as fg1, layers, fg2 a
 import {sounds} from "main/sfx";
 import {twoPi} from "main/render";
 import {stickHoldEach, stickHold, increaseStick, resetStick} from "menus/menu";
+import {music} from "../main/sfx";
 /* eslint-disable */
 
 // sounds, music

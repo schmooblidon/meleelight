@@ -6,18 +6,18 @@ import {aS, turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, 
     , fastfall
     , airDrift
     , checkForAerials
-    , randomShout
+    , randomShout,setupActionStates
 } from "physics/actionStateShortcuts";
 import {baseActionStates} from "characters/baseActionStates";
-import {player, palettes, pPal, cS, activeStage} from "main/main";
-import {Vec2D,framesData} from "main/characters";
+import {player, palettes, pPal, cS} from "main/main";
+import {Vec2D,framesData,CHARIDS} from "main/characters";
 import {sounds} from "main/sfx";
 
 import {hitQueue} from 'physics/hitDetection';
-import {setupActionStates} from "../../physics/actionStateShortcuts";
-import {CHARIDS} from "../../main/characters";
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
+import {blendColours} from "main/vfx/blendColours";
+import {activeStage} from "stages/activeStage";
 /* eslint-disable */
 
 // action state object creation
@@ -3172,16 +3172,7 @@ marth.NEUTRALSPECIALAIR = {
   }
 };
 
-window.blendColours = function(start,end,opacity){
-  var blended = [];
-  var difference = [];
-  for (var i=0;i<3;i++){
-    start[i] = parseInt(start[i]);
-    difference[i] = end[i]-start[i];
-    blended[i] = start[i]+difference[i]*opacity;
-  }
-  return [Math.floor(blended[0]),Math.floor(blended[1]),Math.floor(blended[2])];
-};
+
 
 marth.NEUTRALSPECIALGROUND = {
   name : "NEUTRALSPECIALGROUND",

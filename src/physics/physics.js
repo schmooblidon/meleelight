@@ -1,4 +1,4 @@
-import {player, cS, percentShake, activeStage, playerType, edgeOffset, versusMode, showDebug, gameMode} from "main/main";
+import {player, cS, percentShake, playerType, edgeOffset, versusMode, showDebug, gameMode} from "main/main";
 import {Vec2D, Box2D,framesData} from "main/characters";
 import {sounds} from "main/sfx";
 import {gameSettings} from "settings";
@@ -7,6 +7,7 @@ import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizonta
 import {lostStockQueue} from 'main/render';
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
+import {activeStage} from "stages/activeStage";
 /* eslint-disable */
 
 export function land (i,y,t,j){

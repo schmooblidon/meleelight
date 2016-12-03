@@ -6,18 +6,17 @@ import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, c
     , fastfall
     , airDrift
     , randomShout
-    , checkForAerials
+    , checkForAerials,setupActionStates
 } from "physics/actionStateShortcuts";
 import {baseActionStates} from "characters/baseActionStates";
 import {sounds} from "main/sfx";
-import {player, cS, activeStage} from "main/main";
-import {Vec2D,framesData} from "main/characters";
+import {player, cS} from "main/main";
+import {Vec2D,framesData,CHARIDS} from "main/characters";
 
 import {hitQueue} from 'physics/hitDetection';
-import {setupActionStates} from "../../physics/actionStateShortcuts";
-import {CHARIDS} from "../../main/characters";
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
+import {activeStage} from "stages/activeStage";
 
 /* eslint-disable */
 

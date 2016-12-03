@@ -14,9 +14,11 @@ import {sounds} from "main/sfx";
 import {Vec2D, Box2D} from "main/characters";
 import {twoPi} from "main/render";
 import {foxPic, puffPic, marthPic} from "menus/css";
-import {customTargetStages, setCustomTargetStages} from "customtargetstages.js";
+import {customTargetStages, setCustomTargetStages} from "stages/customtargetstages";
 import {setCS} from "../main/main";
 import {deepCopyObject} from "main/util/deepCopyObject";
+import {music} from "../main/sfx";
+import {setActiveStageTarget} from "stages/activeStage";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;

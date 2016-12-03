@@ -6,6 +6,7 @@ import { setTargetPlayer} from "target/targetplay";
 import { setTargetPointerPos} from "menus/targetselect";
 import {  setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
+import {music} from "../main/sfx";
 /* eslint-disable */
 
  let menuSelected = 0;
