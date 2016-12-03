@@ -1,5 +1,5 @@
 import {player, cS, percentShake, playerType, edgeOffset, versusMode, showDebug, gameMode} from "main/main";
-import {Vec2D, Box2D,framesData} from "main/characters";
+import {framesData} from "main/characters";
 import {sounds} from "main/sfx";
 import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
@@ -8,6 +8,8 @@ import {lostStockQueue} from 'main/render';
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
+import { Box2D} from "../main/util/Box2D";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 export function land (i,y,t,j){

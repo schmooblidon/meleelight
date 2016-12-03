@@ -1,8 +1,9 @@
-import {Vec2D} from "main/characters";
+
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {vfx} from "main/vfx";
 import {activeStage} from "stages/activeStage";
 import {addToVfxQueue} from "main/vfx/vfxQueue";
+import {Vec2D} from "../util/Vec2D";
 
 export function drawVfx(name, pos, face, f) {
   let facing = f;

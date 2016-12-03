@@ -10,7 +10,7 @@ import {aS, turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, 
 } from "physics/actionStateShortcuts";
 import {baseActionStates} from "characters/baseActionStates";
 import {player, palettes, pPal, cS} from "main/main";
-import {Vec2D,framesData,CHARIDS} from "main/characters";
+import {framesData,CHARIDS} from "main/characters";
 import {sounds} from "main/sfx";
 
 import {hitQueue} from 'physics/hitDetection';
@@ -18,6 +18,7 @@ import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
 import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "stages/activeStage";
+import {Vec2D} from "../../main/util/Vec2D";
 /* eslint-disable */
 
 // action state object creation

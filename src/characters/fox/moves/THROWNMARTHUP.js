@@ -1,5 +1,6 @@
-import {Vec2D} from "main/characters";
+
 import {player} from "main/main";
+import {Vec2D} from "../../../main/util/Vec2D";
 export default {
   name : "THROWNMARTHUP",
   canEdgeCancel : false,

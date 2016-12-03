@@ -1,6 +1,8 @@
-import {Box2D, Vec2D} from "main/characters";
+
 import {activeStage} from "stages/activeStage";
 import {player} from "main/main";
+import {Box2D} from "../../main/util/Box2D";
+import {Vec2D} from "../../main/util/Vec2D";
 
 export default {
   box: [new Box2D([-56, -100], [56, 0])],

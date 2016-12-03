@@ -1,4 +1,4 @@
-import {Vec2D,framesData} from "main/characters";
+
 import {
     player,
     cS,
@@ -19,6 +19,8 @@ import {makeColour} from "main/vfx/makeColour";
 import {aS} from "physics/actionStateShortcuts";
 import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "stages/activeStage";
+import {Vec2D} from "./util/Vec2D";
+import {framesData} from "./characters";
 /* eslint-disable */
 
 export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];

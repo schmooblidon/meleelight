@@ -1,6 +1,6 @@
 import {playSounds, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
 import {cS,  player} from "main/main";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "main/util";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
 export default {

@@ -1,9 +1,9 @@
 import {vfxQueue} from "main/vfx/vfxQueue";
 import {activeStage} from "stages/activeStage";
-import {Vec2D} from "main/characters";
 import {makeColour} from "main/vfx/makeColour";
 import {fg2} from "main/main";
 import {twoPi} from "main/render";
+import {Vec2D} from "../../util/Vec2D";
 export default (j) => {
   fg2.save();
   fg2.translate((vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0], (vfxQueue[j][2].y * -activeStage.scale) + activeStage.offset[

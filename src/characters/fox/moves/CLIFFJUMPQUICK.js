@@ -1,7 +1,7 @@
 
 import FALL from "characters/shared/moves/FALL";
 import {player} from "main/main";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "main/util/Vec2D";
 import {airDrift, fastfall} from "physics/actionStateShortcuts";
 import {activeStage} from "stages/activeStage";
 

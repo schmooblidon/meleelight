@@ -11,12 +11,13 @@ import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, c
 import {baseActionStates} from "characters/baseActionStates";
 import {sounds} from "main/sfx";
 import {player, cS} from "main/main";
-import {Vec2D,framesData,CHARIDS} from "main/characters";
+import {framesData,CHARIDS} from "main/characters";
 
 import {hitQueue} from 'physics/hitDetection';
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
+import {Vec2D} from "../../main/util/Vec2D";
 
 /* eslint-disable */
 

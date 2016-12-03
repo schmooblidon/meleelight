@@ -5,7 +5,7 @@ import {makeColour} from "main/vfx/makeColour";
 import {twoPi} from "main/render";
 import {drawArrayPath} from "main/vfx/drawArrayPath";
 import vfx from "main/vfx/vfxData/index";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "../../util/Vec2D";
 export default(j)=> {
   const s = activeStage.scale / 4.5;
   fg2.save();

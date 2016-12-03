@@ -8,11 +8,12 @@ import {cpuDifficulty, cS, player, changeGamemode, playerType,bg1,ui, palettes, 
     , ports
     , setVersusMode
 } from "main/main";
-import {Vec2D, chars} from "main/characters";
 import {drawArrayPathCompress, twoPi} from "main/render";
 import {sounds} from "main/sfx";
 import {aS} from "physics/actionStateShortcuts";
 import {setCS} from "../main/main";
+import {chars} from "../main/characters";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 export const marthPic = new Image();

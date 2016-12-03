@@ -3,7 +3,7 @@ import WAIT from "characters/shared/moves/WAIT";
 import {player, cS} from "main/main";
 import {turnOffHitboxes, randomShout} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "main/util/Vec2D";
 import {activeStage} from "stages/activeStage";
 
 export default {

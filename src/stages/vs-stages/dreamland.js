@@ -1,4 +1,5 @@
-import {Box2D, Vec2D} from "main/characters";
+import {Box2D} from "../../main/util/Box2D";
+import {Vec2D} from "../../main/util/Vec2D";
 
 export default {
   box: [new Box2D([-77.27, -36], [77.27, 0])],

@@ -1,6 +1,6 @@
 import {vfxQueue} from "main/vfx/vfxQueue";
 import {player,fg2} from "main/main";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "main/util/Vec2D";
 import {activeStage} from "stages/activeStage";
 import {drawArrayPathNew} from "main/vfx/drawArrayPathNew";
 import {twoPi} from "main/render";

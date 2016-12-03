@@ -1,5 +1,5 @@
 import { cS, player} from "main/main";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "main/util";
 import {aS} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {drawVfx} from "main/vfx/drawVfx";

@@ -4,9 +4,9 @@ import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import FIREFOXBOUNCE from "characters/fox/moves/FIREFOXBOUNCE";
 import {turnOffHitboxes, airDrift, fastfall, reduceByTraction} from "physics/actionStateShortcuts";
 import { player} from "main/main";
-import {Vec2D} from "main/characters";
 import {sounds} from "main/sfx";
 import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 
 export default {
   name : "UPSPECIALLAUNCH",

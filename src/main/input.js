@@ -4,7 +4,7 @@ import {
   inverseMatrix,
   multMatVect
 } from "main/linAlg";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "./util/Vec2D";
 
 export const button = {
   "a" : 0, 
@@ -19,7 +19,7 @@ export const button = {
   "dr": 9,  // d-pad right
   "dd": 10, // d-pad down
   "dl": 11  // d-pad left
-}
+};
 
 export const axis = {
   "lsX": 12, // left analog stick left/right

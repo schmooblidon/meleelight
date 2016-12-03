@@ -1,7 +1,8 @@
 import {cS, player, gameMode, versusMode, playerType} from "main/main";
 import {sounds} from "main/sfx";
-import {intangibility, actionSounds, Vec2D} from "main/characters";
+import {intangibility, actionSounds} from "main/characters";
 import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 export function randomShout (char){

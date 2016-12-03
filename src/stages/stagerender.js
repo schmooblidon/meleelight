@@ -1,9 +1,9 @@
 import {getTransparency} from "main/vfx/transparency";
-import {Vec2D} from "main/characters";
 import {bg1, bg2, fg1, fg2, layers} from "main/main";
 import {targetDestroyed} from "target/targetplay";
 import {rotateVector, twoPi} from "main/render";
 import {activeStage} from "stages/activeStage";
+import {Vec2D} from "../main/util/Vec2D";
 
 /* eslint-disable */
 

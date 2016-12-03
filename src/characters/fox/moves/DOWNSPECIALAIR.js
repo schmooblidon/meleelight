@@ -7,8 +7,8 @@ import FALL from "characters/shared/moves/FALL";
 import {player} from "main/main";
 import {sounds} from "main/sfx";
 import {turnOffHitboxes} from "physics/actionStateShortcuts";
-import {Vec2D} from "main/characters";
 import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 
 export default {
   name : "DOWNSPECIALAIR",

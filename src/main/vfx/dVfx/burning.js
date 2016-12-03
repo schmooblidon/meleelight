@@ -3,8 +3,8 @@ import {drawArrayPath} from "main/vfx/drawArrayPath";
 import {fg2} from "main/main";
 import {activeStage} from "stages/activeStage";
 import {drawVfx} from "main/vfx/drawVfx";
-import {Vec2D} from "main/characters";
 import vfx from "main/vfx/vfxData/index";
+import {Vec2D} from "../../util/Vec2D";
 export default(j) => {
   if (vfxQueue[j][1] === 1) {
     drawArrayPath(fg2, "rgb(253,255,161)", vfxQueue[j][3], (vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0], ((

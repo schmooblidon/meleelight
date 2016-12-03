@@ -1,9 +1,9 @@
 import {vfxQueue} from "main/vfx/vfxQueue";
 import {player, fg2} from "main/main";
 import {swordSwings} from "main/swordSwings";
-import {Vec2D} from "main/characters";
 import {activeStage} from "stages/activeStage";
 import {makeColour} from "main/vfx/makeColour";
+import {Vec2D} from "../../util/Vec2D";
 export default(j, draw) =>{
   let shouldDraw = draw;
   shouldDraw = shouldDraw || true;

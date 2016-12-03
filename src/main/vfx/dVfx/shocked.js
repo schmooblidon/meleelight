@@ -1,8 +1,8 @@
 import {activeStage} from "stages/activeStage";
 import {vfxQueue} from "main/vfx/vfxQueue";
 import {fg2} from "main/main";
-import {Vec2D} from "main/characters";
 import {twoPi} from "main/render";
+import {Vec2D} from "../../util/Vec2D";
 export default(j) =>{
   const s = activeStage.scale / 4.5;
   fg2.save();

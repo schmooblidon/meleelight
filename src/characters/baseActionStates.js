@@ -1,6 +1,6 @@
 import {player, cS,  screenShake, percentShake, finishGame, palettes, pPal} from "main/main";
 import {sounds} from "main/sfx";
-import {Vec2D, actionSounds,framesData} from "main/characters";
+import { actionSounds,framesData} from "main/characters";
 import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForAerials,
     checkForDash
     , checkForSmashTurn
@@ -22,6 +22,7 @@ import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, 
 import {drawVfx} from "main/vfx/drawVfx";
 import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "../stages/activeStage";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 // BASE ActionStates

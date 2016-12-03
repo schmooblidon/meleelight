@@ -1,5 +1,4 @@
 /* eslint-disable */
-import {Vec2D,Box2D} from "main/characters";
 import {choosingTag, drawCSSInit, cssControls, drawCSS} from 'menus/css';
 import {playerObject} from 'main/player';
 import {keyMap} from 'settings';
@@ -35,6 +34,8 @@ import {setVsStage, getActiveStage, activeStage} from "../stages/activeStage";
 import {music} from "./sfx";
 import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
+import {Box2D} from "./util/Box2D";
+import {Vec2D} from "./util/Vec2D";
 /*globals performance*/
 
 export const player = [0,0,0,0];

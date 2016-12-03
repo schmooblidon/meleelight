@@ -1,4 +1,4 @@
-import {Vec2D} from "main/characters";
+
 import {player, changeGamemode,  initializePlayers, matchTimer
     , getCookie
 
@@ -21,6 +21,7 @@ import {interpolatedHitCircleCollision} from "physics/hitDetection";
 import {drawVfx} from "main/vfx/drawVfx";
 import {resetVfxQueue} from "main/vfx/vfxQueue";
 import {activeStage} from "stages/activeStage";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 export let targetTesting = false;
