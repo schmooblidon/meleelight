@@ -152,7 +152,7 @@ export function generalAI(i) {
     if (player[i].currentAction == "NONE") {
 	if (["OTTOTTOWAIT", "WAIT", "SMASHTURN", "WALKF", "WALK", "SQUAT"].indexOf(
         paction) != -1 && isAboveGround(player[i].phys.pos.x, px + 1.0)[1] ==
-      "platform" && pgrounded && px - player[nearest].phys.pos.y > 0 && Math.abs(player[
+      "platform" && pgrounded && py - player[nearest].phys.pos.y > 0 && Math.abs(player[
         nearest].phys.pos.x - player[i].phys.pos.x) <= 40) {
       //is above platform
       //console.log("H");
@@ -431,7 +431,7 @@ export function generalAI(i) {
   }
   if (pdiff > 1) {
     var distx = player[i].phys.pos.x - player[nearest].phys.pos.x;
-    var disty = px - player[nearest].phys.pos.y;
+    var disty = py - player[nearest].phys.pos.y;
     if (player[i].currentAction == "NONE" && player[i].currentSubaction == "NONE" && (paction == "WAIT" ||
         paction == "OTTOTTOWAIT" || paction == "WALK")) { //walk towards enemy
       if (Math.abs(distx) >= 23 && (player[nearest].phys.grounded || isAboveGround(player[
