@@ -116,6 +116,9 @@ export function hitDetect (p){
                                                 hitQueue.push([i, p, j, false, false, false, false]);
                                                 player[p].hitboxes.hitList.push(i);
                                                 setHasHit(p, j);
+                                                if (player[i].phys.hurtBoxState != -3) {
+                                                    console.log("Schmoo?");
+                                                }
                                                 break;
                                             }
                                         }
