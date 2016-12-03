@@ -689,29 +689,6 @@ window.interpretInputs = function(i, active) {
     }
     
     interpretPause(i);
-    
-    /*
-    for (var j = 0; j < 12; j++) {
-      var bNum = j;
-      if (mType[i] == 0) {
-        if (bNum > 5) {
-          bNum++;
-        }
-        if (bNum > 7) {
-          bNum++;
-        }
-        if (bNum > 8) {
-          bNum += 2;
-        }
-      }
-      if (input[0].a) { // this could cause problems if controller has undefined buttons
-        $("#" + i + "button" + "a").show();
-      } else {
-        $("#" + i + "button" + "a").hide();
-      }
-    }
-
-    */
 
     showButton(i, 0,input[0].a);
     showButton(i, 1,input[0].b);
