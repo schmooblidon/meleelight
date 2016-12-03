@@ -279,7 +279,8 @@ export function drawCredits (){
       cShotDestroyQueue.push(m);
     } else {
       bg2.lineWidth = Math.max(1, (20 - cShots[m].life));
-      bg2.strokeStyle = "rgb(5, 255, 15)";
+      bg2.strokeStyle = "rgb(5, 235, 15)";
+      bg2.lineWidth = 10;
       bg2.beginPath();
       bg2.moveTo(cShots[m].lastPosition2.x, 750 - cShots[m].lastPosition2.y);
       bg2.lineTo(cShots[m].position.x, 750 - cShots[m].position.y);
