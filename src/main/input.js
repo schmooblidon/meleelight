@@ -76,7 +76,7 @@ export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, 
     input = pollKeyboardInputs(gameMode, frameByFrame, keys);
   }
   else {
-    input = pollGamepadInputs(controllerType, playerSlot, controllerIndex, frameByFrame);
+    input = pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
   }
   return input;
 }
@@ -166,7 +166,7 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
   return input;
 }
 
-function pollGamepadInputs(controllerType, playerSlot, controllerIndex, frameByFrame) {
+function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
   let input = nullInput;
   
   let gamepad = navigator.getGamepads()[controllerIndex];
@@ -260,6 +260,7 @@ function pollGamepadInputs(controllerType, playerSlot, controllerIndex, frameByF
   input.lsY = lstickY;
   input.rawX = rawstickX;
   input.rawY = rawstickY;
+  input.csX = cstickX;
   input.csY = cstickY;
   input.lA = lAnalog;
   input.rA = rAnalog;
@@ -268,6 +269,7 @@ function pollGamepadInputs(controllerType, playerSlot, controllerIndex, frameByF
   input.a = buttonData("a").pressed;
   input.b = buttonData("b").pressed;
   input.y = buttonData("y").pressed;
+  input.z = buttonData("z").pressed;
   
   //----------------------------------------------------------------
   //-- Below: should be moved to inputs.js
@@ -294,7 +296,7 @@ function pollGamepadInputs(controllerType, playerSlot, controllerIndex, frameByF
   if (input.r) {
     input.rA = 1;
   }
-  if (!frameByFrame) {
+  if (!frameByFrame && gameMode != 4) { // not in target builder
     input.z = buttonData("z").pressed;
     if (input.z) {
       input.lA = 0.35;
@@ -303,6 +305,15 @@ function pollGamepadInputs(controllerType, playerSlot, controllerIndex, frameByF
   }
   
   return input;
+};
+
+export function showButton(i, but, bool) {
+  if (bool) {
+    $("#" + i + "button" + but).show();
+  }
+  else {
+    $("#" + i + "button" + but).hide();
+  }
 };
 
 

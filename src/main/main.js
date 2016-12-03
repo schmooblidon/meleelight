@@ -28,7 +28,7 @@ import {stages} from "stages/stages";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, controllerMaps, pollInputs, nullInputs, scaleToUnitAxes, custcent} from "main/input";
+import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, controllerMaps, pollInputs, showButton, nullInputs, scaleToUnitAxes, custcent} from "main/input";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -657,7 +657,7 @@ window.interpretInputs = function(i, active) {
       frameAdvance[i][0] = false
     }
     
-    if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing) {
+    if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode != 4) {
     frameByFrame = true;
     }
     
@@ -690,8 +690,7 @@ window.interpretInputs = function(i, active) {
     
     interpretPause(i);
     
-    /* I can't deal with the following right now 
-    
+    /*
     for (var j = 0; j < 12; j++) {
       var bNum = j;
       if (mType[i] == 0) {
@@ -705,15 +704,27 @@ window.interpretInputs = function(i, active) {
           bNum += 2;
         }
       }
-      if (gamepad.buttons[bNum].pressed) { // this could cause problems if controller has undefined buttons
-        $("#" + i + "button" + j).show();
+      if (input[0].a) { // this could cause problems if controller has undefined buttons
+        $("#" + i + "button" + "a").show();
       } else {
-        $("#" + i + "button" + j).hide();
+        $("#" + i + "button" + "a").hide();
       }
     }
-    
+
     */
-    
+
+    showButton(i, 0,input[0].a);
+    showButton(i, 1,input[0].b);
+    showButton(i, 2,input[0].x);
+    showButton(i, 3,input[0].y);
+    showButton(i, 4,input[0].z);
+    showButton(i, 5,input[0].r);
+    showButton(i, 6,input[0].l);
+    showButton(i, 7,input[0].s);
+    showButton(i, 8,input[0].du);
+    showButton(i, 9,input[0].dr);
+    showButton(i,10,input[0].dd);
+    showButton(i,11,input[0].dl);
         
     if (showDebug) {
     $("#lsAxisX" + i).empty().append(input[0].lsX.toFixed(4));
