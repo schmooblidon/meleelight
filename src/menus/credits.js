@@ -92,6 +92,10 @@ export function credits (p){ //called once every frame
     currentLaserColor = (currentLaserColor === laserColors.length - 1) ? 0 : currentLaserColor + 1;
     laserColor = laserColors[currentLaserColor];
   }
+  if (player[p].inputs.y[0] && !player[p].inputs.y[1]) {
+    currentLaserColor = (currentLaserColor === 0) ? (laserColors.length - 1) : currentLaserColor - 1;
+    laserColor = laserColors[currentLaserColor];
+  }
   if (initc) {
     lastHit = [0, 0, false]; //see notes above
     creditNames = [
