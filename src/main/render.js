@@ -9,14 +9,14 @@ import {
     playerType,
     palettes,
     pPal,
-    stage,
+    activeStage,
     hasTag,
     tagText
     , gameMode
     , startTimer
 } from "main/main";
 import {gameSettings} from "settings";
-import {makeColour} from "main/vfxutil";
+import {makeColour} from "main/vfx/makeColour";
 import {aS} from "physics/actionStateShortcuts";
 /* eslint-disable */
 
@@ -58,8 +58,8 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
 
 
 export function renderPlayer(i) {
-    var temX = (player[i].phys.pos.x * stage.scale) + stage.offset[0];
-    var temY = (player[i].phys.pos.y * -stage.scale) + stage.offset[1];
+    var temX = (player[i].phys.pos.x * activeStage.scale) + activeStage.offset[0];
+    var temY = (player[i].phys.pos.y * -activeStage.scale) + activeStage.offset[1];
     var face = player[i].phys.face;
     var frame = Math.floor(player[i].timer);
     if (frame == 0) {
@@ -175,7 +175,7 @@ export function renderPlayer(i) {
                     }
                     player[i].miniViewSide = 2;
                 } else {
-                    player[i].miniViewPoint = new Vec2D(-375 / s + stage.offset[0], 50);
+                    player[i].miniViewPoint = new Vec2D(-375 / s + activeStage.offset[0], 50);
                     player[i].miniViewSide = 2;
                 }
                 player[i].miniView = true;
@@ -203,28 +203,28 @@ export function renderPlayer(i) {
                 .x, player[i].rotationPoint.y);
         } else {
             if (player[i].actionState == "ENTRANCE") {
-                drawArrayPathCompress(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (stage.scale /
+                drawArrayPathCompress(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
                     4.5), Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 -
-                        startTimer)) * (stage.scale / 4.5), player[i].rotation, player[i].rotationPoint.x, player[i].rotationPoint
+                        startTimer)) * (activeStage.scale / 4.5), player[i].rotation, player[i].rotationPoint.x, player[i].rotationPoint
                     .y);
             } else {
-                drawArrayPathCompress(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (stage.scale /
-                    4.5), player[i].charAttributes.charScale * (stage.scale / 4.5), player[i].rotation, player[i].rotationPoint
+                drawArrayPathCompress(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
+                    4.5), player[i].charAttributes.charScale * (activeStage.scale / 4.5), player[i].rotation, player[i].rotationPoint
                     .x, player[i].rotationPoint.y);
             }
         }
     }
     if (player[i].phys.shielding) {
         if (!(player[i].phys.powerShielded && player[i].hit.hitlag > 0)) {
-            var sX = ((player[i].phys.shieldPositionReal.x) * stage.scale) + stage.offset[0];
-            var sY = ((player[i].phys.shieldPositionReal.y) * -stage.scale) + stage.offset[1];
+            var sX = ((player[i].phys.shieldPositionReal.x) * activeStage.scale) + activeStage.offset[0];
+            var sY = ((player[i].phys.shieldPositionReal.y) * -activeStage.scale) + activeStage.offset[1];
             var sCol = palettes[pPal[i]][2];
             if (Math.floor(player[i].hit.shieldstun) > 0) {
                 sCol = palettes[pPal[i]][4];
             }
             fg2.fillStyle = sCol + (0.6 * player[i].phys.shieldAnalog) + ")";
             fg2.beginPath();
-            fg2.arc(sX, sY, player[i].phys.shieldSize * stage.scale, twoPi, 0);
+            fg2.arc(sX, sY, player[i].phys.shieldSize * activeStage.scale, twoPi, 0);
             fg2.fill();
         }
     }
@@ -232,17 +232,17 @@ export function renderPlayer(i) {
         fg2.fillStyle = makeColour(0, 0, 0, 0.5);
         fg2.strokeStyle = palettes[pPal[i]][0];
         var size = 10 * tagText[i].length
-        fg2.fillRect(temX - size / 2, temY - 130 * (stage.scale / 4.5), size, 20);
-        fg2.strokeRect(temX - size / 2, temY - 130 * (stage.scale / 4.5), size, 20);
+        fg2.fillRect(temX - size / 2, temY - 130 * (activeStage.scale / 4.5), size, 20);
+        fg2.strokeRect(temX - size / 2, temY - 130 * (activeStage.scale / 4.5), size, 20);
         fg2.font = "13px Lucida Console, monaco, monospace";
         fg2.textAlign = "center";
         fg2.fillStyle = "white";
-        fg2.fillText(tagText[i], temX, temY + 15 - 130 * (stage.scale / 4.5));
+        fg2.fillText(tagText[i], temX, temY + 15 - 130 * (activeStage.scale / 4.5));
         fg2.fillStyle = palettes[pPal[i]][0];
         fg2.beginPath();
-        fg2.moveTo(temX - 8, temY + 20 - 130 * (stage.scale / 4.5));
-        fg2.lineTo(temX + 8, temY + 20 - 130 * (stage.scale / 4.5));
-        fg2.lineTo(temX, temY + 28 - 130 * (stage.scale / 4.5));
+        fg2.moveTo(temX - 8, temY + 20 - 130 * (activeStage.scale / 4.5));
+        fg2.lineTo(temX + 8, temY + 20 - 130 * (activeStage.scale / 4.5));
+        fg2.lineTo(temX, temY + 28 - 130 * (activeStage.scale / 4.5));
         fg2.closePath();
         fg2.fill();
         fg2.textAlign = "start";
@@ -251,45 +251,45 @@ export function renderPlayer(i) {
         fg2.fillStyle = palettes[pPal[i]][1];
         fg2.strokeStyle = palettes[pPal[i]][0];
         fg2.beginPath();
-        fg2.moveTo(temX + 18 * (stage.scale / 4.5), temY + 13.5 * (stage.scale / 4.5));
-        fg2.lineTo(temX + 31.5 * (stage.scale / 4.5), temY);
-        fg2.lineTo(temX - 31.5 * (stage.scale / 4.5), temY);
-        fg2.lineTo(temX - 18 * (stage.scale / 4.5), temY + 13.5 * (stage.scale / 4.5));
+        fg2.moveTo(temX + 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5));
+        fg2.lineTo(temX + 31.5 * (activeStage.scale / 4.5), temY);
+        fg2.lineTo(temX - 31.5 * (activeStage.scale / 4.5), temY);
+        fg2.lineTo(temX - 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5));
         fg2.closePath();
         fg2.fill();
         fg2.stroke();
     }
     if (player[i].showLedgeGrabBox) {
         fg2.strokeStyle = "#4478ff";
-        fg2.strokeRect(player[i].phys.ledgeSnapBoxF.min.x * stage.scale + stage.offset[0], player[i].phys.ledgeSnapBoxF.min
-                .y * -stage.scale + stage.offset[1], 14 * stage.scale, 10 * stage.scale);
+        fg2.strokeRect(player[i].phys.ledgeSnapBoxF.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.ledgeSnapBoxF.min
+                .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
         fg2.strokeStyle = "#ff4444";
-        fg2.strokeRect(player[i].phys.ledgeSnapBoxB.min.x * stage.scale + stage.offset[0], player[i].phys.ledgeSnapBoxB.min
-                .y * -stage.scale + stage.offset[1], 14 * stage.scale, 10 * stage.scale);
+        fg2.strokeRect(player[i].phys.ledgeSnapBoxB.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.ledgeSnapBoxB.min
+                .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
     }
     if (player[i].showECB) {
         fg2.fillStyle = "#ff8d2f";
         fg2.beginPath();
-        fg2.moveTo((player[i].phys.ECB1[0].x * stage.scale) + stage.offset[0], (player[i].phys.ECB1[0].y * -stage.scale) +
-            stage.offset[1]);
-        fg2.lineTo((player[i].phys.ECB1[1].x * stage.scale) + stage.offset[0], (player[i].phys.ECB1[1].y * -stage.scale) +
-            stage.offset[1]);
-        fg2.lineTo((player[i].phys.ECB1[2].x * stage.scale) + stage.offset[0], (player[i].phys.ECB1[2].y * -stage.scale) +
-            stage.offset[1]);
-        fg2.lineTo((player[i].phys.ECB1[3].x * stage.scale) + stage.offset[0], (player[i].phys.ECB1[3].y * -stage.scale) +
-            stage.offset[1]);
+        fg2.moveTo((player[i].phys.ECB1[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[0].y * -activeStage.scale) +
+            activeStage.offset[1]);
+        fg2.lineTo((player[i].phys.ECB1[1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[1].y * -activeStage.scale) +
+            activeStage.offset[1]);
+        fg2.lineTo((player[i].phys.ECB1[2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[2].y * -activeStage.scale) +
+            activeStage.offset[1]);
+        fg2.lineTo((player[i].phys.ECB1[3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[3].y * -activeStage.scale) +
+            activeStage.offset[1]);
         fg2.closePath();
         fg2.fill();
         fg2.strokeStyle = "white";
         fg2.beginPath();
-        fg2.moveTo((player[i].phys.ECBp[0].x * stage.scale) + stage.offset[0], (player[i].phys.ECBp[0].y * -stage.scale) +
-            stage.offset[1]);
-        fg2.lineTo((player[i].phys.ECBp[1].x * stage.scale) + stage.offset[0], (player[i].phys.ECBp[1].y * -stage.scale) +
-            stage.offset[1]);
-        fg2.lineTo((player[i].phys.ECBp[2].x * stage.scale) + stage.offset[0], (player[i].phys.ECBp[2].y * -stage.scale) +
-            stage.offset[1]);
-        fg2.lineTo((player[i].phys.ECBp[3].x * stage.scale) + stage.offset[0], (player[i].phys.ECBp[3].y * -stage.scale) +
-            stage.offset[1]);
+        fg2.moveTo((player[i].phys.ECBp[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[0].y * -activeStage.scale) +
+            activeStage.offset[1]);
+        fg2.lineTo((player[i].phys.ECBp[1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[1].y * -activeStage.scale) +
+            activeStage.offset[1]);
+        fg2.lineTo((player[i].phys.ECBp[2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[2].y * -activeStage.scale) +
+            activeStage.offset[1]);
+        fg2.lineTo((player[i].phys.ECBp[3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[3].y * -activeStage.scale) +
+            activeStage.offset[1]);
         fg2.closePath();
         fg2.stroke();
         fg2.beginPath();
@@ -305,9 +305,9 @@ export function renderPlayer(i) {
     }
     if (player[i].showHitbox) {
         fg2.fillStyle = hurtboxColours[player[i].phys.hurtBoxState];
-        fg2.fillRect(player[i].phys.hurtbox.min.x * stage.scale + stage.offset[0], player[i].phys.hurtbox.min.y * -stage.scale +
-            stage.offset[1], player[i].charAttributes.hurtboxOffset[0] * 2 * stage.scale, player[i].charAttributes.hurtboxOffset[
-                1] * stage.scale);
+        fg2.fillRect(player[i].phys.hurtbox.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.hurtbox.min.y * -activeStage.scale +
+            activeStage.offset[1], player[i].charAttributes.hurtboxOffset[0] * 2 * activeStage.scale, player[i].charAttributes.hurtboxOffset[
+                1] * activeStage.scale);
         fg2.fillStyle = makeColour(255, 29, 29, 0.69);
         for (var j = 0; j < 4; j++) {
             switch (j) {
@@ -336,8 +336,8 @@ export function renderPlayer(i) {
                     offset = player[i].hitboxes.id[j].offset[0];
                 }
                 fg2.beginPath();
-                fg2.arc(((offset.x * player[i].phys.face + player[i].phys.pos.x) * stage.scale) + stage.offset[0], ((offset.y +
-                    player[i].phys.pos.y) * -stage.scale) + stage.offset[1], player[i].hitboxes.id[j].size * stage.scale,
+                fg2.arc(((offset.x * player[i].phys.face + player[i].phys.pos.x) * activeStage.scale) + activeStage.offset[0], ((offset.y +
+                    player[i].phys.pos.y) * -activeStage.scale) + activeStage.offset[1], player[i].hitboxes.id[j].size * activeStage.scale,
                     Math.PI * 2, 0);
                 fg2.fill();
                 if (player[i].phys.prevFrameHitboxes.active[j]) {
@@ -346,21 +346,21 @@ export function renderPlayer(i) {
                         offset = player[i].phys.prevFrameHitboxes.id[j].offset[0];
                     }
                     fg2.beginPath();
-                    fg2.arc(((offset.x * player[i].phys.facePrev + player[i].phys.posPrev.x) * stage.scale) + stage.offset[0],
-                        ((offset.y + player[i].phys.posPrev.y) * -stage.scale) + stage.offset[1], player[i].phys.prevFrameHitboxes
-                            .id[j].size * stage.scale, Math.PI * 2, 0);
+                    fg2.arc(((offset.x * player[i].phys.facePrev + player[i].phys.posPrev.x) * activeStage.scale) + activeStage.offset[0],
+                        ((offset.y + player[i].phys.posPrev.y) * -activeStage.scale) + activeStage.offset[1], player[i].phys.prevFrameHitboxes
+                            .id[j].size * activeStage.scale, Math.PI * 2, 0);
                     fg2.fill();
 
                     //console.log(player[i].phys.interPolatedHitbox[j]);
                     fg2.beginPath();
-                    fg2.moveTo((player[i].phys.interPolatedHitbox[j][0].x * stage.scale) + stage.offset[0], (player[i].phys.interPolatedHitbox[
-                            j][0].y * -stage.scale) + stage.offset[1]);
-                    fg2.lineTo((player[i].phys.interPolatedHitbox[j][1].x * stage.scale) + stage.offset[0], (player[i].phys.interPolatedHitbox[
-                            j][1].y * -stage.scale) + stage.offset[1]);
-                    fg2.lineTo((player[i].phys.interPolatedHitbox[j][2].x * stage.scale) + stage.offset[0], (player[i].phys.interPolatedHitbox[
-                            j][2].y * -stage.scale) + stage.offset[1]);
-                    fg2.lineTo((player[i].phys.interPolatedHitbox[j][3].x * stage.scale) + stage.offset[0], (player[i].phys.interPolatedHitbox[
-                            j][3].y * -stage.scale) + stage.offset[1]);
+                    fg2.moveTo((player[i].phys.interPolatedHitbox[j][0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.interPolatedHitbox[
+                            j][0].y * -activeStage.scale) + activeStage.offset[1]);
+                    fg2.lineTo((player[i].phys.interPolatedHitbox[j][1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.interPolatedHitbox[
+                            j][1].y * -activeStage.scale) + activeStage.offset[1]);
+                    fg2.lineTo((player[i].phys.interPolatedHitbox[j][2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.interPolatedHitbox[
+                            j][2].y * -activeStage.scale) + activeStage.offset[1]);
+                    fg2.lineTo((player[i].phys.interPolatedHitbox[j][3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.interPolatedHitbox[
+                            j][3].y * -activeStage.scale) + activeStage.offset[1]);
                     fg2.closePath();
                     fg2.fill();
                     fg2.stroke();

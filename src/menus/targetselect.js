@@ -1,7 +1,7 @@
-import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine, setStage,
+import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine,
     addShine
     , setShine
-    , deepCopyObject
+
 } from "main/main";
 import {targetRecords,  startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords,
     setTargetStagePlaying
@@ -14,8 +14,9 @@ import {sounds} from "main/sfx";
 import {Vec2D, Box2D} from "main/characters";
 import {twoPi} from "main/render";
 import {foxPic, puffPic, marthPic} from "menus/css";
-import {customTargetStages, targetStages, setCustomTargetStages} from "stages/stages";
+import {customTargetStages, setCustomTargetStages} from "customtargetstages.js";
 import {setCS} from "../main/main";
+import {deepCopyObject} from "main/util/deepCopyObject";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;
@@ -123,10 +124,10 @@ export function tssControls (i){
         }
         else {
           if (targetSelected > 9){
-            setStage(customTargetStages[targetSelected-10]);
+            setActiveStageCustomTarget(customTargetStages[targetSelected-10]);
           }
           else {
-            setStage(targetStages[targetSelected]);
+            setActiveStageTarget(targetSelected);
           }
             setTargetStagePlaying( targetSelected);
           startTargetGame(i,false);

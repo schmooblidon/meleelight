@@ -2,9 +2,10 @@
 import WAIT from "characters/shared/moves/WAIT";
 import {articles} from "physics/article";
 import {Vec2D} from "main/characters";
-import {drawVfx, player} from "main/main";
+import { player} from "main/main";
 import {sounds} from "main/sfx";
 import {reduceByTraction} from "physics/actionStateShortcuts";
+import {drawVfx} from "main/vfx/drawVfx";
 
 export default {
   name : "NEUTRALSPECIALGROUND",

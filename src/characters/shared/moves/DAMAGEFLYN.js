@@ -1,6 +1,7 @@
-import {drawVfx, cS, player} from "main/main";
+import { cS, player} from "main/main";
 import {aS, turnOffHitboxes} from "physics/actionStateShortcuts";
 import {Vec2D,framesData} from "main/characters";
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "DAMAGEFLYN",
   canPassThrough : false,

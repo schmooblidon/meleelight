@@ -1,6 +1,7 @@
-import {cS, player, gameMode, versusMode, playerType, drawVfx} from "main/main";
+import {cS, player, gameMode, versusMode, playerType} from "main/main";
 import {sounds} from "main/sfx";
 import {intangibility, actionSounds, Vec2D} from "main/characters";
+import {drawVfx} from "main/vfx/drawVfx";
 /* eslint-disable */
 
 export function randomShout (char){
@@ -530,7 +531,7 @@ export function turboGroundedInterrupt (p){
 }
 
 export const aS = [];
-export function setAS(index,val){
+export function setupActionStates(index, val){
   aS[index] = val;
 }
 

@@ -1,8 +1,9 @@
-import {playerType, player, cS, screenShake, drawVfx, gameMode, percentShake} from "main/main";
+import {playerType, player, cS, screenShake, gameMode, percentShake} from "main/main";
 import {Vec2D, Segment2D} from "main/characters";
 import {gameSettings} from "settings";
 import {sounds} from "main/sfx";
 import {turnOffHitboxes, aS} from "physics/actionStateShortcuts";
+import {drawVfx} from "main/vfx/drawVfx";
 /* eslint-disable */
 
 export let hitQueue = [];

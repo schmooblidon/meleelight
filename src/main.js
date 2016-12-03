@@ -34,10 +34,11 @@ import "menus/css.js";
 import "target/targetbuilder.js";
 import "target/targetplay.js";
 import "menus/targetselect.js";
-import "stages/stages.js";
+import "customtargetstages.js";
 import "stages/stagerender.js";
 import "menus/stageselect.js";
 import "physics/physics.js";
 import "main/ai.js";
 import "main/resize.js";
+import "stages/vs-stages/vs-stages"
 import "main/main.js";

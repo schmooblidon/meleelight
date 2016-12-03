@@ -1,8 +1,9 @@
 import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, drawVfx, player} from "main/main";
+import {cS,  player} from "main/main";
 import {sounds} from "main/sfx";
 
 import {framesData} from 'main/characters';
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "DOWNBOUND",
   canEdgeCancel : true,

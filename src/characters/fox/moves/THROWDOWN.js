@@ -2,12 +2,13 @@
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
 import {Vec2D,framesData} from "main/characters";
-import {drawVfx, cS, player} from "main/main";
+import { cS, player} from "main/main";
 import {sounds} from "main/sfx";
 import {articles} from "physics/article";
 import {randomShout, turnOffHitboxes, aS} from "physics/actionStateShortcuts";
 
 import {hitQueue} from 'physics/hitDetection';
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "THROWDOWN",
   canEdgeCancel : false,

@@ -3,9 +3,10 @@ import WAIT from "characters/shared/moves/WAIT";
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import FIREFOXBOUNCE from "characters/fox/moves/FIREFOXBOUNCE";
 import {turnOffHitboxes, airDrift, fastfall, reduceByTraction} from "physics/actionStateShortcuts";
-import {drawVfx, player} from "main/main";
+import { player} from "main/main";
 import {Vec2D} from "main/characters";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
 
 export default {
   name : "UPSPECIALLAUNCH",

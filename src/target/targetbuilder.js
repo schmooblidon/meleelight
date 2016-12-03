@@ -1,11 +1,12 @@
 import {Box2D, Vec2D} from "main/characters";
-import {player,ui, changeGamemode, setCookie, layers, clearScreen, deepCopyObject} from "main/main";
+import {player,ui, changeGamemode, setCookie, layers, clearScreen} from "main/main";
 import {sounds} from "main/sfx";
 import {handGrab, handOpen} from "menus/css";
 import {twoPi} from "main/render";
 import {startTargetGame} from "target/targetplay";
-import {targetStages, customTargetStages, setCustomTargetStages} from "stages/stages";
+import {targetStages, customTargetStages, setCustomTargetStages} from "customtargetstages.js";
 import {boxFill, drawBackground} from "stages/stagerender";
+import {deepCopyObject} from "main/util/deepCopyObject";
 /* eslint-disable */
 
 export let crossHairPos = new Vec2D(0,0);
