@@ -49,7 +49,7 @@ function dealWithWall (i, wallType) {
       }
     }
     if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-      if (sign * player[i].inputs.lStickAxis[0].x >= sign * 0.7 &&
+      if (sign * player[i].inputs.lStickAxis[0].x >= 0.7 &&
           sign * player[i].inputs.lStickAxis[3].x <= 0 &&
           player[i].charAttributes.walljump) {
         player[i].phys.wallJumpTimer = 254;
