@@ -7,6 +7,53 @@ import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizonta
 import {lostStockQueue} from 'main/render';
 /* eslint-disable */
 
+
+
+
+function dealWithWall (wallType) {
+let wallLabel = "L";
+let sign = -1;
+if (wallType[0].toLowerCase() === "r") {
+  wallLabel = "R";
+  sign = 1;
+}
+
+if (player[i].actionState == "DAMAGEFLYN") {
+  if (player[i].hit.hitlag == 0) {
+    player[i].phys.face = sign;
+    if (player[i].phys.techTimer > 0) {
+      if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7) {
+        aS[cS[i]].WALLTECHJUMP.init(i);
+      } else {
+        aS[cS[i]].WALLTECH.init(i);
+      }
+    } else {
+      drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, 0);
+      aS[cS[i]].WALLDAMAGE.init(i);
+    }
+  }
+  else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
+  aS[cS[i]][player[i].actionState].onWallCollide(i, wallLabel, j);
+  else if (player[i].phys.canWallJump) {
+  if (player[i].phys.wallJumpTimer == 254) {
+    if (player[i].phys.posDelta.x >= 0.5) {
+      player[i].phys.wallJumpTimer = 0;
+    }
+  }
+  if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
+    if (sign * player[i].inputs.lStickAxis[0].x >= sign * 0.7 &&
+        sign * player[i].inputs.lStickAxis[3].x <= 0 &&
+        player[i].charAttributes.walljump) {
+      player[i].phys.wallJumpTimer = 254;
+      player[i].phys.face = sign;
+      aS[cS[i]].WALLJUMP.init(i);
+    } else {
+      player[i].phys.wallJumpTimer++;
+    }
+  }
+};
+
+
 export function land (i,y,t,j){
   player[i].phys.pos.y = y;
   player[i].phys.grounded = true;
@@ -504,103 +551,28 @@ export function physics (i){
     }
 
     var notTouchingWalls = [true, true];
-    for (var j = 0; j < stage.wallL.length; j++) {
-
-      if (player[i].phys.ECBp[1].y < stage.wallL[j][0].y &&
-          player[i].phys.ECBp[1].y > stage.wallL[j][1].y &&
-          player[i].phys.ECBp[1].x >= stage.wallL[j][1].x - 0.000011 &&
-          (player[i].phys.ECB1[1].x <= stage.wallL[j][1].x ||
-          ((player[i].phys.ECB1[1].y >= stage.wallL[j][0].y || player[i].phys.ECB1[1].y <= stage.wallL[j][1].y) &&
-            player[i].phys.ECB1[3].x <= stage.wallL[j][0].x))) {
-
-        //player[i].phys.ECB1[3].x <= stage.wallL[j][0].x is kind of a shitty fix. It is very unlikely something will break it though.
+    let wallWallTypes = ( stage.wallL.map(push("left")) ).concat( stage.wallR.map(push("right")) );
+    let touchingAndCenter = getNewTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, wallWallTypes);
+    if (touchingAndCenter === false) { 
+      // no wall collision at all, do nothing
+    }
+    else {
+      player[i].phys.pos = touchingAndCenter[1];
+      if (touchingAndCenter[0] === false ) {
+        // collision with wall but player no longer touching wall
+      }
+      if (touchingAndCenter[0][0].toLowerCase() === "l") {
+        // collision with wall, player still touching a left wall
         notTouchingWalls[0] = false;
-        player[i].phys.pos.x -= player[i].phys.ECBp[1].x - stage.wallL[j][1].x + 0.00001;
-        if (player[i].actionState == "DAMAGEFLYN") {
-          if (player[i].hit.hitlag == 0) {
-            player[i].phys.face = -1;
-            if (player[i].phys.techTimer > 0) {
-              if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7) {
-                aS[cS[i]].WALLTECHJUMP.init(i);
-              } else {
-                aS[cS[i]].WALLTECH.init(i);
-              }
-            } else {
-              drawVfx("wallBounce", new Vec2D(stage.wallL[j][1].x, player[i].phys.ECBp[1].y), -1, 0);
-              aS[cS[i]].WALLDAMAGE.init(i);
-            }
-          }
-        } else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
-          aS[cS[i]][player[i].actionState].onWallCollide(i, "L", j);
-        } else if (player[i].phys.canWallJump) {
-          if (player[i].phys.wallJumpTimer == 254) {
-            if (player[i].phys.posDelta.x >= 0.5) {
-              player[i].phys.wallJumpTimer = 0;
-            }
-          }
-          if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-            if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
-                player[i].inputs.lStickAxis[3].x >= 0 &&
-                player[i].charAttributes.walljump) {
-
-              player[i].phys.wallJumpTimer = 254;
-              player[i].phys.face = -1;
-              aS[cS[i]].WALLJUMP.init(i);
-            } else {
-              player[i].phys.wallJumpTimer++;
-            }
-          }
-        }
+        dealWithWall("left");
       }
-    }
-
-    for (var j = 0; j < stage.wallR.length; j++) {
-      if (player[i].phys.ECBp[3].y < stage.wallR[j][0].y &&
-          player[i].phys.ECBp[3].y > stage.wallR[j][1].y &&
-          player[i].phys.ECBp[3].x <= stage.wallR[j][1].x + 0.000011 &&
-          (player[i].phys.ECB1[3].x >= stage.wallR[j][1].x ||
-          ((player[i].phys.ECB1[3].y >= stage.wallR[j][0].y || player[i].phys.ECB1[3].y <= stage.wallR[j][1].y) &&
-            player[i].phys.ECB1[1].x >= stage.wallR[j][0].x))) {
-
+      else {
+        // collision with wall, player still touching a right wall
         notTouchingWalls[1] = false;
-        player[i].phys.pos.x -= player[i].phys.ECBp[3].x - stage.wallR[j][1].x - 0.00001;
-        if (player[i].actionState == "DAMAGEFLYN") {
-          if (player[i].hit.hitlag == 0) {
-            player[i].phys.face = 1;
-            if (player[i].phys.techTimer > 0) {
-              if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7) {
-                aS[cS[i]].WALLTECHJUMP.init(i);
-              } else {
-                aS[cS[i]].WALLTECH.init(i);
-              }
-            } else {
-              drawVfx("wallBounce", new Vec2D(stage.wallR[j][1].x, player[i].phys.ECBp[3].y), 1, 1);
-              aS[cS[i]].WALLDAMAGE.init(i);
-            }
-          }
-        } else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
-          aS[cS[i]][player[i].actionState].onWallCollide(i, "R", j);
-        } else if (player[i].phys.canWallJump) {
-          if (player[i].phys.wallJumpTimer == 254) {
-            if (player[i].phys.posDelta.x >= 0.5) {
-              player[i].phys.wallJumpTimer = 0;
-            }
-          }
-          if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-            if (player[i].inputs.lStickAxis[0].x >= 0.7 &&
-                player[i].inputs.lStickAxis[3].x <= 0 &&
-                player[i].charAttributes.walljump) {
-
-              player[i].phys.wallJumpTimer = 254;
-              player[i].phys.face = 1;
-              aS[cS[i]].WALLJUMP.init(i);
-            } else {
-              player[i].phys.wallJumpTimer++;
-            }
-          }
-        }
+        dealWithWall("right");
       }
     }
+
     if (notTouchingWalls[0] && notTouchingWalls[1] && player[i].phys.canWallJump) {
       player[i].phys.wallJumpTimer = 254;
     }
