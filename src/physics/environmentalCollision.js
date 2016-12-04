@@ -7,11 +7,11 @@ const maximumCollisionDetectionPasses = 5;
 
 // returns true if the vector is moving into the wall, false otherwise
 function movingInto (vec, wallTop, wallBottom, wallType) {
-  let s = 1;
+  let sign = 1;
   if (wallType[0].toLowerCase() === "l") {
-    s = -1;
+    sign = -1;
   }
-  const outwardsWallNormal = new Vec2D ( s * (wallTop.y - wallBottom.y), s*( wallBottom.x-wallTop.x )  );
+  const outwardsWallNormal = new Vec2D ( sign * (wallTop.y - wallBottom.y), sign*( wallBottom.x-wallTop.x )  );
   return ( dotProd ( vec, outwardsWallNormal ) < 0 );
 };
 
@@ -25,40 +25,42 @@ function isOutside (point, wallTop, wallBottom, wallType) {
 function extremePoint(wall, extreme) {
   const  v1 = wall[0];
   const  v2 = wall[1];
-  if (extreme[0].toLowerCase() === "u" || extreme[0].toLowerCase() === "t" ) {
-    if (v2.y < v1.y) {
-      return v1;
-    }
-    else {
-      return v2;
-    }
-  }
-  else if (extreme[0].toLowerCase() === "d" || extreme[0].toLowerCase() === "b" ) {
-    if (v2.y > v1.y) {
-      return v1;
-    }
-    else {
-      return v2;
-    }
-  }
-  else if (extreme[0].toLowerCase() === "l" ) {
-    if (v2.x > v1.x) {
-      return v1;
-    }
-    else {
-      return v2;
-    }
-  }
-  else if (extreme[0].toLowerCase() === "r" ) {
-    if (v2.x < v1.x) {
-      return v1;
-    }
-    else {
-      return v2;
-    }
-  }
-  else {
-    return ("error in 'extremePoint': invalid parameter "+extreme+", not up/top/down/bottom/left/right");
+  switch (extreme[0].toLowerCase()) {
+    case "u":
+    case "t":
+      if (v2.y < v1.y) {
+        return v1;
+      }
+      else {
+        return v2;
+      }
+      break;
+    case "d":
+    case "b":
+      if (v2.y > v1.y) {
+        return v1;
+      }
+      else {
+        return v2;
+      }
+      break;
+    case "l":
+      if (v2.x > v1.x) {
+        return v1;
+      }
+      else {
+        return v2;
+      }
+      break;
+    case "r":
+      if (v2.x < v1.x) {
+        return v1;
+      }
+      else {
+        return v2;
+      }
+    default:
+      return ("error in 'extremePoint': invalid parameter "+extreme+", not up/top/down/bottom/left/right");
   }
 };
 
@@ -75,9 +77,9 @@ function lineAngle( line ) { // returns angle of line from the positive x axis, 
   }
 };
 
-// finds the intercept of two lines,
-// both given as pairs of points
-// please be careful to not call this function on lines that are parallel
+// say line1 passes through the two points p1 = (x1,y1), p2 = (x2,y2)
+// and line2 by the two points p3 = (x3,y3) and p4 = (x4,y4)
+// this function returns the parameter t, such that p3 + t*(p4-p3) is the intersection point of the two lines
 function coordinateInterceptParameter (line1, line2) {
   const x1 = line1[0].x;
   const x2 = line1[1].x;
@@ -87,16 +89,17 @@ function coordinateInterceptParameter (line1, line2) {
   const y2 = line1[1].y;
   const y3 = line2[0].y;
   const y4 = line2[1].y;
-  const t = ( (x3-x1)*(y2-y1) + (x2-x1)*(y1-y3) ) / ( (x4-x3)*(y2-y1) + (x2-x1)*(y3-y4) );
-  return ( t );
+  return ( (x3-x1)*(y2-y1) + (x2-x1)*(y1-y3) ) / ( (x4-x3)*(y2-y1) + (x2-x1)*(y3-y4) );
 };
 
 // orthogonally projects a point onto a line
 // line is given by two points it passes through
 function orthogonalProjection(point, line) {
+  const line0 = line[0];
+  const [line0x,line0y] = [line0.x, line0.y];
   // turn everything into relative coordinates with respect to the point line[0]
-  const pointVec = new Vec2D ( point.x - line[0].x, point.y - line[0].y);
-  const lineVec  = new Vec2D ( line[1].x - line[0].x, line[1].y - line[0].y);
+  const pointVec = new Vec2D ( point.x - line0x, point.y - line0y);
+  const lineVec  = new Vec2D ( line[1].x - line0x, line[1].y - line0y);
   // renormalise line vector
   const lineNorm = norm(lineVec);
   const lineElem = scalarProd( 1/lineNorm, lineVec);
@@ -104,7 +107,7 @@ function orthogonalProjection(point, line) {
   const factor = dotProd(pointVec, lineElem);
   const projVec = scalarProd(factor, lineElem);
   // back to absolute coordinates by adding the coordinates of line[0]
-  return (new Vec2D(projVec.x + line[0].x,projVec.y + line[0].y));
+  return (new Vec2D(projVec.x + line0x,projVec.y + line0y));
 };
 
 
@@ -275,7 +278,7 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldMaybeTouchingAn
         suggestedMaybeTouchingAndCenters.push(collisionData[i]);
       }
     }
-    if (newCollisionHappened === true) {
+    if (newCollisionHappened) {
       const newMaybeTouchingAndCenter = closestTouchingAndCenter( oldCenter, suggestedMaybeTouchingAndCenters);
       const vec = new Vec2D( newMaybeTouchingAndCenter[1].x - ecbp[0].x, newMaybeTouchingAndCenter[1].y - ecbp[1].y);
       const newecbp = moveECB (ecbp, vec);
