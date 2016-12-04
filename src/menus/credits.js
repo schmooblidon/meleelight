@@ -20,7 +20,7 @@ let cYPos = cYSize / 2;
 let cPlayerXPos = cXSize / 2;
 let cPlayerYPos = cYSize / 2;
 let cScrollingPos = 0;
-let cScrollingMax = 2800;// max scrolling distance in y coords. Can change this when you want more names or w/e
+let cScrollingMax = 2100;// max scrolling distance in y coords. Can change this when you want more names or w/e
 const cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
 let lastHit = [0, 0, false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
@@ -35,7 +35,7 @@ let laserColor = laserColors[currentLaserColor];
 
 export function ScrollingText (text,yPos,position,information) {
   this.Text = text;
-  this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
+  this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.5)) + (cXSize * .25));
   this.yPos = yPos;
   this.fontSize = 36;
   //this.fontSize = fontSize; //font should always be Consolas. Font size IS 36px
@@ -60,10 +60,16 @@ export function ScrollingText (text,yPos,position,information) {
 		  this.canRender = false;
 	  }
   };
-  this.checkIfShot = function(x, y) {//updates this.isShot respectively
-      if (this.isShot == false) {
+    this.isHovering = function(x, y) {
 	  const size = this.size();
 	  if (x >= size[0][0] && x <= size[0][1] && y >= size[1][0] && y <= size[1][1]) {
+		  return true;
+	  }
+	  return false;
+  }
+  this.checkIfShot = function(x, y) {//updates this.isShot respectively
+      if (this.isShot == false) {
+	  if (this.isHovering(x,y)) {
 		  this.isShot = true;
 		  return true;
 	  } else {
@@ -84,10 +90,12 @@ export function ScrollingText (text,yPos,position,information) {
     this.yPos += y;
   }
 }
+
 let creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
 
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
 export function credits (p){ //called once every frame
+   
   if (player[p].inputs.x[0] && !player[p].inputs.x[1]) {
     currentLaserColor = (currentLaserColor === laserColors.length - 1) ? 0 : currentLaserColor + 1;
     laserColor = laserColors[currentLaserColor];
@@ -97,23 +105,26 @@ export function credits (p){ //called once every frame
     laserColor = laserColors[currentLaserColor];
   }
   if (initc) {
+	cScrollingPos = 0;
     lastHit = [0, 0, false]; //see notes above
     creditNames = [
       new ScrollingText("Schmoo", 800, "Creator, Main Developer", "Made the game."),
-      new ScrollingText("Tatatat0", 900, "Programmer", "Created the AI and credits."),
-      new ScrollingText("bites", 1000, "Animation Assistant, Level Design",
+      new ScrollingText("Tatatat0", 950, "Programmer", "Created the AI and credits."),
+      new ScrollingText("bites", 1100, "Animation Assistant, Level Design",
         "Helped develop animation process & designed target stages."),
-      new ScrollingText("WwwWario", 1100, "Support", "Helping users troubleshoot and being a homie!"),
-      new ScrollingText("zircon", 1200, "Musician", "Smash Superstars (Menu Theme)"),
-      new ScrollingText("Buoy", 1300, "Musician",
+      new ScrollingText("WwwWario", 1250, "Support", "Helping users troubleshoot and being a homie!"),
+      new ScrollingText("zircon", 1400, "Musician", "Smash Superstars (Menu Theme)"),
+      new ScrollingText("Buoy", 1550, "Musician",
         "Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
-      new ScrollingText("Tom Mauritzon", 1400, "Musician", "Mega Helix (PStadium Theme)"),
-      new ScrollingText("Rozen", 1500, "Musician", "Kumite (Battlefield Theme)"),
-      new ScrollingText("Zack Parrish", 1600, "Musician", "Sunny Side Up (Dreamland Theme)")
+      new ScrollingText("Tom Mauritzon", 1700, "Musician", "Mega Helix (PStadium Theme)"),
+      new ScrollingText("Rozen", 1850, "Musician", "Kumite (Battlefield Theme)"),
+      new ScrollingText("Zack Parrish", 2000, "Musician", "Sunny Side Up (Dreamland Theme)")
     ];
     cScore = 0;
     initc = false;
   }
+  //cScore = 9;
+  cScrollingPos -= cScrollingSpeed;
   let yDif = 0;
   if (player[p].inputs.s[0]) {
     //is holding down start. Should increase speed
@@ -162,7 +173,7 @@ export function credits (p){ //called once every frame
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(1200, 0), 1));
-      shoot_cooldown = 5;
+      shoot_cooldown = 8;
     }
   } else {
     shoot_cooldown -= 1;
@@ -171,7 +182,7 @@ export function credits (p){ //called once every frame
   for (let n=0; n<cShots.length; n++){
     if (cShots[n].life == 15){
       let madeShot = [false, 0];
-      for (var i = 0; i < creditNames.length; i++) {
+      for (let i = 0; i < creditNames.length; i++) {
         if (!(creditNames[i].isShot)) {
           if (creditNames[i].checkIfShot(cShots[n].target.x, 750 - cShots[n].target.y)) {
             madeShot = [true, i];
@@ -189,9 +200,21 @@ export function credits (p){ //called once every frame
     }
   }
 
-  if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
+  if (cScrollingPos >= cScrollingMax) {
+	if (cScore === creditNames.length) {
+	  sounds.complete.play();
+	} else {
+	  sounds.failure.play();
+    }
+	initc = true;
+    player[p].inputs.b[1] = true;
+    cShots = [];
+    lastHit = [0, 0, false];
+    creditNames = [];
+    changeGamemode(1);
+  } else if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
+    sounds.menuBack.play();		
     initc = true;
-    sounds.menuBack.play();
     player[p].inputs.b[1] = true;
     cShots = [];
     lastHit = [0, 0, false];
@@ -324,6 +347,15 @@ export function drawCredits (){
     }
   }
   fg1.strokeStyle = "rgba(255, 255, 255, 0.7)";
+  if (initc === false) {
+	 for (let i = 0; i < creditNames.length; i++) {
+        if (!(creditNames[i].isShot)) {
+          if (creditNames[i].isHovering(cPlayerXPos,cPlayerYPos)) {
+             fg1.strokeStyle = "rgba(204, 0, 0, 0.7)";
+          }
+        }
+      }
+  }
   fg1.lineWidth = 9;
   fg1.beginPath();
   fg1.arc(cPlayerXPos, cPlayerYPos, 35, 0, twoPi);
