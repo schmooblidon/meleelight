@@ -18,8 +18,9 @@ function movingInto (vec, wallTop, wallBottom, wallType) {
 // returns true if point is to the right of a "left" wall, or to the left of a "right" wall,
 // and false otherwise
 function isOutside (point, wallTop, wallBottom, wallType) {
-  const vec = new Vec2D ( point.x - wallBottom.x, point.y - wallBottom.y );
-  return ( !movingInto(vec, wallTop, wallBottom, wallType ) );
+  //const vec = new Vec2D ( point.x - wallBottom.x, point.y - wallBottom.y );
+  //return ( !movingInto(vec, wallTop, wallBottom, wallType ) );
+  return ( !movingInto(new Vec2D ( point.x - wallBottom.x, point.y - wallBottom.y ), wallTop, wallBottom, wallType ) );
 };
 
 function extremePoint(wall, extreme) {
@@ -79,16 +80,17 @@ function lineAngle( line ) { // returns angle of line from the positive x axis, 
 // both given as pairs of points
 // please be careful to not call this function on lines that are parallel
 function coordinateInterceptParameter (line1, line2) {
-  const x1 = line1[0].x;
-  const x2 = line1[1].x;
-  const x3 = line2[0].x;
-  const x4 = line2[1].x;
-  const y1 = line1[0].y;
-  const y2 = line1[1].y;
-  const y3 = line2[0].y;
-  const y4 = line2[1].y;
-  const t = ( (x3-x1)*(y2-y1) + (x2-x1)*(y1-y3) ) / ( (x4-x3)*(y2-y1) + (x2-x1)*(y3-y4) );
-  return ( t );
+  //const x1 = line1[0].x;
+  //const x2 = line1[1].x;
+  //const x3 = line2[0].x;
+  //const x4 = line2[1].x;
+  //const y1 = line1[0].y;
+  //const y2 = line1[1].y;
+  //const y3 = line2[0].y;
+  //const y4 = line2[1].y;
+  //const t = ( (x3-x1)*(y2-y1) + (x2-x1)*(y1-y3) ) / ( (x4-x3)*(y2-y1) + (x2-x1)*(y3-y4) );
+  //( (line2[0].x-line1[0].x)*(line1[1].y-line1[0].y) + (line1[1].x-line1[0].x)*(line1[0].y-line2[0].y) ) / ( (line2[1].x-line2[0].x)*(line1[1].y-line1[0].y) + (line1[1].x-line1[0].x)*(line2[0].y-line2[1].y) );
+  return ( (line2[0].x-line1[0].x)*(line1[1].y-line1[0].y) + (line1[1].x-line1[0].x)*(line1[0].y-line2[0].y) ) / ( (line2[1].x-line2[0].x)*(line1[1].y-line1[0].y) + (line1[1].x-line1[0].x)*(line2[0].y-line2[1].y) );
 };
 
 // orthogonally projects a point onto a line
