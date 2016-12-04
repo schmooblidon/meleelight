@@ -77,7 +77,7 @@ function lineAngle( line ) { // returns angle of line from the positive x axis, 
 // finds the intercept of two lines,
 // both given as pairs of points
 // please be careful to not call this function on lines that are parallel
-function coordinateIntercept (line1, line2) {
+function coordinateInterceptParameter (line1, line2) {
   let x1 = line1[0].x;
   let x2 = line1[1].x;
   let x3 = line2[0].x;
