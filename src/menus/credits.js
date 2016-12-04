@@ -15,6 +15,10 @@ const cYSize = 750; //To consider when setting the cYSize. make room for bar at 
 let cScore = 0;
 const cBoundX = (cXSize * 1.2098); //credits stick bounding octagon roughly circumscribes canvas size square
 const cBoundY = (cYSize * 1.2098);
+const cRectLength = 25;
+const cRectSpace = 10;
+const cDefaultAngles = [0,.5 * Math.PI, Math.PI, 1.5 * Math.PI];
+let cCursorAngle = 0;
 let cXPos = cXSize / 2;
 let cYPos = cYSize / 2;
 let cPlayerXPos = cXSize / 2;
@@ -121,9 +125,14 @@ export function credits (p){ //called once every frame
       new ScrollingText("Zack Parrish", 2000, "Musician", "Sunny Side Up (Dreamland Theme)")
     ];
     cScore = 0;
+	cCursorAngle = 0;
     initc = false;
   }
   //cScore = 9;
+  cCursorAngle += 3;
+  if (cCursorAngle >= 360) {
+	  cCursorAngle = 0;
+  }
   cScrollingPos -= cScrollingSpeed;
   let yDif = 0;
   if (player[p].inputs.s[0]) {
@@ -356,17 +365,44 @@ export function drawCredits (){
         }
       }
   }
-  fg1.lineWidth = 9;
-  fg1.beginPath();
-  fg1.arc(cPlayerXPos, cPlayerYPos, 35, 0, twoPi);
-  fg1.moveTo(cPlayerXPos, cPlayerYPos + 35);
-  fg1.lineTo(cPlayerXPos, cPlayerYPos + 10);
-  fg1.moveTo(cPlayerXPos, cPlayerYPos - 35);
-  fg1.lineTo(cPlayerXPos, cPlayerYPos - 10);
-  fg1.moveTo(cPlayerXPos + 35, cPlayerYPos);
-  fg1.lineTo(cPlayerXPos + 10, cPlayerYPos);
-  fg1.moveTo(cPlayerXPos - 35, cPlayerYPos);
-  fg1.lineTo(cPlayerXPos - 10, cPlayerYPos);
-  fg1.closePath();
-  fg1.stroke();
+  if (initc === true) {
+	  fg1.lineWidth = 9;
+	  fg1.beginPath();
+	  fg1.arc(cPlayerXPos, cPlayerYPos, 35, 0, twoPi);
+	  fg1.moveTo(cPlayerXPos, cPlayerYPos + 35);
+	  fg1.lineTo(cPlayerXPos, cPlayerYPos + 10);
+	  fg1.moveTo(cPlayerXPos, cPlayerYPos - 35);
+	  fg1.lineTo(cPlayerXPos, cPlayerYPos - 10);
+	  fg1.moveTo(cPlayerXPos + 35, cPlayerYPos);
+	  fg1.lineTo(cPlayerXPos + 10, cPlayerYPos);
+	  fg1.moveTo(cPlayerXPos - 35, cPlayerYPos);
+	  fg1.lineTo(cPlayerXPos - 10, cPlayerYPos);
+	  fg1.closePath();
+	  fg1.stroke();
+  } else {
+	  fg1.lineWidth = 9;
+	  fg1.beginPath();
+	  fg1.arc(cPlayerXPos, cPlayerYPos, 35, 0, twoPi);
+	  //const cRectLength = 25;
+	  //const cRectSpace = 10;
+	  //const cDefaultAngles = [0,.5 * Math.PI, Math.PI, 1.5 * Math.PI,twoPi];
+	  let radiansAngle = ((cCursorAngle / 180) * Math.PI);
+	  let cRectPos = [[[0,0],[0,0]],[[0,0],[0,0]],[[0,0],[0,0]],[[0,0],[0,0]]];
+	  for (let i = 0; i < cDefaultAngles.length; i++) {
+	  	  cRectPos[i][0][0] = Math.cos((cDefaultAngles[i] + radiansAngle)) * (cRectSpace);
+	  	  cRectPos[i][0][1] = Math.sin((cDefaultAngles[i] + radiansAngle)) * (cRectSpace);
+	  	  cRectPos[i][1][0] = Math.cos((cDefaultAngles[i] + radiansAngle)) * (cRectLength + cRectSpace);
+	  	  cRectPos[i][1][1] = Math.sin((cDefaultAngles[i] + radiansAngle)) * (cRectLength + cRectSpace);
+	  }
+	  for (let i = 0; i < cRectPos.length; i++) {
+	   fg1.moveTo(cPlayerXPos + cRectPos[i][0][0], cPlayerYPos + cRectPos[i][0][1]);
+	   fg1.lineTo(cPlayerXPos + cRectPos[i][1][0], cPlayerYPos + cRectPos[i][1][1]);		  
+	  }
+	  //for (let ia = 0; ia < cDefaultAngles.length; i++) {
+	  //	 fg1.moveTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectSpace)));
+	  //  fg1.lineTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)));	
+	  //}
+	  fg1.closePath();
+	  fg1.stroke();	  
+  }
 }
