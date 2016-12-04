@@ -20,7 +20,7 @@ import {
   targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned,
   targetRecords, targetsDestroyed, targetStagePlaying , getTargetCookies , giveMedals, medalTimes
 } from "target/targetplay";
-import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "menus/targetselect";
+import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
 import {runAI} from "main/ai";

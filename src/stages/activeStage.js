@@ -15,16 +15,16 @@ export function setVsStage(val) {
 }
 
 export const targetStageMapping = {
-  1: "targetstage1",
-  2: "targetstage2",
-  3: "targetstage3",
-  4: "targetstage4",
-  5: "targetstage5",
-  6: "targetstage6",
-  7: "targetstage7",
-  8: "targetstage8",
-  9: "targetstage9",
-  10: "targetstage10"
+  0: "targetstage1",
+  1: "targetstage2",
+  2: "targetstage3",
+  3: "targetstage4",
+  4: "targetstage5",
+  5: "targetstage6",
+  6: "targetstage7",
+  7: "targetstage8",
+  8: "targetstage9",
+  9: "targetstage10"
 };
 
 export function setActiveStageTarget(val) {
@@ -51,4 +51,13 @@ export let activeStage = {
 
 export function getActiveStage() {
   return activeStage;
+}
+
+export const customTargetStages = [];
+export function setCustomTargetStages(index, val) {
+  customTargetStages[index] = val;
+}
+
+export function setActiveStageCustomTarget(val){
+  activeStage = customTargetStages[val];
 }
