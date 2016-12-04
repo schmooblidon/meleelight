@@ -6,7 +6,7 @@ const magicAngle = Math.PI/6;
 // returns true if the vector is moving into the wall, false otherwise
 function movingInto (vec, wallTop, wallBottom, wallType) {
   let s = 1;
-  if (wallType[0].toLowerCase() == "r") {
+  if (wallType[0].toLowerCase() == "l") {
     s = -1;
   }
   let outwardsWallNormal = new Vec2d ( s * (wallTop.y - wallBottom.y), s*( wallBottom.x-wallTop.x )  );
@@ -117,7 +117,7 @@ function findCollision (ecbp, ecb1, wall, wallType) {
 
   let same = 3;
   let opposite = 1;
-  if (wallType[0].toLowerCase() === "r" ) {
+  if (wallType[0].toLowerCase() === "l" ) {
     same = 1;
     opposite = 3;
   }
@@ -135,19 +135,16 @@ function findCollision (ecbp, ecb1, wall, wallType) {
   else if ( !isOutside ( ecbp[same], wall, wallType ) ) {
     // from now on, we know that the projected same-side ECB point is on the inside half-plane of the wall
 
-    // case 1: player stayed above the wall
-    // no collision
-    else if ( ebcp[0].y > wallTop.y && ecb1[0].y > wallTop.y) {
-      return false; 
-    }
-
-    // case 2: player stayed below the wall
-    // no collision
-    else if (ecbp[2].y < wallBottom.y && ecb1[2].y < wallBottom.y){
+    // first check if player was even near the wall
+    else if (    (ebcp[0].y > wallTop.y    && ecb1[0].y > wallTop.y   ) // player stayed above the wall
+              || (ecbp[2].y < wallBottom.y && ecb1[2].y < wallBottom.y) // played stayed below the wall
+              || (ecbp[3].x > wallRight.x  && ecb1[3].x > wallRight.x ) // player stayed to the right of the wall
+              || (ecbp[1].x < wallLeft.x   && ecb1[1].x < wallLeft.x  ) // player stayed to the left of the wall
+            ) {
       return false;
     }
     
-    // case 3: everything else
+    // now the real collision checking
     // only need to work with same-side ECB point,
     // and no need to do corner checking,
     // because of wall and airborne ECB angle restrictions
