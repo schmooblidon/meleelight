@@ -556,21 +556,8 @@ export function physics (i){
       // no collision, do nothing
     }
     else {
-      console.log("----------------------------------------");
-      console.log("There was a collision with a wall.");
-      console.log("Player position was at ("+player[i].phys.pos.x+","+player[i].phys.pos.y+").");
-      console.log("Player left ECB1 point was at ("+player[i].phys.ECB1[3].x+","+player[i].phys.ECB1[3].y+").");
-      console.log("Player right ECB1 point was at ("+player[i].phys.ECB1[1].x+","+player[i].phys.ECB1[1].y+").");
-      console.log("Player left ECBp point was at ("+player[i].phys.ECBp[3].x+","+player[i].phys.ECBp[3].y+").");
-      console.log("Player right ECBp point was at ("+player[i].phys.ECBp[1].x+","+player[i].phys.ECBp[1].y+").");
-      console.log("Moving player to ("+maybeTouchingAndCenter[1].x+","+maybeTouchingAndCenter[1].y+").");
       player[i].phys.pos.x = maybeTouchingAndCenter[1].x;
       player[i].phys.pos.y = maybeTouchingAndCenter[1].y - ecbOffset[2];
-      console.log("Player left ECB1 point is now at ("+player[i].phys.ECB1[3].x+","+player[i].phys.ECB1[3].y+").");
-      console.log("Player right ECB1 point is now at ("+player[i].phys.ECB1[1].x+","+player[i].phys.ECB1[1].y+").");
-      console.log("Player left ECBp point is now at ("+player[i].phys.ECBp[3].x+","+player[i].phys.ECBp[3].y+").");
-      console.log("Player right ECBp point is now at ("+player[i].phys.ECBp[1].x+","+player[i].phys.ECBp[1].y+").");
-      console.log("----------------------------------------");
       if (maybeTouchingAndCenter[0] === false ) {
         // collision with wall but player no longer touching wall
       }

@@ -112,6 +112,8 @@ function orthogonalProjection(point, line) {
 // ecb1 : old ECB
 // function return type: either false (no collision) or a pair (touchingWall, proposed new player center position (Vec2D))
 // touchingWall is either false, left or right, indicating whether the player is still touching that wall after the transformation
+// terminology in the comments: a wall is a segment with an inside and an outside,
+// which is contained in an infinite line, extending both ways, which also has an inside and an outside
 function findCollision (ecbp, ecb1, wall, wallType) {
 
   const wallTop    = extremePoint(wall, "top");
@@ -128,19 +130,18 @@ function findCollision (ecbp, ecb1, wall, wallType) {
 
   const sameECBMov = new Vec2D ( ecbp[same].x-ecb1[same].x, ecbp[same].y-ecb1[same].y);
 
-  if ( !movingInto( sameECBMov, wallTop, wallBottom, wallType)) {
-    return false; // no collision: player not moving towards wall
-    // this clause makes sure that in later calls of 'coordinateIntercept',
-    // the relevant lines aren't going to be parallel
+  if ( norm(sameECBMov) > 0.01   && !movingInto( sameECBMov, wallTop, wallBottom, wallType)) {
+    return false; // no collision: player not moving towards the line spanned by the wall
+    // this clause makes sure that in later calls of 'coordinateIntercept', the relevant lines aren't going to be parallel
   }
   else if ( !isOutside ( ecb1[opposite], wallTop, wallBottom, wallType ) ) {
-    return false; // no collision: player was already on the other side of the wall
+    return false; // no collision: player was already on the other side of the line spanned by the wall
   }
   else if ( isOutside ( ecbp[same], wallTop, wallBottom, wallType ) ) {
-    return false; // no collision: same-side projected ECB point on the outside half of wall
+    return false; // no collision: same-side projected ECB point on the outside of the line spanned by the wall
   }
   else {
-    // from now on, we know that the projected same-side ECB point is on the inside half-plane of the wall
+    // from now on, we know that the projected same-side ECB point is on the inside of the line spanned by the wall
 
     // first check if player was even near the wall
     if (    (ecbp[0].y > wallTop.y    && ecb1[0].y > wallTop.y   ) // player stayed above the wall
@@ -150,30 +151,42 @@ function findCollision (ecbp, ecb1, wall, wallType) {
        ) {
       return false;
     }
-    
+
+    // now cover the case where the same-side ECB point was in fact already on the inside of the line spanned by the wall
+    else if ( !isOutside ( ecb1[same], wallTop, wallBottom, wallType )) {
+      if ( ecbp[same].y > wallTop.y || ecbp[same].y < wallBottom.y) {
+        // projected same-side ECB point remained above the top (respectively, below the bottom) of the wall
+        return false;
+      }
+      else {
+        const newSameECB = orthogonalProjection(ecbp[same], wall);
+        const newCenter = new Vec2D( newSameECB.x + (ecbp[opposite].x-ecbp[same].x)/2, newSameECB.y);
+        let touchingWall = wallType;
+        if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
+          touchingWall = false;
+        }
+        return ( [touchingWall, newCenter] );
+      }
+    }
+
     // now the real collision checking
     // only need to work with same-side ECB point,
     // and no need to do corner checking,
     // because of wall and airborne ECB angle restrictions
+    // we know that the same-side ECB point went from the outside to the inside of the line spanned by the wall
     else {
       let t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
       if (t < 0 || t > 1) {
         return false; // no collision
       }
       else {
-        console.log("The intersection parameter is: "+t+".");
         const intersection = new Vec2D (ecb1[same].x + t*(ecbp[same].x-ecb1[same].x), ecb1[same].y + t*(ecbp[same].y-ecb1[same].y));
-        console.log("Player old ECB point at ("+ecb1[same].x+","+ecb1[same].y+").");
-        console.log("Player projected ECB point at ("+ecbp[same].x+","+ecbp[same].y+").");
-        console.log("Intersection with wall is given at ("+intersection.x+","+intersection.y+").");
         if (intersection.y > wallTop.y || intersection.y < wallBottom.y) {
           return false; // no collision
         }
         else {
           const newSameECB = orthogonalProjection(ecbp[same], wall);
-          console.log("Function 'findCollision' wants to put the new ECB point at ("+newSameECB.x+","+newSameECB.y+").");
           const newCenter = new Vec2D( newSameECB.x + (ecbp[opposite].x-ecbp[same].x)/2, newSameECB.y);
-          console.log("In particular, it wants to put the player center at ("+newCenter.x+","+newCenter.y+").");
           let touchingWall = wallType;
           if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
             touchingWall = false;
