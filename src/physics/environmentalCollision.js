@@ -1,5 +1,5 @@
 import {Vec2D} from "main/characters";
-import {dotProd, scalarProd} from "main/linAlg";
+import {dotProd, scalarProd, norm} from "main/linAlg";
 /* eslint-disable */
 
 const magicAngle = Math.PI/6;
@@ -97,9 +97,12 @@ function orthogonalProjection(point, line) {
   // turn everything into relative coordinates with respect to the point line[0]
   const pointVec = new Vec2D ( point.x - line[0].x, point.y - line[0].y);
   const lineVec  = new Vec2D ( line[1].x - line[0].x, line[1].y - line[0].y);
+  // renormalise line vector
+  const lineNorm = norm(lineVec);
+  const lineElem = scalarProd( 1/lineNorm, lineVec);
   // vector projection calculation
-  const factor = dotProd(pointVec, lineVec) / dotProd(lineVec, lineVec);
-  const projVec = scalarProd(factor, lineVec);
+  const factor = dotProd(pointVec, lineElem);
+  const projVec = scalarProd(factor, lineElem);
   // back to absolute coordinates by adding the coordinates of line[0]
   return (new Vec2D(projVec.x + line[0].x,projVec.y + line[0].y));
 };
@@ -153,18 +156,24 @@ function findCollision (ecbp, ecb1, wall, wallType) {
     // and no need to do corner checking,
     // because of wall and airborne ECB angle restrictions
     else {
-      const t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
+      let t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
       if (t < 0 || t > 1) {
         return false; // no collision
       }
       else {
+        console.log("The intersection parameter is: "+t+".");
         const intersection = new Vec2D (ecb1[same].x + t*(ecbp[same].x-ecb1[same].x), ecb1[same].y + t*(ecbp[same].y-ecb1[same].y));
+        console.log("Player old ECB point at ("+ecb1[same].x+","+ecb1[same].y+").");
+        console.log("Player projected ECB point at ("+ecbp[same].x+","+ecbp[same].y+").");
+        console.log("Intersection with wall is given at ("+intersection.x+","+intersection.y+").");
         if (intersection.y > wallTop.y || intersection.y < wallBottom.y) {
           return false; // no collision
         }
         else {
           const newSameECB = orthogonalProjection(ecbp[same], wall);
+          console.log("Function 'findCollision' wants to put the new ECB point at ("+newSameECB.x+","+newSameECB.y+").");
           const newCenter = new Vec2D( newSameECB.x + (ecbp[opposite].x-ecbp[same].x)/2, newSameECB.y);
+          console.log("In particular, it wants to put the player center at ("+newCenter.x+","+newCenter.y+").");
           let touchingWall = wallType;
           if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
             touchingWall = false;
@@ -245,7 +254,7 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldMaybeTouchingAn
     }
     if (newCollisionHappened === true) {
       const newMaybeTouchingAndCenter = closestTouchingAndCenter( oldCenter, suggestedMaybeTouchingAndCenters);
-      const vec = new Vec2D( newMaybeTouchingAndCenter[1].x - oldCenter.x, newMaybeTouchingAndCenter[1].y - oldCenter.y);
+      const vec = new Vec2D( newMaybeTouchingAndCenter[1].x - ecbp[0].x, newMaybeTouchingAndCenter[1].y - ecbp[1].y);
       const newecbp = moveECB (ecbp, vec);
       return (loopOverWalls (newecbp, ecb1, oldCenter, wallWallTypes, newMaybeTouchingAndCenter, passNumber+1));
     }
