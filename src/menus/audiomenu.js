@@ -17,6 +17,7 @@ export function audioMenuControls (i){
   let audioLevelMoveUp = false;
   let audioLevelMoveDown = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
+	fg1.textAlign = "left";
     sounds.menuBack.play();
     player[i].inputs.b[1] = true;
     setCookie("soundsLevel", masterVolume[0], 36500);
