@@ -4,11 +4,11 @@ import {Vec2D} from "main/characters";
 
 export function dotProd(vec1,vec2) {
   return (vec1.x * vec2.x + vec1.y * vec2*y);
-}
+};
 
 export function scalarProd( lambda, vec) {
   return ( new Vec2d ( lambda * vec.x, lambda*vec.y ));
-}
+};
 
 // Computes the inverse of a 2x2 matrix.
 export function inverseMatrix([

@@ -257,7 +257,7 @@ function moveECB (ecb, vec) {
     new Vec2D(ecb[3].x+vec.x,ecb[3].y+vec.y)
   ];
   return newECB;
-}
+};
 
 // assumes walls is a list of wallWallType elements,
 // a wallWallType element is of the form [wall, wallType]
@@ -288,10 +288,10 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldTouchingAndCent
   else {
     return oldTouchingAndCenter;
   }  
-}
+};
 
 function getNewTouchingAndCenter(ecbp, ecb1, wallWallTypes) {
   let touchingAndCenter = [false, new Vec2D( ecbp[0].x, ecbp[1].y)];
   let oldCenter = new Vec2D( ecb1[0].x, ecb1[1].y);
   touchingAndCenter = loopOverWalls(ecbp, ecb1, oldCenter, wallWallTypes, touchingAndCenter );
-}
+};
