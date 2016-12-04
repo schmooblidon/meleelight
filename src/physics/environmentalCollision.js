@@ -130,14 +130,17 @@ function findCollision (ecbp, ecb1, wall, wallType) {
 
   const sameECBMov = new Vec2D ( ecbp[same].x-ecb1[same].x, ecbp[same].y-ecb1[same].y);
 
-  if ( norm(sameECBMov) > 0.01   && !movingInto( sameECBMov, wallTop, wallBottom, wallType)) {
+  if ( !movingInto( sameECBMov, wallTop, wallBottom, wallType)) {
+    //console.log("'findCollision': no collision, not moving towards "+wallType+" wall.");
     return false; // no collision: player not moving towards the line spanned by the wall
     // this clause makes sure that in later calls of 'coordinateIntercept', the relevant lines aren't going to be parallel
   }
   else if ( !isOutside ( ecb1[opposite], wallTop, wallBottom, wallType ) ) {
+    //console.log("'findCollision': no collision, already on other side of "+wallType+" wall.");
     return false; // no collision: player was already on the other side of the line spanned by the wall
   }
   else if ( isOutside ( ecbp[same], wallTop, wallBottom, wallType ) ) {
+    //console.log("'findCollision': no collision, same-side projected ECB on the outside of "+wallType+" wall.");
     return false; // no collision: same-side projected ECB point on the outside of the line spanned by the wall
   }
   else {
@@ -149,13 +152,16 @@ function findCollision (ecbp, ecb1, wall, wallType) {
          || (ecbp[3].x > wallRight.x  && ecb1[3].x > wallRight.x ) // player stayed to the right of the wall
          || (ecbp[1].x < wallLeft.x   && ecb1[1].x < wallLeft.x  ) // player stayed to the left of the wall
        ) {
+      //console.log("'findCollision': no collision, not even near "+wallType+" wall.");
       return false;
     }
 
     // now cover the case where the same-side ECB point was in fact already on the inside of the line spanned by the wall
     else if ( !isOutside ( ecb1[same], wallTop, wallBottom, wallType )) {
+      // this first part is a bit dubious
       if ( ecbp[same].y > wallTop.y || ecbp[same].y < wallBottom.y) {
-        // projected same-side ECB point remained above the top (respectively, below the bottom) of the wall
+        // projected same-side ECB point is above the top (respectively, below the bottom) of the wall
+        //console.log("'findCollision': no collision, noncrossing same-side ECB point above/below "+wallType+" wall.");
         return false;
       }
       else {
@@ -165,6 +171,7 @@ function findCollision (ecbp, ecb1, wall, wallType) {
         if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
           touchingWall = false;
         }
+        //console.log("'findCollision': collision, noncrossing same-side ECB point, "+wallType+" wall.");
         return ( [touchingWall, newCenter] );
       }
     }
@@ -176,12 +183,14 @@ function findCollision (ecbp, ecb1, wall, wallType) {
     // we know that the same-side ECB point went from the outside to the inside of the line spanned by the wall
     else {
       let t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
-      if (t < 0 || t > 1) {
+      if ( t > 1 ) { // I should also check check whether t < 0, but that seems to cause glitches with Fox's Illusion at the moment?
+        //console.log("'findCollision': no collision, intersection parameter outside of allowable range, with "+wallType+" wall.");
         return false; // no collision
       }
       else {
         const intersection = new Vec2D (ecb1[same].x + t*(ecbp[same].x-ecb1[same].x), ecb1[same].y + t*(ecbp[same].y-ecb1[same].y));
         if (intersection.y > wallTop.y || intersection.y < wallBottom.y) {
+          //console.log("'findCollision': no collision, intersection point outside of "+wallType+" wall.");
           return false; // no collision
         }
         else {
@@ -191,6 +200,7 @@ function findCollision (ecbp, ecb1, wall, wallType) {
           if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
             touchingWall = false;
           }
+          //console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" wall.");
           return ( [touchingWall, newCenter] );
         }
       }
