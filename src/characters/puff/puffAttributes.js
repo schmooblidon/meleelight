@@ -1,4 +1,4 @@
-import { offsets, Vec2D, createHitboxObject, createHitbox, charObject,  setChars,
+import { offsets,   charObject,  setChars,
     CHARIDS
     ,
     setHitBoxes
@@ -10,6 +10,9 @@ import { offsets, Vec2D, createHitboxObject, createHitbox, charObject,  setChars
     setIntangibility
     , setActionSounds,setFrames
 } from "main/characters";
+import {Vec2D} from "../../main/util/Vec2D";
+import {createHitboxObject} from "../../main/util/createHitboxObject";
+import {createHitbox} from "../../main/util/createHitBox";
 /* eslint-disable */
 
 setCharAttributes(CHARIDS.PUFF_ID, {

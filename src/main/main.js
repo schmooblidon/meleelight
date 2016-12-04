@@ -1,5 +1,4 @@
 /* eslint-disable */
-import {Vec2D,Box2D,framesData} from "main/characters";
 import {choosingTag, drawCSSInit, cssControls, drawCSS} from 'menus/css';
 import {playerObject} from 'main/player';
 import {keyMap} from 'settings';
@@ -14,21 +13,29 @@ import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGamepla
 import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
 import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
-import {vfx, dVfx, setTransparency, transparency} from "main/vfx";
+
 import {aS} from "physics/actionStateShortcuts";
 import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
 import {
   targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned,
   targetRecords, targetsDestroyed, targetStagePlaying , getTargetCookies , giveMedals, medalTimes
 } from "target/targetplay";
-import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "menus/targetselect";
+import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
-import {stages} from "stages/stages";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, scaleToGCTrigger, custcent} from "main/input";
+import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, button, gpdaxis, gpdbutton, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, scaleToGCTrigger, custcent} from "main/input";
+import {toggleTransparency,getTransparency} from "main/vfx/transparency";
+import {drawVfx} from "main/vfx/drawVfx";
+import {resetVfxQueue} from "main/vfx/vfxQueue";
+import {setVsStage, getActiveStage, activeStage} from "../stages/activeStage";
+import {music} from "./sfx";
+import {getShowSFX, toggleShowSFX} from "main/vfx";
+import {renderVfx} from "./vfx/renderVfx";
+import {Box2D} from "./util/Box2D";
+import {Vec2D} from "./util/Vec2D";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -36,7 +43,7 @@ export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
 export const framerate = [0,0,0];
 export var cS = [0,0,0,0];
-export let vfxQueue = [];
+
 export var shine = 0.5;
 
 export let endTargetGame = false;
@@ -74,7 +81,6 @@ export let frameByFrameRender = false;
 
 export let findingPlayers = true;
 
-export let showVfx = true;
 export let showDebug = false;
 
 export let gameMode = 20;
@@ -137,23 +143,7 @@ export const edgeOrientation = [1,-1];
 
 export const respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
 
-export var stage = {
-  box : [new Box2D([-68.4,-108.8],[68.4,0])],
-  platform : [[new Vec2D(-57.6,27.2),new Vec2D(-20,27.2)],[new Vec2D(20,27.2),new Vec2D(57.6,27.2)],[new Vec2D(-18.8,54.4),new Vec2D(18.8,54.4)]],
-  ground : [[new Vec2D(-68.4,0),new Vec2D(68.4,0)]],
-  ceiling : [[new Vec2D(-68.4,-108.8),new Vec2D(68.4,-108.8)]],
-  wallL : [[new Vec2D(-68.4,0),new Vec2D(-68.4,-108.8)]],
-  wallR : [[new Vec2D(68.4,0),new Vec2D(68.4,-108.8)]],
-  startingPoint : [new Vec2D(-50,50),new Vec2D(50,50),new Vec2D(-25,5),new Vec2D(25,5)],
-  startingFace : [1,-1,1,-1],
-  respawnPoints : [new Vec2D(-50,50),new Vec2D(50,50),new Vec2D(-25,35),new Vec2D(25,35)],
-  respawnFace : [1,-1,1,-1],
-  blastzone : new Box2D([-224,-108.8],[224,200]),
-  ledge : [[0,0],[0,1]],
-  ledgePos : [new Vec2D(-68.4,0),new Vec2D(68.4,0)],
-  scale : 4.5,
-  offset : [600,480],
-};
+
 
 export var stageSelect = 0;
 
@@ -170,6 +160,9 @@ export function setStarting(val){
 export let startTimer = 1.5;
 export function setStartTimer (val){
   startTimer = val;
+}
+export function getStartTimer(){
+  return startTimer;
 }
 //matchTimer = 5999.99;
 export let matchTimer = 480;
@@ -933,43 +926,8 @@ export function renderToMain (){
   }
 }
 
-export function renderVfx (otherFrame){
-  otherFrame = otherFrame || false;
-  var popQueue = [];
-  for (var j = 0; j < vfxQueue.length; j++) {
-    vfxQueue[j][1]++;
-    if (vfxQueue[j][0].frames >= vfxQueue[j][1]) {
-      if (showVfx) {
-        if (!otherFrame) {
-          dVfx[vfxQueue[j][0].name](j);
-        }
-        // if 30fps mode on the other frame, still call swing function but just don't draw
-        else if (vfxQueue[j][0].name == "swing") {
-          dVfx.swing(j, false);
-        }
-      }
-    } else {
-      popQueue.push(j);
-    }
-  }
-  for (var k = 0; k < popQueue.length; k++) {
-    vfxQueue.splice(popQueue[k] - k, 1);
-  }
-}
 
-export function drawVfx (name,pos,face,f){
-  if (typeof(f)==='undefined') f = -1;
-  var instance = {};
-  deepCopyObject(true,instance,vfx[name]);
-  if (instance.name == "circleDust"){
-    instance.circles[0] = Math.random()*-2;
-    instance.circles[1] = (Math.random()*-stage.scale)-2;
-    instance.circles[2] = Math.random()*2;
-    instance.circles[3] = (Math.random()*stage.scale)+2;
-  }
-  var newPos = new Vec2D(pos.x, pos.y);
-  vfxQueue.push([instance, 0, newPos, face, f]);
-}
+
 
 export function update (i){
   if (!starting){
@@ -1116,7 +1074,7 @@ export function gameTick (){
     lastUpdate = now;
 
       resetHitQueue();
-    stage.movingPlatforms();
+    getActiveStage().movingPlatforms();
     destroyArticles();
     executeArticles();
     for (var i = 0; i < 4; i++) {
@@ -1241,7 +1199,7 @@ export function renderTick (){
       if (playing || frameByFrameRender) {
         var rStart = performance.now();
         clearScreen();
-        if (showVfx) {
+        if (getShowSFX()) {
           drawBackground();
         }
         drawStage();
@@ -1276,7 +1234,7 @@ export function renderTick (){
       //console.log("test2");
       var rStart = performance.now();
       clearScreen();
-      if (showVfx) {
+      if (getShowSFX()) {
         drawBackground();
       }
       drawStage();
@@ -1334,17 +1292,17 @@ export function buildPlayerObject (i){
 export function initializePlayers (i,target){
   buildPlayerObject(i);
   if (target) {
-    drawVfx("entrance", new Vec2D(stage.startingPoint.x, stage.startingPoint.y));
+    drawVfx("entrance", new Vec2D(activeStage.startingPoint.x, activeStage.startingPoint.y));
   } else {
     drawVfx("entrance", new Vec2D(startingPoint[i][0], startingPoint[i][1]));
   }
 }
 
 export function startGame (){
-  stage = stages[stageSelect];
+  setVsStage(stageSelect);
     setBackgroundType(Math.round(Math.random()));
   changeGamemode(3);
-  vfxQueue = [];
+  resetVfxQueue();
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
@@ -1447,7 +1405,7 @@ export function finishGame (){
   var textScale = 1;
   var textGrad = fg2.createLinearGradient(0, 200, 0, 520);
   if (gameMode == 5 || gameMode == 8) {
-    if (stage.target.length == targetsDestroyed) {
+    if (activeStage.target.length == targetsDestroyed) {
       if (!targetTesting) {
         if (targetStagePlaying < 10) {
           for (var i = 0; i < 3; i++) {
@@ -1562,12 +1520,12 @@ export function start (){
   renderTick();
 
   $("#effectsButton").click(function() {
-    if (showVfx) {
+    if (getShowSFX()) {
       $("#effectsButtonEdit").empty().append("OFF");
     } else {
       $("#effectsButtonEdit").empty().append("ON");
     }
-    showVfx ^= true;
+    toggleShowSFX();
   });
 
   $("#fpsButton").click(function() {
@@ -1580,12 +1538,12 @@ export function start (){
   });
 
   $("#alphaButton").click(function() {
-    if (transparency) {
+    if (getTransparency()) {
       $("#alphaButtonEdit").empty().append("OFF");
     } else {
       $("#alphaButtonEdit").empty().append("ON");
     }
-      setTransparency(!transparency);
+      toggleTransparency();
   });
 
   $("#layerButton").hover(function() {
@@ -1692,9 +1650,7 @@ export function start (){
   resize();
 }
 window.start = start;
-export function resetVfxQueue  (){
-    vfxQueue =[];
-}
+
 export function customDeadzone (){
     this.ls = new Vec2D(0,0);
     this.cs = new Vec2D(0,0);
@@ -1720,38 +1676,8 @@ export function setEndTargetGame(val){
 export function setCreditsPlayer(val){
   creditsPlayer =val;
 }
-export function deepCopyObject(deep,target,...object){
-   if(deep) {
-       target = target || {};
 
-       for (var i = 2; i < arguments.length; i++) {
-           var obj = arguments[i];
 
-           if (!obj)
-               continue;
-
-           for (var key in obj) {
-               if (obj.hasOwnProperty(key)) {
-                   if (typeof obj[key] === 'object')
-                       target[key] = deepCopyObject(deep,target[key], obj[key]);
-                   else
-                       target[key] = obj[key];
-               }
-           }
-           // adds length property for arrays
-           if (obj instanceof Array){
-               target.length = obj.length;
-           }
-       }
-
-       return target;
-   }else {
-      return Object.assign(target, ...object)
-   }
-}
-export function setStage(val){
-  stage = val;
-}
 const dom = {};
 
 export function cacheDom() {

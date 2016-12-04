@@ -4,8 +4,9 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     , reduceByTraction
     , aS
 } from "physics/actionStateShortcuts";
-import {cS, drawVfx, player} from "main/main";
+import {cS, player} from "main/main";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "LANDING",
   canEdgeCancel : true,

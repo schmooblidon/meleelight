@@ -1,0 +1,61 @@
+import {vfxQueue} from "main/vfx/vfxQueue";
+import {makeColour} from "main/vfx/makeColour";
+import {fg2} from "main/main";
+import {drawHexagon} from "main/vfx/drawHexagon";
+import {activeStage} from "stages/activeStage";
+export default(j) =>{
+  fg2.save();
+  const tX = (vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0];
+  const tY = (vfxQueue[j][2].y * -activeStage.scale) + activeStage.offset[1];
+  fg2.fillStyle = makeColour(77, 108, 217, 0.5);
+  let r;
+  let a;
+  let b;
+  if (vfxQueue[j][1] === 1) {
+    drawHexagon(7 * activeStage.scale, tX, tY, 20);
+    fg2.fillStyle = "rgb(255, 255, 255)";
+    drawHexagon(4 * activeStage.scale, tX, tY, 3);
+    r = 6 * activeStage.scale;
+    a = r * Math.sin(Math.PI / 6);
+    b = r * Math.cos(Math.PI / 6);
+    fg2.translate(tX, tY);
+    fg2.beginPath();
+    fg2.moveTo(0, r);
+    fg2.lineTo(b, r - a);
+    fg2.lineTo(b, -r + a);
+    fg2.lineTo(0, -r);
+    fg2.closePath();
+    fg2.fill();
+  } else if (vfxQueue[j][1] === 2) {
+    drawHexagon(8 * activeStage.scale, tX, tY, 20);
+    fg2.fillStyle = "rgb(255, 255, 255)";
+    drawHexagon(6 * activeStage.scale, tX, tY, 3);
+    fg2.translate(tX, tY);
+    r = 7 * activeStage.scale;
+    a = r * Math.sin(Math.PI / 6);
+    b = r * Math.cos(Math.PI / 6);
+    fg2.beginPath();
+    fg2.moveTo(-b, r - a);
+    fg2.lineTo(0, r);
+    fg2.lineTo(b, r - a);
+    fg2.lineTo(b, -r + a);
+    fg2.closePath();
+    fg2.fill();
+  } else {
+    drawHexagon(10 * activeStage.scale, tX, tY, 20);
+    fg2.fillStyle = "rgb(255, 255, 255)";
+    drawHexagon(8 * activeStage.scale, tX, tY, 3);
+    fg2.translate(tX, tY);
+    r = 9 * activeStage.scale;
+    a = r * Math.sin(Math.PI / 6);
+    b = r * Math.cos(Math.PI / 6);
+    fg2.beginPath();
+    fg2.moveTo(-b, -r + a);
+    fg2.lineTo(-b, r - a);
+    fg2.lineTo(0, r);
+    fg2.lineTo(b, r - a);
+    fg2.closePath();
+    fg2.fill();
+  }
+  fg2.restore();
+};

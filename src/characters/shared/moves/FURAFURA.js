@@ -1,7 +1,9 @@
 import {mashOut, reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {actionSounds, Vec2D,framesData} from "main/characters";
-import {cS, drawVfx, player} from "main/main";
+import { Vec2D} from "main/util";
+import {cS,  player} from "main/main";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
+import {actionSounds, framesData} from "../../../main/characters";
 export default {
   name : "FURAFURA",
   canEdgeCancel : true,

@@ -1,4 +1,4 @@
-import {Vec2D} from "main/characters";
+import {Vec2D} from "main/util/Vec2D";
 import {player} from "main/main";
 export default {
   name : "THROWNMARTHFORWARD",
