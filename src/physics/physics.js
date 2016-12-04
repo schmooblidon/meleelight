@@ -9,6 +9,9 @@ import {getNewTouchingAndCenterFromWalls} from "physics/environmentalCollision";
 /* eslint-disable */
 
 
+// two utility functions used later, put here for convenience
+function pushLeft ( obj ) { return [obj, "left" ]; };
+function pushRight( obj ) { return [obj, "right"]; };
 
 
 function dealWithWall (wallType) {
@@ -555,8 +558,6 @@ export function physics (i){
     }
 
     var notTouchingWalls = [true, true];
-    function pushLeft ( obj ) { [obj, "left" ] };
-    function pushRight( obj ) { [obj, "right"] };
     let wallWallTypes = ( stage.wallL.map(pushLeft) ).concat( stage.wallR.map(pushRight) );
     let touchingAndCenter = getNewTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, wallWallTypes);
     if (touchingAndCenter === false) { 
@@ -567,7 +568,7 @@ export function physics (i){
       if (touchingAndCenter[0] === false ) {
         // collision with wall but player no longer touching wall
       }
-      if (touchingAndCenter[0][0].toLowerCase() === "l") {
+      else if (touchingAndCenter[0][0].toLowerCase() === "l") {
         // collision with wall, player still touching a left wall
         notTouchingWalls[0] = false;
         dealWithWall("left");

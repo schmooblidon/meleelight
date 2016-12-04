@@ -1,5 +1,6 @@
 import {Vec2D} from "main/characters";
 import {dotProd, scalarProd} from "main/linAlg";
+/* eslint-disable */
 
 const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 5;
@@ -17,8 +18,8 @@ function movingInto (vec, wallTop, wallBottom, wallType) {
 // returns true if point is to the right of a "left" wall, or to the left of a "right" wall,
 // and false otherwise
 function isOutside (point, wallTop, wallBottom, wallType) {
-  const mov = new Vec2D ( point.x - wallBottom.x, point.y - wallBottom.y );
-  return ( !movingInto(mov, wallTop, wallBottom, wallType ) );
+  const vec = new Vec2D ( point.x - wallBottom.x, point.y - wallBottom.y );
+  return ( !movingInto(vec, wallTop, wallBottom, wallType ) );
 };
 
 function extremePoint(wall, extreme) {
@@ -209,7 +210,8 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldTouchingAndCent
     return oldTouchingAndCenter;
   }
   else {
-    const collisionData = wallWallTypes.map( function(){ return findCollision (ecbp, ecb1, this[0], this[1]);}  );
+    const collisionData = wallWallTypes.map( function(wallWallType){ 
+      return findCollision (ecbp, ecb1, wallWallType[0], wallWallType[1]);}  );
     for (let i = 0; i < collisionData.length; i++) {
       if (collisionData[i] === false) { 
         // do nothing
@@ -235,4 +237,5 @@ export function getNewTouchingAndCenterFromWalls(ecbp, ecb1, wallWallTypes) {
   let touchingAndCenter = [false, new Vec2D( ecbp[0].x, ecbp[1].y)];
   const oldCenter = new Vec2D( ecb1[0].x, ecb1[1].y);
   touchingAndCenter = loopOverWalls(ecbp, ecb1, oldCenter, wallWallTypes, touchingAndCenter, 0 );
+  return touchingAndCenter;
 };
