@@ -106,9 +106,8 @@ function orthogonalProjection(point, line) {
 
 // ecbp : projected ECB
 // ecb1 : old ECB
-// function return type: either false (no collision) or a pair (bool, proposed new player center position (Vec2D))
-// the bool is the value of 'touchingWall' for that particular wall 
-// this indicates whether the player is still touching that wall after the transformation
+// function return type: either false (no collision) or a pair (touchingWall, proposed new player center position (Vec2D))
+// touchingWall is either false, left or right, indicating whether the player is still touching that wall after the transformation
 function findCollision (ecbp, ecb1, wall, wallType) {
 
   let wallTop    = extremePoint(wall, "top");
@@ -162,7 +161,7 @@ function findCollision (ecbp, ecb1, wall, wallType) {
         else {
           let newSameECB = orthogonalProjection(ecbp[same], wall);
           let newCenter = new Vec2D( newSameECB.x + (ecbp[opposite].x-ecbp[same].x)/2, newSameECB.y);
-          let touchingWall = true;
+          let touchingWall = wallType;
           if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
             touchingWall = false;
           }
@@ -232,7 +231,7 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldTouchingAndCent
   }
 };
 
-function getNewTouchingAndCenter(ecbp, ecb1, wallWallTypes) {
+function getNewTouchingAndCenterFromWalls(ecbp, ecb1, wallWallTypes) {
   function collisionFunction(wallWallType) {
     return findCollision (ecbp, ecb1, wallWallType[0], wallWallType[1]);
   }
