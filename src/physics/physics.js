@@ -5,50 +5,54 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
+import {getNewTouchingAndCenterFromWalls} from "physics/environmentalCollision";
 /* eslint-disable */
 
 
 
 
 function dealWithWall (wallType) {
-let wallLabel = "L";
-let sign = -1;
-if (wallType[0].toLowerCase() === "r") {
-  wallLabel = "R";
-  sign = 1;
-}
-
-if (player[i].actionState == "DAMAGEFLYN") {
-  if (player[i].hit.hitlag == 0) {
-    player[i].phys.face = sign;
-    if (player[i].phys.techTimer > 0) {
-      if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7) {
-        aS[cS[i]].WALLTECHJUMP.init(i);
-      } else {
-        aS[cS[i]].WALLTECH.init(i);
-      }
-    } else {
-      drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, 0);
-      aS[cS[i]].WALLDAMAGE.init(i);
-    }
+  let wallLabel = "L";
+  let sign = -1;
+  if (wallType[0].toLowerCase() === "r") {
+    wallLabel = "R";
+    sign = 1;
   }
-  else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
-  aS[cS[i]][player[i].actionState].onWallCollide(i, wallLabel, j);
-  else if (player[i].phys.canWallJump) {
-  if (player[i].phys.wallJumpTimer == 254) {
-    if (player[i].phys.posDelta.x >= 0.5) {
-      player[i].phys.wallJumpTimer = 0;
-    }
-  }
-  if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-    if (sign * player[i].inputs.lStickAxis[0].x >= sign * 0.7 &&
-        sign * player[i].inputs.lStickAxis[3].x <= 0 &&
-        player[i].charAttributes.walljump) {
-      player[i].phys.wallJumpTimer = 254;
+  
+  if (player[i].actionState == "DAMAGEFLYN") {
+    if (player[i].hit.hitlag == 0) {
       player[i].phys.face = sign;
-      aS[cS[i]].WALLJUMP.init(i);
-    } else {
-      player[i].phys.wallJumpTimer++;
+      if (player[i].phys.techTimer > 0) {
+        if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7) {
+          aS[cS[i]].WALLTECHJUMP.init(i);
+        } else {
+          aS[cS[i]].WALLTECH.init(i);
+        }
+      } else {
+        drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, 0);
+        aS[cS[i]].WALLDAMAGE.init(i);
+      }
+    }
+    else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
+      aS[cS[i]][player[i].actionState].onWallCollide(i, wallLabel, j);
+    }
+    else if (player[i].phys.canWallJump) {
+      if (player[i].phys.wallJumpTimer == 254) {
+        if (player[i].phys.posDelta.x >= 0.5) {
+          player[i].phys.wallJumpTimer = 0;
+        }
+      }
+    }
+    if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
+      if (sign * player[i].inputs.lStickAxis[0].x >= sign * 0.7 &&
+          sign * player[i].inputs.lStickAxis[3].x <= 0 &&
+          player[i].charAttributes.walljump) {
+        player[i].phys.wallJumpTimer = 254;
+        player[i].phys.face = sign;
+        aS[cS[i]].WALLJUMP.init(i);
+      } else {
+        player[i].phys.wallJumpTimer++;
+      }
     }
   }
 };
@@ -551,7 +555,9 @@ export function physics (i){
     }
 
     var notTouchingWalls = [true, true];
-    let wallWallTypes = ( stage.wallL.map(push("left")) ).concat( stage.wallR.map(push("right")) );
+    function pushLeft ( obj ) { [obj, "left" ] };
+    function pushRight( obj ) { [obj, "right"] };
+    let wallWallTypes = ( stage.wallL.map(pushLeft) ).concat( stage.wallR.map(pushRight) );
     let touchingAndCenter = getNewTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, wallWallTypes);
     if (touchingAndCenter === false) { 
       // no wall collision at all, do nothing
