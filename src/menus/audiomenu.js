@@ -141,6 +141,7 @@ export function drawAudioMenuInit (){
 
 export function drawAudioMenu (){
   clearScreen();
+  drawAudioMenuInit();
   bg2.lineWidth = 3;
   addShine(0.01);
   if (shine > 1.8){
