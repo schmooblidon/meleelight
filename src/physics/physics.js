@@ -5,7 +5,7 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewTouchingAndCenterFromWalls} from "physics/environmentalCollision";
+import {getNewMaybeTouchingAndCenterFromWalls} from "physics/environmentalCollision";
 /* eslint-disable */
 
 
@@ -14,7 +14,7 @@ function pushLeft ( obj ) { return [obj, "left" ]; };
 function pushRight( obj ) { return [obj, "right"]; };
 
 
-function dealWithWall (wallType) {
+function dealWithWall (i, wallType) {
   let wallLabel = "L";
   let sign = -1;
   if (wallType[0].toLowerCase() === "r") {
@@ -459,7 +459,6 @@ export function physics (i){
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
                        aS[cS[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
-
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
@@ -469,7 +468,6 @@ export function physics (i){
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
                      !aS[cS[i]][player[i].actionState].inGrab) {
-
             stillGrounded = false;
           } else {
             player[i].phys.cVel.x = 0;
@@ -484,7 +482,6 @@ export function physics (i){
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
                        aS[cS[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
-
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
@@ -494,7 +491,6 @@ export function physics (i){
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
                      !aS[cS[i]][player[i].actionState].inGrab) {
-
             stillGrounded = false;
           } else {
             player[i].phys.cVel.x = 0;
@@ -512,7 +508,6 @@ export function physics (i){
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
                        aS[cS[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
-
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
@@ -522,7 +517,6 @@ export function physics (i){
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
                      !aS[cS[i]][player[i].actionState].inGrab) {
-
             stillGrounded = false;
           } else {
             player[i].phys.cVel.x = 0;
@@ -537,7 +531,6 @@ export function physics (i){
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
                        aS[cS[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
-
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
@@ -547,7 +540,6 @@ export function physics (i){
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
                      !aS[cS[i]][player[i].actionState].inGrab) {
-
             stillGrounded = false;
           } else {
             player[i].phys.cVel.x = 0;
@@ -559,24 +551,24 @@ export function physics (i){
 
     var notTouchingWalls = [true, true];
     let wallWallTypes = ( stage.wallL.map(pushLeft) ).concat( stage.wallR.map(pushRight) );
-    let touchingAndCenter = getNewTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, wallWallTypes);
-    if (touchingAndCenter === false) { 
+    let maybeTouchingAndCenter = getNewMaybeTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, wallWallTypes);
+    if (maybeTouchingAndCenter === false) { 
       // no wall collision at all, do nothing
     }
     else {
-      player[i].phys.pos = touchingAndCenter[1];
-      if (touchingAndCenter[0] === false ) {
+      player[i].phys.pos = maybeTouchingAndCenter[1];
+      if (maybeTouchingAndCenter[0] === false ) {
         // collision with wall but player no longer touching wall
       }
-      else if (touchingAndCenter[0][0].toLowerCase() === "l") {
+      else if (maybeTouchingAndCenter[0][0].toLowerCase() === "l") {
         // collision with wall, player still touching a left wall
         notTouchingWalls[0] = false;
-        dealWithWall("left");
+        dealWithWall(i, "left");
       }
       else {
         // collision with wall, player still touching a right wall
         notTouchingWalls[1] = false;
-        dealWithWall("right");
+        dealWithWall(i, "right");
       }
     }
 
