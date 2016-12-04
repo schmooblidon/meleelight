@@ -129,16 +129,18 @@ export function credits (p){ //called once every frame
     initc = false;
   }
   //cScore = 9;
-  cCursorAngle += 3;
+
   if (cCursorAngle >= 360) {
 	  cCursorAngle = 0;
   }
   cScrollingPos -= cScrollingSpeed;
   let yDif = 0;
-  if (player[p].inputs.s[0]) {
+  if (player[p].inputs.s[0] === true || player[p].inputs.l[0] === true || player[p].inputs.r[0] === true) {
     //is holding down start. Should increase speed
+	cCursorAngle += 4.5;
     yDif = Math.round(cScrollingSpeed * 1.5);
   } else {
+	cCursorAngle += 3;
     yDif = Math.round(cScrollingSpeed);
   }
   // iterate through creditNames and change y pos based on y dif
