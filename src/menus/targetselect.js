@@ -26,10 +26,13 @@ export let targetPointerPos = [600,635];
 export function setTargetPointerPos(val){
   targetPointerPos = val;
 }
+const cXSize = 1200;
+const cYSize = 750;
 export function tssControls (i){
   if (!showingCode){
-    targetPointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
-    targetPointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
+    targetPointerPos[0] = Math.max(0,Math.min(1200,targetPointerPos[0] + (player[i].inputs.lStickAxis[0].x*15)));
+    targetPointerPos[1] = Math.max(0,Math.min(750,targetPointerPos[1] + (player[i].inputs.lStickAxis[0].y*-15)));
+	
     if (targetPointerPos[1] >= 45 && targetPointerPos[1] <= 420){
       for (let j=0;j<Math.min(20,11+customTargetStages.length);j++){
         if (targetPointerPos[0] >= 50+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[0] <= 300+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[1] >= 110+(j%5)*60 && targetPointerPos[1] <= 160+(j%5)*60){
