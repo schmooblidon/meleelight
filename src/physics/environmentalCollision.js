@@ -163,7 +163,6 @@ function findCollision (ecbp, ecb1, wall, wallType) {
           return false; // no collision
         }
         else {
-          console.log("The last part of 'findCollision' has been triggered on a wall of type "+wallType+".");
           const newSameECB = orthogonalProjection(ecbp[same], wall);
           const newCenter = new Vec2D( newSameECB.x + (ecbp[opposite].x-ecbp[same].x)/2, newSameECB.y);
           let touchingWall = wallType;
@@ -199,10 +198,6 @@ function closestTouchingAndCenter(oldCenter, maybeTouchingAndCenters) {
     return newMaybeTouchingAndCenter;
   }
   else {
-    console.log("Here are the 'maybeTouchingAndCenters': ");
-    console.log(maybeTouchingAndCenters.toString());
-    console.log("Here is the value of l: "+l+".");
-    console.log("Here is the value of start: "+start+".");
     for (let j = start; j < l; j++) {
       if (maybeTouchingAndCenters[j] === false ) {
         // do nothing
@@ -211,7 +206,6 @@ function closestTouchingAndCenter(oldCenter, maybeTouchingAndCenters) {
         newMaybeTouchingAndCenter = maybeTouchingAndCenters[j];
       }
     }
-    console.log("Function 'closestTouchingAndCenter' is about to return, for 'newMaybeTouchingAndCenter', a value of " + newMaybeTouchingAndCenter+"." );
     return newMaybeTouchingAndCenter;
   }
 };
@@ -239,10 +233,7 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldMaybeTouchingAn
     return oldMaybeTouchingAndCenter;
   }
   else {
-    const collisionData = wallWallTypes.map( function(wallWallType){  const answer = findCollision (ecbp, ecb1, wallWallType[0], wallWallType[1]);
-                                                                      console.log("Function 'findCollision' has been given the data of wall: "+wallWallType[0]+", wall type: "+wallWallType[1]+".");
-                                                                      console.log("Function 'findCollision' is returning the data of "+answer+".");
-                                                                      return answer; } );
+    const collisionData = wallWallTypes.map( function(wallWallType){  return findCollision (ecbp, ecb1, wallWallType[0], wallWallType[1]); } );
     for (let i = 0; i < collisionData.length; i++) {
       if (collisionData[i] === false) { 
         // do nothing
@@ -253,10 +244,7 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldMaybeTouchingAn
       }
     }
     if (newCollisionHappened === true) {
-      console.log("Function 'loopOverWalls' about to pass the following list of length " + suggestedMaybeTouchingAndCenters.length+" to 'closestTouchingAndCenter': " );
-      console.log(suggestedMaybeTouchingAndCenters+"." );
       const newMaybeTouchingAndCenter = closestTouchingAndCenter( oldCenter, suggestedMaybeTouchingAndCenters);
-      console.log("The 'newMaybeTouchingAndCenter' value I am going to use right now is "+newMaybeTouchingAndCenter+".");
       const vec = new Vec2D( newMaybeTouchingAndCenter[1].x - oldCenter.x, newMaybeTouchingAndCenter[1].y - oldCenter.y);
       const newecbp = moveECB (ecbp, vec);
       return (loopOverWalls (newecbp, ecb1, oldCenter, wallWallTypes, newMaybeTouchingAndCenter, passNumber+1));
