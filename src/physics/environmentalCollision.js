@@ -1,6 +1,5 @@
 import {Vec2D} from "main/characters";
 import {dotProd, scalarProd, norm} from "main/linAlg";
-/* eslint-disable */
 
 const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 5;
@@ -191,7 +190,7 @@ function findCollision (ecbp, ecb1, wall, wallType) {
     // because of wall and airborne ECB angle restrictions
     // we know that the same-side ECB point went from the outside to the inside of the line spanned by the wall
     else {
-      let t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
+      const t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
       if ( t > 1 ) { // I should also check check whether t < 0, but that seems to cause glitches with Fox's Illusion at the moment?
         //console.log("'findCollision': no collision, intersection parameter outside of allowable range, with "+wallType+" wall.");
         return false; // no collision
@@ -274,7 +273,7 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldMaybeTouchingAn
     return oldMaybeTouchingAndCenter;
   }
   else {
-    const collisionData = wallWallTypes.map( function(wallWallType){  return findCollision (ecbp, ecb1, wallWallType[0], wallWallType[1]); } );
+    const collisionData = wallWallTypes.map( (wallWallType) => findCollision (ecbp, ecb1, wallWallType[0], wallWallType[1]) );
     for (let i = 0; i < collisionData.length; i++) {
       if (collisionData[i] === false) { 
         // do nothing
