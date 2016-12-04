@@ -15,12 +15,16 @@ const cYSize = 750; //To consider when setting the cYSize. make room for bar at 
 let cScore = 0;
 const cBoundX = (cXSize * 1.2098); //credits stick bounding octagon roughly circumscribes canvas size square
 const cBoundY = (cYSize * 1.2098);
+const cRectLength = 25;
+const cRectSpace = 10;
+const cDefaultAngles = [0,.5 * Math.PI, Math.PI, 1.5 * Math.PI];
+let cCursorAngle = 0;
 let cXPos = cXSize / 2;
 let cYPos = cYSize / 2;
 let cPlayerXPos = cXSize / 2;
 let cPlayerYPos = cYSize / 2;
 let cScrollingPos = 0;
-let cScrollingMax = 2800;// max scrolling distance in y coords. Can change this when you want more names or w/e
+let cScrollingMax = 2100;// max scrolling distance in y coords. Can change this when you want more names or w/e
 const cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
 let lastHit = [0, 0, false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
@@ -35,7 +39,7 @@ let laserColor = laserColors[currentLaserColor];
 
 export function ScrollingText (text,yPos,position,information) {
   this.Text = text;
-  this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.66)) + (cXSize * .12));
+  this.xPos = Math.floor((Math.random() * Math.round(cXSize * 0.5)) + (cXSize * .25));
   this.yPos = yPos;
   this.fontSize = 36;
   //this.fontSize = fontSize; //font should always be Consolas. Font size IS 36px
@@ -60,10 +64,16 @@ export function ScrollingText (text,yPos,position,information) {
 		  this.canRender = false;
 	  }
   };
-  this.checkIfShot = function(x, y) {//updates this.isShot respectively
-      if (this.isShot == false) {
+    this.isHovering = function(x, y) {
 	  const size = this.size();
 	  if (x >= size[0][0] && x <= size[0][1] && y >= size[1][0] && y <= size[1][1]) {
+		  return true;
+	  }
+	  return false;
+  }
+  this.checkIfShot = function(x, y) {//updates this.isShot respectively
+      if (this.isShot == false) {
+	  if (this.isHovering(x,y)) {
 		  this.isShot = true;
 		  return true;
 	  } else {
@@ -84,10 +94,12 @@ export function ScrollingText (text,yPos,position,information) {
     this.yPos += y;
   }
 }
+
 let creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
 
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
 export function credits (p){ //called once every frame
+   
   if (player[p].inputs.x[0] && !player[p].inputs.x[1]) {
     currentLaserColor = (currentLaserColor === laserColors.length - 1) ? 0 : currentLaserColor + 1;
     laserColor = laserColors[currentLaserColor];
@@ -97,28 +109,38 @@ export function credits (p){ //called once every frame
     laserColor = laserColors[currentLaserColor];
   }
   if (initc) {
+	cScrollingPos = 0;
     lastHit = [0, 0, false]; //see notes above
     creditNames = [
       new ScrollingText("Schmoo", 800, "Creator, Main Developer", "Made the game."),
-      new ScrollingText("Tatatat0", 900, "Programmer", "Created the AI and credits."),
-      new ScrollingText("bites", 1000, "Animation Assistant, Level Design",
+      new ScrollingText("Tatatat0", 950, "Programmer", "Created the AI and credits."),
+      new ScrollingText("bites", 1100, "Animation Assistant, Level Design",
         "Helped develop animation process & designed target stages."),
-      new ScrollingText("WwwWario", 1100, "Support", "Helping users troubleshoot and being a homie!"),
-      new ScrollingText("zircon", 1200, "Musician", "Smash Superstars (Menu Theme)"),
-      new ScrollingText("Buoy", 1300, "Musician",
+      new ScrollingText("WwwWario", 1250, "Support", "Helping users troubleshoot and being a homie!"),
+      new ScrollingText("zircon", 1400, "Musician", "Smash Superstars (Menu Theme)"),
+      new ScrollingText("Buoy", 1550, "Musician",
         "Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
-      new ScrollingText("Tom Mauritzon", 1400, "Musician", "Mega Helix (PStadium Theme)"),
-      new ScrollingText("Rozen", 1500, "Musician", "Kumite (Battlefield Theme)"),
-      new ScrollingText("Zack Parrish", 1600, "Musician", "Sunny Side Up (Dreamland Theme)")
+      new ScrollingText("Tom Mauritzon", 1700, "Musician", "Mega Helix (PStadium Theme)"),
+      new ScrollingText("Rozen", 1850, "Musician", "Kumite (Battlefield Theme)"),
+      new ScrollingText("Zack Parrish", 2000, "Musician", "Sunny Side Up (Dreamland Theme)")
     ];
     cScore = 0;
+	cCursorAngle = 0;
     initc = false;
   }
+  //cScore = 9;
+
+  if (cCursorAngle >= 360) {
+	  cCursorAngle = 0;
+  }
+  cScrollingPos -= cScrollingSpeed;
   let yDif = 0;
-  if (player[p].inputs.s[0]) {
+  if (player[p].inputs.s[0] === true || player[p].inputs.l[0] === true || player[p].inputs.r[0] === true) {
     //is holding down start. Should increase speed
+	cCursorAngle += 4.5;
     yDif = Math.round(cScrollingSpeed * 1.5);
   } else {
+	cCursorAngle += 3;
     yDif = Math.round(cScrollingSpeed);
   }
   // iterate through creditNames and change y pos based on y dif
@@ -162,7 +184,7 @@ export function credits (p){ //called once every frame
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(1200, 0), 1));
-      shoot_cooldown = 5;
+      shoot_cooldown = 8;
     }
   } else {
     shoot_cooldown -= 1;
@@ -171,7 +193,7 @@ export function credits (p){ //called once every frame
   for (let n=0; n<cShots.length; n++){
     if (cShots[n].life == 15){
       let madeShot = [false, 0];
-      for (var i = 0; i < creditNames.length; i++) {
+      for (let i = 0; i < creditNames.length; i++) {
         if (!(creditNames[i].isShot)) {
           if (creditNames[i].checkIfShot(cShots[n].target.x, 750 - cShots[n].target.y)) {
             madeShot = [true, i];
@@ -189,9 +211,21 @@ export function credits (p){ //called once every frame
     }
   }
 
-  if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
+  if (cScrollingPos >= cScrollingMax) {
+	if (cScore === creditNames.length) {
+	  sounds.complete.play();
+	} else {
+	  sounds.failure.play();
+    }
+	initc = true;
+    player[p].inputs.b[1] = true;
+    cShots = [];
+    lastHit = [0, 0, false];
+    creditNames = [];
+    changeGamemode(1);
+  } else if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
+    sounds.menuBack.play();		
     initc = true;
-    sounds.menuBack.play();
     player[p].inputs.b[1] = true;
     cShots = [];
     lastHit = [0, 0, false];
@@ -324,17 +358,53 @@ export function drawCredits (){
     }
   }
   fg1.strokeStyle = "rgba(255, 255, 255, 0.7)";
-  fg1.lineWidth = 9;
-  fg1.beginPath();
-  fg1.arc(cPlayerXPos, cPlayerYPos, 35, 0, twoPi);
-  fg1.moveTo(cPlayerXPos, cPlayerYPos + 35);
-  fg1.lineTo(cPlayerXPos, cPlayerYPos + 10);
-  fg1.moveTo(cPlayerXPos, cPlayerYPos - 35);
-  fg1.lineTo(cPlayerXPos, cPlayerYPos - 10);
-  fg1.moveTo(cPlayerXPos + 35, cPlayerYPos);
-  fg1.lineTo(cPlayerXPos + 10, cPlayerYPos);
-  fg1.moveTo(cPlayerXPos - 35, cPlayerYPos);
-  fg1.lineTo(cPlayerXPos - 10, cPlayerYPos);
-  fg1.closePath();
-  fg1.stroke();
+  if (initc === false) {
+	 for (let i = 0; i < creditNames.length; i++) {
+        if (!(creditNames[i].isShot)) {
+          if (creditNames[i].isHovering(cPlayerXPos,cPlayerYPos)) {
+             fg1.strokeStyle = "rgba(204, 0, 0, 0.7)";
+          }
+        }
+      }
+  }
+  if (initc === true) {
+	  fg1.lineWidth = 9;
+	  fg1.beginPath();
+	  fg1.arc(cPlayerXPos, cPlayerYPos, 35, 0, twoPi);
+	  fg1.moveTo(cPlayerXPos, cPlayerYPos + 35);
+	  fg1.lineTo(cPlayerXPos, cPlayerYPos + 10);
+	  fg1.moveTo(cPlayerXPos, cPlayerYPos - 35);
+	  fg1.lineTo(cPlayerXPos, cPlayerYPos - 10);
+	  fg1.moveTo(cPlayerXPos + 35, cPlayerYPos);
+	  fg1.lineTo(cPlayerXPos + 10, cPlayerYPos);
+	  fg1.moveTo(cPlayerXPos - 35, cPlayerYPos);
+	  fg1.lineTo(cPlayerXPos - 10, cPlayerYPos);
+	  fg1.closePath();
+	  fg1.stroke();
+  } else {
+	  fg1.lineWidth = 9;
+	  fg1.beginPath();
+	  fg1.arc(cPlayerXPos, cPlayerYPos, 35, 0, twoPi);
+	  //const cRectLength = 25;
+	  //const cRectSpace = 10;
+	  //const cDefaultAngles = [0,.5 * Math.PI, Math.PI, 1.5 * Math.PI,twoPi];
+	  let radiansAngle = ((cCursorAngle / 180) * Math.PI);
+	  let cRectPos = [[[0,0],[0,0]],[[0,0],[0,0]],[[0,0],[0,0]],[[0,0],[0,0]]];
+	  for (let i = 0; i < cDefaultAngles.length; i++) {
+	  	  cRectPos[i][0][0] = Math.cos((cDefaultAngles[i] + radiansAngle)) * (cRectSpace);
+	  	  cRectPos[i][0][1] = Math.sin((cDefaultAngles[i] + radiansAngle)) * (cRectSpace);
+	  	  cRectPos[i][1][0] = Math.cos((cDefaultAngles[i] + radiansAngle)) * (cRectLength + cRectSpace);
+	  	  cRectPos[i][1][1] = Math.sin((cDefaultAngles[i] + radiansAngle)) * (cRectLength + cRectSpace);
+	  }
+	  for (let i = 0; i < cRectPos.length; i++) {
+	   fg1.moveTo(cPlayerXPos + cRectPos[i][0][0], cPlayerYPos + cRectPos[i][0][1]);
+	   fg1.lineTo(cPlayerXPos + cRectPos[i][1][0], cPlayerYPos + cRectPos[i][1][1]);		  
+	  }
+	  //for (let ia = 0; ia < cDefaultAngles.length; i++) {
+	  //	 fg1.moveTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectSpace)));
+	  //  fg1.lineTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)));	
+	  //}
+	  fg1.closePath();
+	  fg1.stroke();	  
+  }
 }

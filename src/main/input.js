@@ -108,9 +108,11 @@ var controllerIDMap = new Map();
 // ID 0, Mayflash Wii-U adapter & variants
 controllerIDMap.set("Mayflash", 0); // Mayflash 4 port, ID: MAYFLASH GameCube Controller Adapter
 controllerIDMap.set("0079-1843", 0);
+controllerIDMap.set("79-1843", 0);
 
 controllerIDMap.set("NEXILUX", 0); // NEXILUX GAMECUBE Controller Adapter
 controllerIDMap.set("0079-1845", 0);
+controllerIDMap.set("79-1845", 0);
 
 controllerIDMap.set("Wii U GameCube Adapter", 0); // Mayflash 4 port on Linux, no vendor/product ID?
 
@@ -125,6 +127,7 @@ controllerIDMap.set("1234-bead", 1);
 controllerIDMap.set("GC/N64 to USB, v2.", 2);
 controllerIDMap.set("GC/N64 to USB v2.", 2);
 controllerIDMap.set("289b-000c", 2);
+controllerIDMap.set("289b-c", 2);
 
 // ID 3, XBOX 360 or XInput standard gamepad
 controllerIDMap.set("Microsoft Controller", 3); // XBOX 360 & XBOX One controllers
@@ -133,34 +136,42 @@ controllerIDMap.set("Microsoft X-Box One", 3); // ID: Microsoft X-Box One pad
 controllerIDMap.set("XInput", 3);
 controllerIDMap.set("Standard Gamepad", 3);
 controllerIDMap.set("045e-02d1", 3);
+controllerIDMap.set("45e-2d1", 3);
 
 controllerIDMap.set("Wireless 360 Controller", 3); // XBOX 360 controller on Mac
 controllerIDMap.set("045e-028e", 3);
+controllerIDMap.set("45e-28e", 3);
 
 // ID 4, TigerGame 3-in-1 adapter
 controllerIDMap.set("TigerGame", 4); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
 controllerIDMap.set("0926-2526", 4);
+controllerIDMap.set("926-2526", 4);
 
 // ID 5, Retrolink adapter
 controllerIDMap.set("Generic USB Joystick", 5); // ID: Generic USB Joystick, TODO: should check ID and vendor...
 controllerIDMap.set("0079-0006", 5);
+controllerIDMap.set("79-6", 5);
 
 // ID 6, raphnet n64 adapter, version 3.0 and above
 controllerIDMap.set("GC/N64 to USB v3.", 6); // "v3.2" and "v3.3"
 controllerIDMap.set("GC/N64 to USB, v3.", 6);
 controllerIDMap.set("289b-001d", 6);
+controllerIDMap.set("289b-1d", 6);
 
 // ID 7, Brook adapter
 controllerIDMap.set("Wii U GameCube Controller Adapter", 7);
 controllerIDMap.set("0e8f-0003", 7);
+controllerIDMap.set("e8f-3", 7);
 
 // ID 8, PS4 controller
 controllerIDMap.set("Wireless Controller", 8); // should check ID and vendor...
 controllerIDMap.set("054c-05c4", 8);
+controllerIDMap.set("54c-5c4", 8);
 
 // ID 9, Rock Candy Xbox 360 controller
 controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 360", 8);
 controllerIDMap.set("0e6f-011f", 8);
+controllerIDMap.set("e6f-11f", 8);
 
 //--END OF CONTROLLER IDs-------------------------------------
     

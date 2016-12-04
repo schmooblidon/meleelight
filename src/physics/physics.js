@@ -5,18 +5,23 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewTouchingAndCenterFromWalls} from "physics/environmentalCollision";
+import {getNewMaybeTouchingAndCenterFromWalls} from "physics/environmentalCollision";
 /* eslint-disable */
 
 
+// two utility functions used later, put here for convenience
+function pushLeft ( obj ) { return [obj, "left" ]; };
+function pushRight( obj ) { return [obj, "right"]; };
 
 
-function dealWithWall (wallType) {
+function dealWithWall (i, wallType) {
   let wallLabel = "L";
   let sign = -1;
+  let isRight = 0;
   if (wallType[0].toLowerCase() === "r") {
     wallLabel = "R";
     sign = 1;
+    isRight = 1;
   }
   
   if (player[i].actionState == "DAMAGEFLYN") {
@@ -29,7 +34,7 @@ function dealWithWall (wallType) {
           aS[cS[i]].WALLTECH.init(i);
         }
       } else {
-        drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, 0);
+        drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, isRight);
         aS[cS[i]].WALLDAMAGE.init(i);
       }
     }
@@ -456,7 +461,6 @@ export function physics (i){
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
                        aS[cS[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
-
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
@@ -466,7 +470,6 @@ export function physics (i){
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
                      !aS[cS[i]][player[i].actionState].inGrab) {
-
             stillGrounded = false;
           } else {
             player[i].phys.cVel.x = 0;
@@ -481,7 +484,6 @@ export function physics (i){
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
                        aS[cS[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
-
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
@@ -491,7 +493,6 @@ export function physics (i){
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
                      !aS[cS[i]][player[i].actionState].inGrab) {
-
             stillGrounded = false;
           } else {
             player[i].phys.cVel.x = 0;
@@ -509,7 +510,6 @@ export function physics (i){
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
                        aS[cS[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
-
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
@@ -519,7 +519,6 @@ export function physics (i){
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
                      !aS[cS[i]][player[i].actionState].inGrab) {
-
             stillGrounded = false;
           } else {
             player[i].phys.cVel.x = 0;
@@ -534,7 +533,6 @@ export function physics (i){
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
                        aS[cS[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
-
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
@@ -544,7 +542,6 @@ export function physics (i){
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
                      !aS[cS[i]][player[i].actionState].inGrab) {
-
             stillGrounded = false;
           } else {
             player[i].phys.cVel.x = 0;
@@ -555,27 +552,26 @@ export function physics (i){
     }
 
     var notTouchingWalls = [true, true];
-    function pushLeft ( obj ) { [obj, "left" ] };
-    function pushRight( obj ) { [obj, "right"] };
     let wallWallTypes = ( stage.wallL.map(pushLeft) ).concat( stage.wallR.map(pushRight) );
-    let touchingAndCenter = getNewTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, wallWallTypes);
-    if (touchingAndCenter === false) { 
-      // no wall collision at all, do nothing
+    let maybeTouchingAndCenter = getNewMaybeTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, wallWallTypes);
+    if (maybeTouchingAndCenter === false) {
+      // no collision, do nothing
     }
     else {
-      player[i].phys.pos = touchingAndCenter[1];
-      if (touchingAndCenter[0] === false ) {
+      player[i].phys.pos.x = maybeTouchingAndCenter[1].x;
+      player[i].phys.pos.y = maybeTouchingAndCenter[1].y - ecbOffset[2];
+      if (maybeTouchingAndCenter[0] === false ) {
         // collision with wall but player no longer touching wall
       }
-      if (touchingAndCenter[0][0].toLowerCase() === "l") {
+      else if (maybeTouchingAndCenter[0][0].toLowerCase() === "l") {
         // collision with wall, player still touching a left wall
         notTouchingWalls[0] = false;
-        dealWithWall("left");
+        dealWithWall(i, "left");
       }
       else {
         // collision with wall, player still touching a right wall
         notTouchingWalls[1] = false;
-        dealWithWall("right");
+        dealWithWall(i, "right");
       }
     }
 

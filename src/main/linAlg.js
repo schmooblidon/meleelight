@@ -7,8 +7,12 @@ export function dotProd(vec1,vec2) {
 };
 
 export function scalarProd( lambda, vec) {
-  return ( new Vec2d ( lambda * vec.x, lambda * vec.y ));
+  return ( new Vec2D ( lambda * vec.x, lambda * vec.y ));
 };
+
+export function norm(vec) {
+  return ( Math.sqrt( dotProd(vec,vec) ));
+}
 
 // Computes the inverse of a 2x2 matrix.
 export function inverseMatrix([
