@@ -103,15 +103,6 @@ function orthogonalProjection(point, line) {
 };
 
 
-/*
-
-let centerp = new Vec2D ( ecbp[0].x, ecbp[1].y) ;
-let center1 = new Vec2D ( ecb1[0].x, ecb1[1].y) ;
-let movementVector = new Vec2D (centerp.x - center1.x, centerp.y - center1.y); 
-let theta = Math.atan2( movementVector.y, movementVector.x); // direction of movement, from -pi to pi radians
-
-*/
-
 // ecbp : projected ECB
 // ecb1 : old ECB
 // function return type: either false (no collision) or a pair (bool, proposed new player center position (Vec2D))
@@ -134,12 +125,12 @@ function findCollision (ecbp, ecb1, wall, wallType) {
   let sameECBMov = new Vec2D ( ecbp[same].x-ecb1[same].x, ecbp[same].y-ecb1[same].y);
 
   if ( !movingInto( sameECBMov, wallTop, wallBottom, wallType)) {
-    return false; // no collision: not moving towards wall
+    return false; // no collision: player not moving towards wall
     // this clause makes sure that in later calls of 'coordinateIntercept',
     // the relevant lines aren't going to be parallel
   }
   else if ( !isOutside ( ecb1[opposite], wall, wallType ) ) {
-    return false; // no collision: player already on the other side of the wall
+    return false; // no collision: player was already on the other side of the wall
   }
   else if ( !isOutside ( ecbp[same], wall, wallType ) ) {
     // from now on, we know that the projected same-side ECB point is on the inside half-plane of the wall
@@ -156,79 +147,24 @@ function findCollision (ecbp, ecb1, wall, wallType) {
       return false;
     }
     
-    // case 3: same-side ECB point moved from center to above the top
-    // collision possible, but no corners (because of wall & airborne ECB angle restrictions)
-    // we only need to work with the same-side ECB point (and not top/bottom ECB points),
-    // because of wall & airborne ECB angle restrictions
-    else if (ecb1[same].y < wallTop.y && ecb1[same].y > wallBottom.y && ecbp[same].y > wallTop.y ) {
-      let intersect = coordinateIntercept ([ecb1[same],ecbp[same]], wall);
-      if (intersect.y > wallTop.y) {
-        return false; // no collision
-      }
-      else {
-        let newSameECB = orthogonalProjection(ecbp[same], wall);
-        let newCenter = new Vec2D( newSameECB.x + (ecbp[opposite]-ecbp[same])/2, newSameECB.y);
-        let touchingWall = true;
-        if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
-          touchingWall = false
-        }
-        return ( [touchingWall, newCenter] );
-      }
-    }
-
-    // case 4: same-side ECB point moved from center to below the bottom
-    // collision possible, but no corners (because of wall & airborne ECB angle restrictions)
-    // we only need to work with the same-side ECB point (and not top/bottom ECB points),
-    // because of wall & airborne ECB angle restrictions
-    else if (ecb1[same].y < wallTop.y && ecb1[same].y > wallBottom.y && ecbp[same].y < wallBottom.y) {
-      let intersect = coordinateIntercept ([ecb1[same],ecbp[same]], wall);
-      if (intersect.y < wallBottom.y ) {
-        return false; // no collision
-      }
-      else {
-        let newSameECB = orthogonalProjection(ecbp[same], wall);
-        let newCenter = new Vec2D( newSameECB.x + (ecbp[opposite]-ecbp[same])/2, newSameECB.y);
-        let touchingWall = true;
-        if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
-          touchingWall = false
-        }
-        return ( [touchingWall, newCenter] );
-      }
-    }
-
-    // case 5: same-side ECB point stayed between top and bottom of wall throughout
-    // collision necessary
-    // we only need to work with the same-side ECB point (and not top/bottom ECB points),
-    // because of wall & airborne ECB angle restrictions
-    else if ( ecb1[same].y < wallTop.y && ecb1[same].y > wallBottom.y && ecbp[same].y > wallBottom.y && ecbp[same].y < wallTop.y ) {
-      let newSameECB = orthogonalProjection(ecbp[same], wall);
-      let newCenter = new Vec2D( newSameECB.x + (ecbp[opposite]-ecbp[same])/2, newSameECB.y);
-      let touchingWall = true;
-        if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
-          touchingWall = false
-        }
-      return ( [touchingWall, newCenter] );
-    }
-
-    // case 6: bottom same-side corner collision checking
-    else if ( ecb1[same].y > wallTop.y && ecbp[0].y < wallTop.y) {
-      // TODO
-    }
-
-    // case 7: top same-side corner collision checking
-    else if ( ecb1[same].y < wallBottom.y && ecbp[2].y > wallBottom.y) {
-      // TODO
-    }
-
-    // the next case shouldn't happen if I've thought this through properly
+    // case 3: everything else
+    // only need to work with same-side ECB point,
+    // and no need to do corner checking,
+    // because of wall and airborne ECB angle restrictions
     else {
-      console.log("Warning: non-exhaustive pattern in function 'findCollision'.")
-      console.log("Wall top point was: ("+ wallTop.x+","+wallTop.y+").");
-      console.log("Wall bottom point was: ("+ wallBottom.x+","+wallBottom.y+").");
-      console.log("Wall type was: "+wallType+".");
-      console.log( wallType+"-side ECB1 was at ("+ ecb1[same].x+","+ecb1[same].y+").");
-      console.log( wallType+"-side ECBp was at ("+ ecbp[same].x+","+ecbp[same].y+").");
-      return false;
+      let intersect = coordinateIntercept ([ecb1[same],ecbp[same]], wall);
+      if (intersect.y > wallTop.y || intersect.y < wallBottom.y) {
+        return false; // no collision
+      }
+      else {
+        let newSameECB = orthogonalProjection(ecbp[same], wall);
+        let newCenter = new Vec2D( newSameECB.x + (ecbp[opposite].x-ecbp[same].x)/2, newSameECB.y);
+        let touchingWall = true;
+        if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
+          touchingWall = false
+        }
+        return ( [touchingWall, newCenter] );
+      }
     }
 
   }
