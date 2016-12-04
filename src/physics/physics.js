@@ -17,9 +17,11 @@ function pushRight( obj ) { return [obj, "right"]; };
 function dealWithWall (i, wallType) {
   let wallLabel = "L";
   let sign = -1;
+  let isRight = 0;
   if (wallType[0].toLowerCase() === "r") {
     wallLabel = "R";
     sign = 1;
+    isRight = 1;
   }
   
   if (player[i].actionState == "DAMAGEFLYN") {
@@ -32,7 +34,7 @@ function dealWithWall (i, wallType) {
           aS[cS[i]].WALLTECH.init(i);
         }
       } else {
-        drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, 0);
+        drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, isRight);
         aS[cS[i]].WALLDAMAGE.init(i);
       }
     }
