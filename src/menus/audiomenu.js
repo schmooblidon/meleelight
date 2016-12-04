@@ -97,17 +97,19 @@ export function audioMenuControls (i){
       audioMenuSelected = 0;
     }
   } else if (audioLevelMoveUp) {
-    sounds.menuSelect.play();
     masterVolume[audioMenuSelected] += 0.1;
     if (masterVolume[audioMenuSelected] > 1) {
       masterVolume[audioMenuSelected] = 1;
-    }
+    } else {
+	  sounds.menuSelect.play();
+	}
   } else if (audioLevelMoveDown) {
-    sounds.menuSelect.play();
     masterVolume[audioMenuSelected] -= 0.1;
     if (masterVolume[audioMenuSelected] < 0) {
       masterVolume[audioMenuSelected] = 0;
-    }
+    } else { 
+	  sounds.menuSelect.play();
+	}
   }
   if (audioLevelMoveDown || audioLevelMoveUp) {
     if (audioMenuSelected == 0) {
@@ -165,9 +167,9 @@ export function drawAudioMenu (){
   for (var i = 0; i < 2; i++) {
     if (i == audioMenuSelected) {
       //ui.fillStyle = "rgba(255, 255, 255, 0.7)";
-      ui.fillStyle = "rgba(255, 255, 255, 0.3)";
+      ui.fillStyle = "rgba(255, 255, 255,0.3)";
     } else {
-      ui.fillStyle = "rgba(255, 255, 255, 0.1)";
+      ui.fillStyle = "rgba(255, 255, 255,0.1)";
       //ui.fillStyle = "rgba(0, 0, 0, 0.8)";
     }
     ui.beginPath();
@@ -176,7 +178,7 @@ export function drawAudioMenu (){
     ui.lineTo(1000, 350 + i * 250);
     ui.closePath();
     ui.fill();
-    if (i == 0) {
+    if (i == 0) {	
       var bgGrad = ui.createLinearGradient(200, 0, 1200, 0);
       bgGrad.addColorStop(0, "rgb(12, 75, 13)");
       bgGrad.addColorStop(1, "rgb(15, 75, 255)");
