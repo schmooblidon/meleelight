@@ -1,7 +1,8 @@
 import {checkForSpecials, checkForAerials, airDrift, fastfall, aS} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
-import {cS, drawVfx, player} from "main/main";
+import {cS,  player} from "main/main";
 import {framesData} from 'main/characters';
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "WALLTECHJUMP",
   canPassThrough : true,

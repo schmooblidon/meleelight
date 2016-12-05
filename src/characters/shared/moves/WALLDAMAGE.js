@@ -1,7 +1,8 @@
-import {drawVfx, cS, player} from "main/main";
+import {cS, player} from "main/main";
 import {aS} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "WALLDAMAGE",
   canPassThrough : false,

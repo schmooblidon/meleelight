@@ -427,7 +427,7 @@ export const sounds = {
   })
 }
 
-window.music = {
+export const music = {
   menu: new Howl({
     src: ['music/menu.ogg'],
     volume: 1,

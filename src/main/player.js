@@ -1,4 +1,7 @@
-import {Vec2D, chars, Box2D} from "main/characters";
+
+import {chars} from "./characters";
+import {Vec2D} from "./util/Vec2D";
+import {Box2D} from "./util/Box2D";
 /* eslint-disable */
 
 export function ActiveHitbox(size, offset, dmg, angle, kg, bk, sk, type) {

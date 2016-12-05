@@ -1,6 +1,7 @@
 import {airDrift, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
-import {drawVfx, cS, player} from "main/main";
+import { cS, player} from "main/main";
 import {framesData} from 'main/characters';
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "STOPCEIL",
   canPassThrough : true,

@@ -1,21 +1,23 @@
-import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine, setStage,
+import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine,
     addShine
     , setShine
-    , deepCopyObject
+,setCS
 } from "main/main";
 import {targetRecords,  startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords,
     setTargetStagePlaying
-} from "target/targetplay";
+} from "../target/targetplay";
 import {showingCode, stageTemp,  setShowingCode, resetStageTemp, setTargetBuilder,
     setEditingStage
     , setStageTemp
-} from "target/targetbuilder";
-import {sounds} from "main/sfx";
-import {Vec2D, Box2D} from "main/characters";
-import {twoPi} from "main/render";
-import {foxPic, puffPic, marthPic} from "menus/css";
-import {customTargetStages, targetStages, setCustomTargetStages} from "stages/stages";
-import {setCS} from "../main/main";
+} from "../target/targetbuilder";
+import {sounds,music} from "../main/sfx";
+import {twoPi} from "../main/render";
+import {foxPic, puffPic, marthPic} from "../menus/css";
+import {customTargetStages, setCustomTargetStages,setActiveStageTarget} from "stages/activeStage";
+import {deepCopyObject} from "../main/util/deepCopyObject";
+import {Box2D} from "../main/util/Box2D";
+import {Vec2D} from "../main/util/Vec2D";
+import {setActiveStageCustomTarget} from "./activeStage";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;
@@ -126,12 +128,13 @@ export function tssControls (i){
         }
         else {
           if (targetSelected > 9){
-            setStage(customTargetStages[targetSelected-10]);
+            setTargetStagePlaying(targetSelected);
+            setActiveStageCustomTarget(targetSelected-10);
           }
           else {
-            setStage(targetStages[targetSelected]);
+            setActiveStageTarget(targetSelected);
           }
-            setTargetStagePlaying( targetSelected);
+          //setActiveStageTarget( targetSelected);
           startTargetGame(i,false);
         }
       }

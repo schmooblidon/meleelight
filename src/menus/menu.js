@@ -3,9 +3,10 @@ import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBin
 } from "main/main";
 import {sounds} from "main/sfx";
 import { setTargetPlayer} from "target/targetplay";
-import { setTargetPointerPos} from "menus/targetselect";
+import { setTargetPointerPos} from "../stages/targetselect";
 import {  setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
+import {music} from "../main/sfx";
 /* eslint-disable */
 
  let menuSelected = 0;

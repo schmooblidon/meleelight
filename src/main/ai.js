@@ -1,5 +1,6 @@
-import {player, playerType, cS,stage} from "main/main";
+import {player, playerType, cS} from "main/main";
 import {gameSettings} from "settings";
+import {activeStage} from "stages/activeStage";
 /* eslint-disable */
 
 let a = 0;
@@ -458,6 +459,11 @@ export function marthAI(i) {
   const groundAttacks = ["DOWNTILT","UTILT","FTILT","JAB1","JAB2","JAB3","FSMASH","DSMASH","USMASH","ATTACKDASH"];
   const ptimer = player[i].timer;
   const pgrounded = player[i].phys.grounded;
+  const pface = player[i].phys.face;
+  const nfloor = NearestFloor(player[i]);
+  const nledge = NearestLedge(player[i]);
+  const pisoffstage = isOffstage(player[i]);
+  const ddlength = 15;
   if (player[i].currentAction == "LEDGESTALL") {
     player[i].inputs.lStickAxis[0].x = 0.0;
     if (player[i].currentSubaction == "FALL") {
@@ -479,89 +485,265 @@ export function marthAI(i) {
       return;
     }
   }
-  const nearest = NearestEnemy(player[i], i);
+  var nearest = NearestEnemy(player[i], i);
+  //if (player[i].currentAction == "NONE") {
+  //if (paction == "FALL" || paction == "JUMP") {
+  //	  player[i].inputs.lStickAxis[0].x = player[i].phys.pos.face;
+  //	  player[i].inputs.a[0] = true;
+  //	  return;
+  //}
+  //}
+  const distx = px - player[nearest].phys.pos.x;
+  const disty = py - player[nearest].phys.pos.y;
   if (player[i].currentAction == "NONE") {
-    var distx = px - player[nearest].phys.pos.x;
-    var disty = py - player[nearest].phys.pos.y;
   }
-  if (pdiff >= 2 && player[i].currentAction == "NONE") {
-  if ((pgrounded && ((paction ==
-      "WAIT" || (pgrounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() *
-        10) + 1) >= 8 - (2 * pdiff)))) && Math.abs(distx) > 15) || ((pdiff > 0 &&
-      player[i].hasHit && gameSettings.turbo && pgrounded) || paction == "WAIT") || (
-      paction == "LANDING" && ptimer > 3))) { //smash turn to face enemy
-    if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
-      player[i].currentAction = "SMASHTURN";
-      player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
-      return;
-    } else {
-      if (player[i].currentAction == "NONE" && ["WAIT","WALK","OTTOTTOWAIT","LANDING"].indexOf(paction) != -1 && player[nearest].phys.hurtBoxState == 0) {
-        if (Math.abs(distx) < 23 && Math.abs(disty) < 15) {
-          var randomSeed = Math.floor((Math.random() * 100) + 1);
-          if (randomSeed <= 10) { //grab
-            player[i].inputs.z = true;
-            /*
-				  player[i].inputs.l[0] = true;
-				  player[i].inputs.lAnalog[0] = 1;
-				  player[i].inputs.a = true;
-				  */
-          } else if (randomSeed <= 25) { //tilt
-            const randomSeed1 = Math.floor((Math.random() * 100) + 1);
-            if (randomSeed1 <= 25) { //f-tilt
-              player[i].inputs.lStickAxis[0].x = 0.50;
-            } else if (randomSeed1 <= 50) { //d-tilt
-              player[i].inputs.lStickAxis[0].y = -0.50;
-            } else if (randomSeed1 <= 75) { //up-tilt
-              if (cS[i] == 1 || cS[i] == 2) {
-                if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
-                  player[i].currentAction = "REVERSEUPTILT";
-                  player[i].currentSubaction = "REVERSE";
-                  return;
+  if (["WAVEDASHANY","WAVEDASH","DASHDANCE","DASHDANCEBACK"].indexOf(player[i].currentAction) != -1) {
+    //cancel states
+    if (paction === "FALL") {
+      player[i].currentAction = "NONE";
+      player[i].currentSubaction = "NONE";
+    } else if ((paction == "LANDING" || paction == "WAIT")&& player[i].inputs.lStickAxis[1].x === 0.0) {
+      player[i].currentAction = "NONE";
+      player[i].currentSubaction = "NONE";
+    }
+  }
+  if (pdiff >= 3) {
+    if (player[i].currentAction == "DASHDANCING" || player[i].currentAction == "DASHDANCEBACK") {
+      if (!isAboveGround((3 * pcyx) + px,py)) {
+        player[i].inputs.lStickAxis[0].x = -1.0 * Math.sign(pcyx);
+        player[i].currentAction = "DASHDANCE";
+        player[i].currentSubaction = "NONE";
+        return;
+      }
+    }
+    if (!(pgrounded)) {  //l canceling l-cancelling lcancelling
+      if (aerialAttacks.indexOf(paction) != -1) {
+        //aerial strafing
+        //console.log("ARG1: " + (py + (2 * pcyy)) + "NFLOOR: " + nfloor);
+        if ((py + (pcyy * 2) <= nfloor) && pcyy < 0) { //will land
+          //console.log("Pressed L");
+          let randomSeed = Math.floor((Math.random() * 100) + 1);
+          if (randomSeed <= 80 + ((pdiff - 3) * 20)) {
+            player[i].inputs.l[0] = true;
+            player[i].inputs.lAnalog[0] = 1.0;
+            return;
+          }
+        } else if (pcyy <= 0 && !(player[i].phys.fastfalled)) {
+          if (!(pisoffstage)) { //fast fall
+            let randomSeed = Math.floor((Math.random() * 100) + 1);
+            if (randomSeed <= 50 + ((pdiff - 3) * 20)) {
+              player[i].inputs.lStickAxis[0].y = -1.0;
+              return;
+            }
+          }
+        }
+      }
+    }
+    if (player[i].currentAction == "DASHDANCE") {
+      if (ptimer >= ddlength - 1) {
+        var randomSeed = Math.floor((Math.random() * 100) + 1);
+        if (randomSeed <= 3) {
+          if (Math.abs(distx) < 10 && Math.abs(disty) < 5 && pface == Math.sign(distx)) {
+            player[i].currentAction = "PIVOTFSMASH";
+            player[i].inputs.lStickAxis[0].x = -1.0 * pface;
+            return;
+          } else { //can't pivot f-samash
+            player[i].currentAction = "WAVEDASHANY"; //not any
+            if (pface == 1.0) {
+              player[i].currentSubaction = "LEFT";
+            } else {
+              player[i].currentSubaction = "RIGHT";
+            }
+            player[i].inputs.x[0] = 1.0;
+            return;
+          }
+        } else if (randomSeed <= 38) {
+          //extend dashdance
+          player[i].currentAction = "DASHDANCEBACK";
+          player[i].inputs.lStickAxis[0].x = pface * -1.0;
+          if (pface == 1.0) {
+            player[i].currentSubaction = "LEFT";
+          } else {
+            player[i].currentSubaction = "RIGHT";
+          }
+          return;
+        } else if (randomSeed <= 71) {//wavedash
+          player[i].inputs.x[0] = true;
+          player[i].currentAction = "WAVEDASHANY";
+          return;
+        } else {
+          //dash dance
+          player[i].inputs.lStickAxis[0].x = pface * -1.0;
+          return;
+        }
+      } else {
+        //player[i].inputs.lStickAxis[0].x = player[i].inputs.lStickAxis[1].x;
+        player[i].inputs.lStickAxis[0].x = pface;
+        return;
+      }
+    } //end of dashance end code
+    if (player[i].currentAction == "NONE" && player[i].currentSubaction == "NONE") { //dash dance beginning code
+      if (idleActions.indexOf(paction) != -1) {
+        if (ptimer >= 3) { //gives idle frames
+          if (paction == "OTTOTTOWAIT") {
+            player[i].inputs.lStickAxis[0].x = -1.0 * pface;
+            return;
+          } else {
+            let randomSeed = Math.floor((Math.random() * 100) + 1);
+            if (randomSeed <= 25) {
+              player[i].currentAction = "DASHDANCE";
+              player[i].inputs.lStickAxis[0].x = -1.0;
+              return;
+            } else if (randomSeed <= 50) {
+              player[i].currentAction = "DASHDANCE";
+              player[i].inputs.lStickAxis[0].x = 1.0;
+              return;
+            } else if (randomSeed <= 85) {
+              player[i].currentAction = "WAVEDASHANY";
+              player[i].inputs.x[0] = true;
+              return;
+            }
+          }
+        }
+      }
+    }
+    if (player[i].currentAction == "DASHDANCEBACK") {
+      if (["LEFT","RIGHT"].indexOf(player[i].currentSubaction) == -1) {
+        player[i].currentAction = "NONE";
+        player[i].currentSubaction = "NONE";
+        return;
+      } else {
+        if (player[i].currentSubaction === "LEFT") {
+          if (pface == -1.0) {
+            player[i].currentAction = "DASHDANCE";
+            player[i].currentSubaction = "NONE";
+            player[i].inputs.lStickAxis[0].x = -1.0;
+            return;
+          }  else {
+            if (paction == "SMASHTURN") {
+              console.log("0: " + player[i].inputs.lStickAxis[0].x);
+              console.log("1: " + player[i].inputs.lStickAxis[1].x);
+              player[i].inputs.lStickAxis[0].x = player[i].inputs.lStickAxis[2].x;
+              return;
+            } else if (paction == "DASH") {
+              let doSomething = Math.min(100,20 + Math.sin(((2 * 3.14159265358979323) / 15) * (ptimer - 1)));
+              let randomSeed = Math.floor((Math.random() * 100) + 1);
+              if (randomSeed <= doSomething) {
+                player[i].inputs.lStickAxis[0].x = -1.0 * pface;
+              } else {
+                player[i].inputs.lStickAxis[0].x = pface;
+              }
+              return;
+            }
+          }
+        } else if (player[i].currentSubaction === "RIGHT") {
+          if (pface == 1.0) {
+            player[i].currentAction = "DASHDANCE";
+            player[i].currentSubaction = "NONE";
+            player[i].inputs.lStickAxis[0].x = 1.0;
+            return;
+          }  else {
+            if (paction == "SMASHTURN") {
+              player[i].inputs.lStickAxis[0].x = player[i].inputs.lStickAxis[1].x;
+              return;
+            } else if (paction == "DASH") {
+              let doSomething = Math.min(100,20 + Math.sin(((2 * 3.14159265358979323) / 15) * (ptimer - 1)));
+              let randomSeed = Math.floor((Math.random() * 100) + 1);
+              if (randomSeed <= doSomething) {
+                player[i].inputs.lStickAxis[0].x = -1 * pface;
+              } else {
+                player[i].inputs.lStickAxis[0].x = pface;
+              }
+              return;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (pdiff == 2 && player[i].currentAction == "NONE") {
+    if ((pgrounded && ((paction ==
+        "WAIT" || (pgrounded && gameSettings.turbo && player[i].hasHit && (Math.floor((Math.random() *
+            10) + 1) >= 8 - (2 * pdiff)))) && Math.abs(distx) > 15) || ((pdiff > 0 &&
+        player[i].hasHit && gameSettings.turbo && pgrounded) || paction == "WAIT") || (
+        paction == "LANDING" && ptimer > 3))) { //smash turn to face enemy
+      if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
+        player[i].currentAction = "SMASHTURN";
+        player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
+        return;
+      } else {
+        if (player[i].currentAction == "NONE" && ["WAIT","WALK","OTTOTTOWAIT","LANDING"].indexOf(paction) != -1 && player[nearest].phys.hurtBoxState == 0) {
+          if (Math.abs(distx) < 23 && Math.abs(disty) < 15) {
+            var randomSeed = Math.floor((Math.random() * 100) + 1);
+            if (randomSeed <= 10) { //grab
+              player[i].inputs.z = true;
+              /*
+               player[i].inputs.l[0] = true;
+               player[i].inputs.lAnalog[0] = 1;
+               player[i].inputs.a = true;
+               */
+            } else if (randomSeed <= 25) { //tilt
+              var randomSeed1 = Math.floor((Math.random() * 100) + 1);
+              if (randomSeed1 <= 25) { //f-tilt
+                player[i].inputs.lStickAxis[0].x = 0.50;
+              } else if (randomSeed1 <= 50) { //d-tilt
+                player[i].inputs.lStickAxis[0].y = -0.50;
+              } else if (randomSeed1 <= 75) { //up-tilt
+                if (cS[i] == 1 || cS[i] == 2) {
+                  if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
+                    player[i].currentAction = "REVERSEUPTILT";
+                    player[i].currentSubaction = "REVERSE";
+                    return;
+                  } else {
+                    player[i].inputs.lStickAxis[0].y = 0.50;
+                    player[i].inputs.a[0] = true;
+                  }
                 } else {
+                  //console.log(Math.sign(distx),":",player[i].phys.face)
                   player[i].inputs.lStickAxis[0].y = 0.50;
                   player[i].inputs.a[0] = true;
                 }
-              } else {
-                //console.log(Math.sign(distx),":",player[i].phys.face)
-                player[i].inputs.lStickAxis[0].y = 0.50;
+              }
+              player[i].inputs.a[0] = true;
+              return;
+            }
+            /* else if (randomSeed <= 20) {//shield
+             player[i].inputs.l[0] = true;
+             player[i].inputs.lAnalog[0] = 1;
+             } */
+          }
+        }
+      }
+    }
+  }
+  if (pdiff >= 3) {
+    if (player[nearest].phys.hurtBoxState == 0) {
+      if (["WAIT", "OTTOTTOWAIT", "WALK", "DASH", "RUN"].indexOf(paction) != -1) {
+        if (Math.abs(py - player[nearest].phys.pos.y) <= 3) {
+          if ((player[i].phys.face == -1.0 * (Math.sign(distx)))) {
+            var randomSeed = Math.floor((Math.random() * 100) + 1);
+            if (randomSeed <= 40) {
+              if (isEnemyApproaching(player[i], player[nearest]) || player[nearest].actionState.substr(0, 5) == "GUARD") {
+                if (Math.abs(px - player[nearest].phys.pos.x) <= 20) {
+                  player[i].currentAction = "NONE";
+                  player[i].currentSubaction = "NONE";
+                  player[i].inputs.l[0] = true;
+                  player[i].inputs.lAnalog[0] = 1.0;
+                  player[i].inputs.a[0] = true;
+                }
+              } else if (randomSeed <= 25 && Math.abs(px - player[nearest].phys.pos.x) < 12.5 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
+                player[i].currentAction = "NONE";
+                player[i].currentSubaction = "NONE";
+                player[i].inputs.l[0] = true;
+                player[i].inputs.lAnalog[0] = 1.0;
                 player[i].inputs.a[0] = true;
               }
             }
-            player[i].inputs.a[0] = true;
-            return;
-          }
-          /* else if (randomSeed <= 20) {//shield
-				  player[i].inputs.l[0] = true;
-				  player[i].inputs.lAnalog[0] = 1;
-			  } */
-        }
-      }
-    }
-  }
-  }
-  if (pdiff >= 3) {
-	if (player[nearest].phys.hurtBoxState == 0) {
-    if (["WAIT", "OTTOTTOWAIT", "WALK", "DASH", "RUN"].indexOf(paction) != -1) {
-      if (Math.abs(py - player[nearest].phys.pos.y) <= 3) {
-        if ((player[i].phys.face == -1.0 * (Math.sign(distx)))) {
-          var randomSeed = Math.floor((Math.random() * 100) + 1);
-          if (randomSeed <= 40) {
-            if (isEnemyApproaching(player[i], player[nearest]) || player[nearest].actionState.substr(0, 5) == "GUARD") {
-              if (Math.abs(px - player[nearest].phys.pos.x) <= 20) {
-                player[i].inputs.l[0] = true;
-                player[i].inputs.lAnalog[0] = 1.0;
-                player[i].inputs.a[0] = true;
-              }
-            } else if (randomSeed <= 25 && Math.abs(px - player[nearest].phys.pos.x) < 12.5 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
-                player[i].inputs.l[0] = true;
-                player[i].inputs.lAnalog[0] = 1.0;
-                player[i].inputs.a[0] = true;
-			}
           }
         }
       }
     }
-  }
   }
 }
 
@@ -871,14 +1053,14 @@ export function isEnemyApproaching(cpu,player) {
 export function NearestLedge(cpu) {
 
   let closest = [0, 10000]; //used to measure which ledge is closer
-  for (let i = 0; i < stage.ledgePos.length; i++) {
-    const closeness = Math.abs(cpu.phys.pos.x - stage.ledgePos[i].x) + Math.abs(cpu.phys.pos.y - stage.ledgePos[i].y); //distance from ledge
+  for (let i = 0; i < activeStage.ledgePos.length; i++) {
+    const closeness = Math.abs(cpu.phys.pos.x - activeStage.ledgePos[i].x) + Math.abs(cpu.phys.pos.y - activeStage.ledgePos[i].y); //distance from ledge
     if (closeness < closest[1]) { //if closer to that ledge than others, update closest.
       closest = [i, closeness];
     }
   }
   //closestIndex = closest[0];
-  closest = stage.ledgePos[closest[0]]; //updates closest to instead be the closest ledge.
+  closest = activeStage.ledgePos[closest[0]]; //updates closest to instead be the closest ledge.
   return closest;
 }
 
@@ -886,23 +1068,23 @@ export function NearestFloor(cpu) {
   // for each platform
   let nearestDist = 1000;
   let nearestY = -1000;
-  for (var i = 0; i < stage.platform.length; i++) {
+  for (var i = 0; i < activeStage.platform.length; i++) {
     // if cpu is above platform
-    if (cpu.phys.pos.y > stage.platform[i][0].y && cpu.phys.pos.x >= stage.platform[i][0].x && cpu.phys.pos.x <= stage.platform[
+    if (cpu.phys.pos.y > activeStage.platform[i][0].y && cpu.phys.pos.x >= activeStage.platform[i][0].x && cpu.phys.pos.x <= activeStage.platform[
         i][1].x) {
-      if (cpu.phys.pos.y - stage.platform[i][0].y < nearestDist) {
-        nearestDist = cpu.phys.pos.y - stage.platform[i][0].y;
-        nearestY = stage.platform[i][0].y;
+      if (cpu.phys.pos.y - activeStage.platform[i][0].y < nearestDist) {
+        nearestDist = cpu.phys.pos.y - activeStage.platform[i][0].y;
+        nearestY = activeStage.platform[i][0].y;
       }
     }
   }
-  for (var i = 0; i < stage.ground.length; i++) {
+  for (var i = 0; i < activeStage.ground.length; i++) {
     // if cpu is above platform
-    if (cpu.phys.pos.y > stage.ground[i][0].y && cpu.phys.pos.x >= stage.ground[i][0].x && cpu.phys.pos.x <= stage.ground[
+    if (cpu.phys.pos.y > activeStage.ground[i][0].y && cpu.phys.pos.x >= activeStage.ground[i][0].x && cpu.phys.pos.x <= activeStage.ground[
         i][1].x) {
-      if (cpu.phys.pos.y - stage.ground[i][0].y < nearestDist) {
-        nearestDist = cpu.phys.pos.y - stage.ground[i][0].y;
-        nearestY = stage.ground[i][0].y;
+      if (cpu.phys.pos.y - activeStage.ground[i][0].y < nearestDist) {
+        nearestDist = cpu.phys.pos.y - activeStage.ground[i][0].y;
+        nearestY = activeStage.ground[i][0].y;
       }
     }
   }
@@ -913,21 +1095,21 @@ export function isAboveGround (x,y) {
   let returnValue = [false, "none", 0];
   let closest = 1000;
   let dist;
-  for (var i = 0; i < stage.ground.length; i++) {
-    if (x >= stage.ground[i][0].x && x <= stage.ground[i][1].x && y >= stage.ground[i][0].y) {
-      dist = y - stage.ground[i][0].y;
+  for (var i = 0; i < activeStage.ground.length; i++) {
+    if (x >= activeStage.ground[i][0].x && x <= activeStage.ground[i][1].x && y >= activeStage.ground[i][0].y) {
+      dist = y - activeStage.ground[i][0].y;
       if (dist < closest) {
         closest = dist;
-        returnValue = [true, "ground", stage.ground[i][0].y];
+        returnValue = [true, "ground", activeStage.ground[i][0].y];
       }
     }
   }
-  for (var i = 0; i < stage.platform.length; i++) {
-    if (x >= stage.platform[i][0].x && x <= stage.platform[i][1].x && y >= stage.platform[i][0].y) {
-      dist = y - stage.platform[i][0].y;
+  for (var i = 0; i < activeStage.platform.length; i++) {
+    if (x >= activeStage.platform[i][0].x && x <= activeStage.platform[i][1].x && y >= activeStage.platform[i][0].y) {
+      dist = y - activeStage.platform[i][0].y;
       if (dist < closest) {
         closest = dist;
-        returnValue = [true, "platform", stage.platform[i][0].y];
+        returnValue = [true, "platform", activeStage.platform[i][0].y];
       }
     }
   }
@@ -940,15 +1122,15 @@ export function isOffstage (cpu){
     return false;
   }
   if (!cpu.phys.grounded) {
-    for (var i = 0; i < stage.ground.length; i++) {
-      if (cpu.phys.pos.x >= stage.ground[i][0].x && cpu.phys.pos.x <= stage.ground[i][1].x && cpu.phys.ECBp[0].y >=
-        stage.ground[i][0].y) {
+    for (var i = 0; i < activeStage.ground.length; i++) {
+      if (cpu.phys.pos.x >= activeStage.ground[i][0].x && cpu.phys.pos.x <= activeStage.ground[i][1].x && cpu.phys.ECBp[0].y >=
+        activeStage.ground[i][0].y) {
         return false;
       }
     }
-    for (var i = 0; i < stage.platform.length; i++) {
-      if (cpu.phys.pos.x >= stage.platform[i][0].x && cpu.phys.pos.x <= stage.platform[i][1].x && cpu.phys.ECBp[0].y >=
-        stage.platform[i][0].y) {
+    for (var i = 0; i < activeStage.platform.length; i++) {
+      if (cpu.phys.pos.x >= activeStage.platform[i][0].x && cpu.phys.pos.x <= activeStage.platform[i][1].x && cpu.phys.ECBp[0].y >=
+        activeStage.platform[i][0].y) {
         return false;
       }
     }

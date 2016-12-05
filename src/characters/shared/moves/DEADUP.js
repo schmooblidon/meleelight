@@ -1,6 +1,7 @@
-import {finishGame, cS, percentShake, screenShake, drawVfx, player} from "main/main";
+import {finishGame, cS, percentShake, screenShake, player} from "main/main";
 import {playSounds, aS, isFinalDeath} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "DEADUP",
   canBeGrabbed : false,
