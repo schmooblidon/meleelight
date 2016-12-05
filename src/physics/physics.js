@@ -544,13 +544,17 @@ export function physics (i){
             }
           }
           if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-            if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
+if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
                 player[i].inputs.lStickAxis[3].x >= 0 &&
-                player[i].charAttributes.walljump) {
+                (player[i].charAttributes.walljump || gameSettings.everyCharWallJump)) {
 
               player[i].phys.wallJumpTimer = 254;
               player[i].phys.face = -1;
+			  if (!player[i].charAttributes.multiJump) {
               aS[cS[i]].WALLJUMP.init(i);
+			  } else {
+              aS[cS[i]].WALLTECHJUMP.init(i);				  
+			  }
             } else {
               player[i].phys.wallJumpTimer++;
             }

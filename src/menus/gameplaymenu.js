@@ -41,6 +41,9 @@ export function gameplayMenuControls (i){
       case 2:
         gameSettings.flashOnLCancel ^= true;
         break;
+      case 3:
+        gameSettings.everyCharWallJump ^= true;
+        break;
       default:
         break;
     }
@@ -90,8 +93,8 @@ export function gameplayMenuControls (i){
   if (menuMove) {
     sounds.menuSelect.play();
     if (gameplayMenuSelected == -1) {
-      gameplayMenuSelected = 2;
-    } else if (gameplayMenuSelected == 3) {
+      gameplayMenuSelected = 3;
+    } else if (gameplayMenuSelected == 4) {
       gameplayMenuSelected = 0;
     }
   }
@@ -112,6 +115,7 @@ export function drawGameplayMenuInit (){
   fg1.fillText("Turbo Mode", 75, 275);
   fg1.fillText("L-Cancel", 75, 335);
   fg1.fillText("Flash on L-Cancel", 75, 395);
+  fg1.fillText("Everyone Walljumps",75,465)
 }
 
 export function drawGameplayMenu (){
@@ -137,7 +141,7 @@ export function drawGameplayMenu (){
     bg2.lineTo(1200, 0 + (i * 30));
   }
   bg2.stroke();
-  for (var i = 0; i < 3; i++) {
+  for (var i = 0; i < 4; i++) {
     ui.strokeStyle = "rgba(255, 255, 255, 0.72)";
     if (i == gameplayMenuSelected) {
       ui.fillStyle = "rgba(255, 255, 255, 0.6)";
@@ -161,6 +165,9 @@ export function drawGameplayMenu (){
       case 2:
         text = gameSettings.flashOnLCancel ? "On" : "Off";
         break;
+	  case 3:
+	    text = gameSettings.everyCharWallJump ? "On" : "Off";
+		break;
       default:
         break;
     }
