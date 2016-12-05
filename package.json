@@ -2,13 +2,14 @@
   "name": "meleelight",
   "version": "0.0.1",
   "description": "Melee Light Platform Fighter",
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
     "build": "webpack --progress --colors --config=bin/webpack/build.config.js",
     "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
     "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
     "release": "node bin/release.js",
-    "serve":"node app"
+    "serve":"node app",
+    "startlocal": "electron ."
   },
   "engines": {
     "node": "7.2.0",
@@ -46,7 +47,8 @@
   },
   "devDependencies": {
     "happypack": "^3.0.0",
-    "sw-precache-webpack-plugin": "^0.6.3"
+    "sw-precache-webpack-plugin": "^0.6.3",
+    "electron": "^1.4.1"
   },
   "babel": {
     "presets": [
