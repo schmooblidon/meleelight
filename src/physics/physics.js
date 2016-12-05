@@ -11,7 +11,13 @@ import {getNewMaybeCenterAndTouchingType} from "physics/environmentalCollision";
 
 // this is a workaround for the moment because I am being lazy
 function customZip ( list, string, start = 0 ) {
-  return ( [ list.pop(), [string, start ] ] + customZip (list, string, start+1));
+  if (list.length === 0) {
+    return [];
+  }
+  else {
+    const head = list.pop();
+    return ( [ [ head, [string, start ] ] ] .concat( customZip (list, string, start+1)));
+  }
 }
 
 
@@ -466,29 +472,9 @@ export function physics (i){
 
   if (!aS[cS[i]][player[i].actionState].ignoreCollision) {
 
+    // ----------------------------------------------------------------------
+    // TODO: remove the following loop, and deal with the repercussions
 
-    let platforms = customZip(stage.platform, "p"); // this should not be done every frame, it should be calculated ahead of time by the stage
-    let notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
-
-    if ( notIgnoringPlatforms ) {
-      let platformMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, platforms);
-
-      if ( platformMaybeCenterAndTouchingType === false) {
-        // no collision, do nothing
-      }
-      else if (platformMaybeCenterAndTouchingType[1] === false ) {
-        // collision occured but player no longer on platform
-        dealWithCollision(i, platformMaybeCenterAndTouchingType);
-      }
-      else {
-        // collision occured and player on platform
-        dealWithPlatform(i, platformMaybeCenterAndTouchingType[0], platformMaybeCenterAndTouchingType[1][1] );
-      }
-    }
-
-
-
-    // TODO: remove the following loop, and deal with the situation otherwise
     for (var j = 0; j < stage.platform.length; j++) {
       if (player[i].phys.ECBp[0].y >= stage.platform[j][0].y) {
         player[i].phys.abovePlatforms[j] = true;
@@ -496,8 +482,8 @@ export function physics (i){
         player[i].phys.abovePlatforms[j] = false;
       }
     }
-    // ----------------------------------------------------------------------
 
+    // ----------------------------------------------------------------------
 
     let stillGrounded = true;
     if (player[i].phys.grounded) {
@@ -603,9 +589,13 @@ export function physics (i){
       }
     }
 
+    // ---------------------------------------------------
+    // wall collision detection
+
     var notTouchingWalls = [true, true];
-    let walls = customZip(stage.wallL, "l").concat( customZip(stage.wallR, "r") ); // this should not be done every frame, it should be calculated ahead of time by the stage
-    let wallsMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, walls);
+    console.log( customZip( [ [ "wallA1", "wallA2" ], [ "wallB1", "wallB2" ]  ] ) . toString());
+    let stageWalls = customZip(stage.wallL, "l").concat( customZip(stage.wallR, "r") ); // this should not be done every frame, it should be calculated ahead of time by the stage
+    let wallsMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, stageWalls);
     if (wallsMaybeCenterAndTouchingType === false) {
       // no collision, do nothing
     }
@@ -671,6 +661,7 @@ export function physics (i){
                 player[j].phys.onSurface[1] == player[i].phys.onSurface[1]) {
 
               if (player[i].phys.grabbing != j && player[i].phys.grabbedBy != j) {
+                // TODO: this pushing code needs to account for players on slanted surfaces
                 var diff = Math.abs(player[i].phys.pos.x - player[j].phys.pos.x);
                 if (diff < 6.5 && diff > 0) {
                   player[j].phys.pos.x += Math.sign(player[i].phys.pos.x - player[j].phys.pos.x) * -0.3;
@@ -693,8 +684,33 @@ export function physics (i){
 
     if (!player[i].phys.grounded) {
 
-      let horizSurfaces = customZip(stage.ground, "g").concat( customZip(stage.ceiling, "c") ); // this should not be done every frame, it should be calculated ahead of time by the stage
-      let horizMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, horizSurfaces);
+      // -------------------------------------------------
+      // platform collision detection
+
+      let notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
+      if ( notIgnoringPlatforms ) {
+
+        let stagePlatforms = customZip(stage.platform, "p"); // this should not be done every frame, it should be calculated ahead of time by the stage
+        let platformMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, stagePlatforms);
+
+        if ( platformMaybeCenterAndTouchingType === false) {
+          // no collision, do nothing
+        }
+        else if (platformMaybeCenterAndTouchingType[1] === false ) {
+          // collision occured but player no longer on platform
+          dealWithCollision(i, platformMaybeCenterAndTouchingType);
+        }
+        else {
+          // collision occured and player on platform
+          dealWithPlatform(i, platformMaybeCenterAndTouchingType[0], platformMaybeCenterAndTouchingType[1][1] );
+        }
+      }
+
+      // -------------------------------------------------
+      // ground/ceiling collision detection
+
+      let stageGroundsAndCeilings = customZip(stage.ground, "g").concat( customZip(stage.ceiling, "c") ); // this should not be done every frame, it should be calculated ahead of time by the stage
+      let horizMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, stageGroundsAndCeilings);
       if (horizMaybeCenterAndTouchingType === false) {
         // no collision, do nothing
       }

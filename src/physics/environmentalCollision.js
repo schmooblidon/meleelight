@@ -282,7 +282,8 @@ function findCollision (ecbp, ecb1, offsets, wall, wallType) {
 };
 
 
-// this function loops over all, calculating the collision offsets each ask for
+// this function loops over all walls/surfaces it is provided, calculating the collision offsets that each ask for,
+// and at each iteration returning the smallest possible offset
 // a 'wallAndThenWallTypeAndIndex' is of the form '[wall, [wallType, index]]'
 // where "index" is the index of the wall in the list of walls of that type in the stage
 // this function returns a 'maybeCenterAndTouchingType'
@@ -298,9 +299,10 @@ function loopOverWalls( ecbp, ecb1, offsets, oldCenter, wallAndThenWallTypeAndIn
   }
   else { 
     const collisionData = wallAndThenWallTypeAndIndexs.map( 
+                                              // [  [ touchingWall, center ]  , touchingType ] ]
               (wallAndThenWallTypeAndIndex)  => [ findCollision (ecbp, ecb1, offsets, wallAndThenWallTypeAndIndex[0]
                                                                 , wallAndThenWallTypeAndIndex[1][0] )
-                                                , wallAndThenWallTypeAndIndex[1] ] );
+                                                , wallAndThenWallTypeAndIndex[1] ]);
     for (let i = 0; i < collisionData.length; i++) {
       if (collisionData[i][0] === false) { // option 1: no collision
       }
@@ -314,7 +316,11 @@ function loopOverWalls( ecbp, ecb1, offsets, oldCenter, wallAndThenWallTypeAndIn
       }
     }
     if (newCollisionHappened) {
+      console.log("Here is the suggestedMaybeCenterAndTouchingTypes I am passing on to closestCenterAndTouchingType:");
+      console.log(suggestedMaybeCenterAndTouchingTypes.toString());
       const newMaybeCenterAndTouchingType = closestCenterAndTouchingType( oldCenter, suggestedMaybeCenterAndTouchingTypes);
+      console.log ("Here is the newMaybeCenterAndTouchingType: ");
+      console.log (newMaybeCenterAndTouchingType.toString());
       const vec = new Vec2D( newMaybeCenterAndTouchingType[0].x - ecbp[0].x, newMaybeCenterAndTouchingType[1].y - ecbp[1].y);
       const newecbp = moveECB (ecbp, vec);
       return (loopOverWalls (newecbp, ecb1, offsets, oldCenter, wallAndThenWallTypeAndIndexs
