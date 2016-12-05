@@ -410,12 +410,13 @@ export function targetBuilderControls (p){
             }
           }
           if (ledgeHoverItem != 0) {
+            let i = ledgeHoverItem[1];
             if (Math.abs(realCrossHair.x - stageTemp.draw.box[i].min.x) < Math.abs(realCrossHair.x - stageTemp.draw.box[
                 i].max.x)) {
               ledgeHoverItem.push(0);
             } else {
               ledgeHoverItem.push(1);
-            }
+            }          
             if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]){
               let alreadyExist = false;
               for (let j=0;j<stageTemp.ledge.length;j++){
