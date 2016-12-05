@@ -316,11 +316,7 @@ function loopOverWalls( ecbp, ecb1, offsets, oldCenter, wallAndThenWallTypeAndIn
       }
     }
     if (newCollisionHappened) {
-      console.log("Here is the suggestedMaybeCenterAndTouchingTypes I am passing on to closestCenterAndTouchingType:");
-      console.log(suggestedMaybeCenterAndTouchingTypes.toString());
       const newMaybeCenterAndTouchingType = closestCenterAndTouchingType( oldCenter, suggestedMaybeCenterAndTouchingTypes);
-      console.log ("Here is the newMaybeCenterAndTouchingType: ");
-      console.log (newMaybeCenterAndTouchingType.toString());
       const vec = new Vec2D( newMaybeCenterAndTouchingType[0].x - ecbp[0].x, newMaybeCenterAndTouchingType[1].y - ecbp[1].y);
       const newecbp = moveECB (ecbp, vec);
       return (loopOverWalls (newecbp, ecb1, offsets, oldCenter, wallAndThenWallTypeAndIndexs
