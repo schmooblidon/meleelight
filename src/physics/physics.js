@@ -5,16 +5,23 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewMaybeTouchingAndCenterFromWalls} from "physics/environmentalCollision";
+import {getNewMaybeCenterAndTouchingType} from "physics/environmentalCollision";
 /* eslint-disable */
 
 
-// two utility functions used later, put here for convenience
-function pushLeft ( obj ) { return [obj, "left" ]; };
-function pushRight( obj ) { return [obj, "right"]; };
+// this is a workaround for the moment because I am being lazy
+function customZip ( list, string, start = 0 ) {
+  return ( [ list.pop(), [string, start ] ] + customZip (list, string, start+1));
+}
 
 
-function dealWithWall (i, wallType) {
+function dealWithCollision(i, newCenter) {
+  player[i].phys.pos = newCenter;
+};
+
+function dealWithWall (i, newCenter, wallType) {
+  player[i].phys.pos = newCenter;
+
   let wallLabel = "L";
   let sign = -1;
   let isRight = 0;
@@ -62,9 +69,45 @@ function dealWithWall (i, wallType) {
   }
 };
 
+function dealWithPlatform(i, newCenter, j) {
+  if (player[i].hit.hitlag > 0) {
+    player[i].phys.pos = newCenter;
+  } 
+  else {
+    land(i, newCenter, 1, j);
+  }
+};
 
-export function land (i,y,t,j){
-  player[i].phys.pos.y = y;
+function dealWithGround(i, newCenter, j) {
+  if (player[i].hit.hitlag > 0) {
+    player[i].phys.pos = newCenter;
+  } 
+  else {
+    land(i, newCenter, 0, j);
+  }
+};
+
+function dealWithCeiling(i, newCenter, offsets) {
+  const newECB2 = new Vec2D (newCenter.x, newCenter.y + offsets[3])
+  player[i].phys.pos = newCenter;
+  if (aS[cS[i]][player[i].actionState].headBonk) {
+    if (player[i].hit.hitstun > 0) {
+      if (player[i].phys.techTimer > 0) {
+        aS[cS[i]].TECHU.init(i);
+      } else {
+        drawVfx("ceilingBounce", newECB2, 1);
+        sounds.bounce.play();
+        aS[cS[i]].STOPCEIL.init(i);
+      }
+    } else {
+      aS[cS[i]].STOPCEIL.init(i);
+    }
+  }
+};
+
+
+export function land (i,newCenter,t,j){
+  player[i].phys.pos = newCenter;
   player[i].phys.grounded = true;
   player[i].phys.doubleJumped = false;
   player[i].phys.jumpsUsed = 0;
@@ -422,23 +465,30 @@ export function physics (i){
   }
 
   if (!aS[cS[i]][player[i].actionState].ignoreCollision) {
-    for (var j = 0; j < stage.platform.length; j++) {
-      if (player[i].phys.abovePlatforms[j] &&
-          player[i].phys.ECBp[0].y < stage.platform[j][0].y &&
-          player[i].phys.ECBp[0].x >= stage.platform[j][0].x &&
-          player[i].phys.ECBp[0].x <= stage.platform[j][1].x &&
-          ((player[i].inputs.lStickAxis[0].y > -0.56 &&
-            aS[cS[i]][player[i].actionState].canPassThrough) ||
-            !aS[cS[i]][player[i].actionState].canPassThrough)) {
 
-        if (player[i].hit.hitlag > 0) {
-          player[i].phys.pos.y = stage.platform[j][0].y;
-        } else {
-          land(i, stage.platform[j][0].y, 1, j);
-        }
+
+    let platforms = customZip(stage.platform, "p"); // this should not be done every frame, it should be calculated ahead of time by the stage
+    let notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
+
+    if ( notIgnoringPlatforms ) {
+      let platformMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, platforms);
+
+      if ( platformMaybeCenterAndTouchingType === false) {
+        // no collision, do nothing
+      }
+      else if (platformMaybeCenterAndTouchingType[1] === false ) {
+        // collision occured but player no longer on platform
+        dealWithCollision(i, platformMaybeCenterAndTouchingType);
+      }
+      else {
+        // collision occured and player on platform
+        dealWithPlatform(i, platformMaybeCenterAndTouchingType[0], platformMaybeCenterAndTouchingType[1][1] );
       }
     }
 
+
+
+    // TODO: remove the following loop, and deal with the situation otherwise
     for (var j = 0; j < stage.platform.length; j++) {
       if (player[i].phys.ECBp[0].y >= stage.platform[j][0].y) {
         player[i].phys.abovePlatforms[j] = true;
@@ -446,8 +496,10 @@ export function physics (i){
         player[i].phys.abovePlatforms[j] = false;
       }
     }
+    // ----------------------------------------------------------------------
 
-    var stillGrounded = true;
+
+    let stillGrounded = true;
     if (player[i].phys.grounded) {
       var backward = false;
       if (player[i].phys.onSurface[0] == 0) {
@@ -552,45 +604,35 @@ export function physics (i){
     }
 
     var notTouchingWalls = [true, true];
-    let wallWallTypes = ( stage.wallL.map(pushLeft) ).concat( stage.wallR.map(pushRight) );
-    let maybeTouchingAndCenter = getNewMaybeTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, wallWallTypes);
-    if (maybeTouchingAndCenter === false) {
+    let walls = customZip(stage.wallL, "l").concat( customZip(stage.wallR, "r") ); // this should not be done every frame, it should be calculated ahead of time by the stage
+    let wallsMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, walls);
+    if (wallsMaybeCenterAndTouchingType === false) {
       // no collision, do nothing
     }
     else {
-      player[i].phys.pos = maybeTouchingAndCenter[1];
-      if (maybeTouchingAndCenter[0] === false ) {
-        // collision with wall but player no longer touching wall
+
+      if (wallsMaybeCenterAndTouchingType[1] === false ) {
+        // collision but player no longer touching wall
+        dealWithCollision(i, wallsMaybeCenterAndTouchingType[0]); 
       }
       else {
-        switch(maybeTouchingAndCenter[0][0].toLowerCase()) {
-          case "l":
+        switch(wallsMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
+          case "l": // player touching left wall
             notTouchingWalls[0] = false;
-            dealWithWall(i, "left");
+            dealWithWall(i, wallsMaybeCenterAndTouchingType[0], "l");
             break;
-          case "r":
+          case "r": // player touching right wall
             notTouchingWalls[1] = false;
-            dealWithWall(i, "right");
-            break;
-          case "g":
-          case "b":
-          case "d":
-            // deal with ground
-            break;
-          case "p":
-            // deal with platform
-            break;
-          case "c":
-          case "t":
-          case "u":
-            // deal with ceiling
+            dealWithWall(i, wallsMaybeCenterAndTouchingType[0], "r");
             break;
           default:
-            console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
+            console.log("error: unrecognised surface type, not left/right")
             break;
         }
       }
     }
+
+
 
     if (notTouchingWalls[0] && notTouchingWalls[1] && player[i].phys.canWallJump) {
       player[i].phys.wallJumpTimer = 254;
@@ -650,93 +692,34 @@ export function physics (i){
     }
 
     if (!player[i].phys.grounded) {
-      for (var j = 0; j < stage.ground.length; j++) {
-        if (player[i].phys.ECBp[0].y < stage.ground[j][0].y &&
-            player[i].phys.ECBp[0].x >= stage.ground[j][0].x &&
-            player[i].phys.ECBp[0].x <= stage.ground[j][1].x &&
-            player[i].phys.ECB1[0].y >= stage.ground[j][0].y) {
 
-          if (player[i].hit.hitlag > 0) {
-            player[i].phys.pos.y = stage.ground[j][0].y;
-          } else {
-            land(i, stage.ground[j][0].y, 0, j);
-          }
-          break;
-        }
+      let horizSurfaces = customZip(stage.ground, "g").concat( customZip(stage.ceiling, "c") ); // this should not be done every frame, it should be calculated ahead of time by the stage
+      let horizMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, horizSurfaces);
+      if (horizMaybeCenterAndTouchingType === false) {
+        // no collision, do nothing
       }
-      for (var j = 0; j < stage.ceiling.length; j++) {
-        if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y &&
-            player[i].phys.ECBp[0].x >= stage.ceiling[j][0].x &&
-            player[i].phys.ECBp[0].x <= stage.ceiling[j][1].x &&
-            player[i].phys.ECB1[2].y <= stage.ceiling[j][0].y) {
-
-          player[i].phys.pos.y = stage.ceiling[j][0].y - (player[i].phys.ECBp[2].y - player[i].phys.pos.y) - 0.01;
-          if (aS[cS[i]][player[i].actionState].headBonk) {
-            if (player[i].hit.hitstun > 0) {
-              if (player[i].phys.techTimer > 0) {
-                aS[cS[i]].TECHU.init(i);
-              } else {
-                drawVfx("ceilingBounce", new Vec2D(player[i].phys.ECBp[0].x, stage.ceiling[j][0].y), 1);
-                sounds.bounce.play();
-                aS[cS[i]].STOPCEIL.init(i);
-              }
-            } else {
-              aS[cS[i]].STOPCEIL.init(i);
-            }
+      else {  
+        if (horizMaybeCenterAndTouchingType[1] === false ) {
+          // collision but player no longer touching surface
+          dealWithCollision(i, horizMaybeCenterAndTouchingType[0]); 
+        }
+        else {
+          switch(horizMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
+            case "g": // player grounded
+              dealWithGround(i, horizMaybeCenterAndTouchingType[0], horizMaybeCenterAndTouchingType[1][1]);
+              break;
+            case "c": // player touching ceiling
+              dealWithCeiling(i, horizMaybeCenterAndTouchingType[0], ecbOffset);
+              break;
+            default:
+              console.log("error: unrecognised surface type, not ground/ceiling")
+              break;
           }
         }
       }
+
     }
 
-    // TOP CORNER COLLISION
-    for (var j = 0; j < stage.ground.length; j++) {
-      if (player[i].phys.ECBp[0].y < stage.ground[j][0].y &&
-          player[i].phys.ECBp[1].y > stage.ground[j][0].y &&
-          player[i].phys.ECB1[0].x <= stage.ground[j][0].x) {
-
-        var yDistToBottom = Math.abs(stage.ground[j][0].y - player[i].phys.ECBp[0].y);
-        var curECBangle = Math.atan((player[i].phys.ECBp[1].y - player[i].phys.ECBp[0].y) / ecbOffset[1]);
-        var proposedXDistance = yDistToBottom / Math.tan(curECBangle);
-        if (stage.ground[j][0].x - player[i].phys.ECBp[0].x < proposedXDistance) {
-          player[i].phys.pos.x = stage.ground[j][0].x - proposedXDistance;
-        }
-
-      } else if (player[i].phys.ECBp[0].y < stage.ground[j][0].y &&
-                 player[i].phys.ECBp[3].y > stage.ground[j][0].y &&
-                 player[i].phys.ECB1[0].x >= stage.ground[j][1].x) {
-
-        var yDistToBottom = Math.abs(stage.ground[j][1].y - player[i].phys.ECBp[0].y);
-        var curECBangle = Math.atan((player[i].phys.ECBp[3].y - player[i].phys.ECBp[0].y) / ecbOffset[1]);
-        var proposedXDistance = yDistToBottom / Math.tan(curECBangle);
-        if ((stage.ground[j][1].x - player[i].phys.ECBp[0].x) * -1 < proposedXDistance) {
-          player[i].phys.pos.x = stage.ground[j][1].x + proposedXDistance;
-        }
-      }
-    }
-    // BOTTOM CORNER COLLISION
-    for (var j = 0; j < stage.ceiling.length; j++) {
-      if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y &&
-          player[i].phys.ECBp[3].y < stage.ceiling[j][0].y &&
-          player[i].phys.ECB1[2].x >= stage.ceiling[j][1].x) {
-
-        var yDistToTop = Math.abs(stage.ceiling[j][1].y - player[i].phys.ECBp[2].y);
-        var curECBangle = Math.atan((ecbOffset[3] - ecbOffset[2]) / ecbOffset[1]);
-        var proposedXDistance = yDistToTop / Math.tan(curECBangle);
-        if ((stage.ceiling[j][1].x - player[i].phys.ECBp[0].x) * -1 < proposedXDistance) {
-          player[i].phys.pos.x = stage.ceiling[j][1].x + proposedXDistance;
-        }
-      } else if (player[i].phys.ECBp[2].y > stage.ceiling[j][0].y &&
-                 player[i].phys.ECBp[1].y < stage.ceiling[j][0].y &&
-                 player[i].phys.ECB1[2].x <= stage.ceiling[j][0].x) {
-
-        var yDistToTop = Math.abs(stage.ceiling[j][0].y - player[i].phys.ECBp[2].y);
-        var curECBangle = Math.atan((ecbOffset[3] - ecbOffset[2]) / ecbOffset[1]);
-        var proposedXDistance = yDistToTop / Math.tan(curECBangle);
-        if (stage.ceiling[j][0].x - player[i].phys.ECBp[2].x < proposedXDistance) {
-          player[i].phys.pos.x = stage.ceiling[j][0].x - proposedXDistance;
-        }
-      }
-    }
   } // END OF IGNORE COLLISION CHECK
 
   /*for (var j=0;j<stage.ground.length;j++){
