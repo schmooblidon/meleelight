@@ -41,9 +41,9 @@ export function gameplayMenuControls (i){
       case 2:
         gameSettings.flashOnLCancel ^= true;
         break;
-	  case 3:
-	    gameSettings.everyCharWallJump ^= true;
-		break;
+      case 3:
+        gameSettings.everyCharWallJump ^= true;
+        break;
       default:
         break;
     }
