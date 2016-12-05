@@ -30,6 +30,12 @@
   },
   "homepage": "https://github.com/schmooblidon/meleelight#readme",
   "dependencies": {
+
+    "howler": "^2.0.1",
+    "jquery": "1.11.3"
+
+  },
+  "devDependencies": {
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.8",
@@ -39,17 +45,13 @@
     "eslint-loader": "^1.6.1",
     "express": "^4.14.0",
     "fs-extra": "^1.0.0",
-    "howler": "^2.0.1",
-    "jquery": "1.11.3",
-    "webpack": "^1.13.3",
-    "webpack-notifier": "^1.4.1",
-    "yargs": "^6.4.0"
-  },
-  "devDependencies": {
     "electron": "^1.4.1",
     "electron-packager": "^8.3.0",
     "happypack": "^3.0.0",
-    "sw-precache-webpack-plugin": "^0.6.3"
+    "sw-precache-webpack-plugin": "^0.6.3",
+    "webpack": "^1.13.3",
+    "webpack-notifier": "^1.4.1",
+    "yargs": "^6.4.0"
   },
   "babel": {
     "presets": [
