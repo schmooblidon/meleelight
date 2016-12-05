@@ -390,6 +390,10 @@ function unitRetract ( [x,y] ) {
   }
 };
 
+function meleeRound (x) {
+  return Math.round(steps*x)/steps;
+};
+
 function meleeAxesRescale ( [x,y], bool ) {
     let xnew = axisRescale (x, meleeOrig, bool);
     let ynew = axisRescale (y, meleeOrig, bool);
@@ -402,19 +406,14 @@ function meleeAxesRescale ( [x,y], bool ) {
         ynew2 = 0;
       }
     }
-    return [xnew2, ynew2];
+    return ([xnew2, ynew2].map(meleeRound));
 }
-
-function meleeRound (x) {
-  return Math.round(steps*x)/steps;
-};
-
 
 // this is the main input rescaling function
 // it scales raw input data to the data Melee uses for the simulation
 // number : controller ID, to rescale axes dependent on controller raw input
 // bool == false means no deadzone, bool == true means deadzone
-export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCenterY ) {
+export function scaleToMeleeAxes ( x, y, number = 0, bool = false, customCenterX = 0, customCenterY = 0 ) {
     if (number === 0 || number == 4 || number === 5 || number === 7) { // gamecube controllers
          x = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
          y = (-y+customCenterY+1)*255/2; // y incurs a sign flip
@@ -424,12 +423,12 @@ export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCent
       [x, y] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
       //console.log("You are using GC controller simulation.");
     }
-    return (meleeAxesRescale ( [x,y], bool )).map(meleeRound);
+    return meleeAxesRescale ( [x,y], bool );
 };
 
 // scales -1 -- 1 data to the data Melee uses for the simulation
 // bool == false means no deadzone, bool == true means deadzone
 export function meleeRescale ( x, y, bool = false) {
     let [xnew, ynew] = scaleUnitToGCAxes (x, y);
-    return (meleeAxesRescale ( [xnew, ynew], bool)).map(meleeRound);
-}
+    return meleeAxesRescale ( [xnew, ynew], bool );
+};

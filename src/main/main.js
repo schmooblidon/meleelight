@@ -28,7 +28,7 @@ import {stages} from "stages/stages";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, scaleToGCTrigger, custcent} from "main/input";
+import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -600,8 +600,7 @@ window.interpretInputs = function(i, active) {
         }
       }
     }
-    lstickX = Math.sign(lstickX) * Math.min(1, Math.abs(lstickX));
-    lstickY = Math.sign(lstickY) * Math.min(1, Math.abs(lstickY));
+    let [lStickX, lStickY ] = meleeRescale (lstickX, lstickY)
     player[i].inputs.rawlStickAxis[0].x = lstickX;
     player[i].inputs.rawlStickAxis[0].y = lstickY;
     lAnalog = Math.min(1, Math.abs(lAnalog));
