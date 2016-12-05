@@ -76,7 +76,7 @@ function dealWithWall (i, newCenter, wallType) {
   }
 };
 
-function dealWithPlatform(i, ecbp0, j) {
+function dealWithPlatform(i, newCenter, ecbp0, j) {
   if (player[i].hit.hitlag > 0) {
     player[i].phys.pos = newCenter;
   } 
@@ -85,7 +85,7 @@ function dealWithPlatform(i, ecbp0, j) {
   }
 };
 
-function dealWithGround(i, ecbp0, j) {
+function dealWithGround(i, newCenter, ecbp0, j) {
   if (player[i].hit.hitlag > 0) {
     player[i].phys.pos = newCenter;
   } 
@@ -634,13 +634,13 @@ export function physics (i){
             dealWithWall(i, surfacesMaybeCenterAndTouchingType[0], "r");
             break;
           case "g": // player landed on ground
-            dealWithGround(i, ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithGround(i, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
             break;
           case "c": // player touching ceiling
             dealWithCeiling(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset);
             break;
           case "p": // player landed on platform
-            dealWithPlatform(i, ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithPlatform(i, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
           default:
             console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
             break;

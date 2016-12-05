@@ -66,6 +66,7 @@ function extremePoint(wall, extreme) {
   switch (extreme[0].toLowerCase()) {
     case "u":
     case "t":
+    case "c":
       if (v2.y < v1.y) {
         return v1;
       }
@@ -75,6 +76,8 @@ function extremePoint(wall, extreme) {
       break;
     case "d":
     case "b":
+    case "g":
+    case "p":
       if (v2.y > v1.y) {
         return v1;
       }
