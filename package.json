@@ -8,7 +8,7 @@
     "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
     "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
     "release": "node bin/release.js",
-    "serve":"node app",
+    "serve": "node app",
     "startlocal": "electron ."
   },
   "engines": {
@@ -46,9 +46,10 @@
     "yargs": "^6.4.0"
   },
   "devDependencies": {
+    "electron": "^1.4.1",
+    "electron-packager": "^8.3.0",
     "happypack": "^3.0.0",
-    "sw-precache-webpack-plugin": "^0.6.3",
-    "electron": "^1.4.1"
+    "sw-precache-webpack-plugin": "^0.6.3"
   },
   "babel": {
     "presets": [
