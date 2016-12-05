@@ -76,21 +76,21 @@ function dealWithWall (i, newCenter, wallType) {
   }
 };
 
-function dealWithPlatform(i, newCenter, j) {
+function dealWithPlatform(i, ecbp0, j) {
   if (player[i].hit.hitlag > 0) {
     player[i].phys.pos = newCenter;
   } 
   else {
-    land(i, newCenter, 1, j);
+    land(i, ecbp0 , 1, j);
   }
 };
 
-function dealWithGround(i, newCenter, j) {
+function dealWithGround(i, ecbp0, j) {
   if (player[i].hit.hitlag > 0) {
     player[i].phys.pos = newCenter;
   } 
   else {
-    land(i, newCenter, 0, j);
+    land(i, ecbp0, 0, j);
   }
 };
 
@@ -622,6 +622,8 @@ export function physics (i){
         dealWithCollision(i, surfacesMaybeCenterAndTouchingType[0]);
       }
       else {
+        const ecbp0 = new Vec2D ( player[i].phys.ECBp[0].x + surfacesMaybeCenterAndTouchingType[0].x - player[i].phys.pos.x
+                                , player[i].phys.ECBp[0].y + surfacesMaybeCenterAndTouchingType[0].y - player[i].phys.pos.y);
         switch(surfacesMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
           case "l": // player touching left wall
             notTouchingWalls[0] = false;
@@ -632,13 +634,13 @@ export function physics (i){
             dealWithWall(i, surfacesMaybeCenterAndTouchingType[0], "r");
             break;
           case "g": // player landed on ground
-            dealWithGround(i, surfacesMaybeCenterAndTouchingType[0], surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithGround(i, ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
             break;
           case "c": // player touching ceiling
             dealWithCeiling(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset);
             break;
           case "p": // player landed on platform
-            dealWithPlatform(i, surfacesMaybeCenterAndTouchingType[0], surfacesMaybeCenterAndTouchingType[1][1] );
+            dealWithPlatform(i, ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
           default:
             console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
             break;
