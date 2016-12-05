@@ -590,39 +590,64 @@ export function physics (i){
       }
     }
 
-    // ---------------------------------------------------
-    // wall collision detection
 
     var notTouchingWalls = [true, true];
-    let stageWalls = customZip(stage.wallL, "l").concat( customZip(stage.wallR, "r") ); // this should not be done every frame, it should be calculated ahead of time by the stage
-    let wallsMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, stageWalls);
-    if (wallsMaybeCenterAndTouchingType === false) {
+
+    // ------------------------------------------------------------------------------------------------------
+    // main collision detection routine
+
+    // the following three lines should be precalculated instead of being recalculated every frame
+    const stageWalls = customZip(stage.wallL,"l").concat( customZip(stage.wallR,"r") );
+    const stageGroundsAndCeilings = customZip(stage.ground,"g").concat( customZip(stage.ceiling,"c") );
+    const stagePlatforms = customZip(stage.platform, "p");
+
+    let relevantSurfaces = stageWalls;
+
+    if (!player[i].phys.grounded) {
+      relevantSurfaces = relevantSurfaces.concat(stageGroundsAndCeilings);
+      const notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
+      if ( notIgnoringPlatforms ) {
+        relevantSurfaces = relevantSurfaces.concat(stagePlatforms);
+      }
+    }
+
+    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, relevantSurfaces);
+
+    if (surfacesMaybeCenterAndTouchingType === false) {
       // no collision, do nothing
     }
     else {
-
-      if (wallsMaybeCenterAndTouchingType[1] === false ) {
-        // collision but player no longer touching wall
-        dealWithCollision(i, wallsMaybeCenterAndTouchingType[0]); 
+      if (surfacesMaybeCenterAndTouchingType[1] === false ) {
+        // collision but player no longer touching surface
+        dealWithCollision(i, surfacesMaybeCenterAndTouchingType[0]);
       }
       else {
-        switch(wallsMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
+        switch(surfacesMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
           case "l": // player touching left wall
             notTouchingWalls[0] = false;
-            dealWithWall(i, wallsMaybeCenterAndTouchingType[0], "l");
+            dealWithWall(i, surfacesMaybeCenterAndTouchingType[0], "l");
             break;
           case "r": // player touching right wall
             notTouchingWalls[1] = false;
-            dealWithWall(i, wallsMaybeCenterAndTouchingType[0], "r");
+            dealWithWall(i, surfacesMaybeCenterAndTouchingType[0], "r");
             break;
+          case "g": // player landed on ground
+            dealWithGround(i, surfacesMaybeCenterAndTouchingType[0], surfacesMaybeCenterAndTouchingType[1][1]);
+            break;
+          case "c": // player touching ceiling
+            dealWithCeiling(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset);
+            break;
+          case "p": // player landed on platform
+            dealWithPlatform(i, surfacesMaybeCenterAndTouchingType[0], surfacesMaybeCenterAndTouchingType[1][1] );
           default:
-            console.log("error: unrecognised surface type, not left/right")
+            console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
             break;
         }
       }
     }
 
-
+    // end of main collision detection routine
+    // ------------------------------------------------------------------------------------------------------
 
     if (notTouchingWalls[0] && notTouchingWalls[1] && player[i].phys.canWallJump) {
       player[i].phys.wallJumpTimer = 254;
@@ -680,60 +705,6 @@ export function physics (i){
       if (player[i].phys.shieldHP > 60) {
         player[i].phys.shieldHP = 60;
       }
-    }
-
-    if (!player[i].phys.grounded) {
-
-      // -------------------------------------------------
-      // platform collision detection
-
-      let notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
-      if ( notIgnoringPlatforms ) {
-
-        let stagePlatforms = customZip(stage.platform, "p"); // this should not be done every frame, it should be calculated ahead of time by the stage
-        let platformMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, stagePlatforms);
-
-        if ( platformMaybeCenterAndTouchingType === false) {
-          // no collision, do nothing
-        }
-        else if (platformMaybeCenterAndTouchingType[1] === false ) {
-          // collision occured but player no longer on platform
-          dealWithCollision(i, platformMaybeCenterAndTouchingType);
-        }
-        else {
-          // collision occured and player on platform
-          dealWithPlatform(i, platformMaybeCenterAndTouchingType[0], platformMaybeCenterAndTouchingType[1][1] );
-        }
-      }
-
-      // -------------------------------------------------
-      // ground/ceiling collision detection
-
-      let stageGroundsAndCeilings = customZip(stage.ground, "g").concat( customZip(stage.ceiling, "c") ); // this should not be done every frame, it should be calculated ahead of time by the stage
-      let horizMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, stageGroundsAndCeilings);
-      if (horizMaybeCenterAndTouchingType === false) {
-        // no collision, do nothing
-      }
-      else {  
-        if (horizMaybeCenterAndTouchingType[1] === false ) {
-          // collision but player no longer touching surface
-          dealWithCollision(i, horizMaybeCenterAndTouchingType[0]); 
-        }
-        else {
-          switch(horizMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
-            case "g": // player grounded
-              dealWithGround(i, horizMaybeCenterAndTouchingType[0], horizMaybeCenterAndTouchingType[1][1]);
-              break;
-            case "c": // player touching ceiling
-              dealWithCeiling(i, horizMaybeCenterAndTouchingType[0], ecbOffset);
-              break;
-            default:
-              console.log("error: unrecognised surface type, not ground/ceiling")
-              break;
-          }
-        }
-      }
-
     }
 
   } // END OF IGNORE COLLISION CHECK
