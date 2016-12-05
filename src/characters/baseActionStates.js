@@ -685,7 +685,11 @@ export const baseActionStates = {
     if (!aS[cS[p]].KNEEBEND.interrupt(p)){
       reduceByTraction(p,true);
       // if jumpsquat initiated by stick
-      if (player[p].phys.jumpSquatType){
+	  if (player[p].cStickJump) {
+		  if (player[p].inputs.cStickAxis[0].y < 0.67) {
+			  player[p].phys.jumpType = 0;
+		  }
+	  } else if (player[p].phys.jumpSquatType){
         if (player[p].inputs.lStickAxis[0].y < 0.67){
           player[p].phys.jumpType = 0;
         }
@@ -740,6 +744,7 @@ export const baseActionStates = {
   landType : 0,
   vCancel : true,
   init : function(p,type){
+	player[p].cStickJump = false;
     player[p].actionState = "JUMPF";
     player[p].timer = 0;
     if (type){
@@ -812,6 +817,7 @@ export const baseActionStates = {
   landType : 0,
   vCancel : true,
   init : function(p,type){
+    player[p].cStickJump = false;
     player[p].actionState = "JUMPB";
     player[p].timer = 0;
     if (type){
@@ -1600,6 +1606,7 @@ export const baseActionStates = {
   init : function(p){
     player[p].actionState = "GUARDON";
     player[p].timer = 0;
+	player[p].willUnshield = false;
     player[p].phys.shielding = true;
     player[p].phys.shieldPosition = new Vec2D(0,0);
     player[p].phys.powerShielded = false;
@@ -1646,6 +1653,9 @@ export const baseActionStates = {
     }
   },
   interrupt : function(p){
+    if (player[p].inputs.lAnalog[0] < 0.3 && player[p].inputs.rAnalog[0] < 0.3){
+		player[p].willUnshield = true;
+    }
     if (!player[p].inCSS){
       var j = checkForJump(p);
       if (j[0] || player[p].inputs.cStickAxis[0].y > 0.65){
@@ -1730,6 +1740,11 @@ export const baseActionStates = {
     }
   },
   interrupt : function(p){
+	if (player[p].willUnshield === true){
+        player[p].phys.shielding = false;
+        aS[cS[p]].GUARDOFF.init(p);
+        return;		
+	}
     if (!player[p].inCSS){
       var j = checkForJump(p);
       if (j[0] || player[p].inputs.cStickAxis[0].y > 0.66){
@@ -1764,6 +1779,7 @@ export const baseActionStates = {
         return true;
       }
       else if (player[p].inputs.lAnalog[0] < 0.3 && player[p].inputs.rAnalog[0] < 0.3){
+		console.log(player[p].actionState);
         player[p].phys.shielding = false;
         aS[cS[p]].GUARDOFF.init(p);
         return true;
@@ -1799,6 +1815,7 @@ export const baseActionStates = {
   canBeGrabbed : true,
   missfoot : true,
   init : function(p){
+	player[p].cStickJump = false;
     player[p].actionState = "GUARDOFF";
     player[p].timer = 0;
 	player[p].cStickJump = false;
@@ -1816,15 +1833,10 @@ export const baseActionStates = {
   },
   interrupt : function(p){
     var j = checkForJump(p);
-    if (j[0] && !player[p].inCSS){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
-      return true;
-    }
-    else if (player[p].timer > framesData[cS[p]].GUARDOFF){
+    if (player[p].timer > framesData[cS[p]].GUARDOFF){
       aS[cS[p]].WAIT.init(p);
       return true;
-    }
-    else if (player[p].phys.powerShielded){
+    } else if (player[p].phys.powerShielded){	
       if (!player[p].inCSS){
         var t = checkForTilts(p);
         var s = checkForSmashes(p);
@@ -1860,19 +1872,30 @@ export const baseActionStates = {
         else {
           return false;
         }
-      }
-      else {
+      } else {
         var s = checkForSmashes(p);
         if (s[0]){
           aS[cS[p]][s[1]].init(p);
           return true;
-        }
-        else {
+        } else {
           return false;
         }
       }
-    }
-    else {
+    } else {
+	  if ((player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[4].y > -0.3) || player[p].inputs.cStickAxis[0].y < -0.7){
+        player[p].phys.shielding = false;
+        aS[cS[p]].ESCAPEN.init(p);
+        return true;
+      } else if (j[0]) {
+        player[p].phys.shielding = false;
+        aS[cS[p]].KNEEBEND.init(p,j[1]);
+        return true;
+      } else if (player[p].inputs.cStickAxis[0].y > 0.66){
+        player[p].phys.shielding = false;
+		player[p].cStickJump = true;
+        aS[cS[p]].KNEEBEND.init(p,j[1]);
+        return true;
+      }
       return false;
     }
   }
@@ -2224,6 +2247,7 @@ export const baseActionStates = {
   canBeGrabbed : false,
   ignoreCollision : true,
   init : function(p){
+	player[p].cStickJump = false;
     player[p].actionState = "REBIRTH";
     player[p].timer = 1;
     player[p].phys.pos.x = stage.respawnPoints[p].x;
@@ -2339,6 +2363,7 @@ export const baseActionStates = {
   canBeGrabbed : true,
   landType : 2,
   init : function(p,drawStuff){
+	player[p].cStickJump = false;
     player[p].actionState = "DAMAGEFLYN";
 	player[p].tumbleJumpBuffer = 0;
     player[p].timer = 0;
@@ -2485,6 +2510,7 @@ export const baseActionStates = {
   landType : 1,
   missfoot : true,
   init : function(p){
+	player[p].cStickJump = false;
     player[p].actionState = "DAMAGEN2";
     player[p].timer = 0;
     player[p].phys.grabbing = -1;
