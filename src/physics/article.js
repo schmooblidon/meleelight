@@ -433,13 +433,13 @@ export function executeArticleHits (){
 export function wallDetection (i){
     for (var j = 0; j < stage.wallL.length; j++) {
         if (aArticles[i][2].ecb[1].y < stage.wallL[j][0].y && aArticles[i][2].ecb[1].y > stage.wallL[j][1].y && aArticles[
-                i][2].ecb[1].x >= stage.wallL[j][1].x && aArticles[i][2].ecb[1].x < stage.wallL[j][1].x + 6) {
+                i][2].ecb[1].x >= stage.wallL[j][1].x && aArticles[i][2].ecb[1].x < stage.wallR[j][1].x) {
             return true;
         }
     }
     for (var j = 0; j < stage.wallR.length; j++) {
         if (aArticles[i][2].ecb[3].y < stage.wallR[j][0].y && aArticles[i][2].ecb[3].y > stage.wallR[j][1].y && aArticles[
-                i][2].ecb[3].x <= stage.wallR[j][1].x && aArticles[i][2].ecb[3].x > stage.wallR[j][1].x - 6) {
+                i][2].ecb[3].x <= stage.wallR[j][1].x && aArticles[i][2].ecb[3].x > stage.wallL[j][1].x) {
             return true;
         }
     }
