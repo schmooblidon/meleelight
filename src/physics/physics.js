@@ -15,10 +15,11 @@ function customZip ( list, string, start = 0 ) {
     return [];
   }
   else {
-    const head = list.pop();
-    return ( [ [ head, [string, start ] ] ] .concat( customZip (list, string, start+1)));
+    const [head, ...tail] = list;
+    return ( [[head, [string, start]]] . concat( customZip(tail, string, start+1) ) ) ;
   }
 }
+
 
 
 function dealWithCollision(i, newCenter) {
@@ -593,7 +594,6 @@ export function physics (i){
     // wall collision detection
 
     var notTouchingWalls = [true, true];
-    console.log( customZip( [ [ "wallA1", "wallA2" ], [ "wallB1", "wallB2" ]  ] ) . toString());
     let stageWalls = customZip(stage.wallL, "l").concat( customZip(stage.wallR, "r") ); // this should not be done every frame, it should be calculated ahead of time by the stage
     let wallsMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, stageWalls);
     if (wallsMaybeCenterAndTouchingType === false) {
