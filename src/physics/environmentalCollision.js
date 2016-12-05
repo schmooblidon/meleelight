@@ -282,10 +282,10 @@ function findCollision (ecbp, ecb1, offsets, wall, wallType) {
 };
 
 
-// assumes walls is a list of wallWallType elements,
-// a wallWallType element is of the form [wall, wallType]
-// where wall is a pair of Vec2D points, and wallType is either 'left' or 'right'
-// returns a 'maybeCenterAndTouchingType'
+// this function loops over all, calculating the collision offsets each ask for
+// a 'wallAndThenWallTypeAndIndex' is of the form '[wall, [wallType, index]]'
+// where "index" is the index of the wall in the list of walls of that type in the stage
+// this function returns a 'maybeCenterAndTouchingType'
 // which is one of the following three options: 
 //          option 1: 'false'                      (no collision) 
 //          option 2: '[center, false]'            (collision, but no longer touching) 
