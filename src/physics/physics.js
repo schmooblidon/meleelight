@@ -553,25 +553,42 @@ export function physics (i){
 
     var notTouchingWalls = [true, true];
     let wallWallTypes = ( stage.wallL.map(pushLeft) ).concat( stage.wallR.map(pushRight) );
-    let maybeTouchingAndCenter = getNewMaybeTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, wallWallTypes);
+    let maybeTouchingAndCenter = getNewMaybeTouchingAndCenterFromWalls(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, wallWallTypes);
     if (maybeTouchingAndCenter === false) {
       // no collision, do nothing
     }
     else {
-      player[i].phys.pos.x = maybeTouchingAndCenter[1].x;
-      player[i].phys.pos.y = maybeTouchingAndCenter[1].y - ecbOffset[2];
+      player[i].phys.pos = maybeTouchingAndCenter[1];
       if (maybeTouchingAndCenter[0] === false ) {
         // collision with wall but player no longer touching wall
       }
-      else if (maybeTouchingAndCenter[0][0].toLowerCase() === "l") {
-        // collision with wall, player still touching a left wall
-        notTouchingWalls[0] = false;
-        dealWithWall(i, "left");
-      }
       else {
-        // collision with wall, player still touching a right wall
-        notTouchingWalls[1] = false;
-        dealWithWall(i, "right");
+        switch(maybeTouchingAndCenter[0][0].toLowerCase()) {
+          case "l":
+            notTouchingWalls[0] = false;
+            dealWithWall(i, "left");
+            break;
+          case "r":
+            notTouchingWalls[1] = false;
+            dealWithWall(i, "right");
+            break;
+          case "g":
+          case "b":
+          case "d":
+            // deal with ground
+            break;
+          case "p":
+            // deal with platform
+            break;
+          case "c":
+          case "t":
+          case "u":
+            // deal with ceiling
+            break;
+          default:
+            console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
+            break;
+        }
       }
     }
 

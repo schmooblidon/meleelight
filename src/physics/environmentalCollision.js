@@ -4,22 +4,60 @@ import {dotProd, scalarProd, norm} from "main/linAlg";
 const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 5;
 
-// returns true if the vector is moving into the wall, false otherwise
-function movingInto (vec, wallTop, wallBottom, wallType) {
-  let sign = 1;
-  if (wallType[0].toLowerCase() === "l") {
-    sign = -1;
+
+function getXOrYCoord(vec, xOrY) {
+  if (xOrY === 0) {
+    return vec.x;
   }
-  const outwardsWallNormal = new Vec2D ( sign * (wallTop.y - wallBottom.y), sign*( wallBottom.x-wallTop.x )  );
-  return ( dotProd ( vec, outwardsWallNormal ) < 0 );
+  else {
+    return vec.y;
+  }
+};
+
+
+function centerFromSameECB( sameECB, same, offsets ) {
+  switch(same) {
+    case 1:
+      return ( new Vec2D ( sameECB.x - offsets[1], sameECB.y - offsets[2] ) );
+      break;
+    case 2:
+      return ( new Vec2D ( sameECB.x , sameECB.y - offsets[3]) );
+      break;
+    case 3:
+      return ( new Vec2D ( sameECB.x + offsets[1], sameECB.y - offsets[2] ) );
+      break;
+    default: // default = 0, bottom ECB point
+      return ( new Vec2D ( sameECB.x , sameECB.y - offsets[0] ) );
+      break;
+  }
+};
+
+
+// returns true if the vector is moving into the wall, false otherwise
+function movingInto (vec, wallTopOrRight, wallBottomOrLeft, wallType) {
+  let sign = 1;
+  switch (wallType[0].toLowerCase()) {
+    case "l": // left wall
+    case "g": // ground
+    case "b":
+    case "d":
+    case "p": // platform
+      sign = -1;
+      break;
+    default: // right wall, ceiling
+      break;
+  }
+  // const outwardsWallNormal = new Vec2D ( sign * (wallTopOrRight.y - wallBottomOrLeft.y), sign*( wallBottomOrLeft.x-wallTopOrRight.x )  );
+  // return ( dotProd ( vec, outwardsWallNormal ) < 0 );
+  return (  ( dotProd ( vec, new Vec2D ( sign * (wallTopOrRight.y - wallBottomOrLeft.y), sign*( wallBottomOrLeft.x-wallTopOrRight.x )  ) ) < 0) );
 };
 
 // returns true if point is to the right of a "left" wall, or to the left of a "right" wall,
 // and false otherwise
-function isOutside (point, wallTop, wallBottom, wallType) {
+function isOutside (point, wallTopOrRight, wallBottomOrLeft, wallType) {
   //const vec = new Vec2D ( point.x - wallBottom.x, point.y - wallBottom.y );
   //return ( !movingInto(vec, wallTop, wallBottom, wallType ) );
-  return ( !movingInto(new Vec2D ( point.x - wallBottom.x, point.y - wallBottom.y ), wallTop, wallBottom, wallType ) );
+  return ( !movingInto(new Vec2D ( point.x - wallBottomOrLeft.x, point.y - wallBottomOrLeft.y ), wallTopOrRight, wallBottomOrLeft, wallType ) );
 };
 
 function extremePoint(wall, extreme) {
@@ -122,64 +160,91 @@ function orthogonalProjection(point, line) {
 // touchingWall is either false, left or right, indicating whether the player is still touching that wall after the transformation
 // terminology in the comments: a wall is a segment with an inside and an outside,
 // which is contained in an infinite line, extending both ways, which also has an inside and an outside
-function findCollision (ecbp, ecb1, wall, wallType) {
+function findCollision (ecbp, ecb1, offsets, wall, wallType) {
 
   const wallTop    = extremePoint(wall, "top");
   const wallBottom = extremePoint(wall, "bottom");
   const wallLeft   = extremePoint(wall, "left");
   const wallRight  = extremePoint(wall, "right");
 
+  
+  let wallTopOrRight = wallTop;
+  let wallBottomOrLeft = wallBottom;
   let same = 3;
   let opposite = 1;
-  if (wallType[0].toLowerCase() === "l" ) {
-    same = 1;
-    opposite = 3;
+  let xOrY = 1; // y by default
+  switch(wallType[0].toLowerCase()) {
+    case "l": // left wall
+      same = 1;
+      opposite = 3;
+      break;
+    case "g": // ground
+    case "b":
+    case "d":
+    case "p": // platform
+      same = 0;
+      opposite = 2;
+      wallTopOrRight  = wallRight;
+      wallBottomOrLeft = wallLeft;
+      xOrY = 0;
+      break;
+    case "c": // ceiling
+    case "t":
+    case "u":
+      same = 2;
+      opposite = 0;
+      wallTopOrRight  = wallRight;
+      wallBottomOrLeft = wallLeft;
+      xOrY = 0;
+      break;
+    default: // right wall by default
+      break;
   }
+
 
   const sameECBMov = new Vec2D ( ecbp[same].x-ecb1[same].x, ecbp[same].y-ecb1[same].y);
 
-  if ( !movingInto( sameECBMov, wallTop, wallBottom, wallType)) {
-    //console.log("'findCollision': no collision, not moving towards "+wallType+" wall.");
+  // first check if player was even near the wall
+  if (    (ecbp[0].y > wallTop.y    && ecb1[0].y > wallTop.y   ) // player stayed above the wall
+       || (ecbp[2].y < wallBottom.y && ecb1[2].y < wallBottom.y) // played stayed below the wall
+       || (ecbp[3].x > wallRight.x  && ecb1[3].x > wallRight.x ) // player stayed to the right of the wall
+       || (ecbp[1].x < wallLeft.x   && ecb1[1].x < wallLeft.x  ) // player stayed to the left of the wall
+     ) {
+    console.log("'findCollision': no collision, not even near "+wallType+" wall.");
+    return false;
+  }
+  else if ( !movingInto( sameECBMov, wallTopOrRight, wallBottomOrLeft, wallType)) {
+    console.log("'findCollision': no collision, not moving towards "+wallType+" wall.");
     return false; // no collision: player not moving towards the line spanned by the wall
     // this clause makes sure that in later calls of 'coordinateIntercept', the relevant lines aren't going to be parallel
   }
-  else if ( !isOutside ( ecb1[opposite], wallTop, wallBottom, wallType ) ) {
-    //console.log("'findCollision': no collision, already on other side of "+wallType+" wall.");
+  else if ( !isOutside ( ecb1[opposite], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
+    console.log("'findCollision': no collision, already on other side of "+wallType+" wall.");
     return false; // no collision: player was already on the other side of the line spanned by the wall
   }
-  else if ( isOutside ( ecbp[same], wallTop, wallBottom, wallType ) ) {
-    //console.log("'findCollision': no collision, same-side projected ECB on the outside of "+wallType+" wall.");
+  else if ( isOutside ( ecbp[same], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
+    console.log("'findCollision': no collision, same-side projected ECB on the outside of "+wallType+" wall.");
     return false; // no collision: same-side projected ECB point on the outside of the line spanned by the wall
   }
   else {
     // from now on, we know that the projected same-side ECB point is on the inside of the line spanned by the wall
 
-    // first check if player was even near the wall
-    if (    (ecbp[0].y > wallTop.y    && ecb1[0].y > wallTop.y   ) // player stayed above the wall
-         || (ecbp[2].y < wallBottom.y && ecb1[2].y < wallBottom.y) // played stayed below the wall
-         || (ecbp[3].x > wallRight.x  && ecb1[3].x > wallRight.x ) // player stayed to the right of the wall
-         || (ecbp[1].x < wallLeft.x   && ecb1[1].x < wallLeft.x  ) // player stayed to the left of the wall
-       ) {
-      //console.log("'findCollision': no collision, not even near "+wallType+" wall.");
-      return false;
-    }
-
-    // now cover the case where the same-side ECB point was in fact already on the inside of the line spanned by the wall
-    else if ( !isOutside ( ecb1[same], wallTop, wallBottom, wallType )) {
+    // cover the case where the same-side ECB point was in fact already on the inside of the line spanned by the wall
+    if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
       // this first part is a bit dubious
-      if ( ecbp[same].y > wallTop.y || ecbp[same].y < wallBottom.y) {
-        // projected same-side ECB point is above the top (respectively, below the bottom) of the wall
-        //console.log("'findCollision': no collision, noncrossing same-side ECB point above/below "+wallType+" wall.");
+      if ( getXOrYCoord(ecbp[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) || getXOrYCoord(ecbp[same], xOrY) < getXOrYCoord(wallBottomOrLeft), xOrY) {
+        // projected same-side ECB point is past the extreme point of the wall
+        console.log("'findCollision': no collision, noncrossing same-side ECB point beyond "+wallType+" wall.");
         return false;
       }
       else {
         const newSameECB = orthogonalProjection(ecbp[same], wall);
-        const newCenter = new Vec2D( newSameECB.x + (ecbp[opposite].x-ecbp[same].x)/2, newSameECB.y);
+        const newCenter = centerFromSameECB( newSameECB, same, offsets );
         let touchingWall = wallType;
-        if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
+        if (getXOrYCoord(newCenter, xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) || getXOrYCoord(newCenter, xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
           touchingWall = false;
         }
-        //console.log("'findCollision': collision, noncrossing same-side ECB point, "+wallType+" wall.");
+        console.log("'findCollision': collision, noncrossing same-side ECB point, "+wallType+" wall.");
         return ( [touchingWall, newCenter] );
       }
     }
@@ -192,23 +257,23 @@ function findCollision (ecbp, ecb1, wall, wallType) {
     else {
       const t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
       if ( t > 1 ) { // I should also check check whether t < 0, but that seems to cause glitches with Fox's Illusion at the moment?
-        //console.log("'findCollision': no collision, intersection parameter outside of allowable range, with "+wallType+" wall.");
+        console.log("'findCollision': no collision, intersection parameter outside of allowable range, with "+wallType+" wall.");
         return false; // no collision
       }
       else {
         const intersection = new Vec2D (ecb1[same].x + t*(ecbp[same].x-ecb1[same].x), ecb1[same].y + t*(ecbp[same].y-ecb1[same].y));
-        if (intersection.y > wallTop.y || intersection.y < wallBottom.y) {
-          //console.log("'findCollision': no collision, intersection point outside of "+wallType+" wall.");
+        if (getXOrYCoord(intersection, xOrY) > getXOrYCoord(wallTopOrRight, xOrY) || getXOrYCoord(intersection, xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY)) {
+          console.log("'findCollision': no collision, intersection point outside of "+wallType+" wall.");
           return false; // no collision
         }
         else {
           const newSameECB = orthogonalProjection(ecbp[same], wall);
-          const newCenter = new Vec2D( newSameECB.x + (ecbp[opposite].x-ecbp[same].x)/2, newSameECB.y);
+          const newCenter = centerFromSameECB( newSameECB, same, offsets );
           let touchingWall = wallType;
-          if (newCenter.y < wallBottom.y || newCenter.y > wallTop.y ) {
+          if (getXOrYCoord(newCenter, xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) || getXOrYCoord(newCenter, xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
             touchingWall = false;
           }
-          //console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" wall.");
+          console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" wall.");
           return ( [touchingWall, newCenter] );
         }
       }
@@ -266,14 +331,14 @@ function moveECB (ecb, vec) {
 // where wall is a pair of Vec2D points, and wallType is either 'left' or 'right'
 // returns a 'touchingAndCenter', i.e. whether player is touching a wall,
 // together with the player's proposed new position center
-function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldMaybeTouchingAndCenter, passNumber ) {
+function loopOverWalls( ecbp, ecb1, offsets, oldCenter, wallWallTypes, oldMaybeTouchingAndCenter, passNumber ) {
   let newCollisionHappened = false;
   const suggestedMaybeTouchingAndCenters = [oldMaybeTouchingAndCenter];
   if (passNumber > maximumCollisionDetectionPasses) {
     return oldMaybeTouchingAndCenter;
   }
-  else {
-    const collisionData = wallWallTypes.map( (wallWallType) => findCollision (ecbp, ecb1, wallWallType[0], wallWallType[1]) );
+  else { 
+    const collisionData = wallWallTypes.map( (wallWallType) => findCollision (ecbp, ecb1, offsets, wallWallType[0], wallWallType[1]) );
     for (let i = 0; i < collisionData.length; i++) {
       if (collisionData[i] === false) { 
         // do nothing
@@ -287,7 +352,7 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldMaybeTouchingAn
       const newMaybeTouchingAndCenter = closestTouchingAndCenter( oldCenter, suggestedMaybeTouchingAndCenters);
       const vec = new Vec2D( newMaybeTouchingAndCenter[1].x - ecbp[0].x, newMaybeTouchingAndCenter[1].y - ecbp[1].y);
       const newecbp = moveECB (ecbp, vec);
-      return (loopOverWalls (newecbp, ecb1, oldCenter, wallWallTypes, newMaybeTouchingAndCenter, passNumber+1));
+      return (loopOverWalls (newecbp, ecb1, offsets, oldCenter, wallWallTypes, newMaybeTouchingAndCenter, passNumber+1));
     }
     else {
       return oldMaybeTouchingAndCenter;
@@ -295,9 +360,9 @@ function loopOverWalls( ecbp, ecb1, oldCenter, wallWallTypes, oldMaybeTouchingAn
   }
 };
 
-export function getNewMaybeTouchingAndCenterFromWalls(ecbp, ecb1, wallWallTypes) {
+export function getNewMaybeTouchingAndCenterFromWalls(ecbp, ecb1, offsets, wallWallTypes) {
   let maybeTouchingAndCenter = false;
   const oldCenter = new Vec2D( ecb1[0].x, ecb1[1].y);
-  maybeTouchingAndCenter = loopOverWalls(ecbp, ecb1, oldCenter, wallWallTypes, maybeTouchingAndCenter, 0 );
+  maybeTouchingAndCenter = loopOverWalls(ecbp, ecb1, offsets, oldCenter, wallWallTypes, maybeTouchingAndCenter, 0 );
   return maybeTouchingAndCenter;
 };
