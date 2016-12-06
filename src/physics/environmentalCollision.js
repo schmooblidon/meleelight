@@ -374,7 +374,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     if ( getXOrYCoord(ecb1[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
       counterclockwise = !flip;
       other = turn(same, counterclockwise);
-      if (   isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) 
+      if (   isOutside ( ecbp[other], wallTopOrRight, wallBottomOrLeft, wallType ) 
           && getXOrYCoord(ecbp[other], xOrY) < getXOrYCoord(wallTopOrRight, xOrY) ) {
         edgeCase = true;
         corner = wallTopOrRight;
@@ -385,7 +385,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     if ( getXOrYCoord(ecb1[same], xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) ) {
       counterclockwise = flip;
       other = turn(same, counterclockwise);
-      if (   isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) 
+      if (   isOutside ( ecbp[other], wallTopOrRight, wallBottomOrLeft, wallType ) 
           && getXOrYCoord(ecbp[other], xOrY) > getXOrYCoord(wallBottomOrLeft, xOrY) ) {
         edgeCase = true;
         corner = wallBottomOrLeft;
@@ -455,6 +455,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
           interiorECBside = "r";
         }
         edgeCollision = !isOutside ( corner, ecbp[same], ecbp[other], interiorECBside);
+
         if (edgeCollision) {
           switch (cornerPushoutMethod[0].toLowerCase()) {
             case "o": // orthogonal pushout     
@@ -568,8 +569,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
               touchingWall = false;
             }
             console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" surface.");
-            console.log("Player position was: ("+position.x+","+position.y+").");
-            console.log("I am suggesting a new position of ("+newCenter.x+","+newCenter.y+").");
             return ( [touchingWall, newCenter, priorityFromType(wallType)] );
           }
         }
