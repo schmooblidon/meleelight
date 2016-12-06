@@ -5,6 +5,7 @@ import {
   multMatVect
 } from "main/linAlg";
 import {Vec2D} from "./util/Vec2D";
+import {keyMap} from "../settings";
 
 export const button = {
   "a" : 0, 

@@ -36,6 +36,7 @@ import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
+import {showButton, nullInputs, pollInputs} from "./input";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -550,7 +551,7 @@ export const removePlayer (i){
 }*/
 
 
-window.interpretInputs = function(i, active) {
+export function interpretInputs  (i, active) {
   let input = nullInputs;
 
   // the following block should be removed once the old input data is properly threaded through
