@@ -187,6 +187,10 @@ function lineSweepParameters( line1, line2, flip = false) {
     s = solveQuadraticEquation( a0, a1, a2, sign );
   }
   const t = (s*(x1-x3) - x1) / ( x2-x1 + s*( x1-x2-x3+x4 ));
+  console.log("Function 'lineSweetParameters' logging:");
+  console.log("Relevant recentered ECB1 edge [same,other] given by [("+x1+","+y1+"), ("+x2+","+y2+")].");
+  console.log("Relevant recentered ECBp edge [same,other] given by [("+x3+","+y3+"), ("+x4+","+y4+")].");
+  console.log("'lineSweepParameters' has calculated sweep parameters t="+t+", s="+s+".");
 
   if (s < 0 || s > 1 || t < 0 || t > 1 || s === Infinity || t === Infinity || isNaN(s) || isNaN(t)) {
     return false;
@@ -347,9 +351,9 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       // as the 'lineSweepParameters' function calculates collision with respect to the origin
 
       const recenteredECB1Edge = [ new Vec2D( ecb1[same ].x - corner.x, ecb1[same ].y - corner.y )
-                                 , new Vec2D( ecb1[other].x - corner.x, ecb1[other].x - corner.y)];
+                                 , new Vec2D( ecb1[other].x - corner.x, ecb1[other].y - corner.y)];
       const recenteredECBpEdge = [ new Vec2D( ecbp[same ].x - corner.x, ecbp[same ].y - corner.y )
-                                 , new Vec2D( ecbp[other].x - corner.x, ecbp[other].x - corner.y)];
+                                 , new Vec2D( ecbp[other].x - corner.x, ecbp[other].y - corner.y)];
 
       let edgeCollision = false; // initialising
       let [t,s] = [0,0];
