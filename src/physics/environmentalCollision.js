@@ -251,7 +251,7 @@ function orthogonalProjection(point, line) {
 // touchingWall is either false, left or right, indicating whether the player is still touching that wall after the transformation
 // terminology in the comments: a wall is a segment with an inside and an outside,
 // which is contained in an infinite line, extending both ways, which also has an inside and an outside
-function findCollision (ecbp, ecb1, position, wall, wallType, doSweepingChecks = false) {
+function findCollision (ecbp, ecb1, position, wall, wallType) {
 
   const wallTop    = extremePoint(wall, "top");
   const wallBottom = extremePoint(wall, "bottom");
@@ -334,17 +334,17 @@ function findCollision (ecbp, ecb1, position, wall, wallType, doSweepingChecks =
     // -------------------------------------------------------------------------------------------------------------------------------------------------------
     // now, we check whether the ECB is colliding on an edge, and not a vertex
 
-    let edgeCase = false;
-    let counterclockwise = true;
-    let corner = false; // no value for now
-
     // first, figure out which is the relevant ECB edge that could collide at the corner
     // we know that one of the endpoints of this edge is the same-side ECB point of the wall,
-    // we are left to find the other
+    // we are left to find the other, which we'll call 'other'
+
+    let edgeCase = false;
+    let counterclockwise = true; // whether (same -> other) is counterclockwise or not
+    let corner = false; // no value for now
 
     // case 1
     if ( getXOrYCoord(ecb1[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
-      counterclockwise ^= flip;
+      counterclockwise = !flip;
       other = turn(same, counterclockwise);
       if (   isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) 
           && getXOrYCoord(ecbp[other], xOrY) < getXOrYCoord(wallTopOrRight, xOrY) ) {
@@ -355,8 +355,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, doSweepingChecks =
 
     // case 2
     if ( getXOrYCoord(ecb1[same], xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) ) {
-      counterclockwise = false;
-      counterclockwise ^= flip;
+      counterclockwise = flip;
       other = turn(same, counterclockwise);
       if (   isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) 
           && getXOrYCoord(ecbp[other], xOrY) > getXOrYCoord(wallBottomOrLeft, xOrY) ) {
@@ -376,57 +375,57 @@ function findCollision (ecbp, ecb1, position, wall, wallType, doSweepingChecks =
       // as the 'lineSweepParameters' function calculates collision with respect to the origin
 
       let edgeCollision = false; // initialising
+      let sweepingEdgeCollision = false;
       let [t,s] = [0,0];
-      let newCenter = new Vec2D(500,500);
+      let newCenter = new Vec2D(0,0);
+      const touchingWall = false; // colliding with ECB edge never counts as touching
 
-      if (doSweepingChecks) {
-        const recenteredECB1Edge = [ new Vec2D( ecb1[same ].x - corner.x, ecb1[same ].y - corner.y )
-                                   , new Vec2D( ecb1[other].x - corner.x, ecb1[other].y - corner.y)];
-        const recenteredECBpEdge = [ new Vec2D( ecbp[same ].x - corner.x, ecbp[same ].y - corner.y )
-                                   , new Vec2D( ecbp[other].x - corner.x, ecbp[other].y - corner.y)];
-        let lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, false);
+      // sweeping corner collision check
+      const recenteredECB1Edge = [ new Vec2D( ecb1[same ].x - corner.x, ecb1[same ].y - corner.y )
+                                 , new Vec2D( ecb1[other].x - corner.x, ecb1[other].y - corner.y)];
+      const recenteredECBpEdge = [ new Vec2D( ecbp[same ].x - corner.x, ecbp[same ].y - corner.y )
+                                 , new Vec2D( ecbp[other].x - corner.x, ecbp[other].y - corner.y)];
+      let lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, false);
+      if (lineSweepResult === false) {
+        lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, true);
         if (lineSweepResult === false) {
-          lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, true);
-          if (lineSweepResult === false) {
-            // no edge collision, 'edgeCollision' remains false
-          }
-          else {
-            edgeCollision = true;
-            [t,s] = lineSweepResult;
-          }
+          // no edge collision, 'edgeCollision' remains false
         }
         else {
-          edgeCollision = true;
+          sweepingEdgeCollision = true;
           [t,s] = lineSweepResult;
         }
+      }
+      else {
+        sweepingEdgeCollision = true;
+        [t,s] = lineSweepResult;
+      }
+
+      if (sweepingEdgeCollision) {
         const contactECBedge = [ new Vec2D( ecb1[same ].x + s*(ecbp[same ].x - ecb1[same ].x), ecb1[same ].y + s*(ecbp[same ].y - ecb1[same ].y))
                                , new Vec2D( ecb1[other].x + s*(ecbp[other].x - ecb1[other].x), ecb1[other].y + s*(ecbp[other].y - ecb1[other].y)) ];
         const newSameECB = orthogonalProjection(ecbp[same], contactECBedge);
         newCenter = new Vec2D( position.x + newSameECB.x - ecbp[same].x , position.y + newSameECB.y - ecbp[same].y );
-      } 
-
+        console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
+        return ( [touchingWall, newCenter, 1] ); // corner collision takes low priority
+      }
       else {
-        let interiorECBside = "r";
+        let interiorECBside = "l";
         if (counterclockwise === false) {
-          interiorECBside = "l";
+          interiorECBside = "r";
         }
         edgeCollision = !isOutside ( corner, ecbp[same], ecbp[other], interiorECBside);
-        const projectedCorner = orthogonalProjection( corner, [ecbp[same], ecbp[other]]);
-        const pushOutVector = new Vec2D( corner.x - projectedCorner.x, corner.y - projectedCorner.y);
-        newCenter = new Vec2D( position.x + pushOutVector.x, position.y + pushOutVector.y);
-      }
-
-      
-      if (edgeCollision === false) {
-        console.log("'findCollision': no collision, relevant edge of ECB does not cross "+wallType+" corner.");
-        return false;
-      }
-      else {
-        // this is the ECB edge at the point of contact with the corner
-
-        const touchingWall = false; // colliding with ECB edge never counts as touching
-        console.log("'findCollision': collision, relevant edge of ECB crossed "+wallType+" corner.");
-        return ( [touchingWall, newCenter, 1] ); // corner has priority 1
+        if (edgeCollision) {
+          const projectedCorner = orthogonalProjection( corner, [ecbp[same], ecbp[other]]);
+          const pushOutVector = new Vec2D( corner.x - projectedCorner.x, corner.y - projectedCorner.y);
+          newCenter = new Vec2D( position.x + pushOutVector.x, position.y + pushOutVector.y);
+          console.log("'findCollision': collision, relevant edge of ECB is on the other side of "+wallType+" corner.");
+          return ( [touchingWall, newCenter, 1] ); // corner has priority 1
+        }
+        else {
+          console.log("'findCollision': no collision, relevant edge of ECB does not cross "+wallType+" corner.");
+          return false;
+        }
       }
     }
 
@@ -470,7 +469,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, doSweepingChecks =
         }
         else {
           const t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
-          if ( doSweepingChecks && (t > 1 | t < 0)) {
+          if ( t > 1 ) { // todo: change this by adding non-sweeping checks also
             console.log("'findCollision': no collision, intersection parameter outside of allowable range, with "+wallType+" surface.");
             return false; // no collision
           }
