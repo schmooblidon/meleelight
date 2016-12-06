@@ -349,8 +349,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // from now on, we know that the projected same-side ECB point is on the inside of the line spanned by the wall
 
     // if the surface is a platform, and the bottom ECB point is below the platform, we shouldn't do anything
-    // maybe this should be changed to checking whether player position is below the platform, instead of bottom ECB point
-    // note however that just changing 'ecb1[same]' to 'position' leads to the player passing through platforms (at the moment)
     if ( isPlatform ) {
       if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
         console.log("'findCollision': no collision, bottom ECB point below platform.");
@@ -367,15 +365,14 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // we are left to find the other, which we'll call 'other'
 
     let edgeCase = false;
-    let counterclockwise = true; // whether (same -> other) is counterclockwise or not
+    let counterclockwise = true; // whether (same ECB point -> other ECB point) is counterclockwise or not
     let corner = false; // no value for now
 
     // case 1
     if ( getXOrYCoord(ecb1[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
       counterclockwise = !flip;
       other = turn(same, counterclockwise);
-      if (   isOutside ( ecbp[other], wallTopOrRight, wallBottomOrLeft, wallType ) 
-          && getXOrYCoord(ecbp[other], xOrY) < getXOrYCoord(wallTopOrRight, xOrY) ) {
+      if ( getXOrYCoord(ecbp[other], xOrY) < getXOrYCoord(wallTopOrRight, xOrY) ) { 
         edgeCase = true;
         corner = wallTopOrRight;
       }
@@ -385,8 +382,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     if ( getXOrYCoord(ecb1[same], xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) ) {
       counterclockwise = flip;
       other = turn(same, counterclockwise);
-      if (   isOutside ( ecbp[other], wallTopOrRight, wallBottomOrLeft, wallType ) 
-          && getXOrYCoord(ecbp[other], xOrY) > getXOrYCoord(wallBottomOrLeft, xOrY) ) {
+      if ( getXOrYCoord(ecbp[other], xOrY) > getXOrYCoord(wallBottomOrLeft, xOrY) ) { 
         edgeCase = true;
         corner = wallBottomOrLeft;
       }
@@ -454,7 +450,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
         if (counterclockwise === false) {
           interiorECBside = "r";
         }
-        edgeCollision = !isOutside ( corner, ecbp[same], ecbp[other], interiorECBside);
+        edgeCollision = !isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside);
 
         if (edgeCollision) {
           switch (cornerPushoutMethod[0].toLowerCase()) {
