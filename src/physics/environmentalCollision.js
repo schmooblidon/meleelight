@@ -98,7 +98,7 @@ function extremePoint(wall, extreme) {
         return v2;
       }
     default:
-      return ("error in 'extremePoint': invalid parameter "+extreme+", not up/top/down/bottom/left/right");
+      console.log( "error in 'extremePoint': invalid parameter "+extreme+", not up/top/down/bottom/left/right");
   }
 };
 
@@ -157,6 +157,7 @@ function solveQuadraticEquation (a0, a1, a2, sign = 1) {
 //  t=1 means we are on the line between p2 and p4
 // this function returns a specific value for each of t and s,
 // which correspond to when the swept line hits the origin (at coordinates (0,0))
+// if either of the parameters is not between 0 and 1, this function instead returns 'false'
 function lineSweepParameters( line1, line2, flip = false) {
   let sign = 1;
   if (flip) {
@@ -171,19 +172,28 @@ function lineSweepParameters( line1, line2, flip = false) {
   const y3 = line2[0].y;
   const y4 = line2[1].y;
 
-  const leadingCoeff = x2*y1 - x4*y1 - x1*y2 + x3*y2 - x2*y3 + x4*y3 + x1*y4 - x3*y4;
-  if (Math.abs(leadingCoeff) < 0.001) {
-    return "error in 'lineSweepParameters' function: leading coefficient too small";
+  const a0 = x2*y1 - x1*y2;
+  const a1 = x4*y1 - 2*x2*y1 + 2*x1*y2 - x3*y2 + x2*y3 - x1*y4;
+  const a2 = x2*y1 - x4*y1 - x1*y2 + x3*y2 - x2*y3 + x4*y3 + x1*y4 - x3*y4;
+
+  // s satisfies the equation:   a0 + a1*s + a2*s^2 = 0
+  let s = -1; // initialise s
+
+  if (Math.abs(a2) < 0.00001) {
+    s = - a0 / a1;
   }
   else {
-    const s = solveQuadraticEquation( x2*y1 - x1*y2
-                                    , x4*y1 - 2*x2*y1 + 2*x1*y2 - x3*y2 + x2*y3 - x1*y4
-                                    , leadingCoeff
-                                    , sign );
-    const t = (s*(x1-x3) - x1) / ( x2-x1 + s*( x1-x2-x3+x4 ));
+    s = solveQuadraticEquation( a0, a1, a2, sign );
+  }
+  const t = (s*(x1-x3) - x1) / ( x2-x1 + s*( x1-x2-x3+x4 ));
+
+  if (s < 0 || s > 1 || t < 0 || t > 1 || s === Infinity || t === Infinity || isNaN(s) || isNaN(t)) {
+    return false;
+  }
+  else {
     return [t,s];
   }
-}
+};
 
 
 // orthogonally projects a point onto a line
@@ -340,29 +350,28 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       const recenteredECBpEdge = [ new Vec2D( ecbp[same ].x - corner.x, ecbp[same ].y - corner.y )
                                  , new Vec2D( ecbp[other].x - corner.x, ecbp[other].x - corner.y)];
 
+      let edgeCollision = false; // initialising
+      let [t,s] = [0,0];
 
-      const [t1,s1] = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, false);
-      const [t2,s2] = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, true);
-      // shouldn't need to calculate both sets of parameters
-      // at the moment I am not sure which one is relevant 
-      // (it should depend on relative positions and wall types),
-      // so I just check both
-
-      let [t,s] = [t1,s2];
-      let edgeCollision = false;
-
-      if (t1 < 0 || t1 > 1 || s1 < 0 || s1 > 1) {
-        if (t2 < 0 || t2 > 1 || s2 < 0 || s2 > 1) {
+      let lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, false);
+      if (lineSweepResult === false) {
+        lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, true);
+        if (lineSweepResult === false) {
           // no edge collision, 'edgeCollision' remains false
         }
         else {
           edgeCollision = true;
-          [t,s] = [t2,s2];
+          [t,s] = lineSweepResult;
         }
       }
       else {
         edgeCollision = true;
-      }
+        [t,s] = lineSweepResult;
+      }      
+      // shouldn't need to calculate both sets of parameters
+      // at the moment I am not sure which one is relevant 
+      // (it should depend on relative positions and wall types),
+      // so I just check both
       
       if (edgeCollision) {
         console.log("'findCollision': no collision, relevant edge of ECB does not cross "+wallType+" corner.");
