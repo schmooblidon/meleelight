@@ -470,7 +470,7 @@ export function physics (i){
     new Vec2D(0 + x, ecbOffset[3] + y),
     new Vec2D(ecbOffset[1] * -1 + x, ecbOffset[2] + y)
   ];
-  
+
 
   if (!aS[cS[i]][player[i].actionState].ignoreCollision) {
 
@@ -612,7 +612,7 @@ export function physics (i){
       }
     }
 
-    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, ecbOffset, relevantSurfaces);
+    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, relevantSurfaces);
 
     if (surfacesMaybeCenterAndTouchingType === false) {
       // no collision, do nothing
