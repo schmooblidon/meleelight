@@ -156,8 +156,9 @@ function solveQuadraticEquation (a0, a1, a2, sign = 1) {
 //  t=0 means we are on the line between p1 and p3,
 //  t=1 means we are on the line between p2 and p4
 // this function returns a specific value for each of t and s,
-// which correspond to when the swept line hits the origin (at coordinates (0,0))
+// which correspond to when the swept line hits the origin O (at coordinates (0,0))
 // if either of the parameters is not between 0 and 1, this function instead returns 'false'
+// see '/doc/linesweep.png' for a visual representation of the situation
 function lineSweepParameters( line1, line2, flip = false) {
   let sign = 1;
   if (flip) {
