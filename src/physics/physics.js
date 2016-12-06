@@ -76,8 +76,8 @@ function dealWithWall (i, newCenter, wallType) {
   }
 };
 
-function dealWithPlatform(i, newCenter, ecbp0, j) {
-  if (player[i].hit.hitlag > 0) {
+function dealWithPlatform(i, alreadyGrounded, newCenter, ecbp0, j) {
+  if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
   } 
   else {
@@ -85,8 +85,8 @@ function dealWithPlatform(i, newCenter, ecbp0, j) {
   }
 };
 
-function dealWithGround(i, newCenter, ecbp0, j) {
-  if (player[i].hit.hitlag > 0) {
+function dealWithGround(i, alreadyGrounded, newCenter, ecbp0, j) {
+  if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
   } 
   else {
@@ -599,17 +599,19 @@ export function physics (i){
 
     // the following three lines should be precalculated instead of being recalculated every frame
     const stageWalls = customZip(stage.wallL,"l").concat( customZip(stage.wallR,"r") );
-    const stageGroundsAndCeilings = customZip(stage.ground,"g").concat( customZip(stage.ceiling,"c") );
+    const stageGrounds = customZip(stage.ground,"g");
+    const stageCeilings =customZip(stage.ceiling,"c");
     const stagePlatforms = customZip(stage.platform, "p");
 
-    let relevantSurfaces = stageWalls;
+    let relevantSurfaces = stageWalls .concat(stageGrounds);
+    const alreadyGrounded = player[i].phys.grounded;
 
-    if (!player[i].phys.grounded) {
-      relevantSurfaces = relevantSurfaces.concat(stageGroundsAndCeilings);
-      const notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
-      if ( notIgnoringPlatforms ) {
+    const notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
+    if ( notIgnoringPlatforms ) {
         relevantSurfaces = relevantSurfaces.concat(stagePlatforms);
-      }
+    }
+    if (!alreadyGrounded) {
+      relevantSurfaces = relevantSurfaces.concat(stageCeilings);
     }
 
     let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, relevantSurfaces);
@@ -635,13 +637,13 @@ export function physics (i){
             dealWithWall(i, surfacesMaybeCenterAndTouchingType[0], "r");
             break;
           case "g": // player landed on ground
-            dealWithGround(i, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithGround(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
             break;
           case "c": // player touching ceiling
             dealWithCeiling(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset);
             break;
           case "p": // player landed on platform
-            dealWithPlatform(i, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithPlatform(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
           default:
             console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
             break;
