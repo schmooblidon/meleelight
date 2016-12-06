@@ -556,14 +556,14 @@ export function interpretInputs  (i, active) {
 
   // the following block should be removed once the old input data is properly threaded through
   for (var k = 1; k < 8; k++) {
-    input[k].lsX = player[i].inputs.lStickAxis[k-1].x;
-    input[k].lsY = player[i].inputs.lStickAxis[k-1].y;
-    input[k].rawX = player[i].inputs.rawlStickAxis[k-1].x;
-    input[k].rawY = player[i].inputs.rawlStickAxis[k-1].y;
-    input[k].csX = player[i].inputs.cStickAxis[k-1].x;
-    input[k].csY = player[i].inputs.cStickAxis[k-1].y;
-    input[k].lA = player[i].inputs.lAnalog[k-1];
-    input[k].rA = player[i].inputs.rAnalog[k-1];
+    input[k].lsX = player[i].inputs.lsX[k-1];
+    input[k].lsY = player[i].inputs.lsY[k-1];
+    input[k].rawX = player[i].inputs.rawX[k-1];
+    input[k].rawY = player[i].inputs.rawY[k-1];
+    input[k].csX = player[i].inputs.csX[k-1];
+    input[k].csY = player[i].inputs.csY[k-1];
+    input[k].lA = player[i].inputs.lA[k-1];
+    input[k].rA = player[i].inputs.rA[k-1];
     input[k].s = player[i].inputs.s[k-1];
     input[k].z = player[i].inputs.z[k-1];
     input[k].a = player[i].inputs.a[k-1];
@@ -572,10 +572,10 @@ export function interpretInputs  (i, active) {
     input[k].y = player[i].inputs.y[k-1];
     input[k].r = player[i].inputs.r[k-1];
     input[k].l = player[i].inputs.l[k-1];
-    input[k].dl = player[i].inputs.dpadleft[k-1];
-    input[k].dd = player[i].inputs.dpaddown[k-1];
-    input[k].dr = player[i].inputs.dpadright[k-1];
-    input[k].du = player[i].inputs.dpadup[k-1];
+    input[k].dl = player[i].inputs.dl[k-1];
+    input[k].dd = player[i].inputs.dd[k-1];
+    input[k].dr = player[i].inputs.dr[k-1];
+    input[k].du = player[i].inputs.du[k-1];
   }
 
   input[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys);
@@ -710,14 +710,14 @@ export function interpretInputs  (i, active) {
 
   // the following block should be removed once the input data is properly threaded through and can be passed on
   for (var k = 0; k < 8; k++) {
-    player[i].inputs.lStickAxis[k].x = input[k].lsX;
-    player[i].inputs.lStickAxis[k].y = input[k].lsY;
-    player[i].inputs.rawlStickAxis[k].x = input[k].rawX;
-    player[i].inputs.rawlStickAxis[k].y = input[k].rawY;
-    player[i].inputs.cStickAxis[k].x = input[k].csX;
-    player[i].inputs.cStickAxis[k].y = input[k].csY;
-    player[i].inputs.lAnalog[k] = input[k].lA;
-    player[i].inputs.rAnalog[k] = input[k].rA;
+    player[i].inputs.lsX[k] = input[k].lsX;
+    player[i].inputs.lsY[k] = input[k].lsY;
+    player[i].inputs.rawX[k] = input[k].rawX;
+    player[i].inputs.rawY[k] = input[k].rawY;
+    player[i].inputs.csX[k] = input[k].csX;
+    player[i].inputs.csY[k] = input[k].csY;
+    player[i].inputs.lA[k] = input[k].lA;
+    player[i].inputs.rA[k] = input[k].rA;
     player[i].inputs.s[k] = input[k].s;
     player[i].inputs.z[k] = input[k].z;
     player[i].inputs.a[k] = input[k].a;
@@ -726,10 +726,10 @@ export function interpretInputs  (i, active) {
     player[i].inputs.y[k] = input[k].y;
     player[i].inputs.r[k] = input[k].r;
     player[i].inputs.l[k] = input[k].l;
-    player[i].inputs.dpadleft[k] = input[k].dl;
-    player[i].inputs.dpaddown[k] = input[k].dd;
-    player[i].inputs.dpadright[k] = input[k].dr;
-    player[i].inputs.dpadup[k] = input[k].du;
+    player[i].inputs.dl[k] = input[k].dl;
+    player[i].inputs.dd[k] = input[k].dd;
+    player[i].inputs.dr[k] = input[k].dr;
+    player[i].inputs.du[k] = input[k].du;
   }
 
   return input;

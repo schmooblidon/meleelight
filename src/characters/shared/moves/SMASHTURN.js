@@ -26,8 +26,8 @@ export default {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
+      player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
         aS[cS[p]].SIDESPECIALGROUND.init(p);
       }
@@ -40,7 +40,7 @@ export default {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
@@ -51,7 +51,7 @@ export default {
     else if (t[0]){
       aS[cS[p]][t[1]].init(p);
     }
-    else if (player[p].timer === 2 && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.79){
+    else if (player[p].timer === 2 && player[p].inputs.lsX[0] * player[p].phys.face > 0.79){
       aS[cS[p]].DASH.init(p);
       return true;
     }

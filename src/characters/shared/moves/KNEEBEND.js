@@ -18,7 +18,7 @@ export default {
       reduceByTraction(p,true);
       // if jumpsquat initiated by stick
       if (player[p].phys.jumpSquatType){
-        if (player[p].inputs.lStickAxis[0].y < 0.67){
+        if (player[p].inputs.lsY[0] < 0.67){
           player[p].phys.jumpType = 0;
         }
       }
@@ -36,7 +36,7 @@ export default {
       player[p].phys.pos.y += 0.001;
     }
     if (player[p].timer > player[p].charAttributes.jumpSquat){
-      if (player[p].inputs.lStickAxis[2].x * player[p].phys.face >= -0.3){
+      if (player[p].inputs.lsX[2] * player[p].phys.face >= -0.3){
         aS[cS[p]].JUMPF.init(p,player[p].phys.jumpType);
       }
       else {
@@ -44,15 +44,15 @@ export default {
       }
       return true;
     }
-    else if (player[p].inputs.a[0] && !player[p].inputs.a[1] && (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0)){
+    else if (player[p].inputs.a[0] && !player[p].inputs.a[1] && (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0)){
       aS[cS[p]].GRAB.init(p);
       return true;
     }
-    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lStickAxis[0].y >= 0.8 && player[p].inputs.lStickAxis[3].y < 0.3) || (player[p].inputs.cStickAxis[0].y >= 0.8 && player[p].inputs.cStickAxis[3].y < 0.3)){
+    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lsY[0] >= 0.8 && player[p].inputs.lsY[3] < 0.3) || (player[p].inputs.csY[0] >= 0.8 && player[p].inputs.csY[3] < 0.3)){
       aS[cS[p]].UPSMASH.init(p);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lStickAxis[0].y > 0.58){
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lsY[0] > 0.58){
       aS[cS[p]].UPSPECIAL.init(p);
       return true;
     }

@@ -67,7 +67,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
@@ -100,7 +100,7 @@ export const baseActionStates = {
       aS[cS[p]].TILTTURN.init(p);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3 && !player[p].inCSS){
+    else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 && !player[p].inCSS){
       aS[cS[p]].WALK.init(p,true);
       return true;
     }
@@ -135,13 +135,13 @@ export const baseActionStates = {
         drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
       }
       if (player[p].timer > 1){
-        if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.3){
+        if (Math.abs(player[p].inputs.lsX[0]) < 0.3){
           reduceByTraction(p,false);
         }
         else {
-          var tempMax = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.dMaxV;
-          //var tempAcc = (player[p].charAttributes.dAcc - (1 - Math.abs(player[p].inputs.lStickAxis[0].x))*(player[p].charAttributes.dAcc))*player[p].phys.face;
-          var tempAcc = player[p].inputs.lStickAxis[0].x*player[p].charAttributes.dAccA;
+          var tempMax = player[p].inputs.lsX[0] * player[p].charAttributes.dMaxV;
+          //var tempAcc = (player[p].charAttributes.dAcc - (1 - Math.abs(player[p].inputs.lsX[0]))*(player[p].charAttributes.dAcc))*player[p].phys.face;
+          var tempAcc = player[p].inputs.lsX[0]*player[p].charAttributes.dAccA;
 
           player[p].phys.cVel.x += tempAcc;
           if ((tempMax > 0 && player[p].phys.cVel.x > tempMax) || (tempMax < 0 && player[p].phys.cVel.x < tempMax)){
@@ -168,17 +168,17 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       player[p].phys.cVel.x *= 0.25;
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
-      if (player[p].timer < 4 && player[p].inputs.lStickAxis[0].x*player[p].phys.face >= 0.8){
+      if (player[p].timer < 4 && player[p].inputs.lsX[0]*player[p].phys.face >= 0.8){
         player[p].phys.cVel.x *= 0.25;
         aS[cS[p]].FORWARDSMASH.init(p);
       }
-      else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+      else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
         aS[cS[p]].GRAB.init(p);
       }
       else {
@@ -190,8 +190,8 @@ export const baseActionStates = {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
+      player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
         aS[cS[p]].SIDESPECIALGROUND.init(p);
       }
@@ -205,11 +205,11 @@ export const baseActionStates = {
       aS[cS[p]].SMASHTURN.init(p);
       return true;
     }
-    else if (player[p].timer > player[p].charAttributes.dashFrameMax && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.79 && player[p].inputs.lStickAxis[2].x * player[p].phys.face < 0.3){
+    else if (player[p].timer > player[p].charAttributes.dashFrameMax && player[p].inputs.lsX[0] * player[p].phys.face > 0.79 && player[p].inputs.lsX[2] * player[p].phys.face < 0.3){
       aS[cS[p]].DASH.init(p);
       return true;
     }
-    else if (player[p].timer > player[p].charAttributes.dashFrameMin && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.62){
+    else if (player[p].timer > player[p].charAttributes.dashFrameMin && player[p].inputs.lsX[0] * player[p].phys.face > 0.62){
       aS[cS[p]].RUN.init(p);
       return true;
     }
@@ -245,11 +245,11 @@ export const baseActionStates = {
       if (player[p].timer < 10){
         footstep[1] = true;
       }
-      var tempMax = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.dMaxV;
+      var tempMax = player[p].inputs.lsX[0] * player[p].charAttributes.dMaxV;
 
       //Current Run Acceleration = ((MaxRunVel * Xinput) - PreviousFrameVelocity) * (1/(MaxRunVel * 2.5)) * (DRAA + (DRAB/Math.sign(Xinput)))
 
-      var tempAcc = ((player[p].charAttributes.dMaxV * player[p].inputs.lStickAxis[0].x) - player[p].phys.cVel.x) * (1/(player[p].charAttributes.dMaxV * 2.5)) * (player[p].charAttributes.dAccA + (player[p].charAttributes.dAccB / Math.sign(player[p].inputs.lStickAxis[0].x)));
+      var tempAcc = ((player[p].charAttributes.dMaxV * player[p].inputs.lsX[0]) - player[p].phys.cVel.x) * (1/(player[p].charAttributes.dMaxV * 2.5)) * (player[p].charAttributes.dAccA + (player[p].charAttributes.dAccB / Math.sign(player[p].inputs.lsX[0])));
 
 
       player[p].phys.cVel.x += tempAcc;
@@ -272,7 +272,7 @@ export const baseActionStates = {
   interrupt : function(p){
     var j = checkForJump(p);
     if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
-      if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+      if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
         aS[cS[p]].GRAB.init(p);
       }
       else {
@@ -284,8 +284,8 @@ export const baseActionStates = {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
+      player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
         aS[cS[p]].SIDESPECIALGROUND.init(p);
       }
@@ -294,7 +294,7 @@ export const baseActionStates = {
       }
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lStickAxis[0].y < -0.58){
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lsY[0] < -0.58){
       aS[cS[p]].DOWNSPECIALGROUND.init(p);
       return true;
     }
@@ -302,15 +302,15 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.62){
+    else if (Math.abs(player[p].inputs.lsX[0]) < 0.62){
       aS[cS[p]].RUNBRAKE.init(p);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.3){
+    else if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
       aS[cS[p]].RUNTURN.init(p);
       return true;
     }
@@ -344,8 +344,8 @@ export const baseActionStates = {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
+      player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
         aS[cS[p]].SIDESPECIALGROUND.init(p);
       }
@@ -358,7 +358,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
@@ -369,7 +369,7 @@ export const baseActionStates = {
     else if (t[0]){
       aS[cS[p]][t[1]].init(p);
     }
-    else if (player[p].timer == 2 && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.79){
+    else if (player[p].timer == 2 && player[p].inputs.lsX[0] * player[p].phys.face > 0.79){
       aS[cS[p]].DASH.init(p);
       return true;
     }
@@ -416,8 +416,8 @@ export const baseActionStates = {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
+      player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
         aS[cS[p]].SIDESPECIALGROUND.init(p);
       }
@@ -430,7 +430,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
@@ -448,7 +448,7 @@ export const baseActionStates = {
       aS[cS[p]].WAIT.init(p);
       return true;
     }
-    else if (player[p].timer == 6 && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.79 && player[p].phys.dashbuffer){
+    else if (player[p].timer == 6 && player[p].inputs.lsX[0] * player[p].phys.face > 0.79 && player[p].phys.dashbuffer){
       aS[cS[p]].DASH.init(p);
       return true;
     }
@@ -485,7 +485,7 @@ export const baseActionStates = {
       aS[cS[p]].SQUAT.init(p);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.3){
+    else if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
       aS[cS[p]].RUNTURN.init(p);
       return true;
     }
@@ -516,12 +516,12 @@ export const baseActionStates = {
         player[p].phys.face *= -1;
       }
 
-      if (player[p].timer <= player[p].charAttributes.runTurnBreakPoint && player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.3){
-        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(player[p].inputs.lStickAxis[0].x))*(player[p].charAttributes.dAccA))*player[p].phys.face;
+      if (player[p].timer <= player[p].charAttributes.runTurnBreakPoint && player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
+        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(player[p].inputs.lsX[0]))*(player[p].charAttributes.dAccA))*player[p].phys.face;
         player[p].phys.cVel.x -= tempAcc;
       }
-      else if (player[p].timer > player[p].charAttributes.runTurnBreakPoint && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.3){
-        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(player[p].inputs.lStickAxis[0].x))*(player[p].charAttributes.dAccA))*player[p].phys.face;
+      else if (player[p].timer > player[p].charAttributes.runTurnBreakPoint && player[p].inputs.lsX[0] * player[p].phys.face > 0.3){
+        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(player[p].inputs.lsX[0]))*(player[p].charAttributes.dAccA))*player[p].phys.face;
         player[p].phys.cVel.x += tempAcc;
       }
       else {
@@ -547,7 +547,7 @@ export const baseActionStates = {
       return true;
     }
     else if (player[p].timer > framesData[cS[p]].RUNTURN){
-      if(player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.6){
+      if(player[p].inputs.lsX[0] * player[p].phys.face > 0.6){
         aS[cS[p]].RUN.init(p);
       }
       else {
@@ -589,7 +589,7 @@ export const baseActionStates = {
       }
 
       //Current Walk Acceleration = ((MaxWalkVel * Xinput) - PreviousFrameVelocity) * (1/(MaxWalkVel * 2)) * (InitWalkVel * WalkAcc)
-      var tempMax = player[p].charAttributes.walkMaxV * player[p].inputs.lStickAxis[0].x;
+      var tempMax = player[p].charAttributes.walkMaxV * player[p].inputs.lsX[0];
 
       if (Math.abs(player[p].phys.cVel.x) > Math.abs(tempMax)){
         reduceByTraction(p,true);
@@ -621,7 +621,7 @@ export const baseActionStates = {
       aS[cS[p]].WALK.init(p,false);
       return true;
     }
-    if (player[p].inputs.lStickAxis[0].x == 0){
+    if (player[p].inputs.lsX[0] == 0){
       aS[cS[p]].WAIT.init(p);
       return true;
     }
@@ -633,7 +633,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
@@ -690,11 +690,11 @@ export const baseActionStates = {
       reduceByTraction(p,true);
       // if jumpsquat initiated by stick
 	  if (player[p].cStickJump) {
-		  if (player[p].inputs.cStickAxis[0].y < 0.67) {
+		  if (player[p].inputs.csY[0] < 0.67) {
 			  player[p].phys.jumpType = 0;
 		  }
 	  } else if (player[p].phys.jumpSquatType){
-        if (player[p].inputs.lStickAxis[0].y < 0.67){
+        if (player[p].inputs.lsY[0] < 0.67){
           player[p].phys.jumpType = 0;
         }
       }
@@ -712,7 +712,7 @@ export const baseActionStates = {
       player[p].phys.pos.y += 0.001;
     }
     if (player[p].timer > player[p].charAttributes.jumpSquat){
-      if (player[p].inputs.lStickAxis[2].x * player[p].phys.face >= -0.3){
+      if (player[p].inputs.lsX[2] * player[p].phys.face >= -0.3){
         aS[cS[p]].JUMPF.init(p,player[p].phys.jumpType);
       }
       else {
@@ -720,15 +720,15 @@ export const baseActionStates = {
       }
       return true;
     }
-    else if (player[p].inputs.a[0] && !player[p].inputs.a[1] && (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0)){
+    else if (player[p].inputs.a[0] && !player[p].inputs.a[1] && (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0)){
       aS[cS[p]].GRAB.init(p);
       return true;
     }
-    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lStickAxis[0].y >= 0.8 && player[p].inputs.lStickAxis[3].y < 0.3) || (!(player[p].cStickJump) && (player[p].inputs.cStickAxis[0].y >= 0.8 && player[p].inputs.cStickAxis[3].y < 0.3))){
+    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lsY[0] >= 0.8 && player[p].inputs.lsY[3] < 0.3) || (!(player[p].cStickJump) && (player[p].inputs.csY[0] >= 0.8 && player[p].inputs.csY[3] < 0.3))){
       aS[cS[p]].UPSMASH.init(p);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lStickAxis[0].y > 0.58){
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lsY[0] > 0.58){
       aS[cS[p]].UPSPECIAL.init(p);
       return true;
     }
@@ -758,7 +758,7 @@ export const baseActionStates = {
       player[p].phys.cVel.y += player[p].charAttributes.sHopInitV;
     }
 
-    player[p].phys.cVel.x = (player[p].phys.cVel.x * player[p].charAttributes.groundToAir) + (player[p].inputs.lStickAxis[0].x * player[p].charAttributes.jumpHinitV);
+    player[p].phys.cVel.x = (player[p].phys.cVel.x * player[p].charAttributes.groundToAir) + (player[p].inputs.lsX[0] * player[p].charAttributes.jumpHinitV);
     if (Math.abs(player[p].phys.cVel.x) > player[p].charAttributes.jumpHmaxV){
       player[p].phys.cVel.x = player[p].charAttributes.jumpHmaxV * Math.sign(player[p].phys.cVel.x);
     }
@@ -788,8 +788,8 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {
@@ -831,7 +831,7 @@ export const baseActionStates = {
       player[p].phys.cVel.y += player[p].charAttributes.sHopInitV;
     }
 
-    player[p].phys.cVel.x = (player[p].phys.cVel.x * player[p].charAttributes.groundToAir) + (player[p].inputs.lStickAxis[0].x * player[p].charAttributes.jumpHinitV);
+    player[p].phys.cVel.x = (player[p].phys.cVel.x * player[p].charAttributes.groundToAir) + (player[p].inputs.lsX[0] * player[p].charAttributes.jumpHinitV);
     if (Math.abs(player[p].phys.cVel.x) > player[p].charAttributes.jumpHmaxV){
       player[p].phys.cVel.x = player[p].charAttributes.jumpHmaxV * Math.sign(player[p].phys.cVel.x);
     }
@@ -860,8 +860,8 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {
@@ -915,7 +915,7 @@ export const baseActionStates = {
         aS[cS[p]].GUARDON.init(p);
         return true;
       }
-      else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+      else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
         aS[cS[p]].GUARDON.init(p);
         return true;
       }
@@ -944,11 +944,11 @@ export const baseActionStates = {
         aS[cS[p]].TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         aS[cS[p]].WALK.init(p,true);
         return true;
       }
-      else if (player[p].timer == 5 && player[p].inputs.lStickAxis[0].y < -0.5){
+      else if (player[p].timer == 5 && player[p].inputs.lsY[0] < -0.5){
         aS[cS[p]].SQUATWAIT.init(p);
         return true;
       }
@@ -978,8 +978,8 @@ export const baseActionStates = {
   init : function(p){
     player[p].actionState = "ESCAPEAIR";
     player[p].timer = 0;
-    if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0 || Math.abs(player[p].inputs.lStickAxis[0].y) > 0){
-      var ang = getAngle(player[p].inputs.lStickAxis[0].x,player[p].inputs.lStickAxis[0].y);
+    if (Math.abs(player[p].inputs.lsX[0]) > 0 || Math.abs(player[p].inputs.lsY[0]) > 0){
+      var ang = getAngle(player[p].inputs.lsX[0],player[p].inputs.lsY[0]);
       player[p].phys.cVel.x = 3.1 * Math.cos(ang);
       player[p].phys.cVel.y = 3.1 * Math.sin(ang);
     }
@@ -1091,8 +1091,8 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {
@@ -1146,8 +1146,8 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {
@@ -1228,20 +1228,20 @@ export const baseActionStates = {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if ((player[p].timer == 4 || player[p].timer == 5) && (player[p].inputs.lStickAxis[0].y < -0.65 || player[p].inputs.lStickAxis[1].y < -0.65 || player[p].inputs.lStickAxis[2].y < -0.65) && player[p].inputs.lStickAxis[6].y > -0.3 && player[p].phys.onSurface[0] == 1){
+    if ((player[p].timer == 4 || player[p].timer == 5) && (player[p].inputs.lsY[0] < -0.65 || player[p].inputs.lsY[1] < -0.65 || player[p].inputs.lsY[2] < -0.65) && player[p].inputs.lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
       if(player[p].timer == 5 && player[p].shouldDropThrough == 0) {
 		player[p].shouldDropThrough = 7;
 		return false;
 	  } else {
 	  if (player[p].shouldDropThrough == 0) {
-	  if (player[p].inputs.lStickAxis[2].y < -0.65) {
+	  if (player[p].inputs.lsY[2] < -0.65) {
 	  aS[cS[p]].PASS.init(p);
       return true;
 	  }
-	  if (!(player[p].inputs.lStickAxis[1].y < -0.65) && (player[p].inputs.lStickAxis[0].y < -0.65)) {
+	  if (!(player[p].inputs.lsY[1] < -0.65) && (player[p].inputs.lsY[0] < -0.65)) {
 	  player[p].shouldDropThrough = 6;
 	  return false;
-	  } else if (player[p].inputs.lStickAxis[1].y < -0.65) {
+	  } else if (player[p].inputs.lsY[1] < -0.65) {
 	  player[p].shouldDropThrough = 5;
 	  return false;
 	  }
@@ -1256,7 +1256,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
@@ -1308,7 +1308,7 @@ export const baseActionStates = {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].inputs.lStickAxis[0].y > -0.61){
+    if (player[p].inputs.lsY[0] > -0.61){
       aS[cS[p]].SQUATRV.init(p);
       return true;
     }
@@ -1320,7 +1320,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
@@ -1387,7 +1387,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
@@ -1411,7 +1411,7 @@ export const baseActionStates = {
       aS[cS[p]].SMASHTURN.init(p);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+    else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
       aS[cS[p]].WALK.init(p,true);
       return true;
     }
@@ -1438,7 +1438,7 @@ export const baseActionStates = {
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 
-    player[p].phys.cVel.x = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.djMomentum;
+    player[p].phys.cVel.x = player[p].inputs.lsX[0] * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
     aS[cS[p]].JUMPAERIALF.main(p);
@@ -1493,7 +1493,7 @@ export const baseActionStates = {
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 
-    player[p].phys.cVel.x = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.djMomentum;
+    player[p].phys.cVel.x = player[p].inputs.lsX[0] * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
     aS[cS[p]].JUMPAERIALB.main(p);
@@ -1560,7 +1560,7 @@ export const baseActionStates = {
           if (player[p].phys.cVel.y < -player[p].charAttributes.terminalV){
             player[p].phys.cVel.y = -player[p].charAttributes.terminalV;
           }
-          if (player[p].inputs.lStickAxis[0].y > -0.3){
+          if (player[p].inputs.lsY[0] > -0.3){
             player[p].phys.passFastfall = true;
           }
         }
@@ -1579,8 +1579,8 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {
@@ -1616,7 +1616,7 @@ export const baseActionStates = {
     player[p].phys.powerShielded = false;
 	player[p].cStickJump = false;
     shieldSize(p,true);
-    if (Math.max(player[p].inputs.lAnalog[0],player[p].inputs.rAnalog[0]) == 1){
+    if (Math.max(player[p].inputs.lA[0],player[p].inputs.rA[0]) == 1){
       player[p].phys.powerShieldActive = true;
       player[p].phys.powerShieldReflectActive = true;
     }
@@ -1640,7 +1640,7 @@ export const baseActionStates = {
       if (player[p].timer == 5){
         player[p].phys.powerShieldActive = false;
       }
-      /*if (player[p].timer == 2 && Math.max(player[p].inputs.lAnalog[0],player[p].inputs.rAnalog[0]) == 1){
+      /*if (player[p].timer == 2 && Math.max(player[p].inputs.lA[0],player[p].inputs.rA[0]) == 1){
         player[p].phys.powerShieldActive = true;
       }*/
       if (!aS[cS[p]].GUARDON.interrupt(p)){
@@ -1657,12 +1657,12 @@ export const baseActionStates = {
     }
   },
   interrupt : function(p){
-    if (player[p].inputs.lAnalog[0] < 0.3 && player[p].inputs.rAnalog[0] < 0.3){
+    if (player[p].inputs.lA[0] < 0.3 && player[p].inputs.rA[0] < 0.3){
 		player[p].willUnshield = true;
     }
     if (!player[p].inCSS){
       var j = checkForJump(p);
-      if (j[0] || player[p].inputs.cStickAxis[0].y > 0.65){
+      if (j[0] || player[p].inputs.csY[0] > 0.65){
         player[p].phys.shielding = false;
 		player[p].cStickJump = true;
         aS[cS[p]].KNEEBEND.init(p,j[1]);
@@ -1673,22 +1673,22 @@ export const baseActionStates = {
         aS[cS[p]].GRAB.init(p);
         return true;
       }
-      else if ((player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[4].y > -0.3) || player[p].inputs.cStickAxis[0].y < -0.7){
+      else if ((player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[4] > -0.3) || player[p].inputs.csY[0] < -0.7){
         player[p].phys.shielding = false;
         aS[cS[p]].ESCAPEN.init(p);
         return true;
       }
-      else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.lStickAxis[4].x*player[p].phys.face < 0.3) || player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.7){
+      else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.7 && player[p].inputs.lsX[4]*player[p].phys.face < 0.3) || player[p].inputs.csX[0]*player[p].phys.face > 0.7){
         player[p].phys.shielding = false;
         aS[cS[p]].ESCAPEF.init(p);
         return true;
       }
-      else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.lStickAxis[4].x*player[p].phys.face > -0.3) || player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.7){
+      else if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.7 && player[p].inputs.lsX[4]*player[p].phys.face > -0.3) || player[p].inputs.csX[0]*player[p].phys.face < -0.7){
         player[p].phys.shielding = false;
         aS[cS[p]].ESCAPEB.init(p);
         return true;
       }
-      else if (player[p].timer > 1 && player[p].inputs.lStickAxis[0].y < -0.65 && player[p].inputs.lStickAxis[6].y > -0.3 && player[p].phys.onSurface[0] == 1){
+      else if (player[p].timer > 1 && player[p].inputs.lsY[0] < -0.65 && player[p].inputs.lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
         player[p].phys.shielding = false;
         aS[cS[p]].PASS.init(p);
         return true;
@@ -1751,7 +1751,7 @@ export const baseActionStates = {
 	}
     if (!player[p].inCSS){
       var j = checkForJump(p);
-      if (j[0] || player[p].inputs.cStickAxis[0].y > 0.66){
+      if (j[0] || player[p].inputs.csY[0] > 0.66){
         player[p].phys.shielding = false;
 		player[p].cStickJump = true;
         aS[cS[p]].KNEEBEND.init(p,j[1]);
@@ -1762,27 +1762,27 @@ export const baseActionStates = {
         aS[cS[p]].GRAB.init(p);
         return true;
       }
-      else if ((player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[4].y > -0.3) || player[p].inputs.cStickAxis[0].y < -0.7){
+      else if ((player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[4] > -0.3) || player[p].inputs.csY[0] < -0.7){
         player[p].phys.shielding = false;
         aS[cS[p]].ESCAPEN.init(p);
         return true;
       }
-      else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.lStickAxis[4].x*player[p].phys.face < 0.3) || player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.7){
+      else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.7 && player[p].inputs.lsX[4]*player[p].phys.face < 0.3) || player[p].inputs.csX[0]*player[p].phys.face > 0.7){
         player[p].phys.shielding = false;
         aS[cS[p]].ESCAPEF.init(p);
         return true;
       }
-      else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.lStickAxis[4].x*player[p].phys.face > -0.3) || player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.7){
+      else if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.7 && player[p].inputs.lsX[4]*player[p].phys.face > -0.3) || player[p].inputs.csX[0]*player[p].phys.face < -0.7){
         player[p].phys.shielding = false;
         aS[cS[p]].ESCAPEB.init(p);
         return true;
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.65 && player[p].inputs.lStickAxis[6].y > -0.3 && player[p].phys.onSurface[0] == 1){
+      else if (player[p].inputs.lsY[0] < -0.65 && player[p].inputs.lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
         player[p].phys.shielding = false;
         aS[cS[p]].PASS.init(p);
         return true;
       }
-      else if (player[p].inputs.lAnalog[0] < 0.3 && player[p].inputs.rAnalog[0] < 0.3){
+      else if (player[p].inputs.lA[0] < 0.3 && player[p].inputs.rA[0] < 0.3){
 		console.log(player[p].actionState);
         player[p].phys.shielding = false;
         aS[cS[p]].GUARDOFF.init(p);
@@ -1797,7 +1797,7 @@ export const baseActionStates = {
       }
     }
     else {
-      if (player[p].inputs.lAnalog[0] < 0.3 && player[p].inputs.rAnalog[0] < 0.3){
+      if (player[p].inputs.lA[0] < 0.3 && player[p].inputs.rA[0] < 0.3){
         player[p].phys.shielding = false;
         aS[cS[p]].GUARDOFF.init(p);
         return true;
@@ -1869,7 +1869,7 @@ export const baseActionStates = {
           aS[cS[p]].TILTTURN.init(p);
           return true;
         }
-        else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+        else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
           aS[cS[p]].WALK.init(p,true);
           return true;
         }
@@ -1886,7 +1886,7 @@ export const baseActionStates = {
         }
       }
     } else {
-	  if ((player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[4].y > -0.3) || player[p].inputs.cStickAxis[0].y < -0.7){
+	  if ((player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[4] > -0.3) || player[p].inputs.csY[0] < -0.7){
         player[p].phys.shielding = false;
         aS[cS[p]].ESCAPEN.init(p);
         return true;
@@ -1894,7 +1894,7 @@ export const baseActionStates = {
         player[p].phys.shielding = false;
         aS[cS[p]].KNEEBEND.init(p,j[1]);
         return true;
-      } else if (player[p].inputs.cStickAxis[0].y > 0.66){
+      } else if (player[p].inputs.csY[0] > 0.66){
         player[p].phys.shielding = false;
 		player[p].cStickJump = true;
         aS[cS[p]].KNEEBEND.init(p,j[1]);
@@ -1972,13 +1972,13 @@ export const baseActionStates = {
     }
   },
   interrupt : function(p){
-    if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.2 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.2) || (player[p].inputs.lStickAxis[0].y < -0.2 && player[p].inputs.lStickAxis[1].y >= -0.2) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.2 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.2) || (player[p].inputs.cStickAxis[0].y < -0.2 && player[p].inputs.cStickAxis[1].y >= -0.2)){
+    if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.2 && player[p].inputs.lsX[1]*player[p].phys.face >= -0.2) || (player[p].inputs.lsY[0] < -0.2 && player[p].inputs.lsY[1] >= -0.2) || (player[p].inputs.csX[0]*player[p].phys.face < -0.2 && player[p].inputs.csX[1]*player[p].phys.face >= -0.2) || (player[p].inputs.csY[0] < -0.2 && player[p].inputs.csY[1] >= -0.2)){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
       aS[cS[p]].FALL.init(p,true);
       return true;
     }
-    else if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.65 && player[p].inputs.lStickAxis[1].y <= 0.65)){
+    else if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.65 && player[p].inputs.lsY[1] <= 0.65)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFJUMPQUICK.init(p);
       }
@@ -1987,7 +1987,7 @@ export const baseActionStates = {
       }
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.2 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.2) || (player[p].inputs.lStickAxis[0].y > 0.2 && player[p].inputs.lStickAxis[1].y <= 0.2)){
+    else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.2 && player[p].inputs.lsX[1]*player[p].phys.face <= 0.2) || (player[p].inputs.lsY[0] > 0.2 && player[p].inputs.lsY[1] <= 0.2)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFGETUPQUICK.init(p);
       }
@@ -1996,7 +1996,7 @@ export const baseActionStates = {
       }
       return true;
     }
-    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) || (player[p].inputs.cStickAxis[0].y > 0.65 && player[p].inputs.cStickAxis[1].y <= 0.65)){
+    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) || (player[p].inputs.csY[0] > 0.65 && player[p].inputs.csY[1] <= 0.65)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFATTACKQUICK.init(p);
       }
@@ -2005,7 +2005,7 @@ export const baseActionStates = {
       }
       return true;
     }
-    else if ((player[p].inputs.lAnalog[0] > 0.3 && player[p].inputs.lAnalog[1] <= 0.3) || (player[p].inputs.rAnalog[0] > 0.3 && player[p].inputs.rAnalog[1] <= 0.3) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.8 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.8)){
+    else if ((player[p].inputs.lA[0] > 0.3 && player[p].inputs.lA[1] <= 0.3) || (player[p].inputs.rA[0] > 0.3 && player[p].inputs.rA[1] <= 0.3) || (player[p].inputs.csX[0]*player[p].phys.face > 0.8 && player[p].inputs.csX[1]*player[p].phys.face <= 0.8)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFESCAPEQUICK.init(p);
       }
@@ -2319,10 +2319,10 @@ export const baseActionStates = {
       player[p].phys.invincibleTimer = 120;
 	  aS[cS[p]].ESCAPEAIR.init(p);
       return true;
-    } else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+    } else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       player[p].phys.grounded = false;
       player[p].phys.invincibleTimer = 120;
-	  if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+	  if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       } else {
         aS[cS[p]].JUMPAERIALF.init(p);
@@ -2345,7 +2345,7 @@ export const baseActionStates = {
       aS[cS[p]].FALL.init(p);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3 || Math.abs(player[p].inputs.lStickAxis[0].y) > 0.3 ){
+    else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 || Math.abs(player[p].inputs.lsY[0]) > 0.3 ){
       player[p].phys.grounded = false;
       player[p].phys.invincibleTimer = 120;
       aS[cS[p]].FALL.init(p);
@@ -2431,7 +2431,7 @@ export const baseActionStates = {
 	}
 	if (player[p].timer > 1 && player[p].hit.hitstun == 0 && player[p].tumbleJumpBuffer > 0) {
 	  if (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump)) {
-		if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+		if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
 		return true;
         } else {
@@ -2480,8 +2480,8 @@ export const baseActionStates = {
     if (a[0]){
       aS[cS[p]][a[1]].init(p);
       return true;
-    } else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    } else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {
@@ -2491,7 +2491,7 @@ export const baseActionStates = {
     } else if (b[0]){
       aS[cS[p]][b[1]].init(p);
       return true;
-    } else if ((player[p].inputs.lStickAxis[0].x > 0.7 && player[p].inputs.lStickAxis[1].x < 0.7) || (player[p].inputs.lStickAxis[0].x < -0.7 && player[p].inputs.lStickAxis[1].x > -0.7)) {// || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y < 0.7) || (player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y > -0.7)){
+    } else if ((player[p].inputs.lsX[0] > 0.7 && player[p].inputs.lsX[1] < 0.7) || (player[p].inputs.lsX[0] < -0.7 && player[p].inputs.lsX[1] > -0.7)) {// || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] < 0.7) || (player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[1] > -0.7)){
       aS[cS[p]].FALL.init(p);
       return true;
     } else if (player[p].timer > framesData[cS[p]].DAMAGEFALL){
@@ -2578,7 +2578,7 @@ export const baseActionStates = {
           aS[cS[p]].GUARDON.init(p);
           return true;
         }
-        else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+        else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
           aS[cS[p]].GUARDON.init(p);
           return true;
         }
@@ -2611,7 +2611,7 @@ export const baseActionStates = {
           aS[cS[p]].TILTTURN.init(p);
           return true;
         }
-        else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+        else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
           aS[cS[p]].WALK.init(p,true);
           return true;
         }
@@ -2630,8 +2630,8 @@ export const baseActionStates = {
           aS[cS[p]].ESCAPEAIR.init(p);
           return true;
         }
-        else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-          if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+        else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+          if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
             aS[cS[p]].JUMPAERIALB.init(p);
           }
           else {
@@ -2643,7 +2643,7 @@ export const baseActionStates = {
           aS[cS[p]][b[1]].init(p);
           return true;
         }
-        else if ((player[p].inputs.lStickAxis[0].x > 0.7 && player[p].inputs.lStickAxis[1].x < 0.7) || (player[p].inputs.lStickAxis[0].x < -0.7 && player[p].inputs.lStickAxis[1].x > -0.7) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y < 0.7) || (player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y > -0.7)){
+        else if ((player[p].inputs.lsX[0] > 0.7 && player[p].inputs.lsX[1] < 0.7) || (player[p].inputs.lsX[0] < -0.7 && player[p].inputs.lsX[1] > -0.7) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] < 0.7) || (player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[1] > -0.7)){
           aS[cS[p]].FALL.init(p);
           return true;
         }
@@ -2999,11 +2999,11 @@ export const baseActionStates = {
     }
     else if (player[p].phys.jabReset){
       if (player[p].hit.hitstun <= 0){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7){
+        if (player[p].inputs.lsX[0]*player[p].phys.face < -0.7){
           aS[cS[p]].DOWNSTANDB.init(p);
           return true;
         }
-        else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7){
+        else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.7){
           aS[cS[p]].DOWNSTANDF.init(p);
           return true;
         }
@@ -3020,15 +3020,15 @@ export const baseActionStates = {
         return false;
       }
     }
-    else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7){
+    else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.7){
       aS[cS[p]].DOWNSTANDB.init(p);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7){
+    else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.7){
       aS[cS[p]].DOWNSTANDF.init(p);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].y > 0.7){
+    else if (player[p].inputs.lsY[0] > 0.7){
       aS[cS[p]].DOWNSTANDN.init(p);
       return true;
     }
@@ -3513,19 +3513,19 @@ export const baseActionStates = {
       aS[cS[p]].CATCHATTACK.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) {
+    else if ((player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) {
       aS[cS[p]].THROWUP.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y >= -0.7) || player[p].inputs.cStickAxis[0].y < -0.7){
+    else if ((player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[1] >= -0.7) || player[p].inputs.csY[0] < -0.7){
       aS[cS[p]].THROWDOWN.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.7)) {// || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.7)){
+    else if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.7 && player[p].inputs.lsX[1]*player[p].phys.face >= -0.7)) {// || (player[p].inputs.csX[0]*player[p].phys.face < -0.7 && player[p].inputs.csX[1]*player[p].phys.face >= -0.7)){
       aS[cS[p]].THROWBACK.init(p);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.7)) {// || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.7)){
+    else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.7 && player[p].inputs.lsX[1]*player[p].phys.face <= 0.7)) {// || (player[p].inputs.csX[0]*player[p].phys.face > 0.7 && player[p].inputs.csX[1]*player[p].phys.face <= 0.7)){
       aS[cS[p]].THROWFORWARD.init(p);
       return true;
     }
@@ -3737,8 +3737,8 @@ export const baseActionStates = {
         aS[cS[p]].ESCAPEAIR.init(p);
         return true;
       }
-      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+        if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
           aS[cS[p]].JUMPAERIALB.init(p);
         }
         else {
@@ -3816,8 +3816,8 @@ export const baseActionStates = {
         aS[cS[p]].ESCAPEAIR.init(p);
         return true;
       }
-      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+        if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
           aS[cS[p]].JUMPAERIALB.init(p);
         }
         else {
@@ -3906,8 +3906,8 @@ export const baseActionStates = {
         aS[cS[p]].ESCAPEAIR.init(p);
         return true;
       }
-      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+        if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
           aS[cS[p]].JUMPAERIALB.init(p);
         }
         else {
@@ -3966,7 +3966,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
     }
     else if (b[0]){
@@ -3998,7 +3998,7 @@ export const baseActionStates = {
       aS[cS[p]].TILTTURN.init(p);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
+    else if (Math.abs(player[p].inputs.lsX[0]) > 0.6){
       aS[cS[p]].WALK.init(p,true);
       return true;
     }
@@ -4043,7 +4043,7 @@ export const baseActionStates = {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
     }
     else if (b[0]){
@@ -4075,7 +4075,7 @@ export const baseActionStates = {
       aS[cS[p]].TILTTURN.init(p);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
+    else if (Math.abs(player[p].inputs.lsX[0]) > 0.6){
       aS[cS[p]].WALK.init(p,true);
       return true;
     }
@@ -4306,10 +4306,10 @@ export const baseActionStates = {
   land : function(p){
     if (player[p].hit.hitstun > 0){
       if (player[p].phys.techTimer > 0){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.5){
+        if (player[p].inputs.lsX[0]*player[p].phys.face > 0.5){
           aS[cS[p]].TECHF.init(p);
         }
-        else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.5){
+        else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.5){
           aS[cS[p]].TECHB.init(p);
         }
         else {

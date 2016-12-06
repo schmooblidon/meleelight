@@ -86,7 +86,7 @@ export default {
           player[p].timer = 4;
         }
         if (player[p].timer >= 4 && player[p].timer <= 32){
-          if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < 0){
+          if (player[p].inputs.lsX[0]*player[p].phys.face < 0){
             player[p].timer = 32;
           }
           else if (player[p].phys.inShine >= 22){
@@ -124,8 +124,8 @@ export default {
   interrupt : function(p){
     if (player[p].timer >= 4 && player[p].timer <= 32){
       if (!player[p].phys.doubleJumped){
-        if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y >= 0.7 && player[p].inputs.lStickAxis[3].y < 0.7)){
-          if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+        if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] >= 0.7 && player[p].inputs.lsY[3] < 0.7)){
+          if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
             JUMPAERIALB.init(p);
           }
           else {

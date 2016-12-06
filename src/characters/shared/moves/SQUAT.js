@@ -23,7 +23,7 @@ export default {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer == 4 && (player[p].inputs.lStickAxis[0].y < -0.65 || player[p].inputs.lStickAxis[1].y < -0.65 || player[p].inputs.lStickAxis[2].y < -0.65) && player[p].inputs.lStickAxis[6].y > -0.3 && player[p].phys.onSurface[0] == 1){
+    if (player[p].timer == 4 && (player[p].inputs.lsY[0] < -0.65 || player[p].inputs.lsY[1] < -0.65 || player[p].inputs.lsY[2] < -0.65) && player[p].inputs.lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
       aS[cS[p]].PASS.init(p);
       return true;
     }
@@ -31,7 +31,7 @@ export default {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }

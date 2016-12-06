@@ -21,13 +21,13 @@ export default {
     }
   },
   interrupt : function(p){
-    if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.2 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.2) || (player[p].inputs.lStickAxis[0].y < -0.2 && player[p].inputs.lStickAxis[1].y >= -0.2) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.2 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.2) || (player[p].inputs.cStickAxis[0].y < -0.2 && player[p].inputs.cStickAxis[1].y >= -0.2)){
+    if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.2 && player[p].inputs.lsX[1]*player[p].phys.face >= -0.2) || (player[p].inputs.lsY[0] < -0.2 && player[p].inputs.lsY[1] >= -0.2) || (player[p].inputs.csX[0]*player[p].phys.face < -0.2 && player[p].inputs.csX[1]*player[p].phys.face >= -0.2) || (player[p].inputs.csY[0] < -0.2 && player[p].inputs.csY[1] >= -0.2)){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
       aS[cS[p]].FALL.init(p,true);
       return true;
     }
-    else if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.65 && player[p].inputs.lStickAxis[1].y <= 0.65)){
+    else if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.65 && player[p].inputs.lsY[1] <= 0.65)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFJUMPQUICK.init(p);
       }
@@ -36,7 +36,7 @@ export default {
       }
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.2 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.2) || (player[p].inputs.lStickAxis[0].y > 0.2 && player[p].inputs.lStickAxis[1].y <= 0.2)){
+    else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.2 && player[p].inputs.lsX[1]*player[p].phys.face <= 0.2) || (player[p].inputs.lsY[0] > 0.2 && player[p].inputs.lsY[1] <= 0.2)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFGETUPQUICK.init(p);
       }
@@ -45,7 +45,7 @@ export default {
       }
       return true;
     }
-    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) || (player[p].inputs.cStickAxis[0].y > 0.65 && player[p].inputs.cStickAxis[1].y <= 0.65)){
+    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) || (player[p].inputs.csY[0] > 0.65 && player[p].inputs.csY[1] <= 0.65)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFATTACKQUICK.init(p);
       }
@@ -54,7 +54,7 @@ export default {
       }
       return true;
     }
-    else if ((player[p].inputs.lAnalog[0] > 0.3 && player[p].inputs.lAnalog[1] <= 0.3) || (player[p].inputs.rAnalog[0] > 0.3 && player[p].inputs.rAnalog[1] <= 0.3) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.8 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.8)){
+    else if ((player[p].inputs.lA[0] > 0.3 && player[p].inputs.lA[1] <= 0.3) || (player[p].inputs.rA[0] > 0.3 && player[p].inputs.rA[1] <= 0.3) || (player[p].inputs.csX[0]*player[p].phys.face > 0.8 && player[p].inputs.csX[1]*player[p].phys.face <= 0.8)){
       if (player[p].percent < 100){
         aS[cS[p]].CLIFFESCAPEQUICK.init(p);
       }

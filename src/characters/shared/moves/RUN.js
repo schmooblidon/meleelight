@@ -23,11 +23,11 @@ export default {
       if (player[p].timer < 10){
         footstep[1] = true;
       }
-      var tempMax = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.dMaxV;
+      var tempMax = player[p].inputs.lsX[0] * player[p].charAttributes.dMaxV;
 
       //Current Run Acceleration = ((MaxRunVel * Xinput) - PreviousFrameVelocity) * (1/(MaxRunVel * 2.5)) * (DRAA + (DRAB/Math.sign(Xinput)))
 
-      var tempAcc = ((player[p].charAttributes.dMaxV * player[p].inputs.lStickAxis[0].x) - player[p].phys.cVel.x) * (1/(player[p].charAttributes.dMaxV * 2.5)) * (player[p].charAttributes.dAccA + (player[p].charAttributes.dAccB / Math.sign(player[p].inputs.lStickAxis[0].x)));
+      var tempAcc = ((player[p].charAttributes.dMaxV * player[p].inputs.lsX[0]) - player[p].phys.cVel.x) * (1/(player[p].charAttributes.dMaxV * 2.5)) * (player[p].charAttributes.dAccA + (player[p].charAttributes.dAccB / Math.sign(player[p].inputs.lsX[0])));
 
 
       player[p].phys.cVel.x += tempAcc;
@@ -50,7 +50,7 @@ export default {
   interrupt : function(p){
     var j = checkForJump(p);
     if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
-      if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+      if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
         aS[cS[p]].GRAB.init(p);
       }
       else {
@@ -62,8 +62,8 @@ export default {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
+      player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
         aS[cS[p]].SIDESPECIALGROUND.init(p);
       }
@@ -72,7 +72,7 @@ export default {
       }
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lStickAxis[0].y < -0.58){
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lsY[0] < -0.58){
       aS[cS[p]].DOWNSPECIALGROUND.init(p);
       return true;
     }
@@ -80,15 +80,15 @@ export default {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.62){
+    else if (Math.abs(player[p].inputs.lsX[0]) < 0.62){
       aS[cS[p]].RUNBRAKE.init(p);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.3){
+    else if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
       aS[cS[p]].RUNTURN.init(p);
       return true;
     }

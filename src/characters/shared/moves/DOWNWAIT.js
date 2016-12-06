@@ -28,11 +28,11 @@ export default {
     }
     else if (player[p].phys.jabReset){
       if (player[p].hit.hitstun <= 0){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7){
+        if (player[p].inputs.lsX[0]*player[p].phys.face < -0.7){
           aS[cS[p]].DOWNSTANDB.init(p);
           return true;
         }
-        else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7){
+        else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.7){
           aS[cS[p]].DOWNSTANDF.init(p);
           return true;
         }
@@ -49,15 +49,15 @@ export default {
         return false;
       }
     }
-    else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7){
+    else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.7){
       aS[cS[p]].DOWNSTANDB.init(p);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7){
+    else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.7){
       aS[cS[p]].DOWNSTANDF.init(p);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].y > 0.7){
+    else if (player[p].inputs.lsY[0] > 0.7){
       aS[cS[p]].DOWNSTANDN.init(p);
       return true;
     }

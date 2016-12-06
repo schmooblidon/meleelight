@@ -20,7 +20,7 @@ export default {
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 
-    player[p].phys.cVel.x = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.djMomentum;
+    player[p].phys.cVel.x = player[p].inputs.lsX[0] * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
     aS[cS[p]].JUMPAERIALB.main(p);

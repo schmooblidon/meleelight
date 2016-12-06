@@ -57,7 +57,7 @@ export default {
       WAIT.init(p);
       return true;
     }
-    else if (player[p].timer < 5 && (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0)){
+    else if (player[p].timer < 5 && (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0)){
       if (player[p].phys.cVel.x*player[p].phys.face > player[p].charAttributes.dMaxV){
         player[p].phys.cVel.x = player[p].charAttributes.dMaxV*player[p].phys.face;
       }
@@ -98,7 +98,7 @@ export default {
         TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         WALK.init(p,true);
         return true;
       }

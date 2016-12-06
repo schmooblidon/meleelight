@@ -92,7 +92,7 @@ export default {
         TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         WALK.init(p,true);
         return true;
       }

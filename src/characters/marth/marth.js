@@ -126,7 +126,7 @@ marth.JAB1 = {
           marth.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         marth.WALK.init(p,true);
         return true;
       }
@@ -225,7 +225,7 @@ marth.JAB2 = {
         marth.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         marth.WALK.init(p,true);
         return true;
       }
@@ -311,12 +311,12 @@ marth.DOWNTILT = {
         marth.SMASHTURN.init(p);
         return true;
       }
-      else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3 && Math.abs(player[p].inputs.lStickAxis[0].x) > player[p].inputs.lStickAxis[0].y*-1){
+      else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3 && Math.abs(player[p].inputs.lsX[0]) > player[p].inputs.lsY[0]*-1){
         player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
         marth.TILTTURN.init(p);
         return true;
       }
-      else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.3 && Math.abs(player[p].inputs.lStickAxis[0].x) > player[p].inputs.lStickAxis[0].y*-1){
+      else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.3 && Math.abs(player[p].inputs.lsX[0]) > player[p].inputs.lsY[0]*-1){
         marth.WALK.init(p,true);
         return true;
       }
@@ -414,7 +414,7 @@ marth.UPTILT = {
         marth.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         marth.WALK.init(p,true);
         return true;
       }
@@ -534,8 +534,8 @@ marth.ATTACKAIRF = {
     }
     else if (player[p].timer > 29){
         var a = checkForAerials(p);
-        if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && !player[p].phys.doubleJumped){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+        if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && !player[p].phys.doubleJumped){
+        if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
           marth.JUMPAERIALB.init(p);
         }
         else {
@@ -623,8 +623,8 @@ marth.ATTACKAIRB = {
     }
     else if (player[p].timer > 34){
       var a = checkForAerials(p);
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && !player[p].phys.doubleJumped){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && !player[p].phys.doubleJumped){
+        if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
           marth.JUMPAERIALB.init(p);
         }
         else {
@@ -987,7 +987,7 @@ marth.FORWARDSMASH = {
         marth.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         marth.WALK.init(p,true);
         return true;
       }
@@ -1101,7 +1101,7 @@ marth.UPSMASH = {
         marth.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         marth.WALK.init(p,true);
         return true;
       }
@@ -1242,7 +1242,7 @@ marth.DOWNSMASH = {
         marth.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         marth.WALK.init(p,true);
         return true;
       }
@@ -1347,7 +1347,7 @@ marth.ATTACKDASH = {
       marth.WAIT.init(p);
       return true;
     }
-    else if (player[p].timer < 5 && (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0)){
+    else if (player[p].timer < 5 && (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0)){
       if (player[p].phys.cVel.x*player[p].phys.face > player[p].charAttributes.dMaxV){
         player[p].phys.cVel.x = player[p].charAttributes.dMaxV*player[p].phys.face;
       }
@@ -1388,7 +1388,7 @@ marth.ATTACKDASH = {
         marth.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         marth.WALK.init(p,true);
         return true;
       }
@@ -1477,7 +1477,7 @@ marth.SIDESPECIALGROUND = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALGROUND2UP.init(p);
       }
       else {
@@ -1548,10 +1548,10 @@ marth.SIDESPECIALGROUND2FORWARD = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALGROUND3UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALGROUND3DOWN.init(p);
       }
       else {
@@ -1622,10 +1622,10 @@ marth.SIDESPECIALGROUND2UP = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALGROUND3UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALGROUND3DOWN.init(p);
       }
       else {
@@ -1697,10 +1697,10 @@ marth.SIDESPECIALGROUND3DOWN = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALGROUND4UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALGROUND4DOWN.init(p);
       }
       else {
@@ -1772,10 +1772,10 @@ marth.SIDESPECIALGROUND3FORWARD = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALGROUND4UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALGROUND4DOWN.init(p);
       }
       else {
@@ -1847,10 +1847,10 @@ marth.SIDESPECIALGROUND3UP = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALGROUND4UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALGROUND4DOWN.init(p);
       }
       else {
@@ -2160,7 +2160,7 @@ marth.SIDESPECIALAIR = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALAIR2UP.init(p);
       }
       else {
@@ -2235,10 +2235,10 @@ marth.SIDESPECIALAIR2FORWARD = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALAIR3UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALAIR3DOWN.init(p);
       }
       else {
@@ -2313,10 +2313,10 @@ marth.SIDESPECIALAIR2UP = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALAIR3UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALAIR3DOWN.init(p);
       }
       else {
@@ -2392,10 +2392,10 @@ marth.SIDESPECIALAIR3DOWN = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALAIR4UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALAIR4DOWN.init(p);
       }
       else {
@@ -2471,10 +2471,10 @@ marth.SIDESPECIALAIR3FORWARD = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALAIR4UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALAIR4DOWN.init(p);
       }
       else {
@@ -2550,10 +2550,10 @@ marth.SIDESPECIALAIR3UP = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (player[p].inputs.lStickAxis[0].y > 0.56){
+      if (player[p].inputs.lsY[0] > 0.56){
         marth.SIDESPECIALAIR4UP.init(p);
       }
-      else if (player[p].inputs.lStickAxis[0].y < -0.56){
+      else if (player[p].inputs.lsY[0] < -0.56){
         marth.SIDESPECIALAIR4DOWN.init(p);
       }
       else {
@@ -3342,13 +3342,13 @@ marth.UPSPECIAL = {
         player[p].phys.canWallJump = true;
       }
       if (player[p].timer < 6){
-        if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.7){
-          player[p].phys.upbAngleMultiplier = -player[p].inputs.lStickAxis[0].x * Math.PI/16;
+        if (Math.abs(player[p].inputs.lsX[0]) > 0.7){
+          player[p].phys.upbAngleMultiplier = -player[p].inputs.lsX[0] * Math.PI/16;
         }
       }
       if (player[p].timer == 6){
         player[p].phys.grounded = false;
-        if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.28){
+        if (player[p].inputs.lsX[0] * player[p].phys.face < -0.28){
           player[p].phys.face *= -1;
         }
       }

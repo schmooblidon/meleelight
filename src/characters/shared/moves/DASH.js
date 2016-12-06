@@ -28,13 +28,13 @@ export default {
         drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
       }
       if (player[p].timer > 1){
-        if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.3){
+        if (Math.abs(player[p].inputs.lsX[0]) < 0.3){
           reduceByTraction(p,false);
         }
         else {
-          const tempMax = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.dMaxV;
-          //var tempAcc = (player[p].charAttributes.dAcc - (1 - Math.abs(player[p].inputs.lStickAxis[0].x))*(player[p].charAttributes.dAcc))*player[p].phys.face;
-          const tempAcc = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.dAccA;
+          const tempMax = player[p].inputs.lsX[0] * player[p].charAttributes.dMaxV;
+          //var tempAcc = (player[p].charAttributes.dAcc - (1 - Math.abs(player[p].inputs.lsX[0]))*(player[p].charAttributes.dAcc))*player[p].phys.face;
+          const tempAcc = player[p].inputs.lsX[0] * player[p].charAttributes.dAccA;
 
           player[p].phys.cVel.x += tempAcc;
           if ((tempMax > 0 && player[p].phys.cVel.x > tempMax) || (tempMax < 0 && player[p].phys.cVel.x < tempMax)){
@@ -61,17 +61,17 @@ export default {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       player[p].phys.cVel.x *= 0.25;
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
-      if (player[p].timer < 4 && player[p].inputs.lStickAxis[0].x*player[p].phys.face >= 0.8){
+      if (player[p].timer < 4 && player[p].inputs.lsX[0]*player[p].phys.face >= 0.8){
         player[p].phys.cVel.x *= 0.25;
         aS[cS[p]].FORWARDSMASH.init(p);
       }
-      else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+      else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
         aS[cS[p]].GRAB.init(p);
       }
       else {
@@ -83,8 +83,8 @@ export default {
       aS[cS[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
+    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
+      player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
         aS[cS[p]].SIDESPECIALGROUND.init(p);
       }
@@ -98,11 +98,11 @@ export default {
       aS[cS[p]].SMASHTURN.init(p);
       return true;
     }
-    else if (player[p].timer > player[p].charAttributes.dashFrameMax && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.79 && player[p].inputs.lStickAxis[2].x * player[p].phys.face < 0.3){
+    else if (player[p].timer > player[p].charAttributes.dashFrameMax && player[p].inputs.lsX[0] * player[p].phys.face > 0.79 && player[p].inputs.lsX[2] * player[p].phys.face < 0.3){
       aS[cS[p]].DASH.init(p);
       return true;
     }
-    else if (player[p].timer > player[p].charAttributes.dashFrameMin && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.62){
+    else if (player[p].timer > player[p].charAttributes.dashFrameMin && player[p].inputs.lsX[0] * player[p].phys.face > 0.62){
       aS[cS[p]].RUN.init(p);
       return true;
     }

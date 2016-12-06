@@ -12,8 +12,8 @@ export default {
   init : function(p){
     player[p].actionState = "ESCAPEAIR";
     player[p].timer = 0;
-    if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0 || Math.abs(player[p].inputs.lStickAxis[0].y) > 0){
-      var ang = getAngle(player[p].inputs.lStickAxis[0].x,player[p].inputs.lStickAxis[0].y);
+    if (Math.abs(player[p].inputs.lsX[0]) > 0 || Math.abs(player[p].inputs.lsY[0]) > 0){
+      var ang = getAngle(player[p].inputs.lsX[0],player[p].inputs.lsY[0]);
       player[p].phys.cVel.x = 3.1 * Math.cos(ang);
       player[p].phys.cVel.y = 3.1 * Math.sin(ang);
     }

@@ -39,7 +39,7 @@ export default {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
     }
     else if (b[0]){
@@ -71,7 +71,7 @@ export default {
       aS[cS[p]].TILTTURN.init(p);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
+    else if (Math.abs(player[p].inputs.lsX[0]) > 0.6){
       aS[cS[p]].WALK.init(p,true);
       return true;
     }

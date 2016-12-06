@@ -139,7 +139,7 @@ puff.JAB1 = {
         puff.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         puff.WALK.init(p,true);
         return true;
       }
@@ -223,7 +223,7 @@ puff.JAB2 = {
         puff.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         puff.WALK.init(p,true);
         return true;
       }
@@ -301,12 +301,12 @@ puff.DOWNTILT = {
         puff.SMASHTURN.init(p);
         return true;
       }
-      else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3 && Math.abs(player[p].inputs.lStickAxis[0].x) > player[p].inputs.lStickAxis[0].y*-1){
+      else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3 && Math.abs(player[p].inputs.lsX[0]) > player[p].inputs.lsY[0]*-1){
         player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
         puff.TILTTURN.init(p);
         return true;
       }
-      else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.3 && Math.abs(player[p].inputs.lStickAxis[0].x) > player[p].inputs.lStickAxis[0].y*-1){
+      else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.3 && Math.abs(player[p].inputs.lsX[0]) > player[p].inputs.lsY[0]*-1){
         puff.WALK.init(p,true);
         return true;
       }
@@ -467,7 +467,7 @@ puff.ATTACKAIRF = {
     }
     else if (player[p].timer > 34){
       var a = checkForAerials(p);
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && player[p].phys.jumpsUsed < 5){
+      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
         puff.JUMPAERIALF.init(p);
         return true;
       }
@@ -544,7 +544,7 @@ puff.ATTACKAIRB = {
     }
     else if (player[p].timer > 30){
       var a = checkForAerials(p);
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && player[p].phys.jumpsUsed < 5){
+      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
         puff.JUMPAERIALF.init(p);
         return true;
       }
@@ -618,7 +618,7 @@ puff.ATTACKAIRU = {
     }
     else if (player[p].timer > 37){
       var a = checkForAerials(p);
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && player[p].phys.jumpsUsed < 5){
+      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
         puff.JUMPAERIALF.init(p);
         return true;
       }
@@ -955,7 +955,7 @@ puff.UPSMASH = {
         puff.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         puff.WALK.init(p,true);
         return true;
       }
@@ -1063,7 +1063,7 @@ puff.DOWNSMASH = {
         puff.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         puff.WALK.init(p,true);
         return true;
       }
@@ -1117,7 +1117,7 @@ puff.ATTACKDASH = {
       puff.WAIT.init(p);
       return true;
     }
-    else if (player[p].timer < 5 && (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0)){
+    else if (player[p].timer < 5 && (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0)){
       if (player[p].phys.cVel.x*player[p].phys.face > player[p].charAttributes.dMaxV){
         player[p].phys.cVel.x = player[p].charAttributes.dMaxV*player[p].phys.face;
       }
@@ -1158,7 +1158,7 @@ puff.ATTACKDASH = {
         puff.TILTTURN.init(p);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
+      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
         puff.WALK.init(p,true);
         return true;
       }
@@ -1424,7 +1424,7 @@ puff.NEUTRALSPECIALGROUND = {
         }
         else {
           player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
-          if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.49){
+          if (player[p].inputs.lsX[0]*player[p].phys.face < -0.49){
             puff.NEUTRALSPECIALGROUNDTURN.init(p);
             player[p].colourOverlayBool = false;
           }
@@ -1551,7 +1551,7 @@ puff.SIDESPECIALAIR = {
       else {
         if (player[p].timer == 12){
           player[p].phys.fastfalled = false;
-          player[p].phys.upbAngleMultiplier = player[p].inputs.lStickAxis[0].y * Math.PI*(20/180);
+          player[p].phys.upbAngleMultiplier = player[p].inputs.lsY[0] * Math.PI*(20/180);
            //decide angle
            //max 20 degrees
           player[p].phys.cVel.y = 0;
@@ -1653,7 +1653,7 @@ puff.SIDESPECIALGROUND = {
       else {
         if (player[p].timer == 12){
           player[p].phys.fastfalled = false;
-          player[p].phys.upbAngleMultiplier = player[p].inputs.lStickAxis[0].y * Math.PI*(20/180);
+          player[p].phys.upbAngleMultiplier = player[p].inputs.lsY[0] * Math.PI*(20/180);
            //decide angle
            //max 20 degrees
           player[p].phys.cVel.y = 0;
@@ -3105,11 +3105,11 @@ puff.DOWNATTACK = {
 
 // ------- PUFF JUMPS ---------
 window.puffMultiJumpDrift = function(p){
-  if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.3){
+  if (Math.abs(player[p].inputs.lsX[0]) < 0.3){
     var tempMax = 0
   }
   else {
-    var tempMax = 1.08 * player[p].inputs.lStickAxis[0].x;
+    var tempMax = 1.08 * player[p].inputs.lsX[0];
   }
 
   if ((tempMax < 0 && player[p].phys.cVel.x < tempMax) || (tempMax > 0 && player[p].phys.cVel.x > tempMax)){
@@ -3126,12 +3126,12 @@ window.puffMultiJumpDrift = function(p){
       }
     }
   }
-  else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3 && ((tempMax < 0 && player[p].phys.cVel.x > tempMax) || (tempMax > 0 && player[p].phys.cVel.x < tempMax))){
-    player[p].phys.cVel.x += (0.072 * player[p].inputs.lStickAxis[0].x);
+  else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 && ((tempMax < 0 && player[p].phys.cVel.x > tempMax) || (tempMax > 0 && player[p].phys.cVel.x < tempMax))){
+    player[p].phys.cVel.x += (0.072 * player[p].inputs.lsX[0]);
   }
 
 
-  if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.3){
+  if (Math.abs(player[p].inputs.lsX[0]) < 0.3){
     if (player[p].phys.cVel.x > 0){
       player[p].phys.cVel.x -= player[p].charAttributes.airFriction;
       if (player[p].phys.cVel.x < 0){
@@ -3148,7 +3148,7 @@ window.puffMultiJumpDrift = function(p){
 };
 
 window.puffNextJump = function(p){
-  if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3 && Math.sign(player[p].inputs.lStickAxis[0].x) != player[p].phys.face){
+  if (Math.abs(player[p].inputs.lsX[0]) > 0.3 && Math.sign(player[p].inputs.lsX[0]) != player[p].phys.face){
     puff["AERIALTURN"+(1+player[p].phys.jumpsUsed)].init(p);
   }
   else {
@@ -3169,7 +3169,7 @@ puff.JUMPAERIAL1 = {
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.cVel.y = 1.65;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.JUMPAERIAL1.main(p);
@@ -3196,7 +3196,7 @@ puff.JUMPAERIAL1 = {
       puff[b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.7)){
+    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lsY[0] > 0.7)){
       puffNextJump(p);
       return true;
     }
@@ -3223,7 +3223,7 @@ puff.JUMPAERIAL2 = {
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.59;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.JUMPAERIAL2.main(p);
@@ -3250,7 +3250,7 @@ puff.JUMPAERIAL2 = {
       puff[b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.7)){
+    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lsY[0] > 0.7)){
       puffNextJump(p);
       return true;
     }
@@ -3277,7 +3277,7 @@ puff.JUMPAERIAL3 = {
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.47;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.JUMPAERIAL3.main(p);
@@ -3305,7 +3305,7 @@ puff.JUMPAERIAL3 = {
       puff[b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.7)){
+    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lsY[0] > 0.7)){
       puffNextJump(p);
       return true;
     }
@@ -3332,7 +3332,7 @@ puff.JUMPAERIAL4 = {
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.36;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.JUMPAERIAL4.main(p);
@@ -3360,7 +3360,7 @@ puff.JUMPAERIAL4 = {
       puff[b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.7)){
+    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lsY[0] > 0.7)){
       puffNextJump(p);
       return true;
     }
@@ -3387,7 +3387,7 @@ puff.JUMPAERIAL5 = {
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.25;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.JUMPAERIAL5.main(p);
@@ -3438,7 +3438,7 @@ puff.AERIALTURN1 = {
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.cVel.y = 1.65;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.AERIALTURN1.main(p);
@@ -3494,7 +3494,7 @@ puff.AERIALTURN2 = {
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.59;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.AERIALTURN2.main(p);
@@ -3550,7 +3550,7 @@ puff.AERIALTURN3 = {
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.47;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.AERIALTURN3.main(p);
@@ -3607,7 +3607,7 @@ puff.AERIALTURN4 = {
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.36;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.AERIALTURN4.main(p);
@@ -3664,7 +3664,7 @@ puff.AERIALTURN5 = {
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.25;
-    player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
+    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
     puff.AERIALTURN5.main(p);

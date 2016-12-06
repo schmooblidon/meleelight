@@ -28,7 +28,7 @@ export default {
       aS[cS[p]].SQUAT.init(p);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.3){
+    else if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
       aS[cS[p]].RUNTURN.init(p);
       return true;
     }

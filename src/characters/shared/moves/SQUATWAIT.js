@@ -26,7 +26,7 @@ export default {
     const t = checkForTilts(p);
     const s = checkForSmashes(p);
     const j = checkForJump(p);
-    if (player[p].inputs.lStickAxis[0].y > -0.61){
+    if (player[p].inputs.lsY[0] > -0.61){
       aS[cS[p]].SQUATRV.init(p);
       return true;
     }
@@ -38,7 +38,7 @@ export default {
       aS[cS[p]].GUARDON.init(p);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       aS[cS[p]].GUARDON.init(p);
       return true;
     }

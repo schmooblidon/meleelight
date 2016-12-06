@@ -21,7 +21,7 @@ export default {
       player[p].phys.cVel.y += player[p].charAttributes.sHopInitV;
     }
 
-    player[p].phys.cVel.x = (player[p].phys.cVel.x * player[p].charAttributes.groundToAir) + (player[p].inputs.lStickAxis[0].x * player[p].charAttributes.jumpHinitV);
+    player[p].phys.cVel.x = (player[p].phys.cVel.x * player[p].charAttributes.groundToAir) + (player[p].inputs.lsX[0] * player[p].charAttributes.jumpHinitV);
     if (Math.abs(player[p].phys.cVel.x) > player[p].charAttributes.jumpHmaxV){
       player[p].phys.cVel.x = player[p].charAttributes.jumpHmaxV * Math.sign(player[p].phys.cVel.x);
     }
@@ -50,8 +50,8 @@ export default {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {

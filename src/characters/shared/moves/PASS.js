@@ -30,7 +30,7 @@ export default {
           if (player[p].phys.cVel.y < -player[p].charAttributes.terminalV){
             player[p].phys.cVel.y = -player[p].charAttributes.terminalV;
           }
-          if (player[p].inputs.lStickAxis[0].y > -0.3){
+          if (player[p].inputs.lsY[0] > -0.3){
             player[p].phys.passFastfall = true;
           }
         }
@@ -49,8 +49,8 @@ export default {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {

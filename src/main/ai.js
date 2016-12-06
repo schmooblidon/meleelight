@@ -29,14 +29,14 @@ export function NearestEnemy(cpu,p){
   return nearestEnemy;
 }
 export function generalAI(i) {
-  player[i].inputs.lStickAxis[0].x = 0;
-  player[i].inputs.lStickAxis[0].y = 0;
+  player[i].inputs.lsX[0] = 0;
+  player[i].inputs.lsY[0] = 0;
   player[i].inputs.x[0] = false;
   player[i].inputs.b[0] = false;
   player[i].inputs.l[0] = 0;
-  player[i].inputs.lAnalog[0] = 0;
-  player[i].inputs.cStickAxis[0].x = 0;
-  player[i].inputs.cStickAxis[0].y = 0;
+  player[i].inputs.lA[0] = 0;
+  player[i].inputs.csX[0] = 0;
+  player[i].inputs.csY[0] = 0;
   player[i].inputs.a[0] = false;
   var willWalk = false;
   const paction = player[i].actionState;
@@ -79,13 +79,13 @@ export function generalAI(i) {
 
     var randomSeed = Math.floor((Math.random() * 10) + 1);
     if (randomSeed <= 2) {
-      player[i].inputs.lStickAxis[0].x = 1.0;
+      player[i].inputs.lsX[0] = 1.0;
     } else if (randomSeed <= 4) {
-      player[i].inputs.lStickAxis[0].x = -1.0;
+      player[i].inputs.lsX[0] = -1.0;
     } else if (randomSeed <= 6) {
-      player[i].inputs.lStickAxis[0].y = 1.0;
+      player[i].inputs.lsY[0] = 1.0;
     } else if (randomSeed <= 8) {
-      player[i].inputs.lStickAxis[0].y = -1.0;
+      player[i].inputs.lsY[0] = -1.0;
     } else {
       player[i].inputs.a[0] = 1.0;
     }
@@ -96,7 +96,7 @@ export function generalAI(i) {
     player[i].currentSubaction = "NONE";
   } else if (player[i].currentAction == "DROPTHROUGHPLATFORM") {
     //if (ptimer <= 2) {
-    player[i].inputs.lStickAxis[0].y = -1.0;
+    player[i].inputs.lsY[0] = -1.0;
     //player[i].currentAction = "NONE";
     //}
     return;
@@ -115,7 +115,8 @@ export function generalAI(i) {
       player[i].currentSubaction = "NONE";
     } else {
       if (paction == "WALK") {
-        player[i].inputs.lStickAxis[0] = player[i].phys.pos.face * -1.0;
+        //changed from phys.pos.face to phys.face
+        player[i].inputs.lsX[0] = player[i].phys.face * -1.0;
       }
       if (paction == "SMASHTURN") {
         if (ptimer < 2) {
@@ -124,21 +125,21 @@ export function generalAI(i) {
       }
       if (player[i].currentSubaction == "LEFT") {
         if (pgrounded) {
-          player[i].inputs.lStickAxis[0].x = -1.0;
+          player[i].inputs.lsX[0] = -1.0;
         } else {
-          player[i].inputs.lStickAxis[0].x = -1.0;
+          player[i].inputs.lsX[0] = -1.0;
           if (ptimer == 2 && player[i].phys.cVel.y <= 0) { //fast fall
-            player[i].inputs.lStickAxis[0].y = -1.0;
+            player[i].inputs.lsY[0] = -1.0;
           }
           return;
         }
       } else {
         if (pgrounded) {
-          player[i].inputs.lStickAxis[0].x = 1.0;
+          player[i].inputs.lsX[0] = 1.0;
         } else {
-          player[i].inputs.lStickAxis[0].x = -1.0;
+          player[i].inputs.lsX[0] = -1.0;
           if (ptimer == 2 && player[i].phys.cVel.y <= 0) { //fast fall
-            player[i].inputs.lStickAxis[0].y = -1.0;
+            player[i].inputs.lsY[0] = -1.0;
           }
           return;
         }
@@ -160,14 +161,14 @@ export function generalAI(i) {
       var randomSeed = Math.floor((Math.random() * 10) + 1);
       //randomSeed = 5;
       if (randomSeed <= 3) {
-        player[i].inputs.lStickAxis[0].y = -1.0;
+        player[i].inputs.lsY[0] = -1.0;
         player[i].currentAction = "DROPTHROUGHPLATFORM";
         return;
       } else if (randomSeed <= 5) {
         player[i].currentAction = "SHIELD";
         player[i].inputs.l[0] = 1.0;
         if (player[i].inputs.l[0]) {
-          player[i].inputs.lAnalog[0] = 1;
+          player[i].inputs.lA[0] = 1;
         }
         return;
       } else if (randomSeed >= 6) {
@@ -175,11 +176,11 @@ export function generalAI(i) {
         var randomSeed = Math.floor((Math.random() * 2) + 1);
         if (randomSeed == 1) {
           player[i].currentSubaction = "LEFT";
-          player[i].inputs.lStickAxis[0].x = -1.0;
+          player[i].inputs.lsX[0] = -1.0;
           return;
         } else {
           player[i].currentSubaction = "RIGHT";
-          player[i].inputs.lStickAxis[0].x = 1.0;
+          player[i].inputs.lsX[0] = 1.0;
           return;
         }
       }
@@ -193,16 +194,16 @@ export function generalAI(i) {
     } else {
       //is shielding
       var inputs = CPUShield(player[i], i);
-      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
+      player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lsY[0] = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
+      player[i].inputs.csX[0] = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.csY[0] = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
-        player[i].inputs.lAnalog[0] = 1;
+        player[i].inputs.lA[0] = 1;
       }
       return;
     }
@@ -235,33 +236,33 @@ export function generalAI(i) {
     } else {
       var inputs = CPULedge(player[i], i);
       //do inputs
-      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
+      player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lsY[0] = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
+      player[i].inputs.csX[0] = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.csY[0] = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
-        player[i].inputs.lAnalog[0] = 1;
+        player[i].inputs.lA[0] = 1;
       }
       return;
     }
   }
   if (pdiff == 4 && player[i].hit.hitlag > 0 && isOffstage(player[i]) && !(pgrounded)) { //SDI
     var inputs = CPUSDItoStage(player[i], i);
-    player[i].inputs.lAnalog[0] = 1;
+    player[i].inputs.lA[0] = 1;
     player[i].inputs.l[0] = true;
-    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
+    player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lsY[0] = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     return;
   }
   if (!(player[i].grounded) && isOffstage(player[i]) && player[i].currentAction == "NONE") {
     var inputs = CPUrecover(player[i], i);
     //do inputs
-    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
+    player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lsY[0] = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     player[i].inputs.x[0] = inputs.x;
     player[i].inputs.b[0] = inputs.b;
   }
@@ -271,14 +272,14 @@ export function generalAI(i) {
       player[i].currentSubaction = "NONE";
     } else {
       if (player[i].currentSubaction == "REVERSE") { //smash turn
-        player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
+        player[i].inputs.lsX[0] = -1.0 * player[i].phys.face;
         player[i].currentSubaction = "UPTILT";
         return;
       } else if (player[i].currentSubaction == "UPTILT" && ptimer > 1) {
-        player[i].inputs.lStickAxis[0].x = 0.0;
+        player[i].inputs.lsX[0] = 0.0;
         player[i].currentAction = "NONE";
         player[i].currentSubaction = "NONE";
-        player[i].inputs.lStickAxis[0].y = .50;
+        player[i].inputs.lsY[0] = .50;
         player[i].inputs.a[0] = true;
         return;
       }
@@ -311,9 +312,9 @@ export function generalAI(i) {
       }
       var randomSeed = Math.floor((Math.random() * (2 + extra)) + 1);
       if (randomSeed == 1) { //left
-        player[i].inputs.lStickAxis[0].x = -1.0;
+        player[i].inputs.lsX[0] = -1.0;
       } else if (randomSeed == 2) { //right
-        player[i].inputs.lStickAxis[0].x = 1.0;
+        player[i].inputs.lsX[0] = 1.0;
       } else { //jump
         player[i].inputs.x[0] = true;
       }
@@ -323,23 +324,23 @@ export function generalAI(i) {
     //console.log("SS");
     player[i].currentAction = "TECH";
     var inputs = CPUTech(player[i], i);
-    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
     player[i].inputs.l[0] = inputs.l;
     if (player[i].inputs.l[0]) {
-      player[i].inputs.lAnalog[0] = 1;
+      player[i].inputs.lA[0] = 1;
     }
     return;
     //}
   }
   //if (paction == "DAMAGEFALL") {
   //	var inputs = CPUTumble(player[i],i);
-  //	player[i].inputs.lStickAxis[0].x = inputs.lstickX;
+  //	player[i].inputs.lsX[0] = inputs.lstickX;
   //}
   if (paction == "DOWNWAIT") { //missed tech options
     player[i].currentAction = "MISSEDTECH";
     var inputs = CPUMissedTech(player[i], i);
-    player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
-    player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
+    player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+    player[i].inputs.lsY[0] = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
     player[i].inputs.a[0] = inputs.a;
   }
   if (paction != "DOWNWAIT") {
@@ -350,32 +351,32 @@ export function generalAI(i) {
       player[i].lastMash += 1;
       if (player[i].lastMash > (8 - (2 * (pdiff)))) {
         player[i].lastMash = 0;
-        player[i].inputs.lStickAxis[0].y = 1.0;
-        player[i].inputs.lAnalog[0] = 1;
+        player[i].inputs.lsY[0] = 1.0;
+        player[i].inputs.lA[0] = 1;
         if (!player[i].inputs.a[1]) {
           player[i].inputs.a[0] = true;
           player[i].inputs.x[0] = true;
-          player[i].inputs.lStickAxis[0].x = -1.0;
-          player[i].inputs.cStickAxis[0].x = -1.0;
+          player[i].inputs.lsX[0] = -1.0;
+          player[i].inputs.csX[0] = -1.0;
           //player[i].inputs.r[0] = true;
         } else {
           player[i].inputs.y[0] = true;
-          player[i].inputs.lStickAxis[0].x = 1.0;
+          player[i].inputs.lsX[0] = 1.0;
           player[i].inputs.b[0] = true;
-          player[i].inputs.cStickAxis[0].x = 1.0;
+          player[i].inputs.csX[0] = 1.0;
           //player[i].inputs.l[0] = true;
         }
     }
       }
     if (player[i].currentAction == "WAVESHINEANY") {
       var inputs = CPUWaveshineAny(player[i], i);
-      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
+      player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lsY[0] = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
       if (player[i].inputs.l[0]) {
-        player[i].inputs.lAnalog[0] = 1;
+        player[i].inputs.lA[0] = 1;
       }
       return;
     }
@@ -383,16 +384,16 @@ export function generalAI(i) {
         "GRABRELEASE")) {
       player[i].currentAction = "GRABRELEASE";
       var inputs = CPUGrabRelease(player[i], i);
-      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
+      player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lsY[0] = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
+      player[i].inputs.csX[0] = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.csY[0] = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
-        player[i].inputs.lAnalog[0] = 1;
+        player[i].inputs.lA[0] = 1;
       }
       return;
     }
@@ -404,7 +405,7 @@ export function generalAI(i) {
       player[i].currentAction = "NONE";
     }
     if (paction == "REBIRTHWAIT") {
-      player[i].inputs.lStickAxis[0].y = -1.0;
+      player[i].inputs.lsY[0] = -1.0;
     }
     if ((player[i].currentAction == "NONE" && (paction == "CLIFFWAIT")) || (player[i].currentAction ==
         "LEDGEDASH" || player[i].currentAction == "LEDGEAIRATTACK2" || player[i].currentAction == "LEDGEAIRATTACK" ||
@@ -413,22 +414,22 @@ export function generalAI(i) {
         "TOURNAMENTWINNER")) {
       var inputs = CPULedge(player[i], i);
       //do inputs
-      player[i].inputs.lStickAxis[0].x = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
-      player[i].inputs.lStickAxis[0].y = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
+      player[i].inputs.lsX[0] = isNaN(inputs.lstickX) ? 0 : inputs.lstickX;
+      player[i].inputs.lsY[0] = isNaN(inputs.lstickY) ? 0 : inputs.lstickY;
       player[i].inputs.x[0] = inputs.x;
       player[i].inputs.b[0] = inputs.b;
       player[i].inputs.l[0] = inputs.l;
-      player[i].inputs.cStickAxis[0].x = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
-      player[i].inputs.cStickAxis[0].y = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
+      player[i].inputs.csX[0] = isNaN(inputs.cstickX) ? 0 : inputs.cstickX;
+      player[i].inputs.csY[0] = isNaN(inputs.cstickY) ? 0 : inputs.cstickY;
       player[i].inputs.a[0] = inputs.a;
       if (player[i].inputs.l[0]) {
-        player[i].inputs.lAnalog[0] = 1;
+        player[i].inputs.lA[0] = 1;
       }
       return;
     }
   }
   if (player[i].inputs.l[0]) {
-    player[i].inputs.lAnalog[0] = 1;
+    player[i].inputs.lA[0] = 1;
   }
   if (pdiff > 1) {
     var distx = player[i].phys.pos.x - player[nearest].phys.pos.x;
@@ -437,7 +438,7 @@ export function generalAI(i) {
         paction == "OTTOTTOWAIT" || paction == "WALK")) { //walk towards enemy
       if (Math.abs(distx) >= 23 && (player[nearest].phys.grounded || isAboveGround(player[
           nearest].phys.pos.x, player[nearest].phys.pos.y)[0])) {
-        player[i].inputs.lStickAxis[0].x = 0.75 * (-1.0 * (Math.sign(distx)));
+        player[i].inputs.lsX[0] = 0.75 * (-1.0 * (Math.sign(distx)));
       }
     }
     //console.log(player[i].currentAction);
@@ -465,19 +466,19 @@ export function marthAI(i) {
   const pisoffstage = isOffstage(player[i]);
   const ddlength = 15;
   if (player[i].currentAction == "LEDGESTALL") {
-    player[i].inputs.lStickAxis[0].x = 0.0;
+    player[i].inputs.lsX[0] = 0.0;
     if (player[i].currentSubaction == "FALL") {
       if (ptimer == 7) {
-        //player[i].inputs.lStickAxis[0].y = -1.0;
-        player[i].inputs.lStickAxis[0].y = -1.0;
+        //player[i].inputs.lsY[0] = -1.0;
+        player[i].inputs.lsY[0] = -1.0;
         player[i].inputs.x[0] = 1.0;
         player[i].currentSubaction = "GRAB";
       } else {
-        player[i].inputs.lStickAxis[0].y = -1.0;
+        player[i].inputs.lsY[0] = -1.0;
       }
       return;
     } else if (player[i].currentSubaction == "GRAB") {
-      player[i].inputs.lStickAxis[0].x = 0.0;
+      player[i].inputs.lsX[0] = 0.0;
       if (paction.substr(0, 4) == "CLIFF" && paction == "CLIFFCATCH") { //end of action
         player[i].currentAction = "NONE";
         player[i].currentSubaction = "NONE";
@@ -488,7 +489,7 @@ export function marthAI(i) {
   var nearest = NearestEnemy(player[i], i);
   //if (player[i].currentAction == "NONE") {
   //if (paction == "FALL" || paction == "JUMP") {
-  //	  player[i].inputs.lStickAxis[0].x = player[i].phys.pos.face;
+  //	  player[i].inputs.lsX[0] = player[i].phys.pos.face;
   //	  player[i].inputs.a[0] = true;
   //	  return;
   //}
@@ -502,7 +503,7 @@ export function marthAI(i) {
     if (paction === "FALL") {
       player[i].currentAction = "NONE";
       player[i].currentSubaction = "NONE";
-    } else if ((paction == "LANDING" || paction == "WAIT")&& player[i].inputs.lStickAxis[1].x === 0.0) {
+    } else if ((paction == "LANDING" || paction == "WAIT")&& player[i].inputs.lsX[1] === 0.0) {
       player[i].currentAction = "NONE";
       player[i].currentSubaction = "NONE";
     }
@@ -510,7 +511,7 @@ export function marthAI(i) {
   if (pdiff >= 3) {
     if (player[i].currentAction == "DASHDANCING" || player[i].currentAction == "DASHDANCEBACK") {
       if (!isAboveGround((3 * pcyx) + px,py)) {
-        player[i].inputs.lStickAxis[0].x = -1.0 * Math.sign(pcyx);
+        player[i].inputs.lsX[0] = -1.0 * Math.sign(pcyx);
         player[i].currentAction = "DASHDANCE";
         player[i].currentSubaction = "NONE";
         return;
@@ -525,14 +526,14 @@ export function marthAI(i) {
           let randomSeed = Math.floor((Math.random() * 100) + 1);
           if (randomSeed <= 80 + ((pdiff - 3) * 20)) {
             player[i].inputs.l[0] = true;
-            player[i].inputs.lAnalog[0] = 1.0;
+            player[i].inputs.lA[0] = 1.0;
             return;
           }
         } else if (pcyy <= 0 && !(player[i].phys.fastfalled)) {
           if (!(pisoffstage)) { //fast fall
             let randomSeed = Math.floor((Math.random() * 100) + 1);
             if (randomSeed <= 50 + ((pdiff - 3) * 20)) {
-              player[i].inputs.lStickAxis[0].y = -1.0;
+              player[i].inputs.lsY[0] = -1.0;
               return;
             }
           }
@@ -545,7 +546,7 @@ export function marthAI(i) {
         if (randomSeed <= 3) {
           if (Math.abs(distx) < 10 && Math.abs(disty) < 5 && pface == Math.sign(distx)) {
             player[i].currentAction = "PIVOTFSMASH";
-            player[i].inputs.lStickAxis[0].x = -1.0 * pface;
+            player[i].inputs.lsX[0] = -1.0 * pface;
             return;
           } else { //can't pivot f-samash
             player[i].currentAction = "WAVEDASHANY"; //not any
@@ -560,7 +561,7 @@ export function marthAI(i) {
         } else if (randomSeed <= 38) {
           //extend dashdance
           player[i].currentAction = "DASHDANCEBACK";
-          player[i].inputs.lStickAxis[0].x = pface * -1.0;
+          player[i].inputs.lsX[0] = pface * -1.0;
           if (pface == 1.0) {
             player[i].currentSubaction = "LEFT";
           } else {
@@ -573,12 +574,12 @@ export function marthAI(i) {
           return;
         } else {
           //dash dance
-          player[i].inputs.lStickAxis[0].x = pface * -1.0;
+          player[i].inputs.lsX[0] = pface * -1.0;
           return;
         }
       } else {
-        //player[i].inputs.lStickAxis[0].x = player[i].inputs.lStickAxis[1].x;
-        player[i].inputs.lStickAxis[0].x = pface;
+        //player[i].inputs.lsX[0] = player[i].inputs.lsX[1];
+        player[i].inputs.lsX[0] = pface;
         return;
       }
     } //end of dashance end code
@@ -586,17 +587,17 @@ export function marthAI(i) {
       if (idleActions.indexOf(paction) != -1) {
         if (ptimer >= 3) { //gives idle frames
           if (paction == "OTTOTTOWAIT") {
-            player[i].inputs.lStickAxis[0].x = -1.0 * pface;
+            player[i].inputs.lsX[0] = -1.0 * pface;
             return;
           } else {
             let randomSeed = Math.floor((Math.random() * 100) + 1);
             if (randomSeed <= 25) {
               player[i].currentAction = "DASHDANCE";
-              player[i].inputs.lStickAxis[0].x = -1.0;
+              player[i].inputs.lsX[0] = -1.0;
               return;
             } else if (randomSeed <= 50) {
               player[i].currentAction = "DASHDANCE";
-              player[i].inputs.lStickAxis[0].x = 1.0;
+              player[i].inputs.lsX[0] = 1.0;
               return;
             } else if (randomSeed <= 85) {
               player[i].currentAction = "WAVEDASHANY";
@@ -617,21 +618,21 @@ export function marthAI(i) {
           if (pface == -1.0) {
             player[i].currentAction = "DASHDANCE";
             player[i].currentSubaction = "NONE";
-            player[i].inputs.lStickAxis[0].x = -1.0;
+            player[i].inputs.lsX[0] = -1.0;
             return;
           }  else {
             if (paction == "SMASHTURN") {
-              console.log("0: " + player[i].inputs.lStickAxis[0].x);
-              console.log("1: " + player[i].inputs.lStickAxis[1].x);
-              player[i].inputs.lStickAxis[0].x = player[i].inputs.lStickAxis[2].x;
+              console.log("0: " + player[i].inputs.lsX[0]);
+              console.log("1: " + player[i].inputs.lsX[1]);
+              player[i].inputs.lsX[0] = player[i].inputs.lsX[2];
               return;
             } else if (paction == "DASH") {
               let doSomething = Math.min(100,20 + Math.sin(((2 * 3.14159265358979323) / 15) * (ptimer - 1)));
               let randomSeed = Math.floor((Math.random() * 100) + 1);
               if (randomSeed <= doSomething) {
-                player[i].inputs.lStickAxis[0].x = -1.0 * pface;
+                player[i].inputs.lsX[0] = -1.0 * pface;
               } else {
-                player[i].inputs.lStickAxis[0].x = pface;
+                player[i].inputs.lsX[0] = pface;
               }
               return;
             }
@@ -640,19 +641,19 @@ export function marthAI(i) {
           if (pface == 1.0) {
             player[i].currentAction = "DASHDANCE";
             player[i].currentSubaction = "NONE";
-            player[i].inputs.lStickAxis[0].x = 1.0;
+            player[i].inputs.lsX[0] = 1.0;
             return;
           }  else {
             if (paction == "SMASHTURN") {
-              player[i].inputs.lStickAxis[0].x = player[i].inputs.lStickAxis[1].x;
+              player[i].inputs.lsX[0] = player[i].inputs.lsX[1];
               return;
             } else if (paction == "DASH") {
               let doSomething = Math.min(100,20 + Math.sin(((2 * 3.14159265358979323) / 15) * (ptimer - 1)));
               let randomSeed = Math.floor((Math.random() * 100) + 1);
               if (randomSeed <= doSomething) {
-                player[i].inputs.lStickAxis[0].x = -1 * pface;
+                player[i].inputs.lsX[0] = -1 * pface;
               } else {
-                player[i].inputs.lStickAxis[0].x = pface;
+                player[i].inputs.lsX[0] = pface;
               }
               return;
             }
@@ -670,7 +671,7 @@ export function marthAI(i) {
         paction == "LANDING" && ptimer > 3))) { //smash turn to face enemy
       if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
         player[i].currentAction = "SMASHTURN";
-        player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
+        player[i].inputs.lsX[0] = -1.0 * player[i].phys.face;
         return;
       } else {
         if (player[i].currentAction == "NONE" && ["WAIT","WALK","OTTOTTOWAIT","LANDING"].indexOf(paction) != -1 && player[nearest].phys.hurtBoxState == 0) {
@@ -680,15 +681,15 @@ export function marthAI(i) {
               player[i].inputs.z = true;
               /*
                player[i].inputs.l[0] = true;
-               player[i].inputs.lAnalog[0] = 1;
+               player[i].inputs.lA[0] = 1;
                player[i].inputs.a = true;
                */
             } else if (randomSeed <= 25) { //tilt
               var randomSeed1 = Math.floor((Math.random() * 100) + 1);
               if (randomSeed1 <= 25) { //f-tilt
-                player[i].inputs.lStickAxis[0].x = 0.50;
+                player[i].inputs.lsX[0] = 0.50;
               } else if (randomSeed1 <= 50) { //d-tilt
-                player[i].inputs.lStickAxis[0].y = -0.50;
+                player[i].inputs.lsY[0] = -0.50;
               } else if (randomSeed1 <= 75) { //up-tilt
                 if (cS[i] == 1 || cS[i] == 2) {
                   if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
@@ -696,12 +697,12 @@ export function marthAI(i) {
                     player[i].currentSubaction = "REVERSE";
                     return;
                   } else {
-                    player[i].inputs.lStickAxis[0].y = 0.50;
+                    player[i].inputs.lsY[0] = 0.50;
                     player[i].inputs.a[0] = true;
                   }
                 } else {
                   //console.log(Math.sign(distx),":",player[i].phys.face)
-                  player[i].inputs.lStickAxis[0].y = 0.50;
+                  player[i].inputs.lsY[0] = 0.50;
                   player[i].inputs.a[0] = true;
                 }
               }
@@ -710,7 +711,7 @@ export function marthAI(i) {
             }
             /* else if (randomSeed <= 20) {//shield
              player[i].inputs.l[0] = true;
-             player[i].inputs.lAnalog[0] = 1;
+             player[i].inputs.lA[0] = 1;
              } */
           }
         }
@@ -729,14 +730,14 @@ export function marthAI(i) {
                   player[i].currentAction = "NONE";
                   player[i].currentSubaction = "NONE";
                   player[i].inputs.l[0] = true;
-                  player[i].inputs.lAnalog[0] = 1.0;
+                  player[i].inputs.lA[0] = 1.0;
                   player[i].inputs.a[0] = true;
                 }
               } else if (randomSeed <= 25 && Math.abs(px - player[nearest].phys.pos.x) < 12.5 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].currentAction = "NONE";
                 player[i].currentSubaction = "NONE";
                 player[i].inputs.l[0] = true;
-                player[i].inputs.lAnalog[0] = 1.0;
+                player[i].inputs.lA[0] = 1.0;
                 player[i].inputs.a[0] = true;
               }
             }
@@ -773,7 +774,7 @@ export function jiggsAI(i) {
         paction == "LANDING" && ptimer > 3)) { //smash turn to face enemy
       if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
         player[i].currentAction = "SMASHTURN";
-        player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
+        player[i].inputs.lsX[0] = -1.0 * player[i].phys.face;
         return;
       } else {
         if (cS[i] == 2 && Math.abs(distx) > 80 && Math.abs(disty) < 15) { //is fox
@@ -790,15 +791,15 @@ export function jiggsAI(i) {
               player[i].inputs.z = true;
               /*
 				  player[i].inputs.l[0] = true;
-				  player[i].inputs.lAnalog[0] = 1;
+				  player[i].inputs.lA[0] = 1;
 				  player[i].inputs.a = true;
 				  */
             } else if (randomSeed <= 25) { //tilt
               const randomSeed1 = Math.floor((Math.random() * 100) + 1);
               if (randomSeed1 <= 25) { //f-tilt
-                player[i].inputs.lStickAxis[0].x = 0.50;
+                player[i].inputs.lsX[0] = 0.50;
               } else if (randomSeed1 <= 50) { //d-tilt
-                player[i].inputs.lStickAxis[0].y = -0.50;
+                player[i].inputs.lsY[0] = -0.50;
               } else if (randomSeed1 <= 75) { //up-tilt
                 if (cS[i] == 1 || cS[i] == 2) {
                   if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
@@ -806,12 +807,12 @@ export function jiggsAI(i) {
                     player[i].currentSubaction = "REVERSE";
                     return;
                   } else {
-                    player[i].inputs.lStickAxis[0].y = 0.50;
+                    player[i].inputs.lsY[0] = 0.50;
                     player[i].inputs.a[0] = true;
                   }
                 } else {
                   //console.log(Math.sign(distx),":",player[i].phys.face)
-                  player[i].inputs.lStickAxis[0].y = 0.50;
+                  player[i].inputs.lsY[0] = 0.50;
                   player[i].inputs.a[0] = true;
                 }
               }
@@ -820,7 +821,7 @@ export function jiggsAI(i) {
             }
             /* else if (randomSeed <= 20) {//shield
 				  player[i].inputs.l[0] = true;
-				  player[i].inputs.lAnalog[0] = 1;
+				  player[i].inputs.lA[0] = 1;
 			  } */
           }
         }
@@ -838,12 +839,12 @@ export function jiggsAI(i) {
             if (isEnemyApproaching(player[i], player[nearest]) || player[nearest].actionState.substr(0, 5) == "GUARD") {
               if (Math.abs(px - player[nearest].phys.pos.x) <= 13) {
                 player[i].inputs.l[0] = true;
-                player[i].inputs.lAnalog[0] = 1.0;
+                player[i].inputs.lA[0] = 1.0;
                 player[i].inputs.a[0] = true;
               }
             } else if (randomSeed <= 20 && Math.abs(px - player[nearest].phys.pos.x) < 8 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].inputs.l[0] = true;
-                player[i].inputs.lAnalog[0] = 1.0;
+                player[i].inputs.lA[0] = 1.0;
                 player[i].inputs.a[0] = true;
 			}
           }
@@ -868,19 +869,19 @@ export function foxAI(i) {
   const ptimer = player[i].timer;
   const pgrounded = player[i].phys.grounded;
   if (player[i].currentAction == "LEDGESTALL") {
-    player[i].inputs.lStickAxis[0].x = 0.0;
+    player[i].inputs.lsX[0] = 0.0;
     if (player[i].currentSubaction == "FALL") {
       if (ptimer == 1) {
-        //player[i].inputs.lStickAxis[0].y = -1.0;
-        player[i].inputs.lStickAxis[0].y = 1.0;
+        //player[i].inputs.lsY[0] = -1.0;
+        player[i].inputs.lsY[0] = 1.0;
         player[i].inputs.b[0] = true;
         player[i].currentSubaction = "GRAB";
       } else {
-        player[i].inputs.lStickAxis[0].y = -1.0;
+        player[i].inputs.lsY[0] = -1.0;
       }
       return;
     } else if (player[i].currentSubaction == "GRAB") {
-      player[i].inputs.lStickAxis[0].x = 0.0;
+      player[i].inputs.lsX[0] = 0.0;
       if (paction.substr(0, 4) == "CLIFF") { //end of action
         player[i].currentAction = "NONE";
         player[i].currentSubaction = "NONE";
@@ -921,7 +922,7 @@ export function foxAI(i) {
       player[i].currentSubaction = "NONE";
     }
     if (player[i].currentSubaction == "SHINE") {
-      player[i].inputs.lStickAxis[0].y = -1.0;
+      player[i].inputs.lsY[0] = -1.0;
       player[i].inputs.b[0] = true;
       player[i].currentSubaction = "JUMP";
     } else if (player[i].currentSubaction == "JUMP") {
@@ -933,7 +934,7 @@ export function foxAI(i) {
       }
     } else if (player[i].currentSubaction == "SHINE2") {
       if (paction == "KNEEBEND" && ptimer == 3) {
-        player[i].inputs.lStickAxis[0].y = -1.0;
+        player[i].inputs.lsY[0] = -1.0;
         player[i].inputs.b[0] = true;
         player[i].currentSubaction = "NONE";
       }
@@ -959,7 +960,7 @@ export function foxAI(i) {
         paction == "LANDING" && ptimer > 3))) { //smash turn to face enemy
       if (!(player[i].phys.face == -1.0 * (Math.sign(distx)))) {
         player[i].currentAction = "SMASHTURN";
-        player[i].inputs.lStickAxis[0].x = -1.0 * player[i].phys.face;
+        player[i].inputs.lsX[0] = -1.0 * player[i].phys.face;
         return;
       } else {
         if (cS[i] == 2 && Math.abs(distx) > 80 && Math.abs(disty) < 15) { //is fox
@@ -977,9 +978,9 @@ export function foxAI(i) {
             } else if (randomSeed <= 25) { //tilt
               const randomSeed1 = Math.floor((Math.random() * 100) + 1);
               if (randomSeed1 <= 25) { //f-tilt
-                player[i].inputs.lStickAxis[0].x = 0.50;
+                player[i].inputs.lsX[0] = 0.50;
               } else if (randomSeed1 <= 50) { //d-tilt
-                player[i].inputs.lStickAxis[0].y = -0.50;
+                player[i].inputs.lsY[0] = -0.50;
               } else if (randomSeed1 <= 75) { //up-tilt
                 if (cS[i] == 1 || cS[i] == 2) {
                   if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
@@ -987,12 +988,12 @@ export function foxAI(i) {
                     player[i].currentSubaction = "REVERSE";
                     return;
                   } else {
-                    player[i].inputs.lStickAxis[0].y = 0.50;
+                    player[i].inputs.lsY[0] = 0.50;
                     player[i].inputs.a[0] = true;
                   }
                 } else {
                   //console.log(Math.sign(distx),":",player[i].phys.face)
-                  player[i].inputs.lStickAxis[0].y = 0.50;
+                  player[i].inputs.lsY[0] = 0.50;
                   player[i].inputs.a[0] = true;
                 }
               }
@@ -1015,12 +1016,12 @@ export function foxAI(i) {
             if (isEnemyApproaching(player[i], player[nearest]) || player[nearest].actionState.substr(0, 5) == "GUARD") {
               if (Math.abs(px - player[nearest].phys.pos.x) <= 12) {
                 player[i].inputs.l[0] = true;
-                player[i].inputs.lAnalog[0] = 1.0;
+                player[i].inputs.lA[0] = 1.0;
                 player[i].inputs.a[0] = true;
               }
             } else if (randomSeed <= 20 && Math.abs(px - player[nearest].phys.pos.x) < 8 && ["DOWNBOUND","DOWNSTANDF","DOWNSTANDB","DOWNSTANDN"].indexOf(paction) == -1) {
                 player[i].inputs.l[0] = true;
-                player[i].inputs.lAnalog[0] = 1.0;
+                player[i].inputs.lA[0] = 1.0;
                 player[i].inputs.a[0] = true;
 			}
           }
@@ -1172,17 +1173,17 @@ export function CPUTech (cpu, p) {
     if (randomSeed <= 34) { //inplace
       returnInput.lstickX = 0.0;
       returnInput.l = true;
-      returnInput.lAnalog = 1.0;
+      returnInput.lA = 1.0;
       //console.log("techinplace");
     } else if (randomSeed <= 67) { //roll left
       returnInput.l = true;
       returnInput.lstickX = -1.0;
-      returnInput.lAnalog = 1.0;
+      returnInput.lA = 1.0;
       //console.log("techrollleft");
     } else if (randomSeed <= 100) { //roll right
       returnInput.l = true;
       returnInput.lstickX = 1.0;
-      returnInput.lAnalog = 1.0;
+      returnInput.lA = 1.0;
       //console.log("techrollright");
     } //otherwise miss tech
     //console.log("4");
