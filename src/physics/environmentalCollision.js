@@ -324,7 +324,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       }
     }
 
-    // case 1
+    // case 2
     if ( getXOrYCoord(ecb1[same], xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) ) {
       counterclockwise = false;
       counterclockwise ^= flip;
@@ -332,7 +332,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       if (   isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) 
           && getXOrYCoord(ecbp[other], xOrY) > getXOrYCoord(wallBottomOrLeft, xOrY) ) {
         edgeCase = true;
-        corner = wallTopOrRight;
+        corner = wallBottomOrLeft;
       }
     }
 
