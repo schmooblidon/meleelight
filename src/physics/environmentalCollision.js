@@ -187,10 +187,6 @@ function lineSweepParameters( line1, line2, flip = false) {
     s = solveQuadraticEquation( a0, a1, a2, sign );
   }
   const t = (s*(x1-x3) - x1) / ( x2-x1 + s*( x1-x2-x3+x4 ));
-  console.log("Function 'lineSweetParameters' logging:");
-  console.log("Relevant recentered ECB1 edge [same,other] given by [("+x1+","+y1+"), ("+x2+","+y2+")].");
-  console.log("Relevant recentered ECBp edge [same,other] given by [("+x3+","+y3+"), ("+x4+","+y4+")].");
-  console.log("'lineSweepParameters' has calculated sweep parameters t="+t+", s="+s+".");
 
   if (s < 0 || s > 1 || t < 0 || t > 1 || s === Infinity || t === Infinity || isNaN(s) || isNaN(t)) {
     return false;
