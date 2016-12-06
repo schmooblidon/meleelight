@@ -162,7 +162,7 @@ function coordinateInterceptParameter (line1, line2) {
 function solveQuadraticEquation (a0, a1, a2, sign = 1) {
   const disc = a1*a1 - 4*a0*a2;
   if (disc < 0) {
-    console.log("error in function 'solveQuadraticEquation': negative discriminant");
+    //console.log("error in function 'solveQuadraticEquation': negative discriminant");
     return false;
   }
   else {
@@ -375,8 +375,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType, doSweepingChecks =
       // first we have to recenter everything around the corner,
       // as the 'lineSweepParameters' function calculates collision with respect to the origin
 
-
-
       let edgeCollision = false; // initialising
       let [t,s] = [0,0];
       let newCenter = new Vec2D(500,500);
@@ -413,11 +411,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType, doSweepingChecks =
           interiorECBside = "l";
         }
         edgeCollision = !isOutside ( corner, ecbp[same], ecbp[other], interiorECBside);
-        console.log("I have detected a collision: "+edgeCollision+"+.");
-        console.log("Corner is at ("+corner.x+","+corner.y+").");
-        //console.log("I am going to push out by ("+pushOutVector.x+","+pushOutVector)
-
-
         const projectedCorner = orthogonalProjection( corner, [ecbp[same], ecbp[other]]);
         const pushOutVector = new Vec2D( corner.x - projectedCorner.x, corner.y - projectedCorner.y);
         newCenter = new Vec2D( position.x + pushOutVector.x, position.y + pushOutVector.y);
