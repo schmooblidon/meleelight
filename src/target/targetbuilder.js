@@ -1,11 +1,14 @@
-import {Box2D, Vec2D} from "main/characters";
-import {player,ui, changeGamemode, setCookie, layers, clearScreen, deepCopyObject} from "main/main";
+
+import {player,ui, changeGamemode, setCookie, layers, clearScreen} from "main/main";
 import {sounds} from "main/sfx";
 import {handGrab, handOpen} from "menus/css";
 import {twoPi} from "main/render";
 import {startTargetGame} from "target/targetplay";
-import {targetStages, customTargetStages, setCustomTargetStages} from "stages/stages";
 import {boxFill, drawBackground} from "stages/stagerender";
+import {deepCopyObject} from "main/util/deepCopyObject";
+import {Vec2D} from "../main/util/Vec2D";
+import {Box2D} from "../main/util/Box2D";
+import {setCustomTargetStages, customTargetStages} from "../stages/activeStage";
 /* eslint-disable */
 
 export let crossHairPos = new Vec2D(0,0);
@@ -410,6 +413,7 @@ export function targetBuilderControls (p, input){
             }
           }
           if (ledgeHoverItem != 0) {
+            let i = ledgeHoverItem[1];
             if (Math.abs(realCrossHair.x - stageTemp.draw.box[i].min.x) < Math.abs(realCrossHair.x - stageTemp.draw.box[
                 i].max.x)) {
               ledgeHoverItem.push(0);

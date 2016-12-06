@@ -4,8 +4,7 @@ import {
   inverseMatrix,
   multMatVect
 } from "main/linAlg";
-import {Vec2D} from "main/characters";
-import {keyMap} from 'settings';
+import {Vec2D} from "./util/Vec2D";
 
 export const button = {
   "a" : 0, 
@@ -20,7 +19,7 @@ export const button = {
   "dr": 9,  // d-pad right
   "dd": 10, // d-pad down
   "dl": 11  // d-pad left
-}
+};
 
 export const axis = {
   "lsX": 12, // left analog stick left/right
@@ -40,7 +39,7 @@ export function inputData ( list = [false, false, false, false, false, false, fa
   this.r   = list[button["r"  ]];
   this.l   = list[button["l"  ]];
   this.s   = list[button["s"  ]];
-  this.du  = list[button["du" ]]; 
+  this.du  = list[button["du" ]];
   this.dr  = list[button["dr" ]];
   this.dd  = list[button["dd" ]];
   this.dl  = list[button["dl" ]];
@@ -83,7 +82,7 @@ export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, 
 
 function pollKeyboardInputs(gameMode, frameByFrame, keys) {
   let input = nullInput; // initialise with default values
-  
+
   let stickR = 1;
   let stickL = 1;
   let stickU = 1;
@@ -121,13 +120,13 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
   lstickY = Math.sign(lstickY) * Math.min(1, Math.abs(lstickY));
   lAnalog = Math.min(1, Math.abs(lAnalog));
   rAnalog = Math.min(1, Math.abs(rAnalog));
-    
+
   let cstickX = (keys[keyMap.cstick.right[0]] || keys[keyMap.cstick.right[1]]) ? ((keys[keyMap.cstick.left[0]] ||
     keys[keyMap.cstick.left[1]]) ? 0 : 1) : ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? -1 :
     0);
   let cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[
     keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
-  
+
   input.lsX = lstickX;
   input.lsY = lstickY;
   input.rawX = lstickX;
@@ -148,14 +147,14 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
   input.dd  = keys[keyMap.dd[0]];
   input.dr  = keys[keyMap.dr[0]];
   input.du  = keys[keyMap.du[0]];
-  
+
   if (input.l) {
     input.lA = 1;
   }
   if (input.r) {
     input.rA = 1;
   }
-   
+
   if (!frameByFrame && gameMode != 4) { // not in target builder or frame by frame mode
     if (input.z) {
       input.lA = 0.35;
@@ -168,19 +167,19 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
 
 function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
   let input = nullInput;
-  
+
   let gamepad = navigator.getGamepads()[controllerIndex];
-    
+
   function axisData (ax) {
     return gpdaxis (gamepad, controllerType, ax );
   };
   function buttonData (but) {
     return gpdbutton (gamepad, controllerType, but);
   };
- 
+
   let lsXData = axisData("lsX");
   let lsYData = axisData("lsY");
- 
+
   let lsticks = scaleToMeleeAxes ( lsXData, // x-axis data
                                    lsYData, // y-axis data
                                    controllerType,
@@ -205,14 +204,14 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   let cstickY = csticks[1];
   let rawstickX = rawlsticks[0];
   let rawstickY = rawlsticks[1];
-  
+
   let lAnalog = 0;
   let rAnalog = 0;
-  
+
   //----------------------------------------------------------------
   //-- Below: should be moved to inputs.js
-  
-  if (controllerType == 3){    
+
+  if (controllerType == 3){
     lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[playerSlot].l, 1); // shifted by +0.2
     rAnalog = scaleToGCTrigger(buttonData("r").value, 0.2-custcent[playerSlot].r, 1); // shifted by +0.2
   }
@@ -228,19 +227,19 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, 0.6); // shifted by +0.867
     rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, 0.6); // shifted by +0.867
   }
-  
+
   //-- Above: should be moved to inputs.js
   //----------------------------------------------------------------
-  
-  
+
+
   //----------------------------------------------------------------
   //-- Below: should be moved to inputs.js
-  
+
   if (controllerType == 3) {
     // FOR XBOX CONTROLLERS
     input.r = buttonData("r").value > 0.95 ? true : false;
     input.l = buttonData("l").value > 0.95 ? true : false;
-    
+
     // 4 is lB, 5 is RB
     if (gamepad.buttons[4].pressed) {
       input.l = true;
@@ -252,10 +251,10 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     input.r = buttonData("r").pressed;
     input.l = buttonData("l").pressed;
   }
-  
+
   //-- Above: should be moved to inputs.js
   //----------------------------------------------------------------
-  
+
   input.lsX = lstickX;
   input.lsY = lstickY;
   input.rawX = rawstickX;
@@ -270,10 +269,10 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   input.b = buttonData("b").pressed;
   input.y = buttonData("y").pressed;
   input.z = buttonData("z").pressed;
-  
+
   //----------------------------------------------------------------
   //-- Below: should be moved to inputs.js
-  
+
   if (controllerType == 9) { // Rock Candy controller, parameters to be confirmed
     input.dl = gamepad.axes[6] < -0.5 ? true : false;
     input.dr = gamepad.axes[6] >  0.5 ? true : false;
@@ -286,10 +285,10 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     input.dr = buttonData("dr").pressed;
     input.du = buttonData("du").pressed;
   }
-  
+
   //-- Above: should be moved to inputs.js
   //----------------------------------------------------------------
-  
+
   if (input.l) {
     input.lA = 1;
   }
@@ -303,7 +302,7 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
       input.a = true;
     }
   }
-  
+
   return input;
 };
 
@@ -395,9 +394,11 @@ var controllerIDMap = new Map();
 // ID 0, Mayflash Wii-U adapter & variants
 controllerIDMap.set("Mayflash", 0); // Mayflash 4 port, ID: MAYFLASH GameCube Controller Adapter
 controllerIDMap.set("0079-1843", 0);
+controllerIDMap.set("79-1843", 0);
 
 controllerIDMap.set("NEXILUX", 0); // NEXILUX GAMECUBE Controller Adapter
 controllerIDMap.set("0079-1845", 0);
+controllerIDMap.set("79-1845", 0);
 
 controllerIDMap.set("Wii U GameCube Adapter", 0); // Mayflash 4 port on Linux, no vendor/product ID?
 
@@ -412,6 +413,7 @@ controllerIDMap.set("1234-bead", 1);
 controllerIDMap.set("GC/N64 to USB, v2.", 2);
 controllerIDMap.set("GC/N64 to USB v2.", 2);
 controllerIDMap.set("289b-000c", 2);
+controllerIDMap.set("289b-c", 2);
 
 // ID 3, XBOX 360 or XInput standard gamepad
 controllerIDMap.set("Microsoft Controller", 3); // XBOX 360 & XBOX One controllers
@@ -420,34 +422,42 @@ controllerIDMap.set("Microsoft X-Box One", 3); // ID: Microsoft X-Box One pad
 controllerIDMap.set("XInput", 3);
 controllerIDMap.set("Standard Gamepad", 3);
 controllerIDMap.set("045e-02d1", 3);
+controllerIDMap.set("45e-2d1", 3);
 
 controllerIDMap.set("Wireless 360 Controller", 3); // XBOX 360 controller on Mac
 controllerIDMap.set("045e-028e", 3);
+controllerIDMap.set("45e-28e", 3);
 
 // ID 4, TigerGame 3-in-1 adapter
 controllerIDMap.set("TigerGame", 4); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
 controllerIDMap.set("0926-2526", 4);
+controllerIDMap.set("926-2526", 4);
 
 // ID 5, Retrolink adapter
 controllerIDMap.set("Generic USB Joystick", 5); // ID: Generic USB Joystick, TODO: should check ID and vendor...
 controllerIDMap.set("0079-0006", 5);
+controllerIDMap.set("79-6", 5);
 
 // ID 6, raphnet n64 adapter, version 3.0 and above
 controllerIDMap.set("GC/N64 to USB v3.", 6); // "v3.2" and "v3.3"
 controllerIDMap.set("GC/N64 to USB, v3.", 6);
 controllerIDMap.set("289b-001d", 6);
+controllerIDMap.set("289b-1d", 6);
 
 // ID 7, Brook adapter
 controllerIDMap.set("Wii U GameCube Controller Adapter", 7);
 controllerIDMap.set("0e8f-0003", 7);
+controllerIDMap.set("e8f-3", 7);
 
 // ID 8, PS4 controller
 controllerIDMap.set("Wireless Controller", 8); // should check ID and vendor...
 controllerIDMap.set("054c-05c4", 8);
+controllerIDMap.set("54c-5c4", 8);
 
 // ID 9, Rock Candy Xbox 360 controller
 controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 360", 8);
 controllerIDMap.set("0e6f-011f", 8);
+controllerIDMap.set("e6f-11f", 8);
 
 //--END OF CONTROLLER IDs-------------------------------------
     
@@ -666,6 +676,10 @@ function unitRetract ( [x,y] ) {
   }
 };
 
+function meleeRound (x) {
+  return Math.round(steps*x)/steps;
+};
+
 function meleeAxesRescale ( [x,y], bool ) {
     let xnew = axisRescale (x, meleeOrig, bool);
     let ynew = axisRescale (y, meleeOrig, bool);
@@ -678,19 +692,14 @@ function meleeAxesRescale ( [x,y], bool ) {
         ynew2 = 0;
       }
     }
-    return [xnew2, ynew2];
+    return ([xnew2, ynew2].map(meleeRound));
 }
-
-function meleeRound (x) {
-  return Math.round(steps*x)/steps;
-};
-
 
 // this is the main input rescaling function
 // it scales raw input data to the data Melee uses for the simulation
 // number : controller ID, to rescale axes dependent on controller raw input
 // bool == false means no deadzone, bool == true means deadzone
-export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCenterY ) {
+export function scaleToMeleeAxes ( x, y, number = 0, bool = false, customCenterX = 0, customCenterY = 0 ) {
     if (number === 0 || number == 4 || number === 5 || number === 7) { // gamecube controllers
          x = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
          y = (-y+customCenterY+1)*255/2; // y incurs a sign flip
@@ -700,12 +709,12 @@ export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCent
       [x, y] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
       //console.log("You are using GC controller simulation.");
     }
-    return (meleeAxesRescale ( [x,y], bool )).map(meleeRound);
+    return meleeAxesRescale ( [x,y], bool );
 };
 
 // scales -1 -- 1 data to the data Melee uses for the simulation
 // bool == false means no deadzone, bool == true means deadzone
 export function meleeRescale ( x, y, bool = false) {
     let [xnew, ynew] = scaleUnitToGCAxes (x, y);
-    return (meleeAxesRescale ( [xnew, ynew], bool)).map(meleeRound);
-}
+    return meleeAxesRescale ( [xnew, ynew], bool );
+};

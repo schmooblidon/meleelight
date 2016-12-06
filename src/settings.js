@@ -48,4 +48,5 @@ export const gameSettings = {
   flashOnLCancel : 0,
   dustLessPerfectWavedash : 0,
   phantomThreshold : 0.01,
+  everyCharWallJump : 0, //0 - off | 1 - on
 };

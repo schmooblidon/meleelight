@@ -1,9 +1,10 @@
 
 import WAIT from "characters/shared/moves/WAIT";
-import {player, stage, cS} from "main/main";
+import {player, cS} from "main/main";
 import {turnOffHitboxes, randomShout} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "main/util/Vec2D";
+import {activeStage} from "stages/activeStage";
 
 export default {
   name : "CLIFFATTACKQUICK",
@@ -23,8 +24,8 @@ export default {
   main : function(p){
     player[p].timer++;
     if (!this.interrupt(p)){
-      const x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      const y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      const x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      const y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 24){
         if (player[p].timer >= 14){
           player[p].phys.pos = new Vec2D(x+(this.offset[player[p].timer-14][0]+68.4)*player[p].phys.face,y+this.offset[player[p].timer-14][1]);
@@ -35,7 +36,7 @@ export default {
       }
       if (player[p].timer === 24){
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [0,activeStage.ledge[player[p].phys.onLedge][0]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }

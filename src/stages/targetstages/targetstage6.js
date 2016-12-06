@@ -1,0 +1,17 @@
+import {Vec2D} from "main/util/Vec2D";
+import {Box2D} from "../../main/util/Box2D";
+
+export default {
+  startingPoint: new Vec2D(0.0, 0.0),
+  box: [new Box2D([-24.4, -51.1], [113.3, -37.3]), new Box2D([45.9, -14.6], [113.2, -3.7]), new Box2D([45.9, -3.7], [56.5, 45.4]), new Box2D([-25.0, -78.3], [56.5, -73.7]), new Box2D([-23.2, 32.9], [45.6, 45.1]), new Box2D([75.3, 69.4], [129.6, 74.5]), new Box2D([99.5, 30.7], [107.2, 69.4]), new Box2D([-120.9, -125.0], [-105.2, -29.4]), new Box2D([-119.8, 33.0], [-104.8, 45.4]), new Box2D([-151.4, -45.4], [-120.8, -29.4])],
+  ground: [[new Vec2D(-24.4, -37.3), new Vec2D(113.3, -37.3)], [new Vec2D(45.9, -3.7), new Vec2D(113.2, -3.7)], [new Vec2D(45.9, 45.4), new Vec2D(56.5, 45.4)], [new Vec2D(-25.0, -73.7), new Vec2D(56.5, -73.7)], [new Vec2D(-23.2, 45.1), new Vec2D(45.6, 45.1)], [new Vec2D(75.3, 74.5), new Vec2D(129.6, 74.5)], [new Vec2D(99.5, 69.4), new Vec2D(107.2, 69.4)], [new Vec2D(-120.9, -29.4), new Vec2D(-105.2, -29.4)], [new Vec2D(-119.8, 45.4), new Vec2D(-104.8, 45.4)], [new Vec2D(-151.4, -29.4), new Vec2D(-120.8, -29.4)]],
+  ceiling: [[new Vec2D(-24.4, -51.1), new Vec2D(113.3, -51.1)], [new Vec2D(45.9, -14.6), new Vec2D(113.2, -14.6)], [new Vec2D(45.9, -3.7), new Vec2D(56.5, -3.7)], [new Vec2D(-25.0, -78.3), new Vec2D(56.5, -78.3)], [new Vec2D(-23.2, 32.9), new Vec2D(45.6, 32.9)], [new Vec2D(75.3, 69.4), new Vec2D(129.6, 69.4)], [new Vec2D(99.5, 30.7), new Vec2D(107.2, 30.7)], [new Vec2D(-120.9, -125.0), new Vec2D(-105.2, -125.0)], [new Vec2D(-119.8, 33.0), new Vec2D(-104.8, 33.0)], [new Vec2D(-151.4, -45.4), new Vec2D(-120.8, -45.4)]],
+  wallL: [[new Vec2D(-24.4, -37.3), new Vec2D(-24.4, -51.1)], [new Vec2D(45.9, -3.7), new Vec2D(45.9, -14.6)], [new Vec2D(45.9, 45.4), new Vec2D(45.9, -3.7)], [new Vec2D(-25.0, -73.7), new Vec2D(-25.0, -78.3)], [new Vec2D(-23.2, 45.1), new Vec2D(-23.2, 32.9)], [new Vec2D(75.3, 74.5), new Vec2D(75.3, 69.4)], [new Vec2D(99.5, 69.4), new Vec2D(99.5, 30.7)], [new Vec2D(-120.9, -29.4), new Vec2D(-120.9, -125.0)], [new Vec2D(-119.8, 45.4), new Vec2D(-119.8, 33.0)], [new Vec2D(-151.4, -29.4), new Vec2D(-151.4, -45.4)]],
+  wallR: [[new Vec2D(113.3, -37.3), new Vec2D(113.3, -51.1)], [new Vec2D(113.2, -3.7), new Vec2D(113.2, -14.6)], [new Vec2D(56.5, 45.4), new Vec2D(56.5, -3.7)], [new Vec2D(56.5, -73.7), new Vec2D(56.5, -78.3)], [new Vec2D(45.6, 45.1), new Vec2D(45.6, 32.9)], [new Vec2D(129.6, 74.5), new Vec2D(129.6, 69.4)], [new Vec2D(107.2, 69.4), new Vec2D(107.2, 30.7)], [new Vec2D(-105.2, -29.4), new Vec2D(-105.2, -125.0)], [new Vec2D(-104.8, 45.4), new Vec2D(-104.8, 33.0)], [new Vec2D(-120.8, -29.4), new Vec2D(-120.8, -45.4)]],
+  platform: [[new Vec2D(131.3, -26.0), new Vec2D(186.5, -26.0)], [new Vec2D(-71.4, -59.2), new Vec2D(-50.7, -59.2)], [new Vec2D(-97.0, -37.3), new Vec2D(-77.6, -37.3)], [new Vec2D(-121.8, -15.6), new Vec2D(-104.0, -15.6)], [new Vec2D(-16.0, -14.6), new Vec2D(14.5, -14.6)], [new Vec2D(141.7, 10.2), new Vec2D(175.2, 10.2)], [new Vec2D(151.9, 40.7), new Vec2D(166.7, 40.7)], [new Vec2D(-93.4, 6.7), new Vec2D(-74.1, 6.7)], [new Vec2D(-66.2, 27.8), new Vec2D(-46.5, 27.8)]],
+  ledge: [[3.0, 1.0], [0.0, 0.0], [3.0, 0.0], [0.0, 1.0], [1.0, 1.0], [2.0, 1.0], [4.0, 0.0]],
+  target: [new Vec2D(103.3, -66.6), new Vec2D(74.1, -78.3), new Vec2D(-26.6, -62.4), new Vec2D(159.0, 25.2), new Vec2D(118.6, 58.8), new Vec2D(86.7, 58.8), new Vec2D(-112.7, 19.4), new Vec2D(-134.1, -71.6), new Vec2D(-44.5, 56.0)],
+  scale: 3,
+  blastzone: new Box2D([-250, -250], [250, 250]),
+  offset: [600, 375]
+};

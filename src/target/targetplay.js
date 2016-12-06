@@ -1,7 +1,7 @@
-import {Vec2D} from "main/characters";
-import {player, changeGamemode,  initializePlayers, matchTimer,  drawVfx
-    , getCookie,stage
-    , resetVfxQueue
+
+import {player, changeGamemode,  initializePlayers, matchTimer
+    , getCookie
+
     , setMatchTimer
     , addMatchTimer
     , setStartTimer
@@ -18,6 +18,10 @@ import {stageTemp} from "target/targetbuilder";
 import { setBackgroundType} from "stages/stagerender";
 import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision, destroyArticleQueue} from "physics/article";
 import {interpolatedHitCircleCollision} from "physics/hitDetection";
+import {drawVfx} from "main/vfx/drawVfx";
+import {resetVfxQueue} from "main/vfx/vfxQueue";
+import {activeStage} from "stages/activeStage";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 export let targetTesting = false;
@@ -139,7 +143,7 @@ export function startTargetGame (p,test){
   initializePlayers(p,true);
   renderPlayer(p);
 
-  player[p].phys.pos = new Vec2D(stage.startingPoint.x,stage.startingPoint.y);
+  player[p].phys.pos = new Vec2D(activeStage.startingPoint.x,activeStage.startingPoint.y);
   setMatchTimer(0);
     setStartTimer(1.5);
     setStarting(true);
@@ -154,19 +158,19 @@ export function startTargetGame (p,test){
 export function destroyTarget (i){
   targetDestroyed[i] = true;
   targetsDestroyed++;
-  drawVfx("targetDestroy",stage.target[i]);
+  drawVfx("targetDestroy",activeStage.target[i]);
   sounds.targetBreak.play();
-  if (targetsDestroyed == stage.target.length){
+  if (targetsDestroyed == activeStage.target.length){
       setEndTargetGame(true);
   }
 }
 
 export function targetHitDetection (p){
-  for (var i=0;i<stage.target.length;i++){
+  for (var i=0; i<activeStage.target.length; i++){
     if (!targetDestroyed[i]){
       for (var j=0;j<4;j++){
         if (player[p].hitboxes.active[j]){
-          if (hitTargetCollision(p,j,i,false) || (player[p].hitboxes.active[j] && player[p].phys.prevFrameHitboxes.active[j] && (hitTargetCollision(p,j,i,true) || interpolatedHitCircleCollision(new Vec2D(stage.target[i].x,stage.target[i].y),7,p,j)))){
+          if (hitTargetCollision(p,j,i,false) || (player[p].hitboxes.active[j] && player[p].phys.prevFrameHitboxes.active[j] && (hitTargetCollision(p,j,i,true) || interpolatedHitCircleCollision(new Vec2D(activeStage.target[i].x,activeStage.target[i].y),7,p,j)))){
             player[p].hasHit = true;
             destroyTarget(i);
             break;
@@ -181,7 +185,7 @@ export function targetHitDetection (p){
         else {
           var interpolate = false;
         }
-        if (articleTargetCollision(a,i,false) || (interpolate && (articleTargetCollision(a,i,true) || interpolatedArticleCircleCollision(a,new Vec2D(stage.target[i].x,stage.target[i].y),7)))){
+        if (articleTargetCollision(a,i,false) || (interpolate && (articleTargetCollision(a,i,true) || interpolatedArticleCircleCollision(a,new Vec2D(activeStage.target[i].x,activeStage.target[i].y),7)))){
           if (articles[aArticles[a][0]].canTurboCancel){
             player[aArticles[a][1]].hasHit = true;
           }
@@ -201,7 +205,7 @@ export function hitTargetCollision (p,j,t,previous){
   else {
     var hbpos = new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x*player[p].phys.face),player[p].phys.pos.y+player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
   }
-  var targetPos = new Vec2D(stage.target[t].x,stage.target[t].y);
+  var targetPos = new Vec2D(activeStage.target[t].x,activeStage.target[t].y);
 
   return (Math.pow(targetPos.x-hbpos.x,2) + Math.pow(hbpos.y-targetPos.y,2) <= Math.pow(player[p].hitboxes.id[j].size+7,2));
 }
@@ -213,7 +217,7 @@ export function articleTargetCollision (a,t,previous){
   else {
     var hbpos = aArticles[a][2].pos;
   }
-  var targetpos = new Vec2D(stage.target[t].x,stage.target[t].y);
+  var targetpos = new Vec2D(activeStage.target[t].x,activeStage.target[t].y);
 
   return (Math.pow(targetpos.x-hbpos.x,2) + Math.pow(hbpos.y-targetpos.y,2) <= Math.pow(aArticles[a][2].hb.size+7,2));
 }

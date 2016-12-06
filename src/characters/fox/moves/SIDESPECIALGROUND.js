@@ -5,7 +5,8 @@ import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import {articles} from "physics/article";
 import {sounds} from "main/sfx";
 import {turnOffHitboxes} from "physics/actionStateShortcuts";
-import {drawVfx, player} from "main/main";
+import { player} from "main/main";
+import {drawVfx} from "main/vfx/drawVfx";
 
 export default {
   name : "SIDESPECIALGROUND",

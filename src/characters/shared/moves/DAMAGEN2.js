@@ -8,7 +8,8 @@ import {checkForAerials, tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn
     , turnOffHitboxes
 } from "physics/actionStateShortcuts";
 import {cS, player} from "main/main";
-import {Vec2D,framesData} from "main/characters";
+import {framesData} from "main/characters";
+import {Vec2D} from "../../../main/util/Vec2D";
 export default {
   name : "DAMAGEN2",
   canEdgeCancel : true,

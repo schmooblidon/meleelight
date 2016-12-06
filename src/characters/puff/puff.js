@@ -6,21 +6,23 @@ import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, c
     , fastfall
     , airDrift
     , randomShout
-    , checkForAerials
+    , checkForAerials,setupActionStates
 } from "physics/actionStateShortcuts";
 import {baseActionStates} from "characters/baseActionStates";
 import {sounds} from "main/sfx";
-import {player, cS, stage, drawVfx, deepCopyObject} from "main/main";
-import {Vec2D,framesData} from "main/characters";
+import {player, cS} from "main/main";
+import {framesData,CHARIDS} from "main/characters";
 
 import {hitQueue} from 'physics/hitDetection';
-import {setAS} from "../../physics/actionStateShortcuts";
-import {CHARIDS} from "../../main/characters";
+import {deepCopyObject} from "main/util/deepCopyObject";
+import {drawVfx} from "main/vfx/drawVfx";
+import {activeStage} from "stages/activeStage";
+import {Vec2D} from "../../main/util/Vec2D";
 
 /* eslint-disable */
 
 // action state object creation
-setAS(CHARIDS.PUFF_ID,{});
+setupActionStates(CHARIDS.PUFF_ID,{});
 // base action states added
 var keys = Object.keys(baseActionStates);
 for (var i=0;i<keys.length;i++){
@@ -1307,10 +1309,10 @@ puff.NEUTRALSPECIALAIR = {
       player[p].phys.face *= -1;
       sounds.rollouthit.play();
       if (wallFace == "R"){
-        drawVfx("wallBounce",new Vec2D(stage.wallR[wallNum][1].x,player[p].phys.ECBp[3].y),1,1);
+        drawVfx("wallBounce",new Vec2D(activeStage.wallR[wallNum][1].x,player[p].phys.ECBp[3].y),1,1);
       }
       else {
-        drawVfx("wallBounce",new Vec2D(stage.wallL[wallNum][1].x,player[p].phys.ECBp[1].y),-1,0);
+        drawVfx("wallBounce",new Vec2D(activeStage.wallL[wallNum][1].x,player[p].phys.ECBp[1].y),-1,0);
       }
     }
   },
@@ -2612,8 +2614,8 @@ puff.CLIFFGETUPQUICK = {
   main : function(p){
     player[p].timer++;
     if (!puff.CLIFFGETUPQUICK.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 16){
         player[p].phys.pos = new Vec2D(x+(puff.CLIFFGETUPQUICK.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+puff.CLIFFGETUPQUICK.offset[player[p].timer-1][1]);
       }
@@ -2622,7 +2624,7 @@ puff.CLIFFGETUPQUICK = {
       }
       if (player[p].timer == 16){
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [0,activeStage.ledge[player[p].phys.onLedge][0]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }
@@ -2655,8 +2657,8 @@ puff.CLIFFGETUPSLOW = {
   main : function(p){
     player[p].timer++;
     if (!puff.CLIFFGETUPSLOW.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 34){
         player[p].phys.pos = new Vec2D(x+(puff.CLIFFGETUPSLOW.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+puff.CLIFFGETUPSLOW.offset[player[p].timer-1][1]);
       }
@@ -2665,7 +2667,7 @@ puff.CLIFFGETUPSLOW = {
       }
       if (player[p].timer == 34){
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [0,activeStage.ledge[player[p].phys.onLedge][0]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }
@@ -2698,8 +2700,8 @@ puff.CLIFFESCAPEQUICK = {
   main : function(p){
     player[p].timer++;
     if (!puff.CLIFFESCAPEQUICK.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 15){
         player[p].phys.pos = new Vec2D(x+(puff.CLIFFESCAPEQUICK.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+puff.CLIFFESCAPEQUICK.offset[player[p].timer-1][1]);
       }
@@ -2708,7 +2710,7 @@ puff.CLIFFESCAPEQUICK = {
       }
       if (player[p].timer == 15){
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [0,activeStage.ledge[player[p].phys.onLedge][0]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }
@@ -2742,8 +2744,8 @@ puff.CLIFFESCAPESLOW = {
   main : function(p){
     player[p].timer++;
     if (!puff.CLIFFESCAPESLOW.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 33){
         player[p].phys.pos = new Vec2D(x+(puff.CLIFFESCAPESLOW.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+puff.CLIFFESCAPESLOW.offset[player[p].timer-1][1]);
       }
@@ -2752,7 +2754,7 @@ puff.CLIFFESCAPESLOW = {
       }
       if (player[p].timer == 32){
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [0,activeStage.ledge[player[p].phys.onLedge][0]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }
@@ -2788,8 +2790,8 @@ puff.CLIFFATTACKSLOW = {
   main : function(p){
     player[p].timer++;
     if (!puff.CLIFFATTACKSLOW.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 34){
         player[p].phys.pos = new Vec2D(x+(puff.CLIFFATTACKSLOW.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+puff.CLIFFATTACKSLOW.offset[player[p].timer-1][1]);
       }
@@ -2798,7 +2800,7 @@ puff.CLIFFATTACKSLOW = {
       }
       if (player[p].timer == 33){
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [0,activeStage.ledge[player[p].phys.onLedge][0]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }
@@ -2846,8 +2848,8 @@ puff.CLIFFATTACKQUICK = {
   main : function(p){
     player[p].timer++;
     if (!puff.CLIFFATTACKQUICK.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 15){
         player[p].phys.pos = new Vec2D(x+(puff.CLIFFATTACKQUICK.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+puff.CLIFFATTACKQUICK.offset[player[p].timer-1][1]);
       }
@@ -2856,7 +2858,7 @@ puff.CLIFFATTACKQUICK = {
       }
       if (player[p].timer == 15){
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0,stage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [0,activeStage.ledge[player[p].phys.onLedge][0]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }
@@ -2900,8 +2902,8 @@ puff.CLIFFJUMPQUICK = {
   main : function(p){
     player[p].timer++;
     if (!puff.CLIFFJUMPQUICK.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 15){
         player[p].phys.pos = new Vec2D(x+(puff.CLIFFJUMPQUICK.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+puff.CLIFFJUMPQUICK.offset[player[p].timer-1][1]);
       }
@@ -2940,8 +2942,8 @@ puff.CLIFFJUMPSLOW = {
   main : function(p){
     player[p].timer++;
     if (!puff.CLIFFJUMPSLOW.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 18){
         player[p].phys.pos = new Vec2D(x+(puff.CLIFFJUMPSLOW.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+puff.CLIFFJUMPSLOW.offset[player[p].timer-1][1]);
       }

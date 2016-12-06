@@ -8,11 +8,12 @@ import {cpuDifficulty, cS, player, changeGamemode, playerType,bg1,ui, palettes, 
     , ports
     , setVersusMode
 } from "main/main";
-import {Vec2D, chars} from "main/characters";
 import {drawArrayPathCompress, twoPi} from "main/render";
 import {sounds} from "main/sfx";
 import {aS} from "physics/actionStateShortcuts";
 import {setCS} from "../main/main";
+import {chars} from "../main/characters";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -571,7 +572,6 @@ export function drawCSS (){
     bg1.fill();
   }
   ui.restore();
-
   for (var i = 0; i < 4; i++) {
     if (playerType[i] > -1) {
       if (playerType[i] == 0) {
@@ -825,7 +825,67 @@ export function drawCSS (){
   }
   ui.font = "900 31px Arial";
   ui.lineWidth = 2;
-  for (var i = 0; i < 4; i++) {
+  let alreadyDrawn = [false,false,false,false];
+  for (let i = 3; i >= 0; i--) {
+      if (playerType[i] > -1) {
+	  if (tokenGrabbed[i] === false) {
+		  alreadyDrawn[i] = true;
+	  }
+      var bgGrad = ui.createLinearGradient(tokenPos[i].x - 100, tokenPos[i].y, tokenPos[i].x + 50, tokenPos[i].y);
+      bgGrad.addColorStop(0, "rgb(255, 255, 255)");
+      var text = "";
+      switch (playerType[i]) {
+        case 0:
+          text = "P" + (i + 1);
+          switch (i) {
+            case 0:
+              bgGrad.addColorStop(1, "rgb(233, 57, 57)");
+              break;
+            case 1:
+              bgGrad.addColorStop(1, "rgb(62, 130, 233)");
+              break;
+            case 2:
+              bgGrad.addColorStop(1, "rgb(255, 253, 47)");
+              break;
+            case 3:
+              bgGrad.addColorStop(1, "rgb(36, 242, 45)");
+              break;
+            default:
+              break;
+          }
+          break;
+        case 1:
+          text = "CP";
+          bgGrad.addColorStop(1, "rgb(135, 135, 135)");
+        default:
+          break;
+      }
+      ui.fillStyle = "rgba(0,0,0,0.4)";
+      ui.beginPath();
+      ui.arc(tokenPos[i].x, tokenPos[i].y, 34, 0, twoPi);
+      ui.closePath();
+      ui.fill();
+      ui.fillStyle = bgGrad;
+      ui.beginPath();
+      ui.arc(tokenPos[i].x, tokenPos[i].y, 30, 0, twoPi);
+      ui.closePath();
+      ui.fill();
+      ui.fillStyle = "rgba(0,0,0,0.4)";
+      ui.beginPath(tokenPos[i].y);
+      //ui.moveTo(tokenPos[i].x,tokenPos[i].y+4);
+      ui.arc(tokenPos[i].x, tokenPos[i].y, 26, 1.2 * Math.PI, 0.4 * Math.PI);
+      ui.arc(tokenPos[i].x - 3, tokenPos[i].y, 23, 0.5 * Math.PI, 1.2 * Math.PI, true);
+      ui.closePath();
+      ui.fill();
+      ui.strokeStyle = "rgb(57, 57, 57)";
+      ui.fillStyle = "rgb(207, 207, 207)";
+
+      ui.fillText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
+      ui.strokeText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
+	  }
+  }
+  for (let i = 3; i >= 0; i--) {
+	if (alreadyDrawn[i] === false) {
     if (playerType[i] > -1) {
       var bgGrad = ui.createLinearGradient(tokenPos[i].x - 100, tokenPos[i].y, tokenPos[i].x + 50, tokenPos[i].y);
       bgGrad.addColorStop(0, "rgb(255, 255, 255)");
@@ -879,7 +939,7 @@ export function drawCSS (){
       ui.fillText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
       ui.strokeText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
     }
-
+	}
   }
   // 72 95
   for (var i = 0; i < ports; i++) {

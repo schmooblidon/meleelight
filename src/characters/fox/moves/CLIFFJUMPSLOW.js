@@ -1,8 +1,9 @@
 
 import FALL from "characters/shared/moves/FALL";
-import {player, stage} from "main/main";
-import {Vec2D} from "main/characters";
+import {player} from "main/main";
+import {Vec2D} from "main/util/Vec2D";
 import {airDrift, fastfall} from "physics/actionStateShortcuts";
+import {activeStage} from "stages/activeStage";
 
 export default {
   name : "CLIFFJUMPSLOW",
@@ -17,8 +18,8 @@ export default {
   main : function(p){
     player[p].timer++;
     if (!this.interrupt(p)){
-      const x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      const y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      const x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      const y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 20){
         player[p].phys.pos = new Vec2D(x+(this.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+this.offset[player[p].timer-1][1]);
       }

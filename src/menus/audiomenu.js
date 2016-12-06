@@ -17,6 +17,7 @@ export function audioMenuControls (i, input){
   let audioLevelMoveUp = false;
   let audioLevelMoveDown = false;
   if (input[0].b && !input[1].b){
+	fg1.textAlign = "left";
     sounds.menuBack.play();
     //player[i].inputs.b[1] = true;
     setCookie("soundsLevel", masterVolume[0], 36500);
@@ -141,6 +142,7 @@ export function drawAudioMenuInit (){
 
 export function drawAudioMenu (){
   clearScreen();
+  drawAudioMenuInit();
   bg2.lineWidth = 3;
   addShine(0.01);
   if (shine > 1.8){
@@ -164,9 +166,9 @@ export function drawAudioMenu (){
   for (var i = 0; i < 2; i++) {
     if (i == audioMenuSelected) {
       //ui.fillStyle = "rgba(255, 255, 255, 0.7)";
-      ui.fillStyle = "rgba(255, 255, 255, 0.3)";
+      ui.fillStyle = "rgba(255, 255, 255,0.3)";
     } else {
-      ui.fillStyle = "rgba(255, 255, 255, 0.1)";
+      ui.fillStyle = "rgba(255, 255, 255,0.1)";
       //ui.fillStyle = "rgba(0, 0, 0, 0.8)";
     }
     ui.beginPath();
