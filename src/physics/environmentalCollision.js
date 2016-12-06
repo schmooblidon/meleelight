@@ -33,6 +33,26 @@ function turn(number, counterclockwise = true) {
   }
 };
 
+function priorityFromType(wallType) {
+  switch (wallType[0].toLowerCase) {
+    case "c":
+      return 2;
+      break;
+    case "l":
+    case "r":
+      return 3;
+      break;
+    case "p":
+      return 4;
+      break;
+    case "g":
+      return 5;
+      break;
+    default:
+      return 1;
+  }
+}
+
 // returns true if the vector is moving into the wall, false otherwise
 function movingInto (vec, wallTopOrRight, wallBottomOrLeft, wallType) {
   let sign = 1;
@@ -218,7 +238,7 @@ function orthogonalProjection(point, line) {
 
 // ecbp : projected ECB
 // ecb1 : old ECB
-// function return type: either false (no collision) or a pair (touchingWall, proposed new player center position (Vec2D))
+// function return type: either false (no collision) or a triple (touchingWall, proposed new player center position (Vec2D), collision priority)
 // touchingWall is either false, left or right, indicating whether the player is still touching that wall after the transformation
 // terminology in the comments: a wall is a segment with an inside and an outside,
 // which is contained in an infinite line, extending both ways, which also has an inside and an outside
@@ -386,7 +406,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
         const newCenter = new Vec2D( position.x + newSameECB.x - ecbp[same].x , position.y + newSameECB.y - ecbp[same].y );
         const touchingWall = false; // colliding with ECB edge never counts as touching
         console.log("'findCollision': collision, relevant edge of ECB crossed "+wallType+" corner.");
-        return ( [touchingWall, newCenter] );
+        return ( [touchingWall, newCenter, 1] ); // corner has priority 1
       }
     }
 
@@ -415,7 +435,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
             touchingWall = false;
           }
           console.log("'findCollision': collision, noncrossing same-side ECB point, "+wallType+" surface.");
-          return ( [touchingWall, newCenter] );
+          return ( [touchingWall, newCenter, priorityFromType(wallType)] );
         }
       }
 
@@ -448,7 +468,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
                 touchingWall = false;
               }
               console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" surface.");
-              return ( [touchingWall, newCenter] );
+              return ( [touchingWall, newCenter, priorityFromType(wallType)+10] );
             }
           }
         }
@@ -507,9 +527,9 @@ function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldM
 
 // finds the maybeCenterAndTouchingType with the closest center to the provided position
 // recall that a 'maybeCenterAndTouchingType' is given by one of the following three options: 
-//          option 1: 'false'                      (no collision) 
-//          option 2: '[center, false]'            (collision, but no longer touching) 
-//          option 3: '[center, wallTypeAndIndex]' (collision, still touching wall with given type and index)
+//          option 1: 'false'                                (no collision) 
+//          option 2: '[center, false, priority]'            (collision, but no longer touching) 
+//          option 3: '[center, wallTypeAndIndex, priority]' (collision, still touching wall with given type and index)
 function closestCenterAndTouchingType(oldCenter, maybeCenterAndTouchingTypes) {
   let newMaybeCenterAndTouchingType = false;
   let start = -1;
@@ -538,8 +558,14 @@ function closestCenterAndTouchingType(oldCenter, maybeCenterAndTouchingTypes) {
         // option 1: no center proposed
         // do nothing
       }
+      else if (newMaybeCenterAndTouchingType[2] > maybeCenterAndTouchingTypes[j][2]) {
+        // do nothing: center has higher priority than new suggestion
+      }
+      else if (newMaybeCenterAndTouchingType[2] < maybeCenterAndTouchingTypes[j][2]) {
+        // take the new center: it has higher priority
+        newMaybeCenterAndTouchingType = maybeCenterAndTouchingTypes[j];
+      }
       else if (squaredDist (oldCenter,newMaybeCenterAndTouchingType[0]) > squaredDist(oldCenter, maybeCenterAndTouchingTypes[j][0])) {
-        // options 2 or 3: new proposed center
         // moreover, this center is closer to 'oldCenter' than the previous proposed center
         // use this centerAndTouchingType instead
         newMaybeCenterAndTouchingType = maybeCenterAndTouchingTypes[j];
