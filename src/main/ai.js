@@ -1,4 +1,4 @@
-import {player, playerType, cS} from "main/main";
+import {player, playerType, characterSelections} from "main/main";
 import {gameSettings} from "settings";
 import {activeStage} from "stages/activeStage";
 /* eslint-disable */
@@ -28,7 +28,7 @@ export function NearestEnemy(cpu,p){
   }
   return nearestEnemy;
 }
-export function generalAI(i) {
+export function generalAI(i,input) {
   player[i].inputs.lsX[0] = 0;
   player[i].inputs.lsY[0] = 0;
   player[i].inputs.x[0] = false;
@@ -52,7 +52,7 @@ export function generalAI(i) {
   const ptimer = player[i].timer;
   const pgrounded = player[i].phys.grounded;
   // if (a > 5) {
-  // if (cS[i] == 2) {
+  // if (characterSelections[i] == 2) {
   // var distx = player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x;
   // player[i].phys.pos.x = ((Math.random() * 50) - 25) + player[i].phys.pos.x - (Math.sign(player[i].phys.pos.x - player[NearestEnemy(player[i],i)].phys.pos.x) * 1.0 * Math.min(5,Math.abs(player[i].phys.pos.x - (player[NearestEnemy(player[i],i)].phys.pos.x + ((Math.random() * 50) - 20)))));
   // px = ((Math.random() * 50) - 25) + px - (Math.sign(px - player[NearestEnemy(player[i],i)].phys.pos.y) * 1.0 * Math.min(5,Math.abs(px - (player[NearestEnemy(player[i],i)].phys.pos.y + ((Math.random() * 50) - 20)))));
@@ -445,7 +445,7 @@ export function generalAI(i) {
   }
   //run character specific stuff
   const ais = [marthAI, jiggsAI, foxAI];
-  ais[cS[i]](i); //calls that character's AI.
+  ais[characterSelections[i]](i); //calls that character's AI.
 }
 export function marthAI(i) {
   const paction = player[i].actionState;
@@ -691,7 +691,7 @@ export function marthAI(i) {
               } else if (randomSeed1 <= 50) { //d-tilt
                 player[i].inputs.lsY[0] = -0.50;
               } else if (randomSeed1 <= 75) { //up-tilt
-                if (cS[i] == 1 || cS[i] == 2) {
+                if (characterSelections[i] == 1 || characterSelections[i] == 2) {
                   if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
                     player[i].currentAction = "REVERSEUPTILT";
                     player[i].currentSubaction = "REVERSE";
@@ -777,7 +777,7 @@ export function jiggsAI(i) {
         player[i].inputs.lsX[0] = -1.0 * player[i].phys.face;
         return;
       } else {
-        if (cS[i] == 2 && Math.abs(distx) > 80 && Math.abs(disty) < 15) { //is fox
+        if (characterSelections[i] == 2 && Math.abs(distx) > 80 && Math.abs(disty) < 15) { //is fox
           var randomSeed = Math.floor((Math.random() * 10) + 1);
           if (randomSeed == 1) {
             player[i].currentAction = "SHDL";
@@ -801,7 +801,7 @@ export function jiggsAI(i) {
               } else if (randomSeed1 <= 50) { //d-tilt
                 player[i].inputs.lsY[0] = -0.50;
               } else if (randomSeed1 <= 75) { //up-tilt
-                if (cS[i] == 1 || cS[i] == 2) {
+                if (characterSelections[i] == 1 || characterSelections[i] == 2) {
                   if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
                     player[i].currentAction = "REVERSEUPTILT";
                     player[i].currentSubaction = "REVERSE";
@@ -963,7 +963,7 @@ export function foxAI(i) {
         player[i].inputs.lsX[0] = -1.0 * player[i].phys.face;
         return;
       } else {
-        if (cS[i] == 2 && Math.abs(distx) > 80 && Math.abs(disty) < 15) { //is fox
+        if (characterSelections[i] == 2 && Math.abs(distx) > 80 && Math.abs(disty) < 15) { //is fox
           var randomSeed = Math.floor((Math.random() * 10) + 1);
           if (randomSeed == 1) {
             player[i].currentAction = "SHDL";
@@ -982,7 +982,7 @@ export function foxAI(i) {
               } else if (randomSeed1 <= 50) { //d-tilt
                 player[i].inputs.lsY[0] = -0.50;
               } else if (randomSeed1 <= 75) { //up-tilt
-                if (cS[i] == 1 || cS[i] == 2) {
+                if (characterSelections[i] == 1 || characterSelections[i] == 2) {
                   if (!(1.0 * Math.sign(distx) == player[i].phys.face)) {
                     player[i].currentAction = "REVERSEUPTILT";
                     player[i].currentSubaction = "REVERSE";
@@ -1038,8 +1038,8 @@ export function foxAI(i) {
 }
 
 
-export function runAI (i){
-  generalAI(i); //calls general AI
+export function runAI (i,input){
+  generalAI(i,input); //calls general AI
   //console.log(player[i].difficulty);
   //These are the player Inputs
 }
@@ -1267,7 +1267,7 @@ export function CPUGrabRelease(cpu,p) {
     a: false
   };
   if (cpu.actionState == "WAIT" || cpu.actionState == "CAPTURECUT") {
-    if (cS[p] == 2) { //is fox
+    if (characterSelections[p] == 2) { //is fox
       var randomSeed = Math.floor((Math.random() * 125) + 1);
       if (randomSeed < 4) { //waveshine
         returnInput.b = true;
@@ -1456,7 +1456,7 @@ function CPULedge(cpu, p) {
       }
     } else if (randomSeed <= 22) { //ledgestall
       if (player[p].difficulty >= 1) {
-        if (cS[p] != 1) {
+        if (characterSelections[p] != 1) {
           cpu.currentAction = "LEDGESTALL";
           cpu.currentSubaction = "FALL";
           returnInput.lstickY = -1.0;
@@ -1467,7 +1467,7 @@ function CPULedge(cpu, p) {
     //fox waits 4 frames
     //jiggs waits 5 frames
     //marth waits 17 frames...
-    if (cS[p] == 0) { //is marth
+    if (characterSelections[p] == 0) { //is marth
       //might be one frame too late or early on timing on my end. pls fix?
       //if (player[i].timer == 18) {
       //	console.log(1.0 * Math.sign(cpu.phys.face));
@@ -1496,7 +1496,7 @@ function CPULedge(cpu, p) {
         returnInput.x = true;
         returnInput.lstickX = cpu.phys.face;
       }
-    } else if (cS[p] == 1) { //is jiggsc
+    } else if (characterSelections[p] == 1) { //is jiggsc
       if (cpu.timer == 6 && cpu.actionState == "JUMPAERIAL1") {
         returnInput.lstickX = cpu.phys.face;
         returnInput.lstickY = -1.0;
@@ -1505,7 +1505,7 @@ function CPULedge(cpu, p) {
         returnInput.x = true;
         returnInput.lstickX = cpu.phys.face;
       }
-    } else if (cS[p] == 2) { //is fox
+    } else if (characterSelections[p] == 2) { //is fox
       if (cpu.timer == 5) {
         returnInput.lstickX = cpu.phys.face;
         returnInput.lstickY = -1.0;
@@ -1526,7 +1526,7 @@ function CPULedge(cpu, p) {
       returnInput.lstickX = cpu.phys.face; //moves forward?
     }
   } else if (cpu.currentAction == "LEDGEAIRATTACK") {
-    if (cS[p] == 0) { //marth
+    if (characterSelections[p] == 0) { //marth
       if (cpu.timer == 1) {
         returnInput.x = true; // jump
       } else if (cpu.timer == 3) {
@@ -1544,7 +1544,7 @@ function CPULedge(cpu, p) {
       } else {
         returnInput.lstickX = cpu.phys.face;
       }
-    } else if (cS[p] == 1) { //puff
+    } else if (characterSelections[p] == 1) { //puff
       if (cpu.timer == 1) {
         returnInput.x = true; //jump
       } else if (cpu.timer == 3) {
@@ -1562,7 +1562,7 @@ function CPULedge(cpu, p) {
       } else {
         returnInput.lstickX = cpu.phys.face;
       }
-    } else if (cS[p] == 2) { //fox
+    } else if (characterSelections[p] == 2) { //fox
       if (cpu.timer == 3) {
         returnInput.x = true; //jump
       } else if (cpu.timer == 6) {
@@ -1628,7 +1628,7 @@ export function CPUrecover (cpu,p) {
       b: false
     }; //format is [x joystick float, y joystick float, x button, b button]
     // if charSelect of player num is 2 meaning Fox
-    if (cS[p] == 2) {
+    if (characterSelections[p] == 2) {
       //perfect imperfect firefox angles
       if (cpu.actionState == "UPSPECIALCHARGE") {
         returnInput.lStickX = 0.0;
@@ -1665,7 +1665,7 @@ export function CPUrecover (cpu,p) {
       } else if (cpu.phys.pos.x > closest.x) {
         returnInput.lstickX = -1.0;
       }
-      if (cS[p] == 0 && ((Math.abs(closest.x - cpu.phys.pos.x) > 25) && (!cpu.phys.doubleJumped || (cpu.phys.jumpsUsed <
+      if (characterSelections[p] == 0 && ((Math.abs(closest.x - cpu.phys.pos.x) > 25) && (!cpu.phys.doubleJumped || (cpu.phys.jumpsUsed <
           5 && cpu.charAttributes.multiJump)) && ((closest.y - cpu.phys.pos.y < 5) || ((closest.y - cpu.phys.pos.y <
           30 && Math.abs(closest.x - cpu.phys.pos.x) > 40))))) {
         //side-b
@@ -1694,21 +1694,21 @@ export function CPUrecover (cpu,p) {
             if (randomSeed <= 300) { //will jump
               returnInput.x = true;
             } else if (randomSeed <= 301) { //will up-b
-              if (cS[p] != 1) { //not jigglypuff
+              if (characterSelections[p] != 1) { //not jigglypuff
                 returnInput.lstickX = 0.0;
                 returnInput.lstickY = 1.0;
                 returnInput.b = true;
               }
             }
           } else {
-            if (cS[p] == 0) { //is marth
+            if (characterSelections[p] == 0) { //is marth
               if ((Math.abs(closest.x - cpu.phys.pos.x) <= 20 && closest.y - cpu.phys.pos.y > 30) || closest.y - cpu.phys
                 .pos.y > 60) {
                 returnInput.lstickY = 1.0;
                 returnInput.b = true;
               } //else moves towards ledge
             }
-            if (cS[p] == 2) { //is fox
+            if (characterSelections[p] == 2) { //is fox
               if ((Math.abs(closest.y - cpu.phys.pos.y) <= 10) && (Math.abs(closest.x - cpu.phys.pos.x) >= 30 && Math.abs(
                   closest.x - cpu.phys.pos.x) <= 77)) { //can side-b?
                 randomSeed = Math.floor((Math.random() * 10) + 1);
@@ -1733,7 +1733,7 @@ export function CPUrecover (cpu,p) {
           }
         }
       }
-      if (cS[p] == 2 && returnInput.lStickY == 1.0) {
+      if (characterSelections[p] == 2 && returnInput.lStickY == 1.0) {
         returnInput.lStickX = 0.0;
       }
     } else {

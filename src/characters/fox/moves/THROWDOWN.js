@@ -2,10 +2,10 @@
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
 import {framesData} from "main/characters";
-import { cS, player} from "main/main";
+import { characterSelections, player} from "main/main";
 import {sounds} from "main/sfx";
 import {articles} from "physics/article";
-import {randomShout, turnOffHitboxes, aS} from "physics/actionStateShortcuts";
+import {randomShout, turnOffHitboxes, actionStates} from "physics/actionStateShortcuts";
 
 import {hitQueue} from 'physics/hitDetection';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -17,12 +17,12 @@ export default {
   init : function(p){
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNFOXDOWN.init(player[p].phys.grabbing);
-    const frame = framesData[cS[player[p].phys.grabbing]].THROWNFOXDOWN;
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXDOWN.init(player[p].phys.grabbing);
+    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXDOWN;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
-    randomShout(cS[p]);
+    randomShout(characterSelections[p]);
     this.main(p);
   },
   main : function(p){

@@ -1,5 +1,5 @@
-import {checkForJump, reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {checkForJump, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "RUNTURN",
@@ -8,11 +8,11 @@ export default {
   init : function(p){
     player[p].actionState = "RUNTURN";
     player[p].timer = 0;
-    aS[cS[p]].RUNTURN.main(p);
+    actionStates[characterSelections[p]].RUNTURN.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].RUNTURN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].RUNTURN.interrupt(p)){
       if (player[p].timer == player[p].charAttributes.runTurnBreakPoint+1){
         player[p].phys.face *= -1;
       }
@@ -44,15 +44,15 @@ export default {
   interrupt : function(p){
     var j = checkForJump(p);
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].RUNTURN){
+    else if (player[p].timer > framesData[characterSelections[p]].RUNTURN){
       if(player[p].inputs.lsX[0] * player[p].phys.face > 0.6){
-        aS[cS[p]].RUN.init(p);
+        actionStates[characterSelections[p]].RUN.init(p);
       }
       else {
-        aS[cS[p]].WAIT.init(p);
+        actionStates[characterSelections[p]].WAIT.init(p);
       }
       return true;
     }

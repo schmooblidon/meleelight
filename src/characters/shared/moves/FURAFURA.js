@@ -1,6 +1,6 @@
-import {mashOut, reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {mashOut, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
 import { Vec2D} from "main/util";
-import {cS,  player} from "main/main";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {drawVfx} from "main/vfx/drawVfx";
 import {actionSounds, framesData} from "../../../main/characters";
@@ -14,13 +14,13 @@ export default {
     player[p].phys.stuckTimer = 490;
     drawVfx("furaFura",new Vec2D(player[p].phys.pos.x+(4+Math.random()*2)*player[p].phys.face,player[p].phys.pos.y+11+Math.random()*3),player[p].phys.face);
     player[p].furaLoopID = sounds.furaloop.play();
-    aS[cS[p]].FURAFURA.main(p);
+    actionStates[characterSelections[p]].FURAFURA.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FURAFURA.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FURAFURA.interrupt(p)){
       if (player[p].timer % 100 == 65){
-        sounds[actionSounds[cS[p]].FURAFURA[0][1]].play();
+        sounds[actionSounds[characterSelections[p]].FURAFURA[0][1]].play();
       }
       reduceByTraction(p,true);
       if (player[p].timer % 49 == 0){
@@ -41,10 +41,10 @@ export default {
   interrupt : function(p){
     if (player[p].phys.stuckTimer <= 0){
       sounds.furaloop.stop(player[p].furaLoopID);
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].FURAFURA){
+    else if (player[p].timer > framesData[characterSelections[p]].FURAFURA){
       player[p].timer = 1;
       return false;
     }

@@ -1,5 +1,5 @@
-import {cS, player} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 import {activeStage} from "stages/activeStage";
 export default {
   name : "REBIRTH",
@@ -30,13 +30,13 @@ export default {
   },
   main : function(p){
     player[p].timer+= 1;
-    if (!aS[cS[p]].REBIRTH.interrupt(p)){
+    if (!actionStates[characterSelections[p]].REBIRTH.interrupt(p)){
       player[p].phys.outOfCameraTimer = 0;
     }
   },
   interrupt : function(p){
     if (player[p].timer > 90){
-      aS[cS[p]].REBIRTHWAIT.init(p);
+      actionStates[characterSelections[p]].REBIRTHWAIT.init(p);
       return true;
     }
     else {

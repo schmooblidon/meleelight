@@ -1,5 +1,5 @@
-import {cS, player} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 import {framesData} from 'main/characters';
 export default {
   name : "REBIRTHWAIT",
@@ -12,25 +12,25 @@ export default {
   main : function(p){
     player[p].timer+= 1;
     player[p].spawnWaitTime++;
-    if (!aS[cS[p]].REBIRTHWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].REBIRTHWAIT.interrupt(p)){
       player[p].phys.outOfCameraTimer = 0;
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].WAIT){
-      aS[cS[p]].REBIRTHWAIT.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].WAIT){
+      actionStates[characterSelections[p]].REBIRTHWAIT.init(p);
       return true;
     }
     else if (player[p].spawnWaitTime > 300){
       player[p].phys.grounded = false;
       player[p].phys.invincibleTimer = 120;
-      aS[cS[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 || Math.abs(player[p].inputs.lsY[0]) > 0.3 ){
       player[p].phys.grounded = false;
       player[p].phys.invincibleTimer = 120;
-      aS[cS[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {

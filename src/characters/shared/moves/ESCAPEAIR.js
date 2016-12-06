@@ -1,5 +1,5 @@
-import {playSounds, executeIntangibility, fastfall, airDrift, aS, getAngle} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {playSounds, executeIntangibility, fastfall, airDrift, actionStates, getAngle} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 export default {
   name : "ESCAPEAIR",
   canPassThrough : false,
@@ -23,11 +23,11 @@ export default {
     }
     player[p].phys.fastfalled = false;
     player[p].phys.landingMultiplier = 3;
-    aS[cS[p]].ESCAPEAIR.main(p);
+    actionStates[characterSelections[p]].ESCAPEAIR.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].ESCAPEAIR.interrupt(p)){
+    if (!actionStates[characterSelections[p]].ESCAPEAIR.interrupt(p)){
       if (player[p].timer < 30){
         player[p].phys.cVel.x *= 0.9;
         player[p].phys.cVel.y *= 0.9;
@@ -42,7 +42,7 @@ export default {
   },
   interrupt : function(p){
     if (player[p].timer > 49){
-      aS[cS[p]].FALLSPECIAL.init(p);
+      actionStates[characterSelections[p]].FALLSPECIAL.init(p);
       return true;
     }
     else {
@@ -52,7 +52,7 @@ export default {
   land : function(p){
     player[p].phys.intangibleTimer = 0;
     player[p].phys.hurtBoxState = 0;
-    aS[cS[p]].LANDINGFALLSPECIAL.init(p);
+    actionStates[characterSelections[p]].LANDINGFALLSPECIAL.init(p);
   }
 };
 

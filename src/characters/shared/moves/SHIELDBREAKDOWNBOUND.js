@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS,  player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -14,11 +14,11 @@ export default {
     player[p].phys.kVel.y = 0;
     drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
     sounds.bounce.play();
-    aS[cS[p]].SHIELDBREAKDOWNBOUND.main(p);
+    actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SHIELDBREAKDOWNBOUND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.interrupt(p)){
       player[p].phys.intangibleTimer = 1;
       if (player[p].timer == 1){
         reduceByTraction(p,true);
@@ -29,8 +29,8 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].SHIELDBREAKDOWNBOUND){
-      aS[cS[p]].SHIELDBREAKSTAND.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].SHIELDBREAKDOWNBOUND){
+      actionStates[characterSelections[p]].SHIELDBREAKSTAND.init(p);
       return true;
     }
     else {

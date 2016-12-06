@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 
 import {framesData} from 'main/characters';
 export default {
@@ -13,17 +13,17 @@ export default {
     player[p].timer = 0;
     player[p].phys.grabbing = -1;
     player[p].phys.cVel.x = -1*player[p].phys.face;
-    aS[cS[p]].CATCHCUT.main(p);
+    actionStates[characterSelections[p]].CATCHCUT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CATCHCUT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CATCHCUT.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].CATCHCUT){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].CATCHCUT){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {

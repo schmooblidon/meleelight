@@ -1,4 +1,4 @@
-import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForDash,
+import {actionStates, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForDash,
     checkForSmashTurn
     , checkForTiltTurn
     , tiltTurnDashBuffer
@@ -10,7 +10,7 @@ import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, c
 } from "physics/actionStateShortcuts";
 import {baseActionStates} from "characters/baseActionStates";
 import {sounds} from "main/sfx";
-import {player, cS} from "main/main";
+import {player, characterSelections} from "main/main";
 import {framesData,CHARIDS} from "main/characters";
 
 import {hitQueue} from 'physics/hitDetection';
@@ -26,11 +26,11 @@ setupActionStates(CHARIDS.PUFF_ID,{});
 // base action states added
 var keys = Object.keys(baseActionStates);
 for (var i=0;i<keys.length;i++){
-  aS[1][keys[i]] = {};
-    deepCopyObject(true,aS[1][keys[i]],baseActionStates[keys[i]]);
+  actionStates[1][keys[i]] = {};
+    deepCopyObject(true,actionStates[1][keys[i]],baseActionStates[keys[i]]);
 }
 // set pointer for readibility
-var puff = aS[1];
+var puff = actionStates[1];
 
 // OVERWRITES START
 // BITES PLZ
@@ -830,7 +830,7 @@ puff.FORWARDSMASH = {
 
       player[p].phys.cVel.x = puff.FORWARDSMASH.setVelocities[player[p].timer-1]*player[p].phys.face;
       if (player[p].timer == 6){
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
       }
 
       if (player[p].timer == 12){
@@ -874,7 +874,7 @@ puff.UPSMASH = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.upsmash.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.upsmash.id1;
-    randomShout(cS[p]);
+    randomShout(characterSelections[p]);
     puff.UPSMASH.main(p);
   },
   main : function(p){
@@ -983,7 +983,7 @@ puff.DOWNSMASH = {
     player[p].hitboxes.id[1] = player[p].charHitboxes.dsmash.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.dsmash.id2;
     player[p].hitboxes.id[3] = player[p].charHitboxes.dsmash.id3;
-    randomShout(cS[p]);
+    randomShout(characterSelections[p]);
     puff.DOWNSMASH.main(p);
   },
   main : function(p){
@@ -2017,12 +2017,12 @@ puff.THROWFORWARD = {
   init : function(p){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNPUFFFORWARD.init(player[p].phys.grabbing);
-    var frame = framesData[cS[player[p].phys.grabbing]].THROWNPUFFFORWARD;
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFFORWARD.init(player[p].phys.grabbing);
+    var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNPUFFFORWARD;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
-    randomShout(cS[p]);
+    randomShout(characterSelections[p]);
     puff.THROWFORWARD.main(p);
   },
   main : function(p){
@@ -2067,12 +2067,12 @@ puff.THROWBACK = {
   init : function(p){
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNPUFFBACK.init(player[p].phys.grabbing);
-    var frame = framesData[cS[player[p].phys.grabbing]].THROWNPUFFBACK;
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFBACK.init(player[p].phys.grabbing);
+    var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNPUFFBACK;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
-    randomShout(cS[p]);
+    randomShout(characterSelections[p]);
     puff.THROWBACK.main(p);
   },
   main : function(p){
@@ -2110,9 +2110,9 @@ puff.THROWUP = {
   init : function(p){
     player[p].actionState = "THROWUP";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNPUFFUP.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFUP.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
-    var frame = framesData[cS[player[p].phys.grabbing]].THROWNPUFFUP;
+    var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNPUFFUP;
     player[p].phys.releaseFrame = frame+1;
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
     puff.THROWUP.main(p);
@@ -2151,12 +2151,12 @@ puff.THROWDOWN = {
   init : function(p){
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNPUFFDOWN.init(player[p].phys.grabbing);
-    var frame = framesData[cS[player[p].phys.grabbing]].THROWNPUFFDOWN;
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFDOWN.init(player[p].phys.grabbing);
+    var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNPUFFDOWN;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdownextra.id0;
-    randomShout(cS[p]);
+    randomShout(characterSelections[p]);
     puff.THROWDOWN.main(p);
   },
   main : function(p){
@@ -2425,7 +2425,7 @@ puff.THROWNPUFFBACK = {
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNPUFFBACK.offset[player[p].timer-1][0]*player[p].phys.face*-1,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNPUFFBACK.offset[player[p].timer-1][1]);
         /*if (player[p].timer > 13 && player[p].timer < 19){
-          player[p].phys.pos.x += aS[0].THROWNPUFFBACK.offsetVel[player[p].timer-14]*player[p].phys.face;
+          player[p].phys.pos.x += actionStates[0].THROWNPUFFBACK.offsetVel[player[p].timer-14]*player[p].phys.face;
         }*/
       }
 

@@ -1,4 +1,4 @@
-import {cpuDifficulty, cS, player, changeGamemode, playerType,bg1,ui, palettes, pPal, clearScreen, versusMode, tagText,
+import {cpuDifficulty, characterSelections, player, changeGamemode, playerType,bg1,ui, palettes, pPal, clearScreen, versusMode, tagText,
     pause
     , hasTag
     , randomTags
@@ -10,7 +10,7 @@ import {cpuDifficulty, cS, player, changeGamemode, playerType,bg1,ui, palettes, 
 } from "main/main";
 import {drawArrayPathCompress, twoPi} from "main/render";
 import {sounds} from "main/sfx";
-import {aS} from "physics/actionStateShortcuts";
+import {actionStates} from "physics/actionStateShortcuts";
 import {setCS} from "../main/main";
 import {chars} from "../main/characters";
 import {Vec2D} from "../main/util/Vec2D";
@@ -54,8 +54,8 @@ export function changeCharacter (i,c){
   setCS(i,c);
   player[i].actionState = "WAIT";
   player[i].timer = 0;
-  player[i].charAttributes = chars[cS[i]].attributes;
-  player[i].charHitboxes = chars[cS[i]].hitboxes;
+  player[i].charAttributes = chars[characterSelections[i]].attributes;
+  player[i].charHitboxes = chars[characterSelections[i]].hitboxes;
 }
 
 export function cssControls (i, input){
@@ -704,7 +704,7 @@ export function drawCSS (){
       }
       var face = player[i].phys.face;
 
-      var model = animations[cS[i]][aS[cS[i]][player[i].actionState].name][frame - 1];
+      var model = animations[characterSelections[i]][actionStates[characterSelections[i]][player[i].actionState].name][frame - 1];
 
       switch (player[i].actionState) {
         case 15:
@@ -714,12 +714,12 @@ export function drawCSS (){
         case 61:
         case 72:
         case 94:
-          var model = animations[cS[i]][aS[cS[i]][player[i].actionState].name][0];
+          var model = animations[characterSelections[i]][actionStates[characterSelections[i]][player[i].actionState].name][0];
           break;
         default:
           break;
       }
-      if (aS[cS[i]][player[i].actionState].reverseModel) {
+      if (actionStates[characterSelections[i]][player[i].actionState].reverseModel) {
         face *= -1;
       } else if (player[i].actionState == 4) {
         if (frame > 5) {

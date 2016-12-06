@@ -1,5 +1,5 @@
-import {airDrift, fastfall, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {airDrift, fastfall, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "FALLSPECIAL",
@@ -13,18 +13,18 @@ export default {
   init : function(p){
     player[p].actionState = "FALLSPECIAL";
     player[p].timer = 0;
-    aS[cS[p]].FALLSPECIAL.main(p);
+    actionStates[characterSelections[p]].FALLSPECIAL.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FALLSPECIAL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FALLSPECIAL.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].FALLSPECIAL){
-      aS[cS[p]].FALLSPECIAL.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].FALLSPECIAL){
+      actionStates[characterSelections[p]].FALLSPECIAL.init(p);
       return true;
     }
     else {
@@ -32,6 +32,6 @@ export default {
     }
   },
   land : function(p){
-    aS[cS[p]].LANDINGFALLSPECIAL.init(p);
+    actionStates[characterSelections[p]].LANDINGFALLSPECIAL.init(p);
   }
 };

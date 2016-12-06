@@ -1,6 +1,6 @@
 
 import WAIT from "characters/shared/moves/WAIT";
-import {player, cS} from "main/main";
+import {player, characterSelections} from "main/main";
 import {turnOffHitboxes, randomShout} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {Vec2D} from "main/util/Vec2D";
@@ -43,7 +43,7 @@ export default {
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
       }
       else if (player[p].timer > 57 && player[p].timer < 60){
         player[p].hitboxes.frame++;

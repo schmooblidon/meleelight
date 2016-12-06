@@ -5,14 +5,14 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "WAIT";
     player[p].timer = 1;
-    aS[cS[p]].WAIT.main(p);
+    actionStates[characterSelections[p]].WAIT.main(p);
   },
   main : function(p){
     player[p].timer += 1;
-    if (!aS[cS[p]].WAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].WAIT.interrupt(p)){
       reduceByTraction(p,false);
-      if (player[p].timer > frames[cS[p]].WAIT){
-        aS[cS[p]].WAIT.init(p);
+      if (player[p].timer > frames[characterSelections[p]].WAIT){
+        actionStates[characterSelections[p]].WAIT.init(p);
       }
     }
   },
@@ -28,48 +28,48 @@ echo 'export default {
     var s = checkForSmashes(p);
     var j = checkForJump(p);
     if (j[0] && !player[p].inCSS){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
       return true;
     }
     else if (checkForSquat(p) && !player[p].inCSS){
-      aS[cS[p]].SQUAT.init(p);
+      actionStates[characterSelections[p]].SQUAT.init(p);
       return true;
     }
     else if (checkForDash(p) && !player[p].inCSS){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else if (checkForSmashTurn(p) && !player[p].inCSS){
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p);
       return true;
     }
     else if (checkForTiltTurn(p) && !player[p].inCSS){
       player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-      aS[cS[p]].TILTTURN.init(p);
+      actionStates[characterSelections[p]].TILTTURN.init(p);
       return true;
     }
     else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 && !player[p].inCSS){
-      aS[cS[p]].WALK.init(p,true);
+      actionStates[characterSelections[p]].WALK.init(p,true);
       return true;
     }
     else {
@@ -88,11 +88,11 @@ echo 'export default {
     player[p].actionState = "DASH";
     player[p].timer = 0;
     sounds.dash.play();
-    aS[cS[p]].DASH.main(p);
+    actionStates[characterSelections[p]].DASH.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DASH.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DASH.interrupt(p)){
       if (player[p].timer == 2){
         player[p].phys.cVel.x += player[p].charAttributes.dInitV * player[p].phys.face;
         if (Math.abs(player[p].phys.cVel.x) > player[p].charAttributes.dMaxV){
@@ -133,56 +133,56 @@ echo 'export default {
     var j = checkForJump(p);
     if (player[p].inputs.l[0] || player[p].inputs.r[0]){
       player[p].phys.cVel.x *= 0.25;
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
       player[p].phys.cVel.x *= 0.25;
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
       if (player[p].timer < 4 && player[p].inputs.lsX[0]*player[p].phys.face >= 0.8){
         player[p].phys.cVel.x *= 0.25;
-        aS[cS[p]].FORWARDSMASH.init(p);
+        actionStates[characterSelections[p]].FORWARDSMASH.init(p);
       }
       else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-        aS[cS[p]].GRAB.init(p);
+        actionStates[characterSelections[p]].GRAB.init(p);
       }
       else {
-        aS[cS[p]].ATTACKDASH.init(p);
+        actionStates[characterSelections[p]].ATTACKDASH.init(p);
       }
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
       player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
-        aS[cS[p]].SIDESPECIALGROUND.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALGROUND.init(p);
       }
       else {
-        aS[cS[p]].SIDESPECIALAIR.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALAIR.init(p);
       }
       return true;
     }
     else if (player[p].timer > 4 && checkForSmashTurn(p)){
       player[p].phys.cVel.x *= 0.25;
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p);
       return true;
     }
     else if (player[p].timer > player[p].charAttributes.dashFrameMax && player[p].inputs.lsX[0] * player[p].phys.face > 0.79 && player[p].inputs.lsX[2] * player[p].phys.face < 0.3){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else if (player[p].timer > player[p].charAttributes.dashFrameMin && player[p].inputs.lsX[0] * player[p].phys.face > 0.62){
-      aS[cS[p]].RUN.init(p);
+      actionStates[characterSelections[p]].RUN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].DASH){
-      aS[cS[p]].WAIT.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].DASH){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -199,13 +199,13 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "RUN";
     player[p].timer = 1;
-    aS[cS[p]].RUN.main(p);
+    actionStates[characterSelections[p]].RUN.main(p);
   },
   main : function(p){
-    if (player[p].timer > frames[cS[p]].RUN){
+    if (player[p].timer > frames[characterSelections[p]].RUN){
       player[p].timer = 1;
     }
-    if (!aS[cS[p]].RUN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].RUN.interrupt(p)){
       var footstep = [false,false];
       if (player[p].timer < 2){
         footstep[0] = true;
@@ -229,7 +229,7 @@ echo 'export default {
       if (time > 0){
         player[p].timer += time;
       }
-      if (player[p].timer > frames[cS[p]].RUN){
+      if (player[p].timer > frames[characterSelections[p]].RUN){
         player[p].timer = 1;
       }
       if ((footstep[0] && player[p].timer >= 2) || (footstep[1] && player[p].timer >= 10)){
@@ -241,45 +241,45 @@ echo 'export default {
     var j = checkForJump(p);
     if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
       if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-        aS[cS[p]].GRAB.init(p);
+        actionStates[characterSelections[p]].GRAB.init(p);
       }
       else {
-        aS[cS[p]].ATTACKDASH.init(p);
+        actionStates[characterSelections[p]].ATTACKDASH.init(p);
       }
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
       player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
-        aS[cS[p]].SIDESPECIALGROUND.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALGROUND.init(p);
       }
       else {
-        aS[cS[p]].SIDESPECIALAIR.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALAIR.init(p);
       }
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lsY[0] < -0.58){
-      aS[cS[p]].DOWNSPECIALGROUND.init(p);
+      actionStates[characterSelections[p]].DOWNSPECIALGROUND.init(p);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (Math.abs(player[p].inputs.lsX[0]) < 0.62){
-      aS[cS[p]].RUNBRAKE.init(p);
+      actionStates[characterSelections[p]].RUNBRAKE.init(p);
       return true;
     }
     else if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
-      aS[cS[p]].RUNTURN.init(p);
+      actionStates[characterSelections[p]].RUNTURN.init(p);
       return true;
     }
   }
@@ -296,11 +296,11 @@ echo 'export default {
     player[p].actionState = "SMASHTURN";
     player[p].timer = 0;
     player[p].phys.face *= -1;
-    aS[cS[p]].SMASHTURN.main(p);
+    actionStates[characterSelections[p]].SMASHTURN.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SMASHTURN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SMASHTURN.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -309,40 +309,40 @@ echo 'export default {
     var s = checkForSmashes(p);
     var j = checkForJump(p);
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
       player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
-        aS[cS[p]].SIDESPECIALGROUND.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALGROUND.init(p);
       }
       else {
-        aS[cS[p]].SIDESPECIALAIR.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALAIR.init(p);
       }
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
     }
     else if (player[p].timer == 2 && player[p].inputs.lsX[0] * player[p].phys.face > 0.79){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else if (player[p].timer > 11){
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -360,14 +360,14 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "TILTTURN";
     player[p].timer = 0;
-    aS[cS[p]].TILTTURN.main(p);
+    actionStates[characterSelections[p]].TILTTURN.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (player[p].timer == 6){
       player[p].phys.face *= -1;
     }
-    if (!aS[cS[p]].TILTTURN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].TILTTURN.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -381,43 +381,43 @@ echo 'export default {
     var s = checkForSmashes(p);
     var j = checkForJump(p);
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
       player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
-        aS[cS[p]].SIDESPECIALGROUND.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALGROUND.init(p);
       }
       else {
-        aS[cS[p]].SIDESPECIALAIR.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALAIR.init(p);
       }
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
       if (player[p].timer < 6){
         player[p].phys.face *= -1;
       }
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
     }
     else if (player[p].timer > 11){
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else if (player[p].timer == 6 && player[p].inputs.lsX[0] * player[p].phys.face > 0.79 && player[p].phys.dashbuffer){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else {
@@ -435,30 +435,30 @@ echo 'export default {
     player[p].actionState = "RUNBRAKE";
     player[p].timer = 0;
     sounds.runbrake.play();
-    aS[cS[p]].RUNBRAKE.main(p);
+    actionStates[characterSelections[p]].RUNBRAKE.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].RUNBRAKE.interrupt(p)){
+    if (!actionStates[characterSelections[p]].RUNBRAKE.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
     var j = checkForJump(p);
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].timer > 1 && checkForSquat(p)){
-      aS[cS[p]].SQUAT.init(p);
+      actionStates[characterSelections[p]].SQUAT.init(p);
       return true;
     }
     else if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
-      aS[cS[p]].RUNTURN.init(p);
+      actionStates[characterSelections[p]].RUNTURN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].RUNBRAKE){
-      aS[cS[p]].WAIT.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].RUNBRAKE){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -475,11 +475,11 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "RUNTURN";
     player[p].timer = 0;
-    aS[cS[p]].RUNTURN.main(p);
+    actionStates[characterSelections[p]].RUNTURN.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].RUNTURN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].RUNTURN.interrupt(p)){
       if (player[p].timer == player[p].charAttributes.runTurnBreakPoint+1){
         player[p].phys.face *= -1;
       }
@@ -511,15 +511,15 @@ echo 'export default {
   interrupt : function(p){
     var j = checkForJump(p);
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].RUNTURN){
+    else if (player[p].timer > frames[characterSelections[p]].RUNTURN){
       if(player[p].inputs.lsX[0] * player[p].phys.face > 0.6){
-        aS[cS[p]].RUN.init(p);
+        actionStates[characterSelections[p]].RUN.init(p);
       }
       else {
-        aS[cS[p]].WAIT.init(p);
+        actionStates[characterSelections[p]].WAIT.init(p);
       }
       return true;
     }
@@ -543,11 +543,11 @@ echo 'export default {
         player[p].phys.cVel.x += player[p].charAttributes.walkInitV * player[p].phys.face;
       }
     }
-    aS[cS[p]].WALK.main(p);
+    actionStates[characterSelections[p]].WALK.main(p);
   },
   main : function(p){
 
-    if (!aS[cS[p]].WALK.interrupt(p)){
+    if (!actionStates[characterSelections[p]].WALK.interrupt(p)){
       var footstep = [false,false];
       if (player[p].timer < 5){
         footstep[0] = true;
@@ -585,53 +585,53 @@ echo 'export default {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].WALK){
-      aS[cS[p]].WALK.init(p,false);
+    if (player[p].timer > frames[characterSelections[p]].WALK){
+      actionStates[characterSelections[p]].WALK.init(p,false);
       return true;
     }
     if (player[p].inputs.lsX[0] == 0){
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
       return true;
     }
     else if (checkForSquat(p)){
-      aS[cS[p]].SQUAT.init(p);
+      actionStates[characterSelections[p]].SQUAT.init(p);
       return true;
     }
     else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p);
       return true;
     }
     else if (checkForTiltTurn(p)){
       player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-      aS[cS[p]].TILTTURN.init(p);
+      actionStates[characterSelections[p]].TILTTURN.init(p);
       return true;
     }
     else {
@@ -651,11 +651,11 @@ echo 'export default {
     player[p].timer = 0;
     player[p].phys.jumpType = 1;
     player[p].phys.jumpSquatType = type;
-    aS[cS[p]].KNEEBEND.main(p);
+    actionStates[characterSelections[p]].KNEEBEND.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].KNEEBEND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].KNEEBEND.interrupt(p)){
       reduceByTraction(p,true);
       // if jumpsquat initiated by stick
       if (player[p].phys.jumpSquatType){
@@ -678,23 +678,23 @@ echo 'export default {
     }
     if (player[p].timer > player[p].charAttributes.jumpSquat){
       if (player[p].inputs.lsX[2] * player[p].phys.face >= -0.3){
-        aS[cS[p]].JUMPF.init(p,player[p].phys.jumpType);
+        actionStates[characterSelections[p]].JUMPF.init(p,player[p].phys.jumpType);
       }
       else {
-        aS[cS[p]].JUMPB.init(p,player[p].phys.jumpType);
+        actionStates[characterSelections[p]].JUMPB.init(p,player[p].phys.jumpType);
       }
       return true;
     }
     else if (player[p].inputs.a[0] && !player[p].inputs.a[1] && (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0)){
-      aS[cS[p]].GRAB.init(p);
+      actionStates[characterSelections[p]].GRAB.init(p);
       return true;
     }
     else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lsY[0] >= 0.8 && player[p].inputs.lsY[3] < 0.3) || (player[p].inputs.csY[0] >= 0.8 && player[p].inputs.csY[3] < 0.3)){
-      aS[cS[p]].UPSMASH.init(p);
+      actionStates[characterSelections[p]].UPSMASH.init(p);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lsY[0] > 0.58){
-      aS[cS[p]].UPSPECIAL.init(p);
+      actionStates[characterSelections[p]].UPSPECIAL.init(p);
       return true;
     }
     else {
@@ -730,12 +730,12 @@ echo 'export default {
 
     player[p].phys.grounded = false;
     sounds.jump2.play();
-    aS[cS[p]].JUMPF.main(p);
+    actionStates[characterSelections[p]].JUMPF.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("JUMP",p);
-    if (!aS[cS[p]].JUMPF.interrupt(p)){
+    if (!actionStates[characterSelections[p]].JUMPF.interrupt(p)){
       if (player[p].timer > 1){
         fastfall(p);
         airDrift(p);
@@ -746,28 +746,28 @@ echo 'export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-        aS[cS[p]].JUMPAERIALB.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALB.init(p);
       }
       else {
-        aS[cS[p]].JUMPAERIALF.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALF.init(p);
       }
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPF){
-      aS[cS[p]].FALL.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].JUMPF){
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {
@@ -803,11 +803,11 @@ echo 'export default {
 
     player[p].phys.grounded = false;
     sounds.jump2.play();
-    aS[cS[p]].JUMPB.main(p);
+    actionStates[characterSelections[p]].JUMPB.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].JUMPB.interrupt(p)){
+    if (!actionStates[characterSelections[p]].JUMPB.interrupt(p)){
       if (player[p].timer > 1){
         fastfall(p);
         airDrift(p);
@@ -818,28 +818,28 @@ echo 'export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-        aS[cS[p]].JUMPAERIALB.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALB.init(p);
       }
       else {
-        aS[cS[p]].JUMPAERIALF.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALF.init(p);
       }
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPB){
-      aS[cS[p]].FALL.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].JUMPB){
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {
@@ -859,11 +859,11 @@ echo 'export default {
     drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDING.main(p);
+    actionStates[characterSelections[p]].LANDING.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].LANDING.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDING.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -874,48 +874,48 @@ echo 'export default {
       var s = checkForSmashes(p);
       var j = checkForJump(p);
       if (j[0]){
-        aS[cS[p]].KNEEBEND.init(p,j[1]);
+        actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-        aS[cS[p]].GUARDON.init(p);
+        actionStates[characterSelections[p]].GUARDON.init(p);
         return true;
       }
       else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-        aS[cS[p]].GUARDON.init(p);
+        actionStates[characterSelections[p]].GUARDON.init(p);
         return true;
       }
       else if (b[0]){
-        aS[cS[p]][b[1]].init(p);
+        actionStates[characterSelections[p]][b[1]].init(p);
         return true;
       }
       else if (s[0]){
-        aS[cS[p]][s[1]].init(p);
+        actionStates[characterSelections[p]][s[1]].init(p);
         return true;
       }
       else if (t[0]){
-        aS[cS[p]][t[1]].init(p);
+        actionStates[characterSelections[p]][t[1]].init(p);
         return true;
       }
       else if (checkForDash(p)){
-        aS[cS[p]].DASH.init(p);
+        actionStates[characterSelections[p]].DASH.init(p);
         return true;
       }
       else if (checkForSmashTurn(p)){
-        aS[cS[p]].SMASHTURN.init(p);
+        actionStates[characterSelections[p]].SMASHTURN.init(p);
         return true;
       }
       else if (checkForTiltTurn(p)){
         player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        aS[cS[p]].TILTTURN.init(p);
+        actionStates[characterSelections[p]].TILTTURN.init(p);
         return true;
       }
       else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-        aS[cS[p]].WALK.init(p,true);
+        actionStates[characterSelections[p]].WALK.init(p,true);
         return true;
       }
       else if (player[p].timer == 5 && player[p].inputs.lsY[0] < -0.5){
-        aS[cS[p]].SQUATWAIT.init(p);
+        actionStates[characterSelections[p]].SQUATWAIT.init(p);
         return true;
       }
       else {
@@ -923,7 +923,7 @@ echo 'export default {
       }
     }
     else if (player[p].timer > 30){
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -956,11 +956,11 @@ echo 'export default {
     }
     player[p].phys.fastfalled = false;
     player[p].phys.landingMultiplier = 3;
-    aS[cS[p]].ESCAPEAIR.main(p);
+    actionStates[characterSelections[p]].ESCAPEAIR.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].ESCAPEAIR.interrupt(p)){
+    if (!actionStates[characterSelections[p]].ESCAPEAIR.interrupt(p)){
       if (player[p].timer < 30){
         player[p].phys.cVel.x *= 0.9;
         player[p].phys.cVel.y *= 0.9;
@@ -975,7 +975,7 @@ echo 'export default {
   },
   interrupt : function(p){
     if (player[p].timer > 49){
-      aS[cS[p]].FALLSPECIAL.init(p);
+      actionStates[characterSelections[p]].FALLSPECIAL.init(p);
       return true;
     }
     else {
@@ -985,7 +985,7 @@ echo 'export default {
   land : function(p){
     player[p].phys.intangibleTimer = 0;
     player[p].phys.hurtBoxState = 0;
-    aS[cS[p]].LANDINGFALLSPECIAL.init(p);
+    actionStates[characterSelections[p]].LANDINGFALLSPECIAL.init(p);
   }
 };
 ' > ESCAPEAIR.js;
@@ -1000,17 +1000,17 @@ echo 'export default {
     player[p].timer = 0;
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDINGFALLSPECIAL.main(p);
+    actionStates[characterSelections[p]].LANDINGFALLSPECIAL.main(p);
   },
   main : function(p){
     player[p].timer += player[p].phys.landingMultiplier;
-    if (!aS[cS[p]].LANDINGFALLSPECIAL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGFALLSPECIAL.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
     if (player[p].timer > 30){
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -1034,7 +1034,7 @@ echo 'export default {
     player[p].actionState = "FALL";
     player[p].timer = 0;
     turnOffHitboxes(p);
-    aS[cS[p]].FALL.main(p,dInputs);
+    actionStates[characterSelections[p]].FALL.main(p,dInputs);
   },
   main : function(p,disableInputs){
     player[p].timer++;
@@ -1043,7 +1043,7 @@ echo 'export default {
       airDrift(p);
     }
     else {
-      if (!aS[cS[p]].FALL.interrupt(p)){
+      if (!actionStates[characterSelections[p]].FALL.interrupt(p)){
         fastfall(p);
         airDrift(p);
       }
@@ -1053,28 +1053,28 @@ echo 'export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-        aS[cS[p]].JUMPAERIALB.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALB.init(p);
       }
       else {
-        aS[cS[p]].JUMPAERIALF.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALF.init(p);
       }
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FALL){
-      aS[cS[p]].FALL.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].FALL){
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {
@@ -1096,11 +1096,11 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "FALLAERIAL";
     player[p].timer = 0;
-    aS[cS[p]].FALLAERIAL.main(p);
+    actionStates[characterSelections[p]].FALLAERIAL.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FALLAERIAL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FALLAERIAL.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
@@ -1109,28 +1109,28 @@ echo 'export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-        aS[cS[p]].JUMPAERIALB.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALB.init(p);
       }
       else {
-        aS[cS[p]].JUMPAERIALF.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALF.init(p);
       }
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FALLAERIAL){
-      aS[cS[p]].FALLAERIAL.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].FALLAERIAL){
+      actionStates[characterSelections[p]].FALLAERIAL.init(p);
       return true;
     }
     else {
@@ -1153,18 +1153,18 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "FALLSPECIAL";
     player[p].timer = 0;
-    aS[cS[p]].FALLSPECIAL.main(p);
+    actionStates[characterSelections[p]].FALLSPECIAL.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FALLSPECIAL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FALLSPECIAL.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].FALLSPECIAL){
-      aS[cS[p]].FALLSPECIAL.init(p);
+    if (player[p].timer > frames[characterSelections[p]].FALLSPECIAL){
+      actionStates[characterSelections[p]].FALLSPECIAL.init(p);
       return true;
     }
     else {
@@ -1172,7 +1172,7 @@ echo 'export default {
     }
   },
   land : function(p){
-    aS[cS[p]].LANDINGFALLSPECIAL.init(p);
+    actionStates[characterSelections[p]].LANDINGFALLSPECIAL.init(p);
   }
 };
 ' > FALLSPECIAL.js;
@@ -1186,11 +1186,11 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "SQUAT";
     player[p].timer = 0;
-    aS[cS[p]].SQUAT.main(p);
+    actionStates[characterSelections[p]].SQUAT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SQUAT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SQUAT.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -1200,35 +1200,35 @@ echo 'export default {
     var s = checkForSmashes(p);
     var j = checkForJump(p);
     if (player[p].timer == 4 && (player[p].inputs.lsY[0] < -0.65 || player[p].inputs.lsY[1] < -0.65 || player[p].inputs.lsY[2] < -0.65) && player[p].inputs.lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
-      aS[cS[p]].PASS.init(p);
+      actionStates[characterSelections[p]].PASS.init(p);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].SQUAT){
-      aS[cS[p]].SQUATWAIT.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].SQUAT){
+      actionStates[characterSelections[p]].SQUATWAIT.init(p);
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else {
@@ -1247,11 +1247,11 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "SQUATWAIT";
     player[p].timer = 0;
-    aS[cS[p]].SQUATWAIT.main(p);
+    actionStates[characterSelections[p]].SQUATWAIT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SQUATWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SQUATWAIT.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -1261,43 +1261,43 @@ echo 'export default {
     var s = checkForSmashes(p);
     var j = checkForJump(p);
     if (player[p].inputs.lsY[0] > -0.61){
-      aS[cS[p]].SQUATRV.init(p);
+      actionStates[characterSelections[p]].SQUATRV.init(p);
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
       return true;
     }
     else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].SQUATWAIT){
-      aS[cS[p]].SQUATWAIT.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].SQUATWAIT){
+      actionStates[characterSelections[p]].SQUATWAIT.init(p);
     }
     else {
       return false;
@@ -1315,11 +1315,11 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "SQUATRV";
     player[p].timer = 0;
-    aS[cS[p]].SQUATRV.main(p);
+    actionStates[characterSelections[p]].SQUATRV.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SQUATRV.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SQUATRV.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -1328,44 +1328,44 @@ echo 'export default {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].SQUATRV){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].SQUATRV){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
       return true;
     }
     /*else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }*/
     else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p);
       return true;
     }
     else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-      aS[cS[p]].WALK.init(p,true);
+      actionStates[characterSelections[p]].WALK.init(p,true);
       return true;
     }
     else {
@@ -1395,12 +1395,12 @@ echo 'export default {
     player[p].phys.cVel.x = player[p].inputs.lsX[0] * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
-    aS[cS[p]].JUMPAERIALF.main(p);
+    actionStates[characterSelections[p]].JUMPAERIALF.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("JUMPAERIAL",p);
-    if (!aS[cS[p]].JUMPAERIALF.interrupt(p)){
+    if (!actionStates[characterSelections[p]].JUMPAERIALF.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
@@ -1409,19 +1409,19 @@ echo 'export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPAERIALF){
-      aS[cS[p]].FALLAERIAL.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].JUMPAERIALF){
+      actionStates[characterSelections[p]].FALLAERIAL.init(p);
       return true;
     }
     else {
@@ -1451,12 +1451,12 @@ echo 'export default {
     player[p].phys.cVel.x = player[p].inputs.lsX[0] * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
-    aS[cS[p]].JUMPAERIALB.main(p);
+    actionStates[characterSelections[p]].JUMPAERIALB.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("JUMPAERIAL",p);
-    if (!aS[cS[p]].JUMPAERIALB.interrupt(p)){
+    if (!actionStates[characterSelections[p]].JUMPAERIALB.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
@@ -1465,19 +1465,19 @@ echo 'export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].JUMPAERIALB){
-      aS[cS[p]].FALLAERIAL.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].JUMPAERIALB){
+      actionStates[characterSelections[p]].FALLAERIAL.init(p);
       return true;
     }
     else {
@@ -1502,12 +1502,12 @@ echo 'export default {
     player[p].phys.passFastfall = false;
     player[p].phys.abovePlatforms[player[p].phys.onSurface[1]] = false;
     player[p].phys.cVel.y = -0.5;
-    aS[cS[p]].PASS.main(p);
+    actionStates[characterSelections[p]].PASS.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (player[p].timer > 1){
-      if (!aS[cS[p]].PASS.interrupt(p)){
+      if (!actionStates[characterSelections[p]].PASS.interrupt(p)){
         if (player[p].phys.passFastfall){
           fastfall(p);
         }
@@ -1528,28 +1528,28 @@ echo 'export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-        aS[cS[p]].JUMPAERIALB.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALB.init(p);
       }
       else {
-        aS[cS[p]].JUMPAERIALF.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALF.init(p);
       }
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].PASS){
-      aS[cS[p]].FALL.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].PASS){
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {
@@ -1579,7 +1579,7 @@ echo 'export default {
       player[p].phys.powerShieldActive = false;
       player[p].phys.powerShieldReflectActive = false;
     }
-    aS[cS[p]].GUARDON.main(p);
+    actionStates[characterSelections[p]].GUARDON.main(p);
   },
   main : function(p){
     if (player[p].hit.shieldstun > 0){
@@ -1598,7 +1598,7 @@ echo 'export default {
       /*if (player[p].timer == 2 && Math.max(player[p].inputs.lA[0],player[p].inputs.rA[0]) == 1){
         player[p].phys.powerShieldActive = true;
       }*/
-      if (!aS[cS[p]].GUARDON.interrupt(p)){
+      if (!actionStates[characterSelections[p]].GUARDON.interrupt(p)){
         if (player[p].timer == 1){
           sounds.shieldup.play();
         }
@@ -1616,36 +1616,36 @@ echo 'export default {
       var j = checkForJump(p);
       if (j[0] || player[p].inputs.csY[0] > 0.65){
         player[p].phys.shielding = false;
-        aS[cS[p]].KNEEBEND.init(p,j[1]);
+        actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
         player[p].phys.shielding = false;
-        aS[cS[p]].GRAB.init(p);
+        actionStates[characterSelections[p]].GRAB.init(p);
         return true;
       }
       else if ((player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[4] > -0.3) || player[p].inputs.csY[0] < -0.7){
         player[p].phys.shielding = false;
-        aS[cS[p]].ESCAPEN.init(p);
+        actionStates[characterSelections[p]].ESCAPEN.init(p);
         return true;
       }
       else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.7 && player[p].inputs.lsX[4]*player[p].phys.face < 0.3) || player[p].inputs.csX[0]*player[p].phys.face > 0.7){
         player[p].phys.shielding = false;
-        aS[cS[p]].ESCAPEF.init(p);
+        actionStates[characterSelections[p]].ESCAPEF.init(p);
         return true;
       }
       else if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.7 && player[p].inputs.lsX[4]*player[p].phys.face > -0.3) || player[p].inputs.csX[0]*player[p].phys.face < -0.7){
         player[p].phys.shielding = false;
-        aS[cS[p]].ESCAPEB.init(p);
+        actionStates[characterSelections[p]].ESCAPEB.init(p);
         return true;
       }
       else if (player[p].timer > 1 && player[p].inputs.lsY[0] < -0.65 && player[p].inputs.lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
         player[p].phys.shielding = false;
-        aS[cS[p]].PASS.init(p);
+        actionStates[characterSelections[p]].PASS.init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].GUARDON){
-        aS[cS[p]].GUARD.init(p);
+      else if (player[p].timer > frames[characterSelections[p]].GUARDON){
+        actionStates[characterSelections[p]].GUARD.init(p);
         return true;
       }
       else {
@@ -1654,7 +1654,7 @@ echo 'export default {
     }
     else {
       if (player[p].timer > 8){
-        aS[cS[p]].GUARD.init(p);
+        actionStates[characterSelections[p]].GUARD.init(p);
         return true;
       }
       else {
@@ -1675,7 +1675,7 @@ echo 'export default {
     player[p].timer = 0;
     player[p].phys.powerShieldActive = false;
     player[p].phys.powerShieldReflectActive = false;
-    aS[cS[p]].GUARD.main(p);
+    actionStates[characterSelections[p]].GUARD.main(p);
   },
   main : function(p){
     if (player[p].hit.shieldstun > 0){
@@ -1684,7 +1684,7 @@ echo 'export default {
     }
     else {
       player[p].timer++;
-      if (!aS[cS[p]].GUARD.interrupt(p)){
+      if (!actionStates[characterSelections[p]].GUARD.interrupt(p)){
         if (!player[p].inCSS){
           reduceByTraction(p,false);
           shieldDepletion(p);
@@ -1699,41 +1699,41 @@ echo 'export default {
       var j = checkForJump(p);
       if (j[0] || player[p].inputs.csY[0] > 0.66){
         player[p].phys.shielding = false;
-        aS[cS[p]].KNEEBEND.init(p,j[1]);
+        actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
         player[p].phys.shielding = false;
-        aS[cS[p]].GRAB.init(p);
+        actionStates[characterSelections[p]].GRAB.init(p);
         return true;
       }
       else if ((player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[4] > -0.3) || player[p].inputs.csY[0] < -0.7){
         player[p].phys.shielding = false;
-        aS[cS[p]].ESCAPEN.init(p);
+        actionStates[characterSelections[p]].ESCAPEN.init(p);
         return true;
       }
       else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.7 && player[p].inputs.lsX[4]*player[p].phys.face < 0.3) || player[p].inputs.csX[0]*player[p].phys.face > 0.7){
         player[p].phys.shielding = false;
-        aS[cS[p]].ESCAPEF.init(p);
+        actionStates[characterSelections[p]].ESCAPEF.init(p);
         return true;
       }
       else if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.7 && player[p].inputs.lsX[4]*player[p].phys.face > -0.3) || player[p].inputs.csX[0]*player[p].phys.face < -0.7){
         player[p].phys.shielding = false;
-        aS[cS[p]].ESCAPEB.init(p);
+        actionStates[characterSelections[p]].ESCAPEB.init(p);
         return true;
       }
       else if (player[p].inputs.lsY[0] < -0.65 && player[p].inputs.lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
         player[p].phys.shielding = false;
-        aS[cS[p]].PASS.init(p);
+        actionStates[characterSelections[p]].PASS.init(p);
         return true;
       }
       else if (player[p].inputs.lA[0] < 0.3 && player[p].inputs.rA[0] < 0.3){
         player[p].phys.shielding = false;
-        aS[cS[p]].GUARDOFF.init(p);
+        actionStates[characterSelections[p]].GUARDOFF.init(p);
         return true;
       }
       else if (player[p].timer > 1){
-        aS[cS[p]].GUARD.init(p);
+        actionStates[characterSelections[p]].GUARD.init(p);
         return true;
       }
       else {
@@ -1743,11 +1743,11 @@ echo 'export default {
     else {
       if (player[p].inputs.lA[0] < 0.3 && player[p].inputs.rA[0] < 0.3){
         player[p].phys.shielding = false;
-        aS[cS[p]].GUARDOFF.init(p);
+        actionStates[characterSelections[p]].GUARDOFF.init(p);
         return true;
       }
       else if (player[p].timer > 1){
-        aS[cS[p]].GUARD.init(p);
+        actionStates[characterSelections[p]].GUARD.init(p);
         return true;
       }
       else {
@@ -1767,12 +1767,12 @@ echo 'export default {
     player[p].actionState = "GUARDOFF";
     player[p].timer = 0;
     sounds.shieldoff.play();
-    aS[cS[p]].GUARDOFF.main(p);
+    actionStates[characterSelections[p]].GUARDOFF.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("GUARDOFF",p);
-    if (!aS[cS[p]].GUARDOFF.interrupt(p)){
+    if (!actionStates[characterSelections[p]].GUARDOFF.interrupt(p)){
       reduceByTraction(p,false);
       //shieldDepletion(p);
       //shieldSize(p);
@@ -1781,11 +1781,11 @@ echo 'export default {
   interrupt : function(p){
     var j = checkForJump(p);
     if (j[0] && !player[p].inCSS){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].GUARDOFF){
-      aS[cS[p]].WAIT.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].GUARDOFF){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else if (player[p].phys.powerShielded){
@@ -1793,32 +1793,32 @@ echo 'export default {
         var t = checkForTilts(p);
         var s = checkForSmashes(p);
         if (s[0]){
-          aS[cS[p]][s[1]].init(p);
+          actionStates[characterSelections[p]][s[1]].init(p);
           return true;
         }
         else if (t[0]){
-          aS[cS[p]][t[1]].init(p);
+          actionStates[characterSelections[p]][t[1]].init(p);
           return true;
         }
         else if (checkForSquat(p)){
-          aS[cS[p]].SQUAT.init(p);
+          actionStates[characterSelections[p]].SQUAT.init(p);
           return true;
         }
         else if (checkForDash(p)){
-          aS[cS[p]].DASH.init(p);
+          actionStates[characterSelections[p]].DASH.init(p);
           return true;
         }
         else if (checkForSmashTurn(p)){
-          aS[cS[p]].SMASHTURN.init(p);
+          actionStates[characterSelections[p]].SMASHTURN.init(p);
           return true;
         }
         else if (checkForTiltTurn(p)){
           player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-          aS[cS[p]].TILTTURN.init(p);
+          actionStates[characterSelections[p]].TILTTURN.init(p);
           return true;
         }
         else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-          aS[cS[p]].WALK.init(p,true);
+          actionStates[characterSelections[p]].WALK.init(p,true);
           return true;
         }
         else {
@@ -1828,7 +1828,7 @@ echo 'export default {
       else {
         var s = checkForSmashes(p);
         if (s[0]){
-          aS[cS[p]][s[1]].init(p);
+          actionStates[characterSelections[p]][s[1]].init(p);
           return true;
         }
         else {
@@ -1869,20 +1869,20 @@ echo 'export default {
     player[p].phys.charging = false;
     turnOffHitboxes(p);
     drawVfx("cliffcatchspark",new Vec2D(stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x,stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y),player[p].phys.face);
-    aS[cS[p]].CLIFFCATCH.main(p);
+    actionStates[characterSelections[p]].CLIFFCATCH.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("CLIFFCATCH",p);
-    if (!aS[cS[p]].CLIFFCATCH.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CLIFFCATCH.interrupt(p)){
       var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
-      player[p].phys.pos = new Vec2D(x+(aS[cS[p]].CLIFFCATCH.posOffset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+aS[cS[p]].CLIFFCATCH.posOffset[player[p].timer-1][1]);
+      player[p].phys.pos = new Vec2D(x+(actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][1]);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CLIFFCATCH){
-      aS[cS[p]].CLIFFWAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].CLIFFCATCH){
+      actionStates[characterSelections[p]].CLIFFWAIT.init(p);
       return true;
     }
     else {
@@ -1902,11 +1902,11 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "CLIFFWAIT";
     player[p].timer = 0;
-    aS[cS[p]].CLIFFWAIT.main(p);
+    actionStates[characterSelections[p]].CLIFFWAIT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CLIFFWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CLIFFWAIT.interrupt(p)){
       player[p].phys.ledgeHangTimer++;
     }
   },
@@ -1914,53 +1914,53 @@ echo 'export default {
     if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.2 && player[p].inputs.lsX[1]*player[p].phys.face >= -0.2) || (player[p].inputs.lsY[0] < -0.2 && player[p].inputs.lsY[1] >= -0.2) || (player[p].inputs.csX[0]*player[p].phys.face < -0.2 && player[p].inputs.csX[1]*player[p].phys.face >= -0.2) || (player[p].inputs.csY[0] < -0.2 && player[p].inputs.csY[1] >= -0.2)){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
-      aS[cS[p]].FALL.init(p,true);
+      actionStates[characterSelections[p]].FALL.init(p,true);
       return true;
     }
     else if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.65 && player[p].inputs.lsY[1] <= 0.65)){
       if (player[p].percent < 100){
-        aS[cS[p]].CLIFFJUMPQUICK.init(p);
+        actionStates[characterSelections[p]].CLIFFJUMPQUICK.init(p);
       }
       else {
-        aS[cS[p]].CLIFFJUMPSLOW.init(p);
+        actionStates[characterSelections[p]].CLIFFJUMPSLOW.init(p);
       }
       return true;
     }
     else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.2 && player[p].inputs.lsX[1]*player[p].phys.face <= 0.2) || (player[p].inputs.lsY[0] > 0.2 && player[p].inputs.lsY[1] <= 0.2)){
       if (player[p].percent < 100){
-        aS[cS[p]].CLIFFGETUPQUICK.init(p);
+        actionStates[characterSelections[p]].CLIFFGETUPQUICK.init(p);
       }
       else {
-        aS[cS[p]].CLIFFGETUPSLOW.init(p);
+        actionStates[characterSelections[p]].CLIFFGETUPSLOW.init(p);
       }
       return true;
     }
     else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) || (player[p].inputs.csY[0] > 0.65 && player[p].inputs.csY[1] <= 0.65)){
       if (player[p].percent < 100){
-        aS[cS[p]].CLIFFATTACKQUICK.init(p);
+        actionStates[characterSelections[p]].CLIFFATTACKQUICK.init(p);
       }
       else {
-        aS[cS[p]].CLIFFATTACKSLOW.init(p);
+        actionStates[characterSelections[p]].CLIFFATTACKSLOW.init(p);
       }
       return true;
     }
     else if ((player[p].inputs.lA[0] > 0.3 && player[p].inputs.lA[1] <= 0.3) || (player[p].inputs.rA[0] > 0.3 && player[p].inputs.rA[1] <= 0.3) || (player[p].inputs.csX[0]*player[p].phys.face > 0.8 && player[p].inputs.csX[1]*player[p].phys.face <= 0.8)){
       if (player[p].percent < 100){
-        aS[cS[p]].CLIFFESCAPEQUICK.init(p);
+        actionStates[characterSelections[p]].CLIFFESCAPEQUICK.init(p);
       }
       else {
-        aS[cS[p]].CLIFFESCAPESLOW.init(p);
+        actionStates[characterSelections[p]].CLIFFESCAPESLOW.init(p);
       }
       return true;
     }
     else if (player[p].phys.ledgeHangTimer > 600){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
-      aS[cS[p]].DAMAGEFALL.init(p);
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CLIFFWAIT){
-      aS[cS[p]].CLIFFWAIT.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].CLIFFWAIT){
+      actionStates[characterSelections[p]].CLIFFWAIT.init(p);
       return true;
     }
     else {
@@ -1989,12 +1989,12 @@ echo 'export default {
       percentShake(500,p);
     }
     sounds.kill.play();
-    aS[cS[p]].DEADLEFT.main(p);
+    actionStates[characterSelections[p]].DEADLEFT.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("DEAD",p);
-    if (!aS[cS[p]].DEADLEFT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DEADLEFT.interrupt(p)){
       player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
@@ -2011,10 +2011,10 @@ echo 'export default {
   interrupt : function(p){
     if (player[p].timer > 60){
       if (player[p].stocks > 0){
-        aS[cS[p]].REBIRTH.init(p);
+        actionStates[characterSelections[p]].REBIRTH.init(p);
       }
       else {
-        aS[cS[p]].SLEEP.init(p);
+        actionStates[characterSelections[p]].SLEEP.init(p);
       }
       return true;
     }
@@ -2044,12 +2044,12 @@ echo 'export default {
       percentShake(500,p);
     }
     sounds.kill.play();
-    aS[cS[p]].DEADRIGHT.main(p);
+    actionStates[characterSelections[p]].DEADRIGHT.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("DEAD",p);
-    if (!aS[cS[p]].DEADRIGHT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DEADRIGHT.interrupt(p)){
       player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
@@ -2066,10 +2066,10 @@ echo 'export default {
   interrupt : function(p){
     if (player[p].timer > 60){
       if (player[p].stocks > 0){
-        aS[cS[p]].REBIRTH.init(p);
+        actionStates[characterSelections[p]].REBIRTH.init(p);
       }
       else {
-        aS[cS[p]].SLEEP.init(p);
+        actionStates[characterSelections[p]].SLEEP.init(p);
       }
       return true;
     }
@@ -2099,12 +2099,12 @@ echo 'export default {
       percentShake(500,p);
     }
     sounds.kill.play();
-    aS[cS[p]].DEADUP.main(p);
+    actionStates[characterSelections[p]].DEADUP.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("DEAD",p);
-    if (!aS[cS[p]].DEADUP.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DEADUP.interrupt(p)){
       player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
@@ -2121,10 +2121,10 @@ echo 'export default {
   interrupt : function(p){
     if (player[p].timer > 60){
       if (player[p].stocks > 0){
-        aS[cS[p]].REBIRTH.init(p);
+        actionStates[characterSelections[p]].REBIRTH.init(p);
       }
       else {
-        aS[cS[p]].SLEEP.init(p);
+        actionStates[characterSelections[p]].SLEEP.init(p);
       }
       return true;
     }
@@ -2154,12 +2154,12 @@ echo 'export default {
       percentShake(500,p);
     }
     sounds.kill.play();
-    aS[cS[p]].DEADDOWN.main(p);
+    actionStates[characterSelections[p]].DEADDOWN.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("DEAD",p);
-    if (!aS[cS[p]].DEADDOWN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DEADDOWN.interrupt(p)){
       player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
@@ -2176,10 +2176,10 @@ echo 'export default {
   interrupt : function(p){
     if (player[p].timer > 60){
       if (player[p].stocks > 0){
-        aS[cS[p]].REBIRTH.init(p);
+        actionStates[characterSelections[p]].REBIRTH.init(p);
       }
       else {
-        aS[cS[p]].SLEEP.init(p);
+        actionStates[characterSelections[p]].SLEEP.init(p);
       }
       return true;
     }
@@ -2219,13 +2219,13 @@ echo 'export default {
   },
   main : function(p){
     player[p].timer+= 1;
-    if (!aS[cS[p]].REBIRTH.interrupt(p)){
+    if (!actionStates[characterSelections[p]].REBIRTH.interrupt(p)){
       player[p].phys.outOfCameraTimer = 0;
     }
   },
   interrupt : function(p){
     if (player[p].timer > 90){
-      aS[cS[p]].REBIRTHWAIT.init(p);
+      actionStates[characterSelections[p]].REBIRTHWAIT.init(p);
       return true;
     }
     else {
@@ -2246,25 +2246,25 @@ echo 'export default {
   main : function(p){
     player[p].timer+= 1;
     player[p].spawnWaitTime++;
-    if (!aS[cS[p]].REBIRTHWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].REBIRTHWAIT.interrupt(p)){
       player[p].phys.outOfCameraTimer = 0;
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].WAIT){
-      aS[cS[p]].REBIRTHWAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].WAIT){
+      actionStates[characterSelections[p]].REBIRTHWAIT.init(p);
       return true;
     }
     else if (player[p].spawnWaitTime > 300){
       player[p].phys.grounded = false;
       player[p].phys.invincibleTimer = 120;
-      aS[cS[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 || Math.abs(player[p].inputs.lsY[0]) > 0.3 ){
       player[p].phys.grounded = false;
       player[p].phys.invincibleTimer = 120;
-      aS[cS[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {
@@ -2301,7 +2301,7 @@ echo 'export default {
     /*player[p].phys.grounded = false;
     player[p].phys.pos.y += 0.0001;*/
     turnOffHitboxes(p);
-    aS[cS[p]].DAMAGEFLYN.main(p);
+    actionStates[characterSelections[p]].DAMAGEFLYN.main(p);
   },
   main : function(p){
     if (player[p].phys.thrownHitbox){
@@ -2316,13 +2316,13 @@ echo 'export default {
         turnOffHitboxes(p);
       }
     }
-    if (player[p].timer < frames[cS[p]].DAMAGEFLYN){
+    if (player[p].timer < frames[characterSelections[p]].DAMAGEFLYN){
       player[p].timer++;
     }
     if (player[p].hit.hitstun % 10 == 0){
       drawVfx("flyingDust",player[p].phys.pos);
     }
-    if (!aS[cS[p]].DAMAGEFLYN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DAMAGEFLYN.interrupt(p)){
       if (player[p].timer > 1){
         player[p].hit.hitstun--;
         if (!player[p].phys.grounded){
@@ -2339,7 +2339,7 @@ echo 'export default {
   },
   interrupt : function(p){
     if (player[p].timer > 1 && player[p].hit.hitstun == 0){
-      aS[cS[p]].DAMAGEFALL.init(p);
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
       player[p].phys.thrownHitbox = false;
       return true;
     }
@@ -2363,11 +2363,11 @@ echo 'export default {
     player[p].actionState = "DAMAGEFALL";
     player[p].timer = 0;
     turnOffHitboxes(p);
-    aS[cS[p]].DAMAGEFALL.main(p);
+    actionStates[characterSelections[p]].DAMAGEFALL.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DAMAGEFALL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DAMAGEFALL.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
@@ -2376,32 +2376,32 @@ echo 'export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-        aS[cS[p]].JUMPAERIALB.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALB.init(p);
       }
       else {
-        aS[cS[p]].JUMPAERIALF.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALF.init(p);
       }
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.lsX[0] > 0.7 && player[p].inputs.lsX[1] < 0.7) || (player[p].inputs.lsX[0] < -0.7 && player[p].inputs.lsX[1] > -0.7) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] < 0.7) || (player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[1] > -0.7)){
-      aS[cS[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].DAMAGEFALL){
-      aS[cS[p]].DAMAGEFALL.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].DAMAGEFALL){
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
       return true;
     }
     else {
@@ -2431,7 +2431,7 @@ echo 'export default {
     player[p].rotationPoint = new Vec2D(0,0);
     player[p].colourOverlayBool = false;
     turnOffHitboxes(p);
-    aS[cS[p]].DAMAGEN2.main(p);
+    actionStates[characterSelections[p]].DAMAGEN2.main(p);
   },
   main : function(p){
     if (player[p].inCSS){
@@ -2440,7 +2440,7 @@ echo 'export default {
     else {
       player[p].timer++;
     }
-    if (!aS[cS[p]].DAMAGEN2.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DAMAGEN2.interrupt(p)){
       if (player[p].timer > 1){
         player[p].hit.hitstun--;
         if (!player[p].phys.grounded){
@@ -2456,17 +2456,17 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DAMAGEN2){
+    if (player[p].timer > frames[characterSelections[p]].DAMAGEN2){
       if (player[p].hit.hitstun > 0){
         player[p].timer--;
         return false;
       }
       else {
         if (player[p].phys.grounded || player[p].inCSS){
-          aS[cS[p]].WAIT.init(p);
+          actionStates[characterSelections[p]].WAIT.init(p);
         }
         else {
-          aS[cS[p]].FALL.init(p);
+          actionStates[characterSelections[p]].FALL.init(p);
         }
         return true;
       }
@@ -2478,48 +2478,48 @@ echo 'export default {
         var s = checkForSmashes(p);
         var j = checkForJump(p);
         if (j[0]){
-          aS[cS[p]].KNEEBEND.init(p,j[1]);
+          actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
           return true;
         }
         else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-          aS[cS[p]].GUARDON.init(p);
+          actionStates[characterSelections[p]].GUARDON.init(p);
           return true;
         }
         else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-          aS[cS[p]].GUARDON.init(p);
+          actionStates[characterSelections[p]].GUARDON.init(p);
           return true;
         }
         else if (b[0]){
-          aS[cS[p]][b[1]].init(p);
+          actionStates[characterSelections[p]][b[1]].init(p);
           return true;
         }
         else if (s[0]){
-          aS[cS[p]][s[1]].init(p);
+          actionStates[characterSelections[p]][s[1]].init(p);
           return true;
         }
         else if (t[0]){
-          aS[cS[p]][t[1]].init(p);
+          actionStates[characterSelections[p]][t[1]].init(p);
           return true;
         }
         else if (checkForSquat(p)){
-          aS[cS[p]].SQUAT.init(p);
+          actionStates[characterSelections[p]].SQUAT.init(p);
           return true;
         }
         else if (checkForDash(p)){
-          aS[cS[p]].DASH.init(p);
+          actionStates[characterSelections[p]].DASH.init(p);
           return true;
         }
         else if (checkForSmashTurn(p)){
-          aS[cS[p]].SMASHTURN.init(p);
+          actionStates[characterSelections[p]].SMASHTURN.init(p);
           return true;
         }
         else if (checkForTiltTurn(p)){
           player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-          aS[cS[p]].TILTTURN.init(p);
+          actionStates[characterSelections[p]].TILTTURN.init(p);
           return true;
         }
         else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-          aS[cS[p]].WALK.init(p,true);
+          actionStates[characterSelections[p]].WALK.init(p,true);
           return true;
         }
         else {
@@ -2530,28 +2530,28 @@ echo 'export default {
         var a = checkForAerials(p);
         var b = checkForSpecials(p);
         if (a[0]){
-          aS[cS[p]][a[1]].init(p);
+          actionStates[characterSelections[p]][a[1]].init(p);
           return true;
         }
         else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-          aS[cS[p]].ESCAPEAIR.init(p);
+          actionStates[characterSelections[p]].ESCAPEAIR.init(p);
           return true;
         }
         else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
           if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-            aS[cS[p]].JUMPAERIALB.init(p);
+            actionStates[characterSelections[p]].JUMPAERIALB.init(p);
           }
           else {
-            aS[cS[p]].JUMPAERIALF.init(p);
+            actionStates[characterSelections[p]].JUMPAERIALF.init(p);
           }
           return true;
         }
         else if (b[0]){
-          aS[cS[p]][b[1]].init(p);
+          actionStates[characterSelections[p]][b[1]].init(p);
           return true;
         }
         else if ((player[p].inputs.lsX[0] > 0.7 && player[p].inputs.lsX[1] < 0.7) || (player[p].inputs.lsX[0] < -0.7 && player[p].inputs.lsX[1] > -0.7) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] < 0.7) || (player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[1] > -0.7)){
-          aS[cS[p]].FALL.init(p);
+          actionStates[characterSelections[p]].FALL.init(p);
           return true;
         }
         else {
@@ -2565,7 +2565,7 @@ echo 'export default {
   },
   land : function(p){
     if (player[p].hit.hitstun <= 0){
-      aS[cS[p]].LANDING.init(p);
+      actionStates[characterSelections[p]].LANDING.init(p);
     }
   }
 };
@@ -2586,17 +2586,17 @@ echo 'export default {
     }
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDINGATTACKAIRN.main(p);
+    actionStates[characterSelections[p]].LANDINGATTACKAIRN.main(p);
   },
   main : function(p){
     player[p].timer += player[p].phys.landingLagScaling;
-    if (!aS[cS[p]].LANDINGATTACKAIRN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRN.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRN){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].LANDINGATTACKAIRN){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -2621,17 +2621,17 @@ echo 'export default {
     }
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDINGATTACKAIRF.main(p);
+    actionStates[characterSelections[p]].LANDINGATTACKAIRF.main(p);
   },
   main : function(p){
     player[p].timer += player[p].phys.landingLagScaling;
-    if (!aS[cS[p]].LANDINGATTACKAIRF.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRF.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRF){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].LANDINGATTACKAIRF){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -2656,17 +2656,17 @@ echo 'export default {
     }
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDINGATTACKAIRB.main(p);
+    actionStates[characterSelections[p]].LANDINGATTACKAIRB.main(p);
   },
   main : function(p){
     player[p].timer += player[p].phys.landingLagScaling;
-    if (!aS[cS[p]].LANDINGATTACKAIRB.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRB.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRB){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].LANDINGATTACKAIRB){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -2691,17 +2691,17 @@ echo 'export default {
     }
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDINGATTACKAIRD.main(p);
+    actionStates[characterSelections[p]].LANDINGATTACKAIRD.main(p);
   },
   main : function(p){
     player[p].timer += player[p].phys.landingLagScaling;
-    if (!aS[cS[p]].LANDINGATTACKAIRD.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRD.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRD){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].LANDINGATTACKAIRD){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -2726,17 +2726,17 @@ echo 'export default {
     }
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDINGATTACKAIRU.main(p);
+    actionStates[characterSelections[p]].LANDINGATTACKAIRU.main(p);
   },
   main : function(p){
     player[p].timer += player[p].phys.landingLagScaling;
-    if (!aS[cS[p]].LANDINGATTACKAIRU.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRU.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].LANDINGATTACKAIRU){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].LANDINGATTACKAIRU){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -2755,13 +2755,13 @@ echo 'export default {
     player[p].actionState = "ESCAPEB";
     player[p].timer = 0;
     player[p].phys.shielding = false;
-    aS[cS[p]].ESCAPEB.main(p);
+    actionStates[characterSelections[p]].ESCAPEB.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("ESCAPEB",p);
-    if (!aS[cS[p]].ESCAPEB.interrupt(p)){
-      player[p].phys.cVel.x = aS[cS[p]].ESCAPEB.setVelocities[player[p].timer-1]*player[p].phys.face;
+    if (!actionStates[characterSelections[p]].ESCAPEB.interrupt(p)){
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].ESCAPEB.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("ESCAPEB",p);
       if (player[p].timer == 4){
         sounds.roll.play();
@@ -2769,9 +2769,9 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].ESCAPEB){
+    if (player[p].timer > frames[characterSelections[p]].ESCAPEB){
       player[p].phys.cVel.x = 0;
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -2790,13 +2790,13 @@ echo 'export default {
     player[p].actionState = "ESCAPEF";
     player[p].timer = 0;
     player[p].phys.shielding = false;
-    aS[cS[p]].ESCAPEF.main(p);
+    actionStates[characterSelections[p]].ESCAPEF.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("ESCAPEF",p);
-    if (!aS[cS[p]].ESCAPEF.interrupt(p)){
-      player[p].phys.cVel.x = aS[cS[p]].ESCAPEF.setVelocities[player[p].timer-1]*player[p].phys.face;
+    if (!actionStates[characterSelections[p]].ESCAPEF.interrupt(p)){
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].ESCAPEF.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("ESCAPEF",p);
       if (player[p].timer == 4){
         sounds.roll.play();
@@ -2804,10 +2804,10 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].ESCAPEF){
+    if (player[p].timer > frames[characterSelections[p]].ESCAPEF){
       player[p].phys.cVel.x = 0;
       player[p].phys.face *= -1;
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -2826,12 +2826,12 @@ echo 'export default {
     player[p].timer = 0;
     player[p].phys.shielding = false;
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
-    aS[cS[p]].ESCAPEN.main(p);
+    actionStates[characterSelections[p]].ESCAPEN.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("ESCAPEN",p);
-    if (!aS[cS[p]].ESCAPEN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].ESCAPEN.interrupt(p)){
       if (player[p].timer == 1){
         sounds.spotdodge.play();
       }
@@ -2840,8 +2840,8 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].ESCAPEN){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].ESCAPEN){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -2864,11 +2864,11 @@ echo 'export default {
     player[p].phys.jabReset = false;
     drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
     sounds.bounce.play();
-    aS[cS[p]].DOWNBOUND.main(p);
+    actionStates[characterSelections[p]].DOWNBOUND.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNBOUND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNBOUND.interrupt(p)){
       if (player[p].timer == 1){
         reduceByTraction(p,true);
       }
@@ -2878,8 +2878,8 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNBOUND){
-      aS[cS[p]].DOWNWAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].DOWNBOUND){
+      actionStates[characterSelections[p]].DOWNWAIT.init(p);
       return true;
     }
     else {
@@ -2898,11 +2898,11 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "DOWNWAIT";
     player[p].timer = 0;
-    aS[cS[p]].DOWNWAIT.main(p);
+    actionStates[characterSelections[p]].DOWNWAIT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNWAIT.interrupt(p)){
       reduceByTraction(p,true);
       if (player[p].timer > 1){
         player[p].hit.hitstun--;
@@ -2910,26 +2910,26 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNWAIT){
-      aS[cS[p]].DOWNWAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].DOWNWAIT){
+      actionStates[characterSelections[p]].DOWNWAIT.init(p);
       return true;
     }
     else if (player[p].phys.jabReset){
       if (player[p].hit.hitstun <= 0){
         if (player[p].inputs.lsX[0]*player[p].phys.face < -0.7){
-          aS[cS[p]].DOWNSTANDB.init(p);
+          actionStates[characterSelections[p]].DOWNSTANDB.init(p);
           return true;
         }
         else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.7){
-          aS[cS[p]].DOWNSTANDF.init(p);
+          actionStates[characterSelections[p]].DOWNSTANDF.init(p);
           return true;
         }
         else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1])){
-          aS[cS[p]].DOWNATTACK.init(p);
+          actionStates[characterSelections[p]].DOWNATTACK.init(p);
           return true;
         }
         else {
-          aS[cS[p]].DOWNSTANDN.init(p);
+          actionStates[characterSelections[p]].DOWNSTANDN.init(p);
           return true;
         }
       }
@@ -2938,19 +2938,19 @@ echo 'export default {
       }
     }
     else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.7){
-      aS[cS[p]].DOWNSTANDB.init(p);
+      actionStates[characterSelections[p]].DOWNSTANDB.init(p);
       return true;
     }
     else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.7){
-      aS[cS[p]].DOWNSTANDF.init(p);
+      actionStates[characterSelections[p]].DOWNSTANDF.init(p);
       return true;
     }
     else if (player[p].inputs.lsY[0] > 0.7){
-      aS[cS[p]].DOWNSTANDN.init(p);
+      actionStates[characterSelections[p]].DOWNSTANDN.init(p);
       return true;
     }
     else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1])){
-      aS[cS[p]].DOWNATTACK.init(p);
+      actionStates[characterSelections[p]].DOWNATTACK.init(p);
       return true;
     }
     else {
@@ -2974,11 +2974,11 @@ echo 'export default {
     player[p].timer = 0;
     player[p].phys.jabReset = true;
     player[p].phys.grounded = false;
-    aS[cS[p]].DOWNDAMAGE.main(p);
+    actionStates[characterSelections[p]].DOWNDAMAGE.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNDAMAGE.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNDAMAGE.interrupt(p)){
       if (!player[p].phys.grounded){
         player[p].phys.cVel.y -= player[p].charAttributes.gravity;
       }
@@ -2994,14 +2994,14 @@ echo 'export default {
     if (player[p].timer > 13){
       if (player[p].phys.grounded){
         if (player[p].hit.hitstun <= 0){
-          aS[cS[p]].DOWNSTANDN.init(p);
+          actionStates[characterSelections[p]].DOWNSTANDN.init(p);
         }
         else {
-          aS[cS[p]].DOWNWAIT.init(p);
+          actionStates[characterSelections[p]].DOWNWAIT.init(p);
         }
       }
       else {
-        aS[cS[p]].FALL.init(p);
+        actionStates[characterSelections[p]].FALL.init(p);
       }
       return true;
     }
@@ -3023,18 +3023,18 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "DOWNSTANDN";
     player[p].timer = 0;
-    aS[cS[p]].DOWNSTANDN.main(p);
+    actionStates[characterSelections[p]].DOWNSTANDN.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNSTANDN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNSTANDN.interrupt(p)){
       reduceByTraction(p,true);
       executeIntangibility("DOWNSTANDN",p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNSTANDN){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].DOWNSTANDN){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -3052,18 +3052,18 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "DOWNSTANDB";
     player[p].timer = 0;
-    aS[cS[p]].DOWNSTANDB.main(p);
+    actionStates[characterSelections[p]].DOWNSTANDB.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNSTANDB.interrupt(p)){
-      player[p].phys.cVel.x = aS[cS[p]].DOWNSTANDB.setVelocities[player[p].timer-1]*player[p].phys.face;
+    if (!actionStates[characterSelections[p]].DOWNSTANDB.interrupt(p)){
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].DOWNSTANDB.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("DOWNSTANDB",p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNSTANDB){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].DOWNSTANDB){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -3081,18 +3081,18 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "DOWNSTANDF";
     player[p].timer = 0;
-    aS[cS[p]].DOWNSTANDF.main(p);
+    actionStates[characterSelections[p]].DOWNSTANDF.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNSTANDF.interrupt(p)){
-      player[p].phys.cVel.x = aS[cS[p]].DOWNSTANDF.setVelocities[player[p].timer-1]*player[p].phys.face;
+    if (!actionStates[characterSelections[p]].DOWNSTANDF.interrupt(p)){
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].DOWNSTANDF.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("DOWNSTANDF",p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].DOWNSTANDF){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].DOWNSTANDF){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -3111,18 +3111,18 @@ echo 'export default {
     player[p].timer = 0;
     drawVfx("tech",player[p].phys.pos);
     sounds.tech.play();
-    aS[cS[p]].TECHN.main(p);
+    actionStates[characterSelections[p]].TECHN.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].TECHN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].TECHN.interrupt(p)){
       reduceByTraction(p,true);
       executeIntangibility("TECHN",p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHN){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].TECHN){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -3142,18 +3142,18 @@ echo 'export default {
     player[p].timer = 0;
     drawVfx("tech",player[p].phys.pos);
     sounds.tech.play();
-    aS[cS[p]].TECHB.main(p);
+    actionStates[characterSelections[p]].TECHB.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].TECHB.interrupt(p)){
+    if (!actionStates[characterSelections[p]].TECHB.interrupt(p)){
       executeIntangibility("TECHB",p);
-      player[p].phys.cVel.x = aS[cS[p]].TECHB.setVelocities[player[p].timer-1]*player[p].phys.face;
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].TECHB.setVelocities[player[p].timer-1]*player[p].phys.face;
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHB){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].TECHB){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -3173,18 +3173,18 @@ echo 'export default {
     player[p].timer = 0;
     drawVfx("tech",player[p].phys.pos);
     sounds.tech.play();
-    aS[cS[p]].TECHF.main(p);
+    actionStates[characterSelections[p]].TECHF.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].TECHF.interrupt(p)){
+    if (!actionStates[characterSelections[p]].TECHF.interrupt(p)){
       executeIntangibility("TECHF",p);
-      player[p].phys.cVel.x = aS[cS[p]].TECHF.setVelocities[player[p].timer-1]*player[p].phys.face;
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].TECHF.setVelocities[player[p].timer-1]*player[p].phys.face;
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHF){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].TECHF){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -3205,18 +3205,18 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "SHIELDBREAKFALL";
     player[p].timer = 0;
-    aS[cS[p]].SHIELDBREAKFALL.main(p);
+    actionStates[characterSelections[p]].SHIELDBREAKFALL.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SHIELDBREAKFALL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SHIELDBREAKFALL.interrupt(p)){
       player[p].phys.intangibleTimer = 1;
       player[p].phys.cVel.y -= player[p].charAttributes.gravity;
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].SHIELDBREAKFALL){
-      aS[cS[p]].SHIELDBREAKFALL.init(p);
+    if (player[p].timer > frames[characterSelections[p]].SHIELDBREAKFALL){
+      actionStates[characterSelections[p]].SHIELDBREAKFALL.init(p);
       return true;
     }
     else {
@@ -3224,7 +3224,7 @@ echo 'export default {
     }
   },
   land : function(p){
-    aS[cS[p]].SHIELDBREAKDOWNBOUND.init(p);
+    actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.init(p);
   }
 };
 ' > SHIELDBREAKFALL.js;
@@ -3240,11 +3240,11 @@ echo 'export default {
     player[p].phys.kVel.y = 0;
     drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
     sounds.bounce.play();
-    aS[cS[p]].SHIELDBREAKDOWNBOUND.main(p);
+    actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SHIELDBREAKDOWNBOUND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.interrupt(p)){
       player[p].phys.intangibleTimer = 1;
       if (player[p].timer == 1){
         reduceByTraction(p,true);
@@ -3255,8 +3255,8 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].SHIELDBREAKDOWNBOUND){
-      aS[cS[p]].SHIELDBREAKSTAND.init(p);
+    if (player[p].timer > frames[characterSelections[p]].SHIELDBREAKDOWNBOUND){
+      actionStates[characterSelections[p]].SHIELDBREAKSTAND.init(p);
       return true;
     }
     else {
@@ -3273,18 +3273,18 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "SHIELDBREAKSTAND";
     player[p].timer = 0;
-    aS[cS[p]].SHIELDBREAKSTAND.main(p);
+    actionStates[characterSelections[p]].SHIELDBREAKSTAND.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SHIELDBREAKSTAND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SHIELDBREAKSTAND.interrupt(p)){
       reduceByTraction(p,true);
       player[p].phys.intangibleTimer = 1;
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].SHIELDBREAKSTAND){
-      aS[cS[p]].FURAFURA.init(p);
+    if (player[p].timer > frames[characterSelections[p]].SHIELDBREAKSTAND){
+      actionStates[characterSelections[p]].FURAFURA.init(p);
       return true;
     }
     else {
@@ -3304,13 +3304,13 @@ echo 'export default {
     player[p].phys.stuckTimer = 490;
     drawVfx("furaFura",new Vec2D(player[p].phys.pos.x+(4+Math.random()*2)*player[p].phys.face,player[p].phys.pos.y+11+Math.random()*3),player[p].phys.face);
     player[p].furaLoopID = sounds.furaloop.play();
-    aS[cS[p]].FURAFURA.main(p);
+    actionStates[characterSelections[p]].FURAFURA.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FURAFURA.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FURAFURA.interrupt(p)){
       if (player[p].timer % 100 == 65){
-        sounds[actionSounds[cS[p]].FURAFURA[0][1]].play();
+        sounds[actionSounds[characterSelections[p]].FURAFURA[0][1]].play();
       }
       reduceByTraction(p,true);
       if (player[p].timer % 49 == 0){
@@ -3331,10 +3331,10 @@ echo 'export default {
   interrupt : function(p){
     if (player[p].phys.stuckTimer <= 0){
       sounds.furaloop.stop(player[p].furaLoopID);
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FURAFURA){
+    else if (player[p].timer > frames[characterSelections[p]].FURAFURA){
       player[p].timer = 1;
       return false;
     }
@@ -3358,11 +3358,11 @@ echo 'export default {
     player[p].phys.onSurface = [player[player[p].phys.grabbedBy].phys.onSurface[0],player[player[p].phys.grabbedBy].phys.onSurface[1]];
     player[p].phys.stuckTimer = 100+(2*player[p].percent);
     sounds.grabbed.play();
-    aS[cS[p]].CAPTUREPULLED.main(p);
+    actionStates[characterSelections[p]].CAPTUREPULLED.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CAPTUREPULLED.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CAPTUREPULLED.interrupt(p)){
       if (player[p].timer == 2){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+(-16.41205*player[p].phys.face),player[player[p].phys.grabbedBy].phys.pos.y);
       }
@@ -3370,8 +3370,8 @@ echo 'export default {
   },
   interrupt : function(p){
     if (player[p].timer > 2){
-      aS[cS[p]].CAPTUREWAIT.init(p);
-      aS[cS[p]].CATCHWAIT.init(player[p].phys.grabbedBy);
+      actionStates[characterSelections[p]].CAPTUREWAIT.init(p);
+      actionStates[characterSelections[p]].CATCHWAIT.init(player[p].phys.grabbedBy);
       drawVfx("tech",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+10));
       return true;
     }
@@ -3391,11 +3391,11 @@ echo 'export default {
     player[p].actionState = "CAPTUREWAIT";
     player[p].timer = 0;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+(-9.04298*player[p].phys.face),player[player[p].phys.grabbedBy].phys.pos.y);
-    aS[cS[p]].CAPTUREWAIT.main(p);
+    actionStates[characterSelections[p]].CAPTUREWAIT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CAPTUREWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CAPTUREWAIT.interrupt(p)){
       player[p].phys.stuckTimer--;
       if (mashOut(p)){
         player[p].phys.stuckTimer -= 3;
@@ -3408,12 +3408,12 @@ echo 'export default {
   },
   interrupt : function(p){
     if (player[p].phys.stuckTimer < 0){
-      aS[cS[p]].CATCHCUT.init(player[p].phys.grabbedBy);
-      aS[cS[p]].CAPTURECUT.init(p);
+      actionStates[characterSelections[p]].CATCHCUT.init(player[p].phys.grabbedBy);
+      actionStates[characterSelections[p]].CAPTURECUT.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CAPTUREWAIT){
-      aS[cS[p]].CAPTUREWAIT.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].CAPTUREWAIT){
+      actionStates[characterSelections[p]].CAPTUREWAIT.init(p);
       return true;
     }
     else {
@@ -3432,37 +3432,37 @@ echo 'export default {
     player[p].actionState = "CATCHWAIT";
     player[p].timer = 0;
     turnOffHitboxes(p);
-    aS[cS[p]].CATCHWAIT.main(p);
+    actionStates[characterSelections[p]].CATCHWAIT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CATCHWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CATCHWAIT.interrupt(p)){
 
     }
   },
   interrupt : function(p){
     if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
-      aS[cS[p]].CATCHATTACK.init(p);
+      actionStates[characterSelections[p]].CATCHATTACK.init(p);
       return true;
     }
     else if ((player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7) || (player[p].inputs.csY[0] > 0.7 && player[p].inputs.csY[1] <= 0.7)){
-      aS[cS[p]].THROWUP.init(p);
+      actionStates[characterSelections[p]].THROWUP.init(p);
       return true;
     }
     else if ((player[p].inputs.lsY[0] < -0.7 && player[p].inputs.lsY[1] >= -0.7) || player[p].inputs.csY[0] < -0.7){
-      aS[cS[p]].THROWDOWN.init(p);
+      actionStates[characterSelections[p]].THROWDOWN.init(p);
       return true;
     }
     else if ((player[p].inputs.lsX[0]*player[p].phys.face < -0.7 && player[p].inputs.lsX[1]*player[p].phys.face >= -0.7) || (player[p].inputs.csX[0]*player[p].phys.face < -0.7 && player[p].inputs.csX[1]*player[p].phys.face >= -0.7)){
-      aS[cS[p]].THROWBACK.init(p);
+      actionStates[characterSelections[p]].THROWBACK.init(p);
       return true;
     }
     else if ((player[p].inputs.lsX[0]*player[p].phys.face > 0.7 && player[p].inputs.lsX[1]*player[p].phys.face <= 0.7) || (player[p].inputs.csX[0]*player[p].phys.face > 0.7 && player[p].inputs.csX[1]*player[p].phys.face <= 0.7)){
-      aS[cS[p]].THROWFORWARD.init(p);
+      actionStates[characterSelections[p]].THROWFORWARD.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].CATCHWAIT){
-      aS[cS[p]].CATCHWAIT.init(p);
+    else if (player[p].timer > frames[characterSelections[p]].CATCHWAIT){
+      actionStates[characterSelections[p]].CATCHWAIT.init(p);
       return true;
     }
     else {
@@ -3484,11 +3484,11 @@ echo 'export default {
     player[p].timer = 0;
     player[p].phys.grabbedBy = -1
     player[p].phys.cVel.x = -1*player[p].phys.face;
-    aS[cS[p]].CAPTURECUT.main(p);
+    actionStates[characterSelections[p]].CAPTURECUT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CAPTURECUT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CAPTURECUT.interrupt(p)){
       if (player[p].timer == 2){
         player[p].phys.grabTech = false;
       }
@@ -3496,8 +3496,8 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CAPTURECUT){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].CAPTURECUT){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -3518,17 +3518,17 @@ echo 'export default {
     player[p].timer = 0;
     player[p].phys.grabbing = -1;
     player[p].phys.cVel.x = -1*player[p].phys.face;
-    aS[cS[p]].CATCHCUT.main(p);
+    actionStates[characterSelections[p]].CATCHCUT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CATCHCUT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CATCHCUT.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CATCHCUT){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].CATCHCUT){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -3547,17 +3547,17 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "CAPTUREDAMAGE";
     player[p].timer = 0;
-    aS[cS[p]].CAPTUREDAMAGE.main(p);
+    actionStates[characterSelections[p]].CAPTUREDAMAGE.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CAPTUREDAMAGE.interrupt(p)){
-      player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-aS[cS[p]].CAPTUREDAMAGE.setPositions[player[p].timer-1]*player[p].phys.face);
+    if (!actionStates[characterSelections[p]].CAPTUREDAMAGE.interrupt(p)){
+      player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-actionStates[characterSelections[p]].CAPTUREDAMAGE.setPositions[player[p].timer-1]*player[p].phys.face);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].CAPTUREDAMAGE){
-      aS[cS[p]].CAPTUREWAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].CAPTUREDAMAGE){
+      actionStates[characterSelections[p]].CAPTUREWAIT.init(p);
       return true;
     }
     else {
@@ -3580,7 +3580,7 @@ echo 'export default {
     player[p].actionState = "WALLDAMAGE";
     player[p].timer = 0;
     sounds.bounce.play();
-    aS[cS[p]].WALLDAMAGE.main(p);
+    actionStates[characterSelections[p]].WALLDAMAGE.main(p);
   },
   main : function(p){
     player[p].timer++;
@@ -3592,7 +3592,7 @@ echo 'export default {
       player[p].phys.kVel.x *= -0.8;
       player[p].phys.kDec.x *= -1;
     }
-    if (!aS[cS[p]].WALLDAMAGE.interrupt(p)){
+    if (!actionStates[characterSelections[p]].WALLDAMAGE.interrupt(p)){
       player[p].hit.hitstun--;
       player[p].phys.cVel.y -= player[p].charAttributes.gravity;
       if (player[p].phys.cVel.y < -player[p].charAttributes.terminalV){
@@ -3601,8 +3601,8 @@ echo 'export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].WALLDAMAGE){
-      aS[cS[p]].DAMAGEFALL.init(p);
+    if (player[p].timer > frames[characterSelections[p]].WALLDAMAGE){
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
       return true;
     }
     else {
@@ -3637,7 +3637,7 @@ echo 'export default {
       drawVfx("tech",player[p].phys.ECBp[1]);
     }
     // draw tech rotated
-    aS[cS[p]].WALLTECH.main(p);
+    actionStates[characterSelections[p]].WALLTECH.main(p);
   },
   main : function(p){
     if (player[p].timer < 1){
@@ -3649,7 +3649,7 @@ echo 'export default {
     else {
       player[p].timer++;
     }
-    if (!aS[cS[p]].WALLTECH.interrupt(p)){
+    if (!actionStates[characterSelections[p]].WALLTECH.interrupt(p)){
       if (player[p].timer == 2){
         sounds.walljump.play();
       }
@@ -3667,28 +3667,28 @@ echo 'export default {
       var a = checkForAerials(p);
       var b = checkForSpecials(p);
       if (a[0]){
-        aS[cS[p]][a[1]].init(p);
+        actionStates[characterSelections[p]][a[1]].init(p);
         return true;
       }
       else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-        aS[cS[p]].ESCAPEAIR.init(p);
+        actionStates[characterSelections[p]].ESCAPEAIR.init(p);
         return true;
       }
       else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
         if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-          aS[cS[p]].JUMPAERIALB.init(p);
+          actionStates[characterSelections[p]].JUMPAERIALB.init(p);
         }
         else {
-          aS[cS[p]].JUMPAERIALF.init(p);
+          actionStates[characterSelections[p]].JUMPAERIALF.init(p);
         }
         return true;
       }
       else if (b[0]){
-        aS[cS[p]][b[1]].init(p);
+        actionStates[characterSelections[p]][b[1]].init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].WALLTECH){
-        aS[cS[p]].FALL.init(p);
+      else if (player[p].timer > frames[characterSelections[p]].WALLTECH){
+        actionStates[characterSelections[p]].FALL.init(p);
         return true;
       }
       else {
@@ -3730,14 +3730,14 @@ echo 'export default {
       drawVfx("tech",player[p].phys.ECBp[1]);
     }
     // draw tech rotated
-    aS[cS[p]].WALLJUMP.main(p);
+    actionStates[characterSelections[p]].WALLJUMP.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (player[p].timer == 2){
       sounds.walljump.play();
     }
-    if (!aS[cS[p]].WALLJUMP.interrupt(p)){
+    if (!actionStates[characterSelections[p]].WALLJUMP.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
@@ -3747,28 +3747,28 @@ echo 'export default {
       var a = checkForAerials(p);
       var b = checkForSpecials(p);
       if (a[0]){
-        aS[cS[p]][a[1]].init(p);
+        actionStates[characterSelections[p]][a[1]].init(p);
         return true;
       }
       else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-        aS[cS[p]].ESCAPEAIR.init(p);
+        actionStates[characterSelections[p]].ESCAPEAIR.init(p);
         return true;
       }
       else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
         if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-          aS[cS[p]].JUMPAERIALB.init(p);
+          actionStates[characterSelections[p]].JUMPAERIALB.init(p);
         }
         else {
-          aS[cS[p]].JUMPAERIALF.init(p);
+          actionStates[characterSelections[p]].JUMPAERIALF.init(p);
         }
         return true;
       }
       else if (b[0]){
-        aS[cS[p]][b[1]].init(p);
+        actionStates[characterSelections[p]][b[1]].init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].WALLJUMP){
-        aS[cS[p]].FALL.init(p);
+      else if (player[p].timer > frames[characterSelections[p]].WALLJUMP){
+        actionStates[characterSelections[p]].FALL.init(p);
         return true;
       }
       else {
@@ -3807,7 +3807,7 @@ echo 'export default {
       drawVfx("tech",player[p].phys.ECBp[1]);
     }
     // draw tech rotated
-    aS[cS[p]].WALLTECHJUMP.main(p);
+    actionStates[characterSelections[p]].WALLTECHJUMP.main(p);
   },
   main : function(p){
     if (player[p].timer < 1){
@@ -3822,7 +3822,7 @@ echo 'export default {
     if (player[p].timer == 2){
       sounds.walljump.play();
     }
-    if (!aS[cS[p]].WALLTECH.interrupt(p)){
+    if (!actionStates[characterSelections[p]].WALLTECH.interrupt(p)){
       if (player[p].timer > 0.89 && player[p].timer < 0.91){
         player[p].phys.cVel.x = player[p].phys.face * player[p].charAttributes.wallJumpVelX;
         player[p].phys.cVel.y = player[p].charAttributes.wallJumpVelY;
@@ -3838,28 +3838,28 @@ echo 'export default {
       var a = checkForAerials(p);
       var b = checkForSpecials(p);
       if (a[0]){
-        aS[cS[p]][a[1]].init(p);
+        actionStates[characterSelections[p]][a[1]].init(p);
         return true;
       }
       else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-        aS[cS[p]].ESCAPEAIR.init(p);
+        actionStates[characterSelections[p]].ESCAPEAIR.init(p);
         return true;
       }
       else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
         if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-          aS[cS[p]].JUMPAERIALB.init(p);
+          actionStates[characterSelections[p]].JUMPAERIALB.init(p);
         }
         else {
-          aS[cS[p]].JUMPAERIALF.init(p);
+          actionStates[characterSelections[p]].JUMPAERIALF.init(p);
         }
         return true;
       }
       else if (b[0]){
-        aS[cS[p]][b[1]].init(p);
+        actionStates[characterSelections[p]][b[1]].init(p);
         return true;
       }
-      else if (player[p].timer > frames[cS[p]].WALLJUMP){
-        aS[cS[p]].FALL.init(p);
+      else if (player[p].timer > frames[characterSelections[p]].WALLJUMP){
+        actionStates[characterSelections[p]].FALL.init(p);
         return true;
       }
       else {
@@ -3881,11 +3881,11 @@ echo 'export default {
     player[p].actionState = "OTTOTTO";
     player[p].timer = 1;
     player[p].phys.cVel.x = 0;
-    aS[cS[p]].OTTOTTO.main(p);
+    actionStates[characterSelections[p]].OTTOTTO.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].OTTOTTO.interrupt(p)){
+    if (!actionStates[characterSelections[p]].OTTOTTO.interrupt(p)){
 
     }
   },
@@ -3894,52 +3894,52 @@ echo 'export default {
     var t = checkForTilts(p);
     var s = checkForSmashes(p);
     var j = checkForJump(p);
-    if (player[p].timer > frames[cS[p]].OTTOTTO){
-      aS[cS[p]].OTTOTTOWAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].OTTOTTO){
+      actionStates[characterSelections[p]].OTTOTTOWAIT.init(p);
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
       return true;
     }
     else if (checkForSquat(p)){
-      aS[cS[p]].SQUAT.init(p);
+      actionStates[characterSelections[p]].SQUAT.init(p);
       return true;
     }
     else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p);
       return true;
     }
     else if (checkForTiltTurn(p)){
       player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-      aS[cS[p]].TILTTURN.init(p);
+      actionStates[characterSelections[p]].TILTTURN.init(p);
       return true;
     }
     else if (Math.abs(player[p].inputs.lsX[0]) > 0.6){
-      aS[cS[p]].WALK.init(p,true);
+      actionStates[characterSelections[p]].WALK.init(p,true);
       return true;
     }
     else {
@@ -3956,18 +3956,18 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "OTTOTTOWAIT";
     player[p].timer = 1;
-    if (cS[p] != 1){
-      sounds[actionSounds[cS[p]].OTTOTTOWAIT[0][1]].play();
+    if (characterSelections[p] != 1){
+      sounds[actionSounds[characterSelections[p]].OTTOTTOWAIT[0][1]].play();
     }
     player[p].phys.cVel.x = 0;
-    aS[cS[p]].OTTOTTOWAIT.main(p);
+    actionStates[characterSelections[p]].OTTOTTOWAIT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (player[p].timer > frames[cS[p]].OTTOTTOWAIT){
+    if (player[p].timer > frames[characterSelections[p]].OTTOTTOWAIT){
       player[p].timer = 0
     }
-    if (!aS[cS[p]].OTTOTTOWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].OTTOTTOWAIT.interrupt(p)){
 
     }
   },
@@ -3977,47 +3977,47 @@ echo 'export default {
     var s = checkForSmashes(p);
     var j = checkForJump(p);
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
       return true;
     }
     else if (checkForSquat(p)){
-      aS[cS[p]].SQUAT.init(p);
+      actionStates[characterSelections[p]].SQUAT.init(p);
       return true;
     }
     else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p);
       return true;
     }
     else if (checkForTiltTurn(p)){
       player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-      aS[cS[p]].TILTTURN.init(p);
+      actionStates[characterSelections[p]].TILTTURN.init(p);
       return true;
     }
     else if (Math.abs(player[p].inputs.lsX[0]) > 0.6){
-      aS[cS[p]].WALK.init(p,true);
+      actionStates[characterSelections[p]].WALK.init(p,true);
       return true;
     }
     else {
@@ -4040,18 +4040,18 @@ echo 'export default {
     player[p].timer = 0;
     player[p].hit.hitstun = 0;
     turnOffHitboxes(p);
-    aS[cS[p]].MISSFOOT.main(p);
+    actionStates[characterSelections[p]].MISSFOOT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].MISSFOOT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].MISSFOOT.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
   },
   interrupt : function(p){
     if (player[p].timer > 26){
-      aS[cS[p]].DAMAGEFALL.init(p);
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
       return true;
     }
     else {
@@ -4070,11 +4070,11 @@ echo 'export default {
     player[p].timer = 0;
     player[p].phys.stuckTimer = 95+2*Math.floor(player[p].percent);
     sounds.fireweakhit.play();
-    aS[cS[p]].FURASLEEPSTART.main(p);
+    actionStates[characterSelections[p]].FURASLEEPSTART.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FURASLEEPSTART.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FURASLEEPSTART.interrupt(p)){
       player[p].phys.stuckTimer--;
       reduceByTraction(p,true);
       var originalColour = palettes[pPal[p]][0];
@@ -4100,12 +4100,12 @@ echo 'export default {
   interrupt : function(p){
     if (player[p].phys.stuckTimer <= 0){
       player[p].colourOverlayBool = false;
-      aS[cS[p]].FURASLEEPEND.init(p);
+      actionStates[characterSelections[p]].FURASLEEPEND.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FURASLEEPSTART){
+    else if (player[p].timer > frames[characterSelections[p]].FURASLEEPSTART){
       player[p].colourOverlayBool = false;
-      aS[cS[p]].FURASLEEPLOOP.init(p);
+      actionStates[characterSelections[p]].FURASLEEPLOOP.init(p);
       return true;
     }
     else {
@@ -4122,11 +4122,11 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "FURASLEEPLOOP";
     player[p].timer = 0;
-    aS[cS[p]].FURASLEEPLOOP.main(p);
+    actionStates[characterSelections[p]].FURASLEEPLOOP.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FURASLEEPLOOP.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FURASLEEPLOOP.interrupt(p)){
       player[p].phys.stuckTimer--;
       var originalColour = palettes[pPal[p]][0];
       originalColour = originalColour.substr(4,originalColour.length-5);
@@ -4151,10 +4151,10 @@ echo 'export default {
   interrupt : function(p){
     if (player[p].phys.stuckTimer <= 0){
       player[p].colourOverlayBool = false;
-      aS[cS[p]].FURASLEEPEND.init(p);
+      actionStates[characterSelections[p]].FURASLEEPEND.init(p);
       return true;
     }
-    else if (player[p].timer > frames[cS[p]].FURASLEEPLOOP){
+    else if (player[p].timer > frames[characterSelections[p]].FURASLEEPLOOP){
       player[p].timer = 1;
       player[p].colourOverlayBool = false;
       return false;
@@ -4173,17 +4173,17 @@ echo 'export default {
   init : function(p){
     player[p].actionState = "FURASLEEPEND";
     player[p].timer = 0;
-    aS[cS[p]].FURASLEEPEND.main(p);
+    actionStates[characterSelections[p]].FURASLEEPEND.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FURASLEEPEND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FURASLEEPEND.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].FURASLEEPEND){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > frames[characterSelections[p]].FURASLEEPEND){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {
@@ -4206,11 +4206,11 @@ echo 'export default {
     player[p].timer = 0;
     player[p].phys.cVel.y = 0;
     turnOffHitboxes(p);
-    aS[cS[p]].STOPCEIL.main(p);
+    actionStates[characterSelections[p]].STOPCEIL.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].STOPCEIL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].STOPCEIL.interrupt(p)){
       if (player[p].timer == 2){
         player[p].phys.kVel.y *= -0.8;
         player[p].phys.kVel.x *= 0.8;
@@ -4233,15 +4233,15 @@ echo 'export default {
   },
   interrupt : function(p){
     if (player[p].timer > 5 && player[p].hit.hitstun <= 0){
-      aS[cS[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p);
     }
-    else if (player[p].timer > frames[cS[p]].STOPCEIL){
+    else if (player[p].timer > frames[characterSelections[p]].STOPCEIL){
       if (player[p].hit.hitstun <= 0){
-        aS[cS[p]].DAMAGEFALL.init(p);
+        actionStates[characterSelections[p]].DAMAGEFALL.init(p);
         return true;
       }
       else {
-        player[p].timer = frames[cS[p]].STOPCEIL;
+        player[p].timer = frames[characterSelections[p]].STOPCEIL;
         return false;
       }
     }
@@ -4253,21 +4253,21 @@ echo 'export default {
     if (player[p].hit.hitstun > 0){
       if (player[p].phys.techTimer > 0){
         if (player[p].inputs.lsX[0]*player[p].phys.face > 0.5){
-          aS[cS[p]].TECHF.init(p);
+          actionStates[characterSelections[p]].TECHF.init(p);
         }
         else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.5){
-          aS[cS[p]].TECHB.init(p);
+          actionStates[characterSelections[p]].TECHB.init(p);
         }
         else {
-          aS[cS[p]].TECHN.init(p);
+          actionStates[characterSelections[p]].TECHN.init(p);
         }
       }
       else {
-        aS[cS[p]].DOWNBOUND.init(p);
+        actionStates[characterSelections[p]].DOWNBOUND.init(p);
       }
     }
     else {
-      aS[cS[p]].LANDING.init(p);
+      actionStates[characterSelections[p]].LANDING.init(p);
     }
   }
 };
@@ -4294,18 +4294,18 @@ echo 'export default {
     drawVfx("tech",player[p].phys.ECBp[2]);
     sounds.tech.play();
     turnOffHitboxes(p);
-    aS[cS[p]].TECHU.main(p);
+    actionStates[characterSelections[p]].TECHU.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].TECHU.interrupt(p)){
+    if (!actionStates[characterSelections[p]].TECHU.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > frames[cS[p]].TECHU){
-      aS[cS[p]].FALL.init(p);
+    if (player[p].timer > frames[characterSelections[p]].TECHU){
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {
@@ -4327,7 +4327,7 @@ echo 'export default {
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = 0;
     player[p].phys.pos.x = 300;
-    aS[cS[p]].SLEEP.main(p);
+    actionStates[characterSelections[p]].SLEEP.main(p);
   },
   main : function(p){
     player[p].phys.outOfCameraTimer = 0;
@@ -4345,15 +4345,15 @@ echo 'export default {
     player[p].actionState = "ENTRANCE";
     player[p].timer = 0;
     player[p].phys.grounded = false;
-    aS[cS[p]].ENTRANCE.main(p);
+    actionStates[characterSelections[p]].ENTRANCE.main(p);
   },
   main : function(p){
     player[p].timer++;
-    aS[cS[p]].ENTRANCE.interrupt(p);
+    actionStates[characterSelections[p]].ENTRANCE.interrupt(p);
   },
   interrupt : function(p){
     if (player[p].timer > 60){
-      aS[cS[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p);
     }
   }
 };

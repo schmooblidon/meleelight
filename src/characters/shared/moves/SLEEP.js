@@ -1,5 +1,5 @@
-import {cS, player} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 export default {
   name : "SLEEP",
   canBeGrabbed : false,
@@ -12,7 +12,7 @@ export default {
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = 0;
     player[p].phys.pos.x = 300;
-    aS[cS[p]].SLEEP.main(p);
+    actionStates[characterSelections[p]].SLEEP.main(p);
   },
   main : function(p){
     player[p].phys.outOfCameraTimer = 0;

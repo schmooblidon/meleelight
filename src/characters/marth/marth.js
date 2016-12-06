@@ -1,4 +1,4 @@
-import {aS, turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump,
+import {actionStates, turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump,
     checkForDash
     , checkForSmashTurn
     , checkForTiltTurn
@@ -9,7 +9,7 @@ import {aS, turnOffHitboxes, reduceByTraction, checkForSpecials, checkForTilts, 
     , randomShout,setupActionStates
 } from "physics/actionStateShortcuts";
 import {baseActionStates} from "characters/baseActionStates";
-import {player, palettes, pPal, cS} from "main/main";
+import {player, palettes, pPal, characterSelections} from "main/main";
 import {framesData,CHARIDS} from "main/characters";
 import {sounds} from "main/sfx";
 
@@ -26,11 +26,11 @@ setupActionStates(CHARIDS.MARTH_ID,{});
 // base action states added
 var keys = Object.keys(baseActionStates);
 for (var i=0;i<keys.length;i++){
-  aS[0][keys[i]] = {};
-    deepCopyObject(true,aS[0][keys[i]],baseActionStates[keys[i]]);
+  actionStates[0][keys[i]] = {};
+    deepCopyObject(true,actionStates[0][keys[i]],baseActionStates[keys[i]]);
 }
 // set pointer for readibility
-var marth = aS[0];
+var marth = actionStates[0];
 
 // OVERWRITES START
 
@@ -938,7 +938,7 @@ marth.FORWARDSMASH = {
       if (player[p].timer == 10){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
       }
       if (player[p].timer > 10 && player[p].timer < 14){
         player[p].hitboxes.frame++;
@@ -1052,7 +1052,7 @@ marth.UPSMASH = {
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
         sounds.sword3.play();
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
       }
       if (player[p].timer > 13 && player[p].timer < 17){
         player[p].hitboxes.frame++;
@@ -1177,7 +1177,7 @@ marth.DOWNSMASH = {
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
         sounds.sword3.play();
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
       }
       if (player[p].timer > 5 && player[p].timer < 8){
         player[p].hitboxes.frame++;
@@ -3411,11 +3411,11 @@ marth.THROWFORWARD = {
   init : function(p){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNMARTHFORWARD.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHFORWARD.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
-    randomShout(cS[p]);
-    var frame = framesData[cS[player[p].phys.grabbing]].THROWNMARTHFORWARD;
+    randomShout(characterSelections[p]);
+    var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNMARTHFORWARD;
     player[p].phys.releaseFrame = frame+1;
     marth.THROWFORWARD.main(p);
   },
@@ -3451,11 +3451,11 @@ marth.THROWBACK = {
   init : function(p){
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNMARTHBACK.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHBACK.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
-    randomShout(cS[p]);
-    var frame = framesData[cS[player[p].phys.grabbing]].THROWNMARTHBACK;
+    randomShout(characterSelections[p]);
+    var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNMARTHBACK;
     player[p].phys.releaseFrame = frame+1;
     marth.THROWBACK.main(p);
   },
@@ -3491,12 +3491,12 @@ marth.THROWUP = {
   init : function(p){
     player[p].actionState = "THROWUP";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNMARTHUP.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHUP.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
-    var frame = framesData[cS[player[p].phys.grabbing]].THROWNMARTHUP;
+    var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNMARTHUP;
     player[p].phys.releaseFrame = frame+1;
-    randomShout(cS[p]);
+    randomShout(characterSelections[p]);
     marth.THROWUP.main(p);
   },
   main : function(p){
@@ -3531,11 +3531,11 @@ marth.THROWDOWN = {
   init : function(p){
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNMARTHDOWN.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHDOWN.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
-    randomShout(cS[p]);
-    var frame = framesData[cS[player[p].phys.grabbing]].THROWNMARTHDOWN;
+    randomShout(characterSelections[p]);
+    var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNMARTHDOWN;
     player[p].phys.releaseFrame = frame+1;
     marth.THROWDOWN.main(p);
   },
@@ -4270,7 +4270,7 @@ marth.CLIFFATTACKSLOW = {
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
       }
       else if (player[p].timer > 38 && player[p].timer < 42){
         player[p].hitboxes.frame++;
@@ -4331,7 +4331,7 @@ marth.CLIFFATTACKQUICK = {
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
         // needs 3
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
       }
       else if (player[p].timer > 24 && player[p].timer < 28){
         player[p].hitboxes.frame++;

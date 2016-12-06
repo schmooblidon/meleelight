@@ -1,5 +1,5 @@
-import {cS, player} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -15,7 +15,7 @@ export default {
     player[p].actionState = "WALLDAMAGE";
     player[p].timer = 0;
     sounds.bounce.play();
-    aS[cS[p]].WALLDAMAGE.main(p);
+    actionStates[characterSelections[p]].WALLDAMAGE.main(p);
   },
   main : function(p){
     player[p].timer++;
@@ -27,7 +27,7 @@ export default {
       player[p].phys.kVel.x *= -0.8;
       player[p].phys.kDec.x *= -1;
     }
-    if (!aS[cS[p]].WALLDAMAGE.interrupt(p)){
+    if (!actionStates[characterSelections[p]].WALLDAMAGE.interrupt(p)){
       player[p].hit.hitstun--;
       player[p].phys.cVel.y -= player[p].charAttributes.gravity;
       if (player[p].phys.cVel.y < -player[p].charAttributes.terminalV){
@@ -36,8 +36,8 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].WALLDAMAGE){
-      aS[cS[p]].DAMAGEFALL.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].WALLDAMAGE){
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
       return true;
     }
     else {

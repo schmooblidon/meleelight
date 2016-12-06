@@ -1,5 +1,5 @@
-import {airDrift, fastfall, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
-import {cS,  player} from "main/main";
+import {airDrift, fastfall, actionStates, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -24,18 +24,18 @@ export default {
     drawVfx("tech",player[p].phys.ECBp[2]);
     sounds.tech.play();
     turnOffHitboxes(p);
-    aS[cS[p]].TECHU.main(p);
+    actionStates[characterSelections[p]].TECHU.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].TECHU.interrupt(p)){
+    if (!actionStates[characterSelections[p]].TECHU.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].TECHU){
-      aS[cS[p]].FALL.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].TECHU){
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {

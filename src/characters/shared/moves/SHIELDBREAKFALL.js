@@ -1,5 +1,5 @@
-import {cS, player} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 import {framesData} from 'main/characters';
 export default {
   name : "SHIELDBREAKFALL",
@@ -12,18 +12,18 @@ export default {
   init : function(p){
     player[p].actionState = "SHIELDBREAKFALL";
     player[p].timer = 0;
-    aS[cS[p]].SHIELDBREAKFALL.main(p);
+    actionStates[characterSelections[p]].SHIELDBREAKFALL.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SHIELDBREAKFALL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SHIELDBREAKFALL.interrupt(p)){
       player[p].phys.intangibleTimer = 1;
       player[p].phys.cVel.y -= player[p].charAttributes.gravity;
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].SHIELDBREAKFALL){
-      aS[cS[p]].SHIELDBREAKFALL.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].SHIELDBREAKFALL){
+      actionStates[characterSelections[p]].SHIELDBREAKFALL.init(p);
       return true;
     }
     else {
@@ -31,7 +31,7 @@ export default {
     }
   },
   land : function(p){
-    aS[cS[p]].SHIELDBREAKDOWNBOUND.init(p);
+    actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.init(p);
   }
 };
 

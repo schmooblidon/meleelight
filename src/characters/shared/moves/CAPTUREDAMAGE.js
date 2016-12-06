@@ -1,5 +1,5 @@
-import {player, cS} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {player, characterSelections} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 
 import {framesData} from 'main/characters';
 export default {
@@ -11,17 +11,17 @@ export default {
   init : function(p){
     player[p].actionState = "CAPTUREDAMAGE";
     player[p].timer = 0;
-    aS[cS[p]].CAPTUREDAMAGE.main(p);
+    actionStates[characterSelections[p]].CAPTUREDAMAGE.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].CAPTUREDAMAGE.interrupt(p)){
-      player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-aS[cS[p]].CAPTUREDAMAGE.setPositions[player[p].timer-1]*player[p].phys.face);
+    if (!actionStates[characterSelections[p]].CAPTUREDAMAGE.interrupt(p)){
+      player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-actionStates[characterSelections[p]].CAPTUREDAMAGE.setPositions[player[p].timer-1]*player[p].phys.face);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].CAPTUREDAMAGE){
-      aS[cS[p]].CAPTUREWAIT.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].CAPTUREDAMAGE){
+      actionStates[characterSelections[p]].CAPTUREWAIT.init(p);
       return true;
     }
     else {

@@ -1,5 +1,5 @@
-import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, aS} from "physics/actionStateShortcuts";
-import {cS,  player} from "main/main";
+import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -23,12 +23,12 @@ export default {
     player[p].phys.cVel.x = player[p].inputs.lsX[0] * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
-    aS[cS[p]].JUMPAERIALB.main(p);
+    actionStates[characterSelections[p]].JUMPAERIALB.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("JUMPAERIAL",p);
-    if (!aS[cS[p]].JUMPAERIALB.interrupt(p)){
+    if (!actionStates[characterSelections[p]].JUMPAERIALB.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
@@ -37,19 +37,19 @@ export default {
     const a = checkForAerials(p);
     const b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].JUMPAERIALB){
-      aS[cS[p]].FALLAERIAL.init(p);
+    else if (player[p].timer > framesData[characterSelections[p]].JUMPAERIALB){
+      actionStates[characterSelections[p]].FALLAERIAL.init(p);
       return true;
     }
     else {

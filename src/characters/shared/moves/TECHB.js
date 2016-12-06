@@ -1,5 +1,5 @@
-import {executeIntangibility, aS} from "physics/actionStateShortcuts";
-import {cS,  player} from "main/main";
+import {executeIntangibility, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -13,18 +13,18 @@ export default {
     player[p].timer = 0;
     drawVfx("tech",player[p].phys.pos);
     sounds.tech.play();
-    aS[cS[p]].TECHB.main(p);
+    actionStates[characterSelections[p]].TECHB.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].TECHB.interrupt(p)){
+    if (!actionStates[characterSelections[p]].TECHB.interrupt(p)){
       executeIntangibility("TECHB",p);
-      player[p].phys.cVel.x = aS[cS[p]].TECHB.setVelocities[player[p].timer-1]*player[p].phys.face;
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].TECHB.setVelocities[player[p].timer-1]*player[p].phys.face;
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].TECHB){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].TECHB){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {

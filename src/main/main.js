@@ -14,7 +14,7 @@ import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboar
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
 import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
 
-import {aS} from "physics/actionStateShortcuts";
+import {actionStates} from "physics/actionStateShortcuts";
 import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
 import {
   targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned,
@@ -43,7 +43,7 @@ export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
 export const framerate = [0,0,0];
-export var cS = [0,0,0,0];
+export var characterSelections = [0,0,0,0];
 
 export var shine = 0.5;
 
@@ -787,19 +787,20 @@ export function renderToMain (){
 
 
 export function update (i){
+  var physInput = nullInputs;
   if (!starting){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
-        interpretInputs(i,true);
+      physInput[i]=  interpretInputs(i,true);
       }
       else {
         if (player[i].actionState != "SLEEP"){
-          runAI(i);
+          runAI(i,physInput[i]);
         }
       }
     }
   }
-  physics(i);
+  physics(i,physInput[i]);
 }
 
 let delta = 0;
@@ -845,7 +846,7 @@ export function gameTick (){
         cssControls(i, input[i]);
       }
 
-      aS[cS[i]][player[i].actionState].main(i);
+      actionStates[characterSelections[i]][player[i].actionState].main(i);
     }
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
@@ -1141,7 +1142,7 @@ export function renderTick (){
 }
 
 export function buildPlayerObject (i){
-  player[i] = new playerObject(cS[i],startingPoint[i],startingFace[i]);
+  player[i] = new playerObject(characterSelections[i],startingPoint[i],startingFace[i]);
   player[i].phys.ECB1 = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
   player[i].phys.ECBp = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
   player[i].difficulty = cpuDifficulty[i];
@@ -1269,19 +1270,19 @@ export function finishGame (){
       if (!targetTesting) {
         if (targetStagePlaying < 10) {
           for (var i = 0; i < 3; i++) {
-            if (!medalsEarned[cS[targetPlayer]][targetStagePlaying][i]) {
-              if (Math.round(matchTimer * 100) / 100 <= medalTimes[cS[targetPlayer]][targetStagePlaying][i]) {
-                medalsEarned[cS[targetPlayer]][targetStagePlaying][i] = true;
+            if (!medalsEarned[characterSelections[targetPlayer]][targetStagePlaying][i]) {
+              if (Math.round(matchTimer * 100) / 100 <= medalTimes[characterSelections[targetPlayer]][targetStagePlaying][i]) {
+                medalsEarned[characterSelections[targetPlayer]][targetStagePlaying][i] = true;
               }
             }
           }
         }
-        if (matchTimer < targetRecords[cS[targetPlayer]][targetStagePlaying] || targetRecords[cS[targetPlayer]][
+        if (matchTimer < targetRecords[characterSelections[targetPlayer]][targetStagePlaying] || targetRecords[characterSelections[targetPlayer]][
             targetStagePlaying
           ] == -1) {
-          targetRecords[cS[targetPlayer]][targetStagePlaying] = matchTimer;
+          targetRecords[characterSelections[targetPlayer]][targetStagePlaying] = matchTimer;
           sounds.newRecord.play();
-          setCookie(cS[targetPlayer] + "target" + targetStagePlaying, targetRecords[cS[targetPlayer]][
+          setCookie(characterSelections[targetPlayer] + "target" + targetStagePlaying, targetRecords[characterSelections[targetPlayer]][
             targetStagePlaying
           ], 36500);
         } else {
@@ -1560,5 +1561,5 @@ export function cacheDom() {
 };
 
 export function setCS(index,val){
-  cS[index] = val;
+  characterSelections[index] = val;
 }

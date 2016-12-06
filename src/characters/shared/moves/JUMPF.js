@@ -1,5 +1,5 @@
-import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 export default {
@@ -28,12 +28,12 @@ export default {
 
     player[p].phys.grounded = false;
     sounds.jump2.play();
-    aS[cS[p]].JUMPF.main(p);
+    actionStates[characterSelections[p]].JUMPF.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("JUMP",p);
-    if (!aS[cS[p]].JUMPF.interrupt(p)){
+    if (!actionStates[characterSelections[p]].JUMPF.interrupt(p)){
       if (player[p].timer > 1){
         fastfall(p);
         airDrift(p);
@@ -44,28 +44,28 @@ export default {
     var a = checkForAerials(p);
     var b = checkForSpecials(p);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p);
       return true;
     }
     else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
       return true;
     }
     else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
       if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-        aS[cS[p]].JUMPAERIALB.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALB.init(p);
       }
       else {
-        aS[cS[p]].JUMPAERIALF.init(p);
+        actionStates[characterSelections[p]].JUMPAERIALF.init(p);
       }
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].JUMPF){
-      aS[cS[p]].FALL.init(p);
+    else if (player[p].timer > framesData[characterSelections[p]].JUMPF){
+      actionStates[characterSelections[p]].FALL.init(p);
       return true;
     }
     else {

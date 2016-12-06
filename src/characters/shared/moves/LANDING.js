@@ -2,9 +2,9 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     checkForTilts
     , checkForSpecials
     , reduceByTraction
-    , aS
+    , actionStates
 } from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {characterSelections, player} from "main/main";
 import {sounds} from "main/sfx";
 import {drawVfx} from "main/vfx/drawVfx";
 export default {
@@ -17,11 +17,11 @@ export default {
     drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDING.main(p);
+    actionStates[characterSelections[p]].LANDING.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].LANDING.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDING.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -32,48 +32,48 @@ export default {
       const s = checkForSmashes(p);
       const j = checkForJump(p);
       if (j[0]){
-        aS[cS[p]].KNEEBEND.init(p,j[1]);
+        actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
         return true;
       }
       else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-        aS[cS[p]].GUARDON.init(p);
+        actionStates[characterSelections[p]].GUARDON.init(p);
         return true;
       }
       else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-        aS[cS[p]].GUARDON.init(p);
+        actionStates[characterSelections[p]].GUARDON.init(p);
         return true;
       }
       else if (b[0]){
-        aS[cS[p]][b[1]].init(p);
+        actionStates[characterSelections[p]][b[1]].init(p);
         return true;
       }
       else if (s[0]){
-        aS[cS[p]][s[1]].init(p);
+        actionStates[characterSelections[p]][s[1]].init(p);
         return true;
       }
       else if (t[0]){
-        aS[cS[p]][t[1]].init(p);
+        actionStates[characterSelections[p]][t[1]].init(p);
         return true;
       }
       else if (checkForDash(p)){
-        aS[cS[p]].DASH.init(p);
+        actionStates[characterSelections[p]].DASH.init(p);
         return true;
       }
       else if (checkForSmashTurn(p)){
-        aS[cS[p]].SMASHTURN.init(p);
+        actionStates[characterSelections[p]].SMASHTURN.init(p);
         return true;
       }
       else if (checkForTiltTurn(p)){
         player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        aS[cS[p]].TILTTURN.init(p);
+        actionStates[characterSelections[p]].TILTTURN.init(p);
         return true;
       }
       else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-        aS[cS[p]].WALK.init(p,true);
+        actionStates[characterSelections[p]].WALK.init(p,true);
         return true;
       }
       else if (player[p].timer === 5 && player[p].inputs.lsY[0] < -0.5){
-        aS[cS[p]].SQUATWAIT.init(p);
+        actionStates[characterSelections[p]].SQUATWAIT.init(p);
         return true;
       }
       else {
@@ -81,7 +81,7 @@ export default {
       }
     }
     else if (player[p].timer > 30){
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {

@@ -1,5 +1,5 @@
-import {checkForJump, checkForSmashes, checkForTilts, reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {checkForJump, checkForSmashes, checkForTilts, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 export default {
   name : "TILTTURN",
   canEdgeCancel : true,
@@ -8,14 +8,14 @@ export default {
   init : function(p){
     player[p].actionState = "TILTTURN";
     player[p].timer = 0;
-    aS[cS[p]].TILTTURN.main(p);
+    actionStates[characterSelections[p]].TILTTURN.main(p);
   },
   main : function(p){
     player[p].timer++;
     if (player[p].timer === 6){
       player[p].phys.face *= -1;
     }
-    if (!aS[cS[p]].TILTTURN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].TILTTURN.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -25,43 +25,43 @@ export default {
     const j = checkForJump(p);
 
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lsX[0]) > 0.6){
       player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
       if (player[p].phys.grounded){
-        aS[cS[p]].SIDESPECIALGROUND.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALGROUND.init(p);
       }
       else {
-        aS[cS[p]].SIDESPECIALAIR.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALAIR.init(p);
       }
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
       if (player[p].timer < 6){
         player[p].phys.face *= -1;
       }
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
     }
     else if (player[p].timer > 11){
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else if (player[p].timer === 6 && player[p].inputs.lsX[0] * player[p].phys.face > 0.79 && player[p].phys.dashbuffer){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else {

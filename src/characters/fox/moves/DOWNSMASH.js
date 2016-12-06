@@ -6,7 +6,7 @@ import TILTTURN from "characters/shared/moves/TILTTURN";
 import WALK from "characters/shared/moves/WALK";
 import WAIT from "characters/shared/moves/WAIT";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
-import {player, cS} from "main/main";
+import {player, characterSelections} from "main/main";
 import {sounds} from "main/sfx";
 import {reduceByTraction, randomShout, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump,
     checkForDash
@@ -59,7 +59,7 @@ export default {
       if (player[p].timer === 6){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
         sounds.normalswing1.play();
       }
       if (player[p].timer > 6 && player[p].timer < 11){

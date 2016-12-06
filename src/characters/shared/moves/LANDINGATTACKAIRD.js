@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS,  player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -18,17 +18,17 @@ export default {
     }
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDINGATTACKAIRD.main(p);
+    actionStates[characterSelections[p]].LANDINGATTACKAIRD.main(p);
   },
   main : function(p){
     player[p].timer += player[p].phys.landingLagScaling;
-    if (!aS[cS[p]].LANDINGATTACKAIRD.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRD.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].LANDINGATTACKAIRD){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].LANDINGATTACKAIRD){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {

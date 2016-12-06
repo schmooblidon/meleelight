@@ -2,10 +2,10 @@
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
 import {framesData} from "main/characters";
-import { cS, player} from "main/main";
+import { characterSelections, player} from "main/main";
 import {articles} from "physics/article";
 import {sounds} from "main/sfx";
-import {turnOffHitboxes, aS} from "physics/actionStateShortcuts";
+import {turnOffHitboxes, actionStates} from "physics/actionStateShortcuts";
 
 import {hitQueue} from 'physics/hitDetection';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -17,9 +17,9 @@ export default {
   init : function(p){
     player[p].actionState = "THROWUP";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNFOXUP.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXUP.init(player[p].phys.grabbing);
     turnOffHitboxes(p);
-    const frame = framesData[cS[player[p].phys.grabbing]].THROWNFOXUP;
+    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXUP;
     player[p].phys.releaseFrame = frame+1;
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
     this.main(p);

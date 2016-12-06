@@ -1,5 +1,5 @@
-import {executeIntangibility, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {executeIntangibility, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 
 import {framesData} from 'main/characters';
 export default {
@@ -10,18 +10,18 @@ export default {
   init : function(p){
     player[p].actionState = "DOWNSTANDB";
     player[p].timer = 0;
-    aS[cS[p]].DOWNSTANDB.main(p);
+    actionStates[characterSelections[p]].DOWNSTANDB.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNSTANDB.interrupt(p)){
-      player[p].phys.cVel.x = aS[cS[p]].DOWNSTANDB.setVelocities[player[p].timer-1]*player[p].phys.face;
+    if (!actionStates[characterSelections[p]].DOWNSTANDB.interrupt(p)){
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].DOWNSTANDB.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("DOWNSTANDB",p);
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].DOWNSTANDB){
-      aS[cS[p]].WAIT.init(p);
+    if (player[p].timer > framesData[characterSelections[p]].DOWNSTANDB){
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {

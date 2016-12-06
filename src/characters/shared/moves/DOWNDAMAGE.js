@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 export default {
   name : "DOWNDAMAGE",
   canEdgeCancel : true,
@@ -14,11 +14,11 @@ export default {
     player[p].timer = 0;
     player[p].phys.jabReset = true;
     player[p].phys.grounded = false;
-    aS[cS[p]].DOWNDAMAGE.main(p);
+    actionStates[characterSelections[p]].DOWNDAMAGE.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNDAMAGE.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNDAMAGE.interrupt(p)){
       if (!player[p].phys.grounded){
         player[p].phys.cVel.y -= player[p].charAttributes.gravity;
       }
@@ -34,14 +34,14 @@ export default {
     if (player[p].timer > 13){
       if (player[p].phys.grounded){
         if (player[p].hit.hitstun <= 0){
-          aS[cS[p]].DOWNSTANDN.init(p);
+          actionStates[characterSelections[p]].DOWNSTANDN.init(p);
         }
         else {
-          aS[cS[p]].DOWNWAIT.init(p);
+          actionStates[characterSelections[p]].DOWNWAIT.init(p);
         }
       }
       else {
-        aS[cS[p]].FALL.init(p);
+        actionStates[characterSelections[p]].FALL.init(p);
       }
       return true;
     }

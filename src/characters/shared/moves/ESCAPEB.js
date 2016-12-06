@@ -1,6 +1,6 @@
 import {sounds, sounds} from "main/sfx";
-import {executeIntangibility, playSounds, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {executeIntangibility, playSounds, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "ESCAPEB",
@@ -11,13 +11,13 @@ export default {
     player[p].actionState = "ESCAPEB";
     player[p].timer = 0;
     player[p].phys.shielding = false;
-    aS[cS[p]].ESCAPEB.main(p);
+    actionStates[characterSelections[p]].ESCAPEB.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("ESCAPEB",p);
-    if (!aS[cS[p]].ESCAPEB.interrupt(p)){
-      player[p].phys.cVel.x = aS[cS[p]].ESCAPEB.setVelocities[player[p].timer-1]*player[p].phys.face;
+    if (!actionStates[characterSelections[p]].ESCAPEB.interrupt(p)){
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].ESCAPEB.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("ESCAPEB",p);
       if (player[p].timer == 4){
         sounds.roll.play();
@@ -25,9 +25,9 @@ export default {
     }
   },
   interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].ESCAPEB){
+    if (player[p].timer > framesData[characterSelections[p]].ESCAPEB){
       player[p].phys.cVel.x = 0;
-      aS[cS[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p);
       return true;
     }
     else {

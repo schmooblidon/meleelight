@@ -1,5 +1,5 @@
-import {airDrift, fastfall, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {airDrift, fastfall, actionStates, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 export default {
   name : "MISSFOOT",
   canPassThrough : true,
@@ -13,18 +13,18 @@ export default {
     player[p].timer = 0;
     player[p].hit.hitstun = 0;
     turnOffHitboxes(p);
-    aS[cS[p]].MISSFOOT.main(p);
+    actionStates[characterSelections[p]].MISSFOOT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].MISSFOOT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].MISSFOOT.interrupt(p)){
       fastfall(p);
       airDrift(p);
     }
   },
   interrupt : function(p){
     if (player[p].timer > 26){
-      aS[cS[p]].DAMAGEFALL.init(p);
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
       return true;
     }
     else {

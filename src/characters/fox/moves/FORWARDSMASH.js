@@ -1,6 +1,6 @@
 
 import WAIT from "characters/shared/moves/WAIT";
-import {player, cS} from "main/main";
+import {player, characterSelections} from "main/main";
 import {turnOffHitboxes, reduceByTraction, randomShout} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 
@@ -60,7 +60,7 @@ export default {
       if (player[p].timer === 12){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
-        randomShout(cS[p]);
+        randomShout(characterSelections[p]);
         sounds.normalswing1.play();
       }
       if (player[p].timer > 12 && player[p].timer < 23){

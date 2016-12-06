@@ -1,8 +1,8 @@
 import {checkForSmashTurn, checkForDash, checkForJump, checkForSmashes, checkForTilts, checkForSpecials,
     reduceByTraction
-    , aS
+    , actionStates
 } from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "SQUATWAIT",
@@ -13,11 +13,11 @@ export default {
   init : function(p){
     player[p].actionState = "SQUATWAIT";
     player[p].timer = 0;
-    aS[cS[p]].SQUATWAIT.main(p);
+    actionStates[characterSelections[p]].SQUATWAIT.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].SQUATWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SQUATWAIT.interrupt(p)){
       reduceByTraction(p,true);
     }
   },
@@ -27,43 +27,43 @@ export default {
     const s = checkForSmashes(p);
     const j = checkForJump(p);
     if (player[p].inputs.lsY[0] > -0.61){
-      aS[cS[p]].SQUATRV.init(p);
+      actionStates[characterSelections[p]].SQUATRV.init(p);
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
       return true;
     }
     else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p);
       return true;
     }
     else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+      actionStates[characterSelections[p]].DASH.init(p);
       return true;
     }
     else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].SQUATWAIT){
-      aS[cS[p]].SQUATWAIT.init(p);
+    else if (player[p].timer > framesData[characterSelections[p]].SQUATWAIT){
+      actionStates[characterSelections[p]].SQUATWAIT.init(p);
     }
     else {
       return false;

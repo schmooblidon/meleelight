@@ -1,5 +1,5 @@
-import {pPal, palettes, cS, player} from "main/main";
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
+import {pPal, palettes, characterSelections, player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {blendColours} from "main/vfx/blendColours";
@@ -12,11 +12,11 @@ export default {
     player[p].timer = 0;
     player[p].phys.stuckTimer = 95+2*Math.floor(player[p].percent);
     sounds.fireweakhit.play();
-    aS[cS[p]].FURASLEEPSTART.main(p);
+    actionStates[characterSelections[p]].FURASLEEPSTART.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].FURASLEEPSTART.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FURASLEEPSTART.interrupt(p)){
       player[p].phys.stuckTimer--;
       reduceByTraction(p,true);
       var originalColour = palettes[pPal[p]][0];
@@ -42,12 +42,12 @@ export default {
   interrupt : function(p){
     if (player[p].phys.stuckTimer <= 0){
       player[p].colourOverlayBool = false;
-      aS[cS[p]].FURASLEEPEND.init(p);
+      actionStates[characterSelections[p]].FURASLEEPEND.init(p);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].FURASLEEPSTART){
+    else if (player[p].timer > framesData[characterSelections[p]].FURASLEEPSTART){
       player[p].colourOverlayBool = false;
-      aS[cS[p]].FURASLEEPLOOP.init(p);
+      actionStates[characterSelections[p]].FURASLEEPLOOP.init(p);
       return true;
     }
     else {

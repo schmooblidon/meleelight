@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 export default {
   name : "KNEEBEND",
   canEdgeCancel : true,
@@ -10,11 +10,11 @@ export default {
     player[p].timer = 0;
     player[p].phys.jumpType = 1;
     player[p].phys.jumpSquatType = type;
-    aS[cS[p]].KNEEBEND.main(p);
+    actionStates[characterSelections[p]].KNEEBEND.main(p);
   },
   main : function(p){
     player[p].timer++;
-    if (!aS[cS[p]].KNEEBEND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].KNEEBEND.interrupt(p)){
       reduceByTraction(p,true);
       // if jumpsquat initiated by stick
       if (player[p].phys.jumpSquatType){
@@ -37,23 +37,23 @@ export default {
     }
     if (player[p].timer > player[p].charAttributes.jumpSquat){
       if (player[p].inputs.lsX[2] * player[p].phys.face >= -0.3){
-        aS[cS[p]].JUMPF.init(p,player[p].phys.jumpType);
+        actionStates[characterSelections[p]].JUMPF.init(p,player[p].phys.jumpType);
       }
       else {
-        aS[cS[p]].JUMPB.init(p,player[p].phys.jumpType);
+        actionStates[characterSelections[p]].JUMPB.init(p,player[p].phys.jumpType);
       }
       return true;
     }
     else if (player[p].inputs.a[0] && !player[p].inputs.a[1] && (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0)){
-      aS[cS[p]].GRAB.init(p);
+      actionStates[characterSelections[p]].GRAB.init(p);
       return true;
     }
     else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lsY[0] >= 0.8 && player[p].inputs.lsY[3] < 0.3) || (player[p].inputs.csY[0] >= 0.8 && player[p].inputs.csY[3] < 0.3)){
-      aS[cS[p]].UPSMASH.init(p);
+      actionStates[characterSelections[p]].UPSMASH.init(p);
       return true;
     }
     else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lsY[0] > 0.58){
-      aS[cS[p]].UPSPECIAL.init(p);
+      actionStates[characterSelections[p]].UPSPECIAL.init(p);
       return true;
     }
     else {
