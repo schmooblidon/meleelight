@@ -37,7 +37,7 @@ function dealWithWall (i, newCenter, wallType) {
     sign = 1;
     isRight = 1;
   }
-  
+
   if (player[i].actionState == "DAMAGEFLYN") {
     if (player[i].hit.hitlag == 0) {
       player[i].phys.face = sign;
@@ -52,28 +52,29 @@ function dealWithWall (i, newCenter, wallType) {
         aS[cS[i]].WALLDAMAGE.init(i);
       }
     }
-    else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
-      aS[cS[i]][player[i].actionState].onWallCollide(i, wallLabel, j);
-    }
-    else if (player[i].phys.canWallJump) {
-      if (player[i].phys.wallJumpTimer == 254) {
-        if (player[i].phys.posDelta.x >= 0.5) {
-          player[i].phys.wallJumpTimer = 0;
-        }
-      }
-    }
-    if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-      if (sign * player[i].inputs.lStickAxis[0].x >= 0.7 &&
-          sign * player[i].inputs.lStickAxis[3].x <= 0 &&
-          player[i].charAttributes.walljump) {
-        player[i].phys.wallJumpTimer = 254;
-        player[i].phys.face = sign;
-        aS[cS[i]].WALLJUMP.init(i);
-      } else {
-        player[i].phys.wallJumpTimer++;
+  }
+  else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
+    aS[cS[i]][player[i].actionState].onWallCollide(i, wallLabel, j);
+  }
+  else if (player[i].phys.canWallJump) {
+    if (player[i].phys.wallJumpTimer == 254) {
+      if (player[i].phys.posDelta.x >= 0.5) {
+        player[i].phys.wallJumpTimer = 0;
       }
     }
   }
+  if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
+    if (sign * player[i].inputs.lStickAxis[0].x >= 0.7 &&
+        sign * player[i].inputs.lStickAxis[3].x <= 0 &&
+        player[i].charAttributes.walljump) {
+      player[i].phys.wallJumpTimer = 254;
+      player[i].phys.face = sign;
+      aS[cS[i]].WALLJUMP.init(i);
+    } else {
+      player[i].phys.wallJumpTimer++;
+    }
+  }
+  
 };
 
 function dealWithPlatform(i, alreadyGrounded, newCenter, ecbp0, j) {
@@ -614,7 +615,7 @@ export function physics (i){
       relevantSurfaces = relevantSurfaces.concat(stageCeilings);
     }
 
-    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, relevantSurfaces);
+    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, player[i].phys.posPrev, relevantSurfaces);
 
     if (surfacesMaybeCenterAndTouchingType === false) {
       // no collision, do nothing

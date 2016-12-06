@@ -584,10 +584,10 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 // where "index" is the index of the wall in the list of walls of that type in the stage
 // this function returns a 'maybeCenterAndTouchingType'
 // which is one of the following three options: 
-//          option 1: 'false'                      (no collision) 
-//          option 2: '[center, false]'            (collision, but no longer touching) 
-//          option 3: '[center, wallTypeAndIndex]' (collision, still touching wall with given type and index)
-function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldMaybeCenterAndTouchingType, passNumber ) {
+//          option 1: 'false'                                (no collision) 
+//          option 2: '[center, false, priority]'            (collision, but no longer touching) 
+//          option 3: '[center, wallTypeAndIndex, priority]' (collision, still touching wall with given type and index)
+function loopOverWalls( ecbp, ecb1, position, oldPosition, wallAndThenWallTypeAndIndexs, oldMaybeCenterAndTouchingType, passNumber ) {
   let newCollisionHappened = false;
   const suggestedMaybeCenterAndTouchingTypes = [oldMaybeCenterAndTouchingType];
   if (passNumber > maximumCollisionDetectionPasses) {
@@ -604,19 +604,21 @@ function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldM
       }
       else if (collisionData[i][0][0] === false) { // option 2: collision, but no longer touching
         newCollisionHappened = true;
-        suggestedMaybeCenterAndTouchingTypes.push( [collisionData[i][0][1], false] );
+        suggestedMaybeCenterAndTouchingTypes.push( [collisionData[i][0][1], false, collisionData[i][0][2] ] );
       }
       else { // option 3: collision, still touching wall with given type and index)
         newCollisionHappened = true;
-        suggestedMaybeCenterAndTouchingTypes.push( [collisionData[i][0][1], collisionData[i][1] ]);
+        suggestedMaybeCenterAndTouchingTypes.push( [collisionData[i][0][1], collisionData[i][1], collisionData[i][0][2] ]);
       }
     }
     if (newCollisionHappened) {
-      const newMaybeCenterAndTouchingType = closestCenterAndTouchingType( position, suggestedMaybeCenterAndTouchingTypes);
+      const newMaybeCenterAndTouchingType = closestCenterAndTouchingType( oldPosition, suggestedMaybeCenterAndTouchingTypes);
       const vec = new Vec2D( newMaybeCenterAndTouchingType[0].x - position.x, newMaybeCenterAndTouchingType[1].y - position.y);
       const newecbp = moveECB (ecbp, vec);
-      return (loopOverWalls (newecbp, ecb1, position, wallAndThenWallTypeAndIndexs
-                            , newMaybeCenterAndTouchingType, passNumber+1
+      return (loopOverWalls ( newecbp, ecb1, position, oldPosition
+                            , wallAndThenWallTypeAndIndexs
+                            , newMaybeCenterAndTouchingType 
+                            , passNumber+1 
                             ) );
     }
     else {
@@ -630,7 +632,7 @@ function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldM
 //          option 1: 'false'                                (no collision) 
 //          option 2: '[center, false, priority]'            (collision, but no longer touching) 
 //          option 3: '[center, wallTypeAndIndex, priority]' (collision, still touching wall with given type and index)
-function closestCenterAndTouchingType(oldCenter, maybeCenterAndTouchingTypes) {
+function closestCenterAndTouchingType(oldPosition, maybeCenterAndTouchingTypes) {
   let newMaybeCenterAndTouchingType = false;
   let start = -1;
   const l = maybeCenterAndTouchingTypes.length;
@@ -658,6 +660,7 @@ function closestCenterAndTouchingType(oldCenter, maybeCenterAndTouchingTypes) {
         // option 1: no center proposed
         // do nothing
       }
+      /*
       else if (newMaybeCenterAndTouchingType[2] > maybeCenterAndTouchingTypes[j][2]) {
         // do nothing: center has higher priority than new suggestion
       }
@@ -665,8 +668,9 @@ function closestCenterAndTouchingType(oldCenter, maybeCenterAndTouchingTypes) {
         // take the new center: it has higher priority
         newMaybeCenterAndTouchingType = maybeCenterAndTouchingTypes[j];
       }
-      else if (squaredDist (oldCenter,newMaybeCenterAndTouchingType[0]) > squaredDist(oldCenter, maybeCenterAndTouchingTypes[j][0])) {
-        // moreover, this center is closer to 'oldCenter' than the previous proposed center
+      */
+      else if (squaredDist (oldPosition,newMaybeCenterAndTouchingType[0]) > squaredDist(oldPosition, maybeCenterAndTouchingTypes[j][0])) {
+        // moreover, this center is closer to 'oldPosition' than the previous proposed center
         // use this centerAndTouchingType instead
         newMaybeCenterAndTouchingType = maybeCenterAndTouchingTypes[j];
       }
@@ -690,8 +694,8 @@ function moveECB (ecb, vec) {
   return newECB;
 };
 
-export function getNewMaybeCenterAndTouchingType(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs) {
+export function getNewMaybeCenterAndTouchingType(ecbp, ecb1, position, oldPosition, wallAndThenWallTypeAndIndexs) {
   let maybeCenterAndTouchingType = false;
-  maybeCenterAndTouchingType = loopOverWalls(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, maybeCenterAndTouchingType, 0 );
+  maybeCenterAndTouchingType = loopOverWalls(ecbp, ecb1, position, oldPosition, wallAndThenWallTypeAndIndexs, maybeCenterAndTouchingType, 0 );
   return maybeCenterAndTouchingType;
 };
