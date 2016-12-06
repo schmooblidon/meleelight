@@ -234,6 +234,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
   let wallBottomOrLeft = wallBottom;
   let same = 3;
   let opposite = 1;
+  let other = 0;
   let xOrY = 1; // y by default
   let isPlatform = false;
   let flip = false;
@@ -313,31 +314,30 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // we are left to find the other
 
     // case 1
-    if (    getXOrYCoord(ecb1[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) 
-         && getXOrYCoord(ecbp[same], xOrY) < getXOrYCoord(wallTopOrRight, xOrY) ) {
-      if ( isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) ) {
+    if ( getXOrYCoord(ecb1[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
+      counterclockwise ^= flip;
+      other = turn(same, counterclockwise);
+      if (   isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) 
+          && getXOrYCoord(ecbp[other], xOrY) < getXOrYCoord(wallTopOrRight, xOrY) ) {
         edgeCase = true;
         corner = wallTopOrRight;
       }
     }
 
-    // case 2
-    else if (    getXOrYCoord(ecb1[same], xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) 
-              && getXOrYCoord(ecbp[same], xOrY) > getXOrYCoord(wallBottomOrLeft, xOrY)) {
-      if ( isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) ) {
+    // case 1
+    if ( getXOrYCoord(ecb1[same], xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) ) {
+      counterclockwise = false;
+      counterclockwise ^= flip;
+      other = turn(same, counterclockwise);
+      if (   isOutside ( position, wallTopOrRight, wallBottomOrLeft, wallType ) 
+          && getXOrYCoord(ecbp[other], xOrY) > getXOrYCoord(wallBottomOrLeft, xOrY) ) {
         edgeCase = true;
-        counterclockwise = false;
-        corner = wallBottomOrLeft;
-      }        
+        corner = wallTopOrRight;
+      }
     }
 
-    counterclockwise ^= flip;
-
     if (edgeCase) {
-      const other = turn(same, counterclockwise);
-      // other is the next ECB point counterclockwise from the same-side ECB point if 'counterclockwise == true',
-      // and the next ECB point clockwise from it otherwise
-      // the relevant ECB edge, that might collide with the corner, is then the edge between ECB points 'same' and 'other'
+      // the relevant ECB edge, that might collide with the corner, is the edge between ECB points 'same' and 'other'
 
       // we now sweep a line,
       // starting from the relevant ECB1 edge, and ending at the relevant ECBp edge,
@@ -374,7 +374,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       // (it should depend on relative positions and wall types),
       // so I just check both
       
-      if (edgeCollision) {
+      if (edgeCollision === false) {
         console.log("'findCollision': no collision, relevant edge of ECB does not cross "+wallType+" corner.");
         return false;
       }
