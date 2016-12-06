@@ -66,7 +66,6 @@ function extremePoint(wall, extreme) {
   switch (extreme[0].toLowerCase()) {
     case "u":
     case "t":
-    case "c":
       if (v2.y < v1.y) {
         return v1;
       }
@@ -76,8 +75,6 @@ function extremePoint(wall, extreme) {
       break;
     case "d":
     case "b":
-    case "g":
-    case "p":
       if (v2.y > v1.y) {
         return v1;
       }
@@ -176,15 +173,17 @@ function findCollision (ecbp, ecb1, offsets, wall, wallType) {
   let same = 3;
   let opposite = 1;
   let xOrY = 1; // y by default
+  let isPlatform = false;
   switch(wallType[0].toLowerCase()) {
     case "l": // left wall
       same = 1;
       opposite = 3;
       break;
+    case "p": // platform
+      isPlatform = true;
     case "g": // ground
     case "b":
     case "d":
-    case "p": // platform
       same = 0;
       opposite = 2;
       wallTopOrRight  = wallRight;
@@ -228,8 +227,12 @@ function findCollision (ecbp, ecb1, offsets, wall, wallType) {
 
     // cover the case where the same-side ECB point was in fact already on the inside of the line spanned by the wall
     if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
-      // this first part is a bit dubious
-      if ( getXOrYCoord(ecbp[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) || getXOrYCoord(ecbp[same], xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY)) {
+      if (isPlatform) {
+        console.log("'findCollision': no collision, non-crossing same-side ECB point not pushed back by platform.");
+        return false;
+      }
+      // this next part is a bit dubious
+      else if ( getXOrYCoord(ecbp[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) || getXOrYCoord(ecbp[same], xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY)) {
         // projected same-side ECB point is past the extreme point of the wall
         console.log("'findCollision': no collision, noncrossing same-side ECB point beyond "+wallType+" surface.");
         return false;

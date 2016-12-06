@@ -460,16 +460,17 @@ export function physics (i){
       break;
   }*/
 
+  if (player[i].phys.grounded || player[i].phys.airborneTimer < 10) {
+    ecbOffset[0] = 0;
+  }
+
   player[i].phys.ECBp = [
     new Vec2D(0 + x, ecbOffset[0] + y),
     new Vec2D(ecbOffset[1] + x, ecbOffset[2] + y),
     new Vec2D(0 + x, ecbOffset[3] + y),
     new Vec2D(ecbOffset[1] * -1 + x, ecbOffset[2] + y)
   ];
-
-  if (player[i].phys.grounded || player[i].phys.airborneTimer < 10) {
-    player[i].phys.ECBp[0].y = 0 + y;
-  }
+  
 
   if (!aS[cS[i]][player[i].actionState].ignoreCollision) {
 
