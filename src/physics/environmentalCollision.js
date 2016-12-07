@@ -6,7 +6,6 @@ const maximumCollisionDetectionPasses = 2;
 const cornerPushoutMethod = "h"; // corners only push out horizontally
 const additionalOffset = 0.0001;
 const preferredDistMethod = squaredDist; // manhattanDist;
-const noncrossingPushback = true;
 
 function lengthen ( x ) {
   if (x > 0) {
@@ -404,78 +403,51 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 
     if (edgeCase) {
       // the relevant ECB edge, that might collide with the corner, is the edge between ECB points 'same' and 'other'
+    
+      if (!isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside) ) {
 
-      // we now sweep a line,
-      // starting from the relevant ECB1 edge, and ending at the relevant ECBp edge,
-      // and figure out where this would intersect the corner
+        let sweepingEdgeCollision = false;
+        let [t,s] = [0,0];
+        const touchingCorner = false; // colliding with ECB edge never counts as "touching"
 
-      // first we have to recenter everything around the corner,
-      // as the 'lineSweepParameters' function calculates collision with respect to the origin
+        // we now sweep a line,
+        // starting from the relevant ECB1 edge, and ending at the relevant ECBp edge,
+        // and figure out where this would intersect the corner
+        
+        // first we recenter everything around the corner,
+        // as the 'lineSweepParameters' function calculates collision with respect to the origin
 
-      let edgeCollision = false; // initialising
-      let sweepingEdgeCollision = false;
-      let [t,s] = [0,0];
-      const touchingCorner = false; // colliding with ECB edge never counts as touching
-
-      // sweeping corner collision check
-      const recenteredECB1Edge = [ new Vec2D( ecb1[same ].x - corner.x, ecb1[same ].y - corner.y )
-                                 , new Vec2D( ecb1[other].x - corner.x, ecb1[other].y - corner.y)];
-      const recenteredECBpEdge = [ new Vec2D( ecbp[same ].x - corner.x, ecbp[same ].y - corner.y )
-                                 , new Vec2D( ecbp[other].x - corner.x, ecbp[other].y - corner.y)];
-      let lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, false);
-      if (lineSweepResult === false) {
-        lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, true);
+        const recenteredECB1Edge = [ new Vec2D( ecb1[same ].x - corner.x, ecb1[same ].y - corner.y )
+                                   , new Vec2D( ecb1[other].x - corner.x, ecb1[other].y - corner.y)];
+        const recenteredECBpEdge = [ new Vec2D( ecbp[same ].x - corner.x, ecbp[same ].y - corner.y )
+                                   , new Vec2D( ecbp[other].x - corner.x, ecbp[other].y - corner.y)];
+        let lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, false);
         if (lineSweepResult === false) {
-          // no edge collision, 'edgeCollision' remains false
+          lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, true);
+          if (lineSweepResult === false) {
+            // no edge collision, 'edgeCollision' remains false
+          }
+          else {
+            sweepingEdgeCollision = true;
+            [t,s] = lineSweepResult;
+          }
         }
         else {
           sweepingEdgeCollision = true;
           [t,s] = lineSweepResult;
         }
-      }
-      else {
-        sweepingEdgeCollision = true;
-        [t,s] = lineSweepResult;
-      }
-
-      if (sweepingEdgeCollision) {
-        switch (cornerPushoutMethod) {
-          case "o": // orthogonal pushout     
-            const contactECBedge = [ new Vec2D( ecb1[same ].x + s*(ecbp[same ].x - ecb1[same ].x), ecb1[same ].y + s*(ecbp[same ].y - ecb1[same ].y))
-                                   , new Vec2D( ecb1[other].x + s*(ecbp[other].x - ecb1[other].x), ecb1[other].y + s*(ecbp[other].y - ecb1[other].y)) ];       
-            const newSameECB = orthogonalProjection(ecbp[same], contactECBedge);
-            newCenter = new Vec2D( position.x + lengthen (newSameECB.x - ecbp[same].x) , position.y + lengthen ( newSameECB.y - ecbp[same].y) );
-            break;
-          case "v": // vertical pushout
-            const yIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-            newCenter = new Vec2D( position.x , position.y + lengthen (corner.y-yIntersect.y ));
-            break;
-          case "h": // horizontal pushout
-          default:
-            const xIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
-            newCenter = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
-            break;
-        }
-        console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
-        return ( [touchingCorner, newCenter, 4] ); // corner collision priority = 4
-      }
-      else {
-        let interiorECBside = "l";
-        if (counterclockwise === false) {
-          interiorECBside = "r";
-        }
-        edgeCollision = !isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside);
-
-        if (noncrossingPushback && edgeCollision) {
+        
+        if (sweepingEdgeCollision) {
           switch (cornerPushoutMethod) {
             case "o": // orthogonal pushout     
-              const projectedCorner = orthogonalProjection( corner, [ecbp[same], ecbp[other]]);
-              const pushOutVector = new Vec2D( corner.x - projectedCorner.x, corner.y - projectedCorner.y);
-              newCenter = new Vec2D( position.x + lengthen(pushOutVector.x), position.y + lengthen(pushOutVector.y));
+              const contactECBedge = [ new Vec2D( ecb1[same ].x + s*(ecbp[same ].x - ecb1[same ].x), ecb1[same ].y + s*(ecbp[same ].y - ecb1[same ].y))
+                                     , new Vec2D( ecb1[other].x + s*(ecbp[other].x - ecb1[other].x), ecb1[other].y + s*(ecbp[other].y - ecb1[other].y)) ];       
+              const newSameECB = orthogonalProjection(ecbp[same], contactECBedge);
+              newCenter = new Vec2D( position.x + lengthen (newSameECB.x - ecbp[same].x) , position.y + lengthen ( newSameECB.y - ecbp[same].y) );
               break;
             case "v": // vertical pushout
               const yIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-              newCenter = new Vec2D( position.x , position.y + lengthen (corner.y - yIntersect.y));
+              newCenter = new Vec2D( position.x , position.y + lengthen (corner.y-yIntersect.y ));
               break;
             case "h": // horizontal pushout
             default:
@@ -483,7 +455,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
               newCenter = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
               break;
           }
-          console.log("'findCollision': collision, relevant edge of ECB is on the other side of "+wallType+" corner.");
+          console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
           return ( [touchingCorner, newCenter, 4] ); // corner collision priority = 4
         }
         else {
