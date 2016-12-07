@@ -149,7 +149,7 @@ export function generalAI(i,input) {
   if (player[i].currentSubaction == "UPTILT" && paction != "UPTILT") {
     player[i].currentSubaction = "NONE";
   }
-  var nearest = NearestEnemy(player[i], i);
+  var nearest = NearestEnemy(player[i], i,input);
   if (pdiff >= 2) {
     if (player[i].currentAction == "NONE") {
 	if (["OTTOTTOWAIT", "WAIT", "SMASHTURN", "WALKF", "WALK", "SQUAT"].indexOf(
@@ -486,7 +486,7 @@ export function marthAI(i) {
       return;
     }
   }
-  var nearest = NearestEnemy(player[i], i);
+  var nearest = NearestEnemy(player[i], i,input);
   //if (player[i].currentAction == "NONE") {
   //if (paction == "FALL" || paction == "JUMP") {
   //	  input[i].lsX[0] = player[i].phys.pos.face;
@@ -761,7 +761,7 @@ export function jiggsAI(i) {
   const groundAttacks = ["DOWNTILT","UTILT","FTILT","JAB1","JAB2","JAB3","FSMASH","DSMASH","USMASH","ATTACKDASH"];
   const ptimer = player[i].timer;
   const pgrounded = player[i].phys.grounded;
-  const nearest = NearestEnemy(player[i], i);
+  const nearest = NearestEnemy(player[i], i,input);
   if (player[i].currentAction == "NONE") {
     var distx = px - player[nearest].phys.pos.x;
     var disty = py - player[nearest].phys.pos.y;
@@ -948,7 +948,7 @@ export function foxAI(i) {
       }
     }
   }
-  const nearest = NearestEnemy(player[i], i);
+  const nearest = NearestEnemy(player[i], i,input);
   if (player[i].currentAction == "NONE") {
     var distx = px - player[nearest].phys.pos.x;
     var disty = py - player[nearest].phys.pos.y;
