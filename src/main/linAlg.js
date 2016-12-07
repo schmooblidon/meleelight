@@ -14,6 +14,16 @@ export function norm(vec) {
   return ( Math.sqrt( dotProd(vec,vec) ));
 }
 
+
+export function squaredDist (center1, center2) {
+  return ( (center2.x - center1.x)*(center2.x - center1.x) + (center2.y - center1.y)*(center2.y - center1.y) );
+};
+
+export function manhattanDist (center1, center2) {
+  return ( Math.abs(center2.x - center1.x) + Math.abs(center2.y - center1.y) );
+};
+
+
 // Computes the inverse of a 2x2 matrix.
 export function inverseMatrix([
   [x1, x2],

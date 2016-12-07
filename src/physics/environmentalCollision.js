@@ -1,10 +1,11 @@
 import {Vec2D} from "main/characters";
-import {dotProd, scalarProd, norm} from "main/linAlg";
+import {dotProd, scalarProd, norm, squaredDist, manhattanDist} from "main/linAlg";
 
 const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 2;
 const cornerPushoutMethod = "h"; // corners only push out horizontally
 const offsetMultiplier = 1.0001;
+const preferredDistMethod = manhattanDist;
 
 
 function getXOrYCoord(vec, xOrY) {
@@ -655,7 +656,7 @@ function closestCenterAndTouchingType(oldPosition, maybeCenterAndTouchingTypes) 
         // option 1: no center proposed
         // do nothing
       }
-      else if (squaredDist (oldPosition,newMaybeCenterAndTouchingType[0]) > squaredDist(oldPosition, maybeCenterAndTouchingTypes[j][0])) {
+      else if (preferredDistMethod (oldPosition,newMaybeCenterAndTouchingType[0]) > preferredDistMethod(oldPosition, maybeCenterAndTouchingTypes[j][0])) {
         // moreover, this center is closer to 'oldPosition' than the previous proposed center
         // use this centerAndTouchingType instead
         newMaybeCenterAndTouchingType = maybeCenterAndTouchingTypes[j];
@@ -663,10 +664,6 @@ function closestCenterAndTouchingType(oldPosition, maybeCenterAndTouchingTypes) 
     }
     return newMaybeCenterAndTouchingType;
   }
-};
-
-function squaredDist (center1, center2) {
-  return ( (center2.x - center1.x)*(center2.x - center1.x) + (center2.y - center1.y)*(center2.y - center1.y) );
 };
 
 

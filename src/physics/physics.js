@@ -26,7 +26,7 @@ function dealWithCollision(i, newCenter) {
   player[i].phys.pos = newCenter;
 };
 
-function dealWithWall (i, newCenter, wallType) {
+function dealWithWallCollision (i, newCenter, wallType) {
   player[i].phys.pos = newCenter;
 
   let wallLabel = "L";
@@ -77,7 +77,7 @@ function dealWithWall (i, newCenter, wallType) {
   
 };
 
-function dealWithPlatform(i, alreadyGrounded, newCenter, ecbp0, j) {
+function dealWithPlatformCollision(i, alreadyGrounded, newCenter, ecbp0, j) {
   if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
   } 
@@ -86,7 +86,7 @@ function dealWithPlatform(i, alreadyGrounded, newCenter, ecbp0, j) {
   }
 };
 
-function dealWithGround(i, alreadyGrounded, newCenter, ecbp0, j) {
+function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbp0, j) {
   if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
   } 
@@ -95,7 +95,7 @@ function dealWithGround(i, alreadyGrounded, newCenter, ecbp0, j) {
   }
 };
 
-function dealWithCeiling(i, newCenter, offsets) {
+function dealWithCeilingCollision(i, newCenter, offsets) {
   const newECB2 = new Vec2D (newCenter.x, newCenter.y + offsets[3])
   player[i].phys.pos = newCenter;
   if (aS[cS[i]][player[i].actionState].headBonk) {
@@ -631,20 +631,20 @@ export function physics (i){
         switch(surfacesMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
           case "l": // player touching left wall
             notTouchingWalls[0] = false;
-            dealWithWall(i, surfacesMaybeCenterAndTouchingType[0], "l");
+            dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "l");
             break;
           case "r": // player touching right wall
             notTouchingWalls[1] = false;
-            dealWithWall(i, surfacesMaybeCenterAndTouchingType[0], "r");
+            dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "r");
             break;
           case "g": // player landed on ground
-            dealWithGround(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithGroundCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
             break;
           case "c": // player touching ceiling
-            dealWithCeiling(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset);
+            dealWithCeilingCollision(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset);
             break;
           case "p": // player landed on platform
-            dealWithPlatform(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithPlatformCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
           default:
             console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
             break;
