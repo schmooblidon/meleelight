@@ -7,7 +7,7 @@ import {stickHold, stickHoldEach, increaseStick, resetStick} from "menus/menu";
 /* eslint-disable */
 
 export let menuIndex = [0,0];
-export var menuVOptions =  5;
+export var menuVOptions =  4;
 export var menuHOptions = [0,0,0,0,3];
 export let menuMove = false;
 export function getGameplayCookies (){
@@ -144,13 +144,13 @@ export function gameplayMenuControls (i){
   if (menuMove) {
 	menuMove = false;
     sounds.menuSelect.play();
-	if (menuIndex[0] < 0) {
+	if (menuIndex[0] <	 0) {
 		menuIndex[0] = menuVOptions;
 	} else if (menuIndex[0] > menuVOptions) {
 		menuIndex[0] = 0;
 	}
-	//console.log("index[0]: " + menuIndex[0]);
-	//console.log("index[1]: " + menuIndex[1]);
+	console.log("index[0]: " + menuIndex[0]);
+	console.log("index[1]: " + menuIndex[1]);
 	if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
 	  menuIndex[1] = 0;
 	} else if (menuIndex[1] < 0) {
@@ -201,7 +201,7 @@ export function drawGameplayMenu (){
     bg2.lineTo(1200, 0 + (i * 30));
   }
   bg2.stroke();
-  for (let i = 0; i < menuVOptions; i++) {
+  for (let i = 0; i < menuVOptions + 1; i++) {
     for (let x = 0; x < menuHOptions[i] + 1; x++) {
     ui.strokeStyle = "rgba(255, 255, 255, 0.72)";
     if (i == menuIndex[0] && x == menuIndex[1]) {
