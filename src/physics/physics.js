@@ -615,7 +615,7 @@ export function physics (i){
       relevantSurfaces = relevantSurfaces.concat(stageCeilings).concat(stageGrounds);
     }
 
-    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, player[i].phys.posPrev, relevantSurfaces);
+    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, relevantSurfaces);
 
     if (surfacesMaybeCenterAndTouchingType === false) {
       // no collision, do nothing
