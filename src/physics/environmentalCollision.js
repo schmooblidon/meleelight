@@ -4,6 +4,7 @@ import {dotProd, scalarProd, norm} from "main/linAlg";
 const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 2;
 const cornerPushoutMethod = "h"; // corners only push out horizontally
+const offsetMultiplier = 1.0001;
 
 
 function getXOrYCoord(vec, xOrY) {
@@ -168,10 +169,10 @@ function coordinateInterceptParameter (line1, line2) {
   //const y2 = line1[1].y;
   //const y3 = line2[0].y;
   //const y4 = line2[1].y;
-  //const t = ( (x3-x1)*(y2-y1) + (x2-x1)*(y1-y3) ) / ( (x4-x3)*(y2-y1) + (x2-x1)*(y3-y4) );
+  //const t = ( (x1-x3)*(y2-y1) + (x1-x2)*(y1-y3) ) / ( (x4-x3)*(y2-y1) + (x2-x1)*(y3-y4) );
   //return t;
-  return ( (    line2[0].x-line1[0].x)*(line1[1].y-line1[0].y) 
-             + (line1[1].x-line1[0].x)*(line1[0].y-line2[0].y) ) 
+  return ( (    line1[0].x-line2[0].x)*(line1[1].y-line1[0].y) 
+             + (line1[0].x-line1[1].x)*(line1[0].y-line2[0].y) ) 
           / (  (line2[1].x-line2[0].x)*(line1[1].y-line1[0].y) 
              + (line1[1].x-line1[0].x)*(line2[0].y-line2[1].y) );
 };
@@ -326,8 +327,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       break;
   }
 
-  const sameECBMov = new Vec2D ( ecbp[same].x-ecb1[same].x, ecbp[same].y-ecb1[same].y);
-
   // first check if player ECB was even near the wall
   if (    (ecbp[0].y > wallTop.y    && ecb1[0].y > wallTop.y   ) // player ECB stayed above the wall
        || (ecbp[2].y < wallBottom.y && ecb1[2].y < wallBottom.y) // played ECB stayed below the wall
@@ -430,16 +429,16 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
             const contactECBedge = [ new Vec2D( ecb1[same ].x + s*(ecbp[same ].x - ecb1[same ].x), ecb1[same ].y + s*(ecbp[same ].y - ecb1[same ].y))
                                    , new Vec2D( ecb1[other].x + s*(ecbp[other].x - ecb1[other].x), ecb1[other].y + s*(ecbp[other].y - ecb1[other].y)) ];       
             const newSameECB = orthogonalProjection(ecbp[same], contactECBedge);
-            newCenter = new Vec2D( position.x + newSameECB.x - ecbp[same].x , position.y + newSameECB.y - ecbp[same].y );
+            newCenter = new Vec2D( position.x + offsetMultiplier * (newSameECB.x - ecbp[same].x) , position.y + offsetMultiplier*( newSameECB.y - ecbp[same].y) );
             break;
           case "v": // vertical pushout
             const yIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-            newCenter = new Vec2D( position.x , position.y + yIntersect.y - corner.y);
+            newCenter = new Vec2D( position.x , position.y + offsetMultiplier*(corner.y-yIntersect.y ));
             break;
           case "h": // horizontal pushout
           default:
             const xIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
-            newCenter = new Vec2D( position.x + xIntersect.x - corner.x, position.y);
+            newCenter = new Vec2D( position.x + offsetMultiplier*(corner.x - xIntersect.x), position.y);
             break;
         }
         console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
@@ -457,24 +456,24 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
             case "o": // orthogonal pushout     
               const projectedCorner = orthogonalProjection( corner, [ecbp[same], ecbp[other]]);
               const pushOutVector = new Vec2D( corner.x - projectedCorner.x, corner.y - projectedCorner.y);
-              newCenter = new Vec2D( position.x + pushOutVector.x, position.y + pushOutVector.y);
+              newCenter = new Vec2D( position.x + offsetMultiplier*pushOutVector.x, position.y + offsetMultiplier*pushOutVector.y);
               break;
             case "v": // vertical pushout
               const yIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-              newCenter = new Vec2D( position.x , position.y + yIntersect.y - corner.y);
+              newCenter = new Vec2D( position.x , position.y + offsetMultiplier*(corner.y - yIntersect.y));
               break;
             case "h": // horizontal pushout
             default:
               const xIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
-              newCenter = new Vec2D( position.x + xIntersect.x - corner.x, position.y);
+              newCenter = new Vec2D( position.x + offsetMultiplier*(corner.x - xIntersect.x), position.y);
               break;
           }
           console.log("'findCollision': collision, relevant edge of ECB is on the other side of "+wallType+" corner.");
           return ( [touchingCorner, newCenter, 4] ); // corner collision priority = 4
         }
         else {
-          console.log("'findCollision': no collision, relevant edge of ECB does not cross "+wallType+" corner.");
-          return false;
+          console.log("'findCollision': no edge collision, relevant edge of ECB does not cross "+wallType+" corner.");
+          console.log("'findCollision': moving on to non-edge collision checking.");
         }
       }
     }
@@ -483,7 +482,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    else if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
+    if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
       // cover the case where the same-side ECB point was in fact already on the inside of the line spanned by the wall
       
       if (isPlatform) {
@@ -500,16 +499,16 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
         switch (pushoutMethodFromType(wallType)[0].toLowerCase()){
           case "o": // orthogonal pushout
             const newSameECB = orthogonalProjection(ecbp[same], wall);
-            newCenter = new Vec2D( position.x + newSameECB.x - ecbp[same].x , position.y + newSameECB.y - ecbp[same].y );
+            newCenter = new Vec2D( position.x + offsetMultiplier*(newSameECB.x - ecbp[same].x) , position.y + offsetMultiplier*(newSameECB.y - ecbp[same].y) );
             break;
           case "v": // vertical pushout
             const yIntersect = coordinateIntercept(wall, [ecbp[same], new Vec2D( ecbp[same].x , ecbp[same].y -1) ]);
-            newCenter = new Vec2D( position.x, position.y + ecbp[same].y - yIntersect.y );
+            newCenter = new Vec2D( position.x, position.y + offsetMultiplier*(yIntersect.y-ecbp[same].y) );
             break;
           case "h": // horizontal pushout
           default:
             const xIntersect = coordinateIntercept(wall, [ecbp[same], new Vec2D( ecbp[same].x-1, ecbp[same].y) ]);
-            newCenter = new Vec2D( position.x + ecbp[same].x - xIntersect.x, position.y);
+            newCenter = new Vec2D( position.x + offsetMultiplier*(xIntersect.x - ecbp[same].x), position.y);
             break;
         }
         let touchingWall = wallType;
@@ -525,6 +524,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     else {
       // we now know that the same-side ECB point went from the outside to the inside of the line spanned by the wall
       // we only need to work with the same-side ECB points, because of wall and airborne ECB angle restrictions
+      const sameECBMov = new Vec2D ( ecbp[same].x-ecb1[same].x, ecbp[same].y-ecb1[same].y);
       if ( !movingInto( sameECBMov, wallTopOrRight, wallBottomOrLeft, wallType) ) {
         console.log("'findCollision': no collision, same-side ECB was on the outside of "+wallType+" surface and was not moving towards it.");
         return false; // no collision: player not moving towards the line spanned by the wall
@@ -533,8 +533,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       else { 
         // sweeping check
         const t = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
-        if (t < 0) { console.log("'findCollision' panic: negative sweeping parameter.");}
-        if (t > 1) {
+        if (t > 1 || t < 0) {
           console.log("'findCollision': no collision, sweeping parameter outside of allowable range, with "+wallType+" surface.");
           return false; // no collision
         }
@@ -548,16 +547,16 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
             switch (pushoutMethodFromType(wallType)[0].toLowerCase()){
               case "o": // orthogonal pushout
                 const newSameECB = orthogonalProjection(ecbp[same], wall);
-                newCenter = new Vec2D( position.x + newSameECB.x - ecbp[same].x , position.y + newSameECB.y - ecbp[same].y );
+                newCenter = new Vec2D( position.x + offsetMultiplier*(newSameECB.x - ecbp[same].x) , position.y + offsetMultiplier*(newSameECB.y - ecbp[same].y) );
                 break;
               case "v": // vertical pushout
                 const yIntersect = coordinateIntercept(wall, [ecbp[same], new Vec2D( ecbp[same].x , ecbp[same].y -1) ]);
-                newCenter = new Vec2D( position.x, position.y + ecbp[same].y - yIntersect.y );
+                newCenter = new Vec2D( position.x, position.y + offsetMultiplier*(yIntersect.y - ecbp[same].y) );
                 break;
               case "h": // horizontal pushout
               default:
                 const xIntersect = coordinateIntercept(wall, [ecbp[same], new Vec2D( ecbp[same].x-1, ecbp[same].y) ]);
-                newCenter = new Vec2D( position.x + ecbp[same].x - xIntersect.x, position.y);
+                newCenter = new Vec2D( position.x + offsetMultiplier*(xIntersect.x - ecbp[same].x), position.y);
                 break;
             }
             let touchingWall = wallType;
@@ -656,15 +655,6 @@ function closestCenterAndTouchingType(oldPosition, maybeCenterAndTouchingTypes) 
         // option 1: no center proposed
         // do nothing
       }
-      /*
-      else if (newMaybeCenterAndTouchingType[2] > maybeCenterAndTouchingTypes[j][2]) {
-        // do nothing: center has higher priority than new suggestion
-      }
-      else if (newMaybeCenterAndTouchingType[2] < maybeCenterAndTouchingTypes[j][2]) {
-        // take the new center: it has higher priority
-        newMaybeCenterAndTouchingType = maybeCenterAndTouchingTypes[j];
-      }
-      */
       else if (squaredDist (oldPosition,newMaybeCenterAndTouchingType[0]) > squaredDist(oldPosition, maybeCenterAndTouchingTypes[j][0])) {
         // moreover, this center is closer to 'oldPosition' than the previous proposed center
         // use this centerAndTouchingType instead
@@ -676,7 +666,7 @@ function closestCenterAndTouchingType(oldPosition, maybeCenterAndTouchingTypes) 
 };
 
 function squaredDist (center1, center2) {
-  return (center1.x * center2.x + center1.y * center2.y);
+  return ( (center2.x - center1.x)*(center2.x - center1.x) + (center2.y - center1.y)*(center2.y - center1.y) );
 };
 
 
