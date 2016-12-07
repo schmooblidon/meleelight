@@ -604,7 +604,7 @@ export function physics (i){
     const stageCeilings =customZip(stage.ceiling,"c");
     const stagePlatforms = customZip(stage.platform, "p");
 
-    let relevantSurfaces = stageWalls .concat(stageGrounds);
+    let relevantSurfaces = stageWalls;
     const alreadyGrounded = player[i].phys.grounded;
 
     const notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
@@ -612,7 +612,7 @@ export function physics (i){
         relevantSurfaces = relevantSurfaces.concat(stagePlatforms);
     }
     if (!alreadyGrounded) {
-      relevantSurfaces = relevantSurfaces.concat(stageCeilings);
+      relevantSurfaces = relevantSurfaces.concat(stageCeilings).concat(stageGrounds);
     }
 
     let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, player[i].phys.posPrev, relevantSurfaces);
