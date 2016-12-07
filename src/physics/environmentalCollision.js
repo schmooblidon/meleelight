@@ -248,7 +248,7 @@ function lineSweepParameters( line1, line2, flip = false) {
   // s satisfies the equation:   a0 + a1*s + a2*s^2 = 0
   let s = -1; // initialise s
 
-  if (Math.abs(a2) < 0.00001) {
+  if ( Math.abs( a0*a0*a2/(a1*a1) ) < 0.0001 ) {
     s = - a0 / a1;
   }
   else {
