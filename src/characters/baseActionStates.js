@@ -1,7 +1,7 @@
 import {player, cS,  screenShake, percentShake, finishGame, palettes, pPal} from "main/main";
 import {sounds} from "main/sfx";
 import { actionSounds,framesData} from "main/characters";
-import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForAerials,
+import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForDoubleJump, checkForMultiJump, checkForJump, checkForAerials,
     checkForDash
     , checkForSmashTurn
     , checkForTiltTurn
@@ -788,8 +788,8 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (checkForDoubleJump(p)) {
+		if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {
