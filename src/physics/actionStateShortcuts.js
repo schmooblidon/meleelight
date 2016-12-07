@@ -3,6 +3,7 @@ import {sounds} from "main/sfx";
 import {intangibility, actionSounds} from "main/characters";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../main/util/Vec2D";
+import {gameSettings} from "settings";
 /* eslint-disable */
 
 export function randomShout (char){
@@ -431,7 +432,7 @@ export function checkForTiltTurn (p){
 export function checkForJump (p){
   if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1])) {
     return [true, 0];
-  } else if (player[p].inputs.lStickAxis[0].y > 0.66 && player[p].inputs.lStickAxis[3].y < 0.2) {
+  } else if (gameSettings["tapJumpOffp" + (p + 1)] == false &&  (player[p].inputs.lStickAxis[0].y > 0.66 && player[p].inputs.lStickAxis[3].y < 0.2)) { // == is on purpose
     return [true, 1];
   } else {
     return [false, false];
