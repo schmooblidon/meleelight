@@ -5,7 +5,8 @@ const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 2;
 const cornerPushoutMethod = "h"; // corners only push out horizontally
 const additionalOffset = 0.0001;
-const preferredDistMethod = manhattanDist;
+const preferredDistMethod = squaredDist; // manhattanDist;
+const noncrossingPushback = true;
 
 function lengthen ( x ) {
   if (x > 0) {
@@ -465,7 +466,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
         }
         edgeCollision = !isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside);
 
-        if (edgeCollision) {
+        if (noncrossingPushback && edgeCollision) {
           switch (cornerPushoutMethod) {
             case "o": // orthogonal pushout     
               const projectedCorner = orthogonalProjection( corner, [ecbp[same], ecbp[other]]);
@@ -496,7 +497,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
+    if ( noncrossingPushback && !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
       // cover the case where the same-side ECB point was in fact already on the inside of the line spanned by the wall
       
       if (isPlatform) {
@@ -670,7 +671,7 @@ function closestCenterAndTouchingType(oldPosition, maybeCenterAndTouchingTypes) 
         // do nothing
       }
       else if (preferredDistMethod (oldPosition,newMaybeCenterAndTouchingType[0]) > preferredDistMethod(oldPosition, maybeCenterAndTouchingTypes[j][0])) {
-        // moreover, this center is closer to 'oldPosition' than the previous proposed center
+        // this center is closer to 'oldPosition' than the previous proposed center
         // use this centerAndTouchingType instead
         newMaybeCenterAndTouchingType = maybeCenterAndTouchingTypes[j];
       }
