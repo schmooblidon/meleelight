@@ -10,16 +10,16 @@ export default {
   headBonk : true,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "STOPCEIL";
     player[p].timer = 0;
     player[p].phys.cVel.y = 0;
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].STOPCEIL.main(p);
+    actionStates[characterSelections[p]].STOPCEIL.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].STOPCEIL.interrupt(p)){
+    if (!actionStates[characterSelections[p]].STOPCEIL.interrupt(p,input)){
       if (player[p].timer == 2){
         player[p].phys.kVel.y *= -0.8;
         player[p].phys.kVel.x *= 0.8;
@@ -36,17 +36,17 @@ export default {
         }
       }
       else {
-        airDrift(p);
+        airDrift(p,input);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 5 && player[p].hit.hitstun <= 0){
-      actionStates[characterSelections[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p,input);
     }
     else if (player[p].timer > framesData[characterSelections[p]].STOPCEIL){
       if (player[p].hit.hitstun <= 0){
-        actionStates[characterSelections[p]].DAMAGEFALL.init(p);
+        actionStates[characterSelections[p]].DAMAGEFALL.init(p,input);
         return true;
       }
       else {
@@ -58,25 +58,25 @@ export default {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].hit.hitstun > 0){
       if (player[p].phys.techTimer > 0){
-        if (player[p].inputs.lsX[0]*player[p].phys.face > 0.5){
-          actionStates[characterSelections[p]].TECHF.init(p);
+        if (input[p].lsX[0]*player[p].phys.face > 0.5){
+          actionStates[characterSelections[p]].TECHF.init(p,input);
         }
-        else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.5){
-          actionStates[characterSelections[p]].TECHB.init(p);
+        else if (input[p].lsX[0]*player[p].phys.face < -0.5){
+          actionStates[characterSelections[p]].TECHB.init(p,input);
         }
         else {
-          actionStates[characterSelections[p]].TECHN.init(p);
+          actionStates[characterSelections[p]].TECHN.init(p,input);
         }
       }
       else {
-        actionStates[characterSelections[p]].DOWNBOUND.init(p);
+        actionStates[characterSelections[p]].DOWNBOUND.init(p,input);
       }
     }
     else {
-      actionStates[characterSelections[p]].LANDING.init(p);
+      actionStates[characterSelections[p]].LANDING.init(p,input);
     }
   }
 };

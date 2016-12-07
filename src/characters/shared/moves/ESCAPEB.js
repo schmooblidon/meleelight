@@ -7,16 +7,16 @@ export default {
   setVelocities : [],
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ESCAPEB";
     player[p].timer = 0;
     player[p].phys.shielding = false;
-    actionStates[characterSelections[p]].ESCAPEB.main(p);
+    actionStates[characterSelections[p]].ESCAPEB.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     playSounds("ESCAPEB",p);
-    if (!actionStates[characterSelections[p]].ESCAPEB.interrupt(p)){
+    if (!actionStates[characterSelections[p]].ESCAPEB.interrupt(p,input)){
       player[p].phys.cVel.x = actionStates[characterSelections[p]].ESCAPEB.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("ESCAPEB",p);
       if (player[p].timer == 4){
@@ -24,10 +24,10 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > framesData[characterSelections[p]].ESCAPEB){
       player[p].phys.cVel.x = 0;
-      actionStates[characterSelections[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

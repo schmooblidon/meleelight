@@ -13,62 +13,62 @@ export default {
   canEdgeCancel : true,
   canBeGrabbed : true,
   missfoot : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "GUARDOFF";
     player[p].timer = 0;
     sounds.shieldoff.play();
-    actionStates[characterSelections[p]].GUARDOFF.main(p);
+    actionStates[characterSelections[p]].GUARDOFF.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     playSounds("GUARDOFF",p);
-    if (!actionStates[characterSelections[p]].GUARDOFF.interrupt(p)){
+    if (!actionStates[characterSelections[p]].GUARDOFF.interrupt(p,input)){
       reduceByTraction(p,false);
-      //shieldDepletion(p);
-      //shieldSize(p);
+      //shieldDepletion(p,input);
+      //shieldSize(p,null,input);
     }
   },
-  interrupt : function(p){
-    var j = checkForJump(p);
+  interrupt : function(p,input){
+    var j = checkForJump(p,input);
     if (j[0] && !player[p].inCSS){
-      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
     else if (player[p].timer > framesData[characterSelections[p]].GUARDOFF){
-      actionStates[characterSelections[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else if (player[p].phys.powerShielded){
       if (!player[p].inCSS){
-        var t = checkForTilts(p);
-        var s = checkForSmashes(p);
+        var t = checkForTilts(p,input);
+        var s = checkForSmashes(p,input);
         if (s[0]){
-          actionStates[characterSelections[p]][s[1]].init(p);
+          actionStates[characterSelections[p]][s[1]].init(p,input);
           return true;
         }
         else if (t[0]){
-          actionStates[characterSelections[p]][t[1]].init(p);
+          actionStates[characterSelections[p]][t[1]].init(p,input);
           return true;
         }
-        else if (checkForSquat(p)){
-          actionStates[characterSelections[p]].SQUAT.init(p);
+        else if (checkForSquat(p,input)){
+          actionStates[characterSelections[p]].SQUAT.init(p,input);
           return true;
         }
-        else if (checkForDash(p)){
-          actionStates[characterSelections[p]].DASH.init(p);
+        else if (checkForDash(p,input)){
+          actionStates[characterSelections[p]].DASH.init(p,input);
           return true;
         }
-        else if (checkForSmashTurn(p)){
-          actionStates[characterSelections[p]].SMASHTURN.init(p);
+        else if (checkForSmashTurn(p,input)){
+          actionStates[characterSelections[p]].SMASHTURN.init(p,input);
           return true;
         }
-        else if (checkForTiltTurn(p)){
-          player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-          actionStates[characterSelections[p]].TILTTURN.init(p);
+        else if (checkForTiltTurn(p,input)){
+          player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+          actionStates[characterSelections[p]].TILTTURN.init(p,input);
           return true;
         }
-        else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-          actionStates[characterSelections[p]].WALK.init(p,true);
+        else if (Math.abs(input[p].lsX[0]) > 0.3){
+          actionStates[characterSelections[p]].WALK.init(p,true,input);
           return true;
         }
         else {
@@ -76,9 +76,9 @@ export default {
         }
       }
       else {
-        var s = checkForSmashes(p);
+        var s = checkForSmashes(p,input);
         if (s[0]){
-          actionStates[characterSelections[p]][s[1]].init(p);
+          actionStates[characterSelections[p]][s[1]].init(p,input);
           return true;
         }
         else {

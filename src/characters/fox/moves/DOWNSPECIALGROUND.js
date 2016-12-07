@@ -19,7 +19,7 @@ export default {
   canEdgeCancel : true,
   disableTeeter : true,
   airborneState : "DOWNSPECIALAIR",
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNSPECIALGROUND";
     player[p].timer = 0;
     player[p].phys.inShine = 0;
@@ -29,14 +29,14 @@ export default {
     drawVfx("shine",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+6));
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.downspecial.id0;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     player[p].phys.inShine++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (player[p].phys.onSurface[0] === 1 && player[p].timer > 1){
-        if (player[p].inputs.lsY[0] < -0.66 && player[p].inputs.lsY[6] >= 0){
+        if (input[p].lsY[0] < -0.66 && input[p].lsY[6] >= 0){
           player[p].phys.grounded = false;
           player[p].phys.abovePlatforms[player[p].phys.onSurface[1]] = false;
           player[p].phys.cVel.y = -0.5;
@@ -60,11 +60,11 @@ export default {
           player[p].timer = 4;
         }
         if (player[p].timer >= 4 && player[p].timer <= 32){
-          if (player[p].inputs.lsX[0]*player[p].phys.face < 0){
+          if (input[p].lsX[0]*player[p].phys.face < 0){
             player[p].timer = 32;
           }
           else if (player[p].phys.inShine >= 22){
-            if (!player[p].inputs.b[0]){
+            if (!input[p].b[0]){
               player[p].timer = 36;
             }
             else if (player[p].timer === 32){
@@ -93,15 +93,15 @@ export default {
       else {
         player[p].actionState = "DOWNSPECIALAIR";
         player[p].timer--;
-        DOWNSPECIALAIR.main(p);
+        DOWNSPECIALAIR.main(p,input);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer >= 4 && player[p].timer <= 32){
-      const j = checkForJump(p);
+      const j = checkForJump(p,input);
       if (j[0]){
-        KNEEBEND.init(p,j[1]);
+        KNEEBEND.init(p,j[1],input);
         turnOffHitboxes(p);
         return true;
       }
@@ -111,10 +111,10 @@ export default {
     }
     else if (player[p].timer > 49){
       if (player[p].phys.grounded){
-        WAIT.init(p);
+        WAIT.init(p,input);
       }
       else {
-        FALL.init(p);
+        FALL.init(p,input);
       }
       return true;
     }

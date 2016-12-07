@@ -32,31 +32,33 @@ export const axis = {
 };
 
 export function inputData ( list = [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0] ) {
-  this.a   = list[button["a"  ]];
-  this.b   = list[button["b"  ]];
-  this.x   = list[button["x"  ]];
-  this.y   = list[button["y"  ]];
-  this.z   = list[button["z"  ]];
-  this.r   = list[button["r"  ]];
-  this.l   = list[button["l"  ]];
-  this.s   = list[button["s"  ]];
-  this.du  = list[button["du" ]];
-  this.dr  = list[button["dr" ]];
-  this.dd  = list[button["dd" ]];
-  this.dl  = list[button["dl" ]];
-  this.lsX = list[  axis["lsX"]];
-  this.lsY = list[  axis["lsY"]];
-  this.csX = list[  axis["csX"]];
-  this.csY = list[  axis["csY"]];
-  this.lA  = list[  axis["lA" ]];
-  this.rA  = list[  axis["rA" ]];
-  this.rawX = list[18];
-  this.rawY = list[19];
+ return {
+    a : list[button["a"]],
+        b : list[button["b"]],
+        x : list[button["x"]],
+        y : list[button["y"]],
+        z : list[button["z"]],
+        r : list[button["r"]],
+        l : list[button["l"]],
+        s : list[button["s"]],
+        du : list[button["du"]],
+        dr : list[button["dr"]],
+        dd : list[button["dd"]],
+        dl : list[button["dl"]],
+        lsX : list[axis["lsX"]],
+        lsY : list[axis["lsY"]],
+        csX : list[axis["csX"]],
+        csY : list[axis["csY"]],
+        lA : list[axis["lA"]],
+        rA : list[axis["rA"]],
+        rawX : list[18],
+        rawY : list[19]
+  }
 };
 
-const nullInput = new inputData ();
+const nullInput = ()=>{return new inputData ()};
 
-export const nullInputs = [ new inputData ( )
+export const nullInputs = ()=>{return [ new inputData ( )
                           , new inputData ( )
                           , new inputData ( )
                           , new inputData ( )
@@ -64,14 +66,14 @@ export const nullInputs = [ new inputData ( )
                           , new inputData ( )
                           , new inputData ( )
                           , new inputData ( )
-                          ];
+                          ]};
 
 
 // should be able to move out the "frameByFrame" aspect of the following function
 // it is only used to make z button mean "left trigger value = 0.35" + "A = true".
 export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, controllerIndex, keys) {
   // input is the input for player i in the current frame
-  let input = nullInput; // initialise with default values
+  let input = nullInput(); // initialise with default values
   if (controllerType == 10) { // keyboard controls
     input = pollKeyboardInputs(gameMode, frameByFrame, keys);
   }
@@ -82,7 +84,7 @@ export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, 
 }
 
 function pollKeyboardInputs(gameMode, frameByFrame, keys) {
-  let input = nullInput; // initialise with default values
+  let input = nullInput(); // initialise with default values
 
   let stickR = 1;
   let stickL = 1;
@@ -167,7 +169,7 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
 }
 
 function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
-  let input = nullInput;
+  let input = nullInput();
 
   let gamepad = navigator.getGamepads()[controllerIndex];
 

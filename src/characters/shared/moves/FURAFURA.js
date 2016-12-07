@@ -8,17 +8,17 @@ export default {
   name : "FURAFURA",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "FURAFURA";
     player[p].timer = 0;
     player[p].phys.stuckTimer = 490;
     drawVfx("furaFura",new Vec2D(player[p].phys.pos.x+(4+Math.random()*2)*player[p].phys.face,player[p].phys.pos.y+11+Math.random()*3),player[p].phys.face);
     player[p].furaLoopID = sounds.furaloop.play();
-    actionStates[characterSelections[p]].FURAFURA.main(p);
+    actionStates[characterSelections[p]].FURAFURA.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].FURAFURA.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FURAFURA.interrupt(p,input)){
       if (player[p].timer % 100 == 65){
         sounds[actionSounds[characterSelections[p]].FURAFURA[0][1]].play();
       }
@@ -33,15 +33,15 @@ export default {
         player[p].phys.shieldHP = 30;
       }
       player[p].phys.stuckTimer--;
-      if (mashOut(p)){
+      if (mashOut(p,input)){
         player[p].phys.stuckTimer -= 3;
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].phys.stuckTimer <= 0){
       sounds.furaloop.stop(player[p].furaLoopID);
-      actionStates[characterSelections[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer > framesData[characterSelections[p]].FURAFURA){

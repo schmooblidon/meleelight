@@ -7,7 +7,7 @@ export default {
   canBeGrabbed : false,
   ignoreCollision : true,
   dead : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DEADLEFT";
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
@@ -21,12 +21,12 @@ export default {
       percentShake(500,p);
     }
     sounds.kill.play();
-    actionStates[characterSelections[p]].DEADLEFT.main(p);
+    actionStates[characterSelections[p]].DEADLEFT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     playSounds("DEAD",p);
-    if (!actionStates[characterSelections[p]].DEADLEFT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DEADLEFT.interrupt(p,input)){
       player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
@@ -40,13 +40,13 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 60){
       if (player[p].stocks > 0){
-        actionStates[characterSelections[p]].REBIRTH.init(p);
+        actionStates[characterSelections[p]].REBIRTH.init(p,input);
       }
       else {
-        actionStates[characterSelections[p]].SLEEP.init(p);
+        actionStates[characterSelections[p]].SLEEP.init(p,input);
       }
       return true;
     }

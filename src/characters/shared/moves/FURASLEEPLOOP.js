@@ -6,14 +6,14 @@ export default {
   name : "FURASLEEPLOOP",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "FURASLEEPLOOP";
     player[p].timer = 0;
-    actionStates[characterSelections[p]].FURASLEEPLOOP.main(p);
+    actionStates[characterSelections[p]].FURASLEEPLOOP.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].FURASLEEPLOOP.interrupt(p)){
+    if (!actionStates[characterSelections[p]].FURASLEEPLOOP.interrupt(p,input)){
       player[p].phys.stuckTimer--;
       var originalColour = palettes[pPal[p]][0];
       originalColour = originalColour.substr(4,originalColour.length-5);
@@ -35,10 +35,10 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].phys.stuckTimer <= 0){
       player[p].colourOverlayBool = false;
-      actionStates[characterSelections[p]].FURASLEEPEND.init(p);
+      actionStates[characterSelections[p]].FURASLEEPEND.init(p,input);
       return true;
     }
     else if (player[p].timer > framesData[characterSelections[p]].FURASLEEPLOOP){

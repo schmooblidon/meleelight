@@ -14,7 +14,7 @@ export default {
   name : "THROWBACK",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXBACK.init(player[p].phys.grabbing);
@@ -23,12 +23,12 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
     randomShout(characterSelections[p]);
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     const prevFrame = player[p].timer;
     player[p].timer+=8/player[p].phys.releaseFrame;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (prevFrame < 10 && player[p].timer >= 10){
         player[p].phys.face *= -1;
       }
@@ -57,14 +57,14 @@ export default {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 32){
       player[p].phys.grabbing = -1;
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p);
+      CATCHCUT.init(p,input);
       return true;
     }
     else {

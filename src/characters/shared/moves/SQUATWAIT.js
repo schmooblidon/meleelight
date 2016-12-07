@@ -10,60 +10,60 @@ export default {
   canBeGrabbed : true,
   crouch : true,
   disableTeeter : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "SQUATWAIT";
     player[p].timer = 0;
-    actionStates[characterSelections[p]].SQUATWAIT.main(p);
+    actionStates[characterSelections[p]].SQUATWAIT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].SQUATWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SQUATWAIT.interrupt(p,input)){
       reduceByTraction(p,true);
     }
   },
-  interrupt : function(p){
-    const b = checkForSpecials(p);
-    const t = checkForTilts(p);
-    const s = checkForSmashes(p);
-    const j = checkForJump(p);
-    if (player[p].inputs.lsY[0] > -0.61){
-      actionStates[characterSelections[p]].SQUATRV.init(p);
+  interrupt : function(p,input){
+    const b = checkForSpecials(p,input);
+    const t = checkForTilts(p,input);
+    const s = checkForSmashes(p,input);
+    const j = checkForJump(p,input);
+    if (input[p].lsY[0] > -0.61){
+      actionStates[characterSelections[p]].SQUATRV.init(p,input);
       return true;
     }
     else if (j[0]){
-      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      actionStates[characterSelections[p]].GUARDON.init(p);
+    else if (input[p].l[0] || input[p].r[0]){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      actionStates[characterSelections[p]].GUARDON.init(p);
+    else if (input[p].lA[0] > 0 || input[p].rA[0] > 0){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
     else if (b[0]){
-      actionStates[characterSelections[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p,input);
       return true;
     }
     else if (s[0]){
-      actionStates[characterSelections[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p,input);
       return true;
     }
     else if (t[0]){
-      actionStates[characterSelections[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p,input);
       return true;
     }
-    else if (checkForDash(p)){
-      actionStates[characterSelections[p]].DASH.init(p);
+    else if (checkForDash(p,input)){
+      actionStates[characterSelections[p]].DASH.init(p,input);
       return true;
     }
-    else if (checkForSmashTurn(p)){
-      actionStates[characterSelections[p]].SMASHTURN.init(p);
+    else if (checkForSmashTurn(p,input)){
+      actionStates[characterSelections[p]].SMASHTURN.init(p,input);
       return true;
     }
     else if (player[p].timer > framesData[characterSelections[p]].SQUATWAIT){
-      actionStates[characterSelections[p]].SQUATWAIT.init(p);
+      actionStates[characterSelections[p]].SQUATWAIT.init(p,input);
     }
     else {
       return false;

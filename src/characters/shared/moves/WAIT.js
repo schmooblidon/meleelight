@@ -11,78 +11,78 @@ export default {
   name : "WAIT",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "WAIT";
     player[p].timer = 1;
-    actionStates[characterSelections[p]].WAIT.main(p);
+    actionStates[characterSelections[p]].WAIT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer += 1;
-    if (!actionStates[characterSelections[p]].WAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].WAIT.interrupt(p,input)){
       reduceByTraction(p,false);
       if (player[p].timer > framesData[characterSelections[p]].WAIT){
-        actionStates[characterSelections[p]].WAIT.init(p);
+        actionStates[characterSelections[p]].WAIT.init(p,input);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     let b;
     let t;
-    const s = checkForSmashes(p);
-    const j = checkForJump(p);
+    const s = checkForSmashes(p,input);
+    const j = checkForJump(p,input);
 
     if (player[p].inCSS){
       b = [false,false];
       t = [false,false];
     }
     else {
-      b = checkForSpecials(p);
-      t = checkForTilts(p);
+      b = checkForSpecials(p,input);
+      t = checkForTilts(p,input);
     }
 
     if (j[0] && !player[p].inCSS){
-      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      actionStates[characterSelections[p]].GUARDON.init(p);
+    else if (input[p].l[0] || input[p].r[0]){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0){
-      actionStates[characterSelections[p]].GUARDON.init(p);
+    else if (input[p].lA[0] > 0 || input[p].rA[0] > 0){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
     else if (b[0]){
-      actionStates[characterSelections[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p,input);
       return true;
     }
     else if (s[0]){
-      actionStates[characterSelections[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p,input);
       return true;
     }
     else if (t[0]){
-      actionStates[characterSelections[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p,input);
       return true;
     }
-    else if (checkForSquat(p) && !player[p].inCSS){
-      actionStates[characterSelections[p]].SQUAT.init(p);
+    else if (checkForSquat(p,input) && !player[p].inCSS){
+      actionStates[characterSelections[p]].SQUAT.init(p,input);
       return true;
     }
-    else if (checkForDash(p) && !player[p].inCSS){
-      actionStates[characterSelections[p]].DASH.init(p);
+    else if (checkForDash(p,input) && !player[p].inCSS){
+      actionStates[characterSelections[p]].DASH.init(p,input);
       return true;
     }
-    else if (checkForSmashTurn(p) && !player[p].inCSS){
-      actionStates[characterSelections[p]].SMASHTURN.init(p);
+    else if (checkForSmashTurn(p,input) && !player[p].inCSS){
+      actionStates[characterSelections[p]].SMASHTURN.init(p,input);
       return true;
     }
-    else if (checkForTiltTurn(p) && !player[p].inCSS){
-      player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-      actionStates[characterSelections[p]].TILTTURN.init(p);
+    else if (checkForTiltTurn(p,input) && !player[p].inCSS){
+      player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+      actionStates[characterSelections[p]].TILTTURN.init(p,input);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 && !player[p].inCSS){
-      actionStates[characterSelections[p]].WALK.init(p,true);
+    else if (Math.abs(input[p].lsX[0]) > 0.3 && !player[p].inCSS){
+      actionStates[characterSelections[p]].WALK.init(p,true,input);
       return true;
     }
     else {

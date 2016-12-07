@@ -8,7 +8,7 @@ export default {
   name : "FORWARDSMASH",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "FORWARDSMASH";
     player[p].timer = 0;
     player[p].phys.charging = false;
@@ -17,11 +17,11 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.fsmash1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.fsmash1.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.fsmash1.id2;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].timer === 7){
-      if (player[p].inputs.a[0] || player[p].inputs.z[0]){
+      if (input[p].a[0] || input[p].z[0]){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames === 5){
@@ -41,7 +41,7 @@ export default {
       player[p].timer++;
       player[p].phys.charging = false;
     }
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer < 9){
         player[p].phys.cVel.x = 0;
@@ -77,9 +77,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 39){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else {

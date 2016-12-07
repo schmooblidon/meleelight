@@ -17,7 +17,7 @@ export default {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ATTACKAIRF";
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
@@ -25,13 +25,13 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.fair1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.fair1.id1;
     turnOffHitboxes(p);
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!this.interrupt(p,input)){
+      fastfall(p,input);
+      airDrift(p,input);
       if (player[p].timer === 5){
         player[p].phys.autoCancel = false;
       }
@@ -104,24 +104,24 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 59){
-      FALL.init(p);
+      FALL.init(p,input);
       return true;
     }
     else if (player[p].timer > 52){
-      const a = checkForAerials(p);
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && !player[p].phys.doubleJumped){
-        if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-          JUMPAERIALB.init(p);
+      const a = checkForAerials(p,input);
+      if (((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && !player[p].phys.doubleJumped){
+        if (input[p].lsX[0]*player[p].phys.face < -0.3){
+          JUMPAERIALB.init(p,input);
         }
         else {
-          JUMPAERIALF.init(p);
+          JUMPAERIALF.init(p,input);
         }
         return true;
       }
       else if (a[0]){
-        MOVES[a[1]].init(p);
+        MOVES[a[1]].init(p,input);
         return true;
       }
       else {
@@ -132,12 +132,12 @@ export default {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].phys.autoCancel){
-      LANDING.init(p);
+      LANDING.init(p,input);
     }
     else {
-      LANDINGATTACKAIRF.init(p);
+      LANDINGATTACKAIRF.init(p,input);
     }
   }
 };

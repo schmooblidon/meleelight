@@ -14,7 +14,7 @@ export default {
   name : "THROWUP",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWUP";
     player[p].timer = 0;
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXUP.init(player[p].phys.grabbing);
@@ -22,12 +22,12 @@ export default {
     const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXUP;
     player[p].phys.releaseFrame = frame+1;
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     const prevFrame = player[p].timer;
     player[p].timer+=7/player[p].phys.releaseFrame;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (prevFrame < 13 && player[p].timer >= 13){
         sounds.foxlasercock.play();
       }
@@ -59,14 +59,14 @@ export default {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 33){
       player[p].phys.grabbing = -1;
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p);
+      CATCHCUT.init(p,input);
       return true;
     }
     else {

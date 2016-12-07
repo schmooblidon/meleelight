@@ -10,18 +10,18 @@ export default {
   disableTeeter : true,
   canBeGrabbed : false,
   downed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNBOUND";
     player[p].timer = 0;
     player[p].phys.kVel.y = 0;
     player[p].phys.jabReset = false;
     drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
     sounds.bounce.play();
-    actionStates[characterSelections[p]].DOWNBOUND.main(p);
+    actionStates[characterSelections[p]].DOWNBOUND.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].DOWNBOUND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNBOUND.interrupt(p,input)){
       if (player[p].timer == 1){
         reduceByTraction(p,true);
       }
@@ -30,9 +30,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > framesData[characterSelections[p]].DOWNBOUND){
-      actionStates[characterSelections[p]].DOWNWAIT.init(p);
+      actionStates[characterSelections[p]].DOWNWAIT.init(p,input);
       return true;
     }
     else {

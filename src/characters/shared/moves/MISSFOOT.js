@@ -8,23 +8,23 @@ export default {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "MISSFOOT";
     player[p].timer = 0;
     player[p].hit.hitstun = 0;
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].MISSFOOT.main(p);
+    actionStates[characterSelections[p]].MISSFOOT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].MISSFOOT.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!actionStates[characterSelections[p]].MISSFOOT.interrupt(p,input)){
+      fastfall(pminput,input);
+      airDrift(p,input);
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 26){
-      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p,input);
       return true;
     }
     else {

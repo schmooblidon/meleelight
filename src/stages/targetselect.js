@@ -107,7 +107,7 @@ export function tssControls (i, input){
             setStageTemp(deepCopyObject(true,stageTemp,customTargetStages[targetSelected-10]));
             setTargetBuilder(i);
             setEditingStage(targetSelected-10);
-          //player[i].inputs.a[1] = true;
+          //input[i].a[1] = true;
           changeGamemode(4);
           music.targettest.stop();
           music.menu.play("menuStart");

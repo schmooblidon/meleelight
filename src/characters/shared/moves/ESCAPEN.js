@@ -7,17 +7,17 @@ export default {
   name : "ESCAPEN",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ESCAPEN";
     player[p].timer = 0;
     player[p].phys.shielding = false;
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
-    actionStates[characterSelections[p]].ESCAPEN.main(p);
+    actionStates[characterSelections[p]].ESCAPEN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     playSounds("ESCAPEN",p);
-    if (!actionStates[characterSelections[p]].ESCAPEN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].ESCAPEN.interrupt(p,input)){
       if (player[p].timer == 1){
         sounds.spotdodge.play();
       }
@@ -25,9 +25,9 @@ export default {
       executeIntangibility("ESCAPEN",p);
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > framesData[characterSelections[p]].ESCAPEN){
-      actionStates[characterSelections[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

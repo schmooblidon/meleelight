@@ -130,10 +130,10 @@ export function turnOffHitboxes (p){
   player[p].hitboxes.hitList = [];
 }
 
-export function shieldTilt (p,shieldstun){
+export function shieldTilt (p,shieldstun,input){
   if (!shieldstun && !player[p].inCSS){
-    var x = player[p].inputs.lsX[0];
-    var y = player[p].inputs.lsY[0];
+    var x = input[p][0].lsX;
+    var y = input[p][0].lsY;
     var targetOffset = Math.sqrt(x * x + y * y) * 3;
     var targetAngle = getAngle(x, y);
     var targetPosition = new Vec2D(Math.cos(targetAngle) * targetOffset, Math.sin(targetAngle) * targetOffset);
@@ -169,11 +169,11 @@ export function reduceByTraction (p,applyDouble){
   }
 }
 
-export function airDrift (p){
-  if (Math.abs(player[p].inputs.lsX[0]) < 0.3){
+export function airDrift (p,input){
+  if (Math.abs(input[p][0].lsX) < 0.3){
     var tempMax = 0
   } else {
-    var tempMax = player[p].charAttributes.aerialHmaxV * player[p].inputs.lsX[0];
+    var tempMax = player[p].charAttributes.aerialHmaxV * input[p][0].lsX;
   }
 
   if ((tempMax < 0 && player[p].phys.cVel.x < tempMax) || (tempMax > 0 && player[p].phys.cVel.x > tempMax)) {
@@ -188,14 +188,14 @@ export function airDrift (p){
         player[p].phys.cVel.x = 0;
       }
     }
-  } else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 && ((tempMax < 0 && player[p].phys.cVel.x > tempMax) ||
+  } else if (Math.abs(input[p][0].lsX) > 0.3 && ((tempMax < 0 && player[p].phys.cVel.x > tempMax) ||
       (tempMax > 0 && player[p].phys.cVel.x < tempMax))) {
-    player[p].phys.cVel.x += (player[p].charAttributes.airMobA * player[p].inputs.lsX[0]) + (Math.sign(
-      player[p].inputs.lsX[0]) * player[p].charAttributes.airMobB);
+    player[p].phys.cVel.x += (player[p].charAttributes.airMobA * input[p][0].lsX) + (Math.sign(
+      input[p][0].lsX) * player[p].charAttributes.airMobB);
   }
 
 
-  if (Math.abs(player[p].inputs.lsX[0]) < 0.3) {
+  if (Math.abs(input[p][0].lsX) < 0.3) {
     if (player[p].phys.cVel.x > 0) {
       player[p].phys.cVel.x -= player[p].charAttributes.airFriction;
       if (player[p].phys.cVel.x < 0) {
@@ -210,13 +210,13 @@ export function airDrift (p){
   }
 }
 
-export function fastfall (p){
+export function fastfall (p,input){
   if (!player[p].phys.fastfalled){
     player[p].phys.cVel.y -= player[p].charAttributes.gravity;
     if (player[p].phys.cVel.y < -player[p].charAttributes.terminalV) {
       player[p].phys.cVel.y = -player[p].charAttributes.terminalV;
     }
-    if (player[p].inputs.lsY[0] < -0.65 && player[p].inputs.lsY[3] > -0.1 && player[p].phys.cVel.y <
+    if (input[p][0].lsY < -0.65 && input[p][3].lsY > -0.1 && player[p].phys.cVel.y <
       0) {
       sounds.fastfall.play();
       player[p].phys.fastfalled = true;
@@ -225,9 +225,9 @@ export function fastfall (p){
   }
 }
 
-export function shieldDepletion (p){
+export function shieldDepletion (p,input){
   //(0.28*input - (1-input/10))
-  var input = Math.max(player[p].inputs.lA[0], player[p].inputs.rA[0]);
+  var input = Math.max(input[p][0].lA, input[p][0].rA);
   player[p].phys.shieldHP -= 0.28 * input - ((1 - input) / 10);
   if (player[p].phys.shieldHP <= 0) {
     player[p].phys.shielding = false;
@@ -238,14 +238,14 @@ export function shieldDepletion (p){
     player[p].phys.shieldHP = 0;
     drawVfx("breakShield", player[p].phys.pos, player[p].phys.face);
     sounds.shieldbreak.play();
-    actionStates[characterSelections[p]].SHIELDBREAKFALL.init(p);
+    actionStates[characterSelections[p]].SHIELDBREAKFALL.init(p,input);
   }
 }
 
-export function shieldSize (p,lock){
+export function shieldSize (p,lock,input){
    //shield size * 0.575 * model scaling
   //(shield size * 0.575 * hp/60) + (1-input)*0.60714*shieldsize
-  player[p].phys.shieldAnalog = Math.max(player[p].inputs.lA[0], player[p].inputs.rA[0]);
+  player[p].phys.shieldAnalog = Math.max(input[p][0].lA, input[p][0].rA);
   if (lock && player[p].phys.shieldAnalog == 0) {
     player[p].phys.shieldAnalog = 1;
   }
@@ -254,30 +254,30 @@ export function shieldSize (p,lock){
     ((60 - player[p].phys.shieldHP) / 60 * 2);
 }
 
-export function mashOut (p){
-  if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
+export function mashOut (p,input){
+  if (input[p][0].a && !input[p][1].a){
     return true;
-  } else if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
+  } else if (input[p][0].b && !input[p][1].b) {
     return true;
-  } else if (player[p].inputs.x[0] && !player[p].inputs.x[1]) {
+  } else if (input[p][0].x && !input[p][1].x) {
     return true;
-  } else if (player[p].inputs.y[0] && !player[p].inputs.y[1]) {
+  } else if (input[p][0].y && !input[p][1].y) {
     return true;
-  } else if (player[p].inputs.lsX[0] > 0.8 && !player[p].inputs.lsX[1] < 0.7) {
+  } else if (input[p][0].lsX > 0.8 && !input[p][1].lsX < 0.7) {
     return true;
-  } else if (player[p].inputs.lsX[0] < -0.8 && !player[p].inputs.lsX[1] < -0.7) {
+  } else if (input[p][0].lsX < -0.8 && !input[p][1].lsX < -0.7) {
     return true;
-  } else if (player[p].inputs.lsY[0] > 0.8 && !player[p].inputs.lsY[1] < 0.7) {
+  } else if (input[p][0].lsY > 0.8 && !input[p][1].lsY < 0.7) {
     return true;
-  } else if (player[p].inputs.lsY[0] < -0.8 && !player[p].inputs.lsY[1] > -0.7) {
+  } else if (input[p][0].lsY < -0.8 && !input[p][1].lsY > -0.7) {
     return true;
-  } else if (player[p].inputs.csX[0] > 0.8 && !player[p].inputs.csX[1] < 0.7) {
+  } else if (input[p][0].csX > 0.8 && !input[p][1].csX < 0.7) {
     return true;
-  } else if (player[p].inputs.csX[0] < -0.8 && !player[p].inputs.csX[1] < -0.7) {
+  } else if (input[p][0].csX < -0.8 && !input[p][1].csX < -0.7) {
     return true;
-  } else if (player[p].inputs.csY[0] > 0.8 && !player[p].inputs.csY[1] < 0.7) {
+  } else if (input[p][0].csY > 0.8 && !input[p].csY[1] < 0.7) {
     return true;
-  } else if (player[p].inputs.csY[0] < -0.8 && !player[p].inputs.csY[1] > -0.7) {
+  } else if (input[p][0].csY < -0.8 && !input[p].csY[1] > -0.7) {
     return true;
   } else {
     return false;
@@ -285,39 +285,39 @@ export function mashOut (p){
 }
 
 // Global Interrupts
-export function checkForSmashes (p){
-  if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
-    if (Math.abs(player[p].inputs.lsX[0]) >= 0.79 && player[p].inputs.lsX[2]*Math.sign(player[p].inputs.lsX[0]) < 0.3){
-      player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
+export function checkForSmashes (p,input){
+  if (input[p].a[0] && !input[p].a[1]){
+    if (Math.abs(input[p].lsX[0]) >= 0.79 && input[p].lsX[2]*Math.sign(input[p].lsX[0]) < 0.3){
+      player[p].phys.face = Math.sign(input[p].lsX[0]);
       return [true, "FORWARDSMASH"];
-    } else if (player[p].inputs.lsY[0] >= 0.66 && player[p].inputs.lsY[2] < 0.3) {
+    } else if (input[p].lsY[0] >= 0.66 && input[p].lsY[2] < 0.3) {
       return [true, "UPSMASH"];
-    } else if (player[p].inputs.lsY[0] <= -0.66 && player[p].inputs.lsY[2] > -0.3) {
+    } else if (input[p].lsY[0] <= -0.66 && input[p].lsY[2] > -0.3) {
       return [true, "DOWNSMASH"];
     } else {
       return [false, false];
     }
-  } else if (Math.abs(player[p].inputs.csX[0]) >= 0.79 && Math.abs(player[p].inputs.csX[1]) < 0.79) {
-    player[p].phys.face = Math.sign(player[p].inputs.csX[0]);
+  } else if (Math.abs(input[p].csX[0]) >= 0.79 && Math.abs(input[p].csX[1]) < 0.79) {
+    player[p].phys.face = Math.sign(input[p].csX[0]);
     return [true, "FORWARDSMASH"];
-  } else if (player[p].inputs.csY[0] >= 0.66 && player[p].inputs.csY[1] < 0.66) {
+  } else if (input[p].csY[0] >= 0.66 && input[p].csY[1] < 0.66) {
     return [true, "UPSMASH"];
-  } else if (player[p].inputs.csY[0] <= -0.66 && player[p].inputs.csY[1] > -0.66) {
+  } else if (input[p].csY[0] <= -0.66 && input[p].csY[1] > -0.66) {
     return [true, "DOWNSMASH"];
   } else {
     return [false, false];
   }
 }
 
-export function checkForTilts (p,reverse){
+export function checkForTilts (p,input,reverse){
   var reverse = reverse || 1;
-  if (player[p].inputs.a[0] && !player[p].inputs.a[1]) {
-    if (player[p].inputs.lsX[0] * player[p].phys.face * reverse > 0.3 && Math.abs(player[p].inputs.lsX[
-        0]) - (Math.abs(player[p].inputs.lsY[0])) > -0.05) {
+  if (input[p].a[0] && !input[p].a[1]) {
+    if (input[p].lsX[0] * player[p].phys.face * reverse > 0.3 && Math.abs(input[p].lsX[
+        0]) - (Math.abs(input[p].lsY[0])) > -0.05) {
       return [true, "FORWARDTILT"];
-    } else if (player[p].inputs.lsY[0] < -0.3) {
+    } else if (input[p].lsY[0] < -0.3) {
       return [true, "DOWNTILT"];
-    } else if (player[p].inputs.lsY[0] > 0.3) {
+    } else if (input[p].lsY[0] > 0.3) {
       return [true, "UPTILT"];
     } else {
       return [true, "JAB1"];
@@ -327,32 +327,32 @@ export function checkForTilts (p,reverse){
   }
 }
 
-export function checkForSpecials (p){
-  if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
+export function checkForSpecials (p,input){
+  if (input[p].b[0] && !input[p].b[1]) {
     if (player[p].phys.grounded) {
-      if (Math.abs(player[p].inputs.lsX[0]) > 0.59 || (player[p].inputs.lsY[0] > 0.54 && Math.abs(
-          player[p].inputs.lsX[0]) > player[p].inputs.lsY[0] - 0.2)) {
-        player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
+      if (Math.abs(input[p].lsX[0]) > 0.59 || (input[p].lsY[0] > 0.54 && Math.abs(
+          input[p].lsX[0]) > input[p].lsY[0] - 0.2)) {
+        player[p].phys.face = Math.sign(input[p].lsX[0]);
         return [true, "SIDESPECIALGROUND"];
-      } else if (player[p].inputs.lsY[0] > 0.54) {
+      } else if (input[p].lsY[0] > 0.54) {
         return [true, "UPSPECIAL"];
-      } else if (player[p].inputs.lsY[0] < -0.54) {
+      } else if (input[p].lsY[0] < -0.54) {
         return [true, "DOWNSPECIALGROUND"];
       } else {
         return [true, "NEUTRALSPECIALGROUND"];
       }
     } else {
-      if (player[p].inputs.lsY[0] > 0.54 || (Math.abs(player[p].inputs.lsX[0]) > 0.59 && player[p].inputs
-          .lsY[0] > Math.abs(player[p].inputs.lsX[0]) - 0.2)) {
+      if (input[p].lsY[0] > 0.54 || (Math.abs(input[p].lsX[0]) > 0.59 && input[p]
+          .lsY[0] > Math.abs(input[p].lsX[0]) - 0.2)) {
         return [true, "UPSPECIAL"];
-      } else if (player[p].inputs.lsY[0] < -0.54 || (Math.abs(player[p].inputs.lsX[0]) > 0.59 && -
-          player[p].inputs.lsY[0] > Math.abs(player[p].inputs.lsX[0]) - 0.2)) {
+      } else if (input[p].lsY[0] < -0.54 || (Math.abs(input[p].lsX[0]) > 0.59 && -
+          input[p].lsY[0] > Math.abs(input[p].lsX[0]) - 0.2)) {
         return [true, "DOWNSPECIALAIR"];
-      } else if (Math.abs(player[p].inputs.lsX[0]) > 0.59) {
-        player[p].phys.face = Math.sign(player[p].inputs.lsX[0]);
+      } else if (Math.abs(input[p].lsX[0]) > 0.59) {
+        player[p].phys.face = Math.sign(input[p].lsX[0]);
         return [true, "SIDESPECIALAIR"];
       } else {
-        if (player[p].inputs.lsX[0] * player[p].phys.face < -0.25) {
+        if (input[p].lsX[0] * player[p].phys.face < -0.25) {
           player[p].phys.face *= -1;
         } else if (player[p].phys.bTurnaroundTimer > 0) {
           player[p].phys.face = player[p].phys.bTurnaroundDirection;
@@ -365,27 +365,27 @@ export function checkForSpecials (p){
   }
 }
 
-export function checkForAerials (p){
-  if (player[p].inputs.csX[0] * player[p].phys.face >= 0.3 && player[p].inputs.csX[1] * player[p].phys
-    .face < 0.3 && Math.abs(player[p].inputs.csX[0]) > Math.abs(player[p].inputs.csY[0]) - 0.1) {
+export function checkForAerials (p,input){
+  if (input[p].csX[0] * player[p].phys.face >= 0.3 && input[p].csX[1] * player[p].phys
+    .face < 0.3 && Math.abs(input[p].csX[0]) > Math.abs(input[p].csY[0]) - 0.1) {
     return [true, "ATTACKAIRF"];
-  } else if (player[p].inputs.csX[0] * player[p].phys.face <= -0.3 && player[p].inputs.csX[1] *
-    player[p].phys.face > -0.3 && Math.abs(player[p].inputs.csX[0]) > Math.abs(player[p].inputs.csY[0]) - 0.1) {
+  } else if (input[p].csX[0] * player[p].phys.face <= -0.3 && input[p].csX[1] *
+    player[p].phys.face > -0.3 && Math.abs(input[p].csX[0]) > Math.abs(input[p].csY[0]) - 0.1) {
     return [true, "ATTACKAIRB"];
-  } else if (player[p].inputs.csY[0] >= 0.3 && player[p].inputs.csY[1] < 0.3) {
+  } else if (input[p].csY[0] >= 0.3 && input[p].csY[1] < 0.3) {
     return [true, "ATTACKAIRU"];
-  } else if (player[p].inputs.csY[0] < -0.3 && player[p].inputs.csY[1] > -0.3) {
+  } else if (input[p].csY[0] < -0.3 && input[p].csY[1] > -0.3) {
     return [true, "ATTACKAIRD"];
-  } else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.z[0] && !player[p].inputs.z[1])) {
-    if (player[p].inputs.lsX[0] * player[p].phys.face > 0.3 && Math.abs(player[p].inputs.lsX[0]) >
-      Math.abs(player[p].inputs.lsY[0]) - 0.1) {
+  } else if ((input[p].a[0] && !input[p].a[1]) || (input[p].z[0] && !input[p].z[1])) {
+    if (input[p].lsX[0] * player[p].phys.face > 0.3 && Math.abs(input[p].lsX[0]) >
+      Math.abs(input[p].lsY[0]) - 0.1) {
       return [true, "ATTACKAIRF"];
-    } else if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3 && Math.abs(player[p].inputs.lsX[
-        0]) > Math.abs(player[p].inputs.lsY[0]) - 0.1) {
+    } else if (input[p].lsX[0] * player[p].phys.face < -0.3 && Math.abs(input[p].lsX[
+        0]) > Math.abs(input[p].lsY[0]) - 0.1) {
       return [true, "ATTACKAIRB"];
-    } else if (player[p].inputs.lsY[0] > 0.3) {
+    } else if (input[p].lsY[0] > 0.3) {
       return [true, "ATTACKAIRU"];
-    } else if (player[p].inputs.lsY[0] < -0.3) {
+    } else if (input[p].lsY[0] < -0.3) {
       return [true, "ATTACKAIRD"];
     } else {
       return [true, "ATTACKAIRN"];
@@ -395,133 +395,133 @@ export function checkForAerials (p){
 }
 
 
-export function checkForDash (p){
-  if (player[p].inputs.lsX[0] * player[p].phys.face > 0.79 && player[p].inputs.lsX[2] * player[p].phys.face < 0.3){
+export function checkForDash (p,input){
+  if (input[p].lsX[0] * player[p].phys.face > 0.79 && input[p].lsX[2] * player[p].phys.face < 0.3){
     return true;
   } else {
     return false;
   }
 }
 
-export function checkForSmashTurn (p){
-  if (player[p].inputs.lsX[0] * player[p].phys.face < -0.79 && player[p].inputs.lsX[2] * player[p].phys.face > -0.3){
+export function checkForSmashTurn (p,input){
+  if (input[p].lsX[0] * player[p].phys.face < -0.79 && input[p].lsX[2] * player[p].phys.face > -0.3){
     return true;
   } else {
     return false;
   }
 }
 
-export function tiltTurnDashBuffer (p){
-  if (player[p].inputs.lsX[1] * player[p].phys.face > -0.3){
+export function tiltTurnDashBuffer (p,input){
+  if (input[p].lsX[1] * player[p].phys.face > -0.3){
     return true;
   } else {
     return false;
   }
 }
 
-export function checkForTiltTurn (p){
-  if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
+export function checkForTiltTurn (p,input){
+  if (input[p].lsX[0] * player[p].phys.face < -0.3){
     return true;
   } else {
     return false;
   }
 }
 
-export function checkForJump (p){
-  if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1])) {
+export function checkForJump (p,input){
+  if ((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1])) {
     return [true, 0];
-  } else if (player[p].inputs.lsY[0] > 0.66 && player[p].inputs.lsY[3] < 0.2) {
+  } else if (input[p].lsY[0] > 0.66 && input[p].lsY[3] < 0.2) {
     return [true, 1];
   } else {
     return [false, false];
   }
 }
 
-export function checkForSquat (p){
-  if (player[p].inputs.lsY[0] < -0.69){
+export function checkForSquat (p,input){
+  if (input[p].lsY[0] < -0.69){
     return true;
   } else {
     return false;
   }
 }
 
-export function turboAirborneInterrupt (p){
-  var a = checkForAerials(p);
-  var b = checkForSpecials(p);
+export function turboAirborneInterrupt (p,input){
+  var a = checkForAerials(p,input);
+  var b = checkForSpecials(p,input);
   if (a[0] && a[1] != player[p].actionState) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]][a[1]].init(p);
+    actionStates[characterSelections[p]][a[1]].init(p,input);
     return true;
-  } else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])) {
+  } else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].ESCAPEAIR.init(p);
+    actionStates[characterSelections[p]].ESCAPEAIR.init(p,input);
     return true;
-  } else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) ||
-      (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped ||
+  } else if (((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) ||
+      (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped ||
       (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))) {
     turnOffHitboxes(p);
-    if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3) {
-      actionStates[characterSelections[p]].JUMPAERIALB.init(p);
+    if (input[p].lsX[0] * player[p].phys.face < -0.3) {
+      actionStates[characterSelections[p]].JUMPAERIALB.init(p,input);
     } else {
-      actionStates[characterSelections[p]].JUMPAERIALF.init(p);
+      actionStates[characterSelections[p]].JUMPAERIALF.init(p,input);
     }
     return true;
   } else if (b[0] && b[1] != player[p].actionState) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]][b[1]].init(p);
+    actionStates[characterSelections[p]][b[1]].init(p,input);
     return true;
   } else {
     return false;
   }
 }
 
-export function turboGroundedInterrupt (p){
-  var b = checkForSpecials(p);
-  var t = checkForTilts(p);
-  var s = checkForSmashes(p);
-  var j = checkForJump(p);
+export function turboGroundedInterrupt (p,input){
+  var b = checkForSpecials(p,input);
+  var t = checkForTilts(p,input);
+  var s = checkForSmashes(p,input);
+  var j = checkForJump(p,input);
   if (j[0]) {
     turnOffHitboxes(p);
     actionStates[characterSelections[p]].KNEEBEND.init(p, j[1]);
     return true;
-  } else if (player[p].inputs.l[0] || player[p].inputs.r[0]) {
+  } else if (input[p].l[0] || input[p].r[0]) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].GUARDON.init(p);
+    actionStates[characterSelections[p]].GUARDON.init(p,input);
     return true;
-  } else if (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0) {
+  } else if (input[p].lA[0] > 0 || input[p].rA[0] > 0) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].GUARDON.init(p);
+    actionStates[characterSelections[p]].GUARDON.init(p,input);
     return true;
   } else if (b[0] && b[1] != player[p].actionState) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]][b[1]].init(p);
+    actionStates[characterSelections[p]][b[1]].init(p,input);
     return true;
   } else if (s[0] && s[1] != player[p].actionState) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]][s[1]].init(p);
+    actionStates[characterSelections[p]][s[1]].init(p,input);
     return true;
   } else if (t[0] && t[1] != player[p].actionState) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]][t[1]].init(p);
+    actionStates[characterSelections[p]][t[1]].init(p,input);
     return true;
-  } else if (checkForSquat(p)) {
+  } else if (checkForSquat(p,input)) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].SQUAT.init(p);
+    actionStates[characterSelections[p]].SQUAT.init(p,input);
     return true;
-  } else if (checkForDash(p)) {
+  } else if (checkForDash(p,input)) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].DASH.init(p);
+    actionStates[characterSelections[p]].DASH.init(p,input);
     return true;
-  } else if (checkForSmashTurn(p)) {
+  } else if (checkForSmashTurn(p,input)) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].SMASHTURN.init(p);
+    actionStates[characterSelections[p]].SMASHTURN.init(p,input);
     return true;
-  } else if (checkForTiltTurn(p)) {
+  } else if (checkForTiltTurn(p,input)) {
     turnOffHitboxes(p);
-    player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-    actionStates[characterSelections[p]].TILTTURN.init(p);
+    player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+    actionStates[characterSelections[p]].TILTTURN.init(p,input);
     return true;
-  } else if (Math.abs(player[p].inputs.lsX[0]) > 0.3) {
+  } else if (Math.abs(input[p].lsX[0]) > 0.3) {
     turnOffHitboxes(p);
     actionStates[characterSelections[p]].WALK.init(p, true);
     return true;

@@ -6,34 +6,34 @@ export default {
   name : "RUNBRAKE",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "RUNBRAKE";
     player[p].timer = 0;
     sounds.runbrake.play();
-    actionStates[characterSelections[p]].RUNBRAKE.main(p);
+    actionStates[characterSelections[p]].RUNBRAKE.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].RUNBRAKE.interrupt(p)){
+    if (!actionStates[characterSelections[p]].RUNBRAKE.interrupt(p,input)){
       reduceByTraction(p,true);
     }
   },
-  interrupt : function(p){
-    var j = checkForJump(p);
+  interrupt : function(p,input){
+    var j = checkForJump(p,input);
     if (j[0]){
-      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (player[p].timer > 1 && checkForSquat(p)){
-      actionStates[characterSelections[p]].SQUAT.init(p);
+    else if (player[p].timer > 1 && checkForSquat(p,input)){
+      actionStates[characterSelections[p]].SQUAT.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lsX[0] * player[p].phys.face < -0.3){
-      actionStates[characterSelections[p]].RUNTURN.init(p);
+    else if (input[p].lsX[0] * player[p].phys.face < -0.3){
+      actionStates[characterSelections[p]].RUNTURN.init(p,input);
       return true;
     }
     else if (player[p].timer > framesData[characterSelections[p]].RUNBRAKE){
-      actionStates[characterSelections[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

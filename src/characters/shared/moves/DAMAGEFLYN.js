@@ -29,9 +29,9 @@ export default {
     /*player[p].phys.grounded = false;
     player[p].phys.pos.y += 0.0001;*/
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].DAMAGEFLYN.main(p);
+    actionStates[characterSelections[p]].DAMAGEFLYN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].phys.thrownHitbox){
       if (player[p].timer == 1 && player[p].phys.cVel.y+player[p].phys.kVel.y > 0){
         player[p].hitboxes.active = [true,false,false,false];
@@ -50,7 +50,7 @@ export default {
     if (player[p].hit.hitstun % 10 == 0){
       drawVfx("flyingDust",player[p].phys.pos);
     }
-    if (!actionStates[characterSelections[p]].DAMAGEFLYN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DAMAGEFLYN.interrupt(p,input)){
       if (player[p].timer > 1){
         player[p].hit.hitstun--;
         if (!player[p].phys.grounded){
@@ -65,9 +65,9 @@ export default {
       player[p].phys.thrownHitbox = false;
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 1 && player[p].hit.hitstun == 0){
-      actionStates[characterSelections[p]].DAMAGEFALL.init(p);
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p,input);
       player[p].phys.thrownHitbox = false;
       return true;
     }

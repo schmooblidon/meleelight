@@ -36,21 +36,21 @@ var puff = actionStates[1];
 // BITES PLZ
 puff.FURAFURA = {
   name : "FURAFURA",
-  init : function(p){
-    puff.WAIT.init(p);
+  init : function(p,input){
+    puff.WAIT.init(p,input);
     //*cough*BITES*cough*
   }
 };
 
 puff.JUMPAERIALF = {
   name : "JUMPAERIALF",
-  init : function(p){
+  init : function(p,input){
     puffNextJump(p);
   }
 };
 puff.JUMPAERIALB = {
   name : "JUMPAERIALB",
-  init : function(p){
+  init : function(p,input){
     puffNextJump(p);
   }
 };
@@ -65,7 +65,7 @@ puff.JAB1 = {
   name : "JAB1",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JAB1";
     player[p].timer = 0;
     player[p].phys.jabCombo = false;
@@ -73,14 +73,14 @@ puff.JAB1 = {
     player[p].hitboxes.id[0] = player[p].charHitboxes.jab1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.jab1.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.jab1.id2;
-    puff.JAB1.main(p);
+    puff.JAB1.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.JAB1.interrupt(p)){
+    if (!puff.JAB1.interrupt(p,input)){
       reduceByTraction(p,true);
 
-      if (player[p].timer > 2 && player[p].timer < 26 && player[p].inputs.a[0] && !player[p].inputs.a[1]){
+      if (player[p].timer > 2 && player[p].timer < 26 && input[p].a[0] && !input[p].a[1]){
         player[p].phys.jabCombo = true;
       }
       if (player[p].timer == 5){
@@ -96,51 +96,51 @@ puff.JAB1 = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 7 && player[p].phys.jabCombo){
-      puff.JAB2.init(p);
+      puff.JAB2.init(p,input);
       return true;
     }
     else if (player[p].timer > 17){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer > 15){
-      var b = checkForSpecials(p);;
-      var t = checkForTilts(p);;
-      var s = checkForSmashes(p);;
-      var j = checkForJump(p);;
+      var b = checkForSpecials(p,input);;
+      var t = checkForTilts(p,input);;
+      var s = checkForSmashes(p,input);;
+      var j = checkForJump(p,input);;
       if (j[0]){
-        puff.KNEEBEND.init(p,j[1]);
+        puff.KNEEBEND.init(p,j[1],input);
         return true;
       }
       else if (b[0]){
-        puff[b[1]].init(p);
+        puff[b[1]].init(p,input);
         return true;
       }
       else if (s[0]){
-        puff[s[1]].init(p);
+        puff[s[1]].init(p,input);
         return true;
       }
       else if (t[0]){
-        puff[t[1]].init(p);
+        puff[t[1]].init(p,input);
         return true;
       }
-      else if (checkForDash(p)){
-        puff.DASH.init(p);
+      else if (checkForDash(p,input)){
+        puff.DASH.init(p,input);
         return true;
       }
-      else if (checkForSmashTurn(p)){
-        puff.SMASHTURN.init(p);
+      else if (checkForSmashTurn(p,input)){
+        puff.SMASHTURN.init(p,input);
         return true;
       }
-      else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);;
-        puff.TILTTURN.init(p);
+      else if (checkForTiltTurn(p,input)){
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);;
+        puff.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-        puff.WALK.init(p,true);
+      else if (Math.abs(input[p].lsX[0]) > 0.3){
+        puff.WALK.init(p,true,input);
         return true;
       }
       else {
@@ -157,7 +157,7 @@ puff.JAB2 = {
   name : "JAB2",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JAB2";
     player[p].timer = 0;
     player[p].phys.jabCombo = false;
@@ -165,11 +165,11 @@ puff.JAB2 = {
     player[p].hitboxes.id[0] = player[p].charHitboxes.jab2.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.jab2.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.jab2.id2;
-    puff.JAB2.main(p);
+    puff.JAB2.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.JAB2.interrupt(p)){
+    if (!puff.JAB2.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer == 6){
         player[p].hitboxes.active = [true,true,true,false];
@@ -184,47 +184,47 @@ puff.JAB2 = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 20){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer > 16){
-      var b = checkForSpecials(p);
-      var t = checkForTilts(p);
-      var s = checkForSmashes(p);
-      var j = checkForJump(p);
+      var b = checkForSpecials(p,input);
+      var t = checkForTilts(p,input);
+      var s = checkForSmashes(p,input);
+      var j = checkForJump(p,input);
       if (j[0]){
-        puff.KNEEBEND.init(p,j[1]);
+        puff.KNEEBEND.init(p,j[1],input);
         return true;
       }
       else if (b[0]){
-        puff[b[1]].init(p);
+        puff[b[1]].init(p,input);
         return true;
       }
       else if (s[0]){
-        puff[s[1]].init(p);
+        puff[s[1]].init(p,input);
         return true;
       }
       else if (t[0]){
-        puff[t[1]].init(p);
+        puff[t[1]].init(p,input);
         return true;
       }
-      else if (checkForDash(p)){
-        puff.DASH.init(p);
+      else if (checkForDash(p,input)){
+        puff.DASH.init(p,input);
         return true;
       }
-      else if (checkForSmashTurn(p)){
-        puff.SMASHTURN.init(p);
+      else if (checkForSmashTurn(p,input)){
+        puff.SMASHTURN.init(p,input);
         return true;
       }
-      else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        puff.TILTTURN.init(p);
+      else if (checkForTiltTurn(p,input)){
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+        puff.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-        puff.WALK.init(p,true);
+      else if (Math.abs(input[p].lsX[0]) > 0.3){
+        puff.WALK.init(p,true,input);
         return true;
       }
       else {
@@ -241,18 +241,18 @@ puff.DOWNTILT = {
   name : "DOWNTILT",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNTILT";
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.dtilt.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.dtilt.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.dtilt.id2;
-    puff.DOWNTILT.main(p);
+    puff.DOWNTILT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.DOWNTILT.interrupt(p)){
+    if (!puff.DOWNTILT.interrupt(p,input)){
       reduceByTraction(p,true);;
       if (player[p].timer == 10){
         player[p].hitboxes.active = [true,true,true,false];
@@ -267,47 +267,47 @@ puff.DOWNTILT = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 39){
-      puff.SQUATWAIT.init(p);
+      puff.SQUATWAIT.init(p,input);
       return true;
     }
     else if (player[p].timer > 29){
-      var b = checkForSpecials(p);
-      var t = checkForTilts(p);
-      var s = checkForSmashes(p);
-      var j = checkForJump(p);
+      var b = checkForSpecials(p,input);
+      var t = checkForTilts(p,input);
+      var s = checkForSmashes(p,input);
+      var j = checkForJump(p,input);
       if (j[0]){
-        puff.KNEEBEND.init(p,j[1]);
+        puff.KNEEBEND.init(p,j[1],input);
         return true;
       }
       else if (b[0]){
-        puff[b[1]].init(p);
+        puff[b[1]].init(p,input);
         return true;
       }
       else if (s[0]){
-        puff[s[1]].init(p);
+        puff[s[1]].init(p,input);
         return true;
       }
       else if (t[0]){
-        puff[t[1]].init(p);
+        puff[t[1]].init(p,input);
         return true;
       }
-      else if (checkForDash(p)){
-        puff.DASH.init(p);
+      else if (checkForDash(p,input)){
+        puff.DASH.init(p,input);
         return true;
       }
-      else if (checkForSmashTurn(p)){
-        puff.SMASHTURN.init(p);
+      else if (checkForSmashTurn(p,input)){
+        puff.SMASHTURN.init(p,input);
         return true;
       }
-      else if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3 && Math.abs(player[p].inputs.lsX[0]) > player[p].inputs.lsY[0]*-1){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        puff.TILTTURN.init(p);
+      else if (input[p].lsX[0]*player[p].phys.face < -0.3 && Math.abs(input[p].lsX[0]) > input[p].lsY[0]*-1){
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+        puff.TILTTURN.init(p,input);
         return true;
       }
-      else if (player[p].inputs.lsX[0]*player[p].phys.face > 0.3 && Math.abs(player[p].inputs.lsX[0]) > player[p].inputs.lsY[0]*-1){
-        puff.WALK.init(p,true);
+      else if (input[p].lsX[0]*player[p].phys.face > 0.3 && Math.abs(input[p].lsX[0]) > input[p].lsY[0]*-1){
+        puff.WALK.init(p,true,input);
         return true;
       }
       else {
@@ -324,17 +324,17 @@ puff.UPTILT = {
   name : "UPTILT",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "UPTILT";
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.uptilt1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.uptilt1.id1;
-    puff.UPTILT.main(p);
+    puff.UPTILT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.UPTILT.interrupt(p)){
+    if (!puff.UPTILT.interrupt(p,input)){
       reduceByTraction(p,true);
 
       if (player[p].timer == 8){
@@ -358,9 +358,9 @@ puff.UPTILT = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 23){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -373,17 +373,17 @@ puff.FORWARDTILT = {
   name : "FORWARDTILT",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "FORWARDTILT";
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.ftilt.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ftilt.id1;
-    puff.FORWARDTILT.main(p);
+    puff.FORWARDTILT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.FORWARDTILT.interrupt(p)){
+    if (!puff.FORWARDTILT.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer == 6){
         player[p].hitboxes.active = [true,true,false,false];
@@ -398,9 +398,9 @@ puff.FORWARDTILT = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 27){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -418,7 +418,7 @@ puff.ATTACKAIRF = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ATTACKAIRF";
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
@@ -426,13 +426,13 @@ puff.ATTACKAIRF = {
     player[p].hitboxes.id[0] = player[p].charHitboxes.fair1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.fair1.id1;
     turnOffHitboxes(p);
-    puff.ATTACKAIRF.main(p);
+    puff.ATTACKAIRF.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.ATTACKAIRF.interrupt(p)){
-      fastfall(p);;
-      airDrift(p);;
+    if (!puff.ATTACKAIRF.interrupt(p,input)){
+      fastfall(pminput,input);;
+      airDrift(p,input);;
 
       if (player[p].timer == 7){
         player[p].hitboxes.active = [true,true,false,false];
@@ -460,19 +460,19 @@ puff.ATTACKAIRF = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 39){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else if (player[p].timer > 34){
-      var a = checkForAerials(p);
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
-        puff.JUMPAERIALF.init(p);
+      var a = checkForAerials(p,input);
+      if (((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
+        puff.JUMPAERIALF.init(p,input);
         return true;
       }
       else if (a[0]){
-        puff[a[1]].init(p);
+        puff[a[1]].init(p,input);
         return true;
       }
       else {
@@ -483,12 +483,12 @@ puff.ATTACKAIRF = {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].phys.autoCancel){
-      puff.LANDING.init(p);
+      puff.LANDING.init(p,input);
     }
     else {
-      puff.LANDINGATTACKAIRF.init(p);
+      puff.LANDINGATTACKAIRF.init(p,input);
     }
   }
 };
@@ -501,7 +501,7 @@ puff.ATTACKAIRB = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ATTACKAIRB";
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
@@ -510,13 +510,13 @@ puff.ATTACKAIRB = {
     player[p].hitboxes.id[0] = player[p].charHitboxes.bair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.bair.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.bair.id2;
-    puff.ATTACKAIRB.main(p);
+    puff.ATTACKAIRB.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.ATTACKAIRB.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!puff.ATTACKAIRB.interrupt(p,input)){
+      fastfall(pminput,input);
+      airDrift(p,input);
 
       if (player[p].timer == 8){
         player[p].phys.autocancel = false;
@@ -537,19 +537,19 @@ puff.ATTACKAIRB = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 39){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else if (player[p].timer > 30){
-      var a = checkForAerials(p);
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
-        puff.JUMPAERIALF.init(p);
+      var a = checkForAerials(p,input);
+      if (((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
+        puff.JUMPAERIALF.init(p,input);
         return true;
       }
       else if (a[0]){
-        puff[a[1]].init(p);
+        puff[a[1]].init(p,input);
         return true;
       }
       else {
@@ -560,12 +560,12 @@ puff.ATTACKAIRB = {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].phys.autoCancel){
-      puff.LANDING.init(p);
+      puff.LANDING.init(p,input);
     }
     else {
-      puff.LANDINGATTACKAIRB.init(p);
+      puff.LANDINGATTACKAIRB.init(p,input);
     }
   }
 };
@@ -578,20 +578,20 @@ puff.ATTACKAIRU = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ATTACKAIRU";
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
     player[p].inAerial = true;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.upair.id0;
-    puff.ATTACKAIRU.main(p);
+    puff.ATTACKAIRU.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.ATTACKAIRU.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!puff.ATTACKAIRU.interrupt(p,input)){
+      fastfall(pminput,input);
+      airDrift(p,input);
 
       if (player[p].timer == 9){
         player[p].hitboxes.active = [true,false,false,false];
@@ -611,19 +611,19 @@ puff.ATTACKAIRU = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 39){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else if (player[p].timer > 37){
-      var a = checkForAerials(p);
-      if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] > 0.7 && player[p].inputs.lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
-        puff.JUMPAERIALF.init(p);
+      var a = checkForAerials(p,input);
+      if (((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && player[p].phys.jumpsUsed < 5){
+        puff.JUMPAERIALF.init(p,input);
         return true;
       }
       else if (a[0]){
-        puff[a[1]].init(p);
+        puff[a[1]].init(p,input);
         return true;
       }
       else {
@@ -634,12 +634,12 @@ puff.ATTACKAIRU = {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].phys.autoCancel){
-      puff.LANDING.init(p);
+      puff.LANDING.init(p,input);
     }
     else {
-      puff.LANDINGATTACKAIRU.init(p);
+      puff.LANDINGATTACKAIRU.init(p,input);
     }
   }
 };
@@ -652,7 +652,7 @@ puff.ATTACKAIRD = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ATTACKAIRD";
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
@@ -662,13 +662,13 @@ puff.ATTACKAIRD = {
     player[p].hitboxes.id[1] = player[p].charHitboxes.dair.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.dair.id2;
     player[p].hitboxes.id[3] = player[p].charHitboxes.dair.id3;
-    puff.ATTACKAIRD.main(p);
+    puff.ATTACKAIRD.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.ATTACKAIRD.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!puff.ATTACKAIRD.interrupt(p,input)){
+      fastfall(pminput,input);
+      airDrift(p,input);
       if (player[p].timer == 4){
         player[p].phys.autoCancel = false;
       }
@@ -695,21 +695,21 @@ puff.ATTACKAIRD = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 49){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].phys.autoCancel){
-      puff.LANDING.init(p);
+      puff.LANDING.init(p,input);
     }
     else {
-      puff.LANDINGATTACKAIRD.init(p);
+      puff.LANDINGATTACKAIRD.init(p,input);
     }
   }
 };
@@ -722,7 +722,7 @@ puff.ATTACKAIRN = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ATTACKAIRN";
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
@@ -730,13 +730,13 @@ puff.ATTACKAIRN = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.nair1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.nair1.id1;
-    puff.ATTACKAIRN.main(p);
+    puff.ATTACKAIRN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.ATTACKAIRN.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!puff.ATTACKAIRN.interrupt(p,input)){
+      fastfall(pminput,input);
+      airDrift(p,input);
       if (player[p].timer == 5){
         player[p].phys.autoCancel = false;
       }
@@ -768,21 +768,21 @@ puff.ATTACKAIRN = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 49){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].phys.autoCancel){
-      puff.LANDING.init(p);
+      puff.LANDING.init(p,input);
     }
     else {
-      puff.LANDINGATTACKAIRN.init(p);
+      puff.LANDINGATTACKAIRN.init(p,input);
     }
   }
 };
@@ -793,7 +793,7 @@ puff.FORWARDSMASH = {
   canEdgeCancel : false,
   canBeGrabbed : true,
   setVelocities : [0,0,0,0,0,0.33572,0.87287,1.20857,1.34283,1.91688,2.27501,1.44811,0.63219,0.61772,0.60393,0.59084,0.57844,0.56672,0.55570,0.54536,0.53572,0.52676,0.51849,0.51092,0.50402,0.49783,0.49232,0.48749,0.48336,0.47992,0.47717,0.47510,0.47373,0.47304,0.47304,0.47374,0.47512,0.47719,0.47995,0.48340,0.48754,0.49237,0.44503,0.30789],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "FORWARDSMASH";
     player[p].timer = 0;
     player[p].phys.charging = false;
@@ -801,11 +801,11 @@ puff.FORWARDSMASH = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.fsmash1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.fsmash1.id1;
-    puff.FORWARDSMASH.main(p);
+    puff.FORWARDSMASH.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].timer == 4){
-      if (player[p].inputs.a[0] || player[p].inputs.z[0]){
+      if (input[p].a[0] || input[p].z[0]){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames == 5){
@@ -825,7 +825,7 @@ puff.FORWARDSMASH = {
       player[p].timer++;
       player[p].phys.charging = false;
     }
-    if (!puff.FORWARDSMASH.interrupt(p)){
+    if (!puff.FORWARDSMASH.interrupt(p,input)){
       reduceByTraction(p,true);
 
       player[p].phys.cVel.x = puff.FORWARDSMASH.setVelocities[player[p].timer-1]*player[p].phys.face;
@@ -851,9 +851,9 @@ puff.FORWARDSMASH = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 44){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -866,7 +866,7 @@ puff.UPSMASH = {
   name : "UPSMASH",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "UPSMASH";
     player[p].timer = 0;
     player[p].phys.charging = false;
@@ -875,11 +875,11 @@ puff.UPSMASH = {
     player[p].hitboxes.id[0] = player[p].charHitboxes.upsmash.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.upsmash.id1;
     randomShout(characterSelections[p]);
-    puff.UPSMASH.main(p);
+    puff.UPSMASH.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].timer == 5){
-      if (player[p].inputs.a[0] || player[p].inputs.z[0]){
+      if (input[p].a[0] || input[p].z[0]){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames == 5){
@@ -899,7 +899,7 @@ puff.UPSMASH = {
       player[p].timer++;
       player[p].phys.charging = false;
     }
-    if (!puff.UPSMASH.interrupt(p)){
+    if (!puff.UPSMASH.interrupt(p,input)){
       reduceByTraction(p,true);
 
       if (player[p].timer == 7){
@@ -916,47 +916,47 @@ puff.UPSMASH = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 54){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer > 44 && !player[p].inCSS){
-      var b = checkForSpecials(p);
-      var t = checkForTilts(p);
-      var s = checkForSmashes(p);
-      var j = checkForJump(p);
+      var b = checkForSpecials(p,input);
+      var t = checkForTilts(p,input);
+      var s = checkForSmashes(p,input);
+      var j = checkForJump(p,input);
       if (j[0]){
-        puff.KNEEBEND.init(p,j[1]);
+        puff.KNEEBEND.init(p,j[1],input);
         return true;
       }
       else if (b[0]){
-        puff[b[1]].init(p);
+        puff[b[1]].init(p,input);
         return true;
       }
       else if (s[0]){
-        puff[s[1]].init(p);
+        puff[s[1]].init(p,input);
         return true;
       }
       else if (t[0]){
-        puff[t[1]].init(p);
+        puff[t[1]].init(p,input);
         return true;
       }
-      else if (checkForDash(p)){
-        puff.DASH.init(p);
+      else if (checkForDash(p,input)){
+        puff.DASH.init(p,input);
         return true;
       }
-      else if (checkForSmashTurn(p)){
-        puff.SMASHTURN.init(p);
+      else if (checkForSmashTurn(p,input)){
+        puff.SMASHTURN.init(p,input);
         return true;
       }
-      else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        puff.TILTTURN.init(p);
+      else if (checkForTiltTurn(p,input)){
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+        puff.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-        puff.WALK.init(p,true);
+      else if (Math.abs(input[p].lsX[0]) > 0.3){
+        puff.WALK.init(p,true,input);
         return true;
       }
       else {
@@ -973,7 +973,7 @@ puff.DOWNSMASH = {
   name : "DOWNSMASH",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNSMASH";
     player[p].timer = 0;
     player[p].phys.charging = false;
@@ -984,11 +984,11 @@ puff.DOWNSMASH = {
     player[p].hitboxes.id[2] = player[p].charHitboxes.dsmash.id2;
     player[p].hitboxes.id[3] = player[p].charHitboxes.dsmash.id3;
     randomShout(characterSelections[p]);
-    puff.DOWNSMASH.main(p);
+    puff.DOWNSMASH.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].timer == 5){
-      if (player[p].inputs.a[0] || player[p].inputs.z[0]){
+      if (input[p].a[0] || input[p].z[0]){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames == 5){
@@ -1008,7 +1008,7 @@ puff.DOWNSMASH = {
       player[p].timer++;
       player[p].phys.charging = false;
     }
-    if (!puff.DOWNSMASH.interrupt(p)){
+    if (!puff.DOWNSMASH.interrupt(p,input)){
       reduceByTraction(p,true);
 
       if (player[p].timer == 9){
@@ -1024,47 +1024,47 @@ puff.DOWNSMASH = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 54){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer > 47 && !player[p].inCSS){
-      var b = checkForSpecials(p);
-      var t = checkForTilts(p);
-      var s = checkForSmashes(p);
-      var j = checkForJump(p);
+      var b = checkForSpecials(p,input);
+      var t = checkForTilts(p,input);
+      var s = checkForSmashes(p,input);
+      var j = checkForJump(p,input);
       if (j[0]){
-        puff.KNEEBEND.init(p,j[1]);
+        puff.KNEEBEND.init(p,j[1],input);
         return true;
       }
       else if (b[0]){
-        puff[b[1]].init(p);
+        puff[b[1]].init(p,input);
         return true;
       }
       else if (s[0]){
-        puff[s[1]].init(p);
+        puff[s[1]].init(p,input);
         return true;
       }
       else if (t[0]){
-        puff[t[1]].init(p);
+        puff[t[1]].init(p,input);
         return true;
       }
-      else if (checkForDash(p)){
-        puff.DASH.init(p);
+      else if (checkForDash(p,input)){
+        puff.DASH.init(p,input);
         return true;
       }
-      else if (checkForSmashTurn(p)){
-        puff.SMASHTURN.init(p);
+      else if (checkForSmashTurn(p,input)){
+        puff.SMASHTURN.init(p,input);
         return true;
       }
-      else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        puff.TILTTURN.init(p);
+      else if (checkForTiltTurn(p,input)){
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+        puff.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-        puff.WALK.init(p,true);
+      else if (Math.abs(input[p].lsX[0]) > 0.3){
+        puff.WALK.init(p,true,input);
         return true;
       }
       else {
@@ -1083,16 +1083,16 @@ puff.ATTACKDASH = {
   canEdgeCancel : false,
   setVelocities : [0.99874,1.82126,2.22815,2.43704,1.91481,1.39379,1.36213,1.33162,1.30228,1.27408,1.24704,1.22115,1.19642,1.17284,1.15042,1.12915,1.10902,1.09006,1.06475,1.01691,0.94598,0.85192,0.73477,0.59452,0.43115,0.32167,0.28310,0.24695,0.21323,0.18194,0.15309,0.12666,0.10266,0.08109,0.06194,0.04524,0.03096,0.0191,0.00968],
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ATTACKDASH";
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.dashattack1.id0;
-    puff.ATTACKDASH.main(p);
+    puff.ATTACKDASH.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.ATTACKDASH.interrupt(p)){
+    if (!puff.ATTACKDASH.interrupt(p,input)){
       player[p].phys.cVel.x = puff.ATTACKDASH.setVelocities[player[p].timer-1]*player[p].phys.face;
 
       if (player[p].timer == 4){
@@ -1112,54 +1112,54 @@ puff.ATTACKDASH = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 39){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
-    else if (player[p].timer < 5 && (player[p].inputs.lA[0] > 0 || player[p].inputs.rA[0] > 0)){
+    else if (player[p].timer < 5 && (input[p].lA[0] > 0 || input[p].rA[0] > 0)){
       if (player[p].phys.cVel.x*player[p].phys.face > player[p].charAttributes.dMaxV){
         player[p].phys.cVel.x = player[p].charAttributes.dMaxV*player[p].phys.face;
       }
-      puff.GRAB.init(p);
+      puff.GRAB.init(p,input);
       return true;
     }
     else if (player[p].timer > 38){
-      var b = checkForSpecials(p);
-      var t = checkForTilts(p);
-      var s = checkForSmashes(p);
-      var j = checkForJump(p);
+      var b = checkForSpecials(p,input);
+      var t = checkForTilts(p,input);
+      var s = checkForSmashes(p,input);
+      var j = checkForJump(p,input);
       if (j[0]){
-        puff.KNEEBEND.init(p,j[1]);
+        puff.KNEEBEND.init(p,j[1],input);
         return true;
       }
       else if (b[0]){
-        puff[b[1]].init(p);
+        puff[b[1]].init(p,input);
         return true;
       }
       else if (s[0]){
-        puff[s[1]].init(p);
+        puff[s[1]].init(p,input);
         return true;
       }
       else if (t[0]){
-        puff[t[1]].init(p);
+        puff[t[1]].init(p,input);
         return true;
       }
-      else if (checkForDash(p)){
-        puff.DASH.init(p);
+      else if (checkForDash(p,input)){
+        puff.DASH.init(p,input);
         return true;
       }
-      else if (checkForSmashTurn(p)){
-        puff.SMASHTURN.init(p);
+      else if (checkForSmashTurn(p,input)){
+        puff.SMASHTURN.init(p,input);
         return true;
       }
-      else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        puff.TILTTURN.init(p);
+      else if (checkForTiltTurn(p,input)){
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+        puff.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-        puff.WALK.init(p,true);
+      else if (Math.abs(input[p].lsX[0]) > 0.3){
+        puff.WALK.init(p,true,input);
         return true;
       }
       else {
@@ -1183,7 +1183,7 @@ puff.NEUTRALSPECIALAIR = {
   landType : 1,
   specialWallCollide : true,
   specialOnHit : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "NEUTRALSPECIALAIR";
     player[p].timer = 0;
     player[p].phys.rollOutCharging = false;
@@ -1198,14 +1198,14 @@ puff.NEUTRALSPECIALAIR = {
     player[p].phys.cVel.y = Math.max(-1.3,player[p].phys.cVel.y);
     sounds.rolloutshout.play();
     turnOffHitboxes(p);
-    puff.NEUTRALSPECIALAIR.main(p);
+    puff.NEUTRALSPECIALAIR.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].timer == 15){
       drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
     }
     if (player[p].timer >= 16 && player[p].timer <= 45 && player[p].phys.rollOutChargeAttempt){
-      if (player[p].inputs.b[0]){
+      if (input[p].b[0]){
         player[p].phys.rollOutCharging = true;
         player[p].phys.rollOutCharge++;
         if (player[p].phys.rollOutCharge > 44){
@@ -1246,7 +1246,7 @@ puff.NEUTRALSPECIALAIR = {
     else {
       player[p].timer++;
     }
-    if (!puff.NEUTRALSPECIALAIR.interrupt(p)){
+    if (!puff.NEUTRALSPECIALAIR.interrupt(p,input)){
       player[p].phys.cVel.y -= 0.07;
       if (player[p].phys.cVel.y < -1.3){
         player[p].phys.cVel.y = -1.3;
@@ -1274,23 +1274,23 @@ puff.NEUTRALSPECIALAIR = {
       if (player[p].phys.rollOutPlayerHit){
         player[p].phys.rollOutPlayerHitTimer++;
         if (player[p].phys.rollOutPlayerHitTimer > 42){
-          airDrift(p);
+          airDrift(p,input);
         }
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 70){
-      puff.FALLSPECIAL.init(p);
+      puff.FALLSPECIAL.init(p,input);
       return false;
     }
     else {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].phys.rollOutPlayerHit){
-      puff.LANDINGFALLSPECIAL.init(p);
+      puff.LANDINGFALLSPECIAL.init(p,input);
     }
     else {
       player[p].actionState = "NEUTRALSPECIALGROUND";
@@ -1335,7 +1335,7 @@ puff.NEUTRALSPECIALGROUND = {
   disableTeeter : true,
   airborneState : "NEUTRALSPECIALAIR",
   specialOnHit : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "NEUTRALSPECIALGROUND";
     player[p].timer = 0;
     player[p].phys.rollOutCharging = false;
@@ -1350,14 +1350,14 @@ puff.NEUTRALSPECIALGROUND = {
     player[p].phys.cVel.x = 0.0001*player[p].phys.face;
     sounds.rolloutshout.play();
     turnOffHitboxes(p);
-    puff.NEUTRALSPECIALGROUND.main(p);
+    puff.NEUTRALSPECIALGROUND.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].timer == 15){
       drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
     }
     if (player[p].timer >= 16 && player[p].timer <= 45 && player[p].phys.rollOutChargeAttempt){
-      if (player[p].inputs.b[0]){
+      if (input[p].b[0]){
         player[p].phys.rollOutCharging = true;
         player[p].phys.rollOutCharge++;
         if (player[p].phys.rollOutCharge > 44){
@@ -1401,7 +1401,7 @@ puff.NEUTRALSPECIALGROUND = {
     else {
       player[p].timer++;
     }
-    if (!puff.NEUTRALSPECIALGROUND.interrupt(p)){
+    if (!puff.NEUTRALSPECIALGROUND.interrupt(p,input)){
 
       if (player[p].timer > 15 && player[p].timer < 46 && !player[p].phys.rollOutCharging && !player[p].phys.rollOutChargeAttempt){
         player[p].phys.rollOutDistance++;
@@ -1424,8 +1424,8 @@ puff.NEUTRALSPECIALGROUND = {
         }
         else {
           player[p].phys.cVel.x = player[p].phys.rollOutVel*player[p].phys.face;
-          if (player[p].inputs.lsX[0]*player[p].phys.face < -0.49){
-            puff.NEUTRALSPECIALGROUNDTURN.init(p);
+          if (input[p].lsX[0]*player[p].phys.face < -0.49){
+            puff.NEUTRALSPECIALGROUNDTURN.init(p,input);
             player[p].colourOverlayBool = false;
           }
         }
@@ -1439,9 +1439,9 @@ puff.NEUTRALSPECIALGROUND = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 77){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return false;
     }
     else {
@@ -1459,30 +1459,30 @@ puff.NEUTRALSPECIALGROUNDTURN = {
   canEdgeCancel : false,
   canBeGrabbed : true,
   specialOnHit : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "NEUTRALSPECIALGROUNDTURN",
     player[p].timer = 0;
     player[p].phys.rollOutTurnTimer = 0;
     player[p].phys.face *= -1;
     sounds.rolloutlaunch.play();
     turnOffHitboxes(p);
-    puff.NEUTRALSPECIALGROUNDTURN.main(p);
+    puff.NEUTRALSPECIALGROUNDTURN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer+=3;
     if (player[p].timer > 30){
       player[p].timer = 3;
     }
     player[p].phys.rollOutTurnTimer++;
     player[p].phys.rollOutDistance++;
-    if (!puff.NEUTRALSPECIALGROUNDTURN.interrupt(p)){
+    if (!puff.NEUTRALSPECIALGROUNDTURN.interrupt(p,input)){
       player[p].phys.cVel.x = (player[p].phys.rollOutVel*player[p].phys.face*-1)-(player[p].phys.rollOutVel*0.045*player[p].phys.rollOutTurnTimer*player[p].phys.face*-1);
       if (player[p].phys.rollOutDistance % 5 == 0){
         drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].phys.rollOutDistance > 100){
       player[p].actionState = "NEUTRALSPECIALGROUND";
       player[p].timer = 46;
@@ -1523,7 +1523,7 @@ puff.SIDESPECIALAIR = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "SIDESPECIALAIR";
     player[p].timer = 0;
     if (player[p].phys.grounded){
@@ -1537,11 +1537,11 @@ puff.SIDESPECIALAIR = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.sidespecial.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.sidespecial.id1;
-    puff.SIDESPECIALAIR.main(p);
+    puff.SIDESPECIALAIR.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.SIDESPECIALAIR.interrupt(p)){
+    if (!puff.SIDESPECIALAIR.interrupt(p,input)){
 
       if (player[p].phys.grounded){
         if (player[p].timer > 11){
@@ -1551,7 +1551,7 @@ puff.SIDESPECIALAIR = {
       else {
         if (player[p].timer == 12){
           player[p].phys.fastfalled = false;
-          player[p].phys.upbAngleMultiplier = player[p].inputs.lsY[0] * Math.PI*(20/180);
+          player[p].phys.upbAngleMultiplier = input[p].lsY[0] * Math.PI*(20/180);
            //decide angle
            //max 20 degrees
           player[p].phys.cVel.y = 0;
@@ -1579,8 +1579,8 @@ puff.SIDESPECIALAIR = {
           player[p].phys.cVel.y = puff.SIDESPECIALAIR.airVelocities[player[p].timer-12]*Math.sin(player[p].phys.upbAngleMultiplier);
         }
         else {
-          airDrift(p);
-          fastfall(p);
+          airDrift(p,input);
+          fastfall(pminput,input);
         }
       }
 
@@ -1597,13 +1597,13 @@ puff.SIDESPECIALAIR = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 45){
       if (player[p].phys.grounded){
-        puff.WAIT.init(p);
+        puff.WAIT.init(p,input);
       }
       else {
-        puff.FALL.init(p);
+        puff.FALL.init(p,input);
       }
       return true;
     }
@@ -1611,7 +1611,7 @@ puff.SIDESPECIALAIR = {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     player[p].actionState = "SIDESPECIALGROUND";
   }
 };
@@ -1625,7 +1625,7 @@ puff.SIDESPECIALGROUND = {
   wallJumpAble : false,
   headBonk : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "SIDESPECIALGROUND";
     player[p].timer = 0;
     if (player[p].phys.grounded){
@@ -1639,11 +1639,11 @@ puff.SIDESPECIALGROUND = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.sidespecial.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.sidespecial.id1;
-    puff.SIDESPECIALGROUND.main(p);
+    puff.SIDESPECIALGROUND.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.SIDESPECIALGROUND.interrupt(p)){
+    if (!puff.SIDESPECIALGROUND.interrupt(p,input)){
 
       if (player[p].phys.grounded){
         if (player[p].timer > 11){
@@ -1653,7 +1653,7 @@ puff.SIDESPECIALGROUND = {
       else {
         if (player[p].timer == 12){
           player[p].phys.fastfalled = false;
-          player[p].phys.upbAngleMultiplier = player[p].inputs.lsY[0] * Math.PI*(20/180);
+          player[p].phys.upbAngleMultiplier = input[p].lsY[0] * Math.PI*(20/180);
            //decide angle
            //max 20 degrees
           player[p].phys.cVel.y = 0;
@@ -1681,8 +1681,8 @@ puff.SIDESPECIALGROUND = {
           player[p].phys.cVel.y = puff.SIDESPECIALGROUND.airVelocities[player[p].timer-12]*Math.sin(player[p].phys.upbAngleMultiplier);
         }
         else {
-          airDrift(p);
-          fastfall(p);
+          airDrift(p,input);
+          fastfall(pminput,input);
         }
       }
 
@@ -1699,13 +1699,13 @@ puff.SIDESPECIALGROUND = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 45){
       if (player[p].phys.grounded){
-        puff.WAIT.init(p);
+        puff.WAIT.init(p,input);
       }
       else {
-        puff.FALL.init(p);
+        puff.FALL.init(p,input);
       }
       return true;
     }
@@ -1723,7 +1723,7 @@ puff.DOWNSPECIALAIR = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNSPECIALAIR";
     player[p].timer = 0;
     if (player[p].phys.grounded){
@@ -1742,11 +1742,11 @@ puff.DOWNSPECIALAIR = {
     }
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.downspecial.id0;
-    puff.DOWNSPECIALAIR.main(p);
+    puff.DOWNSPECIALAIR.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.DOWNSPECIALAIR.interrupt(p)){
+    if (!puff.DOWNSPECIALAIR.interrupt(p,input)){
       if (player[p].phys.grounded){
         reduceByTraction(p);
       }
@@ -1786,13 +1786,13 @@ puff.DOWNSPECIALAIR = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 249){
       if (player[p].phys.grounded){
-        puff.WAIT.init(p);
+        puff.WAIT.init(p,input);
       }
       else {
-        puff.FALL.init(p);
+        puff.FALL.init(p,input);
       }
       return true;
     }
@@ -1800,7 +1800,7 @@ puff.DOWNSPECIALAIR = {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     //player[p].actionState = 109;
   }
 };
@@ -1814,7 +1814,7 @@ puff.DOWNSPECIALGROUND = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNSPECIALGROUND";
     player[p].timer = 0;
     if (player[p].phys.grounded){
@@ -1833,11 +1833,11 @@ puff.DOWNSPECIALGROUND = {
     }
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.downspecial.id0;
-    puff.DOWNSPECIALGROUND.main(p);
+    puff.DOWNSPECIALGROUND.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.DOWNSPECIALGROUND.interrupt(p)){
+    if (!puff.DOWNSPECIALGROUND.interrupt(p,input)){
       if (player[p].phys.grounded){
         reduceByTraction(p);
       }
@@ -1877,13 +1877,13 @@ puff.DOWNSPECIALGROUND = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 249){
       if (player[p].phys.grounded){
-        puff.WAIT.init(p);
+        puff.WAIT.init(p,input);
       }
       else {
-        puff.FALL.init(p);
+        puff.FALL.init(p,input);
       }
       return true;
     }
@@ -1891,7 +1891,7 @@ puff.DOWNSPECIALGROUND = {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     //player[p].actionState = 109;
   }
 };
@@ -1904,7 +1904,7 @@ puff.UPSPECIAL = {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "UPSPECIAL";
     player[p].timer = 0;
     //23
@@ -1926,11 +1926,11 @@ puff.UPSPECIAL = {
     }
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.upb.id0;
-    puff.UPSPECIAL.main(p);
+    puff.UPSPECIAL.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.UPSPECIAL.interrupt(p)){
+    if (!puff.UPSPECIAL.interrupt(p,input)){
       if (player[p].timer == 23) {
         drawVfx("sing",new Vec2D(0,0),p);
       }
@@ -1989,13 +1989,13 @@ puff.UPSPECIAL = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 179){
       if (player[p].phys.grounded){
-        puff.WAIT.init(p);
+        puff.WAIT.init(p,input);
       }
       else {
-        puff.FALLSPECIAL.init(p);
+        puff.FALLSPECIAL.init(p,input);
       }
       return true;
     }
@@ -2003,7 +2003,7 @@ puff.UPSPECIAL = {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
 
   }
 };
@@ -2014,7 +2014,7 @@ puff.THROWFORWARD = {
   name : "THROWFORWARD",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFFORWARD.init(player[p].phys.grabbing);
@@ -2023,11 +2023,11 @@ puff.THROWFORWARD = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
     randomShout(characterSelections[p]);
-    puff.THROWFORWARD.main(p);
+    puff.THROWFORWARD.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer+=12/player[p].phys.releaseFrame;
-    if (!puff.THROWFORWARD.interrupt(p)){
+    if (!puff.THROWFORWARD.interrupt(p,input)){
       if (Math.floor(player[p].timer+0.01) == 12){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
@@ -2043,14 +2043,14 @@ puff.THROWFORWARD = {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 35){
       player[p].phys.grabbing = -1;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy != p){
-      puff.CATCHCUT.init(p);
+      puff.CATCHCUT.init(p,input);
       return true;
     }
     else {
@@ -2064,7 +2064,7 @@ puff.THROWBACK = {
   canEdgeCancel : false,
   canBeGrabbed : true,
   setVelocities : [-0.12755,-1.24035,-3.10533,-2.72023,-0.32654,0,0,0,0.00357,0.09035,0.22531,0.37797,0.54831,1.35048,1.60332,1.04371,0.81257,0.60621,0.42461,0.26777,0.1357,0.03,0],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFBACK.init(player[p].phys.grabbing);
@@ -2073,11 +2073,11 @@ puff.THROWBACK = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
     randomShout(characterSelections[p]);
-    puff.THROWBACK.main(p);
+    puff.THROWBACK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer+=(22/player[p].phys.releaseFrame);
-    if (!puff.THROWBACK.interrupt(p)){
+    if (!puff.THROWBACK.interrupt(p,input)){
       if (Math.floor(player[p].timer+0.01) > 13 && Math.floor(player[p].timer+0.01 < 37)){
         player[p].phys.cVel.x = puff.THROWBACK.setVelocities[Math.floor(player[p].timer+0.01)-14]*player[p].phys.face;
       }
@@ -2088,14 +2088,14 @@ puff.THROWBACK = {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 43){
       player[p].phys.grabbing = -1;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy != p){
-      puff.CATCHCUT.init(p);
+      puff.CATCHCUT.init(p,input);
       return true;
     }
     else {
@@ -2107,7 +2107,7 @@ puff.THROWUP = {
   name : "THROWUP",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWUP";
     player[p].timer = 0;
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFUP.init(player[p].phys.grabbing);
@@ -2115,11 +2115,11 @@ puff.THROWUP = {
     var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNPUFFUP;
     player[p].phys.releaseFrame = frame+1;
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
-    puff.THROWUP.main(p);
+    puff.THROWUP.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer+=7/player[p].phys.releaseFrame;
-    if (!puff.THROWUP.interrupt(p)){
+    if (!puff.THROWUP.interrupt(p,input)){
       if (Math.floor(player[p].timer+0.01) == 7){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
@@ -2127,15 +2127,15 @@ puff.THROWUP = {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 41){
       player[p].phys.grabbing = -1;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy != p){
       console.log("test");
-      puff.CATCHCUT.init(p);
+      puff.CATCHCUT.init(p,input);
       return true;
     }
     else {
@@ -2148,7 +2148,7 @@ puff.THROWDOWN = {
   name : "THROWDOWN",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFDOWN.init(player[p].phys.grabbing);
@@ -2157,11 +2157,11 @@ puff.THROWDOWN = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdownextra.id0;
     randomShout(characterSelections[p]);
-    puff.THROWDOWN.main(p);
+    puff.THROWDOWN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer+=61/player[p].phys.releaseFrame;
-    if (!puff.THROWDOWN.interrupt(p)){
+    if (!puff.THROWDOWN.interrupt(p,input)){
       //10,23,36,49
       if (player[p].timer < 51){
         if (player[p].timer%13 == 10){
@@ -2180,15 +2180,15 @@ puff.THROWDOWN = {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 84){
       player[p].phys.grabbing = -1;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy != p){
       console.log("test");
-      puff.CATCHCUT.init(p);
+      puff.CATCHCUT.init(p,input);
       return true;
     }
     else {
@@ -2206,7 +2206,7 @@ puff.THROWNMARTHUP = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-10.38,7.51],[-11.19,6.91],[-11.33,6.67],[-10.92,6.78],[-10.55,6.91],[-10.51,6.93],[-7.57,17.47],[-7.57,17.47]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNMARTHUP";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2216,17 +2216,17 @@ puff.THROWNMARTHUP = {
     }
     player[p].phys.grounded = false;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
-    puff.THROWNMARTHUP.main(p);
+    puff.THROWNMARTHUP.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNMARTHUP.interrupt(p)){
+    if (!puff.THROWNMARTHUP.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNMARTHUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNMARTHUP.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2240,7 +2240,7 @@ puff.THROWNMARTHDOWN = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-10.42,8.24],[-12.78,9.07],[-13.1,9.18],[-13.1,9.18],[-13.46,8.44],[-13.71,6.36],[-12.79,3.86],[-10.42,0.27],[-10.42,0.27]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNMARTHDOWN";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2251,17 +2251,17 @@ puff.THROWNMARTHDOWN = {
     player[p].phys.grounded = false;
     player[p].phys.face *= -1;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
-    puff.THROWNMARTHDOWN.main(p);
+    puff.THROWNMARTHDOWN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNMARTHDOWN.interrupt(p)){
+    if (!puff.THROWNMARTHDOWN.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNMARTHDOWN.offset[player[p].timer-1][0]*player[p].phys.face*-1,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNMARTHDOWN.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2275,7 +2275,7 @@ puff.THROWNMARTHBACK = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-6.22,7.33],[-1.72,7.12],[-0.02,4.56],[0.80,2.86],[0.80,2.86]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNMARTHBACK";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2286,17 +2286,17 @@ puff.THROWNMARTHBACK = {
     player[p].phys.grounded = false;
     player[p].phys.face *= -1;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
-    puff.THROWNMARTHBACK.main(p);
+    puff.THROWNMARTHBACK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNMARTHBACK.interrupt(p)){
+    if (!puff.THROWNMARTHBACK.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNMARTHBACK.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNMARTHBACK.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2309,7 +2309,7 @@ puff.THROWNMARTHFORWARD = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-11.71,7.06],[-10.22,9.68],[-9.84,9.94],[-9.70,9.88],[-10.01,9.67],[-14.00,8.67],[-11.76,5.89],[-8.89,-0.35],[-8.89,-0.35]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNMARTHFORWARD";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2319,17 +2319,17 @@ puff.THROWNMARTHFORWARD = {
     }
     player[p].phys.grounded = false;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
-    puff.THROWNMARTHFORWARD.main(p);
+    puff.THROWNMARTHFORWARD.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNMARTHFORWARD.interrupt(p)){
+    if (!puff.THROWNMARTHFORWARD.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNMARTHFORWARD.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNMARTHFORWARD.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2340,7 +2340,7 @@ puff.THROWNPUFFFORWARD = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-10.52,-3.27],[-9.84,-3.27],[-9.13,-3.27],[-8.70,-3.27],[-8.60,-3.27],[-8.61,-3.27],[-8.67,-3.27],[-8.70,-3.27],[-9.78,-3.27],[-9.78,0.01]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNPUFFFORWARD";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2349,17 +2349,17 @@ puff.THROWNPUFFFORWARD = {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    puff.THROWNPUFFFORWARD.main(p);
+    puff.THROWNPUFFFORWARD.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNPUFFFORWARD.interrupt(p)){
+    if (!puff.THROWNPUFFFORWARD.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNPUFFFORWARD.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNPUFFFORWARD.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2371,7 +2371,7 @@ puff.THROWNPUFFDOWN = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-10.26,0.98],[-7.67,-0.31],[-4.94,-1.56],[-3.10,-2.50],[-0.94,-3.59],[-0.90,-3.57],[-1.00,-3.52],[-1.01,-3.56],[-0.94,-3.62],[-0.97,-3.60],[-1.02,-3.58],[-1.04,-3.56],[-1.00,-3.57],[-0.93,-3.58],[-0.91,-3.61],[-0.92,-3.64],[-0.91,-3.63],[-0.92,-3.60],[-0.92,-3.57],[-0.97,-3.57],[-1.00,-3.59],[-0.98,-3.62],[-0.96,-3.62],[-0.92,-3.59],[-0.89,-3.55],[-0.91,-3.54],[-0.96,-3.57],[-0.95,-3.62],[-0.93,-3.67],[-0.93,-3.65],[-0.95,-3.58],[-0.89,-3.52],[-0.84,-3.53],[-0.89,-3.59],[-0.94,-3.60],[-0.96,-3.59],[-0.96,-3.56],[-0.90,-3.54],[-0.86,-3.58],[-0.88,-3.63],[-0.88,-3.61],[-0.90,-3.58],[-0.92,-3.56],[-0.97,-3.56],[-1.00,-3.58],[-1.00,-3.62],[-0.98,-3.63],[-0.94,-3.60],[-0.91,-3.55],[-0.94,-3.53],[-0.99,-3.55],[-0.98,-3.59],[-0.98,-3.62],[-0.96,-3.61],[-0.95,-3.58],[-0.91,-3.53],[-0.90,-3.53],[-0.94,-3.59],[-0.93,-3.61],[-0.90,-3.65],[-0.93,-3.64],[-0.98,-3.62],[-0.98,-3.62]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNPUFFDOWN";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2381,17 +2381,17 @@ puff.THROWNPUFFDOWN = {
     }
     player[p].phys.grounded = false;
 
-    puff.THROWNPUFFDOWN.main(p);
+    puff.THROWNPUFFDOWN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNPUFFDOWN.interrupt(p)){
+    if (!puff.THROWNPUFFDOWN.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNPUFFDOWN.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNPUFFDOWN.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2407,7 +2407,7 @@ puff.THROWNPUFFBACK = {
   offset : [[-11.22,-3.35],[-11.51,-3.60],[-11.64,-3.90],[-11.51,-4.11],[-10.99,-4.13],[-9.98,-4.05],[-8.74,-3.92],[-7.52,-3.55],[-6.37,-2.46],[-5.04,-0.22],[-3.44,2.32],[-1.58,3.79],[0.31,4.86],[0.92,7.14],[2.41,7.55],[5.89,1.56],[6.52,-6.85],[6.13,-9.95],[6.14,-10.28],[6.32,-9.92],[6.51,-9.34],[6.51,-9.34]],
   offsetVel : [-0.12755,-1.24035,-3.10533,-2.72023,-0.32654],
   //7.53
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNPUFFBACK";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2417,11 +2417,11 @@ puff.THROWNPUFFBACK = {
     }
     player[p].phys.grounded = false;
     player[p].phys.face *= -1;
-    puff.THROWNPUFFBACK.main(p);
+    puff.THROWNPUFFBACK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNPUFFBACK.interrupt(p)){
+    if (!puff.THROWNPUFFBACK.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNPUFFBACK.offset[player[p].timer-1][0]*player[p].phys.face*-1,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNPUFFBACK.offset[player[p].timer-1][1]);
         /*if (player[p].timer > 13 && player[p].timer < 19){
@@ -2431,7 +2431,7 @@ puff.THROWNPUFFBACK = {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2443,7 +2443,7 @@ puff.THROWNPUFFUP = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-10.63,-3.65],[-9.46,-4.14],[-7.29,-4.39],[-2.98,-3.79],[2.65,-2.33],[4.95,-0.64],[4.95,-0.64]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNPUFFUP";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2452,17 +2452,17 @@ puff.THROWNPUFFUP = {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    puff.THROWNPUFFUP.main(p);
+    puff.THROWNPUFFUP.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNPUFFUP.interrupt(p)){
+    if (!puff.THROWNPUFFUP.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNPUFFUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNPUFFUP.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2475,7 +2475,7 @@ puff.THROWNFOXFORWARD = {
   ignoreCollision : true,
   offset : [[-7.74-0.08,2.53],[-7.17-0.22,3.27],[-7.15-0.24,3.42],[-7.34,3.43],[-7.44+0.68,3.60],[-7.65+1.67,3.79],[-8.06+2.69,3.95],[-8.77+3.47,4.02],[-10.03+4.04,3.91],[-12.03+4.61,3.68],[-12.03+4.61,3.68]],
   //[0.08,0.22,0.24,0,-0.68,-1.67,-2.69,-3.47,-4.04,-4.61]
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNFOXFORWARD";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2484,17 +2484,17 @@ puff.THROWNFOXFORWARD = {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    puff.THROWNFOXFORWARD.main(p);
+    puff.THROWNFOXFORWARD.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNFOXFORWARD.interrupt(p)){
+    if (!puff.THROWNFOXFORWARD.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNFOXFORWARD.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNFOXFORWARD.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2506,7 +2506,7 @@ puff.THROWNFOXDOWN = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-4.73,2.26],[-2.33,1.03],[-1.90,0.93],[-1.84,1.06],[-1.84,1.52],[-1.98,3.71],[-1.04,6.74],[-0.05,7.45],[0.82,7.62],[1.03,7.33],[1.07,6.86],[1.07,7.12],[1.07,7.30],[0.85,7.44],[-0.45,9.89],[-0.78,-0.74],[-0.82,-1.45],[-0.81,-0.59],[-0.78,0.19],[-0.72,-0.15],[-0.65,-0.88],[-0.57,-0.99],[-0.50,0.52],[-0.50,-1.74],[-0.50,-1.44],[-0.50,-1.14],[-0.50,-0.85],[-0.50,-0.58],[-0.50,-0.33],[-0.50,-0.10],[-0.50,0.10],[-0.50,0.26],[-0.50,0.26]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNFOXDOWN";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2516,17 +2516,17 @@ puff.THROWNFOXDOWN = {
     }
     player[p].phys.grounded = false;
 
-    puff.THROWNFOXDOWN.main(p);
+    puff.THROWNFOXDOWN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNFOXDOWN.interrupt(p)){
+    if (!puff.THROWNFOXDOWN.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNFOXDOWN.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNFOXDOWN.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2541,7 +2541,7 @@ puff.THROWNFOXBACK = {
   //[1.05,7.14],[3.78,7.55],[10.37,1.56],[13.72,-6.85],[13.66,-9.95],[13.67,-10.28],[13.85,-9.92],[14.04,-9.34],[14.04,-9.34]],
   offset : [[-7.91,1.71],[-5.60,1.14],[-1.22,-0.33],[3.34,-1.09],[8.23,6.71],[8.23,6.71]],
   //7.53
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNFOXBACK";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2551,18 +2551,18 @@ puff.THROWNFOXBACK = {
     }
     player[p].phys.grounded = false;
     player[p].phys.face*= -1;
-    puff.THROWNFOXBACK.main(p);
+    puff.THROWNFOXBACK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNFOXBACK.interrupt(p)){
+    if (!puff.THROWNFOXBACK.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNFOXBACK.offset[player[p].timer-1][0]*player[p].phys.face*-1,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNFOXBACK.offset[player[p].timer-1][1]);
       }
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2574,7 +2574,7 @@ puff.THROWNFOXUP = {
   canBeGrabbed : false,
   ignoreCollision : true,
   offset : [[-6.30,2.16],[-5.56,2.71],[-5.19,2.38],[-3.03,12.89],[-3.03,12.89]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWNFOXUP";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
@@ -2583,17 +2583,17 @@ puff.THROWNFOXUP = {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    puff.THROWNFOXUP.main(p);
+    puff.THROWNFOXUP.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.THROWNFOXUP.interrupt(p)){
+    if (!puff.THROWNFOXUP.interrupt(p,input)){
       if (player[p].timer > 0){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+puff.THROWNFOXUP.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+puff.THROWNFOXUP.offset[player[p].timer-1][1]);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     return false;
   }
 };
@@ -2605,15 +2605,15 @@ puff.CLIFFGETUPQUICK = {
   name : "CLIFFGETUPQUICK",
   canBeGrabbed : true,
   offset : [[-73.32063,-8.97483],[-73.806,-7.875],[-74.29,-6.36],[-74.51,-4.7],[-74.39,-2.91],[-74.06,-1.07],[-73.57,0.48],[-72.954,1.81],[-72.24,3.06],[-71.46,3.99],[-70.68,4.36],[-69.75,3.23],[-68.82,1.13],[-67.98,0],[-67.93,0],[-67.77,0],[-67.54,0],[-67.25,0],[-66.92,0],[-66.57,0],[-66.22,0],[-65.89,0],[-65.6,0],[-65.37,0],[-65.22,0],[-65.16,0],[-65.16,0],[-65.16,0],[-65.16,0],[-65.16,0],[-65.16,0],[-65.16,0],[-65.16,0]],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFGETUPQUICK";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 30;
-    puff.CLIFFGETUPQUICK.main(p);
+    puff.CLIFFGETUPQUICK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CLIFFGETUPQUICK.interrupt(p)){
+    if (!puff.CLIFFGETUPQUICK.interrupt(p,input)){
       var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 16){
@@ -2630,11 +2630,11 @@ puff.CLIFFGETUPQUICK = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 32){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -2648,15 +2648,15 @@ puff.CLIFFGETUPSLOW = {
   offset : [[-73.10,-9.44],[-73.10,-9.56],[-73.09,-9.71],[-73.09,-9.87],[-73.09,-10.01],[-73.09,-10.12],[-73.09,-10.19],[-73.09,-10.23],[-73.09,-10.24],[-73.09,-10.21],[-73.09,-10.14],[-73.09,-10.04],[-73.09,-9.94],[-73.09,-9.89],[-73.09,-9.87],[-73.09,-9.87],[-73.09,-9.87],[-73.09,-9.63],[-73.09,-9.04],[-73.09,-8.28],[-73.09,-7.52],[-73.09,-6.76],[-73.09,-5.93],[-73.09,-5.07],[-73.09,-4.23],[-72.76,-3.35],[-71.98,-2.44],[-71.05,-1.60],[-70.28,-0.94],[-69.68,-0.50],[-69.11,-0.21],[-68.66,-0.05],[-68.14,0]],
   setVelocities : [0.12,0.10,0.08,0.07,0.06,0.05,0.05,0.06,0.07,0.08,0.09,0.12,0.16,0.20,0.23,0.25,0.25,0.24,0.21,0.17,0.12,0.05,0.004],
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFGETUPSLOW";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 55;
-    puff.CLIFFGETUPSLOW.main(p);
+    puff.CLIFFGETUPSLOW.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CLIFFGETUPSLOW.interrupt(p)){
+    if (!puff.CLIFFGETUPSLOW.interrupt(p,input)){
       var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 34){
@@ -2673,11 +2673,11 @@ puff.CLIFFGETUPSLOW = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 59){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = false;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -2691,15 +2691,15 @@ puff.CLIFFESCAPEQUICK = {
   offset : [[-74.04,-8.78],[-74.48,-7.21],[-74.42,-5.16],[-74.24,-3.09],[-73.97,-1.28],[-73.59,0.24],[-73.14,1.46],[-72.61,2.35],[-72.01,2.87],[-71.36,3.00],[-70.66,2.72],[-69.93,1.80],[-69.17,0.60],[-67.63,0]],
   setVelocities : [0.64,0.40,0.21,0.08,-0.003,-0.03,0.002,0.09,0.23,0.42,0.67,0.97,1.27,1.52,1.76,1.99,2.21,2.42,2.62,2.81,2.99,3.16,3.32,3.48,0.12,0.33,0.49,0.59,0.65,0.65,0.60,0.49,0.34,0.13,0.002],
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFESCAPEQUICK";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 28;
-    puff.CLIFFESCAPEQUICK.main(p);
+    puff.CLIFFESCAPEQUICK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CLIFFESCAPEQUICK.interrupt(p)){
+    if (!puff.CLIFFESCAPEQUICK.interrupt(p,input)){
       var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 15){
@@ -2716,11 +2716,11 @@ puff.CLIFFESCAPEQUICK = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 49){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = false;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -2735,15 +2735,15 @@ puff.CLIFFESCAPESLOW = {
   offset : [[-73.10,-9.44],[-73.09,-9.56],[-73.09,-9.71],[-73.09,-9.87],[-73.09,-10.01],[-73.09,-10.12],[-73.09,-10.19],[-73.09,-10.23],[-73.09,-10.24],[-73.09,-10.21],[-73.09,-10.14],[-73.09,-10.04],[-73.09,-9.94],[-73.09,-9.89],[-73.09,-9.87],[-73.09,-9.87],[-73.09,-9.87],[-73.09,-9.63],[-73.09,-9.04],[-73.09,-8.28],[-73.09,-7.52],[-73.09,-6.76],[-73.09,-5.93],[-73.09,-5.07],[-73.09,-4.23],[-72.78,-3.37],[-72.02,-2.48],[-71.10,-1.64],[-70.28,-0.94],[-69.52,-0.43],[-68.80,-0.11],[-68,0]],
   setVelocities : [0.63,1.31,1.52,1.24,0.96,1.01,1.05,1.08,1.11,1.14,1.16,1.18,1.20,1.21,1.22,1.22,1.22,1.21,1.20,1.19,1.17,1.15,1.12,1.09,1.06,1.02,0.98,0.93,0.88,0.82,0.77,0.70,0.63,0.56,0.49,0.41,0.32,0.24,0.15,0.05,0],
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFESCAPESLOW";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 53;
-    puff.CLIFFESCAPESLOW.main(p);
+    puff.CLIFFESCAPESLOW.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CLIFFESCAPESLOW.interrupt(p)){
+    if (!puff.CLIFFESCAPESLOW.interrupt(p,input)){
       var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 33){
@@ -2760,11 +2760,11 @@ puff.CLIFFESCAPESLOW = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 79){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = false;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -2778,18 +2778,18 @@ puff.CLIFFATTACKSLOW = {
   offset : [[-73.10,-9.44],[-73.10,-9.56],[-73.10,-9.71],[-73.09,-9.87],[-73.09,-10.01],[-73.09,-10.12],[-73.09,-10.19],[-73.09,-10.23],[-73.09,-10.24],[-73.09,-10.21],[-73.09,-10.14],[-73.09,-10.04],[-73.09,-9.94],[-73.09,-9.89],[-73.09,-9.87],[-73.09,-9.87],[-73.09,-9.87],[-73.09,-9.63],[-73.09,-9.04],[-73.09,-8.28],[-73.09,-7.52],[-73.09,-6.76],[-73.09,-5.93],[-73.09,-5.07],[-73.09,-4.23],[-72.76,-3.35],[-71.98,-2.44],[-71.05,-1.60],[-70.28,-0.94],[-69.72,-0.50],[-69.22,-0.21],[-68.78,-0.05],[-68.02,0]],
   setVelocities : [0.34,0.34,0.35,0.38,0.43,0.50,0.59,0.69,1.86,2.03,1.09,1.02,0.85,0.58,0.22,-0.07,-0.20,-0.31,-0.40,-0.47,-0.53,-0.57,-0.59,-0.59,-0.58,-0.55,-0.50,-0.43,-0.35,-0.25,-0.16,-0.09,-0.03,0.002,0.02,0.03],
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFATTACKSLOW";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 39;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupslow.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupslow.id1;
-    puff.CLIFFATTACKSLOW.main(p);
+    puff.CLIFFATTACKSLOW.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CLIFFATTACKSLOW.interrupt(p)){
+    if (!puff.CLIFFATTACKSLOW.interrupt(p,input)){
       var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 34){
@@ -2818,11 +2818,11 @@ puff.CLIFFATTACKSLOW = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 69){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = false;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -2836,18 +2836,18 @@ puff.CLIFFATTACKQUICK = {
   offset : [[-73.32,-8.97],[-73.81,-7.87],[-74.29,-6.36],[-74.51,-4.70],[-74.44,-2.88],[-74.22,-0.88],[-73.87,1.08],[-73.40,2.76],[-72.81,3.94],[-72.11,4.39],[-71.31,3.70],[-70.42,2.19],[-69.45,0.69],[-67.35,0]],
   setVelocities : [1.16,1.27,1.29,1.24,1.1,0.89,0.59,0.21,-0.18,-0.34,-0.18,0],
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFATTACKQUICK";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 15;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupquick.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupquick.id1;
-    puff.CLIFFATTACKQUICK.main(p);
+    puff.CLIFFATTACKQUICK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CLIFFATTACKQUICK.interrupt(p)){
+    if (!puff.CLIFFATTACKQUICK.interrupt(p,input)){
       var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 15){
@@ -2875,11 +2875,11 @@ puff.CLIFFATTACKQUICK = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 55){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = false;
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -2893,15 +2893,15 @@ puff.CLIFFJUMPQUICK = {
   name : "CLIFFJUMPQUICK",
   offset : [[-73.32,-8.97],[-73.81,-7.87],[-74.29,-6.36],[-74.51,-4.70],[-74.43,-2.80],[-74.13,-0.84],[-73.57,0.48],[-72.72,1.10],[-71.70,1.48],[-70.62,1.63],[-69.61,1.60],[-68.82,1.43],[-68.42,0.95],[-68.36,0.32]],
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFJUMPQUICK";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 14;
-    puff.CLIFFJUMPQUICK.main(p);
+    puff.CLIFFJUMPQUICK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CLIFFJUMPQUICK.interrupt(p)){
+    if (!puff.CLIFFJUMPQUICK.interrupt(p,input)){
       var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 15){
@@ -2911,16 +2911,16 @@ puff.CLIFFJUMPQUICK = {
         player[p].phys.cVel = new Vec2D(1.1*player[p].phys.face,1.8);
       }
       if (player[p].timer > 15){
-        airDrift(p);
-        fastfall(p);
+        airDrift(p,input);
+        fastfall(pminput,input);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 38){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = false;
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
@@ -2933,15 +2933,15 @@ puff.CLIFFJUMPSLOW = {
   name : "CLIFFJUMPSLOW",
   offset : [[-73.10,-9.01],[-73.10,-8.03],[-73.09,-6.73],[-73.09,-5.37],[-73.09,-4.23],[-72.76,-3.29],[-71.98,-2.38],[-71.05,-1.58],[-70.28,-0.94],[-69.66,-0.50],[-69.05,-0.21],[-68.59,-0.05],[-68.4,0],[-68.4,0],[-68.4,0],[-68.4,0],[-68.4,0]],
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFJUMPSLOW";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 17;
-    puff.CLIFFJUMPSLOW.main(p);
+    puff.CLIFFJUMPSLOW.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CLIFFJUMPSLOW.interrupt(p)){
+    if (!puff.CLIFFJUMPSLOW.interrupt(p,input)){
       var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 18){
@@ -2951,16 +2951,16 @@ puff.CLIFFJUMPSLOW = {
         player[p].phys.cVel = new Vec2D(1.1*player[p].phys.face,1.8);
       }
       if (player[p].timer > 18){
-        airDrift(p);
-        fastfall(p);
+        airDrift(p,input);
+        fastfall(pminput,input);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 38){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = false;
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
@@ -2973,16 +2973,16 @@ puff.CATCHATTACK = {
   name : "CATCHATTACK",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CATCHATTACK";
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.pummel.id0;
-    puff.CATCHATTACK.main(p);
+    puff.CATCHATTACK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.CATCHATTACK.interrupt(p)){
+    if (!puff.CATCHATTACK.interrupt(p,input)){
       if (player[p].timer == 10){
         player[p].hitboxes.active = [true,false,false,false];
         player[p].hitboxes.frame = 0;
@@ -2992,9 +2992,9 @@ puff.CATCHATTACK = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 30){
-      puff.CATCHWAIT.init(p);
+      puff.CATCHWAIT.init(p,input);
       return true;
     }
     else {
@@ -3006,7 +3006,7 @@ puff.GRAB = {
   name : "GRAB",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "GRAB";
     player[p].timer = 0;
     player[p].phys.charging = false;
@@ -3014,11 +3014,11 @@ puff.GRAB = {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.grab.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.grab.id1;
-    puff.GRAB.main(p);
+    puff.GRAB.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.GRAB.interrupt(p)){
+    if (!puff.GRAB.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer == 7){
         player[p].hitboxes.active = [true,true,false,false];
@@ -3033,9 +3033,9 @@ puff.GRAB = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 30){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -3047,7 +3047,7 @@ puff.DOWNATTACK = {
   name : "DOWNATTACK",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNATTACK";
     player[p].timer = 0;
     turnOffHitboxes(p);
@@ -3055,11 +3055,11 @@ puff.DOWNATTACK = {
     player[p].hitboxes.id[1] = player[p].charHitboxes.downattack1.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.downattack1.id2;
     player[p].hitboxes.id[3] = player[p].charHitboxes.downattack1.id3;
-    puff.DOWNATTACK.main(p);
+    puff.DOWNATTACK.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.DOWNATTACK.interrupt(p)){
+    if (!puff.DOWNATTACK.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer == 1){
         player[p].phys.intangibleTimer = 15
@@ -3092,9 +3092,9 @@ puff.DOWNATTACK = {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 49){
-      puff.WAIT.init(p);
+      puff.WAIT.init(p,input);
       return true;
     }
     else {
@@ -3105,11 +3105,11 @@ puff.DOWNATTACK = {
 
 // ------- PUFF JUMPS ---------
 window.puffMultiJumpDrift = function(p){
-  if (Math.abs(player[p].inputs.lsX[0]) < 0.3){
+  if (Math.abs(input[p].lsX[0]) < 0.3){
     var tempMax = 0
   }
   else {
-    var tempMax = 1.08 * player[p].inputs.lsX[0];
+    var tempMax = 1.08 * input[p].lsX[0];
   }
 
   if ((tempMax < 0 && player[p].phys.cVel.x < tempMax) || (tempMax > 0 && player[p].phys.cVel.x > tempMax)){
@@ -3126,12 +3126,12 @@ window.puffMultiJumpDrift = function(p){
       }
     }
   }
-  else if (Math.abs(player[p].inputs.lsX[0]) > 0.3 && ((tempMax < 0 && player[p].phys.cVel.x > tempMax) || (tempMax > 0 && player[p].phys.cVel.x < tempMax))){
-    player[p].phys.cVel.x += (0.072 * player[p].inputs.lsX[0]);
+  else if (Math.abs(input[p].lsX[0]) > 0.3 && ((tempMax < 0 && player[p].phys.cVel.x > tempMax) || (tempMax > 0 && player[p].phys.cVel.x < tempMax))){
+    player[p].phys.cVel.x += (0.072 * input[p].lsX[0]);
   }
 
 
-  if (Math.abs(player[p].inputs.lsX[0]) < 0.3){
+  if (Math.abs(input[p].lsX[0]) < 0.3){
     if (player[p].phys.cVel.x > 0){
       player[p].phys.cVel.x -= player[p].charAttributes.airFriction;
       if (player[p].phys.cVel.x < 0){
@@ -3148,11 +3148,11 @@ window.puffMultiJumpDrift = function(p){
 };
 
 window.puffNextJump = function(p){
-  if (Math.abs(player[p].inputs.lsX[0]) > 0.3 && Math.sign(player[p].inputs.lsX[0]) != player[p].phys.face){
-    puff["AERIALTURN"+(1+player[p].phys.jumpsUsed)].init(p);
+  if (Math.abs(input[p].lsX[0]) > 0.3 && Math.sign(input[p].lsX[0]) != player[p].phys.face){
+    puff["AERIALTURN"+(1+player[p].phys.jumpsUsed)].init(p,input);
   }
   else {
-    puff["JUMPAERIAL"+(1+player[p].phys.jumpsUsed)].init(p);
+    puff["JUMPAERIAL"+(1+player[p].phys.jumpsUsed)].init(p,input);
   }
 };
 
@@ -3164,44 +3164,44 @@ puff.JUMPAERIAL1 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JUMPAERIAL1";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.cVel.y = 1.65;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.JUMPAERIAL1.main(p);
+    puff.JUMPAERIAL1.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.JUMPAERIAL1.interrupt(p)){
-      fastfall(p);
+    if (!puff.JUMPAERIAL1.interrupt(p,input)){
+      fastfall(pminput,input);
       puffMultiJumpDrift(p);
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lsY[0] > 0.7)){
+    else if (player[p].timer > 28 && (input[p].x[0] || input[p].y[0] || input[p].lsY[0] > 0.7)){
       puffNextJump(p);
       return true;
     }
     else if (player[p].timer > 50){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
@@ -3217,45 +3217,45 @@ puff.JUMPAERIAL2 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JUMPAERIAL2";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.59;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.JUMPAERIAL2.main(p);
+    puff.JUMPAERIAL2.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.JUMPAERIAL2.interrupt(p)){
-      fastfall(p);
+    if (!puff.JUMPAERIAL2.interrupt(p,input)){
+      fastfall(pminput,input);
       puffMultiJumpDrift(p);
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lsY[0] > 0.7)){
+    else if (player[p].timer > 28 && (input[p].x[0] || input[p].y[0] || input[p].lsY[0] > 0.7)){
       puffNextJump(p);
       return true;
     }
     else if (player[p].timer > 50){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
@@ -3271,46 +3271,46 @@ puff.JUMPAERIAL3 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JUMPAERIAL3";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.47;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.JUMPAERIAL3.main(p);
+    puff.JUMPAERIAL3.main(p,input);
 
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.JUMPAERIAL3.interrupt(p)){
-      fastfall(p);
+    if (!puff.JUMPAERIAL3.interrupt(p,input)){
+      fastfall(pminput,input);
       puffMultiJumpDrift(p);
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lsY[0] > 0.7)){
+    else if (player[p].timer > 28 && (input[p].x[0] || input[p].y[0] || input[p].lsY[0] > 0.7)){
       puffNextJump(p);
       return true;
     }
     else if (player[p].timer > 50){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
@@ -3326,46 +3326,46 @@ puff.JUMPAERIAL4 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JUMPAERIAL4";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.36;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.JUMPAERIAL4.main(p);
+    puff.JUMPAERIAL4.main(p,input);
 
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.JUMPAERIAL4.interrupt(p)){
-      fastfall(p);
+    if (!puff.JUMPAERIAL4.interrupt(p,input)){
+      fastfall(pminput,input);
       puffMultiJumpDrift(p);
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lsY[0] > 0.7)){
+    else if (player[p].timer > 28 && (input[p].x[0] || input[p].y[0] || input[p].lsY[0] > 0.7)){
       puffNextJump(p);
       return true;
     }
     else if (player[p].timer > 50){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
@@ -3381,42 +3381,42 @@ puff.JUMPAERIAL5 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JUMPAERIAL5";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.25;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.JUMPAERIAL5.main(p);
+    puff.JUMPAERIAL5.main(p,input);
 
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!puff.JUMPAERIAL5.interrupt(p)){
-      fastfall(p);
+    if (!puff.JUMPAERIAL5.interrupt(p,input)){
+      fastfall(pminput,input);
       puffMultiJumpDrift(p);
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
     else if (player[p].timer > 50){
-      puff.FALL.init(p);
+      puff.FALL.init(p,input);
       return true;
     }
     else {
@@ -3433,26 +3433,26 @@ puff.AERIALTURN1 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "AERIALTURN1";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.cVel.y = 1.65;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.AERIALTURN1.main(p);
+    puff.AERIALTURN1.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     if (player[p].timer == 13){
       player[p].timer--;
       player[p].actionState = "JUMPAERIAL1";
-      puff.JUMPAERIAL1.main(p);
+      puff.JUMPAERIAL1.main(p,input);
     }
     else {
-      if (!puff.AERIALTURN1.interrupt(p)){
-        fastfall(p);
+      if (!puff.AERIALTURN1.interrupt(p,input)){
+        fastfall(pminput,input);
         puffMultiJumpDrift(p);
         if (player[p].timer == 6){
           player[p].phys.face *= -1;
@@ -3460,19 +3460,19 @@ puff.AERIALTURN1 = {
       }
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
     else {
@@ -3488,27 +3488,27 @@ puff.AERIALTURN2 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "AERIALTURN2";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.59;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.AERIALTURN2.main(p);
+    puff.AERIALTURN2.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     if (player[p].timer == 13){
       player[p].timer--;
       player[p].actionState = "JUMPAERIAL2";
-      puff.JUMPAERIAL2.main(p);
+      puff.JUMPAERIAL2.main(p,input);
     }
     else {
-      if (!puff.AERIALTURN2.interrupt(p)){
-        fastfall(p);
+      if (!puff.AERIALTURN2.interrupt(p,input)){
+        fastfall(pminput,input);
         puffMultiJumpDrift(p);
         if (player[p].timer == 6){
           player[p].phys.face *= -1;
@@ -3516,19 +3516,19 @@ puff.AERIALTURN2 = {
       }
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
     else {
@@ -3544,28 +3544,28 @@ puff.AERIALTURN3 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "AERIALTURN3";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.47;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.AERIALTURN3.main(p);
+    puff.AERIALTURN3.main(p,input);
 
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     if (player[p].timer == 13){
       player[p].timer--;
       player[p].actionState = "JUMPAERIAL3";
-      puff.JUMPAERIAL3.main(p);
+      puff.JUMPAERIAL3.main(p,input);
     }
     else {
-      if (!puff.AERIALTURN3.interrupt(p)){
-        fastfall(p);
+      if (!puff.AERIALTURN3.interrupt(p,input)){
+        fastfall(pminput,input);
         puffMultiJumpDrift(p);
         if (player[p].timer == 6){
           player[p].phys.face *= -1;
@@ -3573,19 +3573,19 @@ puff.AERIALTURN3 = {
       }
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
     else {
@@ -3601,28 +3601,28 @@ puff.AERIALTURN4 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "AERIALTURN4";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.36;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.AERIALTURN4.main(p);
+    puff.AERIALTURN4.main(p,input);
 
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     if (player[p].timer == 13){
       player[p].timer--;
       player[p].actionState = "JUMPAERIAL4";
-      puff.JUMPAERIAL4.main(p);
+      puff.JUMPAERIAL4.main(p,input);
     }
     else {
-      if (!puff.AERIALTURN4.interrupt(p)){
-        fastfall(p);
+      if (!puff.AERIALTURN4.interrupt(p,input)){
+        fastfall(pminput,input);
         puffMultiJumpDrift(p);
         if (player[p].timer == 6){
           player[p].phys.face *= -1;
@@ -3630,19 +3630,19 @@ puff.AERIALTURN4 = {
       }
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
     else {
@@ -3658,28 +3658,28 @@ puff.AERIALTURN5 = {
   headBonk : true,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "AERIALTURN5";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.25;
-    player[p].phys.cVel.x = (player[p].inputs.lsX[0] * 0.5);
+    player[p].phys.cVel.x = (input[p].lsX[0] * 0.5);
     player[p].phys.jumpsUsed++;
     sounds.jump2.play();
-    puff.AERIALTURN5.main(p);
+    puff.AERIALTURN5.main(p,input);
 
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     if (player[p].timer == 13){
       player[p].timer--;
       player[p].actionState = "JUMPAERIAL5";
-      puff.JUMPAERIAL5.main(p);
+      puff.JUMPAERIAL5.main(p,input);
     }
     else {
-      if (!puff.AERIALTURN5.interrupt(p)){
-        fastfall(p);
+      if (!puff.AERIALTURN5.interrupt(p,input)){
+        fastfall(pminput,input);
         puffMultiJumpDrift(p);
         if (player[p].timer == 6){
           player[p].phys.face *= -1;
@@ -3687,19 +3687,19 @@ puff.AERIALTURN5 = {
       }
     }
   },
-  interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
+  interrupt : function(p,input){
+    var a = checkForAerials(p,input);
+    var b = checkForSpecials(p,input);
     if (a[0]){
-      puff[a[1]].init(p);
+      puff[a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      puff.ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      puff.ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      puff[b[1]].init(p);
+      puff[b[1]].init(p,input);
       return true;
     }
     else {

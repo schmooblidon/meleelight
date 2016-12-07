@@ -8,7 +8,7 @@ export default {
   name : "UPSMASH",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "UPSMASH";
     player[p].timer = 0;
     player[p].phys.charging = false;
@@ -16,11 +16,11 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.upsmash1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.upsmash1.id1;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].timer === 2){
-      if (player[p].inputs.a[0] || player[p].inputs.z[0]){
+      if (input[p].a[0] || input[p].z[0]){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames === 5){
@@ -40,7 +40,7 @@ export default {
       player[p].timer++;
       player[p].phys.charging = false;
     }
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
 
       if (player[p].timer === 7){
@@ -62,9 +62,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 41){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else {

@@ -19,21 +19,21 @@ export default {
   name : "JAB1",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JAB1";
     player[p].timer = 0;
     player[p].phys.jabCombo = false;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.jab1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.jab1.id1;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
 
-      if (player[p].timer > 2 && player[p].timer < 32 && player[p].inputs.a[0] && !player[p].inputs.a[1]){
+      if (player[p].timer > 2 && player[p].timer < 32 && input[p].a[0] && !input[p].a[1]){
         player[p].phys.jabCombo = true;
       }
       if (player[p].timer === 2){
@@ -49,51 +49,51 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 5 && player[p].phys.jabCombo){
-      JAB2.init(p);
+      JAB2.init(p,input);
       return true;
     }
     else if (player[p].timer > 17){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer > 15){
-      const b = checkForSpecials(p);
-      const t = checkForTilts(p);
-      const s = checkForSmashes(p);
-      const j = checkForJump(p);
+      const b = checkForSpecials(p,input);
+      const t = checkForTilts(p,input);
+      const s = checkForSmashes(p,input);
+      const j = checkForJump(p,input);
       if (j[0]){
-        KNEEBEND.init(p,j[1]);
+        KNEEBEND.init(p,j[1],input);
         return true;
       }
       else if (b[0]){
-        MOVES[b[1]].init(p);
+        MOVES[b[1]].init(p,input);
         return true;
       }
       else if (s[0]){
-        MOVES[s[1]].init(p);
+        MOVES[s[1]].init(p,input);
         return true;
       }
       else if (t[0]){
-        MOVES[t[1]].init(p);
+        MOVES[t[1]].init(p,input);
         return true;
       }
-      else if (checkForDash(p)){
-        DASH.init(p);
+      else if (checkForDash(p,input)){
+        DASH.init(p,input);
         return true;
       }
-      else if (checkForSmashTurn(p)){
-        SMASHTURN.init(p);
+      else if (checkForSmashTurn(p,input)){
+        SMASHTURN.init(p,input);
         return true;
       }
-      else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        TILTTURN.init(p);
+      else if (checkForTiltTurn(p,input)){
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+        TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lsX[0]) > 0.3){
-        WALK.init(p,true);
+      else if (Math.abs(input[p].lsX[0]) > 0.3){
+        WALK.init(p,true,input);
         return true;
       }
       else {

@@ -238,8 +238,8 @@ export function keyboardMenuControls (i, input){
           keymapItems[kMenuSelected].binding[keymapItems[kMenuSelected].index] = keyBind;
         }
       }
-      //player[i].inputs.b[0] = true;
-      //player[i].inputs.b[1] = true;
+      //input[i].b[0] = true;
+      //input[i].b[1] = true;
       disableStick[i] = true;
       keyListen = false;
     }
@@ -273,7 +273,7 @@ export function keyboardMenuControls (i, input){
     } else if (input[0].b && !input[1].b) {
       if (!settingModifier && !settingRange) {
         sounds.menuBack.play();
-        player[i].inputs.b[1] = true;
+        input[i].b[1] = true;
         changeGamemode(1);
         setKeyboardCookie();
       }

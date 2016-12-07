@@ -11,7 +11,7 @@ export default {
   headBonk : false,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "TECHU";
     player[p].timer = 0;
     player[p].phys.cVel.y = 0;
@@ -24,18 +24,18 @@ export default {
     drawVfx("tech",player[p].phys.ECBp[2]);
     sounds.tech.play();
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].TECHU.main(p);
+    actionStates[characterSelections[p]].TECHU.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].TECHU.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!actionStates[characterSelections[p]].TECHU.interrupt(p,input)){
+      fastfall(pminput,input);
+      airDrift(p,input);
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > framesData[characterSelections[p]].TECHU){
-      actionStates[characterSelections[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p,input);
       return true;
     }
     else {

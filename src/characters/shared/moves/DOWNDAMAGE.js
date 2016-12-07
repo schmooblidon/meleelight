@@ -9,16 +9,16 @@ export default {
   downed : true,
   landType : 1,
   canGrabLedge : [false,false],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNDAMAGE";
     player[p].timer = 0;
     player[p].phys.jabReset = true;
     player[p].phys.grounded = false;
-    actionStates[characterSelections[p]].DOWNDAMAGE.main(p);
+    actionStates[characterSelections[p]].DOWNDAMAGE.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!actionStates[characterSelections[p]].DOWNDAMAGE.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNDAMAGE.interrupt(p,input)){
       if (!player[p].phys.grounded){
         player[p].phys.cVel.y -= player[p].charAttributes.gravity;
       }
@@ -30,18 +30,18 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 13){
       if (player[p].phys.grounded){
         if (player[p].hit.hitstun <= 0){
-          actionStates[characterSelections[p]].DOWNSTANDN.init(p);
+          actionStates[characterSelections[p]].DOWNSTANDN.init(p,input);
         }
         else {
-          actionStates[characterSelections[p]].DOWNWAIT.init(p);
+          actionStates[characterSelections[p]].DOWNWAIT.init(p,input);
         }
       }
       else {
-        actionStates[characterSelections[p]].FALL.init(p);
+        actionStates[characterSelections[p]].FALL.init(p,input);
       }
       return true;
     }
@@ -49,7 +49,7 @@ export default {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
 
   }
 };

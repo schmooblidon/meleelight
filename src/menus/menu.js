@@ -46,7 +46,7 @@ export function menuMove (i, input){
       else if (menuSelected == 1){
           setTargetPlayer(i);
           setTargetPointerPos([178.5,137]);
-        //player[i].inputs.a[1] = true;
+        //input[i].a[1] = true;
         music.menu.stop();
         music.targettest.play("targettestStart");
         changeGamemode(7);
@@ -54,7 +54,7 @@ export function menuMove (i, input){
       else if (menuSelected == 2){
        setEditingStage(-1);
         setTargetBuilder(i);
-        //player[i].inputs.a[1] = true;
+        //input[i].a[1] = true;
         changeGamemode(4);
       } else if (menuSelected == 3) {
         // options

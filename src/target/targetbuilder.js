@@ -243,7 +243,7 @@ export function targetBuilderControls (p, input){
     if (!builderPaused){
       hoverItem = 0;
       ledgeHoverItem = 0;
-      /*if (player[p].inputs.z[0] && !player[p].inputs.z[1]){
+      /*if (input[p].z[0] && !input[p].z[1]){
         // so i can create permanent stages
         let code = createStageCode();
         console.log(code);

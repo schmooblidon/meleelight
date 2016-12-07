@@ -211,7 +211,7 @@ export function articlesHitDetection (){
                            attackerClank = true;
                            articleDestroyed = true;
                            turnOffHitboxes(p);
-                           actionStates[characterSelections[p]][78].init(p);
+                           actionStates[characterSelections[p]][78].init(p,input);
                            }
                            else {
                            // both clank
@@ -222,7 +222,7 @@ export function articlesHitDetection (){
                            turnOffHitboxes(i);
                            actionStates[characterSelections[i]][78].init(i);
                            turnOffHitboxes(p);
-                           actionStates[characterSelections[p]][78].init(p);
+                           actionStates[characterSelections[p]][78].init(p,input);
                            }
                            sounds.clank.play();
                            drawVfx("clank",clankHit[1]);

@@ -177,7 +177,7 @@ export function cssControls (i, input){
         occupiedCpu[whichCpuGrabbed[i]] = false;
         whichCpuGrabbed[i] = -1;
         handType[i] = 0;
-        //player[i].inputs.a[1] = true;
+        //input[i].a[1] = true;
       }
     } else {
       handType[i] = 0;

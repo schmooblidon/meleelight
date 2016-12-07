@@ -18,7 +18,7 @@ export function setPhantonQueue(val){
 }
 const angleConversion = Math.PI / 180;
 
-export function hitDetect (p){
+export function hitDetect (p,input){
     var attackerClank = false;
     for (var i = 0; i < 4; i++) {
         if (playerType[i] > -1) {
@@ -76,7 +76,7 @@ export function hitDetect (p){
                                                     player[p].hit.hitlag = Math.floor(player[i].hitboxes.id[k].dmg * (1 / 3) + 3);
                                                     attackerClank = true;
                                                     turnOffHitboxes(p);
-                                                    actionStates[characterSelections[p]].CATCHCUT.init(p);
+                                                    actionStates[characterSelections[p]].CATCHCUT.init(p,input);
                                                 } else {
                                                     // both clank
                                                     player[i].hit.hitlag = Math.floor(player[p].hitboxes.id[j].dmg * (1 / 3) + 3);
@@ -85,7 +85,7 @@ export function hitDetect (p){
                                                     turnOffHitboxes(i);
                                                     actionStates[characterSelections[i]].CATCHCUT.init(i);
                                                     turnOffHitboxes(p);
-                                                    actionStates[characterSelections[p]].CATCHCUT.init(p);
+                                                    actionStates[characterSelections[p]].CATCHCUT.init(p,input);
                                                 }
                                                 sounds.clank.play();
                                                 drawVfx("clank", clankHit[1]);

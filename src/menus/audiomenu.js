@@ -20,7 +20,7 @@ export function audioMenuControls (i, input){
   if (input[0].b && !input[1].b){
 	fg1.textAlign = "left";
     sounds.menuBack.play();
-    //player[i].inputs.b[1] = true;
+    //input[i].b[1] = true;
     setCookie("soundsLevel", masterVolume[0], 36500);
     setCookie("musicLevel", masterVolume[1], 36500);
     changeGamemode(1);

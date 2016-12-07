@@ -100,11 +100,11 @@ let creditNames = []; //list of scrollingText objects SEE PLEASE:               
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
 export function credits (p){ //called once every frame
 
-  if (player[p].inputs.x[0] && !player[p].inputs.x[1]) {
+  if (input[p].x[0] && !input[p].x[1]) {
     currentLaserColor = (currentLaserColor === laserColors.length - 1) ? 0 : currentLaserColor + 1;
     laserColor = laserColors[currentLaserColor];
   }
-  if (player[p].inputs.y[0] && !player[p].inputs.y[1]) {
+  if (input[p].y[0] && !input[p].y[1]) {
     currentLaserColor = (currentLaserColor === 0) ? (laserColors.length - 1) : currentLaserColor - 1;
     laserColor = laserColors[currentLaserColor];
   }
@@ -135,7 +135,7 @@ export function credits (p){ //called once every frame
   }
   cScrollingPos -= cScrollingSpeed;
   let yDif = 0;
-  if (player[p].inputs.s[0] === true || player[p].inputs.l[0] === true || player[p].inputs.r[0] === true) {
+  if (input[p].s[0] === true || input[p].l[0] === true || input[p].r[0] === true) {
     //is holding down start. Should increase speed
 	cCursorAngle += 4.5;
     yDif = Math.round(cScrollingSpeed * 1.5);
@@ -218,7 +218,7 @@ export function credits (p){ //called once every frame
 	  sounds.failure.play();
     }
 	initc = true;
-    player[p].inputs.b[1] = true;
+    input[p].b[1] = true;
     cShots = [];
     lastHit = [0, 0, false];
     creditNames = [];
@@ -226,7 +226,7 @@ export function credits (p){ //called once every frame
   } else if (input[0].b && !input[1].b) {
     initc = true;
     sounds.menuBack.play();
-    player[p].inputs.b[1] = true;
+    input[p].b[1] = true;
     cShots = [];
     lastHit = [0, 0, false];
     creditNames = [];

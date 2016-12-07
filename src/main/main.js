@@ -36,7 +36,7 @@ import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
-import {showButton, nullInputs, pollInputs} from "./input";
+import {showButton, nullInputs, pollInputs, inputData} from "./input";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -552,31 +552,9 @@ export const removePlayer (i){
 
 
 export function interpretInputs  (i, active) {
-  let input = nullInputs;
+  let input = nullInputs();
 
-  // the following block should be removed once the old input data is properly threaded through
-  for (var k = 1; k < 8; k++) {
-    input[k].lsX = player[i].inputs.lsX[k-1];
-    input[k].lsY = player[i].inputs.lsY[k-1];
-    input[k].rawX = player[i].inputs.rawX[k-1];
-    input[k].rawY = player[i].inputs.rawY[k-1];
-    input[k].csX = player[i].inputs.csX[k-1];
-    input[k].csY = player[i].inputs.csY[k-1];
-    input[k].lA = player[i].inputs.lA[k-1];
-    input[k].rA = player[i].inputs.rA[k-1];
-    input[k].s = player[i].inputs.s[k-1];
-    input[k].z = player[i].inputs.z[k-1];
-    input[k].a = player[i].inputs.a[k-1];
-    input[k].b = player[i].inputs.b[k-1];
-    input[k].x = player[i].inputs.x[k-1];
-    input[k].y = player[i].inputs.y[k-1];
-    input[k].r = player[i].inputs.r[k-1];
-    input[k].l = player[i].inputs.l[k-1];
-    input[k].dl = player[i].inputs.dl[k-1];
-    input[k].dd = player[i].inputs.dd[k-1];
-    input[k].dr = player[i].inputs.dr[k-1];
-    input[k].du = player[i].inputs.du[k-1];
-  }
+
 
   input[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys);
 
@@ -708,29 +686,7 @@ export function interpretInputs  (i, active) {
 
   }
 
-  // the following block should be removed once the input data is properly threaded through and can be passed on
-  for (var k = 0; k < 8; k++) {
-    player[i].inputs.lsX[k] = input[k].lsX;
-    player[i].inputs.lsY[k] = input[k].lsY;
-    player[i].inputs.rawX[k] = input[k].rawX;
-    player[i].inputs.rawY[k] = input[k].rawY;
-    player[i].inputs.csX[k] = input[k].csX;
-    player[i].inputs.csY[k] = input[k].csY;
-    player[i].inputs.lA[k] = input[k].lA;
-    player[i].inputs.rA[k] = input[k].rA;
-    player[i].inputs.s[k] = input[k].s;
-    player[i].inputs.z[k] = input[k].z;
-    player[i].inputs.a[k] = input[k].a;
-    player[i].inputs.b[k] = input[k].b;
-    player[i].inputs.x[k] = input[k].x;
-    player[i].inputs.y[k] = input[k].y;
-    player[i].inputs.r[k] = input[k].r;
-    player[i].inputs.l[k] = input[k].l;
-    player[i].inputs.dl[k] = input[k].dl;
-    player[i].inputs.dd[k] = input[k].dd;
-    player[i].inputs.dr[k] = input[k].dr;
-    player[i].inputs.du[k] = input[k].du;
-  }
+
 
   return input;
 
@@ -786,21 +742,20 @@ export function renderToMain (){
 
 
 
-export function update (i){
-  var physInput = nullInputs;
+export function update (i,input){
   if (!starting){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
-      physInput[i]=  interpretInputs(i,true);
+        input=  interpretInputs(i,true);
       }
       else {
         if (player[i].actionState != "SLEEP"){
-          runAI(i,physInput[i]);
+          runAI(i,input);
         }
       }
     }
   }
-  physics(i,physInput[i]);
+  physics(i,input);
 }
 
 let delta = 0;
@@ -811,7 +766,7 @@ export function gameTick (){
   var start = performance.now();
   var diff = 0;
 
-  let input = [nullInputs, nullInputs, nullInputs, nullInputs]; // need to change this
+  let input = [nullInputs(), nullInputs(), nullInputs(), nullInputs()]; // need to change this
 
   if (gameMode == 0 || gameMode == 20) {
     findPlayers();
@@ -846,11 +801,11 @@ export function gameTick (){
         cssControls(i, input[i]);
       }
 
-      actionStates[characterSelections[i]][player[i].actionState].main(i);
+      actionStates[characterSelections[i]][player[i].actionState].main(i,input);
     }
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetect(i);
+        hitDetect(i,input[i]);
       }
     }
     executeHits();
@@ -940,7 +895,8 @@ export function gameTick (){
     executeArticles();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        update(i);
+        input[i] = interpretInputs(i, true);
+        update(i,input);
       }
     }
     checkPhantoms();
@@ -1245,8 +1201,8 @@ export function endGame (){
       if (player[i].actionState == "FURAFURA") {
         sounds.furaloop.stop(player[i].furaLoopID);
       }
-      player[i].inputs.a[0] = true;
-      player[i].inputs.a[1] = true;
+      input[i].a[0] = true;
+      input[i].a[1] = true;
       player[i].inCSS = true;
       player[i].phys.face = 1;
       player[i].actionState = "WAIT";

@@ -19,7 +19,7 @@ export default {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNSPECIALAIR";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
@@ -32,16 +32,16 @@ export default {
     drawVfx("shine",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+6));
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.downspecial.id0;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     player[p].phys.inShine++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (player[p].phys.grounded){
         player[p].actionState = "DOWNSPECIALGROUND";
         player[p].timer--;
-        DOWNSPECIALGROUND.main(p);
+        DOWNSPECIALGROUND.main(p,input);
       }
       else {
         if (player[p].phys.cVel.x > 0){
@@ -86,11 +86,11 @@ export default {
           player[p].timer = 4;
         }
         if (player[p].timer >= 4 && player[p].timer <= 32){
-          if (player[p].inputs.lsX[0]*player[p].phys.face < 0){
+          if (input[p].lsX[0]*player[p].phys.face < 0){
             player[p].timer = 32;
           }
           else if (player[p].phys.inShine >= 22){
-            if (!player[p].inputs.b[0]){
+            if (!input[p].b[0]){
               player[p].timer = 36;
             }
             else if (player[p].timer === 32){
@@ -121,15 +121,15 @@ export default {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer >= 4 && player[p].timer <= 32){
       if (!player[p].phys.doubleJumped){
-        if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lsY[0] >= 0.7 && player[p].inputs.lsY[3] < 0.7)){
-          if (player[p].inputs.lsX[0]*player[p].phys.face < -0.3){
-            JUMPAERIALB.init(p);
+        if ((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] >= 0.7 && input[p].lsY[3] < 0.7)){
+          if (input[p].lsX[0]*player[p].phys.face < -0.3){
+            JUMPAERIALB.init(p,input);
           }
           else {
-            JUMPAERIALF.init(p);
+            JUMPAERIALF.init(p,input);
           }
           turnOffHitboxes(p);
           return true;
@@ -144,10 +144,10 @@ export default {
     }
     else if (player[p].timer > 49){
       if (player[p].phys.grounded){
-        WAIT.init(p);
+        WAIT.init(p,input);
       }
       else {
-        FALL.init(p);
+        FALL.init(p,input);
       }
       return true;
     }
@@ -155,7 +155,7 @@ export default {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     player[p].actionState = "DOWNSPECIALGROUND";
     if (player[p].timer >= 4 && player[p].timer <= 35){
       player[p].hitboxes.id[0] = player[p].charHitboxes.reflector.id0;

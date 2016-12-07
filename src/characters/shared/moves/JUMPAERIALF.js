@@ -12,7 +12,7 @@ export default {
   canBeGrabbed : true,
   landType : 0,
   vCancel : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JUMPAERIALF";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
@@ -20,36 +20,36 @@ export default {
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 
-    player[p].phys.cVel.x = player[p].inputs.lsX[0] * player[p].charAttributes.djMomentum;
+    player[p].phys.cVel.x = input[p].lsX[0] * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
-    actionStates[characterSelections[p]].JUMPAERIALF.main(p);
+    actionStates[characterSelections[p]].JUMPAERIALF.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     playSounds("JUMPAERIAL",p);
-    if (!actionStates[characterSelections[p]].JUMPAERIALF.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!actionStates[characterSelections[p]].JUMPAERIALF.interrupt(p,input)){
+      fastfall(p,input);
+      airDrift(p,input);
     }
   },
-  interrupt : function(p){
-    const a = checkForAerials(p);
-    const b = checkForSpecials(p);
+  interrupt : function(p,input){
+    const a = checkForAerials(p,input);
+    const b = checkForSpecials(p,input);
     if (a[0]){
-      actionStates[characterSelections[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      actionStates[characterSelections[p]].ESCAPEAIR.init(p);
+    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      actionStates[characterSelections[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p,input);
       return true;
     }
     else if (player[p].timer > framesData[characterSelections[p]].JUMPAERIALF){
-      actionStates[characterSelections[p]].FALLAERIAL.init(p);
+      actionStates[characterSelections[p]].FALLAERIAL.init(p,input);
       return true;
     }
     else {

@@ -7,7 +7,7 @@ export default {
   name : "LANDINGATTACKAIRN",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "LANDINGATTACKAIRN";
     player[p].timer = 0;
     if (player[p].phys.lCancel){
@@ -18,17 +18,17 @@ export default {
     }
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    actionStates[characterSelections[p]].LANDINGATTACKAIRN.main(p);
+    actionStates[characterSelections[p]].LANDINGATTACKAIRN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer += player[p].phys.landingLagScaling;
-    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRN.interrupt(p,input)){
       reduceByTraction(p,true);
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > framesData[characterSelections[p]].LANDINGATTACKAIRN){
-      actionStates[characterSelections[p]].WAIT.init(p);
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

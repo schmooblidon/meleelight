@@ -8,18 +8,18 @@ export default {
   name : "JAB3",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JAB3";
     player[p].timer = 0;
     player[p].phys.jabCombo = false;
     turnOffHitboxes(p);
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
-      if (player[p].timer > 6 && player[p].timer < 43 && player[p].inputs.a[0] && !player[p].inputs.a[1]){
+      if (player[p].timer > 6 && player[p].timer < 43 && input[p].a[0] && !input[p].a[1]){
         player[p].phys.jabCombo = true;
       }
 
@@ -71,9 +71,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 51){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else {

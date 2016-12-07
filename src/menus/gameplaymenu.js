@@ -20,7 +20,7 @@ export function gameplayMenuControls (i, input){
   var menuMove = false;
   if (input[0].b && !input[1].b) {
     sounds.menuBack.play();
-    //player[i].inputs.b[1] = true;
+    //input[i].b[1] = true;
     var keys = Object.keys(gameSettings);
     for (var j = 0; j < keys.length; j++) {
       setCookie(keys[j], gameSettings[keys[j]], 36500);
