@@ -465,7 +465,8 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 
       // sweeping check
       const s = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
-      if (s > 1 || s < 0) {
+      console.log("s="+s+".");
+      if (s > 1 || s < 0 || isNaN(s) || s === Infinity) {
         console.log("'findCollision': no collision, sweeping parameter outside of allowable range, with "+wallType+" surface.");
         return false; // no collision
       }
@@ -543,7 +544,7 @@ function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldM
       const newMaybeCenterAndTouchingType = closestCenterAndTouchingType(suggestedMaybeCenterAndTouchingTypes);
       const vec = new Vec2D( newMaybeCenterAndTouchingType[0].x - position.x, newMaybeCenterAndTouchingType[0].y - position.y);
       const newecbp = moveECB (ecbp, vec);
-      return (loopOverWalls ( newecbp, ecb1, position
+      return (loopOverWalls ( newecbp, ecb1, newMaybeCenterAndTouchingType[0]
                             , wallAndThenWallTypeAndIndexs
                             , newMaybeCenterAndTouchingType 
                             , passNumber+1 
@@ -557,7 +558,7 @@ function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldM
 
 // finds the maybeCenterAndTouchingType collision with smallest sweeping parameter
 // recall that a 'maybeCenterAndTouchingType' is given by one of the following three options: 
-//          option 1: 'false'                         (no collision) 
+//          option 1: 'false'                              (no collision) 
 //          option 2: '[newPosition, false, s]             (collision, but no longer touching) 
 //          option 3: '[newPosition, wallTypeAndIndex, s]' (collision, still touching wall with given type and index)
 // s is the sweeping parameter
@@ -607,8 +608,7 @@ function moveECB (ecb, vec) {
   return ( [ new Vec2D (ecb[0].x+vec.x,ecb[0].y+vec.y)
            , new Vec2D (ecb[1].x+vec.x,ecb[1].y+vec.y)
            , new Vec2D (ecb[2].x+vec.x,ecb[2].y+vec.y)
-           , new Vec2D (ecb[3].x+vec.x,ecb[3].y+vec.y)
-           ] );
+           , new Vec2D (ecb[3].x+vec.x,ecb[3].y+vec.y) ] );
 };
 
 export function getNewMaybeCenterAndTouchingType(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs) {
