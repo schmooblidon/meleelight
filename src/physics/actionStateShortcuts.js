@@ -438,7 +438,21 @@ export function checkForJump (p){
     return [false, false];
   }
 }
-
+export function checkForDoubleJump (p){
+	if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (gameSettings["tapJumpOffp" + (p + 1)] == false && player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))) {
+      return true;
+    } else {
+	  return false;
+	}
+}
+export function checkForMultiJump (p){
+	if (player[p].inputs.x[0] || player[p].inputs.y[0] || (gameSettings["tapJumpOffp" + (p + 1)] == false &&  player[p].inputs.lStickAxis[0].y > 0.7)) {
+		return true;
+	} else {
+		return false;
+	}
+	
+}
 export function checkForSquat (p){
   if (player[p].inputs.lStickAxis[0].y < -0.69){
     return true;
