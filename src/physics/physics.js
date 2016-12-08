@@ -671,6 +671,7 @@ export function physics (i){
             break;
           case "p": // player landed on platform
             dealWithPlatformCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            break;
           default:
             console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
             break;

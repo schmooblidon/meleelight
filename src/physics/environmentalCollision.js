@@ -329,15 +329,15 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
        || (ecbp[3].x > wallRight.x  && ecb1[3].x > wallRight.x ) // player ECB stayed to the right of the wall
        || (ecbp[1].x < wallLeft.x   && ecb1[1].x < wallLeft.x  ) // player ECB stayed to the left of the wall
      ) {
-    console.log("'findCollision': no collision, ECB not even near "+wallType+" surface.");
+    //console.log("'findCollision': no collision, ECB not even near "+wallType+" surface.");
     return false;
   }
   else if ( !isOutside ( ecb1[opposite], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
-    console.log("'findCollision': no collision, ECB already fully on other side of "+wallType+" surface.");
+    //console.log("'findCollision': no collision, ECB already fully on other side of "+wallType+" surface.");
     return false; // no collision: player was already on the other side of the line spanned by the wall
   }
   else if ( isOutside ( ecbp[same], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
-    console.log("'findCollision': no collision, same-side projected ECB point on the outside of "+wallType+" surface.");
+    //console.log("'findCollision': no collision, same-side projected ECB point on the outside of "+wallType+" surface.");
     return false; // no collision: same-side projected ECB point on the outside of the line spanned by the wall
   }
   else {
@@ -346,7 +346,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // if the surface is a platform, and the bottom ECB point is below the platform, we shouldn't do anything
     if ( isPlatform ) {
       if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
-        console.log("'findCollision': no collision, bottom ECB point below platform.");
+        //console.log("'findCollision': no collision, bottom ECB point below platform.");
         return false;
       }
     }
@@ -442,12 +442,12 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
               newPosition = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
               break;
           }
-          console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
+          //console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
           return ( [touchingCorner, newPosition, s] ); // s is the sweeping parameter, t just moves along teh edge
         }
         else {
-          console.log("'findCollision': no edge collision, relevant edge of ECB does not cross "+wallType+" corner.");
-          console.log("'findCollision': moving on to non-edge collision checking.");
+          //console.log("'findCollision': no edge collision, relevant edge of ECB does not cross "+wallType+" corner.");
+          //console.log("'findCollision': moving on to non-edge collision checking.");
         }
       }
     }
@@ -457,7 +457,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 
 
     if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
-      console.log("'findCollision': no collision, same-side ECB point did not cross "+wallType+" surface.");
+      //console.log("'findCollision': no collision, same-side ECB point did not cross "+wallType+" surface.");
       return false;
     }
 
@@ -469,13 +469,13 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       // sweeping check
       const s = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
       if (s > 1 || s < 0 || isNaN(s) || s === Infinity) {
-        console.log("'findCollision': no collision, sweeping parameter outside of allowable range, with "+wallType+" surface.");
+        //console.log("'findCollision': no collision, sweeping parameter outside of allowable range, with "+wallType+" surface.");
         return false; // no collision
       }
       else {
         const intersection = new Vec2D (ecb1[same].x + s*(ecbp[same].x-ecb1[same].x), ecb1[same].y + s*(ecbp[same].y-ecb1[same].y));
         if (getXOrYCoord(intersection, xOrY) > getXOrYCoord(wallTopOrRight, xOrY) || getXOrYCoord(intersection, xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY)) {
-          console.log("'findCollision': no collision, intersection point outside of "+wallType+" surface.");
+          //console.log("'findCollision': no collision, intersection point outside of "+wallType+" surface.");
           return false; // no collision
         }
         else {
@@ -498,7 +498,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
           if (getXOrYCoord(newPosition, xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) || getXOrYCoord(newPosition, xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
             touchingWall = false;
           }
-          console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" surface.");
+          //console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" surface.");
           return ( [touchingWall, newPosition, s] );
         }
       }
@@ -518,10 +518,11 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 //          option 3: '[newPosition, wallTypeAndIndex, s]' (collision, still touching wall with given type and index)
 // s is the sweeping parameter
 function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldMaybeCenterAndTouchingType, passNumber ) {
-  console.log("'loopOverWalls' pass number "+passNumber+".");
+  //console.log("'loopOverWalls' pass number "+passNumber+".");
   let newCollisionHappened = false;
   const suggestedMaybeCenterAndTouchingTypes = [false]; // initialise list of new collisions
   if (passNumber > maximumCollisionDetectionPasses) {
+    //console.log('collision detection giving up, cannot resolve collisions');
     return oldMaybeCenterAndTouchingType;
   }
   else { 
@@ -611,6 +612,13 @@ function moveECB (ecb, vec) {
            , new Vec2D (ecb[1].x+vec.x,ecb[1].y+vec.y)
            , new Vec2D (ecb[2].x+vec.x,ecb[2].y+vec.y)
            , new Vec2D (ecb[3].x+vec.x,ecb[3].y+vec.y) ] );
+};
+
+function squashECB (ecb, factor) {
+  return ( [ new Vec2D ( ecb[0].x                                , factor * (ecb[0].y-ecb[1].y) + ecb[1].y )
+           , new Vec2D ( factor * (ecb[1].x-ecb[0].x) + ecb[0].x , ecb[1].y                                )
+           , new Vec2D ( ecb[2].x                                , factor * (ecb[2].y-ecb[1].y) + ecb[1].y )
+           , new Vec2D ( factor * (ecb[3].x-ecb[0].x) + ecb[0].x , ecb[3].y                                ) ] );
 };
 
 export function getNewMaybeCenterAndTouchingType(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs) {
