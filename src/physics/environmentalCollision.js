@@ -430,12 +430,26 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
               break;
             case "v": // vertical pushout
               const yIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-              newPosition = new Vec2D( position.x , position.y + lengthen (corner.y-yIntersect.y ));
+              let yPushout = yIntersect.y;
+              if (yPushout > wallTop.y) {
+                yPushout = wallTop.y;
+              }
+              else if (yPushout < wallBottom.y) {
+                yPushout = wallBottom.y;
+              }
+              newPosition = new Vec2D( position.x , position.y + lengthen (corner.y-yPushout));
               break;
             case "h": // horizontal pushout
             default:
               const xIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
-              newPosition = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
+              let xPushout = xIntersect.x;
+              if (xPushout > wallRight.x) {
+                xPushout = wallRight.x;
+              }
+              else if (xPushout < wallLeft.x) {
+                xPushout = wallLeft.x;
+              }
+              newPosition = new Vec2D( position.x + lengthen (corner.x - xPushout), position.y);
               break;
           }
           //console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
@@ -482,12 +496,26 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
               break;
             case "v": // vertical pushout
               const yIntersect = coordinateIntercept(wall, [ecbp[same], new Vec2D( ecbp[same].x , ecbp[same].y -1) ]);
-              newPosition = new Vec2D( position.x, position.y + lengthen (yIntersect.y - ecbp[same].y) );
+              let yPushout = yIntersect.y;
+              if (yPushout > wallTop.y) {
+                yPushout = wallTop.y;
+              }
+              else if (yPushout < wallBottom.y) {
+                yPushout = wallBottom.y;
+              }
+              newPosition = new Vec2D( position.x, position.y + lengthen (yPushout - ecbp[same].y) );
               break;
             case "h": // horizontal pushout
             default:
               const xIntersect = coordinateIntercept(wall, [ecbp[same], new Vec2D( ecbp[same].x-1, ecbp[same].y) ]);
-              newPosition = new Vec2D( position.x + lengthen (xIntersect.x - ecbp[same].x), position.y);
+              let xPushout = xIntersect.x;
+              if (xPushout > wallRight.x) {
+                xPushout = wallRight.x;
+              }
+              else if (xPushout < wallLeft.x) {
+                xPushout = wallLeft.x;
+              }
+              newPosition = new Vec2D( position.x + lengthen (xPushout - ecbp[same].x), position.y);
               break;
           }
           let touchingWall = wallType;
