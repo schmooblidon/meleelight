@@ -191,7 +191,7 @@ export function physics (i){
     if (player[i].prevActionState != player[i].actionState) {
       player[i].hasHit = false;
     }
-    if (gameSettings.turbo) {
+    if (gameSettings.turbo && gameMode != 5) {
       if (player[i].hasHit) {
         if (player[i].actionState != "CATCHATTACK") {
           if (player[i].phys.grounded) {
@@ -266,7 +266,7 @@ export function physics (i){
   }
 
   // if smash 64 lcancel, put any landingattackair action states into landing
-  if (gameSettings.lCancelType == 2) {
+  if (gameSettings.lCancelType == 2 && gameMode != 5) {
     if (player[i].phys.lCancel) {
       if (player[i].actionState.substr(0, 16) == "LANDINGATTACKAIR") {
         player[i].actionState = "LANDING";
@@ -288,7 +288,7 @@ export function physics (i){
      (player[i].inputs.z[0] && !player[i].inputs.z[1]))) {
 
     // if smash 64 lcancel, increase window to 11 frames
-    if (gameSettings.lCancelType == 2) {
+    if (gameSettings.lCancelType == 2 && gameMode != 5) {
       player[i].phys.lCancelTimer = 11;
     } else {
       player[i].phys.lCancelTimer = 7;
@@ -297,7 +297,7 @@ export function physics (i){
   }
 
   // if auto lcancel is on, always lcancel
-  if (gameSettings.lCancelType == 1) {
+  if (gameSettings.lCancelType == 1 && gameMode != 5) {
     player[i].phys.lCancel = true;
   }
 
@@ -546,7 +546,7 @@ export function physics (i){
           if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
 if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
                 player[i].inputs.lStickAxis[3].x >= 0 &&
-                (player[i].charAttributes.walljump || gameSettings.everyCharWallJump)) {
+                (player[i].charAttributes.walljump || (gameSettings.everyCharWallJump && gameMode != 5))) {
 
               player[i].phys.wallJumpTimer = 254;
               player[i].phys.face = -1;
