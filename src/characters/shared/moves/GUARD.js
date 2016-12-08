@@ -32,37 +32,37 @@ export default {
   interrupt : function(p,input){
     if (!player[p].inCSS){
       var j = checkForJump(p,input);
-      if (j[0] || input[p].csY[0] > 0.66){
+      if (j[0] || input[p][0].csY > 0.66){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
         return true;
       }
-      else if (input[p].a[0] && !input[p].a[1]){
+      else if (input[p][0].a && !input[p][1].a){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].GRAB.init(p,input);
         return true;
       }
-      else if ((input[p].lsY[0] < -0.7 && input[p].lsY[4] > -0.3) || input[p].csY[0] < -0.7){
+      else if ((input[p][0].lsY < -0.7 && input[p][4].lsY > -0.3) || input[p][0].csY < -0.7){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].ESCAPEN.init(p,input);
         return true;
       }
-      else if ((input[p].lsX[0]*player[p].phys.face > 0.7 && input[p].lsX[4]*player[p].phys.face < 0.3) || input[p].csX[0]*player[p].phys.face > 0.7){
+      else if ((input[p][0].lsX*player[p].phys.face > 0.7 && input[p][4].lsX*player[p].phys.face < 0.3) || input[p][0].csX*player[p].phys.face > 0.7){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].ESCAPEF.init(p,input);
         return true;
       }
-      else if ((input[p].lsX[0]*player[p].phys.face < -0.7 && input[p].lsX[4]*player[p].phys.face > -0.3) || input[p].csX[0]*player[p].phys.face < -0.7){
+      else if ((input[p][0].lsX*player[p].phys.face < -0.7 && input[p][4].lsX*player[p].phys.face > -0.3) || input[p][0].csX*player[p].phys.face < -0.7){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].ESCAPEB.init(p,input);
         return true;
       }
-      else if (input[p].lsY[0] < -0.65 && input[p].lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
+      else if (input[p][0].lsY < -0.65 && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] == 1){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].PASS.init(p,input);
         return true;
       }
-      else if (input[p].lA[0] < 0.3 && input[p].rA[0] < 0.3){
+      else if (input[p][0].lA < 0.3 && input[p][0].rA < 0.3){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].GUARDOFF.init(p,input);
         return true;
@@ -76,7 +76,7 @@ export default {
       }
     }
     else {
-      if (input[p].lA[0] < 0.3 && input[p].rA[0] < 0.3){
+      if (input[p][0].lA < 0.3 && input[p][0].rA < 0.3){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].GUARDOFF.init(p,input);
         return true;

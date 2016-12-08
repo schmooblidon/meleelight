@@ -31,7 +31,7 @@ export default {
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
         if (isFinalDeath()){
-          finishGame();
+          finishGame(input);
         }
         else {
           screenShake(500);

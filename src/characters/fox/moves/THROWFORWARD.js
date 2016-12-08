@@ -13,7 +13,7 @@ export default {
   init : function(p,input){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD.init(player[p].phys.grabbing,input);
     const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);

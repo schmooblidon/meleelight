@@ -17,12 +17,12 @@ export default {
         player[p].phys.face *= -1;
       }
 
-      if (player[p].timer <= player[p].charAttributes.runTurnBreakPoint && input[p].lsX[0] * player[p].phys.face < -0.3){
-        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(input[p].lsX[0]))*(player[p].charAttributes.dAccA))*player[p].phys.face;
+      if (player[p].timer <= player[p].charAttributes.runTurnBreakPoint && input[p][0].lsX * player[p].phys.face < -0.3){
+        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(input[p][0].lsX))*(player[p].charAttributes.dAccA))*player[p].phys.face;
         player[p].phys.cVel.x -= tempAcc;
       }
-      else if (player[p].timer > player[p].charAttributes.runTurnBreakPoint && input[p].lsX[0] * player[p].phys.face > 0.3){
-        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(input[p].lsX[0]))*(player[p].charAttributes.dAccA))*player[p].phys.face;
+      else if (player[p].timer > player[p].charAttributes.runTurnBreakPoint && input[p][0].lsX * player[p].phys.face > 0.3){
+        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(input[p][0].lsX))*(player[p].charAttributes.dAccA))*player[p].phys.face;
         player[p].phys.cVel.x += tempAcc;
       }
       else {
@@ -48,7 +48,7 @@ export default {
       return true;
     }
     else if (player[p].timer > framesData[characterSelections[p]].RUNTURN){
-      if(input[p].lsX[0] * player[p].phys.face > 0.6){
+      if(input[p][0].lsX * player[p].phys.face > 0.6){
         actionStates[characterSelections[p]].RUN.init(p,input);
       }
       else {

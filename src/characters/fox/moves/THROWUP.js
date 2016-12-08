@@ -17,7 +17,7 @@ export default {
   init : function(p,input){
     player[p].actionState = "THROWUP";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXUP.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXUP.init(player[p].phys.grabbing,input);
     turnOffHitboxes(p);
     const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXUP;
     player[p].phys.releaseFrame = frame+1;

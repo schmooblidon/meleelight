@@ -78,12 +78,12 @@ export default {
         SMASHTURN.init(p,input);
         return true;
       }
-      else if (input[p].lsX[0]*player[p].phys.face < -0.3 && Math.abs(input[p].lsX[0]) > input[p].lsY[0]*-1){
+      else if (input[p][0].lsX*player[p].phys.face < -0.3 && Math.abs(input[p][0].lsX) > input[p][0].lsY*-1){
         player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
         TILTTURN.init(p,input);
         return true;
       }
-      else if (input[p].lsX[0]*player[p].phys.face > 0.3 && Math.abs(input[p].lsX[0]) > input[p].lsY[0]*-1){
+      else if (input[p][0].lsX*player[p].phys.face > 0.3 && Math.abs(input[p][0].lsX) > input[p][0].lsY*-1){
         WALK.init(p,true,input);
         return true;
       }

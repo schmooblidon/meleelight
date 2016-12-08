@@ -28,7 +28,7 @@ export default {
   },
   interrupt : function(p,input){
     if (player[p].phys.stuckTimer < 0){
-      actionStates[characterSelections[p]].CATCHCUT.init(player[p].phys.grabbedBy);
+      actionStates[characterSelections[p]].CATCHCUT.init(player[p].phys.grabbedBy,input);
       actionStates[characterSelections[p]].CAPTURECUT.init(p,input);
       return true;
     }

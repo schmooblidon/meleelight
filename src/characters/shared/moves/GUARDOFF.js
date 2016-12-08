@@ -67,7 +67,7 @@ export default {
           actionStates[characterSelections[p]].TILTTURN.init(p,input);
           return true;
         }
-        else if (Math.abs(input[p].lsX[0]) > 0.3){
+        else if (Math.abs(input[p][0].lsX) > 0.3){
           actionStates[characterSelections[p]].WALK.init(p,true,input);
           return true;
         }

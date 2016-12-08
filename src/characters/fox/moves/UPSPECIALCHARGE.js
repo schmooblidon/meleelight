@@ -54,7 +54,7 @@ export default {
 
       if (player[p].timer === 42){
         let ang = Math.PI/2;
-        if (input[p].lsX[0] === 0 && input[p].lsY[0] === 0){
+        if (input[p][0].lsX === 0 && input[p][0].lsY === 0){
           if (player[p].phys.grounded){
             if (player[p].phys.face === 1){
               ang = 0;
@@ -65,11 +65,11 @@ export default {
           }
         }
         else {
-          ang = Math.atan(input[p].lsY[0]/input[p].lsX[0]);
+          ang = Math.atan(input[p][0].lsY/input[p][0].lsX);
         }
 
-        if (input[p].lsX[0] < 0){
-          if (input[p].lsY[0] < 0){
+        if (input[p][0].lsX < 0){
+          if (input[p][0].lsY < 0){
             ang += Math.PI;
           }
           else {

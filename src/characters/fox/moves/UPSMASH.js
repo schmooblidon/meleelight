@@ -20,7 +20,7 @@ export default {
   },
   main : function(p,input){
     if (player[p].timer === 2){
-      if (input[p].a[0] || input[p].z[0]){
+      if (input[p][0].a || input[p][0].z){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames === 5){

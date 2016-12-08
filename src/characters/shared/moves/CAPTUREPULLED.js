@@ -29,7 +29,7 @@ export default {
   interrupt : function(p,input){
     if (player[p].timer > 2){
       actionStates[characterSelections[p]].CAPTUREWAIT.init(p,input);
-      actionStates[characterSelections[p]].CATCHWAIT.init(player[p].phys.grabbedBy);
+      actionStates[characterSelections[p]].CATCHWAIT.init(player[p].phys.grabbedBy,input);
       drawVfx("tech",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+10));
       return true;
     }

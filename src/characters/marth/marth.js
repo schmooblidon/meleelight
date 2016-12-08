@@ -67,7 +67,7 @@ marth.JAB1 = {
           frame:player[p].timer-4
         });
       }
-      if (player[p].timer > 2 && player[p].timer < 26 && input[p].a[0] && !input[p].a[1]){
+      if (player[p].timer > 2 && player[p].timer < 26 && input[p][0].a && !input[p][1].a){
         player[p].phys.jabCombo = true;
       }
       if (player[p].timer == 4){
@@ -126,7 +126,7 @@ marth.JAB1 = {
           marth.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         marth.WALK.init(p,true,input);
         return true;
       }
@@ -166,7 +166,7 @@ marth.JAB2 = {
           frame:player[p].timer-5
         });
       }
-      if (player[p].timer > 1 && player[p].timer < 26 && input[p].a[0] && !input[p].a[1]){
+      if (player[p].timer > 1 && player[p].timer < 26 && input[p][0].a && !input[p][1].a){
         player[p].phys.jabCombo = true;
       }
       if (player[p].timer == 5){
@@ -225,7 +225,7 @@ marth.JAB2 = {
         marth.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         marth.WALK.init(p,true,input);
         return true;
       }
@@ -311,12 +311,12 @@ marth.DOWNTILT = {
         marth.SMASHTURN.init(p,input);
         return true;
       }
-      else if (input[p].lsX[0]*player[p].phys.face < -0.3 && Math.abs(input[p].lsX[0]) > input[p].lsY[0]*-1){
+      else if (input[p][0].lsX*player[p].phys.face < -0.3 && Math.abs(input[p][0].lsX) > input[p][0].lsY*-1){
         player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
         marth.TILTTURN.init(p,input);
         return true;
       }
-      else if (input[p].lsX[0]*player[p].phys.face > 0.3 && Math.abs(input[p].lsX[0]) > input[p].lsY[0]*-1){
+      else if (input[p][0].lsX*player[p].phys.face > 0.3 && Math.abs(input[p][0].lsX) > input[p][0].lsY*-1){
         marth.WALK.init(p,true,input);
         return true;
       }
@@ -414,7 +414,7 @@ marth.UPTILT = {
         marth.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         marth.WALK.init(p,true,input);
         return true;
       }
@@ -502,7 +502,7 @@ marth.ATTACKAIRF = {
   main : function(p,input){
     player[p].timer++;
     if (!marth.ATTACKAIRF.interrupt(p,input)){
-        fastfall(pminput,input);
+        fastfall(p,input);
         airDrift(p,input);
         if (player[p].timer > 2 && player[p].timer < 11){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -534,8 +534,8 @@ marth.ATTACKAIRF = {
     }
     else if (player[p].timer > 29){
         var a = checkForAerials(p,input);
-        if (((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && !player[p].phys.doubleJumped){
-        if (input[p].lsX[0]*player[p].phys.face < -0.3){
+        if (((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && !player[p].phys.doubleJumped){
+        if (input[p][0].lsX*player[p].phys.face < -0.3){
           marth.JUMPAERIALB.init(p,input);
         }
         else {
@@ -591,7 +591,7 @@ marth.ATTACKAIRB = {
       if (player[p].timer == 30){
         player[p].phys.face *= -1;
       }
-      fastfall(pminput,input);
+      fastfall(p,input);
       airDrift(p,input);
       if (player[p].timer > 2 && player[p].timer < 12){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -623,8 +623,8 @@ marth.ATTACKAIRB = {
     }
     else if (player[p].timer > 34){
       var a = checkForAerials(p,input);
-      if (((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && !player[p].phys.doubleJumped){
-        if (input[p].lsX[0]*player[p].phys.face < -0.3){
+      if (((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && !player[p].phys.doubleJumped){
+        if (input[p][0].lsX*player[p].phys.face < -0.3){
           marth.JUMPAERIALB.init(p,input);
         }
         else {
@@ -677,7 +677,7 @@ marth.ATTACKAIRU = {
   main : function(p,input){
     player[p].timer++;
     if (!marth.ATTACKAIRU.interrupt(p,input)){
-      fastfall(pminput,input);
+      fastfall(p,input);
       airDrift(p,input);
       if (player[p].timer > 4 && player[p].timer < 18){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -745,7 +745,7 @@ marth.ATTACKAIRD = {
   main : function(p,input){
     player[p].timer++;
     if (!marth.ATTACKAIRD.interrupt(p,input)){
-      fastfall(pminput,input);
+      fastfall(p,input);
       airDrift(p,input);
       if (player[p].timer > 4 && player[p].timer < 12){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -813,7 +813,7 @@ marth.ATTACKAIRN = {
   main : function(p,input){
     player[p].timer++;
     if (!marth.ATTACKAIRN.interrupt(p,input)){
-      fastfall(pminput,input);
+      fastfall(p,input);
       airDrift(p,input);
       if (player[p].timer > 4 && player[p].timer < 9){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -900,7 +900,7 @@ marth.FORWARDSMASH = {
   },
   main : function(p,input){
     if (player[p].timer == 3){
-      if (input[p].a[0] || input[p].z[0]){
+      if (input[p][0].a || input[p][0].z){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames == 5){
@@ -987,7 +987,7 @@ marth.FORWARDSMASH = {
         marth.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         marth.WALK.init(p,true,input);
         return true;
       }
@@ -1019,7 +1019,7 @@ marth.UPSMASH = {
   },
   main : function(p,input){
     if (player[p].timer == 7){
-      if (input[p].a[0] || input[p].z[0]){
+      if (input[p][0].a || input[p][0].z){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames == 5){
@@ -1101,7 +1101,7 @@ marth.UPSMASH = {
         marth.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         marth.WALK.init(p,true,input);
         return true;
       }
@@ -1133,7 +1133,7 @@ marth.DOWNSMASH = {
   },
   main : function(p,input){
     if (player[p].timer == 3){
-      if (input[p].a[0] || input[p].z[0]){
+      if (input[p][0].a || input[p][0].z){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames == 5){
@@ -1242,7 +1242,7 @@ marth.DOWNSMASH = {
         marth.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         marth.WALK.init(p,true,input);
         return true;
       }
@@ -1347,7 +1347,7 @@ marth.ATTACKDASH = {
       marth.WAIT.init(p,input);
       return true;
     }
-    else if (player[p].timer < 5 && (input[p].lA[0] > 0 || input[p].rA[0] > 0)){
+    else if (player[p].timer < 5 && (input[p][0].lA > 0 || input[p][0].rA > 0)){
       if (player[p].phys.cVel.x*player[p].phys.face > player[p].charAttributes.dMaxV){
         player[p].phys.cVel.x = player[p].charAttributes.dMaxV*player[p].phys.face;
       }
@@ -1388,7 +1388,7 @@ marth.ATTACKDASH = {
         marth.TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         marth.WALK.init(p,true,input);
         return true;
       }
@@ -1404,9 +1404,9 @@ marth.ATTACKDASH = {
 
 // -------- SPECIALS -----------
 
-window.dancingBladeCombo = function(p,min,max){
+export function dancingBladeCombo (p,min,max,input){
   if (player[p].timer > 1){
-    if ((input[p].a[0] && !input[p].a[1]) || (input[p].b[0] && !input[p].b[1]) && !player[p].phys.dancingBladeDisable){
+    if ((input[p][0].a && !input[p][1].a) || (input[p][0].b && !input[p][1].b) && !player[p].phys.dancingBladeDisable){
       if (player[p].timer < min){
         player[p].phys.dancingBladeDisable = true;
       }
@@ -1441,7 +1441,7 @@ marth.SIDESPECIALGROUND = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,8,26);
+    dancingBladeCombo(p,8,26,input);
     if (!marth.SIDESPECIALGROUND.interrupt(p,input)){
       if (player[p].timer == 6){
         sounds.dancingBlade.play();
@@ -1477,7 +1477,7 @@ marth.SIDESPECIALGROUND = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALGROUND2UP.init(p,input);
       }
       else {
@@ -1514,7 +1514,7 @@ marth.SIDESPECIALGROUND2FORWARD = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,17,33);
+    dancingBladeCombo(p,17,33,input);
     if (!marth.SIDESPECIALGROUND2FORWARD.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer > 12 && player[p].timer < 17){
@@ -1548,10 +1548,10 @@ marth.SIDESPECIALGROUND2FORWARD = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALGROUND3UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALGROUND3DOWN.init(p,input);
       }
       else {
@@ -1588,7 +1588,7 @@ marth.SIDESPECIALGROUND2UP = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,17,32);
+    dancingBladeCombo(p,17,32,input);
     if (!marth.SIDESPECIALGROUND2UP.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer > 10 && player[p].timer < 20){
@@ -1622,10 +1622,10 @@ marth.SIDESPECIALGROUND2UP = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALGROUND3UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALGROUND3DOWN.init(p,input);
       }
       else {
@@ -1663,7 +1663,7 @@ marth.SIDESPECIALGROUND3DOWN = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,19,35);
+    dancingBladeCombo(p,19,35,input);
     if (!marth.SIDESPECIALGROUND3DOWN.interrupt(p,input)){
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND3DOWN.setVelocities[player[p].timer-1]*player[p].phys.face;
       if (player[p].timer > 13 && player[p].timer < 18){
@@ -1697,10 +1697,10 @@ marth.SIDESPECIALGROUND3DOWN = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALGROUND4UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALGROUND4DOWN.init(p,input);
       }
       else {
@@ -1738,7 +1738,7 @@ marth.SIDESPECIALGROUND3FORWARD = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,16,37);
+    dancingBladeCombo(p,16,37,input);
     if (!marth.SIDESPECIALGROUND3FORWARD.interrupt(p,input)){
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND3FORWARD.setVelocities[player[p].timer-1]*player[p].phys.face;
       if (player[p].timer > 10 && player[p].timer < 18){
@@ -1772,10 +1772,10 @@ marth.SIDESPECIALGROUND3FORWARD = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALGROUND4UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALGROUND4DOWN.init(p,input);
       }
       else {
@@ -1813,7 +1813,7 @@ marth.SIDESPECIALGROUND3UP = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,18,38);
+    dancingBladeCombo(p,18,38,input);
     if (!marth.SIDESPECIALGROUND3UP.interrupt(p,input)){
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND3UP.setVelocities[player[p].timer-1]*player[p].phys.face;
       if (player[p].timer > 3 && player[p].timer < 21){
@@ -1847,10 +1847,10 @@ marth.SIDESPECIALGROUND3UP = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALGROUND4UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALGROUND4DOWN.init(p,input);
       }
       else {
@@ -2119,7 +2119,7 @@ marth.SIDESPECIALAIR = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,8,26);
+    dancingBladeCombo(p,8,26,input);
     if (!marth.SIDESPECIALAIR.interrupt(p,input)){
       if (player[p].timer == 6){
         sounds.dancingBlade.play();
@@ -2132,7 +2132,7 @@ marth.SIDESPECIALAIR = {
         });
       }
 
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
 
       if (player[p].timer > 4 && player[p].timer < 12){
 
@@ -2160,7 +2160,7 @@ marth.SIDESPECIALAIR = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALAIR2UP.init(p,input);
       }
       else {
@@ -2201,7 +2201,7 @@ marth.SIDESPECIALAIR2FORWARD = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,17,33);
+    dancingBladeCombo(p,17,33,input);
     if (!marth.SIDESPECIALAIR2FORWARD.interrupt(p,input)){
       if (player[p].timer > 11 && player[p].timer < 25){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -2210,7 +2210,7 @@ marth.SIDESPECIALAIR2FORWARD = {
           frame:player[p].timer-12
         });
       }
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
       if (player[p].timer == 14){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -2235,10 +2235,10 @@ marth.SIDESPECIALAIR2FORWARD = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALAIR3UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALAIR3DOWN.init(p,input);
       }
       else {
@@ -2279,7 +2279,7 @@ marth.SIDESPECIALAIR2UP = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,17,32);
+    dancingBladeCombo(p,17,32,input);
     if (!marth.SIDESPECIALAIR2UP.interrupt(p,input)){
       if (player[p].timer > 10 && player[p].timer < 21){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -2288,7 +2288,7 @@ marth.SIDESPECIALAIR2UP = {
           frame:player[p].timer-11
         });
       }
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
       if (player[p].timer == 12){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
@@ -2313,10 +2313,10 @@ marth.SIDESPECIALAIR2UP = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALAIR3UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALAIR3DOWN.init(p,input);
       }
       else {
@@ -2357,7 +2357,7 @@ marth.SIDESPECIALAIR3DOWN = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,19,35);
+    dancingBladeCombo(p,19,35,input);
     if (!marth.SIDESPECIALAIR3DOWN.interrupt(p,input)){
       if (player[p].timer > 13 && player[p].timer < 18){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -2366,7 +2366,7 @@ marth.SIDESPECIALAIR3DOWN = {
           frame:player[p].timer-14
         });
       }
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
       player[p].phys.cVel.x = 0;
       if (player[p].timer == 15){
         player[p].hitboxes.active = [true,true,true,true];
@@ -2392,10 +2392,10 @@ marth.SIDESPECIALAIR3DOWN = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALAIR4UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALAIR4DOWN.init(p,input);
       }
       else {
@@ -2436,7 +2436,7 @@ marth.SIDESPECIALAIR3FORWARD = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,16,37);
+    dancingBladeCombo(p,16,37,input);
     if (!marth.SIDESPECIALAIR3FORWARD.interrupt(p,input)){
       if (player[p].timer > 9 && player[p].timer < 18){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -2445,7 +2445,7 @@ marth.SIDESPECIALAIR3FORWARD = {
           frame:player[p].timer-10
         });
       }
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
       player[p].phys.cVel.x = 0;
       if (player[p].timer == 11){
         player[p].hitboxes.active = [true,true,true,true];
@@ -2471,10 +2471,10 @@ marth.SIDESPECIALAIR3FORWARD = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALAIR4UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALAIR4DOWN.init(p,input);
       }
       else {
@@ -2515,7 +2515,7 @@ marth.SIDESPECIALAIR3UP = {
   },
   main : function(p,input){
     player[p].timer++;
-    dancingBladeCombo(p,18,38);
+    dancingBladeCombo(p,18,38,input);
     if (!marth.SIDESPECIALAIR3UP.interrupt(p,input)){
       if (player[p].timer > 9 && player[p].timer < 18){
         drawVfx("swing",new Vec2D(0,0),player[p].phys.face,{
@@ -2524,7 +2524,7 @@ marth.SIDESPECIALAIR3UP = {
           frame:player[p].timer-10
         });
       }
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
       player[p].phys.cVel.x = 0;
       if (player[p].timer == 13){
         player[p].hitboxes.active = [true,true,true,true];
@@ -2550,10 +2550,10 @@ marth.SIDESPECIALAIR3UP = {
       return true;
     }
     else if (player[p].phys.dancingBlade){
-      if (input[p].lsY[0] > 0.56){
+      if (input[p][0].lsY > 0.56){
         marth.SIDESPECIALAIR4UP.init(p,input);
       }
-      else if (input[p].lsY[0] < -0.56){
+      else if (input[p][0].lsY < -0.56){
         marth.SIDESPECIALAIR4DOWN.init(p,input);
       }
       else {
@@ -2595,7 +2595,7 @@ marth.SIDESPECIALAIR4DOWN = {
           frame:player[p].timer-10
         });
       }
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
       if (player[p].timer > 12 && player[p].timer < 39){
         switch (player[p].timer%6){
           case 1:
@@ -2676,7 +2676,7 @@ marth.SIDESPECIALAIR4FORWARD = {
           frame:player[p].timer-22
         });
       }
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
       player[p].phys.cVel.x = 0;
       if (player[p].timer == 23){
         player[p].hitboxes.active = [true,true,true,true];
@@ -2740,7 +2740,7 @@ marth.SIDESPECIALAIR4UP = {
           frame:player[p].timer-18
         });
       }
-      dancingBladeAirMobility(p);
+      dancingBladeAirMobility(p,input);
       player[p].phys.cVel.x = 0;
       if (player[p].timer == 20){
         player[p].hitboxes.active = [true,true,true,true];
@@ -2848,7 +2848,7 @@ marth.DOWNSPECIALAIR = {
   land : function(p,input){
     player[p].actionState = "DOWNSPECIALGROUND";
   },
-  onClank : function(p){
+  onClank : function(p,input){
     player[p].hit.hitlag = 11;
     player[p].colourOverlayBool = false;
     marth.DOWNSPECIALAIR2.init(p,input);
@@ -2976,7 +2976,7 @@ marth.DOWNSPECIALGROUND = {
       return false;
     }
   },
-  onClank : function(p){
+  onClank : function(p,input){
     player[p].hit.hitlag = 11;
     player[p].colourOverlayBool = false;
     marth.DOWNSPECIALGROUND2.init(p,input);
@@ -3068,7 +3068,7 @@ marth.NEUTRALSPECIALAIR = {
   main : function(p,input){
     player[p].timer++;
     if (player[p].timer >= 12 && player[p].timer <= 41 && player[p].phys.shieldBreakerChargeAttempt){
-      if (input[p].b[0]){
+      if (input[p][0].b){
         player[p].phys.shieldBreakerCharging = true;
         player[p].phys.shieldBreakerCharge++;
         var originalColour = palettes[pPal[p]][0];
@@ -3199,7 +3199,7 @@ marth.NEUTRALSPECIALGROUND = {
   main : function(p,input){
     player[p].timer++;
     if (player[p].timer >= 12 && player[p].timer <= 41 && player[p].phys.shieldBreakerChargeAttempt){
-      if (input[p].b[0]){
+      if (input[p][0].b){
         player[p].phys.shieldBreakerCharging = true;
         player[p].phys.shieldBreakerCharge++;
         var originalColour = palettes[pPal[p]][0];
@@ -3342,13 +3342,13 @@ marth.UPSPECIAL = {
         player[p].phys.canWallJump = true;
       }
       if (player[p].timer < 6){
-        if (Math.abs(input[p].lsX[0]) > 0.7){
-          player[p].phys.upbAngleMultiplier = -input[p].lsX[0] * Math.PI/16;
+        if (Math.abs(input[p][0].lsX) > 0.7){
+          player[p].phys.upbAngleMultiplier = -input[p][0].lsX * Math.PI/16;
         }
       }
       if (player[p].timer == 6){
         player[p].phys.grounded = false;
-        if (input[p].lsX[0] * player[p].phys.face < -0.28){
+        if (input[p][0].lsX * player[p].phys.face < -0.28){
           player[p].phys.face *= -1;
         }
       }
@@ -3356,7 +3356,7 @@ marth.UPSPECIAL = {
         player[p].phys.cVel = new Vec2D(marth.UPSPECIAL.setVelocities[player[p].timer-6][0]*player[p].phys.face*Math.cos(player[p].phys.upbAngleMultiplier)-marth.UPSPECIAL.setVelocities[player[p].timer-6][1]*Math.sin(player[p].phys.upbAngleMultiplier),marth.UPSPECIAL.setVelocities[player[p].timer-6][0]*player[p].phys.face*Math.sin(player[p].phys.upbAngleMultiplier)+marth.UPSPECIAL.setVelocities[player[p].timer-6][1]*Math.cos(player[p].phys.upbAngleMultiplier));
       }
       else if (player[p].timer > 22){
-        fastfall(pminput,input);
+        fastfall(p,input);
         airDrift(p,input);
         if (Math.abs(player[p].phys.cVel.x) > 0.36){
           player[p].phys.cVel.x = 0.36*Math.sign(player[p].phys.cVel.x);
@@ -3411,7 +3411,7 @@ marth.THROWFORWARD = {
   init : function(p,input){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHFORWARD.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHFORWARD.init(player[p].phys.grabbing,input);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
     randomShout(characterSelections[p]);
@@ -3451,7 +3451,7 @@ marth.THROWBACK = {
   init : function(p,input){
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHBACK.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHBACK.init(player[p].phys.grabbing,input);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
     randomShout(characterSelections[p]);
@@ -3491,7 +3491,7 @@ marth.THROWUP = {
   init : function(p,input){
     player[p].actionState = "THROWUP";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHUP.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHUP.init(player[p].phys.grabbing,input);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
     var frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNMARTHUP;
@@ -3531,7 +3531,7 @@ marth.THROWDOWN = {
   init : function(p,input){
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHDOWN.init(player[p].phys.grabbing);
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHDOWN.init(player[p].phys.grabbing,input);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
     randomShout(characterSelections[p]);
@@ -4171,7 +4171,7 @@ marth.CLIFFJUMPQUICK = {
       }
       if (player[p].timer > 12){
         airDrift(p,input);
-        fastfall(pminput,input);
+        fastfall(p,input);
       }
     }
   },
@@ -4211,7 +4211,7 @@ marth.CLIFFJUMPSLOW = {
       }
       if (player[p].timer > 19){
         airDrift(p,input);
-        fastfall(pminput,input);
+        fastfall(p,input);
       }
     }
   },

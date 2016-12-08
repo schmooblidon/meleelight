@@ -25,7 +25,7 @@ export default {
     if (!this.interrupt(p,input)){
       reduceByTraction(p);
       if (player[p].timer >= 4 && player[p].timer <= 16){
-        if (input[p].b[0] && !input[p].b[1]){
+        if (input[p][0].b && !input[p][1].b){
           player[p].phys.laserCombo = true;
         }
       }

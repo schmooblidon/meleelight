@@ -27,7 +27,7 @@ export default {
       actionStates[characterSelections[p]].FALL.init(p,input);
       return true;
     }
-    else if (Math.abs(input[p].lsX[0]) > 0.3 || Math.abs(input[p].lsY[0]) > 0.3 ){
+    else if (Math.abs(input[p][0].lsX) > 0.3 || Math.abs(input[p][0].lsY) > 0.3 ){
       player[p].phys.grounded = false;
       player[p].phys.invincibleTimer = 120;
       actionStates[characterSelections[p]].FALL.init(p,input);

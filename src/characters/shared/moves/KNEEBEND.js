@@ -18,13 +18,13 @@ export default {
       reduceByTraction(p,true);
       // if jumpsquat initiated by stick
       if (player[p].phys.jumpSquatType){
-        if (input[p].lsY[0] < 0.67){
+        if (input[p][0].lsY < 0.67){
           player[p].phys.jumpType = 0;
         }
       }
       // else if jumpsquat initiated by button
       else {
-        if (!input[p].x[0] && !input[p].y[0]){
+        if (!input[p][0].x && !input[p][0].y){
           player[p].phys.jumpType = 0;
         }
       }
@@ -36,23 +36,23 @@ export default {
       player[p].phys.pos.y += 0.001;
     }
     if (player[p].timer > player[p].charAttributes.jumpSquat){
-      if (input[p].lsX[2] * player[p].phys.face >= -0.3){
-        actionStates[characterSelections[p]].JUMPF.init(p,player[p].phys.jumpType);
+      if (input[p][2].lsX * player[p].phys.face >= -0.3){
+        actionStates[characterSelections[p]].JUMPF.init(p,player[p].phys.jumpType,input);
       }
       else {
-        actionStates[characterSelections[p]].JUMPB.init(p,player[p].phys.jumpType);
+        actionStates[characterSelections[p]].JUMPB.init(p,player[p].phys.jumpType,input);
       }
       return true;
     }
-    else if (input[p].a[0] && !input[p].a[1] && (input[p].lA[0] > 0 || input[p].rA[0] > 0)){
+    else if (input[p][0].a && !input[p][1].a && (input[p][0].lA > 0 || input[p][0].rA > 0)){
       actionStates[characterSelections[p]].GRAB.init(p,input);
       return true;
     }
-    else if ((input[p].a[0] && !input[p].a[1] && input[p].lsY[0] >= 0.8 && input[p].lsY[3] < 0.3) || (input[p].csY[0] >= 0.8 && input[p].csY[3] < 0.3)){
+    else if ((input[p][0].a && !input[p][1].a && input[p][0].lsY >= 0.8 && input[p][3].lsY < 0.3) || (input[p][0].csY >= 0.8 && input[p][3].csY < 0.3)){
       actionStates[characterSelections[p]].UPSMASH.init(p,input);
       return true;
     }
-    else if (input[p].b[0] && !input[p].b[1] && input[p].lsY[0] > 0.58){
+    else if (input[p][0].b && !input[p][1].b && input[p][0].lsY > 0.58){
       actionStates[characterSelections[p]].UPSPECIAL.init(p,input);
       return true;
     }

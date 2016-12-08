@@ -31,11 +31,11 @@ export default {
       actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (input[p].l[0] || input[p].r[0]){
+    else if (input[p][0].l || input[p][0].r){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (input[p].lA[0] > 0 || input[p].rA[0] > 0){
+    else if (input[p][0].lA > 0 || input[p][0].rA > 0){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
@@ -59,7 +59,7 @@ export default {
       actionStates[characterSelections[p]].SMASHTURN.init(p,input);
       return true;
     }
-    else if (Math.abs(input[p].lsX[0]) > 0.3){
+    else if (Math.abs(input[p][0].lsX) > 0.3){
       actionStates[characterSelections[p]].WALK.init(p,true,input);
       return true;
     }

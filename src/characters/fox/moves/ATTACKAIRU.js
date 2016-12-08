@@ -74,8 +74,8 @@ export default {
     }
     else if (player[p].timer > 35){
       const a = checkForAerials(p,input);
-      if (((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && !player[p].phys.doubleJumped){
-        if (input[p].lsX[0]*player[p].phys.face < -0.3){
+      if (((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && !player[p].phys.doubleJumped){
+        if (input[p][0].lsX*player[p].phys.face < -0.3){
           JUMPAERIALB.init(p,input);
         }
         else {

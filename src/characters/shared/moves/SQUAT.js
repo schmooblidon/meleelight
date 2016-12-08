@@ -23,15 +23,15 @@ export default {
     var t = checkForTilts(p,input);
     var s = checkForSmashes(p,input);
     var j = checkForJump(p,input);
-    if (player[p].timer == 4 && (input[p].lsY[0] < -0.65 || input[p].lsY[1] < -0.65 || input[p].lsY[2] < -0.65) && input[p].lsY[6] > -0.3 && player[p].phys.onSurface[0] == 1){
+    if (player[p].timer == 4 && (input[p][0].lsY < -0.65 || input[p][1].lsY < -0.65 || input[p][2].lsY < -0.65) && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] == 1){
       actionStates[characterSelections[p]].PASS.init(p,input);
       return true;
     }
-    else if (input[p].l[0] || input[p].r[0]){
+    else if (input[p][0].l || input[p][0].r){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (input[p].lA[0] > 0 || input[p].rA[0] > 0){
+    else if (input[p][0].lA > 0 || input[p][0].rA > 0){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }

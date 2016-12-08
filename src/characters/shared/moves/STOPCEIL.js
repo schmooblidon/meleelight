@@ -61,10 +61,10 @@ export default {
   land : function(p,input){
     if (player[p].hit.hitstun > 0){
       if (player[p].phys.techTimer > 0){
-        if (input[p].lsX[0]*player[p].phys.face > 0.5){
+        if (input[p][0].lsX*player[p].phys.face > 0.5){
           actionStates[characterSelections[p]].TECHF.init(p,input);
         }
-        else if (input[p].lsX[0]*player[p].phys.face < -0.5){
+        else if (input[p][0].lsX*player[p].phys.face < -0.5){
           actionStates[characterSelections[p]].TECHB.init(p,input);
         }
         else {

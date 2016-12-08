@@ -20,23 +20,23 @@ export default {
     }
   },
   interrupt : function(p,input){
-    if (input[p].a[0] && !input[p].a[1]){
+    if (input[p][0].a && !input[p][1].a){
       actionStates[characterSelections[p]].CATCHATTACK.init(p,input);
       return true;
     }
-    else if ((input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7) || (input[p].csY[0] > 0.7 && input[p].csY[1] <= 0.7)){
+    else if ((input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7) || (input[p][0].csY > 0.7 && input[p][1].csY <= 0.7)){
       actionStates[characterSelections[p]].THROWUP.init(p,input);
       return true;
     }
-    else if ((input[p].lsY[0] < -0.7 && input[p].lsY[1] >= -0.7) || input[p].csY[0] < -0.7){
+    else if ((input[p][0].lsY < -0.7 && input[p][1].lsY >= -0.7) || input[p][0].csY < -0.7){
       actionStates[characterSelections[p]].THROWDOWN.init(p,input);
       return true;
     }
-    else if ((input[p].lsX[0]*player[p].phys.face < -0.7 && input[p].lsX[1]*player[p].phys.face >= -0.7) || (input[p].csX[0]*player[p].phys.face < -0.7 && input[p].csX[1]*player[p].phys.face >= -0.7)){
+    else if ((input[p][0].lsX*player[p].phys.face < -0.7 && input[p][1].lsX*player[p].phys.face >= -0.7) || (input[p][0].csX*player[p].phys.face < -0.7 && input[p][1].csX*player[p].phys.face >= -0.7)){
       actionStates[characterSelections[p]].THROWBACK.init(p,input);
       return true;
     }
-    else if ((input[p].lsX[0]*player[p].phys.face > 0.7 && input[p].lsX[1]*player[p].phys.face <= 0.7) || (input[p].csX[0]*player[p].phys.face > 0.7 && input[p].csX[1]*player[p].phys.face <= 0.7)){
+    else if ((input[p][0].lsX*player[p].phys.face > 0.7 && input[p][1].lsX*player[p].phys.face <= 0.7) || (input[p][0].csX*player[p].phys.face > 0.7 && input[p][1].csX*player[p].phys.face <= 0.7)){
       actionStates[characterSelections[p]].THROWFORWARD.init(p,input);
       return true;
     }

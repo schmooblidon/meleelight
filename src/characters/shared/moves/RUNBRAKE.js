@@ -28,7 +28,7 @@ export default {
       actionStates[characterSelections[p]].SQUAT.init(p,input);
       return true;
     }
-    else if (input[p].lsX[0] * player[p].phys.face < -0.3){
+    else if (input[p][0].lsX * player[p].phys.face < -0.3){
       actionStates[characterSelections[p]].RUNTURN.init(p,input);
       return true;
     }

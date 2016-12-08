@@ -6,6 +6,7 @@ import {
 } from "main/linAlg";
 import {Vec2D} from "./util/Vec2D";
 import {keyMap} from "../settings";
+import {playing} from "./main";
 
 export const button = {
   "a" : 0, 
@@ -68,16 +69,57 @@ export const nullInputs = ()=>{return [ new inputData ( )
                           , new inputData ( )
                           ]};
 
+export const aiPlayer1 = [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          ];
+export const aiPlayer2 =  [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          ];
+export const aiPlayer3 =  [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          ];
+
+export const aiPlayer4 = [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          ];
+
+export const aiInputBank = [aiPlayer1,aiPlayer2,aiPlayer3,aiPlayer4];
 
 // should be able to move out the "frameByFrame" aspect of the following function
 // it is only used to make z button mean "left trigger value = 0.35" + "A = true".
-export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, controllerIndex, keys) {
+export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, controllerIndex, keys,playertype) {
   // input is the input for player i in the current frame
   let input = nullInput(); // initialise with default values
-  if (controllerType == 10) { // keyboard controls
+  if(playertype !== 0 && gameMode === 3 ){
+    return aiInputBank[playerSlot][0];
+  }else if (controllerType == 10) { // keyboard controls
     input = pollKeyboardInputs(gameMode, frameByFrame, keys);
   }
-  else {
+    else if (playertype === 0) {
     input = pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
   }
   return input;
@@ -172,6 +214,8 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   let input = nullInput();
 
   let gamepad = navigator.getGamepads()[controllerIndex];
+
+
 
   function axisData (ax) {
     return gpdaxis (gamepad, controllerType, ax );

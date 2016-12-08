@@ -56,12 +56,12 @@ export default {
           articles.ILLUSION.init(p,0);
           player[p].phys.cVel.x = 18.72*player[p].phys.face;
           player[p].phys.cVel.y = 0;
-          if ((input[p].b[0] || input[p].b[1]) && !input[p].b[2]){
+          if ((input[p][0].b || input[p][1].b) && !input[p][2].b){
             player[p].timer = 24;
           }
         }
         else if (player[p].timer === 22 || player[p].timer === 23){
-          if (input[p].b[0] && !input[p].b[1]){
+          if (input[p][0].b && !input[p][1].b){
             player[p].timer = 24;
           }
         }

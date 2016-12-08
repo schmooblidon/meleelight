@@ -34,7 +34,7 @@ export default {
       }
 
       //Current Walk Acceleration = ((MaxWalkVel * Xinput) - PreviousFrameVelocity) * (1/(MaxWalkVel * 2)) * (InitWalkVel * WalkAcc)
-      const tempMax = player[p].charAttributes.walkMaxV * input[p].lsX[0];
+      const tempMax = player[p].charAttributes.walkMaxV * input[p][0].lsX;
 
       if (Math.abs(player[p].phys.cVel.x) > Math.abs(tempMax)){
         reduceByTraction(p, true);
@@ -66,7 +66,7 @@ export default {
       actionStates[characterSelections[p]].WALK.init(p,false,input);
       return true;
     }
-    if (input[p].lsX[0] === 0){
+    if (input[p][0].lsX === 0){
       actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
@@ -74,11 +74,11 @@ export default {
       actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (input[p].l[0] || input[p].r[0]){
+    else if (input[p][0].l || input[p][0].r){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (input[p].lA[0] > 0 || input[p].rA[0] > 0){
+    else if (input[p][0].lA > 0 || input[p][0].rA > 0){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }

@@ -320,7 +320,7 @@ export function executeArticleHits (){
                     player[v].phys.grounded = false;
                     player[v].phys.shieldHP = 0;
                     drawVfx("breakShield", player[v].phys.pos, player[v].phys.face);
-                    actionStates[characterSelections[v]].SHIELDBREAKFALL.init(v);
+                    actionStates[characterSelections[v]].SHIELDBREAKFALL.init(v,input);
                     sounds.shieldbreak.play();
                     break;
                 }
@@ -343,7 +343,7 @@ export function executeArticleHits (){
                 }
             }
 
-            actionStates[characterSelections[v]].GUARD.init(v);
+            actionStates[characterSelections[v]].GUARD.init(v,input);
 
         } else {
             if (player[v].phys.hurtBoxState == 0) {
@@ -405,13 +405,13 @@ export function executeArticleHits (){
                         player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
 
                         if (player[v].hit.knockback >= 80 || isThrow) {
-                            actionStates[characterSelections[v]].DAMAGEFLYN.init(v, !isThrow);
+                            actionStates[characterSelections[v]].DAMAGEFLYN.init(v,input, !isThrow);
                         } else {
-                            actionStates[characterSelections[v]].DAMAGEN2.init(v);
+                            actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
                         }
                     } else {
                         if (player[v].actionState != "THROWNPUFFDOWN") {
-                            actionStates[characterSelections[v]].CAPTUREDAMAGE.init(v);
+                            actionStates[characterSelections[v]].CAPTUREDAMAGE.init(v,input);
                         }
                     }
 

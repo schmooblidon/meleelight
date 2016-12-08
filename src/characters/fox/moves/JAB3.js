@@ -19,7 +19,7 @@ export default {
     player[p].timer++;
     if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
-      if (player[p].timer > 6 && player[p].timer < 43 && input[p].a[0] && !input[p].a[1]){
+      if (player[p].timer > 6 && player[p].timer < 43 && input[p][0].a && !input[p][1].a){
         player[p].phys.jabCombo = true;
       }
 

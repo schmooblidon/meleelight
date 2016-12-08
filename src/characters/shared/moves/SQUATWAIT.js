@@ -26,7 +26,7 @@ export default {
     const t = checkForTilts(p,input);
     const s = checkForSmashes(p,input);
     const j = checkForJump(p,input);
-    if (input[p].lsY[0] > -0.61){
+    if (input[p][0].lsY > -0.61){
       actionStates[characterSelections[p]].SQUATRV.init(p,input);
       return true;
     }
@@ -34,11 +34,11 @@ export default {
       actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (input[p].l[0] || input[p].r[0]){
+    else if (input[p][0].l || input[p][0].r){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (input[p].lA[0] > 0 || input[p].rA[0] > 0){
+    else if (input[p][0].lA > 0 || input[p][0].rA > 0){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }

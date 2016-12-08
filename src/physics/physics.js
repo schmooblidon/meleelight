@@ -41,14 +41,14 @@ export function land (i,y,t,j,input){
       break;
     case 1:
       // OWN FUNCTION
-      actionStates[characterSelections[i]][player[i].actionState].land(i);
+      actionStates[characterSelections[i]][player[i].actionState].land(i,input);
       break;
     case 2:
       // KNOCKDOWN / TECH
       if (player[i].phys.techTimer > 0) {
-        if (input[i].lsX * player[i].phys.face > 0.5) {
+        if (input[i][0].lsX * player[i].phys.face > 0.5) {
           actionStates[characterSelections[i]].TECHF.init(i,input);
-        } else if (input[i].lsX * player[i].phys.face < -0.5) {
+        } else if (input[i][0].lsX * player[i].phys.face < -0.5) {
           actionStates[characterSelections[i]].TECHB.init(i,input);
         } else {
           actionStates[characterSelections[i]].TECHN.init(i,input);
@@ -78,8 +78,8 @@ export function physics (i,input){
           player[i].hit.angle,
           player[i].hit.knockback,
           player[i].hit.reverse,
-          input[i].lsX[0],
-          input[i].lsY[0],
+          input[i][0].lsX,
+          input[i][0].lsY,
           i
         );
 
@@ -129,20 +129,20 @@ export function physics (i,input){
       case "GUARD":
       case "DOWNDAMAGE":
         if (player[i].hit.hitlag > 0) {
-          if ((input[i].lsX[0] > 0.7 && input[i].lsX[1] < 0.7) ||
-              (input[i].lsX[0] < -0.7 && input[i].lsX[1] > -0.7) ||
-              (input[i].lsY[0] > 0.7 && input[i].lsY[1] < 0.7) ||
-              (input[i].lsY[0] < -0.7 && input[i].lsY[1] > -0.7)) {
+          if ((input[i][0].lsX > 0.7 && input[i][1].lsX < 0.7) ||
+              (input[i][0].lsX < -0.7 && input[i][1].lsX > -0.7) ||
+              (input[i][0].lsY > 0.7 && input[i][1].lsY < 0.7) ||
+              (input[i][0].lsY < -0.7 && input[i][1].lsY > -0.7)) {
 
-            if (!((input[i].lsX[0] * input[i].lsX[0]) + (input[i].lsY[0] * input[i].lsY[0]) < (0.49))) {
+            if (!((input[i][0].lsX * input[i][0].lsX) + (input[i][0].lsY * input[i][0].lsY) < (0.49))) {
 
-              player[i].phys.pos.x += input[i].lsX[0] * 6;
-              player[i].phys.pos.y += player[i].phys.grounded ? 0 : input[i].lsY[0] * 6;
+              player[i].phys.pos.x += input[i][0].lsX * 6;
+              player[i].phys.pos.y += player[i].phys.grounded ? 0 : input[i][0].lsY * 6;
             } 
           }
         } else {
-          player[i].phys.pos.x += input[i].lsX[0] * 3;
-          player[i].phys.pos.y += player[i].phys.grounded ? 0 : input[i].lsY[0] * 3;
+          player[i].phys.pos.x += input[i][0].lsX * 3;
+          player[i].phys.pos.y += player[i].phys.grounded ? 0 : input[i][0].lsY * 3;
         }
         break;
       default:
@@ -161,15 +161,15 @@ export function physics (i,input){
     player[i].phys.canWallJump = actionStates[characterSelections[i]][player[i].actionState].wallJumpAble;
     player[i].phys.bTurnaroundTimer = Math.max(0, player[i].phys.bTurnaroundTimer - 1);
 
-    if ((input[i].lsX[0] > 0.9 && input[i].lsX[1] < 0.9) ||
-        (input[i].lsX[0] < -0.9 && input[i].lsX[1] > -0.9)) {
+    if ((input[i][0].lsX > 0.9 && input[i][1].lsX < 0.9) ||
+        (input[i][0].lsX < -0.9 && input[i][1].lsX > -0.9)) {
 
       player[i].phys.bTurnaroundTimer = 20;
-      player[i].phys.bTurnaroundDirection = Math.sign(input[i].lsX[0]);
+      player[i].phys.bTurnaroundDirection = Math.sign(input[i][0].lsX);
     }
 
     player[i].prevActionState = player[i].actionState;
-    actionStates[characterSelections[i]][player[i].actionState].main(i);
+    actionStates[characterSelections[i]][player[i].actionState].main(i,input);
 
     if (player[i].shocked > 0) {
       player[i].shocked--;
@@ -283,9 +283,9 @@ export function physics (i,input){
   }
   // l CANCEL
   if (player[i].phys.lCancelTimer == 0 &&
-    ((input[i].lA[0] > 0 && input[i].lA[1] == 0) ||
-     (input[i].rA[0] > 0 && input[i].lA[1] == 0) ||
-     (input[i].z[0] && !input[i].z[1]))) {
+    ((input[i][0].lA > 0 && input[i][1].lA == 0) ||
+     (input[i][0].rA > 0 && input[i][1].lA == 0) ||
+     (input[i][0].z && !input[i][1].z))) {
 
     // if smash 64 lcancel, increase window to 11 frames
     if (gameSettings.lCancelType == 2) {
@@ -314,8 +314,8 @@ export function physics (i,input){
     player[i].phys.shoulderLockout--;
   }
 
-  if ((input[i].l[0] && !input[i].l[1]) ||
-      (input[i].r[0] && !input[i].r[1])) {
+  if ((input[i][0].l && !input[i][1].l) ||
+      (input[i][0].r && !input[i][1].r)) {
 
     if (!player[i].phys.grounded) {
       if (player[i].phys.shoulderLockout == 0) {
@@ -376,7 +376,7 @@ export function physics (i,input){
           player[i].phys.ECBp[0].y < activeStage.platform[j][0].y &&
           player[i].phys.ECBp[0].x >= activeStage.platform[j][0].x &&
           player[i].phys.ECBp[0].x <= activeStage.platform[j][1].x &&
-          ((input[i].lsY[0] > -0.56 &&
+          ((input[i][0].lsY > -0.56 &&
             actionStates[characterSelections[i]][player[i].actionState].canPassThrough) ||
             !actionStates[characterSelections[i]][player[i].actionState].canPassThrough)) {
 
@@ -406,7 +406,7 @@ export function physics (i,input){
             if (player[i].phys.face == 1) {
               stillGrounded = false;
               backward = true;
-            } else if (input[i].lsX[0] < -0.6 ||
+            } else if (input[i][0].lsX < -0.6 ||
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
                        actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
@@ -431,7 +431,7 @@ export function physics (i,input){
             if (player[i].phys.face == -1) {
               stillGrounded = false;
               backward = true;
-            } else if (input[i].lsX[0] > 0.6 ||
+            } else if (input[i][0].lsX > 0.6 ||
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
                        actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
@@ -459,7 +459,7 @@ export function physics (i,input){
             if (player[i].phys.face == 1) {
               stillGrounded = false;
               backward = true;
-            } else if (input[i].lsX[0] < -0.6 ||
+            } else if (input[i][0].lsX < -0.6 ||
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
                        actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
@@ -484,7 +484,7 @@ export function physics (i,input){
             if (player[i].phys.face == -1) {
               stillGrounded = false;
               backward = true;
-            } else if (input[i].lsX[0] > 0.6 ||
+            } else if (input[i][0].lsX > 0.6 ||
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
                        actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
@@ -525,7 +525,7 @@ export function physics (i,input){
           if (player[i].hit.hitlag == 0) {
             player[i].phys.face = -1;
             if (player[i].phys.techTimer > 0) {
-              if (input[i].x[0] || input[i].y[0] || input[i].lsY[0] > 0.7) {
+              if (input[i][0].x || input[i][0].y || input[i][0].lsY > 0.7) {
                 actionStates[characterSelections[i]].WALLTECHJUMP.init(i,input);
               } else {
                 actionStates[characterSelections[i]].WALLTECH.init(i,input);
@@ -544,8 +544,8 @@ export function physics (i,input){
             }
           }
           if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-if (input[i].lsX[0] <= -0.7 &&
-                input[i].lsX[3] >= 0 &&
+if (input[i][0].lsX <= -0.7 &&
+                input[i][3].lsX >= 0 &&
                 (player[i].charAttributes.walljump || gameSettings.everyCharWallJump)) {
 
               player[i].phys.wallJumpTimer = 254;
@@ -577,7 +577,7 @@ if (input[i].lsX[0] <= -0.7 &&
           if (player[i].hit.hitlag == 0) {
             player[i].phys.face = 1;
             if (player[i].phys.techTimer > 0) {
-              if (input[i].x[0] || input[i].y[0] || input[i].lsY[0] > 0.7) {
+              if (input[i][0].x || input[i][0].y || input[i][0].lsY > 0.7) {
                 actionStates[characterSelections[i]].WALLTECHJUMP.init(i,input);
               } else {
                 actionStates[characterSelections[i]].WALLTECH.init(i,input);
@@ -596,8 +596,8 @@ if (input[i].lsX[0] <= -0.7 &&
             }
           }
           if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-            if (input[i].lsX[0] >= 0.7 &&
-                input[i].lsX[3] <= 0 &&
+            if (input[i][0].lsX >= 0.7 &&
+                input[i][3].lsX <= 0 &&
                 player[i].charAttributes.walljump) {
 
               player[i].phys.wallJumpTimer = 254;
@@ -677,7 +677,7 @@ if (input[i].lsX[0] <= -0.7 &&
           if (player[i].hit.hitlag > 0) {
             player[i].phys.pos.y = activeStage.ground[j][0].y;
           } else {
-            land(i, activeStage.ground[j][0].y, 0, j);
+            land(i, activeStage.ground[j][0].y, 0, j,input);
           }
           break;
         }
@@ -842,7 +842,7 @@ if (input[i].lsX[0] <= -0.7 &&
           }
         }
       }
-      if (player[i].phys.cVel.y < 0 && input[i].lsY[0] > -0.5) {
+      if (player[i].phys.cVel.y < 0 && input[i][0].lsY > -0.5) {
         if (lsBF > -1) {
           if (activeStage.ledge[lsBF][1] * -2 + 1 == player[i].phys.face || actionStates[characterSelections[i]][player[i].actionState].canGrabLedge[1]) {
             player[i].phys.onLedge = lsBF;

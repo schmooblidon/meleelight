@@ -27,7 +27,7 @@ export default {
       fastfall(p,input);
       airDrift(p,input);
       if (player[p].timer >= 4 && player[p].timer <= 14){
-        if (input[p].b[0] && !input[p].b[1]){
+        if (input[p][0].b && !input[p][1].b){
           player[p].phys.laserCombo = true;
         }
       }

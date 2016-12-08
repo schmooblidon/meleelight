@@ -40,7 +40,7 @@ export default {
       else if (player[p].timer === 4){
         player[p].phys.cVel.x = 0;
       }
-      if (player[p].timer > 0 && player[p].timer < 21 && input[p].a[0] && !input[p].a[1]){
+      if (player[p].timer > 0 && player[p].timer < 21 && input[p][0].a && !input[p][1].a){
         player[p].phys.jabCombo = true;
       }
       if (player[p].timer === 3){
@@ -99,7 +99,7 @@ export default {
         TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         WALK.init(p,true,input);
         return true;
       }

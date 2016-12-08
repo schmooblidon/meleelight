@@ -291,7 +291,7 @@ window.addEventListener("gamepadconnected", function(e) {
 });
 if (navigator.getGamepads) console.log(navigator.getGamepads());
 
-export function matchTimerTick (){
+export function matchTimerTick (input){
   matchTimer -= 0.016667;
 
   if (dom.matchMinutes && dom.matchSeconds) {
@@ -301,7 +301,7 @@ export function matchTimerTick (){
   }
 
   if (matchTimer <= 0) {
-    finishGame();
+    finishGame(input);
   }
 }
 
@@ -550,24 +550,46 @@ export const removePlayer (i){
   playerAmount--;
 }*/
 
+let allInputsBuffer = [nullInputs(),nullInputs(),nullInputs(),nullInputs()];
 
-export function interpretInputs  (i, active) {
-  let input = nullInputs();
+export function interpretInputs  (i, active,playertype) {
+ let tempBuffer = nullInputs();
 
+  for (var k = 1; k < 8; k++) {
+    tempBuffer[k].lsX = allInputsBuffer[i][k-1].lsX;
+    tempBuffer[k].lsY = allInputsBuffer[i][k-1].lsY;
+    tempBuffer[k].rawX = allInputsBuffer[i][k-1].rawX;
+    tempBuffer[k].rawY = allInputsBuffer[i][k-1].rawY;
+    tempBuffer[k].csX = allInputsBuffer[i][k-1].csX;
+    tempBuffer[k].csY = allInputsBuffer[i][k-1].csY;
+    tempBuffer[k].lA = allInputsBuffer[i][k-1].lA;
+    tempBuffer[k].rA = allInputsBuffer[i][k-1].rA;
+    tempBuffer[k].s = allInputsBuffer[i][k-1].s;
+    tempBuffer[k].z = allInputsBuffer[i][k-1].z;
+    tempBuffer[k].a = allInputsBuffer[i][k-1].a;
+    tempBuffer[k].b = allInputsBuffer[i][k-1].b;
+    tempBuffer[k].x = allInputsBuffer[i][k-1].x;
+    tempBuffer[k].y = allInputsBuffer[i][k-1].y;
+    tempBuffer[k].r = allInputsBuffer[i][k-1].r;
+    tempBuffer[k].l = allInputsBuffer[i][k-1].l;
+    tempBuffer[k].dl = allInputsBuffer[i][k-1].dl;
+    tempBuffer[k].dd = allInputsBuffer[i][k-1].dd;
+    tempBuffer[k].dr = allInputsBuffer[i][k-1].dr;
+    tempBuffer[k].du = allInputsBuffer[i][k-1].du;
+  }
 
-
-  input[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys);
+  tempBuffer[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys,playertype);
 
   pause[i][1] = pause[i][0];
   frameAdvance[i][1] = frameAdvance[i][0];
 
   if (mType[i] == 10) { // keyboard controls
-    if (input[0].s || input[1].s ) {
+    if (tempBuffer[0].s || tempBuffer[1].s ) {
       pause[i][0] = true;
     } else {
       pause[i][0] = false
     }
-    if (input[0].z  || input[1].z ) {
+    if (tempBuffer[0].z  || tempBuffer[1].z ) {
       frameAdvance[i][0] = true;
     } else {
       frameAdvance[i][0] = false
@@ -576,54 +598,54 @@ export function interpretInputs  (i, active) {
     frameByFrame = true;
     }
     if (active) {
-      if (input[0].dl && !input[1].dl ) {
+      if (tempBuffer[0].dl && !tempBuffer[1].dl ) {
        player[i].showLedgeGrabBox ^= true;
       }
-      if (input[0].dd && !input[1].dd) {
+      if (tempBuffer[0].dd && !tempBuffer[1].dd) {
         player[i].showECB ^= true;
       }
-      if (input[0].dr && !input[1].dr) {
+      if (tempBuffer[0].dr && !tempBuffer[1].dr) {
         player[i].showHitbox ^= true;
       }
     }
-    if ((input[0].a || input[1].a) && (input[0].l || input[1].l) && (input[0].r ||
-         input[1].r) && (input[0].s || input[1].s)) {
-      if (input[0].b || input[1].b) {
+    if ((tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) && (tempBuffer[0].r ||
+         tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
+      if (tempBuffer[0].b || tempBuffer[1].b) {
         startGame();
       }
       else {
-        endGame();
+        endGame(tempBuffer);
       }
     }
 
     interpretPause(i);
 
     if (showDebug) {
-    $("#lsAxisX" + i).empty().append(input[0].lsX.toFixed(4));
-    $("#lsAxisY" + i).empty().append(input[0].lsY.toFixed(4));
-    $("#csAxisX" + i).empty().append(input[0].csX.toFixed(4));
-    $("#csAxisY" + i).empty().append(input[0].csY.toFixed(4));
-    $("#lAnalog" + i).empty().append(input[0].lA.toFixed(4));
-    $("#rAnalog" + i).empty().append(input[0].rA.toFixed(4));
+    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
+    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
+    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
+    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
+    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
+    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
     }
   }
   else { // gamepad controls
 
-    if (input[0].a && input[0].l && input[0].r && input[0].s) {
-      if (input[0].b) {
+    if (tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s) {
+      if (tempBuffer[0].b) {
         startGame();
       }
       else {
-        endGame();
+        endGame(tempBuffer);
       }
     }
 
-    if (( input[0].s && ! input[1].s) || input[0].du.pressed && gameMode == 5) {
+    if (( tempBuffer[0].s && ! tempBuffer[1].s) || tempBuffer[0].du.pressed && gameMode == 5) {
       pause[i][0] = true;
     } else {
       pause[i][0] = false
     }
-    if (input[0].z && ! input[1].z ) {
+    if (tempBuffer[0].z && ! tempBuffer[1].z ) {
       frameAdvance[i][0] = true;
     } else {
       frameAdvance[i][0] = false
@@ -633,25 +655,25 @@ export function interpretInputs  (i, active) {
     frameByFrame = true;
     }
 
-    if (input[0].dl && !input[1].dl) {
+    if (tempBuffer[0].dl && !tempBuffer[1].dl) {
       player[i].showLedgeGrabBox ^= true;
     }
-    if (input[0].dd && !input[1].dd) {
+    if (tempBuffer[0].dd && !tempBuffer[1].dd) {
       player[i].showECB ^= true;
     }
-    if (input[0].dr && !input[1].dr) {
+    if (tempBuffer[0].dr && !tempBuffer[1].dr) {
       player[i].showHitbox ^= true;
     }
 
     // Controller reset functionality
-    if ((input[0].z || input[0].du) && input[0].x && input[0].y && !attemptingControllerReset[i]) {
+    if ((tempBuffer[0].z || tempBuffer[0].du) && tempBuffer[0].x && tempBuffer[0].y && !attemptingControllerReset[i]) {
       attemptingControllerReset[i] = true;
       setTimeout(function() {
-        if (input[0].du && input[0].x && input[0].y) {
-          custcent[i].ls = new Vec2D(input[0].lsX, input[0].lsY);
-          custcent[i].cs = new Vec2D(input[0].lsX, input[0].lsY);
-          custcent[i].l = input[0].lA;
-          custcent[i].r = input[0].rA;
+        if (tempBuffer[0].du && tempBuffer[0].x && tempBuffer[0].y) {
+          custcent[i].ls = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
+          custcent[i].cs = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
+          custcent[i].l = tempBuffer[0].lA;
+          custcent[i].r = tempBuffer[0].rA;
           console.log("Controller Reset!");
           $("#resetIndicator" + i).fadeIn(100);
           $("#resetIndicator" + i).fadeOut(500);
@@ -662,33 +684,54 @@ export function interpretInputs  (i, active) {
 
     interpretPause(i);
 
-    showButton(i, 0,input[0].a);
-    showButton(i, 1,input[0].b);
-    showButton(i, 2,input[0].x);
-    showButton(i, 3,input[0].y);
-    showButton(i, 4,input[0].z);
-    showButton(i, 5,input[0].r);
-    showButton(i, 6,input[0].l);
-    showButton(i, 7,input[0].s);
-    showButton(i, 8,input[0].du);
-    showButton(i, 9,input[0].dr);
-    showButton(i,10,input[0].dd);
-    showButton(i,11,input[0].dl);
+    showButton(i, 0,tempBuffer[0].a);
+    showButton(i, 1,tempBuffer[0].b);
+    showButton(i, 2,tempBuffer[0].x);
+    showButton(i, 3,tempBuffer[0].y);
+    showButton(i, 4,tempBuffer[0].z);
+    showButton(i, 5,tempBuffer[0].r);
+    showButton(i, 6,tempBuffer[0].l);
+    showButton(i, 7,tempBuffer[0].s);
+    showButton(i, 8,tempBuffer[0].du);
+    showButton(i, 9,tempBuffer[0].dr);
+    showButton(i,10,tempBuffer[0].dd);
+    showButton(i,11,tempBuffer[0].dl);
 
     if (showDebug) {
-    $("#lsAxisX" + i).empty().append(input[0].lsX.toFixed(4));
-    $("#lsAxisY" + i).empty().append(input[0].lsY.toFixed(4));
-    $("#csAxisX" + i).empty().append(input[0].csX.toFixed(4));
-    $("#csAxisY" + i).empty().append(input[0].csY.toFixed(4));
-    $("#lAnalog" + i).empty().append(input[0].lA.toFixed(4));
-    $("#rAnalog" + i).empty().append(input[0].rA.toFixed(4));
+    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
+    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
+    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
+    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
+    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
+    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
     }
 
   }
 
+  for (var k = 0; k < 8; k++) {
+    allInputsBuffer[i][k].lsX = tempBuffer[k].lsX;
+    allInputsBuffer[i][k].lsY = tempBuffer[k].lsY;
+    allInputsBuffer[i][k].rawX = tempBuffer[k].rawX;
+    allInputsBuffer[i][k].rawY = tempBuffer[k].rawY;
+    allInputsBuffer[i][k].csX = tempBuffer[k].csX;
+    allInputsBuffer[i][k].csY = tempBuffer[k].csY;
+    allInputsBuffer[i][k].lA = tempBuffer[k].lA;
+    allInputsBuffer[i][k].rA = tempBuffer[k].rA;
+    allInputsBuffer[i][k].s = tempBuffer[k].s;
+    allInputsBuffer[i][k].z = tempBuffer[k].z;
+    allInputsBuffer[i][k].a = tempBuffer[k].a;
+    allInputsBuffer[i][k].b = tempBuffer[k].b;
+    allInputsBuffer[i][k].x = tempBuffer[k].x;
+    allInputsBuffer[i][k].y = tempBuffer[k].y;
+    allInputsBuffer[i][k].r = tempBuffer[k].r;
+    allInputsBuffer[i][k].l = tempBuffer[k].l;
+    allInputsBuffer[i][k].dl = tempBuffer[k].dl;
+    allInputsBuffer[i][k].dd = tempBuffer[k].dd;
+    allInputsBuffer[i][k].dr = tempBuffer[k].dr;
+    allInputsBuffer[i][k].du = tempBuffer[k].du;
+  }
 
-
-  return input;
+  return allInputsBuffer[i];
 
 };
 
@@ -746,11 +789,11 @@ export function update (i,input){
   if (!starting){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
-        input=  interpretInputs(i,true);
+        input[i]=  interpretInputs(i,true,playerType[i]);
       }
       else {
         if (player[i].actionState != "SLEEP"){
-          runAI(i,input);
+          runAI(i);
         }
       }
     }
@@ -773,31 +816,31 @@ export function gameTick (){
   } else if (gameMode == 1) {
     //console.log(playerType);
     for (var i = 0; i < ports; i++) {
-      input[i] = interpretInputs(i, true);
+      input[i] = interpretInputs(i, true,playerType[i]);
       menuMove(i, input[i]);
     }
   } else if (gameMode == 10) {
     for (var i = 0; i < ports; i++) {
-      input[i] = interpretInputs(i, true);
+      input[i] = interpretInputs(i, true,playerType[i]);
       audioMenuControls(i, input[i]);
     }
   } else if (gameMode == 11) {
     for (var i = 0; i < ports; i++) {
-      input[i] = interpretInputs(i, true);
+      input[i] = interpretInputs(i, true,playerType[i]);
       gameplayMenuControls(i, input[i]);
     }
   } else if (gameMode == 12) {
     for (var i = 0; i < ports; i++) {
-      input[i] = interpretInputs(i, true);
+      input[i] = interpretInputs(i, true,playerType[i]);
       keyboardMenuControls(i, input[i]);
     }
   } else if (gameMode == 13) {
-    input[i] = interpretInputs(creditsPlayer, true);
+    input[i] = interpretInputs(creditsPlayer, true,playerType[i]);
     credits(creditsPlayer, input[i]);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
-        input[i] = interpretInputs(i, true);
+        input[i] = interpretInputs(i, true,playerType[i]);
         cssControls(i, input[i]);
       }
 
@@ -808,27 +851,27 @@ export function gameTick (){
         hitDetect(i,input[i]);
       }
     }
-    executeHits();
+    executeHits(input);
       resetHitQueue();
     findPlayers();
   } else if (gameMode == 6) {
     // stage select
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
-        input[i] = interpretInputs(i, true);
+        input[i] = interpretInputs(i, true,playerType[i]);
         sssControls(i, input[i]);
       }
     }
   } else if (gameMode == 7) {
     // stage select
-    input[i] = interpretInputs(targetPlayer, true);
+    input[i] = interpretInputs(targetPlayer, true,playerType[i]);
     tssControls(targetPlayer, input[i]);
   } else if (gameMode == 4) {
-    input[i] = interpretInputs(targetBuilder, true);
+    input[i] = interpretInputs(targetBuilder, true,playerType[i]);
     targetBuilderControls(targetBuilder, input[i]);
   } else if (gameMode == 5) {
     if (endTargetGame) {
-      finishGame();
+      finishGame(input);
     }
     if (playing || frameByFrame) {
       var now = performance.now();
@@ -836,7 +879,7 @@ export function gameTick (){
       lastUpdate = now;
       destroyArticles();
       executeArticles();
-      update(targetBuilder);
+      update(targetBuilder,input);
       targetHitDetection(targetBuilder);
       if (!starting) {
         targetTimerTick();
@@ -846,8 +889,8 @@ export function gameTick (){
           starting = false;
         }
       }
-      if (player[targetBuilder].inputs.s[0] && !player[targetBuilder].inputs.s[1]) {
-        endGame();
+      if (input[targetBuilder][0].s && !player[targetBuilder][1].s) {
+        endGame(input);
       }
       if (frameByFrame) {
         frameByFrameRender = true;
@@ -874,7 +917,7 @@ export function gameTick (){
       }
     } else {
       if (!gameEnd) {
-        input[i] = interpretInputs(targetBuilder, false);
+        input[i] = interpretInputs(targetBuilder, false,playerType[i]);
       }
     }
   } else if (playing || frameByFrame) {
@@ -895,21 +938,21 @@ export function gameTick (){
     executeArticles();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        input[i] = interpretInputs(i, true);
+        input[i] = interpretInputs(i, true,playerType[i]);
         update(i,input);
       }
     }
     checkPhantoms();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetect(i);
+        hitDetect(i,input);
       }
     }
-    executeHits();
+    executeHits(input);
     articlesHitDetection();
     executeArticleHits();
     if (!starting && !versusMode) {
-      matchTimerTick();
+      matchTimerTick(input);
     } else {
       startTimer -= 0.01666667;
       if (startTimer < 0) {
@@ -946,7 +989,7 @@ export function gameTick (){
       for (var i = 0; i < 4; i++) {
         if (playerType[i] == 0) {
           if (currentPlayers[i] != -1) {
-            interpretInputs(i, false);
+            interpretInputs(i, false,playerType[i]);
           }
         }
       }
@@ -1159,7 +1202,7 @@ export function startGame (){
   playing = true;
 }
 
-export function endGame (){
+export function endGame (input){
   gameEnd = false;
   resetLostStockQueue();
     setPhantonQueue([]);
@@ -1201,8 +1244,8 @@ export function endGame (){
       if (player[i].actionState == "FURAFURA") {
         sounds.furaloop.stop(player[i].furaLoopID);
       }
-      input[i].a[0] = true;
-      input[i].a[1] = true;
+      input[i][0].a = true;
+      input[i][1].a = true;
       player[i].inCSS = true;
       player[i].phys.face = 1;
       player[i].actionState = "WAIT";
@@ -1211,7 +1254,7 @@ export function endGame (){
   }
 }
 
-export function finishGame (){
+export function finishGame (input){
     setEndTargetGame(false);
   gameEnd = true;
   playing = false;
@@ -1298,7 +1341,7 @@ export function finishGame (){
   music.pStadium.stop();
   music.dreamland.stop();
   setTimeout(function() {
-    endGame()
+    endGame(input)
   }, 2500);
 }
 

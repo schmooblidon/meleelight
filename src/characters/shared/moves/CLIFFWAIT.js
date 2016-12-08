@@ -21,13 +21,13 @@ export default {
     }
   },
   interrupt : function(p,input){
-    if ((input[p].lsX[0]*player[p].phys.face < -0.2 && input[p].lsX[1]*player[p].phys.face >= -0.2) || (input[p].lsY[0] < -0.2 && input[p].lsY[1] >= -0.2) || (input[p].csX[0]*player[p].phys.face < -0.2 && input[p].csX[1]*player[p].phys.face >= -0.2) || (input[p].csY[0] < -0.2 && input[p].csY[1] >= -0.2)){
+    if ((input[p][0].lsX*player[p].phys.face < -0.2 && input[p][1].lsX*player[p].phys.face >= -0.2) || (input[p][0].lsY < -0.2 && input[p][1].lsY >= -0.2) || (input[p][0].csX*player[p].phys.face < -0.2 && input[p][1].csX*player[p].phys.face >= -0.2) || (input[p][0].csY < -0.2 && input[p][1].csY >= -0.2)){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
       actionStates[characterSelections[p]].FALL.init(p,input,true);
       return true;
     }
-    else if ((input[p].x[0] && !input[p].x[1]) || (input[p].y[0] && !input[p].y[1]) || (input[p].lsY[0] > 0.65 && input[p].lsY[1] <= 0.65)){
+    else if ((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.65 && input[p][1].lsY <= 0.65)){
       if (player[p].percent < 100){
         actionStates[characterSelections[p]].CLIFFJUMPQUICK.init(p,input);
       }
@@ -36,7 +36,7 @@ export default {
       }
       return true;
     }
-    else if ((input[p].lsX[0]*player[p].phys.face > 0.2 && input[p].lsX[1]*player[p].phys.face <= 0.2) || (input[p].lsY[0] > 0.2 && input[p].lsY[1] <= 0.2)){
+    else if ((input[p][0].lsX*player[p].phys.face > 0.2 && input[p][1].lsX*player[p].phys.face <= 0.2) || (input[p][0].lsY > 0.2 && input[p][1].lsY <= 0.2)){
       if (player[p].percent < 100){
         actionStates[characterSelections[p]].CLIFFGETUPQUICK.init(p,input);
       }
@@ -45,7 +45,7 @@ export default {
       }
       return true;
     }
-    else if ((input[p].a[0] && !input[p].a[1]) || (input[p].b[0] && !input[p].b[1]) || (input[p].csY[0] > 0.65 && input[p].csY[1] <= 0.65)){
+    else if ((input[p][0].a && !input[p][1].a) || (input[p][0].b && !input[p][1].b) || (input[p][0].csY > 0.65 && input[p][1].csY <= 0.65)){
       if (player[p].percent < 100){
         actionStates[characterSelections[p]].CLIFFATTACKQUICK.init(p,input);
       }
@@ -54,7 +54,7 @@ export default {
       }
       return true;
     }
-    else if ((input[p].lA[0] > 0.3 && input[p].lA[1] <= 0.3) || (input[p].rA[0] > 0.3 && input[p].rA[1] <= 0.3) || (input[p].csX[0]*player[p].phys.face > 0.8 && input[p].csX[1]*player[p].phys.face <= 0.8)){
+    else if ((input[p][0].lA > 0.3 && input[p][1].lA <= 0.3) || (input[p][0].rA > 0.3 && input[p][1].rA <= 0.3) || (input[p][0].csX*player[p].phys.face > 0.8 && input[p][1].csX*player[p].phys.face <= 0.8)){
       if (player[p].percent < 100){
         actionStates[characterSelections[p]].CLIFFESCAPEQUICK.init(p,input);
       }

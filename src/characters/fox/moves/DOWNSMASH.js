@@ -33,7 +33,7 @@ export default {
   },
   main : function(p,input){
     if (player[p].timer === 2){
-      if (input[p].a[0] || input[p].z[0]){
+      if (input[p][0].a || input[p][0].z){
         player[p].phys.charging = true;
         player[p].phys.chargeFrames++;
         if (player[p].phys.chargeFrames === 5){
@@ -109,7 +109,7 @@ export default {
         TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(input[p].lsX[0]) > 0.3){
+      else if (Math.abs(input[p][0].lsX) > 0.3){
         WALK.init(p,true,input);
         return true;
       }

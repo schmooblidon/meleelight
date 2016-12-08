@@ -28,15 +28,15 @@ export default {
     }
     else if (player[p].phys.jabReset){
       if (player[p].hit.hitstun <= 0){
-        if (input[p].lsX[0]*player[p].phys.face < -0.7){
+        if (input[p][0].lsX*player[p].phys.face < -0.7){
           actionStates[characterSelections[p]].DOWNSTANDB.init(p,input);
           return true;
         }
-        else if (input[p].lsX[0]*player[p].phys.face > 0.7){
+        else if (input[p][0].lsX*player[p].phys.face > 0.7){
           actionStates[characterSelections[p]].DOWNSTANDF.init(p,input);
           return true;
         }
-        else if ((input[p].a[0] && !input[p].a[1]) || (input[p].b[0] && !input[p].b[1])){
+        else if ((input[p][0].a && !input[p][1].a) || (input[p][0].b && !input[p][1].b)){
           actionStates[characterSelections[p]].DOWNATTACK.init(p,input);
           return true;
         }
@@ -49,19 +49,19 @@ export default {
         return false;
       }
     }
-    else if (input[p].lsX[0]*player[p].phys.face < -0.7){
+    else if (input[p][0].lsX*player[p].phys.face < -0.7){
       actionStates[characterSelections[p]].DOWNSTANDB.init(p,input);
       return true;
     }
-    else if (input[p].lsX[0]*player[p].phys.face > 0.7){
+    else if (input[p][0].lsX*player[p].phys.face > 0.7){
       actionStates[characterSelections[p]].DOWNSTANDF.init(p,input);
       return true;
     }
-    else if (input[p].lsY[0] > 0.7){
+    else if (input[p][0].lsY > 0.7){
       actionStates[characterSelections[p]].DOWNSTANDN.init(p,input);
       return true;
     }
-    else if ((input[p].a[0] && !input[p].a[1]) || (input[p].b[0] && !input[p].b[1])){
+    else if ((input[p][0].a && !input[p][1].a) || (input[p][0].b && !input[p][1].b)){
       actionStates[characterSelections[p]].DOWNATTACK.init(p,input);
       return true;
     }

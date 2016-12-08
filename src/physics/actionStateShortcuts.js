@@ -275,9 +275,9 @@ export function mashOut (p,input){
     return true;
   } else if (input[p][0].csX < -0.8 && !input[p][1].csX < -0.7) {
     return true;
-  } else if (input[p][0].csY > 0.8 && !input[p].csY[1] < 0.7) {
+  } else if (input[p][0].csY > 0.8 && !input[p][1].csY < 0.7) {
     return true;
-  } else if (input[p][0].csY < -0.8 && !input[p].csY[1] > -0.7) {
+  } else if (input[p][0].csY < -0.8 && !input[p][1].csY > -0.7) {
     return true;
   } else {
     return false;
@@ -454,11 +454,11 @@ export function turboAirborneInterrupt (p,input){
     turnOffHitboxes(p);
     actionStates[characterSelections[p]].ESCAPEAIR.init(p,input);
     return true;
-  } else if (((input[p][0].x && !input[p][1].x) || (input[p].y[0] && !input[p][1].y) ||
-      (input[p].lsY[0] > 0.7 && input[p].lsY[1] <= 0.7)) && (!player[p].phys.doubleJumped ||
+  } else if (((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) ||
+      (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && (!player[p].phys.doubleJumped ||
       (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))) {
     turnOffHitboxes(p);
-    if (input[p].lsX[0] * player[p].phys.face < -0.3) {
+    if (input[p][0].lsX * player[p].phys.face < -0.3) {
       actionStates[characterSelections[p]].JUMPAERIALB.init(p,input);
     } else {
       actionStates[characterSelections[p]].JUMPAERIALF.init(p,input);
@@ -480,13 +480,13 @@ export function turboGroundedInterrupt (p,input){
   var j = checkForJump(p,input);
   if (j[0]) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].KNEEBEND.init(p, j[1]);
+    actionStates[characterSelections[p]].KNEEBEND.init(p, j[1],input);
     return true;
-  } else if (input[p].l[0] || input[p].r[0]) {
+  } else if (input[p][0].l || input[p][0].r) {
     turnOffHitboxes(p);
     actionStates[characterSelections[p]].GUARDON.init(p,input);
     return true;
-  } else if (input[p].lA[0] > 0 || input[p].rA[0] > 0) {
+  } else if (input[p][0].lA > 0 || input[p][0].rA > 0) {
     turnOffHitboxes(p);
     actionStates[characterSelections[p]].GUARDON.init(p,input);
     return true;
@@ -519,9 +519,9 @@ export function turboGroundedInterrupt (p,input){
     player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
     actionStates[characterSelections[p]].TILTTURN.init(p,input);
     return true;
-  } else if (Math.abs(input[p].lsX[0]) > 0.3) {
+  } else if (Math.abs(input[p][0].lsX) > 0.3) {
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].WALK.init(p, true);
+    actionStates[characterSelections[p]].WALK.init(p, true,input);
     return true;
   } else {
     return false;

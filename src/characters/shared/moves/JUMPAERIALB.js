@@ -20,7 +20,7 @@ export default {
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 
-    player[p].phys.cVel.x = input[p].lsX[0] * player[p].charAttributes.djMomentum;
+    player[p].phys.cVel.x = input[p][0].lsX * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
     actionStates[characterSelections[p]].JUMPAERIALB.main(p,input);
@@ -40,7 +40,7 @@ export default {
       actionStates[characterSelections[p]][a[1]].init(p,input);
       return true;
     }
-    else if ((input[p].l[0] && !input[p].l[1]) || (input[p].r[0] && !input[p].r[1])){
+    else if ((input[p][0].l && !input[p][1].l) || (input[p][0].r && !input[p][1].r)){
       actionStates[characterSelections[p]].ESCAPEAIR.init(p,input);
       return true;
     }

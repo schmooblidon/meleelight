@@ -36,7 +36,7 @@ export default {
     player[p].phys.inShine++;
     if (!this.interrupt(p,input)){
       if (player[p].phys.onSurface[0] === 1 && player[p].timer > 1){
-        if (input[p].lsY[0] < -0.66 && input[p].lsY[6] >= 0){
+        if (input[p][0].lsY < -0.66 && input[p][6].lsY >= 0){
           player[p].phys.grounded = false;
           player[p].phys.abovePlatforms[player[p].phys.onSurface[1]] = false;
           player[p].phys.cVel.y = -0.5;
@@ -60,11 +60,11 @@ export default {
           player[p].timer = 4;
         }
         if (player[p].timer >= 4 && player[p].timer <= 32){
-          if (input[p].lsX[0]*player[p].phys.face < 0){
+          if (input[p][0].lsX*player[p].phys.face < 0){
             player[p].timer = 32;
           }
           else if (player[p].phys.inShine >= 22){
-            if (!input[p].b[0]){
+            if (!input[p][0].b){
               player[p].timer = 36;
             }
             else if (player[p].timer === 32){
