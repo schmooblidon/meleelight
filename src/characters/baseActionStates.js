@@ -820,7 +820,7 @@ export const baseActionStates = {
   canBeGrabbed : true,
   landType : 0,
   vCancel : true,
-  init : function(p,type){
+  init : function(p,type,input){
     player[p].cStickJump = false;
     player[p].actionState = "JUMPB";
     player[p].timer = 0;

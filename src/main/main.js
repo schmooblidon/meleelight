@@ -733,7 +733,7 @@ export function interpretInputs  (i, active,playertype) {
 
   return allInputsBuffer[i];
 
-};
+}
 
 function interpretPause(i) {
   if (pause[i][0] && !pause[i][1]) {
