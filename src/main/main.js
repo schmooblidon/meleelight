@@ -550,32 +550,30 @@ export const removePlayer (i){
   playerAmount--;
 }*/
 
-let allInputsBuffer = [nullInputs(),nullInputs(),nullInputs(),nullInputs()];
+export function interpretInputs  (i, active,playertype, inputBuffer) {
+  let tempBuffer = nullInputs();  
 
-export function interpretInputs  (i, active,playertype) {
- let tempBuffer = nullInputs();
-
-  for (var k = 1; k < 8; k++) {
-    tempBuffer[k].lsX = allInputsBuffer[i][k-1].lsX;
-    tempBuffer[k].lsY = allInputsBuffer[i][k-1].lsY;
-    tempBuffer[k].rawX = allInputsBuffer[i][k-1].rawX;
-    tempBuffer[k].rawY = allInputsBuffer[i][k-1].rawY;
-    tempBuffer[k].csX = allInputsBuffer[i][k-1].csX;
-    tempBuffer[k].csY = allInputsBuffer[i][k-1].csY;
-    tempBuffer[k].lA = allInputsBuffer[i][k-1].lA;
-    tempBuffer[k].rA = allInputsBuffer[i][k-1].rA;
-    tempBuffer[k].s = allInputsBuffer[i][k-1].s;
-    tempBuffer[k].z = allInputsBuffer[i][k-1].z;
-    tempBuffer[k].a = allInputsBuffer[i][k-1].a;
-    tempBuffer[k].b = allInputsBuffer[i][k-1].b;
-    tempBuffer[k].x = allInputsBuffer[i][k-1].x;
-    tempBuffer[k].y = allInputsBuffer[i][k-1].y;
-    tempBuffer[k].r = allInputsBuffer[i][k-1].r;
-    tempBuffer[k].l = allInputsBuffer[i][k-1].l;
-    tempBuffer[k].dl = allInputsBuffer[i][k-1].dl;
-    tempBuffer[k].dd = allInputsBuffer[i][k-1].dd;
-    tempBuffer[k].dr = allInputsBuffer[i][k-1].dr;
-    tempBuffer[k].du = allInputsBuffer[i][k-1].du;
+  for (var k = 0; k < 7; k++) {
+    tempBuffer[7-k].lsX  = inputBuffer[6-k].lsX;
+    tempBuffer[7-k].lsY  = inputBuffer[6-k].lsY;
+    tempBuffer[7-k].rawX = inputBuffer[6-k].rawX;
+    tempBuffer[7-k].rawY = inputBuffer[6-k].rawY;
+    tempBuffer[7-k].csX  = inputBuffer[6-k].csX;
+    tempBuffer[7-k].csY  = inputBuffer[6-k].csY;
+    tempBuffer[7-k].lA   = inputBuffer[6-k].lA;
+    tempBuffer[7-k].rA   = inputBuffer[6-k].rA;
+    tempBuffer[7-k].s    = inputBuffer[6-k].s;
+    tempBuffer[7-k].z    = inputBuffer[6-k].z;
+    tempBuffer[7-k].a    = inputBuffer[6-k].a;
+    tempBuffer[7-k].b    = inputBuffer[6-k].b;
+    tempBuffer[7-k].x    = inputBuffer[6-k].x;
+    tempBuffer[7-k].y    = inputBuffer[6-k].y;
+    tempBuffer[7-k].r    = inputBuffer[6-k].r;
+    tempBuffer[7-k].l    = inputBuffer[6-k].l;
+    tempBuffer[7-k].dl   = inputBuffer[6-k].dl;
+    tempBuffer[7-k].dd   = inputBuffer[6-k].dd;
+    tempBuffer[7-k].dr   = inputBuffer[6-k].dr;
+    tempBuffer[7-k].du   = inputBuffer[6-k].du;
   }
 
   tempBuffer[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys,playertype);
@@ -707,31 +705,7 @@ export function interpretInputs  (i, active,playertype) {
     }
 
   }
-
-  for (var k = 0; k < 8; k++) {
-    allInputsBuffer[i][k].lsX = tempBuffer[k].lsX;
-    allInputsBuffer[i][k].lsY = tempBuffer[k].lsY;
-    allInputsBuffer[i][k].rawX = tempBuffer[k].rawX;
-    allInputsBuffer[i][k].rawY = tempBuffer[k].rawY;
-    allInputsBuffer[i][k].csX = tempBuffer[k].csX;
-    allInputsBuffer[i][k].csY = tempBuffer[k].csY;
-    allInputsBuffer[i][k].lA = tempBuffer[k].lA;
-    allInputsBuffer[i][k].rA = tempBuffer[k].rA;
-    allInputsBuffer[i][k].s = tempBuffer[k].s;
-    allInputsBuffer[i][k].z = tempBuffer[k].z;
-    allInputsBuffer[i][k].a = tempBuffer[k].a;
-    allInputsBuffer[i][k].b = tempBuffer[k].b;
-    allInputsBuffer[i][k].x = tempBuffer[k].x;
-    allInputsBuffer[i][k].y = tempBuffer[k].y;
-    allInputsBuffer[i][k].r = tempBuffer[k].r;
-    allInputsBuffer[i][k].l = tempBuffer[k].l;
-    allInputsBuffer[i][k].dl = tempBuffer[k].dl;
-    allInputsBuffer[i][k].dd = tempBuffer[k].dd;
-    allInputsBuffer[i][k].dr = tempBuffer[k].dr;
-    allInputsBuffer[i][k].du = tempBuffer[k].du;
-  }
-
-  return allInputsBuffer[i];
+  return tempBuffer;
 
 }
 
@@ -782,65 +756,62 @@ export function renderToMain (){
   }
 }
 
-
-
-
-export function update (i,input){
+export function update (i,inputBuffers){
   if (!starting){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
-        input[i]=  interpretInputs(i,true,playerType[i]);
+        // do nothing, use the provided player i inputs
       }
       else {
         if (player[i].actionState != "SLEEP"){
-          runAI(i);
+          inputBuffers[i] = runAI(i);
         }
       }
     }
   }
-  physics(i,input);
+  physics(i, inputBuffers);
 }
 
 let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
-export function gameTick (){
+export function gameTick (oldInputBuffers){
   var start = performance.now();
   var diff = 0;
 
-  let input = [nullInputs(), nullInputs(), nullInputs(), nullInputs()]; // need to change this
+  let input = [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
 
   if (gameMode == 0 || gameMode == 20) {
     findPlayers();
   } else if (gameMode == 1) {
     //console.log(playerType);
     for (var i = 0; i < ports; i++) {
-      input[i] = interpretInputs(i, true,playerType[i]);
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
       menuMove(i, input[i]);
     }
   } else if (gameMode == 10) {
     for (var i = 0; i < ports; i++) {
-      input[i] = interpretInputs(i, true,playerType[i]);
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
       audioMenuControls(i, input[i]);
     }
   } else if (gameMode == 11) {
     for (var i = 0; i < ports; i++) {
-      input[i] = interpretInputs(i, true,playerType[i]);
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
       gameplayMenuControls(i, input[i]);
     }
   } else if (gameMode == 12) {
     for (var i = 0; i < ports; i++) {
-      input[i] = interpretInputs(i, true,playerType[i]);
+      input[i] = interpretInputs(i, true, playerType[i], oldInputBuffers[i]);
       keyboardMenuControls(i, input[i]);
     }
   } else if (gameMode == 13) {
-    input[i] = interpretInputs(creditsPlayer, true,playerType[i]);
+    input[i] = interpretInputs(creditsPlayer, true, playerType[i],oldInputBuffers[i]);
     credits(creditsPlayer, input[i]);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
-        input[i] = interpretInputs(i, true,playerType[i]);
+        input[i] = interpretInputs(i, true, playerType[i],oldInputBuffers[i]);
         cssControls(i, input[i]);
       }
 
@@ -858,16 +829,16 @@ export function gameTick (){
     // stage select
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
-        input[i] = interpretInputs(i, true,playerType[i]);
+        input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
         sssControls(i, input[i]);
       }
     }
   } else if (gameMode == 7) {
     // stage select
-    input[i] = interpretInputs(targetPlayer, true,playerType[i]);
+    input[i] = interpretInputs(targetPlayer, true,playerType[i],oldInputBuffers[i]);
     tssControls(targetPlayer, input[i]);
   } else if (gameMode == 4) {
-    input[i] = interpretInputs(targetBuilder, true,playerType[i]);
+    input[i] = interpretInputs(targetBuilder, true,playerType[i],oldInputBuffers[i]);
     targetBuilderControls(targetBuilder, input[i]);
   } else if (gameMode == 5) {
     if (endTargetGame) {
@@ -917,7 +888,7 @@ export function gameTick (){
       }
     } else {
       if (!gameEnd) {
-        input[i] = interpretInputs(targetBuilder, false,playerType[i]);
+        input[i] = interpretInputs(targetBuilder, false,playerType[i],oldInputBuffers[i]);
       }
     }
   } else if (playing || frameByFrame) {
@@ -938,7 +909,7 @@ export function gameTick (){
     executeArticles();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        input[i] = interpretInputs(i, true,playerType[i]);
+        input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
         update(i,input);
       }
     }
@@ -989,7 +960,7 @@ export function gameTick (){
       for (var i = 0; i < 4; i++) {
         if (playerType[i] == 0) {
           if (currentPlayers[i] != -1) {
-            interpretInputs(i, false,playerType[i]);
+            interpretInputs(i, false,playerType[i],oldInputBuffers[i]);
           }
         }
       }
@@ -1013,7 +984,7 @@ export function gameTick (){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick, 16 - diff);
+  setTimeout(gameTick, 16 - diff, input);
 }
 
 export function clearScreen (){
@@ -1376,7 +1347,8 @@ export function start (){
   ui = layers.UI.getContext("2d");
   bg1.fillStyle = "rgb(0, 0, 0)";
   bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
-  gameTick();
+  let nullInputBuffers =  [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
+  gameTick(nullInputBuffers);
   renderTick();
 
   $("#effectsButton").click(function() {
