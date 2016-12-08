@@ -1,8 +1,9 @@
 
 import UPSPECIALLAUNCH from "characters/fox/moves/UPSPECIALLAUNCH";
 import {reduceByTraction, turnOffHitboxes} from "physics/actionStateShortcuts";
-import {drawVfx, player} from "main/main";
+import { player} from "main/main";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
 
 export default {
   name : "UPSPECIALCHARGE",

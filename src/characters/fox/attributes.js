@@ -1,4 +1,4 @@
-import {    offsets,  Vec2D, createHitboxObject, createHitbox,
+import {    offsets,
     setCharAttributes
     , CHARIDS
     , charObject
@@ -7,6 +7,9 @@ import {    offsets,  Vec2D, createHitboxObject, createHitbox,
     , setIntangibility
     , setActionSounds,setFrames, setOffsets
 } from "main/characters";
+import {Vec2D} from "../../main/util/Vec2D";
+import {createHitboxObject} from "../../main/util/createHitboxObject";
+import {createHitbox} from "../../main/util/createHitBox";
 /* eslint-disable indent, camelcase */
 
 

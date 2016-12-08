@@ -1,13 +1,29 @@
-import {player, cS, drawVfx, percentShake, stage, playerType, edgeOffset, versusMode, showDebug, deepCopyObject, gameMode} from "main/main";
-import {Vec2D, Box2D,framesData} from "main/characters";
+import {player, cS, percentShake, playerType, edgeOffset, versusMode, showDebug, gameMode} from "main/main";
+import {framesData} from "main/characters";
 import {sounds} from "main/sfx";
 import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
 import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset} from "physics/environmentalCollision";
-import {customZip} from "stages/stages";
+import {deepCopyObject} from "main/util/deepCopyObject";
+import {drawVfx} from "main/vfx/drawVfx";
+import {activeStage} from "stages/activeStage";
+import { Box2D} from "../main/util/Box2D";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
+
+
+// this is a workaround for the moment because I am being lazy
+export function customZip ( list, string, start = 0 ) {
+  if (list.length === 0) {
+    return [];
+  }
+  else {
+    const [head, ...tail] = list;
+    return ( [[head, [string, start]]] . concat( customZip(tail, string, start+1) ) ) ;
+  }
+}
 
 
 function dealWithCollision(i, newCenter) {
@@ -143,10 +159,10 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
       let [leftGroundType, leftGroundIndex] = maybeLeftGroundTypeAndIndex;
       switch (leftGroundType) {
         case "g":
-          [stillGrounded, backward] = dealWithGround(i, stage.ground[leftGroundIndex], ["g",leftGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[leftGroundIndex], ["g",leftGroundIndex]);
           break;
         case "p":
-          [stillGrounded, backward] = dealWithGround(i, stage.platform[leftGroundIndex], ["p",leftGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[leftGroundIndex], ["p",leftGroundIndex]);
       }
     }
   }
@@ -158,10 +174,10 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
       let [rightGroundType, rightGroundIndex] = maybeRightGroundTypeAndIndex;
       switch (rightGroundType) {
         case "g":
-          [stillGrounded, backward] = dealWithGround(i, stage.ground[rightGroundIndex], ["g",rightGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[rightGroundIndex], ["g",rightGroundIndex]);
           break;
         case "p":
-          [stillGrounded, backward] = dealWithGround(i, stage.platform[rightGroundIndex], ["p",rightGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[rightGroundIndex], ["p",rightGroundIndex]);
       }
     }
   }
@@ -372,7 +388,7 @@ export function physics (i){
     if (player[i].prevActionState != player[i].actionState) {
       player[i].hasHit = false;
     }
-    if (gameSettings.turbo) {
+    if (gameSettings.turbo && gameMode != 5) {
       if (player[i].hasHit) {
         if (player[i].actionState != "CATCHATTACK") {
           if (player[i].phys.grounded) {
@@ -447,7 +463,7 @@ export function physics (i){
   }
 
   // if smash 64 lcancel, put any landingattackair action states into landing
-  if (gameSettings.lCancelType == 2) {
+  if (gameSettings.lCancelType == 2 && gameMode != 5) {
     if (player[i].phys.lCancel) {
       if (player[i].actionState.substr(0, 16) == "LANDINGATTACKAIR") {
         player[i].actionState = "LANDING";
@@ -469,7 +485,7 @@ export function physics (i){
      (player[i].inputs.z[0] && !player[i].inputs.z[1]))) {
 
     // if smash 64 lcancel, increase window to 11 frames
-    if (gameSettings.lCancelType == 2) {
+    if (gameSettings.lCancelType == 2 && gameMode != 5) {
       player[i].phys.lCancelTimer = 11;
     } else {
       player[i].phys.lCancelTimer = 7;
@@ -478,7 +494,7 @@ export function physics (i){
   }
 
   // if auto lcancel is on, always lcancel
-  if (gameSettings.lCancelType == 1) {
+  if (gameSettings.lCancelType == 1 && gameMode != 5) {
     player[i].phys.lCancel = true;
   }
 
@@ -565,16 +581,16 @@ export function physics (i){
 
       let relevantGroundIndex = player[i].phys.onSurface[1];
       let relevantGroundType = "g";
-      let relevantGround = stage.ground[relevantGroundIndex];
+      let relevantGround = activeStage.ground[relevantGroundIndex];
 
-      let groundConnectednessFunction = stage.connectednessFunction;
+      let groundConnectednessFunction = activeStage.connectednessFunction;
       if (groundConnectednessFunction === null || groundConnectednessFunction === undefined ) {
         groundConnectednessFunction = function(gd) { return false ;} ;
       }
        
       if (player[i].phys.onSurface[0] == 1) {
         relevantGroundType = "p";
-        relevantGround = stage.platform[relevantGroundIndex];
+        relevantGround = activeStage.platform[relevantGroundIndex];
       }
       
       let relevantGroundTypeAndIndex = [relevantGroundType, relevantGroundIndex];
@@ -596,21 +612,21 @@ export function physics (i){
 
     let hybridLWallsZip = [];
     let hybridRWallsZip = [];
-    if (stage.hybridWallL === null || stage.hybridWallL === undefined) {
+    if (activeStage.hybridWallL === null || activeStage.hybridWallL === undefined) {
     }
     else { 
-      hybridLWallsZip = customZip(stage.hybridWallL,"lcw");
+      hybridLWallsZip = customZip(activeStage.hybridWallL,"lcw");
     }
-    if (stage.hybridWallR === null || stage.hybridWallR === undefined) {
+    if (activeStage.hybridWallR === null || activeStage.hybridWallR === undefined) {
     }
     else { 
-      hybridRWallsZip = customZip(stage.hybridWallR,"rcw");
+      hybridRWallsZip = customZip(activeStage.hybridWallR,"rcw");
     }
 
-    let stageWalls = customZip(stage.wallL,"l").concat( customZip(stage.wallR,"r") ).concat(hybridLWallsZip).concat(hybridRWallsZip);
-    let stageGrounds = customZip(stage.ground,"g");
-    let stageCeilings =customZip(stage.ceiling,"c");
-    let stagePlatforms = customZip(stage.platform, "p");
+    let stageWalls = customZip(activeStage.wallL,"l").concat( customZip(activeStage.wallR,"r") ).concat(hybridLWallsZip).concat(hybridRWallsZip);
+    let stageGrounds = customZip(activeStage.ground,"g");
+    let stageCeilings =customZip(activeStage.ceiling,"c");
+    let stagePlatforms = customZip(activeStage.platform, "p");
 
     // ABOVE: this is recomputed every frame and should be avoided
     // --------------------------------------------------------------
@@ -671,7 +687,7 @@ export function physics (i){
     if (!notTouchingWalls[0] || !notTouchingWalls[1]) {
       if (player[i].phys.grounded) {
         var s = player[i].phys.onSurface[1];
-        var surface = player[i].phys.onSurface[0] ? stage.platform[s] : stage.ground[s];
+        var surface = player[i].phys.onSurface[0] ? activeStage.platform[s] : activeStage.ground[s];
         if (player[i].phys.pos.x < surface[0].x - 0.1 || player[i].phys.pos.x > surface[1].x + 0.1) {
           stillGrounded = false;
         }
@@ -722,18 +738,7 @@ export function physics (i){
         player[i].phys.shieldHP = 60;
       }
     }
-
-  } // END OF IGNORE COLLISION CHECK
-
-  /*for (var j=0;j<stage.ground.length;j++){
-    if (player[i].phys.ECBp[1].x > stage.ground[j][0].x && player[i].phys.ECBp[1].x < stage.ground[j][1].x && player[i].phys.ECBp[1].y > stage.ground[j][0].y && player[i].phys.ECBp[0].y < stage.ground[j][0].y && player[i].phys.ECBp[0].y > stage.ceiling[j][0].y){
-      console.log("top left corner");
-      player[i].phys.pos.x = stage.ground[j][0].x-(ecbOffset[1]*(stage.ground[j][0].y - player[i].phys.ECBp[0].y)/ecbOffset[2]);
-    }
-    else if (player[i].phys.ECBp[3].x < stage.ground[j][1].x && player[i].phys.ECBp[3].x > stage.ground[j][0].x && player[i].phys.ECBp[3].y > stage.ground[j][1].y && player[i].phys.ECBp[0].y < stage.ground[j][1].y && player[i].phys.ECBp[0].y > stage.ceiling[j][1].y){
-      console.log("top right corner");
-    }
-  }*/
+  } 
 
   player[i].phys.ledgeSnapBoxF = new Box2D(
     [
@@ -768,7 +773,7 @@ export function physics (i){
   var lsBF = -1;
   var lsBB = -1;
   if (player[i].phys.onLedge == -1 && !player[i].phys.ledgeRegrabCount) {
-    for (var j = 0; j < stage.ledge.length; j++) {
+    for (var j = 0; j < activeStage.ledge.length; j++) {
       var ledgeAvailable = true;
       for (var k = 0; k < 4; k++) {
         if (playerType[k] > -1) {
@@ -780,15 +785,15 @@ export function physics (i){
         }
       }
       if (ledgeAvailable && !player[i].phys.grounded && player[i].hit.hitstun <= 0) {
-        var x = (stage.ledge[j][1]) ? stage.box[stage.ledge[j][0]].max.x : stage.box[stage.ledge[j][0]].min.x;
-        var y = stage.box[stage.ledge[j][0]].max.y;
+        var x = (activeStage.ledge[j][1]) ? activeStage.box[activeStage.ledge[j][0]].max.x : activeStage.box[activeStage.ledge[j][0]].min.x;
+        var y = activeStage.box[activeStage.ledge[j][0]].max.y;
 
         if (x > player[i].phys.ledgeSnapBoxF.min.x &&
             x < player[i].phys.ledgeSnapBoxF.max.x &&
             y < player[i].phys.ledgeSnapBoxF.min.y &&
             y > player[i].phys.ledgeSnapBoxF.max.y) {
 
-          if (stage.ledge[j][1] == 0) {
+          if (activeStage.ledge[j][1] == 0) {
             if (aS[cS[i]][player[i].actionState].canGrabLedge[0]) {
               lsBF = j;
             }
@@ -801,7 +806,7 @@ export function physics (i){
             y < player[i].phys.ledgeSnapBoxB.min.y &&
             y > player[i].phys.ledgeSnapBoxF.max.y) {
 
-          if (stage.ledge[j][1] == 1) {
+          if (activeStage.ledge[j][1] == 1) {
             if (aS[cS[i]][player[i].actionState].canGrabLedge[0]) {
               lsBB = j;
             }
@@ -812,20 +817,20 @@ export function physics (i){
       }
       if (player[i].phys.cVel.y < 0 && player[i].inputs.lStickAxis[0].y > -0.5) {
         if (lsBF > -1) {
-          if (stage.ledge[lsBF][1] * -2 + 1 == player[i].phys.face || aS[cS[i]][player[i].actionState].canGrabLedge[1]) {
+          if (activeStage.ledge[lsBF][1] * -2 + 1 == player[i].phys.face || aS[cS[i]][player[i].actionState].canGrabLedge[1]) {
             player[i].phys.onLedge = lsBF;
             player[i].phys.ledgeRegrabTimeout = 30;
-            player[i].phys.face = stage.ledge[lsBF][1] * -2 + 1;
-            player[i].phys.pos = new Vec2D(stage.box[stage.ledge[lsBF][0]].min.x + edgeOffset[0][0], stage.box[stage.ledge[
+            player[i].phys.face = activeStage.ledge[lsBF][1] * -2 + 1;
+            player[i].phys.pos = new Vec2D(activeStage.box[activeStage.ledge[lsBF][0]].min.x + edgeOffset[0][0], activeStage.box[activeStage.ledge[
               lsBF][0]].min.y + edgeOffset[0][1]);
             aS[cS[i]].CLIFFCATCH.init(i);
           }
         } else if (lsBB > -1) {
-          if (stage.ledge[lsBB][1] * -2 + 1 == player[i].phys.face || aS[cS[i]][player[i].actionState].canGrabLedge[1]) {
+          if (activeStage.ledge[lsBB][1] * -2 + 1 == player[i].phys.face || aS[cS[i]][player[i].actionState].canGrabLedge[1]) {
             player[i].phys.onLedge = lsBB;
             player[i].phys.ledgeRegrabTimeout = 30;
-            player[i].phys.face = stage.ledge[lsBB][1] * -2 + 1;
-            player[i].phys.pos = new Vec2D(stage.box[stage.ledge[lsBB][0]].max.x + edgeOffset[1][0], stage.box[stage.ledge[
+            player[i].phys.face = activeStage.ledge[lsBB][1] * -2 + 1;
+            player[i].phys.pos = new Vec2D(activeStage.box[activeStage.ledge[lsBB][0]].max.x + edgeOffset[1][0], activeStage.box[activeStage.ledge[
               lsBB][0]].min.y + edgeOffset[1][1]);
             aS[cS[i]].CLIFFCATCH.init(i);
           }
@@ -836,13 +841,13 @@ export function physics (i){
 
   if (!aS[cS[i]][player[i].actionState].dead && player[i].actionState != "SLEEP") {
     var state = 0;
-    if (player[i].phys.pos.x < stage.blastzone.min.x) {
+    if (player[i].phys.pos.x < activeStage.blastzone.min.x) {
       state = "DEADLEFT";
-    } else if (player[i].phys.pos.x > stage.blastzone.max.x) {
+    } else if (player[i].phys.pos.x > activeStage.blastzone.max.x) {
       state = "DEADRIGHT";
-    } else if (player[i].phys.pos.y < stage.blastzone.min.y) {
+    } else if (player[i].phys.pos.y < activeStage.blastzone.min.y) {
       state = "DEADDOWN";
-    } else if (player[i].phys.pos.y > stage.blastzone.max.y && player[i].phys.kVel.y >= 2.4) {
+    } else if (player[i].phys.pos.y > activeStage.blastzone.max.y && player[i].phys.kVel.y >= 2.4) {
       state = "DEADUP";
     }
     if (state != 0) {

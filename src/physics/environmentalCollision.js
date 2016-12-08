@@ -1,4 +1,4 @@
-import {Vec2D} from "main/characters";
+import {Vec2D} from "../main/util/Vec2D";
 import {dotProd, scalarProd, norm} from "main/linAlg";
 
 const magicAngle = Math.PI/6;

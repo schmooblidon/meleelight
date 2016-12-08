@@ -1,9 +1,14 @@
-import {Vec2D, Segment2D, createHitbox} from "main/characters";
-import {player, fg2, stage, playerType, drawVfx, cS, screenShake, percentShake} from "main/main";
+
+import {player, fg2, playerType, cS, screenShake, percentShake} from "main/main";
 import {rotateVector} from "main/render";
 import {sounds} from "main/sfx";
 import {knockbackSounds, segmentSegmentCollision, getKnockback, getHitstun} from "physics/hitDetection";
 import {aS} from "physics/actionStateShortcuts";
+import {drawVfx} from "main/vfx/drawVfx";
+import {activeStage} from "stages/activeStage";
+import {createHitbox} from "../main/util/createHitBox";
+import {Vec2D} from "../main/util/Vec2D";
+import {Segment2D} from "../main/util/Segment2D";
 /* eslint-disable */
 
 export let aArticles = [];
@@ -77,10 +82,10 @@ export const articles = {
             fg2.strokeStyle = "rgb(255, 59, 59)";
             fg2.fillStyle = "rgb(255, 193, 193)";
             fg2.lineWidth = 2;
-            var h = new Vec2D((aArticles[i][2].pos.x * stage.scale) + stage.offset[0], (aArticles[i][2].pos.y * -stage.scale) +
-                stage.offset[1]);
-            var t = new Vec2D((aArticles[i][2].posPrev.x * stage.scale) + stage.offset[0], (aArticles[i][2].posPrev.y * -
-                    stage.scale) + stage.offset[1]);
+            var h = new Vec2D((aArticles[i][2].pos.x * activeStage.scale) + activeStage.offset[0], (aArticles[i][2].pos.y * -activeStage.scale) +
+                activeStage.offset[1]);
+            var t = new Vec2D((aArticles[i][2].posPrev.x * activeStage.scale) + activeStage.offset[0], (aArticles[i][2].posPrev.y * -
+                    activeStage.scale) + activeStage.offset[1]);
             var d = (h.x > t.x) ? 1 : -1;
             var r = aArticles[i][2].rotate;
             var v1 = rotateVector(-4, 2, -r);
@@ -431,15 +436,15 @@ export function executeArticleHits (){
 }
 
 export function wallDetection (i){
-    for (var j = 0; j < stage.wallL.length; j++) {
-        if (aArticles[i][2].ecb[1].y < stage.wallL[j][0].y && aArticles[i][2].ecb[1].y > stage.wallL[j][1].y && aArticles[
-                i][2].ecb[1].x >= stage.wallL[j][1].x && aArticles[i][2].ecb[1].x < stage.wallL[j][1].x + 6) {
+    for (var j = 0; j < activeStage.wallL.length; j++) {
+        if (aArticles[i][2].ecb[1].y < activeStage.wallL[j][0].y && aArticles[i][2].ecb[1].y > activeStage.wallL[j][1].y && aArticles[
+                i][2].ecb[1].x >= activeStage.wallL[j][1].x && aArticles[i][2].ecb[1].x < activeStage.wallR[j][1].x) {
             return true;
         }
     }
-    for (var j = 0; j < stage.wallR.length; j++) {
-        if (aArticles[i][2].ecb[3].y < stage.wallR[j][0].y && aArticles[i][2].ecb[3].y > stage.wallR[j][1].y && aArticles[
-                i][2].ecb[3].x <= stage.wallR[j][1].x && aArticles[i][2].ecb[3].x > stage.wallR[j][1].x - 6) {
+    for (var j = 0; j < activeStage.wallR.length; j++) {
+        if (aArticles[i][2].ecb[3].y < activeStage.wallR[j][0].y && aArticles[i][2].ecb[3].y > activeStage.wallR[j][1].y && aArticles[
+                i][2].ecb[3].x <= activeStage.wallR[j][1].x && aArticles[i][2].ecb[3].x > activeStage.wallL[j][1].x) {
             return true;
         }
     }

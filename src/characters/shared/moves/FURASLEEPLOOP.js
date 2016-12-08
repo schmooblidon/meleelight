@@ -1,6 +1,7 @@
 import {pPal, palettes, cS, player} from "main/main";
 import {aS} from "physics/actionStateShortcuts";
 import {framesData} from 'main/characters';
+import {blendColours} from "main/vfx/blendColours";
 export default {
   name : "FURASLEEPLOOP",
   canEdgeCancel : true,

@@ -4,7 +4,7 @@ import "characters/fox/attributes";
 import "characters/fox/ecb";
 import {baseActionStates} from "characters/baseActionStates";
 import {aS} from "physics/actionStateShortcuts";
-import {setAS} from "../../physics/actionStateShortcuts";
+import {setupActionStates} from "../../physics/actionStateShortcuts";
 import {CHARIDS} from "../../main/characters";
 
 const Fox = {
@@ -16,7 +16,7 @@ const Fox = {
 export default Fox;
 
 // Remove when actionStates are figured out.
-setAS(CHARIDS.FOX_ID, {
+setupActionStates(CHARIDS.FOX_ID, {
   ...baseActionStates,
   ...Fox.moves,
 });

@@ -1,7 +1,7 @@
-import {player, cS, drawVfx, screenShake, percentShake, finishGame, palettes, pPal,stage} from "main/main";
+import {player, cS,  screenShake, percentShake, finishGame, palettes, pPal} from "main/main";
 import {sounds} from "main/sfx";
-import {Vec2D, actionSounds,framesData} from "main/characters";
-import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForAerials,
+import { actionSounds,framesData} from "main/characters";
+import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, checkForDoubleJump, checkForMultiJump, checkForJump, checkForAerials,
     checkForDash
     , checkForSmashTurn
     , checkForTiltTurn
@@ -19,6 +19,10 @@ import {aS, reduceByTraction, checkForSpecials, checkForTilts, checkForSmashes, 
     , checkForSquat
     , shieldDepletion
 } from "physics/actionStateShortcuts";
+import {drawVfx} from "main/vfx/drawVfx";
+import {blendColours} from "main/vfx/blendColours";
+import {activeStage} from "../stages/activeStage";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 // BASE ActionStates
@@ -784,8 +788,8 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-      if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
+    else if (checkForDoubleJump(p)) {
+		if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
       else {
@@ -856,7 +860,7 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+    else if (checkForDoubleJump(p)){
       if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
@@ -1087,7 +1091,7 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+    else if (checkForDoubleJump(p)){
       if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
@@ -1142,7 +1146,7 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+    else if (checkForDoubleJump(p)){
       if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
@@ -1575,7 +1579,7 @@ export const baseActionStates = {
       aS[cS[p]].ESCAPEAIR.init(p);
       return true;
     }
-    else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+    else if (checkForDoubleJump(p)){
       if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
@@ -1926,15 +1930,15 @@ export const baseActionStates = {
     player[p].phys.chargeFrames = 0;
     player[p].phys.charging = false;
     turnOffHitboxes(p);
-    drawVfx("cliffcatchspark",new Vec2D(stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x,stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y),player[p].phys.face);
+    drawVfx("cliffcatchspark",new Vec2D(activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x,activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y),player[p].phys.face);
     aS[cS[p]].CLIFFCATCH.main(p);
   },
   main : function(p){
     player[p].timer++;
     playSounds("CLIFFCATCH",p);
     if (!aS[cS[p]].CLIFFCATCH.interrupt(p)){
-      var x = stage.ledge[player[p].phys.onLedge][1]?stage.box[stage.ledge[player[p].phys.onLedge][0]].max.x:stage.box[stage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = stage.box[stage.ledge[player[p].phys.onLedge][0]].max.y;
+      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       player[p].phys.pos = new Vec2D(x+(aS[cS[p]].CLIFFCATCH.posOffset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+aS[cS[p]].CLIFFCATCH.posOffset[player[p].timer-1][1]);
     }
   },
@@ -2250,12 +2254,12 @@ export const baseActionStates = {
 	player[p].cStickJump = false;
     player[p].actionState = "REBIRTH";
     player[p].timer = 1;
-    player[p].phys.pos.x = stage.respawnPoints[p].x;
-    player[p].phys.pos.y = stage.respawnPoints[p].y+135;
+    player[p].phys.pos.x = activeStage.respawnPoints[p].x;
+    player[p].phys.pos.y = activeStage.respawnPoints[p].y+135;
     //player[p].phys.grounded = true;
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = -1.5;
-    player[p].phys.face = stage.respawnFace[p];
+    player[p].phys.face = activeStage.respawnFace[p];
     player[p].phys.doubleJumped = false;
     player[p].phys.fastfalled = false;
     player[p].phys.jumpsUsed = 0;
@@ -2422,18 +2426,16 @@ export const baseActionStates = {
     }
   },
   interrupt : function(p){
-	if(checkForJump(p)[0]) {
+	if(checkForDoubleJump(p)) {
 		player[p].tumbleJumpBuffer = 20;
 	}
 	if (player[p].timer > 1 && player[p].hit.hitstun == 0 && player[p].tumbleJumpBuffer > 0) {
-	  if (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump)) {
 		if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
 		return true;
         } else {
         aS[cS[p]].JUMPAERIALF.init(p);
 		return true;
-        }
 	    }
 	}
     if (player[p].timer > 1 && player[p].hit.hitstun == 0){
@@ -2476,7 +2478,7 @@ export const baseActionStates = {
     if (a[0]){
       aS[cS[p]][a[1]].init(p);
       return true;
-    } else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+    } else if (checkForDoubleJump(p)){
       if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
         aS[cS[p]].JUMPAERIALB.init(p);
       }
@@ -2626,7 +2628,7 @@ export const baseActionStates = {
           aS[cS[p]].ESCAPEAIR.init(p);
           return true;
         }
-        else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+        else if (checkForDoubleJump(p)){
           if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
             aS[cS[p]].JUMPAERIALB.init(p);
           }
@@ -3733,7 +3735,7 @@ export const baseActionStates = {
         aS[cS[p]].ESCAPEAIR.init(p);
         return true;
       }
-      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      else if (checkForDoubleJump(p)){
         if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
           aS[cS[p]].JUMPAERIALB.init(p);
         }
@@ -3812,7 +3814,7 @@ export const baseActionStates = {
         aS[cS[p]].ESCAPEAIR.init(p);
         return true;
       }
-      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      else if (checkForDoubleJump(p)){
         if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
           aS[cS[p]].JUMPAERIALB.init(p);
         }
@@ -3902,7 +3904,7 @@ export const baseActionStates = {
         aS[cS[p]].ESCAPEAIR.init(p);
         return true;
       }
-      else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+      else if (checkForDoubleJump(p)){
         if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
           aS[cS[p]].JUMPAERIALB.init(p);
         }

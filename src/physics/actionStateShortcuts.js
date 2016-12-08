@@ -1,8 +1,10 @@
-import {cS, player, gameMode, versusMode, playerType, drawVfx} from "main/main";
+import {cS, player, gameMode, versusMode, playerType} from "main/main";
 import {sounds} from "main/sfx";
-import {intangibility, actionSounds, Vec2D} from "main/characters";
+import {intangibility, actionSounds} from "main/characters";
+import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../main/util/Vec2D";
+import {gameSettings} from "settings";
 /* eslint-disable */
-
 export function randomShout (char){
   //playSfx("shout"+Math.round(0.5+Math.random()*5.99));
   switch (char) {
@@ -101,9 +103,9 @@ export function isFinalDeath (){
   } else if (versusMode) {
     return false;
   } else {
-    var finalDeaths = 0;
-    var totalPlayers = 0;
-    for (var j = 0; j < 4; j++) {
+    let finalDeaths = 0;
+    let totalPlayers = 0;
+    for (let j = 0; j < 4; j++) {
       if (playerType[j] > -1) {
         totalPlayers++;
         if (player[j].stocks == 0) {
@@ -111,7 +113,7 @@ export function isFinalDeath (){
         }
       }
     }
-    return (finalDeaths >= totalPlayers - 1);
+    return (finalDeaths >= Math.max(1,totalPlayers - 1));
   }
 }
 
@@ -244,7 +246,7 @@ export function shieldSize (p,lock){
    //shield size * 0.575 * model scaling
   //(shield size * 0.575 * hp/60) + (1-input)*0.60714*shieldsize
   player[p].phys.shieldAnalog = Math.max(player[p].inputs.lAnalog[0], player[p].inputs.rAnalog[0]);
-  if (lock && player[p].phys.shieldAnalog == 0) {
+  if (lock && player[p].phys.shieldAnalog === 0) {
     player[p].phys.shieldAnalog = 1;
   }
   player[p].phys.shieldSize = (player[p].charAttributes.shieldScale * 0.575 * player[p].charAttributes.modelScale * (
@@ -429,13 +431,27 @@ export function checkForTiltTurn (p){
 export function checkForJump (p){
   if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1])) {
     return [true, 0];
-  } else if (player[p].inputs.lStickAxis[0].y > 0.66 && player[p].inputs.lStickAxis[3].y < 0.2) {
+  } else if ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) &&  (player[p].inputs.lStickAxis[0].y > 0.66 && player[p].inputs.lStickAxis[3].y < 0.2)) { // == is on purpose
     return [true, 1];
   } else {
     return [false, false];
   }
 }
-
+export function checkForDoubleJump (p){
+	if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) && player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))) {
+      return true;
+    } else {
+	  return false;
+	}
+}
+export function checkForMultiJump (p){
+	if (player[p].inputs.x[0] || player[p].inputs.y[0] || ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) &&  player[p].inputs.lStickAxis[0].y > 0.7)) {
+		return true;
+	} else {
+		return false;
+	}
+	
+}
 export function checkForSquat (p){
   if (player[p].inputs.lStickAxis[0].y < -0.69){
     return true;
@@ -530,7 +546,7 @@ export function turboGroundedInterrupt (p){
 }
 
 export const aS = [];
-export function setAS(index,val){
+export function setupActionStates(index, val){
   aS[index] = val;
 }
 
