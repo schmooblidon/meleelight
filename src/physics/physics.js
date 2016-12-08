@@ -591,12 +591,29 @@ export function physics (i){
 
     var notTouchingWalls = [true, true];
 
+    // --------------------------------------------------------------
+    // BELOW: this is recomputed every frame and should be avoided
 
-    // this is recomputed every frame and should be avoided
-    let stageWalls = customZip(stage.wallL,"l").concat( customZip(stage.wallR,"r") );
+    let hybridLWallsZip = [];
+    let hybridRWallsZip = [];
+    if (stage.hybridWallL === null || stage.hybridWallL === undefined) {
+    }
+    else { 
+      hybridLWallsZip = customZip(stage.hybridWallL,"lcw");
+    }
+    if (stage.hybridWallR === null || stage.hybridWallR === undefined) {
+    }
+    else { 
+      hybridRWallsZip = customZip(stage.hybridWallR,"rcw");
+    }
+
+    let stageWalls = customZip(stage.wallL,"l").concat( customZip(stage.wallR,"r") ).concat(hybridLWallsZip).concat(hybridRWallsZip);
     let stageGrounds = customZip(stage.ground,"g");
     let stageCeilings =customZip(stage.ceiling,"c");
     let stagePlatforms = customZip(stage.platform, "p");
+
+    // ABOVE: this is recomputed every frame and should be avoided
+    // --------------------------------------------------------------
 
     let relevantSurfaces = stageWalls;
 
