@@ -104,9 +104,9 @@ export function isFinalDeath (){
   } else if (versusMode) {
     return false;
   } else {
-    var finalDeaths = 0;
-    var totalPlayers = 0;
-    for (var j = 0; j < 4; j++) {
+    let finalDeaths = 0;
+    let totalPlayers = 0;
+    for (let j = 0; j < 4; j++) {
       if (playerType[j] > -1) {
         totalPlayers++;
         if (player[j].stocks == 0) {
@@ -114,7 +114,7 @@ export function isFinalDeath (){
         }
       }
     }
-    return (finalDeaths >= totalPlayers - 1);
+    return (finalDeaths >= Math.max(1,totalPlayers - 1));
   }
 }
 
