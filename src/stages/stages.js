@@ -2,6 +2,28 @@ import {Box2D, Vec2D} from "main/characters";
 import {stage, player} from "main/main";
 /* eslint-disable */
 
+
+// this is a workaround for the moment because I am being lazy
+export function customZip ( list, string, start = 0 ) {
+  if (list.length === 0) {
+    return [];
+  }
+  else {
+    const [head, ...tail] = list;
+    return ( [[head, [string, start]]] . concat( customZip(tail, string, start+1) ) ) ;
+  }
+}
+
+// for stages to have connected grounds/platforms, they need to provide a 'connectednessFunction'
+// input of a connectedness function: [ [type, index ], side ]
+// type is either "g" (ground) or "p" (platform),
+// index is the index of that surface in the stage's list of surfaces (grounds or platforms depending on type)
+// side is either "l" (left) or "r" (right)
+// given such an input, the function should return which ground/platform is connected to that side of the given ground/platform,
+// in the format [ newType, newIndex ],
+// or return 'false' if the ground/platform is not connected on that side to any other ground/platform
+// if 'connectednessFunction' is not supplied, it is assumed that no grounds/platforms are connected to any other grounds/platforms
+
 export const stages = [{
     box : [new Box2D([-68.4,-9],[68.4,0]),new Box2D([-29.3,-34],[-13.68,-9]),new Box2D([13.68,-34],[29.3,-9]),new Box2D([-13.68,-20],[13.68,-9])],
     platform : [[new Vec2D(-57.6,27.2),new Vec2D(-20,27.2)],[new Vec2D(20,27.2),new Vec2D(57.6,27.2)],[new Vec2D(-18.8,54.4),new Vec2D(18.8,54.4)]],

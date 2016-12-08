@@ -6,20 +6,8 @@ import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} fro
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
 import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset} from "physics/environmentalCollision";
+import {customZip} from "stages/stages";
 /* eslint-disable */
-
-
-// this is a workaround for the moment because I am being lazy
-function customZip ( list, string, start = 0 ) {
-  if (list.length === 0) {
-    return [];
-  }
-  else {
-    const [head, ...tail] = list;
-    return ( [[head, [string, start]]] . concat( customZip(tail, string, start+1) ) ) ;
-  }
-}
-
 
 
 function dealWithCollision(i, newCenter) {
@@ -135,21 +123,17 @@ function fallOffGround(i, side, groundEdgePosition) {
 };
 
 
-function isGroundToSide(groundTypeAndIndex, side) {
-  return false; // for the moment, grounds are never connected
-}
-
 // ground type and index is a pair, either ["g", index] or ["p", index]
 // this function assumes that grounds/platforms have their leftmost point given first
-function dealWithGround(i, ground, groundTypeAndIndex) {
+function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
   let [stillGrounded, backward] = [true,false]
   let groundOrPlatform = 0;
   if (groundTypeAndIndex[0] === "p") {
     groundOrPlatform = 1;
   }
 
-  let maybeLeftGroundTypeAndIndex  = isGroundToSide(groundTypeAndIndex,"l");
-  let maybeRightGroundTypeAndIndex = isGroundToSide(groundTypeAndIndex,"r");
+  let maybeLeftGroundTypeAndIndex  = connectednessFunction(groundTypeAndIndex,"l");
+  let maybeRightGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"r");
 
   if ( player[i].phys.ECBp[0].x < ground[0].x - 0.1) {
     if (maybeLeftGroundTypeAndIndex === false) { // no other ground to the left
@@ -581,6 +565,11 @@ export function physics (i){
       let relevantGroundIndex = player[i].phys.onSurface[1];
       let relevantGroundType = "g";
       let relevantGround = stage.ground[relevantGroundIndex];
+
+      let groundConnectednessFunction = stage.connectednessFunction;
+      if (groundConnectednessFunction === null || groundConnectednessFunction === undefined ) {
+        groundConnectednessFunction = function(gd) { return false ;} ;
+      }
        
       if (player[i].phys.onSurface[0] == 1) {
         relevantGroundType = "p";
@@ -589,8 +578,8 @@ export function physics (i){
       
       let relevantGroundTypeAndIndex = [relevantGroundType, relevantGroundIndex];
 
-      let backward = false;
-      [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex);
+      var backward = false;
+      [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex, groundConnectednessFunction);
 
     }
 
@@ -602,11 +591,12 @@ export function physics (i){
 
     var notTouchingWalls = [true, true];
 
-    // the following lines should be precalculated instead of being recalculated every frame
-    const stageWalls = customZip(stage.wallL,"l").concat( customZip(stage.wallR,"r") );
-    const stageGrounds = customZip(stage.ground,"g");
-    const stageCeilings =customZip(stage.ceiling,"c");
-    const stagePlatforms = customZip(stage.platform, "p");
+
+    // this is recomputed every frame and should be avoided
+    let stageWalls = customZip(stage.wallL,"l").concat( customZip(stage.wallR,"r") );
+    let stageGrounds = customZip(stage.ground,"g");
+    let stageCeilings =customZip(stage.ceiling,"c");
+    let stagePlatforms = customZip(stage.platform, "p");
 
     let relevantSurfaces = stageWalls;
 
