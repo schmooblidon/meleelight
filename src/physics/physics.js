@@ -184,7 +184,7 @@ function dealWithGround(i, ground, groundTypeAndIndex) {
   else {
     let ecbp0 = player[i].phys.ECBp[0];
     let yIntercept = coordinateIntercept( [ ecbp0, new Vec2D( ecbp0.x , ecbp0.y+1 ) ], ground);
-    player[i].phys.pos.y = player[i].phys.pos.y + yIntercept.y - ecbp0.y;
+    player[i].phys.pos.y = player[i].phys.pos.y + yIntercept.y - ecbp0.y + additionalOffset;
     player[i].phys.onSurface = [groundOrPlatform, groundTypeAndIndex[1] ]; 
   }
   return [stillGrounded, backward];
