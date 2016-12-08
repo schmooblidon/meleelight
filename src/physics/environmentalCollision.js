@@ -172,7 +172,7 @@ function coordinateInterceptParameter (line1, line2) {
 
 // find the intersection of two lines
 // please ensure this function is not called on parallel lines
-function coordinateIntercept (line1, line2) {
+export function coordinateIntercept (line1, line2) {
   const t = coordinateInterceptParameter(line1, line2);
   return ( new Vec2D( line2[0].x + t*(line2[1].x - line2[0].x ), line2[0].y + t*(line2[1].y - line2[0].y ) ) );
 };

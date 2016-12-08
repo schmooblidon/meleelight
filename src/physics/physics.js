@@ -5,7 +5,7 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewMaybeCenterAndTouchingType} from "physics/environmentalCollision";
+import {getNewMaybeCenterAndTouchingType, coordinateIntercept} from "physics/environmentalCollision";
 /* eslint-disable */
 
 
@@ -93,6 +93,94 @@ function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbp0, j) {
   else {
     land(i, ecbp0, 0, j);
   }
+};
+
+
+function fallOffGround(i, side, groundEdgePosition) {
+  let stillGrounded = true
+  let sign = 1;
+  if (side === "r") {
+    sign = -1;
+  }
+  if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
+    if (player[i].phys.face == sign) {
+      stillGrounded = false;
+      backward = true;
+    } else if (sign * player[i].inputs.lStickAxis[0].x < -0.6 ||
+              (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
+               aS[cS[i]][player[i].actionState].disableTeeter ||
+               player[i].phys.shielding) {
+      stillGrounded = false;
+    } else {
+      player[i].phys.cVel.x = 0;
+      player[i].phys.pos.x = groundEdgePosition.x;
+      aS[cS[i]].OTTOTTO.init(i);
+    }
+  } else if (player[i].phys.cVel.x == 0 &&
+             player[i].phys.kVel.x == 0 &&
+             !aS[cS[i]][player[i].actionState].inGrab) {
+    stillGrounded = false;
+  } else {
+    player[i].phys.cVel.x = 0;
+    player[i].phys.pos.x = groundEdgePosition.x;
+  }
+  return stillGrounded;
+};
+
+
+function isGroundToSide(groundTypeAndIndex, side) {
+  return false; // for the moment, grounds are never connected
+}
+
+// ground type and index is a pair, either ["g", index] or ["p", index]
+// this function assumes that grounds/platforms have their leftmost point given first
+function dealWithGround(i, ground, groundTypeAndIndex) {
+  let stillGrounded = true;
+  let groundOrPlatform = 0;
+  if (groundTypeAndIndex[0] === "p") {
+    groundOrPlatform = 1;
+  }
+
+  let maybeLeftGroundTypeAndIndex  = isGroundToSide(groundTypeAndIndex,"l");
+  let maybeRightGroundTypeAndIndex = isGroundToSide(groundTypeAndIndex,"r");
+
+  if ( player[i].phys.ECBp[0].x < ground[0].x - 0.1) {
+    if (maybeLeftGroundTypeAndIndex === false) { // no other ground to the left
+      stillGrounded = fallOffGround(i, "l", ground[0]);
+    }
+    else {
+      let [leftGroundType, leftGroundIndex] = maybeLeftGroundTypeAndIndex;
+      switch (leftGroundType) {
+        case "g":
+          stillGrounded = dealWithGround(i, stage.ground[leftGroundIndex], ["g",leftGroundIndex]);
+          break;
+        case "p":
+          stillGrounded = dealWithGround(i, stage.platform[leftGroundIndex], ["p",leftGroundIndex]);
+      }
+    }
+  }
+  else if ( player[i].phys.ECBp[0].x > ground[1].x + 0.1 ) {
+    if (maybeRightGroundTypeAndIndex === false) { // no other ground to the right
+      stillGrounded = fallOffGround(i, "r", ground[1]);
+    }
+    else {
+      let [rightGroundType, rightGroundIndex] = maybeRightGroundTypeAndIndex;
+      switch (rightGroundType) {
+        case "g":
+          stillGrounded = dealWithGround(i, stage.ground[rightGroundIndex], ["g",rightGroundIndex]);
+          break;
+        case "p":
+          stillGrounded = dealWithGround(i, stage.platform[rightGroundIndex], ["p",rightGroundIndex]);
+      }
+    }
+  }
+  else {
+    let ecbp0 = player[i].phys.ECBp[0];
+    let yIntercept = coordinateIntercept( [ ecbp0, new Vec2D( ecbp0.x , ecbp0.y+1 ) ], ground);
+    player[i].phys.pos.y = player[i].phys.pos.y + yIntercept.y - ecbp0.y;
+    player[i].phys.onSurface = [groundOrPlatform, groundTypeAndIndex[1] ]; 
+  }
+  return stillGrounded;
 };
 
 function dealWithCeilingCollision(i, newCenter, offsets) {
@@ -475,137 +563,42 @@ export function physics (i){
 
   if (!aS[cS[i]][player[i].actionState].ignoreCollision) {
 
-    // ----------------------------------------------------------------------
-    // TODO: remove the following loop, and deal with the repercussions
-
-    for (var j = 0; j < stage.platform.length; j++) {
-      if (player[i].phys.ECBp[0].y >= stage.platform[j][0].y) {
-        player[i].phys.abovePlatforms[j] = true;
-      } else {
-        player[i].phys.abovePlatforms[j] = false;
-      }
-    }
-
-    // ----------------------------------------------------------------------
-
+    const alreadyGrounded = player[i].phys.grounded;
     let stillGrounded = true;
-    if (player[i].phys.grounded) {
-      var backward = false;
-      if (player[i].phys.onSurface[0] == 0) {
-        var g = player[i].phys.onSurface[1];
-        if (player[i].phys.ECBp[0].x < stage.ground[g][0].x - 0.1) {
-          if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
-            if (player[i].phys.face == 1) {
-              stillGrounded = false;
-              backward = true;
-            } else if (player[i].inputs.lStickAxis[0].x < -0.6 ||
-                      (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
-                       aS[cS[i]][player[i].actionState].disableTeeter ||
-                       player[i].phys.shielding) {
-              stillGrounded = false;
-            } else {
-              player[i].phys.cVel.x = 0;
-              player[i].phys.pos.x = stage.ground[g][0].x;
-              aS[cS[i]].OTTOTTO.init(i);
-            }
-          } else if (player[i].phys.cVel.x == 0 &&
-                     player[i].phys.kVel.x == 0 &&
-                     !aS[cS[i]][player[i].actionState].inGrab) {
-            stillGrounded = false;
-          } else {
-            player[i].phys.cVel.x = 0;
-            player[i].phys.pos.x = stage.ground[g][0].x;
-          }
-        } else if (player[i].phys.ECBp[0].x > stage.ground[g][1].x + 0.1) {
-          if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
-            if (player[i].phys.face == -1) {
-              stillGrounded = false;
-              backward = true;
-            } else if (player[i].inputs.lStickAxis[0].x > 0.6 ||
-                      (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
-                       aS[cS[i]][player[i].actionState].disableTeeter ||
-                       player[i].phys.shielding) {
-              stillGrounded = false;
-            } else {
-              player[i].phys.cVel.x = 0;
-              player[i].phys.pos.x = stage.ground[g][1].x;
-              aS[cS[i]].OTTOTTO.init(i);
-            }
-          } else if (player[i].phys.cVel.x == 0 &&
-                     player[i].phys.kVel.x == 0 &&
-                     !aS[cS[i]][player[i].actionState].inGrab) {
-            stillGrounded = false;
-          } else {
-            player[i].phys.cVel.x = 0;
-            player[i].phys.pos.x = stage.ground[g][1].x;
-          }
-        }
-      } else {
-        var m = player[i].phys.onSurface[1];
-        if (player[i].phys.ECBp[0].x < stage.platform[m][0].x - 0.1) {
-          if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
-            if (player[i].phys.face == 1) {
-              stillGrounded = false;
-              backward = true;
-            } else if (player[i].inputs.lStickAxis[0].x < -0.6 ||
-                      (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
-                       aS[cS[i]][player[i].actionState].disableTeeter ||
-                       player[i].phys.shielding) {
-              stillGrounded = false;
-            } else {
-              player[i].phys.cVel.x = 0;
-              player[i].phys.pos.x = stage.platform[m][0].x;
-              aS[cS[i]].OTTOTTO.init(i);
-            }
-          } else if (player[i].phys.cVel.x == 0 &&
-                     player[i].phys.kVel.x == 0 &&
-                     !aS[cS[i]][player[i].actionState].inGrab) {
-            stillGrounded = false;
-          } else {
-            player[i].phys.cVel.x = 0;
-            player[i].phys.pos.x = stage.platform[m][0].x;
-          }
-        } else if (player[i].phys.ECBp[0].x > stage.platform[m][1].x + 0.1) {
-          if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
-            if (player[i].phys.face == -1) {
-              stillGrounded = false;
-              backward = true;
-            } else if (player[i].inputs.lStickAxis[0].x > 0.6 ||
-                      (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
-                       aS[cS[i]][player[i].actionState].disableTeeter ||
-                       player[i].phys.shielding) {
-              stillGrounded = false;
-            } else {
-              player[i].phys.cVel.x = 0;
-              player[i].phys.pos.x = stage.platform[m][1].x;
-              aS[cS[i]].OTTOTTO.init(i);
-            }
-          } else if (player[i].phys.cVel.x == 0 &&
-                     player[i].phys.kVel.x == 0 &&
-                     !aS[cS[i]][player[i].actionState].inGrab) {
-            stillGrounded = false;
-          } else {
-            player[i].phys.cVel.x = 0;
-            player[i].phys.pos.x = stage.platform[m][1].x;
-          }
-        }
+
+    // ----------------------------------------------------------------------
+    // grounded state movement
+
+    if (alreadyGrounded) {
+
+      let relevantGroundIndex = player[i].phys.onSurface[1];
+      let relevantGroundType = "g";
+      let relevantGround = stage.ground[relevantGroundIndex];
+       
+      if (player[i].phys.onSurface[0] == 1) {
+        relevantGroundType = "p";
+        relevantGround = stage.platform[relevantGroundIndex];
       }
+      
+      let relevantGroundTypeAndIndex = [relevantGroundType, relevantGroundIndex];
+
+      stillGrounded = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex);
+
     }
 
-
-    var notTouchingWalls = [true, true];
 
     // ------------------------------------------------------------------------------------------------------
     // main collision detection routine
 
-    // the following three lines should be precalculated instead of being recalculated every frame
+    var notTouchingWalls = [true, true];
+
+    // the following lines should be precalculated instead of being recalculated every frame
     const stageWalls = customZip(stage.wallL,"l").concat( customZip(stage.wallR,"r") );
     const stageGrounds = customZip(stage.ground,"g");
     const stageCeilings =customZip(stage.ceiling,"c");
     const stagePlatforms = customZip(stage.platform, "p");
 
     let relevantSurfaces = stageWalls;
-    const alreadyGrounded = player[i].phys.grounded;
 
     const notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
     if ( notIgnoringPlatforms ) {
