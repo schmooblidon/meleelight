@@ -556,6 +556,7 @@ export function physics (i){
 
     const alreadyGrounded = player[i].phys.grounded;
     let stillGrounded = true;
+    let backward = false;
 
     // ------------------------------------------------------------------------------------------------------
     // grounded state movement
@@ -578,7 +579,6 @@ export function physics (i){
       
       let relevantGroundTypeAndIndex = [relevantGroundType, relevantGroundIndex];
 
-      var backward = false;
       [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex, groundConnectednessFunction);
 
     }
