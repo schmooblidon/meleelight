@@ -408,16 +408,12 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
                                    , new Vec2D( ecb1[other].x - corner.x, ecb1[other].y - corner.y)];
         const recenteredECBpEdge = [ new Vec2D( ecbp[same ].x - corner.x, ecbp[same ].y - corner.y )
                                    , new Vec2D( ecbp[other].x - corner.x, ecbp[other].y - corner.y)];
-        let lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, false);
+
+        // in the line sweeping, some tricky orientation checks show that a minus sign is required precisely in the counterclockwise case
+        // this is what the third argument to 'lineSweepParameters' corresponds to
+        const lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, counterclockwise);
         if (lineSweepResult === false) {
-          lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, true);
-          if (lineSweepResult === false) {
             // no edge collision, 'edgeCollision' remains false
-          }
-          else {
-            sweepingEdgeCollision = true;
-            [t,s] = lineSweepResult;
-          }
         }
         else {
           sweepingEdgeCollision = true;
