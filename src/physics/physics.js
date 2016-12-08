@@ -26,6 +26,60 @@ export function customZip ( list, string, start = 0 ) {
 }
 
 
+// for stages to have connected grounds/platforms, they need to provide a 'connectednessFunction'
+// input of a connectedness function: [type, index ], side
+// type is either "g" (ground) or "p" (platform),
+// index is the index of that surface in the stage's list of surfaces (grounds or platforms depending on type)
+// side is either "l" (left) or "r" (right)
+// given such an input, the function should return which ground/platform is connected to that side of the given ground/platform,
+// in the format [ newType, newIndex ],
+// or return 'false' if the ground/platform is not connected on that side to any other ground/platform
+
+// here I am constructing a 'connectednessFunction' from the data of chains of connected grounds/platforms
+// if 'connectednessFunction' is not supplied, it is assumed that no grounds/platforms are connected to any other grounds/platforms
+function connectednessFromChains(label, side, chains) {
+  const results = chains.map( (chain) => searchThroughChain(label, side, chain) );
+  if (results[0] === false) {
+    return false;
+  }
+  else {
+    return results[0];
+  }
+};
+
+function searchThroughChain(label, side, chain, current = false) {
+  if (chain.length < 1 || chain === null || chain === undefined) {
+    return false;
+  }
+  else {
+    const [head, ...tail] = chain;
+    switch(side) {
+      case "l":
+        if (head[0] === label[0] && head[1] === label[1] ) {
+          return current;
+        }
+        else {
+          return (searchThroughChain(label, side, tail, head));
+        }
+        break;
+      case "r":
+        if (head[0] === label[0] && head[1] === label[1]) {
+           if (chain[1] === null || chain[1] === undefined) {
+            return false;
+           }
+           else {
+            return chain[1];
+           }
+        }
+        else {
+          return (searchThroughChain(label, side, tail));
+        }
+        break;
+    }
+  }
+};
+
+
 function dealWithCollision(i, newCenter) {
   player[i].phys.pos = newCenter;
 };
@@ -148,10 +202,11 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
     groundOrPlatform = 1;
   }
 
-  let maybeLeftGroundTypeAndIndex  = connectednessFunction(groundTypeAndIndex,"l");
-  let maybeRightGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"r");
+  let maybeLeftGroundTypeAndIndex  = false; 
+  let maybeRightGroundTypeAndIndex = false; 
 
-  if ( player[i].phys.ECBp[0].x < ground[0].x - 0.1) {
+  if ( player[i].phys.ECBp[0].x < ground[0].x) {
+    maybeLeftGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"l");
     if (maybeLeftGroundTypeAndIndex === false) { // no other ground to the left
       [stillGrounded, backward] = fallOffGround(i, "l", ground[0]);
     }
@@ -166,7 +221,8 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
       }
     }
   }
-  else if ( player[i].phys.ECBp[0].x > ground[1].x + 0.1) {
+  else if ( player[i].phys.ECBp[0].x > ground[1].x) {
+    maybeRightGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"r");
     if (maybeRightGroundTypeAndIndex === false) { // no other ground to the right
       [stillGrounded, backward] = fallOffGround(i, "r", ground[1]);
     }
@@ -583,10 +639,16 @@ export function physics (i){
       let relevantGroundType = "g";
       let relevantGround = activeStage.ground[relevantGroundIndex];
 
-      let groundConnectednessFunction = activeStage.connectednessFunction;
-      if (groundConnectednessFunction === null || groundConnectednessFunction === undefined ) {
-        groundConnectednessFunction = function(gd) { return false ;} ;
+      let connectedGrounds = activeStage.connected;
+      function groundConnectednessFunction (gd, side) { return false ;} ;
+      if (connectedGrounds === null || connectedGrounds === undefined ) {
+        // do nothing        
       }
+      else {
+        // this should not be done every frame
+        groundConnectednessFunction = function (gd, side) { return connectednessFromChains(gd, side, connectedGrounds) ;};
+      }
+
        
       if (player[i].phys.onSurface[0] == 1) {
         relevantGroundType = "p";
@@ -637,7 +699,7 @@ export function physics (i){
     if ( notIgnoringPlatforms ) {
         relevantSurfaces = relevantSurfaces.concat(stagePlatforms);
     }
-    if (!alreadyGrounded) {
+    if (!alreadyGrounded || !stillGrounded) {
       relevantSurfaces = relevantSurfaces.concat(stageCeilings).concat(stageGrounds);
     }
 
