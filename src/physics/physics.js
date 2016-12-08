@@ -629,11 +629,11 @@ export function physics (i){
         const ecbp0 = new Vec2D ( player[i].phys.ECBp[0].x + surfacesMaybeCenterAndTouchingType[0].x - player[i].phys.pos.x
                                 , player[i].phys.ECBp[0].y + surfacesMaybeCenterAndTouchingType[0].y - player[i].phys.pos.y);
         switch(surfacesMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
-          case "l": // player touching left wall
+          case "l": // player touching left wall, or left ceiling-wall hybrid
             notTouchingWalls[0] = false;
             dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "l");
             break;
-          case "r": // player touching right wall
+          case "r": // player touching right wall, or right ceiling-wall hybrid
             notTouchingWalls[1] = false;
             dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "r");
             break;

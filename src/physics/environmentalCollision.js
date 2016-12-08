@@ -50,14 +50,15 @@ function turn(number, counterclockwise = true) {
 
 function pushoutMethodFromType(wallType) {
   switch (wallType) {
-    case "c":
-    case "g":
-    case "p":
+    case "c": // ceiling
+    case "g": // ground
+    case "p": // platform
       return "v"; // vertical pushback
       break;
-    case "l":
-    case "r":
-    case "p":
+    case "l": // left wall
+    case "r": // right wall
+    case "lcw": // left "ceiling-wall" hybrid
+    case "rcw": // right "ceiling-wall" hybrid
       return "h"; // horizontal pushback
       break;
     default:
@@ -77,7 +78,7 @@ function movingInto (vec, wallTopOrRight, wallBottomOrLeft, wallType) {
     case "p": // platform
       sign = -1;
       break;
-    default: // right wall, ceiling
+    default: // right wall, ceiling, ceiling-wall hybrids
       break;
   }
   // const outwardsWallNormal = new Vec2D ( sign * (wallTopOrRight.y - wallBottomOrLeft.y), sign*( wallBottomOrLeft.x-wallTopOrRight.x )  );
@@ -310,6 +311,8 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     case "c": // ceiling
     case "t":
     case "u":
+    case "lcw": // left ceiling-wall hybrid
+    case "rcw": // right ceiling-wall hybrid
       same = 2;
       opposite = 0;
       wallTopOrRight  = wallRight;
@@ -465,7 +468,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 
       // sweeping check
       const s = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
-      console.log("s="+s+".");
       if (s > 1 || s < 0 || isNaN(s) || s === Infinity) {
         console.log("'findCollision': no collision, sweeping parameter outside of allowable range, with "+wallType+" surface.");
         return false; // no collision
