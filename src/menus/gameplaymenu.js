@@ -6,7 +6,10 @@ import {sounds} from "main/sfx";
 import {stickHold, stickHoldEach, increaseStick, resetStick} from "menus/menu";
 /* eslint-disable */
 
-export let gameplayMenuSelected = 0;
+export let menuIndex = [0,0];
+export var menuVOptions =  4;
+export var menuHOptions = [0,0,0,0,3];
+export let menuMove = false;
 export function getGameplayCookies (){
   var keys = Object.keys(gameSettings);
   for (var j = 0; j < keys.length; j++) {
@@ -17,7 +20,6 @@ export function getGameplayCookies (){
   }
 }
 export function gameplayMenuControls (i){
-  var menuMove = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
     sounds.menuBack.play();
     player[i].inputs.b[1] = true;
@@ -28,7 +30,7 @@ export function gameplayMenuControls (i){
     changeGamemode(1);
   } else if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
     sounds.menuSelect.play();
-    switch (gameplayMenuSelected) {
+    switch (menuIndex[0]) {
       case 0:
         gameSettings.turbo ^= true;
         break;
@@ -44,34 +46,83 @@ export function gameplayMenuControls (i){
       case 3:
         gameSettings.everyCharWallJump ^= true;
         break;
+      case 4:
+        gameSettings["tapJumpOffp" + (menuIndex[1] + 1)] ^= true;
       default:
         break;
     }
-  } else if (player[i].inputs.lStickAxis[0].y > 0.7) {
+  } else if (player[i].inputs.lStickAxis[0].y > 0.7 && !(Math.abs(player[i].inputs.lStickAxis[0].x >= 0.7))) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
-      gameplayMenuSelected--;
+      menuIndex[0]--;
+      if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+        menuIndex[1] = menuHOptions[menuIndex[0]];
+      }
       menuMove = true;
       increaseStick();
-    }
-    else {
+    } else {
       increaseStick();
       if (stickHold % 10 == 0){
-        gameplayMenuSelected--;
+        menuIndex[0]--;
+        if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+          menuIndex[1] = menuHOptions[menuIndex[0]];
+        }
         menuMove = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].y < -0.7) {
+  } else if (player[i].inputs.lStickAxis[0].y < -0.7 && !(Math.abs(player[i].inputs.lStickAxis[0].x >= 0.7))) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
-      gameplayMenuSelected++;
+      menuIndex[0]++;
+      if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+        menuIndex[1] = menuHOptions[menuIndex[0]];
+      }
       menuMove = true;
       increaseStick();
-    }
-    else {
+    } else {
       increaseStick();
       if (stickHold % 10 == 0){
-        gameplayMenuSelected++;
+        menuIndex[0]++;
+        if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+          menuIndex[1] = menuHOptions[menuIndex[0]];
+        }
+        menuMove = true;
+      }
+    }
+    } else if (player[i].inputs.lStickAxis[0].x > 0.7 & !(Math.abs(player[i].inputs.lStickAxis[0].y >= 0.7))) {
+    stickHoldEach[i] = true;
+    if (stickHold == 0) {
+      menuIndex[1]++;
+      //if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+      //  menuIndex[1] = menuHOptions[menuIndex[0]];
+      //}
+      menuMove = true;
+      increaseStick();
+    } else {
+      increaseStick();
+      if (stickHold % 10 == 0){
+        menuIndex[1]++;
+        //if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+        //  menuIndex[1] = menuHOptions[menuIndex[0]];
+        //}
+        menuMove = true;
+      }
+    }
+    } else if (player[i].inputs.lStickAxis[0].x < -0.7 & !(Math.abs(player[i].inputs.lStickAxis[0].y >= 0.7))){
+    if (stickHold == 0) {
+      menuIndex[1]--;
+      //if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+      //  menuIndex[1] = menuHOptions[menuIndex[0]];
+      //}
+      menuMove = true;
+      increaseStick();
+    } else {
+      increaseStick();
+      if (stickHold % 10 == 0){
+        menuIndex[1]--;
+        //if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+        //  menuIndex[1] = menuHOptions[menuIndex[0]];
+        //}
         menuMove = true;
       }
     }
@@ -91,12 +142,20 @@ export function gameplayMenuControls (i){
     }
   }
   if (menuMove) {
+	menuMove = false;
     sounds.menuSelect.play();
-    if (gameplayMenuSelected == -1) {
-      gameplayMenuSelected = 3;
-    } else if (gameplayMenuSelected == 4) {
-      gameplayMenuSelected = 0;
-    }
+	if (menuIndex[0] <	 0) {
+		menuIndex[0] = menuVOptions;
+	} else if (menuIndex[0] > menuVOptions) {
+		menuIndex[0] = 0;
+	}
+	console.log("index[0]: " + menuIndex[0]);
+	console.log("index[1]: " + menuIndex[1]);
+	if (menuIndex[1] > menuHOptions[menuIndex[0]]) {
+	  menuIndex[1] = 0;
+	} else if (menuIndex[1] < 0) {
+	  menuIndex[1] = menuHOptions[menuIndex[0]];
+	}
   }
 }
 
@@ -115,7 +174,8 @@ export function drawGameplayMenuInit (){
   fg1.fillText("Turbo Mode", 75, 275);
   fg1.fillText("L-Cancel", 75, 335);
   fg1.fillText("Flash on L-Cancel", 75, 395);
-  fg1.fillText("Everyone Walljumps",75,465)
+  fg1.fillText("Everyone Walljumps",75,465);
+  fg1.fillText("Tapjump off", 75, 535);
 }
 
 export function drawGameplayMenu (){
@@ -141,16 +201,22 @@ export function drawGameplayMenu (){
     bg2.lineTo(1200, 0 + (i * 30));
   }
   bg2.stroke();
-  for (var i = 0; i < 4; i++) {
+  for (let i = 0; i < menuVOptions + 1; i++) {
+    for (let x = 0; x < menuHOptions[i] + 1; x++) {
     ui.strokeStyle = "rgba(255, 255, 255, 0.72)";
-    if (i == gameplayMenuSelected) {
+    if (i == menuIndex[0] && x == menuIndex[1]) {
       ui.fillStyle = "rgba(255, 255, 255, 0.6)";
     } else {
       ui.fillStyle = "rgba(255, 255, 255, 0.2)";
     }
-    ui.fillRect(650, 235 + i * 60, 300, 50);
-    ui.strokeRect(650, 235 + i * 60, 300, 50);
-    ui.font = "900 30px Arial";
+    if (menuHOptions[i] > 0) {
+      ui.fillRect(650 + (x * (300 / (menuHOptions[i] + 1))), 235 + i * 60, (300 / (menuHOptions[i] + 1)), 50);
+      ui.strokeRect(650 + (x * (300 / (menuHOptions[i] + 1))), 235 + i * 60, (300 / (menuHOptions[i] + 1)), 50);
+    } else {
+      ui.fillRect(650,235 + i * 60, 300, 50);
+      ui.strokeRect(650,235 + i * 60, 300, 50);
+    }
+    ui.font = "900 " + 30 / (Math.min(1,menuHOptions[i] - 1)) + "px Arial";
     ui.textAlign = "center";
     ui.fillStyle = "white";
     ui.strokeStyle = "black";
@@ -165,14 +231,22 @@ export function drawGameplayMenu (){
       case 2:
         text = gameSettings.flashOnLCancel ? "On" : "Off";
         break;
-	  case 3:
-	    text = gameSettings.everyCharWallJump ? "On" : "Off";
-		break;
+	    case 3:
+	      text = gameSettings.everyCharWallJump ? "On" : "Off";
+		    break;
+      case 4:
+          text = gameSettings["tapJumpOffp" + (x + 1)] ? "On" : "Off";
       default:
         break;
     }
-    ui.strokeText(text, 800, 270 + i * 60);
-    ui.fillText(text, 800, 270 + i * 60);
+    if (menuHOptions[i] == 0) {
+      ui.strokeText(text, 800, 270 + i * 60);
+      ui.fillText(text, 800, 270 + i * 60);
+    } else {
+      ui.strokeText(text, (650 + (x * (300 / (menuHOptions[i] + 1)))) + ((300 / (menuHOptions[i] + 1)) / 2), 270 + i * 60);
+      ui.fillText(text, (650 + (x * (300 / (menuHOptions[i] + 1)))) + ((300 / (menuHOptions[i] + 1)) / 2), 270 + i * 60);
+    }
+    }
   }
 
 }

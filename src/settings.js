@@ -49,4 +49,8 @@ export const gameSettings = {
   dustLessPerfectWavedash : 0,
   phantomThreshold : 0.01,
   everyCharWallJump : 0, //0 - off | 1 - on
+  tapJumpOffp1: 0,
+  tapJumpOffp2: 0,
+  tapJumpOffp3: 0,
+  tapJumpOffp4: 0,
 };

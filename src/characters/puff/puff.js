@@ -1,4 +1,4 @@
-import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForDash,
+import {aS, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForMultiJump, checkForDash,
     checkForSmashTurn
     , checkForTiltTurn
     , tiltTurnDashBuffer
@@ -3182,9 +3182,9 @@ puff.JUMPAERIAL1 = {
     }
   },
   interrupt : function(p){
-    var a = checkForAerials(p);
-    var b = checkForSpecials(p);
-    if (a[0]){
+    const a = checkForAerials(p);
+    const b = checkForSpecials(p);
+    if (a[0] === true){
       puff[a[1]].init(p);
       return true;
     }
@@ -3196,7 +3196,7 @@ puff.JUMPAERIAL1 = {
       puff[b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.7)){
+    else if (player[p].timer > 28 && checkForMultiJump(p)){
       puffNextJump(p);
       return true;
     }
@@ -3250,7 +3250,7 @@ puff.JUMPAERIAL2 = {
       puff[b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.7)){
+    else if (player[p].timer > 28 && checkForMultiJump(p)){
       puffNextJump(p);
       return true;
     }
@@ -3305,7 +3305,7 @@ puff.JUMPAERIAL3 = {
       puff[b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.7)){
+    else if (player[p].timer > 28 && checkForMultiJump(p)){
       puffNextJump(p);
       return true;
     }
@@ -3360,7 +3360,7 @@ puff.JUMPAERIAL4 = {
       puff[b[1]].init(p);
       return true;
     }
-    else if (player[p].timer > 28 && (player[p].inputs.x[0] || player[p].inputs.y[0] || player[p].inputs.lStickAxis[0].y > 0.7)){
+    else if (player[p].timer > 28 && checkForMultiJump(p)){
       puffNextJump(p);
       return true;
     }
