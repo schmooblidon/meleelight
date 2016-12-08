@@ -2,7 +2,7 @@ import {Vec2D} from "../main/util/Vec2D";
 import {dotProd, scalarProd, norm} from "main/linAlg";
 
 const magicAngle = Math.PI/6;
-const maximumCollisionDetectionPasses = 4;
+const maximumCollisionDetectionPasses = 15;
 const cornerPushoutMethod = "h"; // corners only push out horizontally
 export const additionalOffset = 0.0001;
 
@@ -329,15 +329,15 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
        || (ecbp[3].x > wallRight.x  && ecb1[3].x > wallRight.x ) // player ECB stayed to the right of the wall
        || (ecbp[1].x < wallLeft.x   && ecb1[1].x < wallLeft.x  ) // player ECB stayed to the left of the wall
      ) {
-    //console.log("'findCollision': no collision, ECB not even near "+wallType+" surface.");
+    console.log("'findCollision': no collision, ECB not even near "+wallType+" surface.");
     return false;
   }
   else if ( !isOutside ( ecb1[opposite], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
-    //console.log("'findCollision': no collision, ECB already fully on other side of "+wallType+" surface.");
+    console.log("'findCollision': no collision, ECB already fully on other side of "+wallType+" surface.");
     return false; // no collision: player was already on the other side of the line spanned by the wall
   }
   else if ( isOutside ( ecbp[same], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
-    //console.log("'findCollision': no collision, same-side projected ECB point on the outside of "+wallType+" surface.");
+    console.log("'findCollision': no collision, same-side projected ECB point on the outside of "+wallType+" surface.");
     return false; // no collision: same-side projected ECB point on the outside of the line spanned by the wall
   }
   else {
@@ -346,7 +346,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // if the surface is a platform, and the bottom ECB point is below the platform, we shouldn't do anything
     if ( isPlatform ) {
       if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
-        //console.log("'findCollision': no collision, bottom ECB point below platform.");
+        console.log("'findCollision': no collision, bottom ECB point below platform.");
         return false;
       }
     }
@@ -430,34 +430,20 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
               break;
             case "v": // vertical pushout
               const yIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-              let yPushout = yIntersect.y;
-              if (yPushout > wallTop.y) {
-                yPushout = wallTop.y;
-              }
-              else if (yPushout < wallBottom.y) {
-                yPushout = wallBottom.y;
-              }
-              newPosition = new Vec2D( position.x , position.y + lengthen (corner.y-yPushout));
+              newPosition = new Vec2D( position.x , position.y + lengthen (corner.y-yIntersect.y));
               break;
             case "h": // horizontal pushout
             default:
               const xIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
-              let xPushout = xIntersect.x;
-              if (xPushout > wallRight.x) {
-                xPushout = wallRight.x;
-              }
-              else if (xPushout < wallLeft.x) {
-                xPushout = wallLeft.x;
-              }
-              newPosition = new Vec2D( position.x + lengthen (corner.x - xPushout), position.y);
+              newPosition = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
               break;
           }
-          //console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
+          console.log("'findCollision': collision, relevant edge of ECB has moved across "+wallType+" corner.");
           return ( [touchingCorner, newPosition, s] ); // s is the sweeping parameter, t just moves along teh edge
         }
         else {
-          //console.log("'findCollision': no edge collision, relevant edge of ECB does not cross "+wallType+" corner.");
-          //console.log("'findCollision': moving on to non-edge collision checking.");
+          console.log("'findCollision': no edge collision, relevant edge of ECB does not cross "+wallType+" corner.");
+          console.log("'findCollision': moving on to non-edge collision checking.");
         }
       }
     }
@@ -479,13 +465,13 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       // sweeping check
       const s = coordinateInterceptParameter (wall, [ecb1[same],ecbp[same]]); // need to put wall first
       if (s > 1 || s < 0 || isNaN(s) || s === Infinity) {
-        //console.log("'findCollision': no collision, sweeping parameter outside of allowable range, with "+wallType+" surface.");
+        console.log("'findCollision': no collision, sweeping parameter outside of allowable range, with "+wallType+" surface.");
         return false; // no collision
       }
       else {
         const intersection = new Vec2D (ecb1[same].x + s*(ecbp[same].x-ecb1[same].x), ecb1[same].y + s*(ecbp[same].y-ecb1[same].y));
         if (getXOrYCoord(intersection, xOrY) > getXOrYCoord(wallTopOrRight, xOrY) || getXOrYCoord(intersection, xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY)) {
-          //console.log("'findCollision': no collision, intersection point outside of "+wallType+" surface.");
+          console.log("'findCollision': no collision, intersection point outside of "+wallType+" surface.");
           return false; // no collision
         }
         else {
@@ -496,33 +482,19 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
               break;
             case "v": // vertical pushout
               const yIntersect = coordinateIntercept(wall, [ecbp[same], new Vec2D( ecbp[same].x , ecbp[same].y -1) ]);
-              let yPushout = yIntersect.y;
-              if (yPushout > wallTop.y) {
-                yPushout = wallTop.y;
-              }
-              else if (yPushout < wallBottom.y) {
-                yPushout = wallBottom.y;
-              }
-              newPosition = new Vec2D( position.x, position.y + lengthen (yPushout - ecbp[same].y) );
+              newPosition = new Vec2D( position.x, position.y + lengthen (yIntersect.y - ecbp[same].y) );
               break;
             case "h": // horizontal pushout
             default:
               const xIntersect = coordinateIntercept(wall, [ecbp[same], new Vec2D( ecbp[same].x-1, ecbp[same].y) ]);
-              let xPushout = xIntersect.x;
-              if (xPushout > wallRight.x) {
-                xPushout = wallRight.x;
-              }
-              else if (xPushout < wallLeft.x) {
-                xPushout = wallLeft.x;
-              }
-              newPosition = new Vec2D( position.x + lengthen (xPushout - ecbp[same].x), position.y);
+              newPosition = new Vec2D( position.x + lengthen (xIntersect.x - ecbp[same].x), position.y);
               break;
           }
           let touchingWall = wallType;
           if (getXOrYCoord(newPosition, xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) || getXOrYCoord(newPosition, xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
             touchingWall = false;
           }
-          //console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" surface.");
+          console.log("'findCollision': collision, crossing same-side ECB point, "+wallType+" surface.");
           return ( [touchingWall, newPosition, s] );
         }
       }
@@ -542,7 +514,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 //          option 3: '[newPosition, wallTypeAndIndex, s]' (collision, still touching wall with given type and index)
 // s is the sweeping parameter
 function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldMaybeCenterAndTouchingType, passNumber ) {
-  //console.log("'loopOverWalls' pass number "+passNumber+".");
+  console.log("'loopOverWalls' pass number "+passNumber+".");
   let newCollisionHappened = false;
   const suggestedMaybeCenterAndTouchingTypes = [false]; // initialise list of new collisions
   if (passNumber > maximumCollisionDetectionPasses) {
