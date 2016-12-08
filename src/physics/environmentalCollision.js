@@ -4,7 +4,7 @@ import {dotProd, scalarProd, norm} from "main/linAlg";
 const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 4;
 const cornerPushoutMethod = "h"; // corners only push out horizontally
-const additionalOffset = 0.0001;
+export const additionalOffset = 0.0001;
 
 function lengthen ( x ) {
   if (x > 0) {

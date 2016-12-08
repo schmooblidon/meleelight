@@ -5,7 +5,7 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewMaybeCenterAndTouchingType, coordinateIntercept} from "physics/environmentalCollision";
+import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset} from "physics/environmentalCollision";
 /* eslint-disable */
 
 
@@ -97,7 +97,7 @@ function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbp0, j) {
 
 
 function fallOffGround(i, side, groundEdgePosition) {
-  let stillGrounded = true
+  let [stillGrounded, backward] = [true,false]
   let sign = 1;
   if (side === "r") {
     sign = -1;
@@ -105,26 +105,33 @@ function fallOffGround(i, side, groundEdgePosition) {
   if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
     if (player[i].phys.face == sign) {
       stillGrounded = false;
+      player[i].phys.pos.y += additionalOffset;
       backward = true;
-    } else if (sign * player[i].inputs.lStickAxis[0].x < -0.6 ||
-              (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
-               aS[cS[i]][player[i].actionState].disableTeeter ||
-               player[i].phys.shielding) {
+    } 
+    else if (sign * player[i].inputs.lStickAxis[0].x < -0.6 ||
+            (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
+             aS[cS[i]][player[i].actionState].disableTeeter ||
+             player[i].phys.shielding) {
       stillGrounded = false;
-    } else {
+      player[i].phys.pos.y += additionalOffset;
+    } 
+    else {
       player[i].phys.cVel.x = 0;
       player[i].phys.pos.x = groundEdgePosition.x;
       aS[cS[i]].OTTOTTO.init(i);
     }
-  } else if (player[i].phys.cVel.x == 0 &&
+  } 
+  else if (player[i].phys.cVel.x == 0 &&
              player[i].phys.kVel.x == 0 &&
              !aS[cS[i]][player[i].actionState].inGrab) {
     stillGrounded = false;
-  } else {
+    player[i].phys.pos.y += additionalOffset;
+  } 
+  else {
     player[i].phys.cVel.x = 0;
     player[i].phys.pos.x = groundEdgePosition.x;
   }
-  return stillGrounded;
+  return [stillGrounded, backward];
 };
 
 
@@ -135,7 +142,7 @@ function isGroundToSide(groundTypeAndIndex, side) {
 // ground type and index is a pair, either ["g", index] or ["p", index]
 // this function assumes that grounds/platforms have their leftmost point given first
 function dealWithGround(i, ground, groundTypeAndIndex) {
-  let stillGrounded = true;
+  let [stillGrounded, backward] = [true,false]
   let groundOrPlatform = 0;
   if (groundTypeAndIndex[0] === "p") {
     groundOrPlatform = 1;
@@ -146,31 +153,31 @@ function dealWithGround(i, ground, groundTypeAndIndex) {
 
   if ( player[i].phys.ECBp[0].x < ground[0].x - 0.1) {
     if (maybeLeftGroundTypeAndIndex === false) { // no other ground to the left
-      stillGrounded = fallOffGround(i, "l", ground[0]);
+      [stillGrounded, backward] = fallOffGround(i, "l", ground[0]);
     }
     else {
       let [leftGroundType, leftGroundIndex] = maybeLeftGroundTypeAndIndex;
       switch (leftGroundType) {
         case "g":
-          stillGrounded = dealWithGround(i, stage.ground[leftGroundIndex], ["g",leftGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, stage.ground[leftGroundIndex], ["g",leftGroundIndex]);
           break;
         case "p":
-          stillGrounded = dealWithGround(i, stage.platform[leftGroundIndex], ["p",leftGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, stage.platform[leftGroundIndex], ["p",leftGroundIndex]);
       }
     }
   }
-  else if ( player[i].phys.ECBp[0].x > ground[1].x + 0.1 ) {
+  else if ( player[i].phys.ECBp[0].x > ground[1].x + 0.1) {
     if (maybeRightGroundTypeAndIndex === false) { // no other ground to the right
-      stillGrounded = fallOffGround(i, "r", ground[1]);
+      [stillGrounded, backward] = fallOffGround(i, "r", ground[1]);
     }
     else {
       let [rightGroundType, rightGroundIndex] = maybeRightGroundTypeAndIndex;
       switch (rightGroundType) {
         case "g":
-          stillGrounded = dealWithGround(i, stage.ground[rightGroundIndex], ["g",rightGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, stage.ground[rightGroundIndex], ["g",rightGroundIndex]);
           break;
         case "p":
-          stillGrounded = dealWithGround(i, stage.platform[rightGroundIndex], ["p",rightGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, stage.platform[rightGroundIndex], ["p",rightGroundIndex]);
       }
     }
   }
@@ -180,7 +187,7 @@ function dealWithGround(i, ground, groundTypeAndIndex) {
     player[i].phys.pos.y = player[i].phys.pos.y + yIntercept.y - ecbp0.y;
     player[i].phys.onSurface = [groundOrPlatform, groundTypeAndIndex[1] ]; 
   }
-  return stillGrounded;
+  return [stillGrounded, backward];
 };
 
 function dealWithCeilingCollision(i, newCenter, offsets) {
@@ -566,7 +573,7 @@ export function physics (i){
     const alreadyGrounded = player[i].phys.grounded;
     let stillGrounded = true;
 
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------
     // grounded state movement
 
     if (alreadyGrounded) {
@@ -582,10 +589,13 @@ export function physics (i){
       
       let relevantGroundTypeAndIndex = [relevantGroundType, relevantGroundIndex];
 
-      stillGrounded = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex);
+      let backward = false;
+      [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex);
 
     }
 
+    // end of grounded state movement
+    // ------------------------------------------------------------------------------------------------------
 
     // ------------------------------------------------------------------------------------------------------
     // main collision detection routine
