@@ -25,6 +25,20 @@ export function customZip ( list, string, start = 0 ) {
   }
 }
 
+function firstNonFalse( list ) {
+  if (list.length < 1 || list === null || list === undefined) {
+    return false;
+  }
+  else {
+    const [head, ...tail] = list;
+    if ( head === false ) {
+      return firstNonFalse(tail);
+    }
+    else {
+      return head;
+    }
+  }
+};
 
 // for stages to have connected grounds/platforms, they need to provide a 'connectednessFunction'
 // input of a connectedness function: [type, index ], side
@@ -39,12 +53,7 @@ export function customZip ( list, string, start = 0 ) {
 // if 'connectednessFunction' is not supplied, it is assumed that no grounds/platforms are connected to any other grounds/platforms
 function connectednessFromChains(label, side, chains) {
   const results = chains.map( (chain) => searchThroughChain(label, side, chain) );
-  if (results[0] === false) {
-    return false;
-  }
-  else {
-    return results[0];
-  }
+  return firstNonFalse (results);
 };
 
 function searchThroughChain(label, side, chain, current = false) {
