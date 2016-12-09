@@ -313,7 +313,7 @@ function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, position, 
           newPosition = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
           break;
       }
-      console.log("'edgeSweepingCheck': collision, relevant edge of ECB has moved across "+wallType+" corner.");
+      console.log("'edgeSweepingCheck': collision, relevant edge of ECB has moved across "+wallType+" corner. Sweeping parameter s="+s+".");
       return ( [false, newPosition, s] ); // s is the sweeping parameter, t just moves along the edge
             //  ^^^^ false because colliding at a corner never counts as 'touching' for the purpose of the physics
     }
@@ -323,6 +323,7 @@ function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, position, 
     }
   }
   else {
+    console.log("'edgeSweepingCheck': no edge collision, "+wallType+" corner did not switch relevant ECB edge sides.");
     return false;
   }
 };
@@ -363,7 +364,7 @@ function pointSweepingCheck ( wall, wallType, wallTopOrRight, wallBottomOrLeft, 
       if (getXOrYCoord(newPosition, xOrY) < getXOrYCoord(wallBottomOrLeft, xOrY) || getXOrYCoord(newPosition, xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
         touchingWall = false;
       }
-      console.log("'pointSweepingCheck': collision, crossing same-side ECB point, "+wallType+" surface.");
+      console.log("'pointSweepingCheck': collision, crossing same-side ECB point, "+wallType+" surface. Sweeping parameter s="+s+".");
       return ( [touchingWall, newPosition, s] );
     }
   }
@@ -431,6 +432,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       break;
   }
 
+
   // first check if player ECB was even near the wall
   if (    (ecbp[0].y > wallTop.y    && ecb1[0].y > wallTop.y   ) // player ECB stayed above the wall
        || (ecbp[2].y < wallBottom.y && ecb1[2].y < wallBottom.y) // played ECB stayed below the wall
@@ -455,7 +457,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       }
     }
 
-
     // -------------------------------------------------------------------------------------------------------------------------------------------------------
     // now, we check whether the ECB is colliding on an edge, and not a vertex
 
@@ -467,6 +468,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     let edgeCase = false;
     let counterclockwise = true; // whether (same ECB point -> other ECB point) is counterclockwise or not
     let corner = false; // no value for now
+    let closestEdgeCollision = false; // false for now
 
     // case 1
     if ( getXOrYCoord(ecb1[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
@@ -524,22 +526,21 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       // if only one of the two ECB edges (same-other / same-top) collided, take that one
       if (edgeSweepResult === false) {
         if (! ( otherEdgeSweepResult === false ) ) {
-          return otherEdgeSweepResult;
+          closestEdgeCollision = otherEdgeSweepResult;
         }
       }
       else if (otherEdgeSweepResult === false) {
         if (! (edgeSweepResult === false)) {
-          return edgeSweepResult;
+          closestEdgeCollision = edgeSweepResult;
         }
       }
       // otherwise choose the collision with smallest sweeping parameter
       else if ( otherEdgeSweepResult[2] > edgeSweepResult[2] ) {
-        return edgeSweepResult;
+        closestEdgeCollision = edgeSweepResult;
       }
       else {
-        return otherEdgeSweepResult;
+        closestEdgeCollision = otherEdgeSweepResult;
       }
-      console.log("'findCollision': no edge collision, moving on to point collision.");
     } 
 
     // end of edge case checking
@@ -548,6 +549,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 
     let sameCrossing = false;
     let topCrossing = false;
+    let closestPointCollision = false;
 
     
     if (  isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType ) && 
@@ -578,19 +580,49 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 
     // if only one of the two ECB points (same/top) collided, take that one
     if (samePointSweepResult === false) {
-      return topPointSweepResult;
+      closestPointCollision =  topPointSweepResult;
     }
     else if (topPointSweepResult === false) {
-      return samePointSweepResult;
+      closestPointCollision = samePointSweepResult;
     }
     // otherwise choose the collision with smallest sweeping parameter
     else if ( topPointSweepResult[2] > samePointSweepResult[2] ) {
-      return samePointSweepResult;
+      closestPointCollision = samePointSweepResult;
     }
     else {
-      return topPointSweepResult;
+      closestPointCollision = topPointSweepResult;
     }
-    
+  
+    let [finalCollision, finalCollisionType] = [false,false];
+
+    // if we have only one collision type (point/edge), take that one
+    if (closestEdgeCollision === false ) {
+      finalCollision = closestPointCollision;
+      finalCollisionType = "point";
+    }
+    else if (closestPointCollision === false) {
+      finalCollision = closestEdgeCollision;
+      finalCollisionType = "edge";
+    }
+    // otherwise choose the collision with smallest sweeping parameter
+    else if (closestEdgeCollision[2] > closestPointCollision[2]) {
+      finalCollision = closestPointCollision;
+      finalCollisionType = "point";
+    }
+    else {
+      finalCollision = closestEdgeCollision;
+      finalCollisionType = "edge";
+    }
+
+    if (finalCollision === false) {
+      console.log("'findCollision': sweeping determined no collision with surface of type "+wallType+".");
+    }
+    else {
+      console.log("'findCollision': "+finalCollisionType+" collision with surface of type "+wallType+" and sweeping parameter s="+finalCollision[2]+".");
+    }
+    return finalCollision;
+
+
   }
 };
 
