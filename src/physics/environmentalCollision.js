@@ -679,10 +679,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) 
       opposite = 2;
       wallTopOrRight  = wallRight;
       wallBottomOrLeft = wallLeft;
-      extremeSign = 1;
-      if (wallAngle > Math.PI) {
-        extremeWall = wallLeft; // otherwise defaults to wallRight
-      }
+      extremeWall = wallTop;
       xOrY = 0;
       flip = true;
       alsoCheckTop = false;
@@ -695,9 +692,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) 
       wallTopOrRight  = wallRight;
       wallBottomOrLeft = wallLeft;
       extremeSign = -1;
-      if (wallAngle > Math.PI) {
-        extremeWall = wallLeft; // otherwise defaults to wallRight
-      }
+      extremeWall = wallBottom;
       xOrY = 0;
       alsoCheckTop = false;
       break;
