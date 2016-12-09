@@ -857,12 +857,10 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) 
     else if (topPointSweepResult === false) {
       closestPointCollision = samePointSweepResult;
     }
-    // otherwise choose the collision with smallest sweeping parameter
-    else if ( topPointSweepResult[2] > samePointSweepResult[2] ) {
-      closestPointCollision = samePointSweepResult;
-    }
+    // in general we prefer the same side ECB point collision, as this will need to be pushed out horizontally the furthest
+    // note that we are not choosing the collision with smallest sweeping parameter
     else {
-      closestPointCollision = topPointSweepResult;
+      closestPointCollision = samePointSweepResult;
     }
     
   
