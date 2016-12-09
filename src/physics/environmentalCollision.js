@@ -334,7 +334,7 @@ function lineSweepParameters( line1, line2, flip = false) {
 };
 
 
-function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, position, counterclockwise, corner, wallType) {
+function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, other, position, counterclockwise, corner, wallType) {
 
   // the relevant ECB edge, that might collide with the corner, is the edge between ECB points 'same' and 'other'
   let interiorECBside = "l";   
@@ -367,9 +367,9 @@ function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, position, 
       let newPosition = false; // initialising
 
       let additionalPushout = additionalOffset; // additional pushout
-      switch(wallType) {
-        case "l":
-        case "c":
+      switch(other) {
+        case 1:
+        case 2:
           additionalPushout = -additionalOffset;
           break;
         default:
@@ -769,7 +769,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) 
       }
 
       if (!isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside) ) {
-        edgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[other], ecbp[same], ecbp[other], position, counterclockwise, corner, wallType);
+        edgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[other], ecbp[same], ecbp[other], other, position, counterclockwise, corner, wallType);
       }
     }
 
@@ -787,7 +787,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) 
       }
 
       if ( !isOutside(corner, ecbp[same], ecbp[2], otherInteriorECBside) && isOutside ( corner, ecb1[same], ecb1[2], otherInteriorECBside) ) {
-        otherEdgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[2], ecbp[same], ecbp[2], position, otherCounterclockwise, otherCorner, wallType);
+        otherEdgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[2], ecbp[same], ecbp[2], 2, position, otherCounterclockwise, otherCorner, wallType);
       }
     }
 
