@@ -681,20 +681,7 @@ export function physics (i){
     // --------------------------------------------------------------
     // BELOW: this is recomputed every frame and should be avoided
 
-    let hybridLWallsZip = [];
-    let hybridRWallsZip = [];
-    if (activeStage.hybridWallL === null || activeStage.hybridWallL === undefined) {
-    }
-    else { 
-      hybridLWallsZip = customZip(activeStage.hybridWallL,"lcw");
-    }
-    if (activeStage.hybridWallR === null || activeStage.hybridWallR === undefined) {
-    }
-    else { 
-      hybridRWallsZip = customZip(activeStage.hybridWallR,"rcw");
-    }
-
-    let stageWalls = customZip(activeStage.wallL,"l").concat( customZip(activeStage.wallR,"r") ).concat(hybridLWallsZip).concat(hybridRWallsZip);
+    let stageWalls = customZip(activeStage.wallL,"l").concat( customZip(activeStage.wallR,"r") );
     let stageGrounds = customZip(activeStage.ground,"g");
     let stageCeilings =customZip(activeStage.ceiling,"c");
     let stagePlatforms = customZip(activeStage.platform, "p");
@@ -705,11 +692,11 @@ export function physics (i){
     let relevantSurfaces = stageWalls;
 
     const notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
-    if ( notIgnoringPlatforms ) {
-        relevantSurfaces = relevantSurfaces.concat(stagePlatforms);
-    }
     if (!alreadyGrounded || !stillGrounded) {
       relevantSurfaces = relevantSurfaces.concat(stageCeilings).concat(stageGrounds);
+      if ( notIgnoringPlatforms ) {
+        relevantSurfaces = relevantSurfaces.concat(stagePlatforms);
+      }
     }
 
     let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, relevantSurfaces);
@@ -726,11 +713,11 @@ export function physics (i){
         const ecbp0 = new Vec2D ( player[i].phys.ECBp[0].x + surfacesMaybeCenterAndTouchingType[0].x - player[i].phys.pos.x
                                 , player[i].phys.ECBp[0].y + surfacesMaybeCenterAndTouchingType[0].y - player[i].phys.pos.y);
         switch(surfacesMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
-          case "l": // player touching left wall, or left ceiling-wall hybrid
+          case "l": // player touching left wall
             notTouchingWalls[0] = false;
             dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "l");
             break;
-          case "r": // player touching right wall, or right ceiling-wall hybrid
+          case "r": // player touching right wall
             notTouchingWalls[1] = false;
             dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "r");
             break;
