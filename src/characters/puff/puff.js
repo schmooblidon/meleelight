@@ -1,4 +1,4 @@
-import {actionStates, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForDash,
+import {actionStates, turnOffHitboxes, checkForSpecials, checkForTilts, checkForSmashes, checkForJump, checkForDash,checkForMultiJump,
     checkForSmashTurn
     , checkForTiltTurn
     , tiltTurnDashBuffer
@@ -3184,7 +3184,7 @@ puff.JUMPAERIAL1 = {
   interrupt : function(p,input){
     var a = checkForAerials(p,input);
     var b = checkForSpecials(p,input);
-    if (a[0]){
+    if (a[0]=== true){
       puff[a[1]].init(p,input);
       return true;
     }
@@ -3196,8 +3196,8 @@ puff.JUMPAERIAL1 = {
       puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && (input[p][0].x || input[p][0].y || input[p][0].lsY > 0.7)){
-      puffNextJump(p,input);
+    else if (player[p].timer > 28 && checkForMultiJump(p)){
+      puffNextJump(p);
       return true;
     }
     else if (player[p].timer > 50){
@@ -3250,8 +3250,8 @@ puff.JUMPAERIAL2 = {
       puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && (input[p][0].x || input[p][0].y || input[p][0].lsY > 0.7)){
-      puffNextJump(p,input);
+    else if (player[p].timer > 28 && checkForMultiJump(p,input)){
+      puffNextJump(p);
       return true;
     }
     else if (player[p].timer > 50){
@@ -3305,8 +3305,8 @@ puff.JUMPAERIAL3 = {
       puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && (input[p][0].x || input[p][0].y || input[p][0].lsY > 0.7)){
-      puffNextJump(p,input);
+    else if (player[p].timer > 28 && checkForMultiJump(p,input)){
+      puffNextJump(p);
       return true;
     }
     else if (player[p].timer > 50){
@@ -3360,8 +3360,8 @@ puff.JUMPAERIAL4 = {
       puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && (input[p][0].x || input[p][0].y || input[p][0].lsY > 0.7)){
-      puffNextJump(p,input);
+    else if (player[p].timer > 28 && checkForMultiJump(p,input)){
+      puffNextJump(p);
       return true;
     }
     else if (player[p].timer > 50){
