@@ -764,7 +764,7 @@ export function update (i,inputBuffers){
       }
       else {
         if (player[i].actionState != "SLEEP"){
-          inputBuffers[i] = runAI(i);
+            runAI(i); // no need to return input since polling returns ai input if they are active
         }
       }
     }
