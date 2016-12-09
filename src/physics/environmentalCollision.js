@@ -266,51 +266,63 @@ function lineSweepParameters( line1, line2, flip = false) {
 
 
 function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, position, counterclockwise, corner, wallType) {
-  let [t,s] = [0,0];
 
-  // we sweep a line,
-  // starting from the relevant ECB1 edge, and ending at the relevant ECBp edge,
-  // and figure out where this would intersect the corner
+  // the relevant ECB edge, that might collide with the corner, is the edge between ECB points 'same' and 'other'
+  let interiorECBside = "l";   
+  if (counterclockwise === false) {   
+    interiorECBside = "r";    
+  }
+
+  if (!isOutside ( corner, ecbpSame, ecbpOther, interiorECBside) && isOutside ( corner, ecb1Same, ecb1Other, interiorECBside) ) {
+
+    let [t,s] = [0,0];
   
-  // first we recenter everything around the corner,
-  // as the 'lineSweepParameters' function calculates collision with respect to the origin
-
-  const recenteredECB1Edge = [ new Vec2D( ecb1Same.x  - corner.x, ecb1Same.y  - corner.y )
-                             , new Vec2D( ecb1Other.x - corner.x, ecb1Other.y - corner.y ) ];
-  const recenteredECBpEdge = [ new Vec2D( ecbpSame.x  - corner.x, ecbpSame.y  - corner.y )
-                             , new Vec2D( ecbpOther.x - corner.x, ecbpOther.y - corner.y ) ];
-
-  // in the line sweeping, some tricky orientation checks show that a minus sign is required precisely in the counterclockwise case
-  // this is what the third argument to 'lineSweepParameters' corresponds to
-  const lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, counterclockwise);
+    // we sweep a line,
+    // starting from the relevant ECB1 edge, and ending at the relevant ECBp edge,
+    // and figure out where this would intersect the corner
+    
+    // first we recenter everything around the corner,
+    // as the 'lineSweepParameters' function calculates collision with respect to the origin
   
-  if (! (lineSweepResult === false) ) {
-    [t,s] = lineSweepResult;
-    let newPosition = false; // initialising
-    switch (cornerPushoutMethod) { // move this pushout procedure to a separate function
-      case "o": // orthogonal pushout     
-        const contactECBedge = [ new Vec2D( ecb1Same + s*(ecbpSame.x - ecb1Same.x), ecb1Same.y + s*(ecbpSame.y - ecb1Same.y))
-                               , new Vec2D( ecb1Other.x + s*(ecbpOther.x - ecb1Other.x), ecb1Other.y + s*(ecbpOther.y - ecb1Other.y)) ];       
-        const newSameECB = orthogonalProjection(ecbpSame, contactECBedge);
-        newPosition = new Vec2D( position.x + lengthen (newSameECB.x - ecbpSame.x) , position.y + lengthen ( newSameECB.y - ecbpSame.y) );
-        break;
-      case "v": // vertical pushout
-        const yIntersect = coordinateIntercept( [ ecbpSame, ecbpOther ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-        newPosition = new Vec2D( position.x , position.y + lengthen (corner.y-yIntersect.y));
-        break;
-      case "h": // horizontal pushout
-      default:
-        const xIntersect = coordinateIntercept( [ ecbpSame, ecbpOther ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
-        newPosition = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
-        break;
+    const recenteredECB1Edge = [ new Vec2D( ecb1Same.x  - corner.x, ecb1Same.y  - corner.y )
+                               , new Vec2D( ecb1Other.x - corner.x, ecb1Other.y - corner.y ) ];
+    const recenteredECBpEdge = [ new Vec2D( ecbpSame.x  - corner.x, ecbpSame.y  - corner.y )
+                               , new Vec2D( ecbpOther.x - corner.x, ecbpOther.y - corner.y ) ];
+  
+    // in the line sweeping, some tricky orientation checks show that a minus sign is required precisely in the counterclockwise case
+    // this is what the third argument to 'lineSweepParameters' corresponds to
+    const lineSweepResult = lineSweepParameters( recenteredECB1Edge, recenteredECBpEdge, counterclockwise);
+    
+    if (! (lineSweepResult === false) ) {
+      [t,s] = lineSweepResult;
+      let newPosition = false; // initialising
+      switch (cornerPushoutMethod) { // move this pushout procedure to a separate function
+        case "o": // orthogonal pushout     
+          const contactECBedge = [ new Vec2D( ecb1Same.x  + s*(ecbpSame.x  - ecb1Same.x ), ecb1Same.y  + s*(ecbpSame.y  - ecb1Same.y ))
+                                 , new Vec2D( ecb1Other.x + s*(ecbpOther.x - ecb1Other.x), ecb1Other.y + s*(ecbpOther.y - ecb1Other.y)) ];       
+          const newSameECB = orthogonalProjection(ecbpSame, contactECBedge);
+          newPosition = new Vec2D( position.x + lengthen (newSameECB.x - ecbpSame.x) , position.y + lengthen ( newSameECB.y - ecbpSame.y) );
+          break;
+        case "v": // vertical pushout
+          const yIntersect = coordinateIntercept( [ ecbpSame, ecbpOther ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
+          newPosition = new Vec2D( position.x , position.y + lengthen (corner.y-yIntersect.y));
+          break;
+        case "h": // horizontal pushout
+        default:
+          const xIntersect = coordinateIntercept( [ ecbpSame, ecbpOther ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
+          newPosition = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
+          break;
+      }
+      console.log("'edgeSweepingCheck': collision, relevant edge of ECB has moved across "+wallType+" corner.");
+      return ( [false, newPosition, s] ); // s is the sweeping parameter, t just moves along the edge
+            //  ^^^^ false because colliding at a corner never counts as 'touching' for the purpose of the physics
     }
-    console.log("'edgeSweepingCheck': collision, relevant edge of ECB has moved across "+wallType+" corner.");
-    return ( [false, newPosition, s] ); // s is the sweeping parameter, t just moves along the edge
-          //  ^^^^ false because colliding at a corner never counts as 'touching' for the purpose of the physics
+    else {
+      console.log("'edgeSweepingCheck': no edge collision, relevant edge of ECB does not cross "+wallType+" corner.");
+      return false;
+    }
   }
   else {
-    console.log("'edgeSweepingCheck': no edge collision, relevant edge of ECB does not cross "+wallType+" corner.");
-    console.log("'edgeSweepingCheck': moving on to non-edge collision checking.");
     return false;
   }
 };
@@ -428,8 +440,9 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     console.log("'findCollision': no collision, ECB not even near "+wallType+" surface.");
     return false;
   }
-  else if ( !isOutside ( ecb1[opposite], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
-    console.log("'findCollision': no collision, ECB already fully on other side of "+wallType+" surface.");
+  else if (   !isOutside ( ecb1[opposite], wallTopOrRight, wallBottomOrLeft, wallType ) &&
+            ( !isOutside ( ecb1[0]       , wallRight     , wallLeft        , "c"      ) && alsoCheckTop ) ) {
+    console.log("'findCollision': no collision, ECB1 fully on other side of "+wallType+" surface.");
     return false;
   }
   else {
@@ -437,7 +450,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // if the surface is a platform, and the bottom ECB point is below the platform, we shouldn't do anything
     if ( isPlatform ) {
       if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
-        console.log("'findCollision': no collision, bottom ECB point below platform.");
+        console.log("'findCollision': no collision, bottom ECB1 point was below platform.");
         return false;
       }
     }
@@ -449,6 +462,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     // first, figure out which is the relevant ECB edge that could collide at the corner
     // we know that one of the endpoints of this edge is the same-side ECB point of the wall,
     // we are left to find the other, which we'll call 'other'
+
 
     let edgeCase = false;
     let counterclockwise = true; // whether (same ECB point -> other ECB point) is counterclockwise or not
@@ -474,21 +488,59 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       }
     }
 
+    
     if (edgeCase) {
       // the relevant ECB edge, that might collide with the corner, is the edge between ECB points 'same' and 'other'
-      let interiorECBside = "l";   
-      if (counterclockwise === false) {   
+      let interiorECBside = "l";
+      if (counterclockwise === false) {
         interiorECBside = "r";    
       }
 
-      if (!isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside) ) {
 
-        const edgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[other], ecbp[same], ecbp[other], position, counterclockwise, corner, wallType);
-        if (! (edgeSweepResult === false ) ) {
-          return edgeSweepResult; // otherwise, move on to non-edge case
+      let edgeSweepResult = false;
+      let otherEdgeSweepResult = false;
+
+      if (!isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside) ) {
+        edgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[other], ecbp[same], ecbp[other], position, counterclockwise, corner, wallType);
+      }
+
+      if (alsoCheckTop) {
+        let otherCounterclockwise = false; // whether ( same ECB point -> top ECB point) is counterclockwise
+        let otherCorner = wallRight;
+        if (wallType === "l") {
+          otherCounterclockwise = true;
+          otherCorner = wallLeft;
+        }
+
+        let otherInteriorECBside = "l";
+        if (otherCounterclockwise === false) {
+          otherInteriorECBside = "r";    
+        }
+
+        if ( !isOutside(corner, ecbp[same], ecbp[2], otherInteriorECBside) && isOutside ( corner, ecb1[same], ecb1[2], otherInteriorECBside) ) {
+          otherEdgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[2], ecbp[same], ecbp[2], position, otherCounterclockwise, otherCorner, wallType);
         }
       }
-    }
+      // if only one of the two ECB edges (same-other / same-top) collided, take that one
+      if (edgeSweepResult === false) {
+        if (! ( otherEdgeSweepResult === false ) ) {
+          return otherEdgeSweepResult;
+        }
+      }
+      else if (otherEdgeSweepResult === false) {
+        if (! (edgeSweepResult === false)) {
+          return edgeSweepResult;
+        }
+      }
+      // otherwise choose the collision with smallest sweeping parameter
+      else if ( otherEdgeSweepResult[2] > edgeSweepResult[2] ) {
+        return edgeSweepResult;
+      }
+      else {
+        return otherEdgeSweepResult;
+      }
+      console.log("'findCollision': no edge collision, moving on to point collision.");
+    } 
 
     // end of edge case checking
     // -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -497,33 +549,48 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
     let sameCrossing = false;
     let topCrossing = false;
 
+    
     if (  isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType ) && 
          !isOutside ( ecbp[same], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
       sameCrossing = true;
     }
     else if (alsoCheckTop){ 
-      if (  isOutside ( ecb1[2], wallTopOrRight, wallBottomOrLeft, wallType ) && 
-           !isOutside ( ecbp[2], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
+      if (  isOutside ( ecb1[2], wallRight, wallLeft, "c" ) && 
+           !isOutside ( ecbp[2], wallRight, wallLeft, "c" ) ) {
         topCrossing = true;
       }
     }
+    
 
     // we now know that the same/other ECB point went from the outside to the inside of the line spanned by the wall
 
+    
+    let samePointSweepResult = false;
+    let topPointSweepResult = false;
     // sweeping checks
     if (sameCrossing === true) {
-      const samePointSweepResult = pointSweepingCheck ( wall, wallType, wallTopOrRight, wallBottomOrLeft, xOrY, ecb1[same], ecbp[same], position );
+      samePointSweepResult = pointSweepingCheck ( wall, wallType, wallTopOrRight, wallBottomOrLeft, xOrY, ecb1[same], ecbp[same], position );
+    }
 
-      if (samePointSweepResult === false && topCrossing === true) {
-        return ( pointSweepingCheck ( wall, wallRight, wallLeft, 0, ecb1[2], ecbp[2], position ) );
-      }
-      else {
-        return samePointSweepResult;
-      }
+    if (topCrossing === true) {
+      topPointSweepResult = pointSweepingCheck ( wall, wallType, wallRight, wallLeft, 0, ecb1[2], ecbp[2], position );
+    }
+
+    // if only one of the two ECB points (same/top) collided, take that one
+    if (samePointSweepResult === false) {
+      return topPointSweepResult;
+    }
+    else if (topPointSweepResult === false) {
+      return samePointSweepResult;
+    }
+    // otherwise choose the collision with smallest sweeping parameter
+    else if ( topPointSweepResult[2] > samePointSweepResult[2] ) {
+      return samePointSweepResult;
     }
     else {
-      return false;
+      return topPointSweepResult;
     }
+    
   }
 };
 
