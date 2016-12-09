@@ -5,7 +5,7 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset} from "physics/environmentalCollision";
+import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor, squashDownECB} from "physics/environmentalCollision";
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
@@ -668,6 +668,13 @@ export function physics (i){
 
       [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex, groundConnectednessFunction);
 
+      // squash grounded ECB if there is a low ceiling
+      if (stillGrounded) {
+        let ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, activeStage.ceiling );
+        if (! (ecbSquashFactor === false )) {
+          player[i].phys.ECBp = squashDownECB(player[i].phys.ECBp, ecbSquashFactor - additionalOffset );
+        }
+      }
     }
 
     // end of grounded state movement

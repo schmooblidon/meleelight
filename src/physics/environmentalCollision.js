@@ -734,11 +734,59 @@ function moveECB (ecb, vec) {
            , new Vec2D (ecb[3].x+vec.x,ecb[3].y+vec.y) ] );
 };
 
-function squashECB (ecb, factor) {
-  return ( [ new Vec2D ( ecb[0].x                                , factor * (ecb[0].y-ecb[1].y) + ecb[1].y )
-           , new Vec2D ( factor * (ecb[1].x-ecb[0].x) + ecb[0].x , ecb[1].y                                )
-           , new Vec2D ( ecb[2].x                                , factor * (ecb[2].y-ecb[1].y) + ecb[1].y )
-           , new Vec2D ( factor * (ecb[3].x-ecb[0].x) + ecb[0].x , ecb[3].y                                ) ] );
+export function squashDownECB (ecb, factor) {
+  return ( [ ecb[0]
+           , new Vec2D ( factor * (ecb[1].x-ecb[0].x) + ecb[0].x , factor * (ecb[1].y-ecb[0].y) + ecb[0].y )
+           , new Vec2D ( ecb[2].x                                , factor * (ecb[2].y-ecb[0].y) + ecb[0].y )
+           , new Vec2D ( factor * (ecb[3].x-ecb[0].x) + ecb[0].x , factor * (ecb[3].y-ecb[0].y) + ecb[0].y ) ] );
+};
+
+// finds the smallest value t of the list with t > min, t <= max
+// returns false if none are found
+function findSmallestWithin(list, min, max, smallestSoFar = false) {
+  if (list === null || list === undefined || list.length < 1) {
+    return smallestSoFar;
+  }
+  else {
+    const [head, ...tail] = list;
+    if (head === false) {
+      return findSmallestWithin(tail, min, max, smallestSoFar);
+    }
+    else if (head > min && head <= max) {
+      if (smallestSoFar === false) {
+        return findSmallestWithin(tail, min, max, head);
+      }
+      else if (head > smallestSoFar) {
+        return findSmallestWithin(tail, min, max, smallestSoFar);
+      }
+      else {
+        return findSmallestWithin(tail, min, max, head);
+      }
+    }
+    else {
+      return findSmallestWithin(tail, min, max, smallestSoFar);
+    }
+  }
+};
+
+
+export function groundedECBSquashFactor( ecb, ceilings ) {
+  const ceilingYValues = ceilings.map ( (ceil) => {
+    if (ecb[0].x < ceil[0].x || ecb[0].x > ceil[1].x) {
+      return false;
+    } 
+    else {
+      return coordinateIntercept( [ ecb[0], ecb[2] ] , ceil).y;
+    }
+  } );
+  const lowestCeilingYValue = findSmallestWithin(ceilingYValues, ecb[0].y, ecb[2].y);
+  console.log(lowestCeilingYValue);
+  if (lowestCeilingYValue === false) {
+    return false;
+  }
+  else {
+    return ( (lowestCeilingYValue - ecb[0].y) / (ecb[2].y - ecb[0].y) );
+  }
 };
 
 export function getNewMaybeCenterAndTouchingType(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs) {
