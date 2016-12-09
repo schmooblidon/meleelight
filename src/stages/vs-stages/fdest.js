@@ -17,6 +17,7 @@ export default {
   ledgePos: [new Vec2D(-68.4, 0), new Vec2D(68.4, 0)],
   scale: 4.5,
   offset: [600, 400],
+  connected: [ [ true, ["g",0], ["r",4], ["r",3], ["r",2], ["r",1], ["r",0], ["c",2], ["c",1], ["c",0], ["l",4], ["l",3], ["l",2], ["l",1], ["l",0], true] ],
   movingPlat: -1,
   movingPlatforms: function () {
   }

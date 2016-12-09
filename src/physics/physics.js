@@ -5,7 +5,7 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor, squashDownECB} from "physics/environmentalCollision";
+import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor, squashDownECB, connectednessFromChains} from "physics/environmentalCollision";
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
@@ -24,70 +24,6 @@ export function customZip ( list, string, start = 0 ) {
     return ( [[head, [string, start]]] . concat( customZip(tail, string, start+1) ) ) ;
   }
 }
-
-function firstNonFalse( list ) {
-  if (list.length < 1 || list === null || list === undefined) {
-    return false;
-  }
-  else {
-    const [head, ...tail] = list;
-    if ( head === false ) {
-      return firstNonFalse(tail);
-    }
-    else {
-      return head;
-    }
-  }
-};
-
-// for stages to have connected grounds/platforms, they need to provide a 'connectednessFunction'
-// input of a connectedness function: [type, index ], side
-// type is either "g" (ground) or "p" (platform),
-// index is the index of that surface in the stage's list of surfaces (grounds or platforms depending on type)
-// side is either "l" (left) or "r" (right)
-// given such an input, the function should return which ground/platform is connected to that side of the given ground/platform,
-// in the format [ newType, newIndex ],
-// or return 'false' if the ground/platform is not connected on that side to any other ground/platform
-
-// here I am constructing a 'connectednessFunction' from the data of chains of connected grounds/platforms
-// if 'connectednessFunction' is not supplied, it is assumed that no grounds/platforms are connected to any other grounds/platforms
-function connectednessFromChains(label, side, chains) {
-  const results = chains.map( (chain) => searchThroughChain(label, side, chain) );
-  return firstNonFalse (results);
-};
-
-function searchThroughChain(label, side, chain, current = false) {
-  if (chain.length < 1 || chain === null || chain === undefined) {
-    return false;
-  }
-  else {
-    const [head, ...tail] = chain;
-    switch(side) {
-      case "l":
-        if (head[0] === label[0] && head[1] === label[1] ) {
-          return current;
-        }
-        else {
-          return (searchThroughChain(label, side, tail, head));
-        }
-        break;
-      case "r":
-        if (head[0] === label[0] && head[1] === label[1]) {
-           if (chain[1] === null || chain[1] === undefined) {
-            return false;
-           }
-           else {
-            return chain[1];
-           }
-        }
-        else {
-          return (searchThroughChain(label, side, tail));
-        }
-        break;
-    }
-  }
-};
-
 
 function dealWithCollision(i, newCenter) {
   player[i].phys.pos = newCenter;
@@ -648,7 +584,7 @@ export function physics (i){
       let relevantGroundType = "g";
       let relevantGround = activeStage.ground[relevantGroundIndex];
 
-      let connectedGrounds = activeStage.connected;
+      let connectedGrounds = activeStage.connectedGround;
       function groundConnectednessFunction (gd, side) { return false ;} ;
       if (connectedGrounds === null || connectedGrounds === undefined ) {
         // do nothing        
@@ -706,7 +642,8 @@ export function physics (i){
       }
     }
 
-    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos, relevantSurfaces);
+    let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos
+                                                                             , relevantSurfaces, activeStage );
 
     if (surfacesMaybeCenterAndTouchingType === false) {
       // no collision, do nothing
