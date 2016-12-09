@@ -163,6 +163,10 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
           break;
         case "p":
           [stillGrounded, backward] = dealWithGround(i, activeStage.platform[leftGroundIndex], ["p",leftGroundIndex]);
+          break;
+        default: // surface to the left is neither a ground nor a platform
+          [stillGrounded, backward] = fallOffGround(i, "l", ground[0]);
+          break;
       }
     }
   }
@@ -179,6 +183,10 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
           break;
         case "p":
           [stillGrounded, backward] = dealWithGround(i, activeStage.platform[rightGroundIndex], ["p",rightGroundIndex]);
+          break;
+        default: // surface to the right is neither a ground nor a platform
+          [stillGrounded, backward] = fallOffGround(i, "r", ground[1]);
+          break;
       }
     }
   }
@@ -584,14 +592,14 @@ export function physics (i){
       let relevantGroundType = "g";
       let relevantGround = activeStage.ground[relevantGroundIndex];
 
-      let connectedGrounds = activeStage.connectedGround;
+      let connectedSurfaces = activeStage.connected;
       function groundConnectednessFunction (gd, side) { return false ;} ;
-      if (connectedGrounds === null || connectedGrounds === undefined ) {
+      if (connectedSurfaces === null || connectedSurfaces === undefined ) {
         // do nothing        
       }
       else {
         // this should not be done every frame
-        groundConnectednessFunction = function (gd, side) { return connectednessFromChains(gd, side, connectedGrounds) ;};
+        groundConnectednessFunction = function (gd, side) { return connectednessFromChains(gd, side, connectedSurfaces) ;};
       }
 
        

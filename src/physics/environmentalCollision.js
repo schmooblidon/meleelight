@@ -482,6 +482,104 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, line) {
 };
 
 
+
+function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
+  const wallTop    = extremePoint(wall, "t");
+  const wallBottom = extremePoint(wall, "b");
+  const yIntersect = coordinateIntercept(wall, line).y;
+  const wallAngle = lineAngle(wall);
+
+  if ( yIntersect > wallTop.y ) {
+
+    let dir = "r";
+    if ( ( wallAngle < Math.PI ) !== (wallType === "c") ) { // xor operation
+      dir = "l";
+    } 
+
+    const nextWallAboveTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , dir, stage.connected);
+    if (nextWallAboveTypeAndIndex === false || ! (nextWallAboveTypeAndIndex[0] === wallType)) {
+      return wallTop.y;
+    }
+    else {
+      if (wallType === "c") {
+        const nextCeilingAbove = stage.ceiling[ nextWallAboveTypeAndIndex[1] ];
+        if (extremePoint(nextCeilingAbove, "t").y <= wallTop.y ) {
+          return wallTop.y;
+        }
+        else {
+          return pushoutVertically( nextCeilingAbove , "c", nextWallAboveTypeAndIndex[1], stage, line);
+        }
+      }
+      else if (wallType === "g") {
+        const nextGroundAbove = stage.ground[ nextWallAboveTypeAndIndex[1] ];
+        if (extremePoint(nextGroundAbove, "t").x <= wallTop.y ) {
+          return wallTop.y;
+        }
+        else {
+          return pushoutVertically( nextGroundAbove, "g", nextWallAboveTypeAndIndex[1], stage, line);
+        }
+      }
+      else if (wallType === "p") {
+        const nextPlatformAbove = stage.platform[ nextWallAboveTypeAndIndex[1] ];
+        if (extremePoint(nextPlatformAbove, "t").x <= wallTop.y ) {
+          return wallTop.y;
+        }
+        else {
+          return pushoutVertically( nextPlatformAbove, "p", nextWallAboveTypeAndIndex[1], stage, line);
+        }
+      }
+      else {
+        console.log("error in 'pushoutVertically': surface is not one of 'ground', 'ceiling' or 'platform'.");
+      }
+    }
+  }
+  else if ( yIntersect < wallBottom.y ) {
+    let dir = "l";
+    if ( ( wallAngle < Math.PI ) !== (wallType === "c") ) { // xor operation
+      dir = "r";
+    }
+    const nextWallBelowTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , dir, stage.connected);
+    if (nextWallBelowTypeAndIndex === false || ! (nextWallBelowTypeAndIndex[0] === wallType)) {
+      return wallBottom.y;
+    }
+    else {
+      if (wallType === "c") {
+        const nextCeilingBelow = stage.ceiling[ nextWallBelowTypeAndIndex[1] ];
+        if (extremePoint(nextCeilingBelow, "b").y >= wallBottom.y ) {
+          return wallBottom.y;
+        }
+        else {
+          return pushoutVertically( nextCeilingBelow , "c", nextWallBelowTypeAndIndex[1], stage, line);
+        }
+      }
+      else if (wallType === "g") {
+        const nextGroundBelow = stage.ground[ nextWallBelowTypeAndIndex[1] ];
+        if (extremePoint(nextGroundBelow, "b").y >= wallBottom.y ) {
+          return wallBottom.y;
+        }
+        else {
+          return pushoutVertically( nextGroundBelow, "g", nextWallBelowTypeAndIndex[1], stage, line);
+        }
+      }
+      else if (wallType === "p") {
+        const nextPlatformBelow = stage.platform[ nextWallBelowTypeAndIndex[1] ];
+        if (extremePoint(nextPlatformBelow, "b").y <= wallBottom.y ) {
+          return wallBottom.y;
+        }
+        else {
+          return pushoutVertically( nextPlatformBelow, "p", nextWallBelowTypeAndIndex[1], stage, line);
+        }
+      }
+      else {
+        console.log("error in 'pushoutVertically': surface is not one of 'ground', 'ceiling' or 'platform'.");
+      }
+    }
+  }
+  else {
+    return yIntersect;
+  }
+};
+
 function pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage, xOrY, ecb1Point, ecbpPoint, position ){
 
   // TODO the following is here as a placeholder until the vertical pushout method gets changed
@@ -515,14 +613,8 @@ function pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBot
 
       switch (pushoutMethodFromType(wallType)){
         case "v": // vertical pushout
-          let yIntersect = coordinateIntercept(wall, [ecbpPoint, new Vec2D( ecbpPoint.x , ecbpPoint.y -1) ]).y;
-          if (yIntersect > wallTop.y) {
-            yIntersect = wallTop.y;
-          }
-          else if (yIntersect < wallBottom.y) {
-            yIntersect = wallBottom.y;
-          }
-          newPosition = new Vec2D( position.x, position.y + yIntersect - ecbpPoint.y + additionalPushout );
+          const yPushout = pushoutVertically (wall, wallType, wallIndex, stage, [ecbpPoint, new Vec2D( ecbpPoint.x , ecbpPoint.y -1) ]);
+          newPosition = new Vec2D( position.x, position.y + yPushout - ecbpPoint.y + additionalPushout );
           break;
         case "h": // horizontal pushout
         default:
