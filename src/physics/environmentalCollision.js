@@ -370,10 +370,6 @@ function pointSweepingCheck ( wall, wallType, wallTopOrRight, wallBottomOrLeft, 
   }
 };
 
-function pushout (pushoutMethod, point, wall, wallType) {
-  // TODO: move pushing out procedures to this function
-};
-
 // ecbp : projected ECB
 // ecb1 : old ECB
 // function return type: either false (no collision) or a triple [touchingWall, proposed new player position, sweeping parameter]
@@ -573,17 +569,11 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
 
     if (!alsoCheckTop &&  ( extremeSign * getXOrYCoord(ecbp[same], yOrX) > extremeSign * getXOrYCoord(extremeWall, yOrX) ) ) {
       console.log("'findCollision': "+wallType+" surface cannot affect ECB, regardless of collision.");
-      console.log("Extreme point of wall was at ("+extremeWall.x+","+extremeWall.y+"), with xOrY="+xOrY+".");
-      console.log("Same-side ECB point was at ("+ecbp[same].x+","+ecbp[same].y+"), with same="+same+".");
-      console.log("extremeSign="+extremeSign+".");
       closestPointCollision = false;
     }
     else if ( alsoCheckTop && ( extremeSign * getXOrYCoord(ecbp[same], yOrX) > extremeSign * getXOrYCoord(extremeWall, yOrX) )
                            && ( extremeSign * ecbp[2].x                      > extremeSign * extremeWall.x                   ) ) {
       console.log("'findCollision': "+wallType+" surface cannot affect ECB, regardless of collision.");
-      console.log("Extreme point of wall was at ("+extremeWall.x+","+extremeWall.y+"), with xOrY="+xOrY+".");
-      console.log("Same-side ECB point was at ("+ecbp[same].x+","+ecbp[same].y+"), with same="+same+".");
-      console.log("extremeSign="+extremeSign+".");
       closestPointCollision = false;
     }
     else {    
