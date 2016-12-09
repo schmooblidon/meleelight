@@ -4,21 +4,7 @@ import {dotProd, scalarProd, norm} from "main/linAlg";
 const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 15;
 const cornerPushoutMethod = "h"; // corners only push out horizontally
-export const additionalOffset = 0.0001;
-
-function lengthen ( x ) {
-  if (x > 0) {
-    return x + additionalOffset;
-  }
-  else if (x < 0) {
-    return x - additionalOffset;
-  }
-  else {
-    console.log("error in function 'lengthen': argument is 0.");
-    return 0;
-  }
-}
-
+export const additionalOffset = 0.00001;
 
 function getXOrYCoord(vec, xOrY) {
   if (xOrY === 0) {
@@ -294,15 +280,26 @@ function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, position, 
     if (! (lineSweepResult === false) ) {
       [t,s] = lineSweepResult;
       let newPosition = false; // initialising
+
+      let additionalPushout = additionalOffset; // additional pushout
+      switch(wallType) {
+        case "l":
+        case "c":
+          additionalPushout = -additionalOffset;
+          break;
+        default:
+          break;
+      }
+
       switch (cornerPushoutMethod) {
         case "v": // vertical pushout
           const yIntersect = coordinateIntercept( [ ecbpSame, ecbpOther ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-          newPosition = new Vec2D( position.x , position.y + lengthen (corner.y-yIntersect.y));
+          newPosition = new Vec2D( position.x , position.y + corner.y-yIntersect.y + additionalPushout);
           break;
         case "h": // horizontal pushout
         default:
           const xIntersect = coordinateIntercept( [ ecbpSame, ecbpOther ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
-          newPosition = new Vec2D( position.x + lengthen (corner.x - xIntersect.x), position.y);
+          newPosition = new Vec2D( position.x + corner.x - xIntersect.x + additionalPushout, position.y);
           break;
       }
       console.log("'edgeSweepingCheck': collision, relevant edge of ECB has moved across "+wallType+" corner. Sweeping parameter s="+s+".");
@@ -337,6 +334,17 @@ function pointSweepingCheck ( wall, wallType, wallTopOrRight, wallBottomOrLeft, 
     }
     else {
       let newPosition = false; // initialising
+
+      let additionalPushout = additionalOffset; // additional pushout
+      switch(wallType) {
+        case "l":
+        case "c":
+          additionalPushout = -additionalOffset;
+          break;
+        default:
+          break;
+      }
+
       switch (pushoutMethodFromType(wallType)){
         case "v": // vertical pushout
           let yIntersect = coordinateIntercept(wall, [ecbpPoint, new Vec2D( ecbpPoint.x , ecbpPoint.y -1) ]).y;
@@ -346,7 +354,7 @@ function pointSweepingCheck ( wall, wallType, wallTopOrRight, wallBottomOrLeft, 
           else if (yIntersect < wallBottom.y) {
             yIntersect = wallBottom.y;
           }
-          newPosition = new Vec2D( position.x, position.y + lengthen (yIntersect - ecbpPoint.y) );
+          newPosition = new Vec2D( position.x, position.y + yIntersect - ecbpPoint.y + additionalPushout );
           break;
         case "h": // horizontal pushout
         default:
@@ -357,7 +365,7 @@ function pointSweepingCheck ( wall, wallType, wallTopOrRight, wallBottomOrLeft, 
           else if (xIntersect < wallLeft.x) {
             xIntersect = wallLeft.x;
           }
-          newPosition = new Vec2D( position.x + lengthen (xIntersect - ecbpPoint.x), position.y);
+          newPosition = new Vec2D( position.x + xIntersect - ecbpPoint.x + additionalPushout, position.y);
           break;
       }
       let touchingWall = wallType;
@@ -417,9 +425,9 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       opposite = 2;
       wallTopOrRight  = wallRight;
       wallBottomOrLeft = wallLeft;
+      extremeSign = 1;
       if (wallAngle > Math.PI) {
         extremeWall = wallLeft; // otherwise defaults to wallRight
-        extremeSign = -1;
       }
       xOrY = 0;
       flip = true;
@@ -432,9 +440,9 @@ function findCollision (ecbp, ecb1, position, wall, wallType) {
       opposite = 0;
       wallTopOrRight  = wallRight;
       wallBottomOrLeft = wallLeft;
+      extremeSign = -1;
       if (wallAngle > Math.PI) {
         extremeWall = wallLeft; // otherwise defaults to wallRight
-        extremeSign = -1;
       }
       xOrY = 0;
       alsoCheckTop = false;
@@ -809,7 +817,6 @@ export function groundedECBSquashFactor( ecb, ceilings ) {
     }
   } );
   const lowestCeilingYValue = findSmallestWithin(ceilingYValues, ecb[0].y, ecb[2].y);
-  console.log(lowestCeilingYValue);
   if (lowestCeilingYValue === false) {
     return false;
   }
