@@ -728,8 +728,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
   let sign = 1;
 
   let other = 0; // this will be calculated later, not in the following switch statement
-  let alsoCheckTop = true; // whether to separately also check the top point for collision
-                           // this is only important for left/right walls that are quite close to horizontal
+
   switch(wallType) {
     case "l": // left wall
       same = 1;
@@ -752,7 +751,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       xOrY = 0;
       flip = true;
       sign = -1;
-      alsoCheckTop = false;
       break;
     case "c": // ceiling
     case "t":
@@ -764,12 +762,13 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       extremeSign = -1;
       extremeWall = wallBottom;
       xOrY = 0;
-      alsoCheckTop = false;
       break;
     default: // right wall by default
       break;
   }
 
+  const wallAngle = lineAngle([wallBottomOrLeft, wallTopOrRight]);
+  const checkTopInstead = (wallType === "l" || wallType === "r") && (sign * wallAngle < sign * lineAngle([ecbp[same], ecbp[2]]));
 
   // first check if player ECB was even near the wall
   if (    (ecbp[0].y > wallTop.y    && ecb1[0].y > wallTop.y   ) // player ECB stayed above the wall
@@ -777,12 +776,12 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
        || (ecbp[3].x > wallRight.x  && ecb1[3].x > wallRight.x ) // player ECB stayed to the right of the wall
        || (ecbp[1].x < wallLeft.x   && ecb1[1].x < wallLeft.x  ) // player ECB stayed to the left of the wall
      ) {
-    console.log("'findCollision': no collision, ECB not even near "+wallType+" surface.");
+    console.log("'findCollision': no collision, ECB not even near "+wallType+""+wallIndex+".");
     return false;
   }
-  else if (   !isOutside ( ecb1[opposite], wallTopOrRight, wallBottomOrLeft, wallType ) &&
-            ( !isOutside ( ecb1[0]       , wallRight     , wallLeft        , "c"      ) && alsoCheckTop ) ) {
-    console.log("'findCollision': no collision, ECB1 fully on other side of "+wallType+" surface.");
+  else if (    (!checkTopInstead && !isOutside ( ecb1[opposite], wallTopOrRight, wallBottomOrLeft, wallType ))
+            || ( checkTopInstead && !isOutside ( ecb1[0]       , wallRight     , wallLeft        , "c"      )) ) {
+    console.log("'findCollision': no collision, ECB1 fully on other side of "+wallType+""+wallIndex+".");
     return false;
   }
   else {
@@ -790,7 +789,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
     // if the surface is a platform, and the bottom ECB point is below the platform, we shouldn't do anything
     if ( isPlatform ) {
       if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType )) {
-        console.log("'findCollision': no collision, bottom ECB1 point was below platform.");
+        console.log("'findCollision': no collision, bottom ECB1 point was below p"+wallIndex+".");
         return false;
       }
     }
@@ -843,7 +842,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       }
     }
 
-    if (alsoCheckTop) { // TODO should also check whether we are in an edge case
+    if (checkTopInstead) {
       let otherCounterclockwise = false; // whether ( same ECB point -> top ECB point) is counterclockwise
       let otherCorner = wallRight;
       if (wallType === "l") {
@@ -890,22 +889,44 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
     if (xOrY === 0) {
       yOrX = 1;
     }
-    
-    // point sweeping check
+
+
     // the first step is to check whether, even if there is a collision, the wall could actually do anything about it
     // this check avoids infinite loops: if a wall can't actually push out the ECB to avoid a collision, we consider that no collision is taking place
-    if (    !( extremeSign * getXOrYCoord(ecbp[same], yOrX) > extremeSign * getXOrYCoord(extremeWall, yOrX) ) // same-side projected ECB point beyond wall extreme
-         && !(    (wallType === "l" || wallType === "r")
+    let allowCollision = true;
+
+    if ( extremeSign * getXOrYCoord(ecbp[same], yOrX) > extremeSign * getXOrYCoord(extremeWall, yOrX) ) { // same side projected ECB point beyond extreme point of surface
+      allowCollision = false;
+    }
+    else if (     checkTopInstead // left or right wall where top ECB point can touch
                && ecbp[2].y > wallTop.y
-               && sign * lineAngle([wallBottom, wallTop]) < sign * lineAngle([ecbp[same], ecbp[2]]) // left or right wall where top ECB point can touch
-               && isOutside( wallTop, ecbp[same], ecbp[2], wallType ) // same-top ECB edge has not gone through to the insode of the top corner
-               ) ) {
-      closestPointCollision = pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage, connectednessFunction
-                                                 , xOrY, position, ecb1[same], ecbp[same], ecb1[2], ecbp[2]);
+               && isOutside( wallTop, ecbp[same], ecbp[2], wallType ) // same-top ECB edge has not gone through to the inside of the top corner
+               ) {
+      allowCollision = false;
+    }
+
+    if (allowCollision === false ) {
+      console.log("'findCollision': "+wallType+""+wallIndex+" is impotent, skipped point sweep.");
     }
     else {
-      console.log("'findCollision': impotent surface of type "+wallType+", skipped point sweep.");
+
+      // now we run some checks to see if the relevant projected ECB point was already on the other side of the wall
+      // this prevents collisions being detected when going through a surface in reverse
+
+      if (    checkTopInstead
+           && !isOutside( ecb1[2], wallTop, wallBottom, wallType ) ) { 
+        console.log("'findCollision': no point collision with "+wallType+""+wallIndex+", top ECB1 point on the inside side of the wall. ");
+      }
+      else if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
+        console.log("'findCollision': no point collision with "+wallType+""+wallIndex+", same side ECB1 point on the inside side of the wall. ");
+      }
+      else {
+         // point sweeping check
+        closestPointCollision = pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage, connectednessFunction
+                                                   , xOrY, position, ecb1[same], ecbp[same], ecb1[2], ecbp[2]);
+      }
     }
+
   
     let [finalCollision, finalCollisionType] = [false,false];
 
@@ -929,10 +950,10 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
     }
 
     if (finalCollision === false) {
-      console.log("'findCollision': sweeping determined no collision with surface of type "+wallType+".");
+      console.log("'findCollision': sweeping determined no collision with "+wallType+""+wallIndex+".");
     }
     else {
-      console.log("'findCollision': "+finalCollisionType+" collision with surface of type "+wallType+" and sweeping parameter s="+finalCollision[2]+".");
+      console.log("'findCollision': "+finalCollisionType+" collision with "+wallType+""+wallIndex+" and sweeping parameter s="+finalCollision[2]+".");
     }
     return finalCollision;
 
