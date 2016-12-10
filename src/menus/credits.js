@@ -98,13 +98,13 @@ export function ScrollingText (text,yPos,position,information) {
 let creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
 
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
-export function credits (p){ //called once every frame
+export function credits (p,input){ //called once every frame
 
-  if (input[p].x[0] && !input[p].x[1]) {
+  if (input[p][0].x && !input[p][1].x) {
     currentLaserColor = (currentLaserColor === laserColors.length - 1) ? 0 : currentLaserColor + 1;
     laserColor = laserColors[currentLaserColor];
   }
-  if (input[p].y[0] && !input[p].y[1]) {
+  if (input[p][0].y && !input[p][1].y) {
     currentLaserColor = (currentLaserColor === 0) ? (laserColors.length - 1) : currentLaserColor - 1;
     laserColor = laserColors[currentLaserColor];
   }
@@ -135,7 +135,7 @@ export function credits (p){ //called once every frame
   }
   cScrollingPos -= cScrollingSpeed;
   let yDif = 0;
-  if (input[p].s[0] === true || input[p].l[0] === true || input[p].r[0] === true) {
+  if (input[p][0].s === true || input[p][0].l === true || input[p][0].r === true) {
     //is holding down start. Should increase speed
 	cCursorAngle += 4.5;
     yDif = Math.round(cScrollingSpeed * 1.5);
@@ -159,9 +159,9 @@ export function credits (p){ //called once every frame
   }
 
   //l stick to pos
-  cPlayerXPos = Math.round(((cBoundX / 2) + ((input[0].rawX) * (cBoundX / 2))) - ((cBoundX -
+  cPlayerXPos = Math.round(((cBoundX / 2) + ((input[p][0].rawX) * (cBoundX / 2))) - ((cBoundX -
     cXSize) / 2));
-  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * input[0].rawY) * (cBoundY / 2))) - ((cBoundY -
+  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * input[p][0].rawY) * (cBoundY / 2))) - ((cBoundY -
     cYSize) / 2));
   //cast positions to canvas size
   if (cPlayerXPos < 0) {
@@ -179,7 +179,7 @@ export function credits (p){ //called once every frame
 
   if (shoot_cooldown == 0) {
 
-    if (input[0].a && !input[1].a) {
+    if (input[p][0].a && !input[p][1].a) {
       //is shooting
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
@@ -218,15 +218,15 @@ export function credits (p){ //called once every frame
 	  sounds.failure.play();
     }
 	initc = true;
-    input[p].b[1] = true;
+    input[p][1].b = true;
     cShots = [];
     lastHit = [0, 0, false];
     creditNames = [];
     changeGamemode(1);
-  } else if (input[0].b && !input[1].b) {
+  } else if (input[p][0].b && !input[p][1].b) {
     initc = true;
     sounds.menuBack.play();
-    input[p].b[1] = true;
+    input[p][1].b = true;
     cShots = [];
     lastHit = [0, 0, false];
     creditNames = [];

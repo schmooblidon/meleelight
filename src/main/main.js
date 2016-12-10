@@ -612,7 +612,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
         startGame();
       }
       else {
-        endGame(tempBuffer);
+        endGame(inputBuffer);
       }
     }
 
@@ -634,7 +634,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
         startGame();
       }
       else {
-        endGame(tempBuffer);
+        endGame(inputBuffer);
       }
     }
 
@@ -788,38 +788,38 @@ export function gameTick (oldInputBuffers){
     //console.log(playerType);
     for (var i = 0; i < ports; i++) {
       input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
-      menuMove(i, input[i]);
+      menuMove(i, input);
     }
   } else if (gameMode == 10) {
     for (var i = 0; i < ports; i++) {
       input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
-      audioMenuControls(i, input[i]);
+      audioMenuControls(i, input);
     }
   } else if (gameMode == 11) {
     for (var i = 0; i < ports; i++) {
       input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
-      gameplayMenuControls(i, input[i]);
+      gameplayMenuControls(i, input);
     }
   } else if (gameMode == 12) {
     for (var i = 0; i < ports; i++) {
       input[i] = interpretInputs(i, true, playerType[i], oldInputBuffers[i]);
-      keyboardMenuControls(i, input[i]);
+      keyboardMenuControls(i, input);
     }
   } else if (gameMode == 13) {
     input[i] = interpretInputs(creditsPlayer, true, playerType[i],oldInputBuffers[i]);
-    credits(creditsPlayer, input[i]);
+    credits(creditsPlayer, input);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
         input[i] = interpretInputs(i, true, playerType[i],oldInputBuffers[i]);
-        cssControls(i, input[i]);
+        cssControls(i, input);
       }
 
       actionStates[characterSelections[i]][player[i].actionState].main(i,input);
     }
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetect(i,input[i]);
+        hitDetect(i,input);
       }
     }
     executeHits(input);
@@ -830,16 +830,16 @@ export function gameTick (oldInputBuffers){
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
         input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
-        sssControls(i, input[i]);
+        sssControls(i, input);
       }
     }
   } else if (gameMode == 7) {
     // stage select
-    input[i] = interpretInputs(targetPlayer, true,playerType[i],oldInputBuffers[i]);
-    tssControls(targetPlayer, input[i]);
+    input[targetPlayer] = interpretInputs(targetPlayer, true,playerType[targetPlayer],oldInputBuffers[targetPlayer]);
+    tssControls(targetPlayer, input);
   } else if (gameMode == 4) {
-    input[i] = interpretInputs(targetBuilder, true,playerType[i],oldInputBuffers[i]);
-    targetBuilderControls(targetBuilder, input[i]);
+    input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+    targetBuilderControls(targetBuilder, input);
   } else if (gameMode == 5) {
     if (endTargetGame) {
       finishGame(input);
@@ -850,6 +850,7 @@ export function gameTick (oldInputBuffers){
       lastUpdate = now;
       destroyArticles();
       executeArticles();
+      input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
       update(targetBuilder,input);
       targetHitDetection(targetBuilder);
       if (!starting) {
@@ -888,7 +889,7 @@ export function gameTick (oldInputBuffers){
       }
     } else {
       if (!gameEnd) {
-        input[i] = interpretInputs(targetBuilder, false,playerType[i],oldInputBuffers[i]);
+        input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
       }
     }
   } else if (playing || frameByFrame) {

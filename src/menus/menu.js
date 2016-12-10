@@ -36,7 +36,7 @@ export let stickHold = 0;
 export function menuMove (i, input){
   var menuMove = false;
   var previousMenuS = menuSelected;
-  if (input[0].a && !input[1].a) {
+  if (input[i][0].a && !input[i][1].a) {
     sounds.menuForward.play();
     if (menuMode == 0) {
       if (menuSelected == 0) {
@@ -80,14 +80,14 @@ export function menuMove (i, input){
         changeGamemode(13);
       }
     }
-  } else if (input[0].b && !input[1].b) {
+  } else if (input[i][0].b && !input[i][1].b) {
     if (menuMode == 1) {
       menuMode = 0;
       menuSelected = 3;
       menuMove = true;
       sounds.menuBack.play();
     }
-  } else if (input[0].lsY > 0.7) {
+  } else if (input[i][0].lsY > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuSelected--;
@@ -100,7 +100,7 @@ export function menuMove (i, input){
         menuMove = true;
       }
     }
-  } else if (input[0].lsY < -0.7) {
+  } else if (input[i][0].lsY < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuSelected++;

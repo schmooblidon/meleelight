@@ -17,14 +17,14 @@ export function audioMenuControls (i, input){
   let menuMove = false;
   let audioLevelMoveUp = false;
   let audioLevelMoveDown = false;
-  if (input[0].b && !input[1].b){
+  if (input[i][0].b && !input[i][1].b){
 	fg1.textAlign = "left";
     sounds.menuBack.play();
     //input[i].b[1] = true;
     setCookie("soundsLevel", masterVolume[0], 36500);
     setCookie("musicLevel", masterVolume[1], 36500);
     changeGamemode(1);
-  } else if (input[0].lsY > 0.7) {
+  } else if (input[i][0].lsY > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioMenuSelected--;
@@ -38,7 +38,7 @@ export function audioMenuControls (i, input){
         menuMove = true;
       }
     }
-  } else if (input[0].lsY < -0.7) {
+  } else if (input[i][0].lsY < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioMenuSelected++;
@@ -52,7 +52,7 @@ export function audioMenuControls (i, input){
         menuMove = true;
       }
     }
-  } else if (input[0].lsX > 0.7) {
+  } else if (input[i][0].lsX > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioLevelMoveUp = true;
@@ -64,7 +64,7 @@ export function audioMenuControls (i, input){
         audioLevelMoveUp = true;
       }
     }
-  } else if (input[0].lsX < -0.7) {
+  } else if (input[i][0].lsX < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioLevelMoveDown = true;

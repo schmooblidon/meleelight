@@ -136,7 +136,7 @@ export function KeymapItem (type, pos, value, binding, index, above, toRight, be
 export function keyboardMenuControls (i, input){
   var menuMove = false;
   var moveD = "";
-  if (input[0].lsX == 0 && input[0].lsY == 0) {
+  if (input[i][0].lsX == 0 && input[i][0].lsY == 0) {
     disableStick[i] = false;
   }
     if (keyboardPromptTimer > 0){
@@ -270,14 +270,14 @@ export function keyboardMenuControls (i, input){
         }
       }
       sounds.menuForward.play();
-    } else if (input[0].b && !input[1].b) {
+    } else if (input[i][0].b && !input[i][1].b) {
       if (!settingModifier && !settingRange) {
         sounds.menuBack.play();
-        input[i].b[1] = true;
+        input[i][1].b = true;
         changeGamemode(1);
         setKeyboardCookie();
       }
-    } else if (input[0].lsY > 0.7 && !disableStick[i]) {
+    } else if (input[i][0].lsY > 0.7 && !disableStick[i]) {
       stickHoldEach[i] = true;
       if (stickHold == 0) {
         moveD = "u";
@@ -291,7 +291,7 @@ export function keyboardMenuControls (i, input){
           menuMove = true;
         }
       }
-    } else if (input[0].lsY < -0.7 && !disableStick[i]) {
+    } else if (input[i][0].lsY < -0.7 && !disableStick[i]) {
       stickHoldEach[i] = true;
       if (stickHold == 0) {
         moveD = "d";
@@ -305,7 +305,7 @@ export function keyboardMenuControls (i, input){
           menuMove = true;
         }
       }
-    } else if (input[0].lsX > 0.7 && !disableStick[i]) {
+    } else if (input[i][0].lsX > 0.7 && !disableStick[i]) {
       stickHoldEach[i] = true;
       if (stickHold == 0) {
         moveD = "r";
@@ -319,7 +319,7 @@ export function keyboardMenuControls (i, input){
           menuMove = true;
         }
       }
-    } else if (input[0].lsX < -0.7 && !disableStick[i]) {
+    } else if (input[i][0].lsX < -0.7 && !disableStick[i]) {
       stickHoldEach[i] = true;
       if (stickHold == 0) {
         menuMove = true;

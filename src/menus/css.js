@@ -60,7 +60,7 @@ export function changeCharacter (i,c){
 
 export function cssControls (i, input){
   if (choosingTag == -1){
-    if (input[0].b){
+    if (input[i][0].b){
       bHold[i]++;
       if (bHold[i] == 30) {
         sounds.menuBack.play();
@@ -69,8 +69,8 @@ export function cssControls (i, input){
     } else {
       bHold[i] = 0;
     }
-    handPos[i].x += input[0].lsX * 12;
-    handPos[i].y += -input[0].lsY * 12;
+    handPos[i].x += input[i][0].lsX * 12;
+    handPos[i].y += -input[i][0].lsY * 12;
     if (handPos[i].x > 1200) {
       handPos[i].x = 1200;
     } else if (handPos[i].x < 0) {
@@ -83,7 +83,7 @@ export function cssControls (i, input){
     }
     if (handPos[i].y < 400 && handPos[i].y > 160) {
       handType[i] = 1;
-      if (input[0].b && !input[1].b && playerType[i] == 0 && whichTokenGrabbed[i] == -1) {
+      if (input[i][0].b && !input[i][1].b && playerType[i] == 0 && whichTokenGrabbed[i] == -1) {
         handType[i] = 2;
         tokenPos[i] = new Vec2D(handPos[i].x, handPos[i].y);
         tokenGrabbed[i] = true;
@@ -101,7 +101,7 @@ export function cssControls (i, input){
               changeCharacter(whichTokenGrabbed[i], 0);
               sounds.menuSelect.play();
             }
-            if (input[0].a && !input[1].a) {
+            if (input[i][0].a && !input[i][1].a) {
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
               tokenPos[whichTokenGrabbed[i]] = new Vec2D(473 + (whichTokenGrabbed[i] % 2) * 40, 268 + (
@@ -115,7 +115,7 @@ export function cssControls (i, input){
               changeCharacter(whichTokenGrabbed[i], 1);
               sounds.menuSelect.play();
             }
-            if (input[0].a && !input[1].a) {
+            if (input[i][0].a && !input[i][1].a) {
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
@@ -130,7 +130,7 @@ export function cssControls (i, input){
               changeCharacter(whichTokenGrabbed[i], 2);
               sounds.menuSelect.play();
             }
-            if (input[0].a && !input[1].a) {
+            if (input[i][0].a && !input[i][1].a) {
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
@@ -147,7 +147,7 @@ export function cssControls (i, input){
           if (!occupiedToken[j] && (playerType[j] == 1 || i == j)) {
             if (handPos[i].y > tokenPos[j].y - 20 && handPos[i].y < tokenPos[j].y + 20 && handPos[i].x > tokenPos[j].x -
               20 && handPos[i].x < tokenPos[j].x + 20) {
-              if (input[0].a && !input[1].a) {
+              if (input[i][0].a && !input[i][1].a) {
                 handType[i] = 2;
                 whichTokenGrabbed[i] = j;
                 tokenPos[whichTokenGrabbed[i]] = new Vec2D(handPos[i].x, handPos[i].y);
@@ -172,7 +172,7 @@ export function cssControls (i, input){
       cpuDifficulty[whichCpuGrabbed[i]] = Math.round((cpuSlider[whichCpuGrabbed[i]].x - whichCpuGrabbed[i] * 225 -
         152 - 15) * 3 / 166) + 1;
       player[whichCpuGrabbed[i]].difficulty = cpuDifficulty[whichCpuGrabbed[i]];
-      if (input[0].a && !input[1].a) {
+      if (input[i][0].a && !input[i][1].a) {
         cpuGrabbed[i] = false;
         occupiedCpu[whichCpuGrabbed[i]] = false;
         whichCpuGrabbed[i] = -1;
@@ -193,7 +193,7 @@ export function cssControls (i, input){
       whichTokenGrabbed[i] = -1;
       for (var j = 0; j < 4; j++) {
         if (handPos[i].y > 430 && handPos[i].y < 485 && handPos[i].x > 109 + j * 225 && handPos[i].x < 207 + j * 225) {
-          if (input[0].a && !input[1].a) {
+          if (input[i][0].a && !input[i][1].a) {
             sounds.menuSelect.play();
             togglePort(j);
             hasTag[j] = false;
@@ -202,14 +202,14 @@ export function cssControls (i, input){
       }
     }
     if (handPos[i].y < 160 && handPos[i].x > 920) {
-      if (input[0].a && !input[1].a) {
+      if (input[i][0].a && !input[i][1].a) {
         sounds.menuBack.play();
         changeGamemode(1);
       }
     }
 
     let tok;
-    if (input[0].x && !input[1].x) {
+    if (input[i][0].x && !input[i][1].x) {
       sounds.menuSelect.play();
       if (whichTokenGrabbed[i] != -1) { tok = whichTokenGrabbed[i]; } else { tok = i; }
       pPal[tok]++;
@@ -217,7 +217,7 @@ export function cssControls (i, input){
         pPal[tok] = 0;
       }
     }
-    if (input[0].y && !input[1].y) {
+    if (input[i][0].y && !input[i][1].y) {
       sounds.menuSelect.play();
       if (whichTokenGrabbed[i] != -1) { tok = whichTokenGrabbed[i]; } else { tok = i; }
       pPal[tok]--;
@@ -226,7 +226,7 @@ export function cssControls (i, input){
       }
     }
     if (handPos[i].y > 100 && handPos[i].y < 160 && handPos[i].x > 380 && handPos[i].x < 910) {
-      if (input[0].a && !input[1].a) {
+      if (input[i][0].a && !input[i][1].a) {
         sounds.menuSelect.play();
        setVersusMode( 1 - versusMode);
       }
@@ -237,7 +237,7 @@ export function cssControls (i, input){
           if (!occupiedCpu[s]) {
             if (handPos[i].y >= cpuSlider[s].y - 25 && handPos[i].y <= cpuSlider[s].y + 25 && handPos[i].x >=
               cpuSlider[s].x - 25 && handPos[i].x <= cpuSlider[s].x + 25) {
-              if (input[0].a && !input[1].a) {
+              if (input[i][0].a && !input[i][1].a) {
                 cpuGrabbed[i] = true;
                 whichCpuGrabbed[i] = s;
                 occupiedCpu[s] = true;
@@ -251,7 +251,7 @@ export function cssControls (i, input){
     }
 
     if (handPos[i].y > 640 && handPos[i].y < 680 && handPos[i].x > 130 + i * 225 && handPos[i].x < 310 + i * 225) {
-      if (input[0].a && !input[1].a) {
+      if (input[i][0].a && !input[i][1].a) {
         // do tag
         if (handPos[i].x < 154 + i * 225) {
           // random
@@ -274,7 +274,7 @@ export function cssControls (i, input){
         }
       }
     }
-  } else if (choosingTag == i && ((input[0].a && !input[1].a) || keys[13])) {
+  } else if (choosingTag == i && ((input[i][0].a && !input[i][1].a) || keys[13])) {
     sounds.menuSelect.play();
     tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
     $("#pTagEdit" + choosingTag).hide();
@@ -287,7 +287,7 @@ export function cssControls (i, input){
       sounds.menuForward.play();
       changeGamemode(6);
     }
-  } else if (choosingTag == -1 && input[0].du && !input[1].du) {
+  } else if (choosingTag == -1 && input[i][0].du && !input[i][1].du) {
     sounds.menuForward.play();
     changeGamemode(6);
   }

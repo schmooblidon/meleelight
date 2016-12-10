@@ -20,8 +20,8 @@ var psIcon = new Image();
 psIcon.src = "assets/stage-icons/ps.png";
 
 export function sssControls (i, input){
-  stagePointerPos[0] += input[0].lsX*15;
-  stagePointerPos[1] += input[0].lsY*-15;
+  stagePointerPos[0] += input[i][0].lsX*15;
+  stagePointerPos[1] += input[i][0].lsY*-15;
   if (stagePointerPos[1] >= 450 && stagePointerPos[1] <= 540){
     for (var j=0;j<4;j++){
       if (stagePointerPos[0] >= 225+j*200 && stagePointerPos[0] <= 375+j*200){
@@ -39,10 +39,10 @@ export function sssControls (i, input){
     }
     stageSelected = 4;
   }
-  if (input[0].b && !input[1].b) {
+  if (input[i][0].b && !input[i][1].b) {
     sounds.menuBack.play();
     changeGamemode(2);
-  } else if ((input[0].s && !input[1].s) || (input[0].a && !input[1].a)) {
+  } else if ((input[i][0].s && !input[i][1].s) || (input[i][0].a && !input[i][1].a)) {
     sounds.menuForward.play();
     if (stageSelected == 4) {
       stageSelected = Math.floor(Math.random() * 3.99);

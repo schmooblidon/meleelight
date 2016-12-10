@@ -21,7 +21,7 @@ export function getGameplayCookies (){
 }
 export function gameplayMenuControls (i, input){
   var menuMove = false;
-  if (input[0].b && !input[1].b) {
+  if (input[i][0].b && !input[i][1].b) {
     sounds.menuBack.play();
     input[i][1].b = true;
     var keys = Object.keys(gameSettings);
@@ -29,7 +29,7 @@ export function gameplayMenuControls (i, input){
       setCookie(keys[j], gameSettings[keys[j]], 36500);
     }
     changeGamemode(1);
-  } else if (input[0].a && !input[1].a) {
+  } else if (input[i][0].a && !input[i][1].a) {
     sounds.menuSelect.play();
     switch (menuIndex[0]) {
       case 0:
@@ -52,7 +52,7 @@ export function gameplayMenuControls (i, input){
       default:
         break;
     }
-  } else if (input[0].lsY > 0.7 && !(Math.abs(input[0].lsX >= 0.7))) {
+  } else if (input[i][0].lsY > 0.7 && !(Math.abs(input[i][0].lsX >= 0.7))) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuIndex[0]--;
@@ -71,7 +71,7 @@ export function gameplayMenuControls (i, input){
         menuMove = true;
       }
     }
-  } else if (input[0].lsY < -0.7 &&  !(Math.abs(input[0].lsX >= 0.7))) {
+  } else if (input[i][0].lsY < -0.7 &&  !(Math.abs(input[i][0].lsX >= 0.7))) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuIndex[0]++;
