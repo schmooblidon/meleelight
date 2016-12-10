@@ -849,7 +849,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) 
 
       if ( !isOutside(corner, ecbp[same], ecbp[2], otherInteriorECBside) && isOutside ( corner, ecb1[same], ecb1[2], otherInteriorECBside) ) {
         otherEdgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[2], ecbp[same], ecbp[2], 2, position, otherCounterclockwise, otherCorner, wallType);
-        console.log("I did a same-top ECB edge sweep check. Collision="+(!(otherEdgeSweepResult===false))+".");
       }
     }
 
