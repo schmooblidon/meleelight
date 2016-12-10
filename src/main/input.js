@@ -98,14 +98,14 @@ export const aiPlayer3 =  [ new inputData ( )
                           ];
 
 export const aiPlayer4 = [ new inputData ( )
-                          , new inputData ( )
-                          , new inputData ( )
-                          , new inputData ( )
-                          , new inputData ( )
-                          , new inputData ( )
-                          , new inputData ( )
-                          , new inputData ( )
-                          ];
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         ];
 
 export const aiInputBank = [aiPlayer1,aiPlayer2,aiPlayer3,aiPlayer4];
 
@@ -255,8 +255,6 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   let lAnalog = 0;
   let rAnalog = 0;
 
-  //----------------------------------------------------------------
-  //-- Below: should be moved to inputs.js
 
   if (controllerType == 3){
     lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[playerSlot].l, 1); // shifted by +0.2
@@ -275,13 +273,6 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, 0.6); // shifted by +0.867
   }
 
-  //-- Above: should be moved to inputs.js
-  //----------------------------------------------------------------
-
-
-  //----------------------------------------------------------------
-  //-- Below: should be moved to inputs.js
-
   if (controllerType == 3) {
     // FOR XBOX CONTROLLERS
     input.r = buttonData("r").value > 0.95 ? true : false;
@@ -299,8 +290,6 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     input.l = buttonData("l").pressed;
   }
 
-  //-- Above: should be moved to inputs.js
-  //----------------------------------------------------------------
 
   input.lsX = lstickX;
   input.lsY = lstickY;
@@ -317,8 +306,6 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   input.y = buttonData("y").pressed;
   input.z = buttonData("z").pressed;
 
-  //----------------------------------------------------------------
-  //-- Below: should be moved to inputs.js
 
   if (controllerType == 9) { // Rock Candy controller, parameters to be confirmed
     input.dl = gamepad.axes[6] < -0.5 ? true : false;
@@ -333,9 +320,6 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     input.du = buttonData("du").pressed;
   }
 
-  //-- Above: should be moved to inputs.js
-  //----------------------------------------------------------------
-
   if (input.l) {
     input.lA = 1;
   }
@@ -343,7 +327,6 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     input.rA = 1;
   }
   if (!frameByFrame && gameMode != 4) { // not in target builder
-    input.z = buttonData("z").pressed;
     if (input.z) {
       input.lA = 0.35;
       input.a = true;
@@ -502,9 +485,9 @@ controllerIDMap.set("054c-05c4", 8);
 controllerIDMap.set("54c-5c4", 8);
 
 // ID 9, Rock Candy Xbox 360 controller
-controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 360", 8);
-controllerIDMap.set("0e6f-011f", 8);
-controllerIDMap.set("e6f-11f", 8);
+controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 360", 9);
+controllerIDMap.set("0e6f-011f", 9);
+controllerIDMap.set("e6f-11f", 9);
 
 //--END OF CONTROLLER IDs-------------------------------------
     
