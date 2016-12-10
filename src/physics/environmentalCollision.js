@@ -319,7 +319,7 @@ function lineSweepParameters( line1, line2, flip = false) {
 };
 
 
-function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, other, position, counterclockwise, corner, wallType) {
+function edgeSweepingCheck( ecb1, ecbp, same, other, position, counterclockwise, corner, wallType) {
 
   // the relevant ECB edge, that might collide with the corner, is the edge between ECB points 'same' and 'other'
   let interiorECBside = "l";   
@@ -327,7 +327,7 @@ function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, other, pos
     interiorECBside = "r";    
   }
 
-  if (!isOutside ( corner, ecbpSame, ecbpOther, interiorECBside) && isOutside ( corner, ecb1Same, ecb1Other, interiorECBside) ) {
+  if (!isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside) ) {
 
     let [t,s] = [0,0];
   
@@ -338,10 +338,10 @@ function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, other, pos
     // first we recenter everything around the corner,
     // as the 'lineSweepParameters' function calculates collision with respect to the origin
   
-    const recenteredECB1Edge = [ new Vec2D( ecb1Same.x  - corner.x, ecb1Same.y  - corner.y )
-                               , new Vec2D( ecb1Other.x - corner.x, ecb1Other.y - corner.y ) ];
-    const recenteredECBpEdge = [ new Vec2D( ecbpSame.x  - corner.x, ecbpSame.y  - corner.y )
-                               , new Vec2D( ecbpOther.x - corner.x, ecbpOther.y - corner.y ) ];
+    const recenteredECB1Edge = [ new Vec2D( ecb1[same ].x - corner.x, ecb1[same ].y - corner.y )
+                               , new Vec2D( ecb1[other].x - corner.x, ecb1[other].y - corner.y ) ];
+    const recenteredECBpEdge = [ new Vec2D( ecbp[same ].x - corner.x, ecbp[same ].y - corner.y )
+                               , new Vec2D( ecbp[other].x - corner.x, ecbp[other].y - corner.y ) ];
   
     // in the line sweeping, some tricky orientation checks show that a minus sign is required precisely in the counterclockwise case
     // this is what the third argument to 'lineSweepParameters' corresponds to
@@ -352,26 +352,12 @@ function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, other, pos
       let newPosition = false; // initialising
 
       let additionalPushout = additionalOffset; // additional pushout
-      switch(other) {
-        case 1:
-        case 2:
-          additionalPushout = -additionalOffset;
-          break;
-        default:
-          break;
+      if (same === 1 || other === 1) {
+        additionalPushout = -additionalOffset;
       }
-
-      switch (cornerPushoutMethod) {
-        case "v": // vertical pushout
-          const yIntersect = coordinateIntercept( [ ecbpSame, ecbpOther ], [ corner, new Vec2D( corner.x, corner.y+1 ) ]);
-          newPosition = new Vec2D( position.x , position.y + corner.y-yIntersect.y + additionalPushout);
-          break;
-        case "h": // horizontal pushout
-        default:
-          const xIntersect = coordinateIntercept( [ ecbpSame, ecbpOther ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
-          newPosition = new Vec2D( position.x + corner.x - xIntersect.x + additionalPushout, position.y);
-          break;
-      }
+      
+      const xIntersect = coordinateIntercept( [ ecbp[same], ecbp[other] ], [ corner, new Vec2D( corner.x+1, corner.y ) ]);
+      newPosition = new Vec2D( position.x + corner.x - xIntersect.x + additionalPushout, position.y);
       console.log("'edgeSweepingCheck': collision, relevant edge of ECB has moved across "+wallType+" corner. Sweeping parameter s="+s+".");
       return ( [false, newPosition, s] ); // s is the sweeping parameter, t just moves along the edge
             //  ^^^^ false because colliding at a corner never counts as 'touching' for the purpose of the physics
@@ -838,7 +824,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       }
 
       if (!isOutside ( corner, ecbp[same], ecbp[other], interiorECBside) && isOutside ( corner, ecb1[same], ecb1[other], interiorECBside) ) {
-        edgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[other], ecbp[same], ecbp[other], other, position, counterclockwise, corner, wallType);
+        edgeSweepResult = edgeSweepingCheck( ecb1, ecbp, same, other, position, counterclockwise, corner, wallType);
       }
     }
 
@@ -856,7 +842,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       }
 
       if ( !isOutside(corner, ecbp[same], ecbp[2], otherInteriorECBside) && isOutside ( corner, ecb1[same], ecb1[2], otherInteriorECBside) ) {
-        otherEdgeSweepResult = edgeSweepingCheck( ecb1[same], ecb1[2], ecbp[same], ecbp[2], 2, position, otherCounterclockwise, otherCorner, wallType);
+        otherEdgeSweepResult = edgeSweepingCheck( ecb1, ecbp, same, 2, position, otherCounterclockwise, otherCorner, wallType);
       }
     }
 
