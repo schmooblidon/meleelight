@@ -806,7 +806,7 @@ export function gameTick (oldInputBuffers){
       keyboardMenuControls(i, input);
     }
   } else if (gameMode == 13) {
-    input[i] = interpretInputs(creditsPlayer, true, playerType[i],oldInputBuffers[i]);
+    input[creditsPlayer] = interpretInputs(creditsPlayer, true, playerType[creditsPlayer],oldInputBuffers[creditsPlayer]);
     credits(creditsPlayer, input);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
