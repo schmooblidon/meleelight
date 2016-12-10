@@ -430,37 +430,29 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFu
       console.log("'pushoutHorizontally': top case, pushing out top point.");
       return ( coordinateIntercept(wall, topLine).x - ecbpTop.x); 
     }
-    else if (ecbpSame.y > wallTop.y) { // in this case, push the side point out
-      if ( sign * xIntersect <= sign * wallSide.x ) {
-        console.log("'pushoutHorizontally': top case, pushing out side point.");
-        console.log("This shouldn't happen.");
-        return (xIntersect - ecbpSame.x);
+    else if (ecbpSame.y >= wallTop.y) { // in this case, push the side point out
+      nextWallToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
+      if (nextWallToTheSideTypeAndIndex === false || nextWallToTheSideTypeAndIndex[0] !== wallType) {
+        console.log("'pushoutHorizontally': top case, pushing out side point (no adjacent wall).");
+        return (wallSide.x - ecbpSame.x);
       }
       else {
-        nextWallToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
-        if (nextWallToTheSideTypeAndIndex === false || nextWallToTheSideTypeAndIndex[0] !== wallType) {
-          console.log("'pushoutHorizontally': top case, pushing out side point (no adjacent wall).");
+        if (wallType === "r") {
+          nextWallToTheSide = stage.wallR[ nextWallToTheSideTypeAndIndex[1] ];
+        }
+        else {
+          nextWallToTheSide = stage.wallL[ nextWallToTheSideTypeAndIndex[1] ];
+        }
+        nextWallToTheSideTop    = extremePoint(nextWallToTheSide, "t");
+        nextWallToTheSideBottom = extremePoint(nextWallToTheSide, "b");
+        nextWallToTheSideAngle  = lineAngle( [nextWallToTheSideBottom, nextWallToTheSideTop]);
+        if (sign * nextWallToTheSideAngle > sign * ecbAngle) {
+          console.log("'pushoutHorizontally': top case, pushing out side point (adjacent wall is useless).");
           return (wallSide.x - ecbpSame.x);
         }
         else {
-          if (wallType === "r") {
-            nextWallToTheSide = stage.wallR[ nextWallToTheSideTypeAndIndex[1] ];
-          }
-          else {
-            nextWallToTheSide = stage.wallL[ nextWallToTheSideTypeAndIndex[1] ];
-          }
-          nextWallToTheSideTop    = extremePoint(nextWallToTheSide, "t");
-          nextWallToTheSideBottom = extremePoint(nextWallToTheSide, "b");
-          nextWallToTheSideAngle  = lineAngle( [nextWallToTheSideBottom, nextWallToTheSideBottom]);
-          if (sign * nextWallToTheSideAngle > sign * ecbAngle) {
-            console.log("'pushoutHorizontally': top case, pushing out side point (adjacent wall is useless).");
-            return (wallSide.x - ecbpSame.x);
-          }
-          else {
-            console.log("'pushoutHorizontally': top case, deferring to adjacent wall.");
-            return pushoutHorizontally(nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, connectednessFunction, ecbpSame, ecbpTop);
-
-          }
+          console.log("'pushoutHorizontally': top case, deferring to adjacent wall.");
+          return pushoutHorizontally(nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, connectednessFunction, ecbpSame, ecbpTop);
         }
       }
     }
@@ -481,7 +473,7 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFu
         }
         nextWallToTheSideTop    = extremePoint(nextWallToTheSide, "t");
         nextWallToTheSideBottom = extremePoint(nextWallToTheSide, "b");
-        nextWallToTheSideAngle  = lineAngle( [nextWallToTheSideBottom, nextWallToTheSideBottom]);
+        nextWallToTheSideAngle  = lineAngle( [nextWallToTheSideBottom, nextWallToTheSideTop]);
         if (sign * nextWallToTheSideAngle > sign * ecbAngle) {
           // place the relevant ECB edge on the corner
           console.log("'pushoutHorizontally': top case, directly pushing out to corner (adjacent wall is useless).");
