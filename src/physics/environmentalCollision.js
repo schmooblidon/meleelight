@@ -725,6 +725,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
   let xOrY = 1; // y by default
   let isPlatform = false;
   let flip = false;
+  let sign = 1;
 
   let other = 0; // this will be calculated later, not in the following switch statement
   let alsoCheckTop = true; // whether to separately also check the top point for collision
@@ -734,6 +735,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       same = 1;
       opposite = 3;
       flip = true;
+      sign = -1;
       extremeWall = wallLeft;
       extremeSign = -1;
       break;
@@ -749,6 +751,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       extremeWall = wallTop;
       xOrY = 0;
       flip = true;
+      sign = -1;
       alsoCheckTop = false;
       break;
     case "c": // ceiling
@@ -889,10 +892,19 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
     }
     
     // point sweeping check
-    // we first check whether the surface can actually push the point out at all or not; if not, potential collisions are ignored
-    if (!( extremeSign * getXOrYCoord(ecbp[same], yOrX) > extremeSign * getXOrYCoord(extremeWall, yOrX) ) ) {
+    // the first step is to check whether, even if there is a collision, the wall could actually do anything about it
+    // this check avoids infinite loops: if a wall can't actually push out the ECB to avoid a collision, we consider that no collision is taking place
+    if (    !( extremeSign * getXOrYCoord(ecbp[same], yOrX) > extremeSign * getXOrYCoord(extremeWall, yOrX) ) // same-side projected ECB point beyond wall extreme
+         && !(    (wallType === "l" || wallType === "r")
+               && ecbp[2].y > wallTop.y
+               && sign * lineAngle([wallBottom, wallTop]) < sign * lineAngle([ecbp[same], ecbp[2]]) // left or right wall where top ECB point can touch
+               && isOutside( wallTop, ecbp[same], ecbp[2], wallType ) // same-top ECB edge has not gone through to the insode of the top corner
+               ) ) {
       closestPointCollision = pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage, connectednessFunction
                                                  , xOrY, position, ecb1[same], ecbp[same], ecb1[2], ecbp[2]);
+    }
+    else {
+      console.log("'findCollision': impotent surface of type "+wallType+", skipped point sweep.");
     }
   
     let [finalCollision, finalCollisionType] = [false,false];
