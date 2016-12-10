@@ -327,7 +327,6 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     input.rA = 1;
   }
   if (!frameByFrame && gameMode != 4) { // not in target builder
-    input.z = buttonData("z").pressed;
     if (input.z) {
       input.lA = 0.35;
       input.a = true;

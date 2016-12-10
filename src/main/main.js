@@ -582,19 +582,25 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   frameAdvance[i][1] = frameAdvance[i][0];
 
   if (mType[i] == 10) { // keyboard controls
+
     if (tempBuffer[0].s || tempBuffer[1].s ) {
       pause[i][0] = true;
-    } else {
-      pause[i][0] = false
     }
+    else {
+      pause[i][0] = false;
+    }
+
     if (tempBuffer[0].z  || tempBuffer[1].z ) {
       frameAdvance[i][0] = true;
-    } else {
-      frameAdvance[i][0] = false
+    } 
+    else {
+      frameAdvance[i][0] = false;
     }
+
     if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode != 4) {
     frameByFrame = true;
     }
+
     if (active) {
       if (tempBuffer[0].dl && !tempBuffer[1].dl ) {
        player[i].showLedgeGrabBox ^= true;
@@ -616,7 +622,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       }
     }
 
-    interpretPause(i);
+    interpretPause(pause[i][0], pause[i][1]);
 
     if (showDebug) {
     $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
@@ -638,19 +644,22 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       }
     }
 
-    if (( tempBuffer[0].s && ! tempBuffer[1].s) || tempBuffer[0].du.pressed && gameMode == 5) {
+    if ( tempBuffer[0].s || tempBuffer[0].du.pressed && gameMode == 5) {
       pause[i][0] = true;
-    } else {
-      pause[i][0] = false
     }
+    else {
+      pause[i][0] = false;
+    }
+
+
     if (tempBuffer[0].z && ! tempBuffer[1].z ) {
       frameAdvance[i][0] = true;
     } else {
-      frameAdvance[i][0] = false
+      frameAdvance[i][0] = false;
     }
 
     if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode != 4) {
-    frameByFrame = true;
+      frameByFrame = true;
     }
 
     if (tempBuffer[0].dl && !tempBuffer[1].dl) {
@@ -680,7 +689,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       }, 2000);
     }
 
-    interpretPause(i);
+    interpretPause(pause[i][0], pause[i][1]);
 
     showButton(i, 0,tempBuffer[0].a);
     showButton(i, 1,tempBuffer[0].b);
@@ -709,8 +718,8 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
 }
 
-function interpretPause(i) {
-  if (pause[i][0] && !pause[i][1]) {
+function interpretPause(pause0, pause1) {
+  if (pause0 && !pause1) {
     if (gameMode == 3 || gameMode == 5) {
       playing ^= true;
       if (!playing) {
@@ -961,7 +970,7 @@ export function gameTick (oldInputBuffers){
       for (var i = 0; i < 4; i++) {
         if (playerType[i] == 0) {
           if (currentPlayers[i] != -1) {
-            interpretInputs(i, false,playerType[i],oldInputBuffers[i]);
+            input[i] = interpretInputs(i, false,playerType[i],oldInputBuffers[i]);
           }
         }
       }
@@ -1197,12 +1206,7 @@ export function endGame (input){
       changeGamemode(7);
     }
   }
-  pause = [
-    [true, true],
-    [true, true],
-    [true, true],
-    [true, true]
-  ];
+  pause = [[true,true],[true,true],[true,true],[true,true]];
   frameAdvance = [
     [true, true],
     [true, true],

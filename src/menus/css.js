@@ -279,8 +279,6 @@ export function cssControls (i, input){
     tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
     $("#pTagEdit" + choosingTag).hide();
     choosingTag = -1;
-    pause[i][0] = true;
-    pause[i][1] = true;
   }
   if (readyToFight && choosingTag == -1) {
     if (pause[i][0] && !pause[i][1]) {
