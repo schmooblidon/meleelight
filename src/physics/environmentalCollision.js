@@ -388,7 +388,7 @@ function edgeSweepingCheck( ecb1Same, ecb1Other, ecbpSame, ecbpOther, other, pos
 };
 
 
-function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpTop) {
+function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFunction, ecbpSame, ecbpTop) {
   console.log("'pushoutHorizontally' working with wall "+wallType+""+wallIndex+".");
 
   const wallRight  = extremePoint(wall, "r");
@@ -422,19 +422,24 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpT
   }
 
   if (sign * wallAngle < sign * ecbAngle) { // top ECB edge situation, might need to push out at corners
+    // initialise some potentially useful objects
+    let nextWallToTheSideTop    = false;
+    let nextWallToTheSideBottom = false;
+    let nextWallToTheSideAngle  = false;
     if (ecbpTop.y <= wallTop.y) { // in this case, just push the top point out
-      console.log("'pushoutHorizontally': top case, pushing top point out directly.");
+      console.log("'pushoutHorizontally': top case, pushing out top point.");
       return ( coordinateIntercept(wall, topLine).x - ecbpTop.x); 
     }
     else if (ecbpSame.y > wallTop.y) { // in this case, push the side point out
       if ( sign * xIntersect <= sign * wallSide.x ) {
-        console.log("'pushoutHorizontally': top case, directly pushing out side point.");
+        console.log("'pushoutHorizontally': top case, pushing out side point.");
+        console.log("This shouldn't happen.");
         return (xIntersect - ecbpSame.x);
       }
       else {
-        nextWallToTheSideTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , dir, stage.connected);
-        if (nextWallToTheSideTypeAndIndex === false || !(nextWallToTheSideTypeAndIndex[0] === wallType)) {
-          console.log("'pushoutHorizontally': top case, pushing side point out directly (no adjacent wall).");
+        nextWallToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
+        if (nextWallToTheSideTypeAndIndex === false || nextWallToTheSideTypeAndIndex[0] !== wallType) {
+          console.log("'pushoutHorizontally': top case, pushing out side point (no adjacent wall).");
           return (wallSide.x - ecbpSame.x);
         }
         else {
@@ -444,22 +449,25 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpT
           else {
             nextWallToTheSide = stage.wallL[ nextWallToTheSideTypeAndIndex[1] ];
           }
-  
-          if ( sign * extremePoint(nextWallToTheSide, wallType).x <= sign * wallSide.x ) {
-            console.log("'pushoutHorizontally': top case, pushing side point out directly (adjacent wall is useless).");
+          nextWallToTheSideTop    = extremePoint(nextWallToTheSide, "t");
+          nextWallToTheSideBottom = extremePoint(nextWallToTheSide, "b");
+          nextWallToTheSideAngle  = lineAngle( [nextWallToTheSideBottom, nextWallToTheSideBottom]);
+          if (sign * nextWallToTheSideAngle > sign * ecbAngle) {
+            console.log("'pushoutHorizontally': top case, pushing out side point (adjacent wall is useless).");
             return (wallSide.x - ecbpSame.x);
           }
           else {
             console.log("'pushoutHorizontally': top case, deferring to adjacent wall.");
-            return pushoutHorizontally(nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, ecbpSame, ecbpTop);
+            return pushoutHorizontally(nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, connectednessFunction, ecbpSame, ecbpTop);
+
           }
         }
       }
     }
     else { // this is the potential corner pushout case
       const cornerLine = [wallSide, new Vec2D (wallSide.x+1,wallSide.y )]; // horizontal line through top corner of wall
-      nextWallToTheSideTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , dir, stage.connected);
-      if (nextWallToTheSideTypeAndIndex === false || !(nextWallToTheSideTypeAndIndex[0] === wallType)) {
+      nextWallToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
+      if (nextWallToTheSideTypeAndIndex === false || nextWallToTheSideTypeAndIndex[0] !== wallType) {
         // place the relevant top ECB edge on the corner
         console.log("'pushoutHorizontally': top case, directly pushing out to corner (no adjacent wall).");
         return (wallSide.x - coordinateIntercept( [ecbpSame, ecbpTop], cornerLine ).x);
@@ -471,17 +479,17 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpT
         else {
           nextWallToTheSide = stage.wallL[ nextWallToTheSideTypeAndIndex[1] ];
         }
-        const nextWallToTheSideTop    = extremePoint(nextWallToTheSide, "t");
-        const nextWallToTheSideBottom = extremePoint(nextWallToTheSide, "b");
-        const nextWallToTheSideAngle  = lineAngle( [nextWallToTheSideBottom, nextWallToTheSideBottom]);
-        if (nextWallToTheSideAngle > ecbAngle) {
-          // place the top left ECB edge on the corner
+        nextWallToTheSideTop    = extremePoint(nextWallToTheSide, "t");
+        nextWallToTheSideBottom = extremePoint(nextWallToTheSide, "b");
+        nextWallToTheSideAngle  = lineAngle( [nextWallToTheSideBottom, nextWallToTheSideBottom]);
+        if (sign * nextWallToTheSideAngle > sign * ecbAngle) {
+          // place the relevant ECB edge on the corner
           console.log("'pushoutHorizontally': top case, directly pushing out to corner (adjacent wall is useless).");
           return (wallSide.x - coordinateIntercept( [ecbpSame, ecbpTop], cornerLine ).x);
         }
         else {
           console.log("'pushoutHorizontally': top case, deferring corner pushing to adjacent wall.");
-          return pushoutHorizontally( nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, ecbpSame, ecbpTop);
+          return pushoutHorizontally( nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, connectednessFunction, ecbpSame, ecbpTop);
         }
 
       }
@@ -495,13 +503,13 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpT
     }
     else {        
       if (wallAngle > Math.PI) {
-        nextWallToTheSideTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , "r", stage.connected);
+        nextWallToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , "r");
       }
       else {
-        nextWallToTheSideTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , "l", stage.connected);
+        nextWallToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , "l");
       }
 
-      if (nextWallToTheSideTypeAndIndex === false || !(nextWallToTheSideTypeAndIndex[0] === wallType)) {
+      if (nextWallToTheSideTypeAndIndex === false || nextWallToTheSideTypeAndIndex[0] !== wallType) {
         console.log("'pushoutHorizontally': side case, directly pushing out side point (no adjacent wall).");
         return (xIntersect - ecbpSame.x);
       }
@@ -518,7 +526,7 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpT
         }
         else {
           console.log("'pushoutHorizontally': side case, deferring side pushing to adjacent wall.");
-          return pushoutHorizontally( nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, ecbpSame, ecbpTop);
+          return pushoutHorizontally( nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, connectednessFunction, ecbpSame, ecbpTop);
         }
       }
     }
@@ -528,7 +536,7 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpT
 
 
 
-function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
+function pushoutVertically ( wall, wallType, wallIndex, stage, connectednessFunction, line) {
   const wallTop    = extremePoint(wall, "t");
   const wallBottom = extremePoint(wall, "b");
   const yIntersect = coordinateIntercept(wall, line).y;
@@ -541,7 +549,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
       dir = "l";
     } 
 
-    const nextWallAboveTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , dir, stage.connected);
+    const nextWallAboveTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
     if (nextWallAboveTypeAndIndex === false || ! (nextWallAboveTypeAndIndex[0] === wallType)) {
       return wallTop.y;
     }
@@ -552,7 +560,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
           return wallTop.y;
         }
         else {
-          return pushoutVertically( nextCeilingAbove , "c", nextWallAboveTypeAndIndex[1], stage, line);
+          return pushoutVertically( nextCeilingAbove , "c", nextWallAboveTypeAndIndex[1], stage, connectednessFunction, line);
         }
       }
       else if (wallType === "g") {
@@ -561,7 +569,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
           return wallTop.y;
         }
         else {
-          return pushoutVertically( nextGroundAbove, "g", nextWallAboveTypeAndIndex[1], stage, line);
+          return pushoutVertically( nextGroundAbove, "g", nextWallAboveTypeAndIndex[1], stage, connectednessFunction, line);
         }
       }
       else if (wallType === "p") {
@@ -570,7 +578,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
           return wallTop.y;
         }
         else {
-          return pushoutVertically( nextPlatformAbove, "p", nextWallAboveTypeAndIndex[1], stage, line);
+          return pushoutVertically( nextPlatformAbove, "p", nextWallAboveTypeAndIndex[1], stage, connectednessFunction, line);
         }
       }
       else {
@@ -583,7 +591,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
     if ( ( wallAngle < Math.PI ) !== (wallType === "c") ) { // xor operation
       dir = "r";
     }
-    const nextWallBelowTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , dir, stage.connected);
+    const nextWallBelowTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
     if (nextWallBelowTypeAndIndex === false || ! (nextWallBelowTypeAndIndex[0] === wallType)) {
       return wallBottom.y;
     }
@@ -594,7 +602,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
           return wallBottom.y;
         }
         else {
-          return pushoutVertically( nextCeilingBelow , "c", nextWallBelowTypeAndIndex[1], stage, line);
+          return pushoutVertically( nextCeilingBelow , "c", nextWallBelowTypeAndIndex[1], stage, connectednessFunction, line);
         }
       }
       else if (wallType === "g") {
@@ -603,7 +611,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
           return wallBottom.y;
         }
         else {
-          return pushoutVertically( nextGroundBelow, "g", nextWallBelowTypeAndIndex[1], stage, line);
+          return pushoutVertically( nextGroundBelow, "g", nextWallBelowTypeAndIndex[1], stage, connectednessFunction, line);
         }
       }
       else if (wallType === "p") {
@@ -612,7 +620,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
           return wallBottom.y;
         }
         else {
-          return pushoutVertically( nextPlatformBelow, "p", nextWallBelowTypeAndIndex[1], stage, line);
+          return pushoutVertically( nextPlatformBelow, "p", nextWallBelowTypeAndIndex[1], stage, connectednessFunction, line);
         }
       }
       else {
@@ -625,7 +633,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, line) {
   }
 };
 
-function pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage, xOrY, position, ecb1Same, ecbpSame, ecb1Top, ecbpTop){
+function pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage, connectednessFunction, xOrY, position, ecb1Same, ecbpSame, ecb1Top, ecbpTop){
 
   let relevantECB1Point = ecb1Same;
   let relevantECBpPoint = ecbpSame;
@@ -669,13 +677,13 @@ function pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBot
         case "c":
         case "g":
         case "p": // vertical pushout
-          const yPushout = pushoutVertically (wall, wallType, wallIndex, stage, [ecbpSame, new Vec2D( ecbpSame.x , ecbpSame.y -1) ]);
+          const yPushout = pushoutVertically (wall, wallType, wallIndex, stage, connectednessFunction, [ecbpSame, new Vec2D( ecbpSame.x , ecbpSame.y -1) ]);
           newPosition = new Vec2D( position.x, position.y + yPushout - ecbpSame.y + additionalPushout );
           break;
         case "l":
         case "r": // horizontal pushout
         default:
-          const xPushout = pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpTop);
+          const xPushout = pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFunction, ecbpSame, ecbpTop);
           newPosition = new Vec2D( position.x + xPushout + additionalPushout, position.y);
           break;
       }
@@ -696,7 +704,7 @@ function pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBot
 // the sweeping parameter s corresponds to the location of the collision, between ECB1 and ECBp
 // terminology in the comments: a wall is a segment with an inside and an outside,
 // which is contained in an infinite line, extending both ways, which also has an inside and an outside
-function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) {
+function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, connectednessFunction) {
 
 // STANDING ASSUMPTIONS
 // the ECB can only collide a ground/platform surface on its bottom point (or a bottom edge on a corner of the ground/platform)
@@ -891,7 +899,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) 
     // point sweeping check
     // we first check whether the surface can actually push the point out at all or not; if not, potential collisions are ignored
     if (!( extremeSign * getXOrYCoord(ecbp[same], yOrX) > extremeSign * getXOrYCoord(extremeWall, yOrX) ) ) {
-      closestPointCollision = pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage
+      closestPointCollision = pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage, connectednessFunction
                                                  , xOrY, position, ecb1[same], ecbp[same], ecb1[2], ecbp[2]);
     }
   
@@ -938,7 +946,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage) 
 //          option 2: '[newPosition, false, s]'            (collision, but no longer touching) 
 //          option 3: '[newPosition, wallTypeAndIndex, s]' (collision, still touching wall with given type and index)
 // s is the sweeping parameter
-function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldMaybeCenterAndTouchingType, stage, passNumber ) {
+function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldMaybeCenterAndTouchingType, stage, connectednessFunction, passNumber ) {
   console.log("'loopOverWalls' pass number "+passNumber+".");
   let newCollisionHappened = false;
   const suggestedMaybeCenterAndTouchingTypes = [false]; // initialise list of new collisions
@@ -951,7 +959,7 @@ function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldM
                                              // [  [ touchingWall, position, s ]  , touchingType ]
               (wallAndThenWallTypeAndIndex)  => [ findCollision (ecbp, ecb1, position, wallAndThenWallTypeAndIndex[0]
                                                                 , wallAndThenWallTypeAndIndex[1][0], wallAndThenWallTypeAndIndex[1][1]
-                                                                , stage )
+                                                                , stage, connectednessFunction )
                                                 , wallAndThenWallTypeAndIndex[1] ]);
     for (let i = 0; i < collisionData.length; i++) {
       if (collisionData[i][0] === false) { // option 1: no collision
@@ -973,6 +981,7 @@ function loopOverWalls( ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, oldM
                             , wallAndThenWallTypeAndIndexs
                             , newMaybeCenterAndTouchingType 
                             , stage
+                            , connectednessFunction
                             , passNumber+1 
                             ) );
     }
@@ -1091,7 +1100,7 @@ export function groundedECBSquashFactor( ecb, ceilings ) {
   }
 };
 
-export function getNewMaybeCenterAndTouchingType(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, stage) {
+export function getNewMaybeCenterAndTouchingType(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, stage, connectednessFunction) {
   // start at loop number 1, with no collisions given
-  return loopOverWalls(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, false, stage, 1 );
+  return loopOverWalls(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, false, stage, connectednessFunction, 1 );
 };

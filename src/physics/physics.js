@@ -595,6 +595,16 @@ export function physics (i){
     let stillGrounded = true;
     let backward = false;
 
+    let connectedSurfaces = activeStage.connected;
+    function connectednessFunction (gd, side) { return false ;} ;
+    if (connectedSurfaces === null || connectedSurfaces === undefined ) {
+      // do nothing        
+    }
+    else {
+      // this should not be done every frame
+      connectednessFunction = function (gd, side) { return connectednessFromChains(gd, side, connectedSurfaces) ;};
+    }
+
     // ------------------------------------------------------------------------------------------------------
     // grounded state movement
 
@@ -603,18 +613,7 @@ export function physics (i){
       let relevantGroundIndex = player[i].phys.onSurface[1];
       let relevantGroundType = "g";
       let relevantGround = activeStage.ground[relevantGroundIndex];
-
-      let connectedSurfaces = activeStage.connected;
-      function groundConnectednessFunction (gd, side) { return false ;} ;
-      if (connectedSurfaces === null || connectedSurfaces === undefined ) {
-        // do nothing        
-      }
-      else {
-        // this should not be done every frame
-        groundConnectednessFunction = function (gd, side) { return connectednessFromChains(gd, side, connectedSurfaces) ;};
-      }
-
-       
+      
       if (player[i].phys.onSurface[0] == 1) {
         relevantGroundType = "p";
         relevantGround = activeStage.platform[relevantGroundIndex];
@@ -622,7 +621,7 @@ export function physics (i){
       
       let relevantGroundTypeAndIndex = [relevantGroundType, relevantGroundIndex];
 
-      [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex, groundConnectednessFunction);
+      [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex, connectednessFunction);
 
       // squash grounded ECB if there is a low ceiling
       if (stillGrounded) {
@@ -663,7 +662,7 @@ export function physics (i){
     }
 
     let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos
-                                                                             , relevantSurfaces, activeStage );
+                                                                             , relevantSurfaces, activeStage, connectednessFunction );
 
     if (surfacesMaybeCenterAndTouchingType === false) {
       // no collision, do nothing
