@@ -1,13 +1,13 @@
 let scriptsLoaded = 0;
 const scripts = [{
-  // path: "./js/main.js",
-  path: "https://raw.githubusercontent.com/schmooblidon/meleelight/download/js/main.js",
+  path: "./js/main.js",
+  //path: "https://raw.githubusercontent.com/schmooblidon/meleelight/download/js/main.js",
   text: "core code",
   size: 1.8 * 1024 * 1024,
   loaded: 0,
 }, {
-  // path: "./js/animations.js",
-  path: "https://raw.githubusercontent.com/schmooblidon/meleelight/download/js/animations.js",
+  path: "./js/animations.js",
+  //path: "https://raw.githubusercontent.com/schmooblidon/meleelight/download/js/animations.js",
   text: "animations",
   size: 17.2 * 1024 * 1024,
   loaded: 0,
