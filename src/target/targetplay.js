@@ -20,9 +20,8 @@ import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision,
 import {interpolatedHitCircleCollision} from "physics/hitDetection";
 import {drawVfx} from "main/vfx/drawVfx";
 import {resetVfxQueue} from "main/vfx/vfxQueue";
-import {activeStage} from "stages/activeStage";
+import {activeStage, setActiveStageBuilderTestStage} from "stages/activeStage";
 import {Vec2D} from "../main/util/Vec2D";
-import {setTargetBuilderTestStage} from "../stages/activeStage";
 /* eslint-disable */
 
 export let targetTesting = false;
@@ -130,9 +129,9 @@ export function giveMedals (){
 }
 
 export function startTargetGame (p,test){
-    setEndTargetGame(false);
+  setEndTargetGame(false);
   if (test){
-    setTargetBuilderTestStage(stageTemp);
+    setActiveStageBuilderTestStage(stageTemp);
   }
   targetTesting = test;
     setBackgroundType(Math.round(Math.random()));
