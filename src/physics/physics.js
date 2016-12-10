@@ -5,7 +5,7 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor, squashDownECB, connectednessFromChains} from "physics/environmentalCollision";
+import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor, squashDownECB, connectednessFromChains, extremePoint} from "physics/environmentalCollision";
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
@@ -23,7 +23,18 @@ export function customZip ( list, string, start = 0 ) {
     const [head, ...tail] = list;
     return ( [[head, [string, start]]] . concat( customZip(tail, string, start+1) ) ) ;
   }
-}
+};
+
+// temporary workaround for custom stage data being objects and not arrays
+function customId(list) {
+  if (list.length === 0) {
+    return [];
+  }
+  else {
+    const [head, ...tail] = list;
+    return ( [head] . concat (customId(tail)));
+  }
+};
 
 function dealWithCollision(i, newCenter) {
   player[i].phys.pos = newCenter;
@@ -139,8 +150,9 @@ function fallOffGround(i, side, groundEdgePosition) {
 
 
 // ground type and index is a pair, either ["g", index] or ["p", index]
-// this function assumes that grounds/platforms have their leftmost point given first
 function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
+  let leftmostGroundPoint  = extremePoint(ground,"l");
+  let rightmostGroundPoint = extremePoint(ground,"r");
   let [stillGrounded, backward] = [true,false]
   let groundOrPlatform = 0;
   if (groundTypeAndIndex[0] === "p") {
@@ -150,10 +162,10 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
   let maybeLeftGroundTypeAndIndex  = false; 
   let maybeRightGroundTypeAndIndex = false; 
 
-  if ( player[i].phys.ECBp[0].x < ground[0].x) {
+  if ( player[i].phys.ECBp[0].x < leftmostGroundPoint.x) {
     maybeLeftGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"l");
     if (maybeLeftGroundTypeAndIndex === false) { // no other ground to the left
-      [stillGrounded, backward] = fallOffGround(i, "l", ground[0]);
+      [stillGrounded, backward] = fallOffGround(i, "l", leftmostGroundPoint);
     }
     else {
       let [leftGroundType, leftGroundIndex] = maybeLeftGroundTypeAndIndex;
@@ -165,15 +177,15 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
           [stillGrounded, backward] = dealWithGround(i, activeStage.platform[leftGroundIndex], ["p",leftGroundIndex]);
           break;
         default: // surface to the left is neither a ground nor a platform
-          [stillGrounded, backward] = fallOffGround(i, "l", ground[0]);
+          [stillGrounded, backward] = fallOffGround(i, "l", leftmostGroundPoint);
           break;
       }
     }
   }
-  else if ( player[i].phys.ECBp[0].x > ground[1].x) {
+  else if ( player[i].phys.ECBp[0].x > rightmostGroundPoint.x) {
     maybeRightGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"r");
     if (maybeRightGroundTypeAndIndex === false) { // no other ground to the right
-      [stillGrounded, backward] = fallOffGround(i, "r", ground[1]);
+      [stillGrounded, backward] = fallOffGround(i, "r", rightmostGroundPoint);
     }
     else {
       let [rightGroundType, rightGroundIndex] = maybeRightGroundTypeAndIndex;
@@ -185,7 +197,7 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
           [stillGrounded, backward] = dealWithGround(i, activeStage.platform[rightGroundIndex], ["p",rightGroundIndex]);
           break;
         default: // surface to the right is neither a ground nor a platform
-          [stillGrounded, backward] = fallOffGround(i, "r", ground[1]);
+          [stillGrounded, backward] = fallOffGround(i, "r", rightmostGroundPoint);
           break;
       }
     }
@@ -614,7 +626,7 @@ export function physics (i){
 
       // squash grounded ECB if there is a low ceiling
       if (stillGrounded) {
-        let ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, activeStage.ceiling );
+        let ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, customId(activeStage.ceiling) );
         if (! (ecbSquashFactor === false )) {
           player[i].phys.ECBp = squashDownECB(player[i].phys.ECBp, ecbSquashFactor - additionalOffset );
         }
