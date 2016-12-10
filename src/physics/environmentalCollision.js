@@ -914,7 +914,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       // this prevents collisions being detected when going through a surface in reverse
 
       if (    checkTopInstead
-           && !isOutside( ecb1[2], wallTop, wallBottom, wallType ) ) { 
+           && !isOutside( ecb1[2], wallRight, wallLeft, "c" ) ) { 
         console.log("'findCollision': no point collision with "+wallType+""+wallIndex+", top ECB1 point on the inside side of the wall. ");
       }
       else if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
