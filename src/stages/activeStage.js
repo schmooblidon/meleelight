@@ -63,6 +63,10 @@ export let activeStage = {
   offset: [600, 480],
 };
 
+export function setActiveStageBuilderTestStage( stageTemp ) {
+  activeStage = stageTemp;
+}
+
 export function getActiveStage() {
   return activeStage;
 }
