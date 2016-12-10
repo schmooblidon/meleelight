@@ -31,9 +31,6 @@ export function setActiveStageTarget(val) {
   activeStage = tstages[targetStageMapping[val]];
 }
 
-export function setTargetBuilderTestStage(val){
-  activeStage = val;
-}
 
 export let activeStage = {
   box: [new Box2D([-68.4, -108.8], [68.4, 0])],
