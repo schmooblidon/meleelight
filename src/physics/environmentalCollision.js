@@ -404,18 +404,18 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpT
 
 
 // we are assuming that the chains of connected surfaces go clockwise:
-//    - left to right for grounds
 //    - top to bottom for right walls
-//    - right to left for ceilings
 //    - bottom to top for left walls
 
 
   let nextWallToTheSideTypeAndIndex = false;
   let nextWallToTheSide = false; // initialising
+
+  // right wall by default
   let wallSide = wallRight;
   let sign = 1;
   let dir = "l";
-  if (wallType === "l") {
+  if (wallType === "l") { // left wall situation
     wallSide = wallLeft;
     sign = -1;
     dir = "r";
@@ -427,26 +427,32 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, ecbpSame, ecbpT
       return ( coordinateIntercept(wall, topLine).x - ecbpTop.x); 
     }
     else if (ecbpSame.y > wallTop.y) { // in this case, push the side point out
-      nextWallToTheSideTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , dir, stage.connected);
-      if (nextWallToTheSideTypeAndIndex === false || !(nextWallToTheSideTypeAndIndex[0] === wallType)) {
-        console.log("'pushoutHorizontally': top case, pushing side point out directly (no adjacent wall).");
+      if ( sign * xIntersect <= sign * wallSide.x ) {
+        console.log("'pushoutHorizontally': top case, directly pushing out side point.");
         return (xIntersect - ecbpSame.x);
       }
       else {
-        if (wallType === "r") {
-          nextWallToTheSide = stage.wallR[ nextWallToTheSideTypeAndIndex[1] ];
+        nextWallToTheSideTypeAndIndex = connectednessFromChains( [wallType, wallIndex] , dir, stage.connected);
+        if (nextWallToTheSideTypeAndIndex === false || !(nextWallToTheSideTypeAndIndex[0] === wallType)) {
+          console.log("'pushoutHorizontally': top case, pushing side point out directly (no adjacent wall).");
+          return (wallSide.x - ecbpSame.x);
         }
         else {
-          nextWallToTheSide = stage.wallL[ nextWallToTheSideTypeAndIndex[1] ];
-        }
-
-        if ( sign * extremePoint(nextWallToTheSide, wallType).x <= sign * wallSide.x ) {
-          console.log("'pushoutHorizontally': top case, pushing side point out directly (adjacent wall is useless).");
-          return (xIntersect - ecbpSame.x);
-        }
-        else {
-          console.log("'pushoutHorizontally': top case, deferring to adjacent wall.");
-          return pushoutHorizontally(nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, ecbpSame, ecbpTop);
+          if (wallType === "r") {
+            nextWallToTheSide = stage.wallR[ nextWallToTheSideTypeAndIndex[1] ];
+          }
+          else {
+            nextWallToTheSide = stage.wallL[ nextWallToTheSideTypeAndIndex[1] ];
+          }
+  
+          if ( sign * extremePoint(nextWallToTheSide, wallType).x <= sign * wallSide.x ) {
+            console.log("'pushoutHorizontally': top case, pushing side point out directly (adjacent wall is useless).");
+            return (wallSide.x - ecbpSame.x);
+          }
+          else {
+            console.log("'pushoutHorizontally': top case, deferring to adjacent wall.");
+            return pushoutHorizontally(nextWallToTheSide , wallType, nextWallToTheSideTypeAndIndex[1], stage, ecbpSame, ecbpTop);
+          }
         }
       }
     }
