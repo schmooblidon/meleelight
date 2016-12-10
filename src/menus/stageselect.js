@@ -14,7 +14,7 @@ const smallBoxStageNames = [
   "Y-STORY",
   "P-STADIUM",
   "DREAMLAND",
-  "LAST STOP"
+  "LAST"
 ];
 
 const bigBoxNames = [
@@ -174,7 +174,7 @@ export function drawSSS() {
   }
   ui.fillStyle = "rgb(245, 144, 61)";
   ui.strokeStyle = "rgb(245, 144, 61)";
-  if (stageSelected == 4) {
+  if (stageSelected == 5) {
     if (stageSelectTimer % 8 > 4) {
       ui.fillStyle = "rgb(251, 195, 149)";
       ui.strokeStyle = "rgb(251, 195, 149)";
