@@ -861,7 +861,7 @@ export function gameTick (oldInputBuffers){
           starting = false;
         }
       }
-      if (input[targetBuilder][0].s && !player[targetBuilder][1].s) {
+      if (input[targetBuilder][0].s && !input[targetBuilder][1].s) {
         endGame(input);
       }
       if (frameByFrame) {
@@ -1216,8 +1216,8 @@ export function endGame (input){
       if (player[i].actionState == "FURAFURA") {
         sounds.furaloop.stop(player[i].furaLoopID);
       }
-      input[i][0].a = true;
-      input[i][1].a = true;
+      //input[i][0].a = true; // do
+      //input[i][1].a = true; // not
       player[i].inCSS = true;
       player[i].phys.face = 1;
       player[i].actionState = "WAIT";
