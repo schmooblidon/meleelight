@@ -394,68 +394,39 @@ export function checkForAerials (p,input){
 
 
 export function checkForDash (p,input){
-  if (input[p][0].lsX * player[p].phys.face > 0.79 && input[p][2].lsX * player[p].phys.face < 0.3){
-    return true;
-  } else {
-    return false;
-  }
+  return input[p][0].lsX * player[p].phys.face > 0.79 && input[p][2].lsX * player[p].phys.face < 0.3;
 }
 
 export function checkForSmashTurn (p,input){
-  if (input[p][0].lsX * player[p].phys.face < -0.79 && input[p][2].lsX * player[p].phys.face > -0.3){
-    return true;
-  } else {
-    return false;
-  }
+  return input[p][0].lsX * player[p].phys.face < -0.79 && input[p][2].lsX * player[p].phys.face > -0.3;
 }
 
 export function tiltTurnDashBuffer (p,input){
-  if (input[p][1].lsX * player[p].phys.face > -0.3){
-    return true;
-  } else {
-    return false;
-  }
+  return input[p][1].lsX * player[p].phys.face > -0.3;
 }
 
 export function checkForTiltTurn (p,input){
-  if (input[p][0].lsX * player[p].phys.face < -0.3){
-    return true;
-  } else {
-    return false;
-  }
+  return input[p][0].lsX * player[p].phys.face < -0.3;
 }
 
 export function checkForJump (p,input){
   if ((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y)) {
     return [true, 0];
-  } else if (input[p][0].lsY > 0.66 && input[p][3].lsY < 0.2) {
-  } else if ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) &&  (player[p].inputs.lStickAxis[0].y > 0.66 && player[p].inputs.lStickAxis[3].y < 0.2)) { // == is on purpose
+  }   else if ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) &&  (input[p][0].lsY > 0.66 && input[p][3].lsY < 0.2)) { // == is on purpose
     return [true, 1];
   } else {
     return [false, false];
   }
 }
-export function checkForDoubleJump (p){
-  if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) && player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))) {
-    return true;
-  } else {
-    return false;
-  }
+export function checkForDoubleJump (p,input){
+  return ((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) && input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump));
 }
-export function checkForMultiJump (p){
-  if (player[p].inputs.x[0] || player[p].inputs.y[0] || ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) &&  player[p].inputs.lStickAxis[0].y > 0.7)) {
-    return true;
-  } else {
-    return false;
-  }
+export function checkForMultiJump (p,input){
+  return !!(input[p][0].x || input[p][0].y || ((gameSettings["tapJumpOffp" + (p + 1)] == false || (gameMode === 4)) && input[p][0].lsY > 0.7));
 
 }
 export function checkForSquat (p,input){
-  if (input[p][0].lsY < -0.69){
-    return true;
-  } else {
-    return false;
-  }
+  return input[p][0].lsY < -0.69;
 }
 
 export function turboAirborneInterrupt (p,input){

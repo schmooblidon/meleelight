@@ -2429,9 +2429,8 @@ export const baseActionStates = {
 	if(checkForDoubleJump(p,input)) {
 		player[p].tumbleJumpBuffer = 20;
 	}
-	if (player[p].timer > 1 && player[p].hit.hitstun == 0 && player[p].tumbleJumpBuffer > 0) {
-	  if (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump)) {
-		if (input[p][0].lsX*player[p].phys.face < -0.3){
+    if (player[p].timer > 1 && player[p].hit.hitstun == 0 && player[p].tumbleJumpBuffer > 0) {
+	  if (input[p][0].lsX*player[p].phys.face < -0.3){
         actionStates[characterSelections[p]].JUMPAERIALB.init(p,input);
 		return true;
         } else {

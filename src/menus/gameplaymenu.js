@@ -90,7 +90,7 @@ export function gameplayMenuControls (i, input){
         menuMove = true;
       }
     }
-    } else if (player[i].inputs.lStickAxis[0].x > 0.7 && !(Math.abs(player[i].inputs.lStickAxis[0].y >= 0.7))) {
+    } else if (input[i][0].lsX > 0.7 && !(Math.abs(input[i][0].lsY >= 0.7))) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuIndex[1]++;
@@ -109,7 +109,7 @@ export function gameplayMenuControls (i, input){
         menuMove = true;
       }
     }
-    } else if (player[i].inputs.lStickAxis[0].x < -0.7 && !(Math.abs(player[i].inputs.lStickAxis[0].y >= 0.7))){
+    } else if (input[i][0].lsX < -0.7 && !(Math.abs(input[i][0].lsY >= 0.7))){
     if (stickHold == 0) {
       menuIndex[1]--;
       //if (menuIndex[1] > menuHOptions[menuIndex[0]]) {

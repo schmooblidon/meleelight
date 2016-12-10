@@ -3196,8 +3196,8 @@ puff.JUMPAERIAL1 = {
       puff[b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > 28 && checkForMultiJump(p)){
-      puffNextJump(p);
+    else if (player[p].timer > 28 && checkForMultiJump(p,input)){
+      puffNextJump(p,input);
       return true;
     }
     else if (player[p].timer > 50){
@@ -3251,7 +3251,7 @@ puff.JUMPAERIAL2 = {
       return true;
     }
     else if (player[p].timer > 28 && checkForMultiJump(p,input)){
-      puffNextJump(p);
+      puffNextJump(p,input);
       return true;
     }
     else if (player[p].timer > 50){
@@ -3306,7 +3306,7 @@ puff.JUMPAERIAL3 = {
       return true;
     }
     else if (player[p].timer > 28 && checkForMultiJump(p,input)){
-      puffNextJump(p);
+      puffNextJump(p,input);
       return true;
     }
     else if (player[p].timer > 50){
@@ -3361,7 +3361,7 @@ puff.JUMPAERIAL4 = {
       return true;
     }
     else if (player[p].timer > 28 && checkForMultiJump(p,input)){
-      puffNextJump(p);
+      puffNextJump(p,input);
       return true;
     }
     else if (player[p].timer > 50){
