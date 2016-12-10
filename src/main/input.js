@@ -368,11 +368,14 @@ const raphnetV3_2Map = [ 0, 1, 7, 8, 2, 5 , 4 , 3, 10, 13, 11, 12,  0,   1,   3,
 const brookMap       = [ 0, 1, 2, 3, 4, 10, 11, 8, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 7, Brook adapter (d-pad values might be wrong, user had broken d-pad)
 const ps4Map         = [ 1, 0, 2, 3, 5, 7 , 6 , 9, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 8, PS4 controller
 const rockx360Map    = [ 0, 1, 2, 3, 5, 4 , 4 , 7, 12, 15, 13, 14,  0,   1,   3,   4,  2,  5  ]; // ID 9, Rock Candy Xbox 360 controller (d-pad are axes not buttons; axes to be confirmed)
+                    //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 // ID number 10 reserved for keyboard
-const wiiULinuxMap   = [ 0, 3, 1, 2, 6, 5 , 4 , 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 10, Official Wii U GC Adapter using wii-u-gc-adapter on Linux
+                    //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
+const wiiULinuxMap   = [ 0, 3, 1, 2, 6, 5 , 4 , 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 11, Official Wii U GC Adapter using wii-u-gc-adapter on Linux
                     //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 
-export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map, rockx360Map, null, wiiULinuxMap];
+export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map, rockx360Map
+                              , null      , wiiULinuxMap];
 
 // Checking gamepad inputs are well defined
 export function gpdaxis ( gpd, gpdID, ax ) { // gpd.axes[n] but checking axis index is in range
@@ -489,6 +492,8 @@ controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 3
 controllerIDMap.set("0e6f-011f", 9);
 controllerIDMap.set("e6f-11f", 9);
 
+// ID 10: reserved for keyboard
+
 // ID 11, Nintendo Wii U Adapter on Linux using wii-u-gc-adapter
 controllerIDMap.set("0000-0000-Wii U GameCube Adapter", 11);
 
@@ -534,6 +539,10 @@ export function controllerNameFromIDnumber(number) {
       return "error: controller detected but not supported";
   }
 };
+
+
+// ----------------------------------------------------------------------------------------------------
+// Melee input simulation
 
 
 function fromCardinals([origx, origy], l, r, d,u) {
