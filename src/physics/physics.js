@@ -23,8 +23,7 @@ export function customZip ( list, string, start = 0 ) {
     const [head, ...tail] = list;
     return ( [[head, [string, start]]] . concat( customZip(tail, string, start+1) ) ) ;
   }
-};
-
+}
 // temporary workaround for custom stage data being objects and not arrays
 function customId(list) {
   if (list.length === 0) {
@@ -34,13 +33,11 @@ function customId(list) {
     const [head, ...tail] = list;
     return ( [head] . concat (customId(tail)));
   }
-};
-
+}
 function dealWithCollision(i, newCenter) {
   player[i].phys.pos = newCenter;
-};
-
-function dealWithWallCollision (i, newCenter, wallType) {
+}
+function dealWithWallCollision (i, newCenter, wallType,input) {
   player[i].phys.pos = newCenter;
 
   let wallLabel = "L";
@@ -56,19 +53,19 @@ function dealWithWallCollision (i, newCenter, wallType) {
     if (player[i].hit.hitlag == 0) {
       player[i].phys.face = sign;
       if (player[i].phys.techTimer > 0) {
-        if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7) {
-          aS[cS[i]].WALLTECHJUMP.init(i);
+        if (input[i].x[0] || input[i].y[0] || input[i][0].lsY > 0.7) {
+          actionStates[characterSelections[i]].WALLTECHJUMP.init(i,input);
         } else {
-          aS[cS[i]].WALLTECH.init(i);
+          actionStates[characterSelections[i]].WALLTECH.init(i,input);
         }
       } else {
         drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, isRight);
-        aS[cS[i]].WALLDAMAGE.init(i);
+        actionStates[characterSelections[i]].WALLDAMAGE.init(i,input);
       }
     }
   }
-  else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
-    aS[cS[i]][player[i].actionState].onWallCollide(i, wallLabel, j);
+  else if (actionStates[characterSelections[i]][player[i].actionState].specialWallCollide) {
+    actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, wallLabel, j);
   }
   else if (player[i].phys.canWallJump) {
     if (player[i].phys.wallJumpTimer == 254) {
@@ -78,53 +75,49 @@ function dealWithWallCollision (i, newCenter, wallType) {
     }
   }
   if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-    if (sign * player[i].inputs.lStickAxis[0].x >= 0.7 &&
-        sign * player[i].inputs.lStickAxis[3].x <= 0 &&
+    if (sign * input[i][0].lsX >= 0.7 &&
+        sign * input[i][3].lsX <= 0 &&
         player[i].charAttributes.walljump) {
       player[i].phys.wallJumpTimer = 254;
       player[i].phys.face = sign;
-      aS[cS[i]].WALLJUMP.init(i);
+      actionStates[characterSelections[i]].WALLJUMP.init(i,input);
     } else {
       player[i].phys.wallJumpTimer++;
     }
   }
 
-};
-
-function dealWithPlatformCollision(i, alreadyGrounded, newCenter, ecbp0, j) {
+}
+function dealWithPlatformCollision(i, alreadyGrounded, newCenter, ecbp0, j,input) {
   if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
   }
   else {
-    land(i, ecbp0 , 1, j);
+    land(i, ecbp0 , 1, j,input);
   }
-};
-
-function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbp0, j) {
+}
+function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbp0, j,input) {
   if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
   }
   else {
-    land(i, ecbp0, 0, j);
+    land(i, ecbp0, 0, j,input);
   }
-};
-
-
-function fallOffGround(i, side, groundEdgePosition) {
-  let [stillGrounded, backward] = [true,false]
+}
+function fallOffGround(i, side, groundEdgePosition,input) {
+  let [stillGrounded, backward] = [true,false];
   let sign = 1;
   if (side === "r") {
     sign = -1;
   }
-  if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
+  if (actionStates[characterSelections[i]][player[i].actionState].canEdgeCancel) {
     if (player[i].phys.face == sign) {
       stillGrounded = false;
       player[i].phys.pos.y += additionalOffset;
       backward = true;
     }
-    else if (sign * player[i].inputs.lStickAxis[0].x < -0.6 ||
+    else if (sign * input[i][0].lsX < -0.6 ||
             (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
-             aS[cS[i]][player[i].actionState].disableTeeter ||
+             actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
              player[i].phys.shielding) {
       stillGrounded = false;
       player[i].phys.pos.y += additionalOffset;
@@ -132,12 +125,12 @@ function fallOffGround(i, side, groundEdgePosition) {
     else {
       player[i].phys.cVel.x = 0;
       player[i].phys.pos.x = groundEdgePosition.x;
-      aS[cS[i]].OTTOTTO.init(i);
+      actionStates[characterSelections[i]].OTTOTTO.init(i,input);
     }
   }
   else if (player[i].phys.cVel.x == 0 &&
              player[i].phys.kVel.x == 0 &&
-             !aS[cS[i]][player[i].actionState].inGrab) {
+             !actionStates[characterSelections[i]][player[i].actionState].inGrab) {
     stillGrounded = false;
     player[i].phys.pos.y += additionalOffset;
   }
@@ -146,14 +139,12 @@ function fallOffGround(i, side, groundEdgePosition) {
     player[i].phys.pos.x = groundEdgePosition.x;
   }
   return [stillGrounded, backward];
-};
-
-
+}
 // ground type and index is a pair, either ["g", index] or ["p", index]
-function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
+function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction,input) {
   let leftmostGroundPoint  = extremePoint(ground,"l");
   let rightmostGroundPoint = extremePoint(ground,"r");
-  let [stillGrounded, backward] = [true,false]
+  let [stillGrounded, backward] = [true,false];
   let groundOrPlatform = 0;
   if (groundTypeAndIndex[0] === "p") {
     groundOrPlatform = 1;
@@ -165,19 +156,19 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
   if ( player[i].phys.ECBp[0].x < leftmostGroundPoint.x) {
     maybeLeftGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"l");
     if (maybeLeftGroundTypeAndIndex === false) { // no other ground to the left
-      [stillGrounded, backward] = fallOffGround(i, "l", leftmostGroundPoint);
+      [stillGrounded, backward] = fallOffGround(i, "l", leftmostGroundPoint,input);
     }
     else {
       let [leftGroundType, leftGroundIndex] = maybeLeftGroundTypeAndIndex;
       switch (leftGroundType) {
         case "g":
-          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[leftGroundIndex], ["g",leftGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[leftGroundIndex], ["g",leftGroundIndex],input);
           break;
         case "p":
-          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[leftGroundIndex], ["p",leftGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[leftGroundIndex], ["p",leftGroundIndex],input);
           break;
         default: // surface to the left is neither a ground nor a platform
-          [stillGrounded, backward] = fallOffGround(i, "l", leftmostGroundPoint);
+          [stillGrounded, backward] = fallOffGround(i, "l", leftmostGroundPoint,input);
           break;
       }
     }
@@ -185,19 +176,19 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
   else if ( player[i].phys.ECBp[0].x > rightmostGroundPoint.x) {
     maybeRightGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"r");
     if (maybeRightGroundTypeAndIndex === false) { // no other ground to the right
-      [stillGrounded, backward] = fallOffGround(i, "r", rightmostGroundPoint);
+      [stillGrounded, backward] = fallOffGround(i, "r", rightmostGroundPoint,input);
     }
     else {
       let [rightGroundType, rightGroundIndex] = maybeRightGroundTypeAndIndex;
       switch (rightGroundType) {
         case "g":
-          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[rightGroundIndex], ["g",rightGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[rightGroundIndex], ["g",rightGroundIndex],input);
           break;
         case "p":
-          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[rightGroundIndex], ["p",rightGroundIndex]);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[rightGroundIndex], ["p",rightGroundIndex],input);
           break;
         default: // surface to the right is neither a ground nor a platform
-          [stillGrounded, backward] = fallOffGround(i, "r", rightmostGroundPoint);
+          [stillGrounded, backward] = fallOffGround(i, "r", rightmostGroundPoint,input);
           break;
       }
     }
@@ -210,27 +201,24 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
     player[i].phys.onSurface = [groundOrPlatform, groundTypeAndIndex[1] ];
   }
   return [stillGrounded, backward];
-};
-
-function dealWithCeilingCollision(i, newCenter, offsets) {
-  const newECBTop = new Vec2D (newCenter.x, newCenter.y + offsets[3])
+}
+function dealWithCeilingCollision(i, newCenter, offsets,input) {
+  const newECBTop = new Vec2D (newCenter.x, newCenter.y + offsets[3]);
   player[i].phys.pos = newCenter;
-  if (aS[cS[i]][player[i].actionState].headBonk) {
+  if (actionStates[characterSelections[i]][player[i].actionState].headBonk) {
     if (player[i].hit.hitstun > 0) {
       if (player[i].phys.techTimer > 0) {
-        aS[cS[i]].TECHU.init(i);
+        actionStates[characterSelections[i]].TECHU.init(i,input);
       } else {
         drawVfx("ceilingBounce", newECBTop, 1);
         sounds.bounce.play();
-        aS[cS[i]].STOPCEIL.init(i);
+        actionStates[characterSelections[i]].STOPCEIL.init(i,input);
       }
     } else {
-      aS[cS[i]].STOPCEIL.init(i);
+      actionStates[characterSelections[i]].STOPCEIL.init(i,input);
     }
   }
-};
-
-
+}
 export function land (i,newCenter,t,j,input){
   player[i].phys.pos = newCenter;
   player[i].phys.grounded = true;
@@ -594,14 +582,16 @@ export function physics (i,input){
 
   let ecbSquashFactor = 1; // a value smaller than 1 entails squashing
 
-  if (!aS[cS[i]][player[i].actionState].ignoreCollision) {
+  if (!actionStates[characterSelections[i]][player[i].actionState].ignoreCollision) {
 
     const alreadyGrounded = player[i].phys.grounded;
     let stillGrounded = true;
     let backward = false;
 
     let connectedSurfaces = activeStage.connected;
-    function connectednessFunction (gd, side) { return false ;} ;
+    function connectednessFunction(gd, side) {
+      return false;
+    }
     if (connectedSurfaces === null || connectedSurfaces === undefined ) {
       // do nothing
     }
@@ -661,7 +651,7 @@ export function physics (i,input){
 
     let relevantSurfaces = stageWalls;
 
-    const notIgnoringPlatforms = ( !aS[cS[i]][player[i].actionState].canPassThrough || (player[i].inputs.lStickAxis[0].y > -0.56) );
+    const notIgnoringPlatforms = ( !actionStates[characterSelections[i]][player[i].actionState].canPassThrough || (input[i][0].lsY > -0.56) );
     if (!alreadyGrounded || !stillGrounded) {
       relevantSurfaces = relevantSurfaces.concat(stageCeilings).concat(stageGrounds);
       if ( notIgnoringPlatforms ) {
@@ -686,23 +676,23 @@ export function physics (i,input){
         switch(surfacesMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
           case "l": // player touching left wall
             notTouchingWalls[0] = false;
-            dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "l");
+            dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "l",input);
             break;
           case "r": // player touching right wall
             notTouchingWalls[1] = false;
-            dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "r");
+            dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "r",input);
             break;
           case "g": // player landed on ground
-            dealWithGroundCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithGroundCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1],input);
             break;
           case "c": // player touching ceiling
-            dealWithCeilingCollision(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset);
+            dealWithCeilingCollision(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset,input);
             break;
           case "p": // player landed on platform
-            dealWithPlatformCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1]);
+            dealWithPlatformCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1],input);
             break;
           default:
-            console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform")
+            console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform");
             break;
         }
       }
@@ -779,7 +769,7 @@ export function physics (i,input){
           if (player[i].hit.hitlag > 0) {
             player[i].phys.pos.y = activeStage.ground[j][0].y;
           } else {
-            land(i, activeStage.ground[j][0].y, 0, j);
+            land(i, activeStage.ground[j][0].y, 0, j,input);
           }
           break;
         }
@@ -791,17 +781,17 @@ export function physics (i,input){
             player[i].phys.ECB1[2].y <= activeStage.ceiling[j][0].y) {
 
           player[i].phys.pos.y = activeStage.ceiling[j][0].y - (player[i].phys.ECBp[2].y - player[i].phys.pos.y) - 0.01;
-          if (aS[cS[i]][player[i].actionState].headBonk) {
+          if (actionStates[characterSelections[i]][player[i].actionState].headBonk) {
             if (player[i].hit.hitstun > 0) {
               if (player[i].phys.techTimer > 0) {
-                aS[cS[i]].TECHU.init(i);
+                actionStates[characterSelections[i]].TECHU.init(i,input);
               } else {
                 drawVfx("ceilingBounce", new Vec2D(player[i].phys.ECBp[0].x, activeStage.ceiling[j][0].y), 1);
                 sounds.bounce.play();
-                aS[cS[i]].STOPCEIL.init(i);
+                actionStates[characterSelections[i]].STOPCEIL.init(i,input);
               }
             } else {
-              aS[cS[i]].STOPCEIL.init(i);
+              actionStates[characterSelections[i]].STOPCEIL.init(i,input);
             }
           }
         }
