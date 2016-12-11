@@ -751,11 +751,6 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
     console.log("'findCollision': no collision, ECB not even near "+wallType+""+wallIndex+".");
     return false;
   }
-  else if (    (!checkTopInstead && !isOutside ( ecb1[opposite], wallTopOrRight, wallBottomOrLeft, wallType ))
-            || ( checkTopInstead && !isOutside ( ecb1[0]       , wallRight     , wallLeft        , "c"      )) ) {
-    console.log("'findCollision': no collision, ECB1 fully on other side of "+wallType+""+wallIndex+".");
-    return false;
-  }
   else {
 
     // if the surface is a platform, and the bottom ECB point is below the platform, we shouldn't do anything
@@ -885,11 +880,10 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
       // now we run some checks to see if the relevant projected ECB point was already on the other side of the wall
       // this prevents collisions being detected when going through a surface in reverse
 
-      if (    checkTopInstead
-           && !isOutside( ecb1[2], wallRight, wallLeft, "c" ) ) { 
+      if ( checkTopInstead && !isOutside( ecb1[2], wallRight, wallLeft, "c" ) ) { 
         console.log("'findCollision': no point collision with "+wallType+""+wallIndex+", top ECB1 point on the inside side of the wall. ");
       }
-      else if ( !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
+      else if ( !checkTopInstead && !isOutside ( ecb1[same], wallTopOrRight, wallBottomOrLeft, wallType ) ) {
         console.log("'findCollision': no point collision with "+wallType+""+wallIndex+", same side ECB1 point on the inside side of the wall. ");
       }
       else {
