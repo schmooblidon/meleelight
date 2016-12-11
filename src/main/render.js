@@ -1,7 +1,7 @@
 
 import {
     player,
-    cS,
+    characterSelections,
     fg2,
     versusMode,
     fg2 as ui,
@@ -16,7 +16,7 @@ import {
 } from "main/main";
 import {gameSettings} from "settings";
 import {makeColour} from "main/vfx/makeColour";
-import {aS} from "physics/actionStateShortcuts";
+import {actionStates} from "physics/actionStateShortcuts";
 import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
@@ -68,13 +68,13 @@ export function renderPlayer(i) {
     if (frame == 0) {
         frame = 1;
     }
-    if (frame > framesData[cS[i]][player[i].actionState]) {
-        frame = framesData[cS[i]][player[i].actionState];
+    if (frame > framesData[characterSelections[i]][player[i].actionState]) {
+        frame = framesData[characterSelections[i]][player[i].actionState];
     }
 
-    var model = animations[cS[i]][player[i].actionState][frame - 1];
+    var model = animations[characterSelections[i]][player[i].actionState][frame - 1];
 
-    if (aS[cS[i]][player[i].actionState].reverseModel) {
+    if (actionStates[characterSelections[i]][player[i].actionState].reverseModel) {
         face *= -1;
     } else if (player[i].actionState == "TILTTURN") {
         if (frame > 5) {
@@ -91,19 +91,19 @@ export function renderPlayer(i) {
         face *= -1;
     }
     // MARTH BAIR
-    else if (player[i].actionState == "ATTACKAIRB" && cS[i] == 0) {
+    else if (player[i].actionState == "ATTACKAIRB" && characterSelections[i] == 0) {
         if (frame > 29) {
             face *= -1;
         }
     }
     // FOX BTHROW
-    else if (player[i].actionState == "THROWBACK" && cS[i] == 2) {
+    else if (player[i].actionState == "THROWBACK" && characterSelections[i] == 2) {
         if (frame >= 10) {
             face *= -1;
         }
     }
 
-    if (!aS[cS[i]][player[i].actionState].dead) {
+    if (!actionStates[characterSelections[i]][player[i].actionState].dead) {
         var col;
         if (player[i].phys.shielding && player[i].phys.powerShielded && player[i].hit.hitlag > 0) {
             col = "rgb(255,255,255)";

@@ -19,18 +19,18 @@ export default {
   name : "JAB2",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JAB2";
     player[p].timer = 0;
     player[p].phys.jabCombo = false;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.jab2.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.jab2.id1;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (player[p].timer === 1){
         player[p].phys.cVel.x = 0;
       }
@@ -40,7 +40,7 @@ export default {
       else if (player[p].timer === 4){
         player[p].phys.cVel.x = 0;
       }
-      if (player[p].timer > 0 && player[p].timer < 21 && player[p].inputs.a[0] && !player[p].inputs.a[1]){
+      if (player[p].timer > 0 && player[p].timer < 21 && input[p][0].a && !input[p][1].a){
         player[p].phys.jabCombo = true;
       }
       if (player[p].timer === 3){
@@ -56,51 +56,51 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 5 && player[p].phys.jabCombo){
-      JAB3.init(p);
+      JAB3.init(p,input);
       return true;
     }
     else if (player[p].timer > 20){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer > 16){
-      const b = checkForSpecials(p);
-      const t = checkForTilts(p);
-      const s = checkForSmashes(p);
-      const j = checkForJump(p);
+      const b = checkForSpecials(p,input);
+      const t = checkForTilts(p,input);
+      const s = checkForSmashes(p,input);
+      const j = checkForJump(p,input);
       if (j[0]){
-        KNEEBEND.init(p,j[1]);
+        KNEEBEND.init(p,j[1],input);
         return true;
       }
       else if (b[0]){
-        MOVES[b[1]].init(p);
+        MOVES[b[1]].init(p,input);
         return true;
       }
       else if (s[0]){
-        MOVES[s[1]].init(p);
+        MOVES[s[1]].init(p,input);
         return true;
       }
       else if (t[0]){
-        MOVES[t[1]].init(p);
+        MOVES[t[1]].init(p,input);
         return true;
       }
-      else if (checkForDash(p)){
-        DASH.init(p);
+      else if (checkForDash(p,input)){
+        DASH.init(p,input);
         return true;
       }
-      else if (checkForSmashTurn(p)){
-        SMASHTURN.init(p);
+      else if (checkForSmashTurn(p,input)){
+        SMASHTURN.init(p,input);
         return true;
       }
-      else if (checkForTiltTurn(p)){
-        player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-        TILTTURN.init(p);
+      else if (checkForTiltTurn(p,input)){
+        player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+        TILTTURN.init(p,input);
         return true;
       }
-      else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
-        WALK.init(p,true);
+      else if (Math.abs(input[p][0].lsX) > 0.3){
+        WALK.init(p,true,input);
         return true;
       }
       else {

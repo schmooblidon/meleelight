@@ -2,10 +2,10 @@
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
 import {framesData} from "main/characters";
-import { cS, player} from "main/main";
+import { characterSelections, player} from "main/main";
 import {sounds} from "main/sfx";
 import {articles} from "physics/article";
-import {randomShout, turnOffHitboxes, aS} from "physics/actionStateShortcuts";
+import {randomShout, turnOffHitboxes, actionStates} from "physics/actionStateShortcuts";
 
 import {hitQueue} from 'physics/hitDetection';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -14,21 +14,21 @@ export default {
   name : "THROWBACK",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNFOXBACK.init(player[p].phys.grabbing);
-    const frame = framesData[cS[player[p].phys.grabbing]].THROWNFOXBACK;
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXBACK.init(player[p].phys.grabbing);
+    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXBACK;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
-    randomShout(cS[p]);
-    this.main(p);
+    randomShout(characterSelections[p]);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     const prevFrame = player[p].timer;
     player[p].timer+=8/player[p].phys.releaseFrame;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (prevFrame < 10 && player[p].timer >= 10){
         player[p].phys.face *= -1;
       }
@@ -57,14 +57,14 @@ export default {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 32){
       player[p].phys.grabbing = -1;
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p);
+      CATCHCUT.init(p,input);
       return true;
     }
     else {

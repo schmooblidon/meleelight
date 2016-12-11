@@ -1,5 +1,5 @@
-import {cS, player} from "main/main";
-import {aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
+import {actionStates, turnOffHitboxes} from "physics/actionStateShortcuts";
 
 import {framesData} from 'main/characters';
 export default {
@@ -7,41 +7,41 @@ export default {
   canEdgeCancel : false,
   canBeGrabbed : true,
   inGrab : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CATCHWAIT";
     player[p].timer = 0;
     turnOffHitboxes(p);
-    aS[cS[p]].CATCHWAIT.main(p);
+    actionStates[characterSelections[p]].CATCHWAIT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].CATCHWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CATCHWAIT.interrupt(p,input)){
 
     }
   },
-  interrupt : function(p){
-    if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
-      aS[cS[p]].CATCHATTACK.init(p);
+  interrupt : function(p,input){
+    if (input[p][0].a && !input[p][1].a){
+      actionStates[characterSelections[p]].CATCHATTACK.init(p,input);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7) || (player[p].inputs.cStickAxis[0].y > 0.7 && player[p].inputs.cStickAxis[1].y <= 0.7)){
-      aS[cS[p]].THROWUP.init(p);
+    else if ((input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7) || (input[p][0].csY > 0.7 && input[p][1].csY <= 0.7)){
+      actionStates[characterSelections[p]].THROWUP.init(p,input);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y >= -0.7) || player[p].inputs.cStickAxis[0].y < -0.7){
-      aS[cS[p]].THROWDOWN.init(p);
+    else if ((input[p][0].lsY < -0.7 && input[p][1].lsY >= -0.7) || input[p][0].csY < -0.7){
+      actionStates[characterSelections[p]].THROWDOWN.init(p,input);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.7) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.7)){
-      aS[cS[p]].THROWBACK.init(p);
+    else if ((input[p][0].lsX*player[p].phys.face < -0.7 && input[p][1].lsX*player[p].phys.face >= -0.7) || (input[p][0].csX*player[p].phys.face < -0.7 && input[p][1].csX*player[p].phys.face >= -0.7)){
+      actionStates[characterSelections[p]].THROWBACK.init(p,input);
       return true;
     }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.7) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.7 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.7)){
-      aS[cS[p]].THROWFORWARD.init(p);
+    else if ((input[p][0].lsX*player[p].phys.face > 0.7 && input[p][1].lsX*player[p].phys.face <= 0.7) || (input[p][0].csX*player[p].phys.face > 0.7 && input[p][1].csX*player[p].phys.face <= 0.7)){
+      actionStates[characterSelections[p]].THROWFORWARD.init(p,input);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].CATCHWAIT){
-      aS[cS[p]].CATCHWAIT.init(p);
+    else if (player[p].timer > framesData[characterSelections[p]].CATCHWAIT){
+      actionStates[characterSelections[p]].CATCHWAIT.init(p,input);
       return true;
     }
     else {

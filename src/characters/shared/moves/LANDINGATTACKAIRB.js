@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS,  player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -7,7 +7,7 @@ export default {
   name : "LANDINGATTACKAIRB",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "LANDINGATTACKAIRB";
     player[p].timer = 0;
     if (player[p].phys.lCancel){
@@ -18,17 +18,17 @@ export default {
     }
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
     sounds.land.play();
-    aS[cS[p]].LANDINGATTACKAIRB.main(p);
+    actionStates[characterSelections[p]].LANDINGATTACKAIRB.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer += player[p].phys.landingLagScaling;
-    if (!aS[cS[p]].LANDINGATTACKAIRB.interrupt(p)){
+    if (!actionStates[characterSelections[p]].LANDINGATTACKAIRB.interrupt(p,input)){
       reduceByTraction(p,true);
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].LANDINGATTACKAIRB){
-      aS[cS[p]].WAIT.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].LANDINGATTACKAIRB){
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

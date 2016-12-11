@@ -10,6 +10,7 @@ import {player, changeGamemode,  initializePlayers, matchTimer
     , setPlaying
 
     , setEndTargetGame
+    , setStage
 } from "main/main";
 import {renderPlayer} from "main/render";
 import {sounds} from "main/sfx";

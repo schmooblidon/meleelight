@@ -1,4 +1,4 @@
-import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine,
+import {player, characterSelections, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine,
     addShine
     , setShine
 ,setCS
@@ -30,11 +30,11 @@ export function setTargetPointerPos(val){
 }
 const cXSize = 1200;
 const cYSize = 750;
-export function tssControls (i){
+
+export function tssControls (i, input){
   if (!showingCode){
-    targetPointerPos[0] = Math.max(0,Math.min(1200,targetPointerPos[0] + (player[i].inputs.lStickAxis[0].x*15)));
-    targetPointerPos[1] = Math.max(0,Math.min(750,targetPointerPos[1] + (player[i].inputs.lStickAxis[0].y*-15)));
-	
+    targetPointerPos[0] += input[i][0].lsX*15;
+    targetPointerPos[1] += input[i][0].lsY*-15;
     if (targetPointerPos[1] >= 45 && targetPointerPos[1] <= 420){
       for (let j=0;j<Math.min(20,11+customTargetStages.length);j++){
         if (targetPointerPos[0] >= 50+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[0] <= 300+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[1] >= 110+(j%5)*60 && targetPointerPos[1] <= 160+(j%5)*60){
@@ -46,24 +46,22 @@ export function tssControls (i){
         }
       }
     }
-    if ((player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]) || (player[i].inputs.l[0] && !player[i].inputs.l[
-        1])) {
-      let cSelected = cS[i];
+    if ((input[i][0].du && !input[i][1].du) || (input[i][0].l && !input[i][1].l)) {
+      let cSelected = characterSelections[i];
       setCS(i,cSelected- 1);
-      if (cS[i] < 0) {
+      if (characterSelections[i] < 0) {
         setCS(i, 2);
       }
       sounds.menuSelect.play();
-    } else if ((player[i].inputs.dpaddown[0] && !player[i].inputs.dpaddown[1]) || (player[i].inputs.r[0] && !player[i]
-        .inputs.r[1])) {
-      let elseSelected = cS[i];
+    } else if ((input[i][0].dd && !input[i][1].dd) || (input[i][0].r && !input[i][1].r)) {
+      let elseSelected = characterSelections[i];
       setCS(i,elseSelected + 1);
-      if (cS[i] > 2) {
+      if (characterSelections[i] > 2) {
         setCS(i, 0);
       }
       sounds.menuSelect.play();
     }
-    if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
+    if (input[i][0].b && !input[i][1].b) {
       sounds.menuBack.play();
       music.targettest.stop();
       music.menu.play("menuStart");
@@ -71,7 +69,7 @@ export function tssControls (i){
       return;
     } else {
       if (targetSelected > 9 && targetSelected != 10 + customTargetStages.length) {
-        if (player[i].inputs.z[0] && !player[i].inputs.z[1]) {
+        if (input[i][0].z && !input[i][1].z) {
           //delete
           for (var n = targetSelected - 10; n < customTargetStages.length; n++) {
             setCookie("custom" + n, getCookie("custom" + (n + 1)), 36500);
@@ -90,7 +88,7 @@ export function tssControls (i){
           customTargetStages.splice(targetSelected - 10, 1);
           redrawCustomStageBoxes();
           return;
-        } else if (player[i].inputs.x[0] && !player[i].inputs.x[1]) {
+        } else if (input[i][0].x && !input[i][1].x) {
           //dupe
           if (customTargetStages.length < 10){
             setCookie("custom"+customTargetStages.length,getCookie("custom"+(targetSelected-10)),36500);
@@ -103,20 +101,20 @@ export function tssControls (i){
           }
           redrawCustomStageBoxes();
           return;
-        } else if (player[i].inputs.y[0] && !player[i].inputs.y[1]) {
+        } else if (input[i][0].y && !input[i][1].y) {
           //edit
             resetStageTemp();
             setStageTemp(deepCopyObject(true,stageTemp,customTargetStages[targetSelected-10]));
             setTargetBuilder(i);
             setEditingStage(targetSelected-10);
-          player[i].inputs.a[1] = true;
+          //input[i][i].a[1] = true;
           changeGamemode(4);
           music.targettest.stop();
           music.menu.play("menuStart");
           return;
         }
       }
-      if ((player[i].inputs.s[0] && !player[i].inputs.s[1]) || (player[i].inputs.a[0] && !player[i].inputs.a[1])) {
+      if ((input[i][0].s && !input[i][1].s) || (input[i][0].a && !input[i][1].a)) {
         sounds.menuForward.play();
         if (targetSelected == 10 + customTargetStages.length) {
           // ADD CODE
@@ -141,7 +139,7 @@ export function tssControls (i){
     }
   }
   else {
-    if (player[i].inputs.a[0] && !player[i].inputs.a[1]){
+    if (input[i][0].a && !input[i][1].a){
         setShowingCode(false);
       let code = $("#cStageEdit").val();
       let newStage = parseStage(code);
@@ -379,7 +377,7 @@ export function drawTSS (){
   ui.lineWidth = 2;
   for (let i=0;i<10;i++){
     // if beaten dev record draw star
-    if (targetRecords[cS[targetPlayer]][i] != -1 && Math.round(targetRecords[cS[targetPlayer]][i]*100)/100 <= devRecords[cS[targetPlayer]][i]){
+    if (targetRecords[characterSelections[targetPlayer]][i] != -1 && Math.round(targetRecords[characterSelections[targetPlayer]][i]*100)/100 <= devRecords[characterSelections[targetPlayer]][i]){
       let x = 190+Math.floor(i/5)*260;
       let y = 135+(i%5)*60;
       ui.fillStyle= "white";
@@ -401,7 +399,7 @@ export function drawTSS (){
     ui.arc(220 + Math.floor(i / 5) * 260, 135 + (i % 5) * 60, 10, 0, twoPi);
     ui.closePath();
 
-    if (medalsEarned[cS[targetPlayer]][i][0]){
+    if (medalsEarned[characterSelections[targetPlayer]][i][0]){
       let medalGrad =ui.createLinearGradient(210+Math.floor(i/5)*260,125+(i%5)*60,230+Math.floor(i/5)*260,145+(i%5)*60);
       medalGrad.addColorStop(0,"rgb(180, 123, 65)");
       medalGrad.addColorStop(1,"rgb(236, 179, 120)");
@@ -413,7 +411,7 @@ export function drawTSS (){
     ui.beginPath();
     ui.arc(250 + Math.floor(i / 5) * 260, 135 + (i % 5) * 60, 10, 0, twoPi);
     ui.closePath();
-    if (medalsEarned[cS[targetPlayer]][i][1]){
+    if (medalsEarned[characterSelections[targetPlayer]][i][1]){
       let medalGrad =ui.createLinearGradient(240+Math.floor(i/5)*260,125+(i%5)*60,260+Math.floor(i/5)*260,145+(i%5)*60);
       medalGrad.addColorStop(0,"rgb(161, 161, 161)");
       medalGrad.addColorStop(1,"rgb(246, 246, 246)");
@@ -425,7 +423,7 @@ export function drawTSS (){
     ui.beginPath();
     ui.arc(280 + Math.floor(i / 5) * 260, 135 + (i % 5) * 60, 10, 0, twoPi);
     ui.closePath();
-    if (medalsEarned[cS[targetPlayer]][i][2]){
+    if (medalsEarned[characterSelections[targetPlayer]][i][2]){
       let medalGrad =ui.createLinearGradient(270+Math.floor(i/5)*260,125+(i%5)*60,290+Math.floor(i/5)*260,145+(i%5)*60);
       medalGrad.addColorStop(0,"rgb(255, 221, 42)");
       medalGrad.addColorStop(1,"rgb(255, 237, 140)");
@@ -465,8 +463,8 @@ export function drawTSS (){
     ui.fillStyle = "rgba(255,255,255,0.7)";
     ui.font = "700 30px Arial";
     for (let i=0;i<3;i++){
-      let text = "0"+Math.floor(medalTimes[cS[targetPlayer]][targetSelected][i]/60)+":";
-      let sec = (medalTimes[cS[targetPlayer]][targetSelected][i] % 60).toFixed(2);
+      let text = "0"+Math.floor(medalTimes[characterSelections[targetPlayer]][targetSelected][i]/60)+":";
+      let sec = (medalTimes[characterSelections[targetPlayer]][targetSelected][i] % 60).toFixed(2);
       text += ((sec.length<5)?"0"+sec:sec);
       ui.fillText(text,345+i*240,513);
     }
@@ -474,8 +472,8 @@ export function drawTSS (){
     ui.fillText("Developer Record", 340, 625);
     ui.font = "700 20px Arial";
     ui.textAlign = "center";
-    let text = "0"+Math.floor(devRecords[cS[targetPlayer]][targetSelected]/60)+":";
-    let sec = (devRecords[cS[targetPlayer]][targetSelected] % 60).toFixed(2);
+    let text = "0"+Math.floor(devRecords[characterSelections[targetPlayer]][targetSelected]/60)+":";
+    let sec = (devRecords[characterSelections[targetPlayer]][targetSelected] % 60).toFixed(2);
     text += ((sec.length<5)?"0"+sec:sec);
     ui.fillText(text,750,625);
   }
@@ -488,12 +486,12 @@ export function drawTSS (){
     ui.fillText("Personal Best", 250, 585 - (targetSelected > 9 ? 45 : 0));
     ui.font = "700 38px Arial";
     ui.textAlign = "center";
-    if (targetRecords[cS[targetPlayer]][targetSelected] == -1) {
+    if (targetRecords[characterSelections[targetPlayer]][targetSelected] == -1) {
       text = "--:--:--";
     }
     else {
-      text = "0"+Math.floor(targetRecords[cS[targetPlayer]][targetSelected]/60)+":";
-      let sec = (targetRecords[cS[targetPlayer]][targetSelected] % 60).toFixed(2);
+      text = "0"+Math.floor(targetRecords[characterSelections[targetPlayer]][targetSelected]/60)+":";
+      let sec = (targetRecords[characterSelections[targetPlayer]][targetSelected] % 60).toFixed(2);
       text += ((sec.length<5)?"0"+sec:sec);
     }
     ui.fillText(text, 750, 585 - (targetSelected > 9 ? 45 : 0));
@@ -537,7 +535,7 @@ export function drawTSS (){
     }
   }
   let add = 0;
-  switch (cS[targetPlayer]){
+  switch (characterSelections[targetPlayer]){
     case 0:
        add = 0;
       break;
@@ -564,7 +562,7 @@ export function drawTSS (){
   ui.fillStyle = "rgb(180, 180, 180)";
   ui.font = "700 18px Arial";
   ui.textAlign = "left";
-  switch (cS[targetPlayer]) {
+  switch (characterSelections[targetPlayer]) {
     case 0:
       ui.fillText("MARTH", 110, 588);
       ui.drawImage(marthPic, 102, 512, 81, 58);

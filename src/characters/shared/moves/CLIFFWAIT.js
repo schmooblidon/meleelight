@@ -1,5 +1,5 @@
-import {cS, player} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 
 import {framesData} from 'main/characters';
 export default {
@@ -9,68 +9,68 @@ export default {
   wallJumpAble : false,
   posOffset : [],
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFWAIT";
     player[p].timer = 0;
-    aS[cS[p]].CLIFFWAIT.main(p);
+    actionStates[characterSelections[p]].CLIFFWAIT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].CLIFFWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].CLIFFWAIT.interrupt(p,input)){
       player[p].phys.ledgeHangTimer++;
     }
   },
-  interrupt : function(p){
-    if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.2 && player[p].inputs.lStickAxis[1].x*player[p].phys.face >= -0.2) || (player[p].inputs.lStickAxis[0].y < -0.2 && player[p].inputs.lStickAxis[1].y >= -0.2) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face < -0.2 && player[p].inputs.cStickAxis[1].x*player[p].phys.face >= -0.2) || (player[p].inputs.cStickAxis[0].y < -0.2 && player[p].inputs.cStickAxis[1].y >= -0.2)){
+  interrupt : function(p,input){
+    if ((input[p][0].lsX*player[p].phys.face < -0.2 && input[p][1].lsX*player[p].phys.face >= -0.2) || (input[p][0].lsY < -0.2 && input[p][1].lsY >= -0.2) || (input[p][0].csX*player[p].phys.face < -0.2 && input[p][1].csX*player[p].phys.face >= -0.2) || (input[p][0].csY < -0.2 && input[p][1].csY >= -0.2)){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
-      aS[cS[p]].FALL.init(p,true);
+      actionStates[characterSelections[p]].FALL.init(p,input,true);
       return true;
     }
-    else if ((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.65 && player[p].inputs.lStickAxis[1].y <= 0.65)){
+    else if ((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.65 && input[p][1].lsY <= 0.65)){
       if (player[p].percent < 100){
-        aS[cS[p]].CLIFFJUMPQUICK.init(p);
+        actionStates[characterSelections[p]].CLIFFJUMPQUICK.init(p,input);
       }
       else {
-        aS[cS[p]].CLIFFJUMPSLOW.init(p);
-      }
-      return true;
-    }
-    else if ((player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.2 && player[p].inputs.lStickAxis[1].x*player[p].phys.face <= 0.2) || (player[p].inputs.lStickAxis[0].y > 0.2 && player[p].inputs.lStickAxis[1].y <= 0.2)){
-      if (player[p].percent < 100){
-        aS[cS[p]].CLIFFGETUPQUICK.init(p);
-      }
-      else {
-        aS[cS[p]].CLIFFGETUPSLOW.init(p);
+        actionStates[characterSelections[p]].CLIFFJUMPSLOW.init(p,input);
       }
       return true;
     }
-    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1]) || (player[p].inputs.cStickAxis[0].y > 0.65 && player[p].inputs.cStickAxis[1].y <= 0.65)){
+    else if ((input[p][0].lsX*player[p].phys.face > 0.2 && input[p][1].lsX*player[p].phys.face <= 0.2) || (input[p][0].lsY > 0.2 && input[p][1].lsY <= 0.2)){
       if (player[p].percent < 100){
-        aS[cS[p]].CLIFFATTACKQUICK.init(p);
+        actionStates[characterSelections[p]].CLIFFGETUPQUICK.init(p,input);
       }
       else {
-        aS[cS[p]].CLIFFATTACKSLOW.init(p);
+        actionStates[characterSelections[p]].CLIFFGETUPSLOW.init(p,input);
       }
       return true;
     }
-    else if ((player[p].inputs.lAnalog[0] > 0.3 && player[p].inputs.lAnalog[1] <= 0.3) || (player[p].inputs.rAnalog[0] > 0.3 && player[p].inputs.rAnalog[1] <= 0.3) || (player[p].inputs.cStickAxis[0].x*player[p].phys.face > 0.8 && player[p].inputs.cStickAxis[1].x*player[p].phys.face <= 0.8)){
+    else if ((input[p][0].a && !input[p][1].a) || (input[p][0].b && !input[p][1].b) || (input[p][0].csY > 0.65 && input[p][1].csY <= 0.65)){
       if (player[p].percent < 100){
-        aS[cS[p]].CLIFFESCAPEQUICK.init(p);
+        actionStates[characterSelections[p]].CLIFFATTACKQUICK.init(p,input);
       }
       else {
-        aS[cS[p]].CLIFFESCAPESLOW.init(p);
+        actionStates[characterSelections[p]].CLIFFATTACKSLOW.init(p,input);
+      }
+      return true;
+    }
+    else if ((input[p][0].lA > 0.3 && input[p][1].lA <= 0.3) || (input[p][0].rA > 0.3 && input[p][1].rA <= 0.3) || (input[p][0].csX*player[p].phys.face > 0.8 && input[p][1].csX*player[p].phys.face <= 0.8)){
+      if (player[p].percent < 100){
+        actionStates[characterSelections[p]].CLIFFESCAPEQUICK.init(p,input);
+      }
+      else {
+        actionStates[characterSelections[p]].CLIFFESCAPESLOW.init(p,input);
       }
       return true;
     }
     else if (player[p].phys.ledgeHangTimer > 600){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
-      aS[cS[p]].DAMAGEFALL.init(p);
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p,input);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].CLIFFWAIT){
-      aS[cS[p]].CLIFFWAIT.init(p);
+    else if (player[p].timer > framesData[characterSelections[p]].CLIFFWAIT){
+      actionStates[characterSelections[p]].CLIFFWAIT.init(p,input);
       return true;
     }
     else {

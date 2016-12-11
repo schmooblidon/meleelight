@@ -2,80 +2,80 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     checkForSmashes
     , checkForTilts
     , checkForSpecials
-    , aS
+    , actionStates
 } from "physics/actionStateShortcuts";
 import {actionSounds,framesData} from "main/characters";
 import {sounds} from "main/sfx";
-import {cS, player} from "main/main";
+import {characterSelections, player} from "main/main";
 export default {
   name : "OTTOTTOWAIT",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "OTTOTTOWAIT";
     player[p].timer = 1;
-    if (cS[p] != 1){
-      sounds[actionSounds[cS[p]].OTTOTTOWAIT[0][1]].play();
+    if (characterSelections[p] != 1){
+      sounds[actionSounds[characterSelections[p]].OTTOTTOWAIT[0][1]].play();
     }
     player[p].phys.cVel.x = 0;
-    aS[cS[p]].OTTOTTOWAIT.main(p);
+    actionStates[characterSelections[p]].OTTOTTOWAIT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (player[p].timer > framesData[cS[p]].OTTOTTOWAIT){
+    if (player[p].timer > framesData[characterSelections[p]].OTTOTTOWAIT){
       player[p].timer = 0
     }
-    if (!aS[cS[p]].OTTOTTOWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].OTTOTTOWAIT.interrupt(p,input)){
 
     }
   },
-  interrupt : function(p){
-    var b = checkForSpecials(p);
-    var t = checkForTilts(p);
-    var s = checkForSmashes(p);
-    var j = checkForJump(p);
+  interrupt : function(p,input){
+    var b = checkForSpecials(p,input);
+    var t = checkForTilts(p,input);
+    var s = checkForSmashes(p,input);
+    var j = checkForJump(p,input);
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+    else if (input[p][0].l || input[p][0].r){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+    else if (input[p][0].lA > 0 || input[p][0].rA > 0){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p,input);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p,input);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p,input);
       return true;
     }
-    else if (checkForSquat(p)){
-      aS[cS[p]].SQUAT.init(p);
+    else if (checkForSquat(p,input)){
+      actionStates[characterSelections[p]].SQUAT.init(p,input);
       return true;
     }
-    else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+    else if (checkForDash(p,input)){
+      actionStates[characterSelections[p]].DASH.init(p,input);
       return true;
     }
-    else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+    else if (checkForSmashTurn(p,input)){
+      actionStates[characterSelections[p]].SMASHTURN.init(p,input);
       return true;
     }
-    else if (checkForTiltTurn(p)){
-      player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-      aS[cS[p]].TILTTURN.init(p);
+    else if (checkForTiltTurn(p,input)){
+      player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+      actionStates[characterSelections[p]].TILTTURN.init(p,input);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      aS[cS[p]].WALK.init(p,true);
+    else if (Math.abs(input[p][0].lsX) > 0.6){
+      actionStates[characterSelections[p]].WALK.init(p,true,input);
       return true;
     }
     else {

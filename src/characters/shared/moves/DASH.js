@@ -1,5 +1,5 @@
-import {checkForSmashTurn, checkForJump, reduceByTraction, aS} from "physics/actionStateShortcuts";
-import { cS, player} from "main/main";
+import {checkForSmashTurn, checkForJump, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import { characterSelections, player} from "main/main";
 import {sounds} from "main/sfx";
 
 import {framesData} from 'main/characters';
@@ -9,15 +9,15 @@ export default {
   canEdgeCancel : true,
   disableTeeter : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DASH";
     player[p].timer = 0;
     sounds.dash.play();
-    aS[cS[p]].DASH.main(p);
+    actionStates[characterSelections[p]].DASH.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].DASH.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DASH.interrupt(p,input)){
       if (player[p].timer === 2){
         player[p].phys.cVel.x += player[p].charAttributes.dInitV * player[p].phys.face;
         if (Math.abs(player[p].phys.cVel.x) > player[p].charAttributes.dMaxV){
@@ -28,13 +28,13 @@ export default {
         drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
       }
       if (player[p].timer > 1){
-        if (Math.abs(player[p].inputs.lStickAxis[0].x) < 0.3){
+        if (Math.abs(input[p][0].lsX) < 0.3){
           reduceByTraction(p,false);
         }
         else {
-          const tempMax = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.dMaxV;
-          //var tempAcc = (player[p].charAttributes.dAcc - (1 - Math.abs(player[p].inputs.lStickAxis[0].x))*(player[p].charAttributes.dAcc))*player[p].phys.face;
-          const tempAcc = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.dAccA;
+          const tempMax = input[p][0].lsX * player[p].charAttributes.dMaxV;
+          //var tempAcc = (player[p].charAttributes.dAcc - (1 - Math.abs(input[p][0].lsX))*(player[p].charAttributes.dAcc))*player[p].phys.face;
+          const tempAcc = input[p][0].lsX * player[p].charAttributes.dAccA;
 
           player[p].phys.cVel.x += tempAcc;
           if ((tempMax > 0 && player[p].phys.cVel.x > tempMax) || (tempMax < 0 && player[p].phys.cVel.x < tempMax)){
@@ -54,60 +54,60 @@ export default {
       }
     }
   },
-  interrupt : function(p){
-    const j = checkForJump(p);
-    if (player[p].inputs.l[0] || player[p].inputs.r[0]){
+  interrupt : function(p,input){
+    const j = checkForJump(p,input);
+    if (input[p][0].l || input[p][0].r){
       player[p].phys.cVel.x *= 0.25;
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
+    else if (input[p][0].lA > 0 || input[p][0].rA > 0){
       player[p].phys.cVel.x *= 0.25;
-      aS[cS[p]].GUARDON.init(p);
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (player[p].inputs.a[0] && !player[p].inputs.a[1]){
-      if (player[p].timer < 4 && player[p].inputs.lStickAxis[0].x*player[p].phys.face >= 0.8){
+    else if (input[p][0].a && !input[p][1].a){
+      if (player[p].timer < 4 && input[p][0].lsX*player[p].phys.face >= 0.8){
         player[p].phys.cVel.x *= 0.25;
-        aS[cS[p]].FORWARDSMASH.init(p);
+        actionStates[characterSelections[p]].FORWARDSMASH.init(p,input);
       }
-      else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
-        aS[cS[p]].GRAB.init(p);
+      else if (input[p][0].lA > 0 || input[p][0].rA > 0){
+        actionStates[characterSelections[p]].GRAB.init(p,input);
       }
       else {
-        aS[cS[p]].ATTACKDASH.init(p);
+        actionStates[characterSelections[p]].ATTACKDASH.init(p,input);
       }
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && Math.abs(player[p].inputs.lStickAxis[0].x) > 0.6){
-      player[p].phys.face = Math.sign(player[p].inputs.lStickAxis[0].x);
+    else if (input[p][0].b && !input[p][1].b && Math.abs(input[p][0].lsX) > 0.6){
+      player[p].phys.face = Math.sign(input[p][0].lsX);
       if (player[p].phys.grounded){
-        aS[cS[p]].SIDESPECIALGROUND.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALGROUND.init(p,input);
       }
       else {
-        aS[cS[p]].SIDESPECIALAIR.init(p);
+        actionStates[characterSelections[p]].SIDESPECIALAIR.init(p,input);
       }
       return true;
     }
-    else if (player[p].timer > 4 && checkForSmashTurn(p)){
+    else if (player[p].timer > 4 && checkForSmashTurn(p,input)){
       player[p].phys.cVel.x *= 0.25;
-      aS[cS[p]].SMASHTURN.init(p);
+      actionStates[characterSelections[p]].SMASHTURN.init(p,input);
       return true;
     }
-    else if (player[p].timer > player[p].charAttributes.dashFrameMax && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.79 && player[p].inputs.lStickAxis[2].x * player[p].phys.face < 0.3){
-      aS[cS[p]].DASH.init(p);
+    else if (player[p].timer > player[p].charAttributes.dashFrameMax && input[p][0].lsX * player[p].phys.face > 0.79 && input[p][2].lsX * player[p].phys.face < 0.3){
+      actionStates[characterSelections[p]].DASH.init(p,input);
       return true;
     }
-    else if (player[p].timer > player[p].charAttributes.dashFrameMin && player[p].inputs.lStickAxis[0].x * player[p].phys.face > 0.62){
-      aS[cS[p]].RUN.init(p);
+    else if (player[p].timer > player[p].charAttributes.dashFrameMin && input[p][0].lsX * player[p].phys.face > 0.62){
+      actionStates[characterSelections[p]].RUN.init(p,input);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].DASH){
-      aS[cS[p]].WAIT.init(p);
+    else if (player[p].timer > framesData[characterSelections[p]].DASH){
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS,  player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 
 import {framesData} from 'main/characters';
@@ -10,18 +10,18 @@ export default {
   disableTeeter : true,
   canBeGrabbed : false,
   downed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNBOUND";
     player[p].timer = 0;
     player[p].phys.kVel.y = 0;
     player[p].phys.jabReset = false;
     drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
     sounds.bounce.play();
-    aS[cS[p]].DOWNBOUND.main(p);
+    actionStates[characterSelections[p]].DOWNBOUND.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNBOUND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNBOUND.interrupt(p,input)){
       if (player[p].timer == 1){
         reduceByTraction(p,true);
       }
@@ -30,9 +30,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].DOWNBOUND){
-      aS[cS[p]].DOWNWAIT.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].DOWNBOUND){
+      actionStates[characterSelections[p]].DOWNWAIT.init(p,input);
       return true;
     }
     else {

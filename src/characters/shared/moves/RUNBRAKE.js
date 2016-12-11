@@ -1,39 +1,39 @@
-import {checkForSquat, checkForJump, reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {checkForSquat, checkForJump, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 export default {
   name : "RUNBRAKE",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "RUNBRAKE";
     player[p].timer = 0;
     sounds.runbrake.play();
-    aS[cS[p]].RUNBRAKE.main(p);
+    actionStates[characterSelections[p]].RUNBRAKE.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].RUNBRAKE.interrupt(p)){
+    if (!actionStates[characterSelections[p]].RUNBRAKE.interrupt(p,input)){
       reduceByTraction(p,true);
     }
   },
-  interrupt : function(p){
-    var j = checkForJump(p);
+  interrupt : function(p,input){
+    var j = checkForJump(p,input);
     if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (player[p].timer > 1 && checkForSquat(p)){
-      aS[cS[p]].SQUAT.init(p);
+    else if (player[p].timer > 1 && checkForSquat(p,input)){
+      actionStates[characterSelections[p]].SQUAT.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x * player[p].phys.face < -0.3){
-      aS[cS[p]].RUNTURN.init(p);
+    else if (input[p][0].lsX * player[p].phys.face < -0.3){
+      actionStates[characterSelections[p]].RUNTURN.init(p,input);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].RUNBRAKE){
-      aS[cS[p]].WAIT.init(p);
+    else if (player[p].timer > framesData[characterSelections[p]].RUNBRAKE){
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

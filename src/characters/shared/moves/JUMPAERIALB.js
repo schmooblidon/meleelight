@@ -1,5 +1,5 @@
-import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, aS} from "physics/actionStateShortcuts";
-import {cS,  player} from "main/main";
+import {checkForSpecials, checkForAerials, airDrift, fastfall, playSounds, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
 import {drawVfx} from "main/vfx/drawVfx";
@@ -12,7 +12,7 @@ export default {
   canBeGrabbed : true,
   landType : 0,
   vCancel : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "JUMPAERIALB";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
@@ -20,36 +20,36 @@ export default {
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 
-    player[p].phys.cVel.x = player[p].inputs.lStickAxis[0].x * player[p].charAttributes.djMomentum;
+    player[p].phys.cVel.x = input[p][0].lsX * player[p].charAttributes.djMomentum;
     drawVfx("doubleJumpRings",player[p].phys.pos,player[p].phys.face);
     sounds.jump2.play();
-    aS[cS[p]].JUMPAERIALB.main(p);
+    actionStates[characterSelections[p]].JUMPAERIALB.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     playSounds("JUMPAERIAL",p);
-    if (!aS[cS[p]].JUMPAERIALB.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!actionStates[characterSelections[p]].JUMPAERIALB.interrupt(p,input)){
+      fastfall(p,input);
+      airDrift(p,input);
     }
   },
-  interrupt : function(p){
-    const a = checkForAerials(p);
-    const b = checkForSpecials(p);
+  interrupt : function(p,input){
+    const a = checkForAerials(p,input);
+    const b = checkForSpecials(p,input);
     if (a[0]){
-      aS[cS[p]][a[1]].init(p);
+      actionStates[characterSelections[p]][a[1]].init(p,input);
       return true;
     }
-    else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-      aS[cS[p]].ESCAPEAIR.init(p);
+    else if ((input[p][0].l && !input[p][1].l) || (input[p][0].r && !input[p][1].r)){
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p,input);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p,input);
       return true;
     }
-    else if (player[p].timer > framesData[cS[p]].JUMPAERIALB){
-      aS[cS[p]].FALLAERIAL.init(p);
+    else if (player[p].timer > framesData[characterSelections[p]].JUMPAERIALB){
+      actionStates[characterSelections[p]].FALLAERIAL.init(p,input);
       return true;
     }
     else {

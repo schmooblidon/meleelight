@@ -8,7 +8,7 @@ export default {
   name : "GRAB",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "GRAB";
     player[p].timer = 0;
     player[p].phys.charging = false;
@@ -16,11 +16,11 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.grab.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.grab.id1;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer === 7){
         player[p].hitboxes.active = [true,true,false,false];
@@ -35,9 +35,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 30){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else {
