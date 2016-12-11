@@ -771,7 +771,7 @@ export function update (i,inputBuffers){
       if (playerType[i] == 0){
         // do nothing, use the provided player i inputs
       }
-      else {
+      else if (playerType[i] === 1) {
         if (player[i].actionState != "SLEEP"){
             runAI(i); // no need to return input since polling returns ai input if they are active
         }
