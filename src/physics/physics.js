@@ -582,13 +582,17 @@ export function physics (i){
     ecbOffset[0] = 0;
   }
 
+  let oldECBSquashFactor = 1; // temporary, should be the ecbSquashFactor of the previous frame
+
   player[i].phys.ECBp = [
-    new Vec2D(0 + x, ecbOffset[0] + y),
-    new Vec2D(ecbOffset[1] + x, ecbOffset[2] + y),
-    new Vec2D(0 + x, ecbOffset[3] + y),
-    new Vec2D(ecbOffset[1] * -1 + x, ecbOffset[2] + y)
+    new Vec2D(x                                    , y + oldECBSquashFactor * ecbOffset[0] ),
+    new Vec2D(x + oldECBSquashFactor * ecbOffset[1], y + oldECBSquashFactor * ecbOffset[2] ),
+    new Vec2D(x                                    , y + oldECBSquashFactor * ecbOffset[3] ),
+    new Vec2D(x - oldECBSquashFactor * ecbOffset[1], y + oldECBSquashFactor * ecbOffset[2] )
   ];
 
+
+  let ecbSquashFactor = 1; // a value smaller than 1 entails squashing
 
   if (!aS[cS[i]][player[i].actionState].ignoreCollision) {
 
@@ -626,9 +630,12 @@ export function physics (i){
 
       // squash grounded ECB if there is a low ceiling
       if (stillGrounded) {
-        let ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, customId(activeStage.ceiling) );
-        if (! (ecbSquashFactor === false )) {
+        ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, customId(activeStage.ceiling) );
+        if (! (ecbSquashFactor === false ) && ecbSquashFactor < 1 && ecbSquashFactor > 0) {
           player[i].phys.ECBp = squashDownECB(player[i].phys.ECBp, ecbSquashFactor - additionalOffset );
+        }
+        else {
+          ecbSquashFactor = 1;
         }
       }
     }
@@ -910,10 +917,10 @@ export function physics (i){
   //player[i].phys.ECB1 = [new Vec2D(0+x,ecbOffset[0]+y),new Vec2D(ecbOffset[1]+x,ecbOffset[2]+y),new Vec2D(0+x,ecbOffset[3]+y),new Vec2D(ecbOffset[1]*-1+x,ecbOffset[2]+y)];
 
   player[i].phys.ECB1 = [
-    new Vec2D(0 + x, (ecbOffset[0] * 10 + y * 10) / 10),
-    new Vec2D((ecbOffset[1] * 10 + x * 10) / 10, (ecbOffset[2] * 10 + y * 10) / 10),
-    new Vec2D((0 + x * 10) / 10, (ecbOffset[3] * 10 + y * 10) / 10),
-    new Vec2D((ecbOffset[1] * -1 * 10 + x * 10) / 10, (ecbOffset[2] * 10 + y * 10) / 10)
+    new Vec2D( x                                 , y + ecbSquashFactor * ecbOffset[0] ),
+    new Vec2D( x + ecbSquashFactor * ecbOffset[1], y + ecbSquashFactor * ecbOffset[2] ),
+    new Vec2D( x                                 , y + ecbSquashFactor * ecbOffset[3] ),
+    new Vec2D( x - ecbSquashFactor * ecbOffset[1], y + ecbSquashFactor * ecbOffset[2] )
   ];
 
   if (player[i].phys.grounded || player[i].phys.airborneTimer < 10) {
