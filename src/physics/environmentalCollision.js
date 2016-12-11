@@ -434,7 +434,7 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFu
         nextWallToTheSideTop    = extremePoint(nextWallToTheSide, "t");
         nextWallToTheSideBottom = extremePoint(nextWallToTheSide, "b");
         nextWallToTheSideAngle  = lineAngle( [nextWallToTheSideBottom, nextWallToTheSideTop]);
-        if (sign * nextWallToTheSideAngle > sign * ecbAngle) {
+        if (sign * nextWallToTheSideAngle >= sign * Math.PI) {
           console.log("'pushoutHorizontally': top case, pushing out side point (adjacent wall is useless).");
           return (wallSide.x - ecbpSame.x);
         }
@@ -531,11 +531,9 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, connectednessFunc
   //    - left to right for grounds and platforms
   //    - right to left for ceilings
 
-  let wallSame    = wallBottom; // ground or platform by default
-  let wallOpposite = wallTop;
+  let wallOpposite = wallTop; // ground or platform by default
   let sign = 1;
   if (wallType === "c") {
-    wallSame     = wallTop;
     wallOpposite = wallBottom;
     sign = -1;
   }
@@ -550,7 +548,7 @@ function pushoutVertically ( wall, wallType, wallIndex, stage, connectednessFunc
     const nextSurfaceToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
     if (     nextSurfaceToTheSideTypeAndIndex === false 
          || (   wallType === "c"                      && nextSurfaceToTheSideTypeAndIndex[0] !== "c" )
-         || ( ( wallType === "g" || wallType === "p") && nextSurfaceToTheSideTypeAndIndex[0] === "c" ) ) {
+         || ( ( wallType === "g" || wallType === "p") && nextSurfaceToTheSideTypeAndIndex[0] !== "g" && nextSurfaceToTheSideTypeAndIndex[0] !== "p" ) ) {
       console.log("'pushoutVertically': directly pushing out ECB point (no relevant adjacent surface)");
       return wallOpposite.y;
     }
