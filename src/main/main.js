@@ -931,10 +931,10 @@ export function renderToMain (){
 export function update (i){
   if (!starting){
     if (currentPlayers[i] != -1){
-      if (playerType[i] == 0){
+      if (playerType[i] === 0){
         interpretInputs(i,true);
       }
-      else {
+      else if (playerType[i] === 1) {
         if (player[i].actionState != "SLEEP"){
           runAI(i);
         }
