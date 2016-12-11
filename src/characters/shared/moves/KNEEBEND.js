@@ -1,59 +1,59 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 export default {
   name : "KNEEBEND",
   canEdgeCancel : true,
   disableTeeter : true,
   canBeGrabbed : true,
-  init : function(p,type){
+  init : function(p,type,input){
     player[p].actionState = "KNEEBEND";
     player[p].timer = 0;
     player[p].phys.jumpType = 1;
     player[p].phys.jumpSquatType = type;
-    aS[cS[p]].KNEEBEND.main(p);
+    actionStates[characterSelections[p]].KNEEBEND.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].KNEEBEND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].KNEEBEND.interrupt(p,input)){
       reduceByTraction(p,true);
       // if jumpsquat initiated by stick
       if (player[p].phys.jumpSquatType){
-        if (player[p].inputs.lStickAxis[0].y < 0.67){
+        if (input[p][0].lsY < 0.67){
           player[p].phys.jumpType = 0;
         }
       }
       // else if jumpsquat initiated by button
       else {
-        if (!player[p].inputs.x[0] && !player[p].inputs.y[0]){
+        if (!input[p][0].x && !input[p][0].y){
           player[p].phys.jumpType = 0;
         }
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer === player[p].charAttributes.jumpSquat){
       // so they can be detected as above current surface instantly
       player[p].phys.pos.y += 0.001;
     }
     if (player[p].timer > player[p].charAttributes.jumpSquat){
-      if (player[p].inputs.lStickAxis[2].x * player[p].phys.face >= -0.3){
-        aS[cS[p]].JUMPF.init(p,player[p].phys.jumpType);
+      if (input[p][2].lsX * player[p].phys.face >= -0.3){
+        actionStates[characterSelections[p]].JUMPF.init(p,player[p].phys.jumpType,input);
       }
       else {
-        aS[cS[p]].JUMPB.init(p,player[p].phys.jumpType);
+        actionStates[characterSelections[p]].JUMPB.init(p,player[p].phys.jumpType,input);
       }
       return true;
     }
-    else if (player[p].inputs.a[0] && !player[p].inputs.a[1] && (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0)){
-      aS[cS[p]].GRAB.init(p);
+    else if (input[p][0].a && !input[p][1].a && (input[p][0].lA > 0 || input[p][0].rA > 0)){
+      actionStates[characterSelections[p]].GRAB.init(p,input);
       return true;
     }
-    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1] && player[p].inputs.lStickAxis[0].y >= 0.8 && player[p].inputs.lStickAxis[3].y < 0.3) || (player[p].inputs.cStickAxis[0].y >= 0.8 && player[p].inputs.cStickAxis[3].y < 0.3)){
-      aS[cS[p]].UPSMASH.init(p);
+    else if ((input[p][0].a && !input[p][1].a && input[p][0].lsY >= 0.8 && input[p][3].lsY < 0.3) || (input[p][0].csY >= 0.8 && input[p][3].csY < 0.3)){
+      actionStates[characterSelections[p]].UPSMASH.init(p,input);
       return true;
     }
-    else if (player[p].inputs.b[0] && !player[p].inputs.b[1] && player[p].inputs.lStickAxis[0].y > 0.58){
-      aS[cS[p]].UPSPECIAL.init(p);
+    else if (input[p][0].b && !input[p][1].b && input[p][0].lsY > 0.58){
+      actionStates[characterSelections[p]].UPSPECIAL.init(p,input);
       return true;
     }
     else {

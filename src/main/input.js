@@ -5,6 +5,8 @@ import {
   multMatVect
 } from "main/linAlg";
 import {Vec2D} from "./util/Vec2D";
+import {keyMap} from "../settings";
+import {playing} from "./main";
 
 export const button = {
   "a" : 0, 
@@ -30,6 +32,320 @@ export const axis = {
   "rA" : 17  // R button analog sensor
 };
 
+export function inputData ( list = [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0] ) {
+ return {
+    a : list[button["a"]],
+        b : list[button["b"]],
+        x : list[button["x"]],
+        y : list[button["y"]],
+        z : list[button["z"]],
+        r : list[button["r"]],
+        l : list[button["l"]],
+        s : list[button["s"]],
+        du : list[button["du"]],
+        dr : list[button["dr"]],
+        dd : list[button["dd"]],
+        dl : list[button["dl"]],
+        lsX : list[axis["lsX"]],
+        lsY : list[axis["lsY"]],
+        csX : list[axis["csX"]],
+        csY : list[axis["csY"]],
+        lA : list[axis["lA"]],
+        rA : list[axis["rA"]],
+        rawX : list[18],
+        rawY : list[19]
+  }
+};
+
+const nullInput = ()=>{return new inputData ()};
+
+export const nullInputs = ()=>{return [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          ]};
+
+export const aiPlayer1 = [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          ];
+export const aiPlayer2 =  [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          ];
+export const aiPlayer3 =  [ new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          , new inputData ( )
+                          ];
+
+export const aiPlayer4 = [ new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         , new inputData ( )
+                         ];
+
+export const aiInputBank = [aiPlayer1,aiPlayer2,aiPlayer3,aiPlayer4];
+
+// should be able to move out the "frameByFrame" aspect of the following function
+// it is only used to make z button mean "left trigger value = 0.35" + "A = true".
+export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, controllerIndex, keys,playertype) {
+  // input is the input for player i in the current frame
+  let input = nullInput(); // initialise with default values
+  if(playertype !== 0 && gameMode === 3 ){
+    return aiInputBank[playerSlot][0];
+  }else if (controllerType == 10) { // keyboard controls
+    input = pollKeyboardInputs(gameMode, frameByFrame, keys);
+  }
+    else if (playertype === 0) {
+    input = pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
+  }
+  return input;
+}
+
+function pollKeyboardInputs(gameMode, frameByFrame, keys) {
+  let input = nullInput(); // initialise with default values
+
+  let stickR = 1;
+  let stickL = 1;
+  let stickU = 1;
+  let stickD = 1;
+  if (gameMode == 3 || gameMode == 5) {
+    stickR = keyMap.lstick.ranges[1];
+    stickL = keyMap.lstick.ranges[2];
+    stickU = keyMap.lstick.ranges[0];
+    stickD = keyMap.lstick.ranges[3];
+  }
+  let lstickX = (keys[keyMap.lstick.right[0]] || keys[keyMap.lstick.right[1]]) ? ((keys[keyMap.lstick.left[0]] ||
+    keys[keyMap.lstick.left[1]]) ? 0 : stickR) : ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ?
+    -stickL : 0);
+  let lstickY = (keys[keyMap.lstick.up[0]] || keys[keyMap.lstick.up[1]]) ? ((keys[keyMap.lstick.down[0]] || keys[
+    keyMap.lstick.down[1]]) ? 0 : stickU) : ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? -
+    stickD : 0);
+
+  let lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? keyMap.shoulders.ranges[
+    0] : 0;
+  let rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? keyMap.shoulders.ranges[
+    1] : 0;
+  if (gameMode == 3 || gameMode == 5) {
+    for (var j = 0; j < 5; j++) {
+      if (keys[keyMap.lstick.modifiers[j][0]]) {
+        lstickX *= keyMap.lstick.modifiers[j][1];
+        lstickY *= keyMap.lstick.modifiers[j][2];
+      }
+      if (keys[keyMap.shoulders.modifiers[j][0]]) {
+        lAnalog *= keyMap.shoulders.modifiers[j][1];
+        rAnalog *= keyMap.shoulders.modifiers[j][2];
+      }
+    }
+  }
+  lstickX = Math.sign(lstickX) * Math.min(1, Math.abs(lstickX));
+  lstickY = Math.sign(lstickY) * Math.min(1, Math.abs(lstickY));
+  lAnalog = Math.min(1, Math.abs(lAnalog));
+  rAnalog = Math.min(1, Math.abs(rAnalog));
+
+  let cstickX = (keys[keyMap.cstick.right[0]] || keys[keyMap.cstick.right[1]]) ? ((keys[keyMap.cstick.left[0]] ||
+    keys[keyMap.cstick.left[1]]) ? 0 : 1) : ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? -1 :
+    0);
+  let cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[
+    keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
+
+  input.lsX = lstickX;
+  input.lsY = lstickY;
+  input.rawX = lstickX;
+  input.rawY = lstickY;
+  input.csX = cstickX;
+  input.csY = cstickY;
+  input.lA  = lAnalog;
+  input.rA  = rAnalog;
+  input.s   = keys[keyMap.s[0]] || keys[keyMap.s[1]];
+  input.x   = keys[keyMap.x[0]] || keys[keyMap.x[1]];
+  input.a   = keys[keyMap.a[0]] || keys[keyMap.a[1]];
+  input.b   = keys[keyMap.b[0]] || keys[keyMap.b[1]];
+  input.y   = keys[keyMap.y[0]] || keys[keyMap.y[1]];
+  input.r   = keys[keyMap.r[0]] || keys[keyMap.r[1]];
+  input.l   = keys[keyMap.l[0]] || keys[keyMap.l[1]];
+  input.z   = keys[keyMap.z[0]] || keys[keyMap.z[1]];
+  input.dl  = keys[keyMap.dl[0]];
+  input.dd  = keys[keyMap.dd[0]];
+  input.dr  = keys[keyMap.dr[0]];
+  input.du  = keys[keyMap.du[0]];
+
+  if (input.l) {
+    input.lA = 1;
+  }
+  if (input.r) {
+    input.rA = 1;
+  }
+
+  if (!frameByFrame && gameMode != 4) { // not in target builder or frame by frame mode
+    if (input.z) {
+      input.lA = 0.35;
+      input.a = true;
+    }
+  }
+
+  return input;
+}
+
+function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
+  let input = nullInput();
+
+  let gamepad = navigator.getGamepads()[controllerIndex];
+
+
+
+  function axisData (ax) {
+    return gpdaxis (gamepad, controllerType, ax );
+  };
+  function buttonData (but) {
+    return gpdbutton (gamepad, controllerType, but);
+  };
+
+  let lsXData = axisData("lsX");
+  let lsYData = axisData("lsY");
+
+  let lsticks = scaleToMeleeAxes ( lsXData, // x-axis data
+                                   lsYData, // y-axis data
+                                   controllerType,
+                                   true, // true: deadzones
+                                   custcent[playerSlot].ls.x,  // x-axis "custom center" offset
+                                   custcent[playerSlot].ls.y); // y-axis "custom center" offset
+  let csticks = scaleToMeleeAxes ( axisData("csX"),
+                                   axisData("csY"),
+                                   controllerType,
+                                   true,
+                                   custcent[playerSlot].cs.x,
+                                   custcent[playerSlot].cs.y);
+   let rawlsticks =
+                scaleToUnitAxes ( lsXData,
+                                  lsYData,
+                                  controllerType,
+                                  custcent[playerSlot].ls.x,
+                                  custcent[playerSlot].ls.y);
+  let lstickX = lsticks[0];
+  let lstickY = lsticks[1];
+  let cstickX = csticks[0];
+  let cstickY = csticks[1];
+  let rawstickX = rawlsticks[0];
+  let rawstickY = rawlsticks[1];
+
+  let lAnalog = 0;
+  let rAnalog = 0;
+
+
+  if (controllerType == 3){
+    lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[playerSlot].l, 1); // shifted by +0.2
+    rAnalog = scaleToGCTrigger(buttonData("r").value, 0.2-custcent[playerSlot].r, 1); // shifted by +0.2
+  }
+  else if (controllerType == 2){
+    lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, -0.6); // shifted by +0.867, flipped
+    rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, -0.6); // shifted by +0.867, flipped
+  }
+  else if (controllerType == 7) { //Brook adapter has no L/R analog information, just light presses
+    lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
+    rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
+  }
+  else {
+    lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, 0.6); // shifted by +0.867
+    rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, 0.6); // shifted by +0.867
+  }
+
+  if (controllerType == 3) {
+    // FOR XBOX CONTROLLERS
+    input.r = buttonData("r").value > 0.95 ? true : false;
+    input.l = buttonData("l").value > 0.95 ? true : false;
+
+    // 4 is lB, 5 is RB
+    if (gamepad.buttons[4].pressed) {
+      input.l = true;
+    }
+  } else if (controllerType == 9) { // Rock Candy controller
+    input.r = axisData("rA").value > 0.95 ? true : false;
+    input.l = axisData("lA").value > 0.95 ? true : buttonData("l").pressed;
+  } else {
+    input.r = buttonData("r").pressed;
+    input.l = buttonData("l").pressed;
+  }
+
+
+  input.lsX = lstickX;
+  input.lsY = lstickY;
+  input.rawX = rawstickX;
+  input.rawY = rawstickY;
+  input.csX = cstickX;
+  input.csY = cstickY;
+  input.lA = lAnalog;
+  input.rA = rAnalog;
+  input.s = buttonData("s").pressed;
+  input.x = buttonData("x").pressed;
+  input.a = buttonData("a").pressed;
+  input.b = buttonData("b").pressed;
+  input.y = buttonData("y").pressed;
+  input.z = buttonData("z").pressed;
+
+
+  if (controllerType == 9) { // Rock Candy controller, parameters to be confirmed
+    input.dl = gamepad.axes[6] < -0.5 ? true : false;
+    input.dr = gamepad.axes[6] >  0.5 ? true : false;
+    input.dd = gamepad.axes[7] >  0.5 ? true : false;
+    input.du = gamepad.axes[7] < -0.5 ? true : false;
+  }
+  else {
+    input.dl = buttonData("dl").pressed;
+    input.dd = buttonData("dd").pressed;
+    input.dr = buttonData("dr").pressed;
+    input.du = buttonData("du").pressed;
+  }
+
+  if (input.l) {
+    input.lA = 1;
+  }
+  if (input.r) {
+    input.rA = 1;
+  }
+  if (!frameByFrame && gameMode != 4) { // not in target builder
+    if (input.z) {
+      input.lA = 0.35;
+      input.a = true;
+    }
+  }
+
+  return input;
+};
+
+export function showButton(i, but, bool) {
+  if (bool) {
+    $("#" + i + "button" + but).show();
+  }
+  else {
+    $("#" + i + "button" + but).hide();
+  }
+};
+
+
 export const keyboardMap = [
   [102, 186],
   [101, 76],
@@ -54,9 +370,12 @@ const ps4Map         = [ 1, 0, 2, 3, 5, 7 , 6 , 9, 12, 15, 13, 14,  0,   1,   2,
 const rockx360Map    = [ 0, 1, 2, 3, 5, 4 , 4 , 7, 12, 15, 13, 14,  0,   1,   3,   4,  2,  5  ]; // ID 9, Rock Candy Xbox 360 controller (d-pad are axes not buttons; axes to be confirmed)
                     //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 // ID number 10 reserved for keyboard
+                    //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
+const wiiULinuxMap   = [ 0, 3, 1, 2, 6, 5 , 4 , 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 11, Official Wii U GC Adapter using wii-u-gc-adapter on Linux
+                    //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 
-
-export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map, rockx360Map];
+export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map, rockx360Map
+                              , null      , wiiULinuxMap];
 
 // Checking gamepad inputs are well defined
 export function gpdaxis ( gpd, gpdID, ax ) { // gpd.axes[n] but checking axis index is in range
@@ -169,9 +488,14 @@ controllerIDMap.set("054c-05c4", 8);
 controllerIDMap.set("54c-5c4", 8);
 
 // ID 9, Rock Candy Xbox 360 controller
-controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 360", 8);
-controllerIDMap.set("0e6f-011f", 8);
-controllerIDMap.set("e6f-11f", 8);
+controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 360", 9);
+controllerIDMap.set("0e6f-011f", 9);
+controllerIDMap.set("e6f-11f", 9);
+
+// ID 10: reserved for keyboard
+
+// ID 11, Nintendo Wii U Adapter on Linux using wii-u-gc-adapter
+controllerIDMap.set("0000-0000-Wii U GameCube Adapter", 11);
 
 //--END OF CONTROLLER IDs-------------------------------------
     
@@ -208,10 +532,17 @@ export function controllerNameFromIDnumber(number) {
     case 9:
       return "Xbox 360 (Rock Candy) controller";
       break;
+    case 11:
+      return "Linux wii-u-gc-adapter";
+      break;
     default:
       return "error: controller detected but not supported";
   }
 };
+
+
+// ----------------------------------------------------------------------------------------------------
+// Melee input simulation
 
 
 function fromCardinals([origx, origy], l, r, d,u) {

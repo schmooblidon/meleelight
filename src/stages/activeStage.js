@@ -46,6 +46,7 @@ export function setActiveStageTarget(val) {
   activeStage = tstages[targetStageMapping[val]];
 }
 
+
 export let activeStage = {
   box: [new Box2D([-68.4, -108.8], [68.4, 0])],
   platform: [[new Vec2D(-57.6, 27.2), new Vec2D(-20, 27.2)], [new Vec2D(20, 27.2), new Vec2D(57.6, 27.2)], [new Vec2D(-18.8, 54.4), new Vec2D(18.8, 54.4)]],

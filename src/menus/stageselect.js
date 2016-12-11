@@ -50,9 +50,9 @@ const stagePointerPos = [600, 635];
 const xRowOffset = 175;
 
 
-export function sssControls(i) {
-  stagePointerPos[0] += player[i].inputs.lStickAxis[0].x * 15;
-  stagePointerPos[1] += player[i].inputs.lStickAxis[0].y * -15;
+export function sssControls (i, input){
+  stagePointerPos[0] += input[i][0].lsX*15;
+  stagePointerPos[1] += input[i][0].lsY*-15;
   if (stagePointerPos[1] >= 450 && stagePointerPos[1] <= 540) {
     for (let j = 0; j < smallBoxStageNames.length; j++) {
       if (stagePointerPos[0] >= 200 + j * xRowOffset && stagePointerPos[0] <= 350 + j * xRowOffset) {
@@ -70,10 +70,10 @@ export function sssControls(i) {
     }
     stageSelected = smallBoxStageNames.length;
   }
-  if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
+  if (input[i][0].b && !input[i][1].b) {
     sounds.menuBack.play();
     changeGamemode(2);
-  } else if ((player[i].inputs.s[0] && !player[i].inputs.s[1]) || (player[i].inputs.a[0] && !player[i].inputs.a[1])) {
+  } else if ((input[i][0].s && !input[i][1].s) || (input[i][0].a && !input[i][1].a)) {
     sounds.menuForward.play();
     if (stageSelected == smallBoxStageNames.length) {
       stageSelected = Math.floor(Math.random() * (smallBoxStageNames.length + 0.99));

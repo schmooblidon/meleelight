@@ -1,5 +1,5 @@
-import {playSounds, executeIntangibility, fastfall, airDrift, aS, getAngle} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {playSounds, executeIntangibility, fastfall, airDrift, actionStates, getAngle} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 export default {
   name : "ESCAPEAIR",
   canPassThrough : false,
@@ -9,11 +9,11 @@ export default {
   canBeGrabbed : true,
   landType : 1,
   vCancel : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ESCAPEAIR";
     player[p].timer = 0;
-    if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0 || Math.abs(player[p].inputs.lStickAxis[0].y) > 0){
-      var ang = getAngle(player[p].inputs.lStickAxis[0].x,player[p].inputs.lStickAxis[0].y);
+    if (Math.abs(input[p][0].lsX) > 0 || Math.abs(input[p][0].lsY) > 0){
+      var ang = getAngle(input[p][0].lsX,input[p][0].lsY);
       player[p].phys.cVel.x = 3.1 * Math.cos(ang);
       player[p].phys.cVel.y = 3.1 * Math.sin(ang);
     }
@@ -23,36 +23,36 @@ export default {
     }
     player[p].phys.fastfalled = false;
     player[p].phys.landingMultiplier = 3;
-    aS[cS[p]].ESCAPEAIR.main(p);
+    actionStates[characterSelections[p]].ESCAPEAIR.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].ESCAPEAIR.interrupt(p)){
+    if (!actionStates[characterSelections[p]].ESCAPEAIR.interrupt(p,input)){
       if (player[p].timer < 30){
         player[p].phys.cVel.x *= 0.9;
         player[p].phys.cVel.y *= 0.9;
       }
       else {
-        airDrift(p);
-        fastfall(p);
+        airDrift(p,input);
+        fastfall(p,input);
       }
       executeIntangibility("ESCAPEAIR",p);
       playSounds("ESCAPEAIR",p);
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 49){
-      aS[cS[p]].FALLSPECIAL.init(p);
+      actionStates[characterSelections[p]].FALLSPECIAL.init(p,input);
       return true;
     }
     else {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     player[p].phys.intangibleTimer = 0;
     player[p].phys.hurtBoxState = 0;
-    aS[cS[p]].LANDINGFALLSPECIAL.init(p);
+    actionStates[characterSelections[p]].LANDINGFALLSPECIAL.init(p,input);
   }
 };
 

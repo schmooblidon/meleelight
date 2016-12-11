@@ -8,18 +8,18 @@ export default {
   name : "FORWARDTILT",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "FORWARDTILT";
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.ftilt.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ftilt.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.ftilt.id2;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer === 5){
         player[p].hitboxes.active = [true,true,false,false];
@@ -35,9 +35,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 26){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else {

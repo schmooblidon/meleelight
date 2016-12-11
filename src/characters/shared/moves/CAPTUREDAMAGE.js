@@ -1,5 +1,5 @@
-import {player, cS} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {player, characterSelections} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 
 import {framesData} from 'main/characters';
 export default {
@@ -8,20 +8,20 @@ export default {
   canBeGrabbed : false,
   setPositions : [9.478,9.478,9.478,9.478,9.478,9.478,9.478,9.478,9.478,9.306,8.920,8.516,8.290,8.293,8.410,8.593,8.792,8.959,9.043,9.068],
   inGrab : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CAPTUREDAMAGE";
     player[p].timer = 0;
-    aS[cS[p]].CAPTUREDAMAGE.main(p);
+    actionStates[characterSelections[p]].CAPTUREDAMAGE.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].CAPTUREDAMAGE.interrupt(p)){
-      player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-aS[cS[p]].CAPTUREDAMAGE.setPositions[player[p].timer-1]*player[p].phys.face);
+    if (!actionStates[characterSelections[p]].CAPTUREDAMAGE.interrupt(p,input)){
+      player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-actionStates[characterSelections[p]].CAPTUREDAMAGE.setPositions[player[p].timer-1]*player[p].phys.face);
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].CAPTUREDAMAGE){
-      aS[cS[p]].CAPTUREWAIT.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].CAPTUREDAMAGE){
+      actionStates[characterSelections[p]].CAPTUREWAIT.init(p,input);
       return true;
     }
     else {

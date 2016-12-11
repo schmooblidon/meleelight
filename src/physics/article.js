@@ -1,9 +1,9 @@
 
-import {player, fg2, playerType, cS, screenShake, percentShake} from "main/main";
+import {player, fg2, playerType, characterSelections, screenShake, percentShake} from "main/main";
 import {rotateVector} from "main/render";
 import {sounds} from "main/sfx";
 import {knockbackSounds, segmentSegmentCollision, getKnockback, getHitstun} from "physics/hitDetection";
-import {aS} from "physics/actionStateShortcuts";
+import {actionStates} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
 import {createHitbox} from "../main/util/createHitBox";
@@ -202,7 +202,7 @@ export function articlesHitDetection (){
                            // attacker cut through
                            player[i].hit.hitlag = Math.floor(player[p].hitboxes.id[j].dmg * (1/3) + 3);
                            turnOffHitboxes(i);
-                           aS[cS[i]][78].init(i);
+                           actionStates[characterSelections[i]][78].init(i);
                            }
                            else if (diff <= -9){
                            // attacker clank
@@ -211,7 +211,7 @@ export function articlesHitDetection (){
                            attackerClank = true;
                            articleDestroyed = true;
                            turnOffHitboxes(p);
-                           aS[cS[p]][78].init(p);
+                           actionStates[characterSelections[p]][78].init(p,input);
                            }
                            else {
                            // both clank
@@ -220,9 +220,9 @@ export function articlesHitDetection (){
                            attackerClank = true;
                            articleDestroyed = true;
                            turnOffHitboxes(i);
-                           aS[cS[i]][78].init(i);
+                           actionStates[characterSelections[i]][78].init(i);
                            turnOffHitboxes(p);
-                           aS[cS[p]][78].init(p);
+                           actionStates[characterSelections[p]][78].init(p,input);
                            }
                            sounds.clank.play();
                            drawVfx("clank",clankHit[1]);
@@ -320,7 +320,7 @@ export function executeArticleHits (){
                     player[v].phys.grounded = false;
                     player[v].phys.shieldHP = 0;
                     drawVfx("breakShield", player[v].phys.pos, player[v].phys.face);
-                    aS[cS[v]].SHIELDBREAKFALL.init(v);
+                    actionStates[characterSelections[v]].SHIELDBREAKFALL.init(v,input);
                     sounds.shieldbreak.play();
                     break;
                 }
@@ -343,14 +343,14 @@ export function executeArticleHits (){
                 }
             }
 
-            aS[cS[v]].GUARD.init(v);
+            actionStates[characterSelections[v]].GUARD.init(v,input);
 
         } else {
             if (player[v].phys.hurtBoxState == 0) {
-                var crouching = aS[cS[v]][player[v].actionState].crouch;
+                var crouching = actionStates[characterSelections[v]][player[v].actionState].crouch;
                 var vCancel = false;
                 if (player[v].phys.vCancelTimer > 0) {
-                    if (aS[cS[v]][player[v].actionState].vCancel) {
+                    if (actionStates[characterSelections[v]][player[v].actionState].vCancel) {
                         vCancel = true;
                         sounds.vcancel.play();
                     }
@@ -405,13 +405,13 @@ export function executeArticleHits (){
                         player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
 
                         if (player[v].hit.knockback >= 80 || isThrow) {
-                            aS[cS[v]].DAMAGEFLYN.init(v, !isThrow);
+                            actionStates[characterSelections[v]].DAMAGEFLYN.init(v,input, !isThrow);
                         } else {
-                            aS[cS[v]].DAMAGEN2.init(v);
+                            actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
                         }
                     } else {
                         if (player[v].actionState != "THROWNPUFFDOWN") {
-                            aS[cS[v]].CAPTUREDAMAGE.init(v);
+                            actionStates[characterSelections[v]].CAPTUREDAMAGE.init(v,input);
                         }
                     }
 

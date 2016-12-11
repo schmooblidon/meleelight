@@ -9,15 +9,15 @@ export default {
   canBeGrabbed : true,
   offset : [[-70.7039,-13.92],[-71.27977,-12.96],[-71.69937,-12.06755],[-72.07638,-11.06843],[-72.24,-9.6],[-72.24,-6.74401],[-72.24,-3.84],[-71.35111,-1.99111],[-69.60889,-0.56889],[-67.19112,0]],
   setVelocities : [0.48171,0.47829,0.50249,0.51401,0.45477,0.32475,0.12398,0,0,0,0],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CLIFFGETUPQUICK";
     player[p].timer = 0;
     player[p].phys.intangibleTimer = 30;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       const x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
       const y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       if (player[p].timer < 24){
@@ -36,11 +36,11 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 33){
       player[p].phys.onLedge = -1;
       player[p].phys.ledgeRegrabCount = true;
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else {

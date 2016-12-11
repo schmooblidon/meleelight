@@ -1,5 +1,5 @@
-import { cS, player} from "main/main";
-import {aS, turnOffHitboxes} from "physics/actionStateShortcuts";
+import { characterSelections, player} from "main/main";
+import {actionStates, turnOffHitboxes} from "physics/actionStateShortcuts";
 import {framesData} from "main/characters";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../../../main/util/Vec2D";
@@ -29,9 +29,9 @@ export default {
     /*player[p].phys.grounded = false;
     player[p].phys.pos.y += 0.0001;*/
     turnOffHitboxes(p);
-    aS[cS[p]].DAMAGEFLYN.main(p);
+    actionStates[characterSelections[p]].DAMAGEFLYN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].phys.thrownHitbox){
       if (player[p].timer == 1 && player[p].phys.cVel.y+player[p].phys.kVel.y > 0){
         player[p].hitboxes.active = [true,false,false,false];
@@ -44,13 +44,13 @@ export default {
         turnOffHitboxes(p);
       }
     }
-    if (player[p].timer < framesData[cS[p]].DAMAGEFLYN){
+    if (player[p].timer < framesData[characterSelections[p]].DAMAGEFLYN){
       player[p].timer++;
     }
     if (player[p].hit.hitstun % 10 == 0){
       drawVfx("flyingDust",player[p].phys.pos);
     }
-    if (!aS[cS[p]].DAMAGEFLYN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DAMAGEFLYN.interrupt(p,input)){
       if (player[p].timer > 1){
         player[p].hit.hitstun--;
         if (!player[p].phys.grounded){
@@ -65,9 +65,9 @@ export default {
       player[p].phys.thrownHitbox = false;
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 1 && player[p].hit.hitstun == 0){
-      aS[cS[p]].DAMAGEFALL.init(p);
+      actionStates[characterSelections[p]].DAMAGEFALL.init(p,input);
       player[p].phys.thrownHitbox = false;
       return true;
     }

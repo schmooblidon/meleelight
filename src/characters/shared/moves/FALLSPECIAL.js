@@ -1,5 +1,5 @@
-import {airDrift, fastfall, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {airDrift, fastfall, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "FALLSPECIAL",
@@ -10,28 +10,28 @@ export default {
   canBeGrabbed : true,
   landType : 1,
   vCancel : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "FALLSPECIAL";
     player[p].timer = 0;
-    aS[cS[p]].FALLSPECIAL.main(p);
+    actionStates[characterSelections[p]].FALLSPECIAL.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].FALLSPECIAL.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!actionStates[characterSelections[p]].FALLSPECIAL.interrupt(p,input)){
+      fastfall(p,input);
+      airDrift(p,input);
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].FALLSPECIAL){
-      aS[cS[p]].FALLSPECIAL.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].FALLSPECIAL){
+      actionStates[characterSelections[p]].FALLSPECIAL.init(p,input);
       return true;
     }
     else {
       return false;
     }
   },
-  land : function(p){
-    aS[cS[p]].LANDINGFALLSPECIAL.init(p);
+  land : function(p,input){
+    actionStates[characterSelections[p]].LANDINGFALLSPECIAL.init(p,input);
   }
 };
