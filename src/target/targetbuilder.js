@@ -238,20 +238,20 @@ export function createStageObject (s){
   return tCode;
 }
 
-export function targetBuilderControls (p){
+export function targetBuilderControls (p, input){
   if (!showingCode){
     if (!builderPaused){
       hoverItem = 0;
       ledgeHoverItem = 0;
-      /*if (player[p].inputs.z[0] && !player[p].inputs.z[1]){
+      /*if (input[p].z[0] && !input[p].z[1]){
         // so i can create permanent stages
         let code = createStageCode();
         console.log(code);
       }*/
       //hoverButton = -1;
-      let multi = (player[p].inputs.y[0] || player[p].inputs.x[0])?1:5;
-      unGriddedCrossHairPos.x += player[p].inputs.lStickAxis[0].x*multi;
-      unGriddedCrossHairPos.y += player[p].inputs.lStickAxis[0].y*multi;
+      let multi = (input[p][0].y || input[p][0].x)?1:5;
+      unGriddedCrossHairPos.x += input[p][0].lsX*multi;
+      unGriddedCrossHairPos.y += input[p][0].lsY*multi;
       if (gridType == 4){
         crossHairPos.x = unGriddedCrossHairPos.x;
         crossHairPos.y = unGriddedCrossHairPos.y;
@@ -294,20 +294,20 @@ export function targetBuilderControls (p){
       } else {
         hoverToolbar = 1;
       }
-      if (player[p].inputs.z[0] && !player[p].inputs.z[1]) {
+      if (input[p][0].z && !input[p][1].z) {
         gridType++;
         if (gridType > 4) {
           gridType = 0;
         }
       }
-      if (player[p].inputs.l[0] && !player[p].inputs.l[1]) {
+      if (input[p][0].l && !input[p][1].l) {
         sounds.menuSelect.play();
         targetTool--;
         if (targetTool == -1) {
           targetTool = 5;
         }
         toolInfoTimer = 120;
-      } else if (player[p].inputs.r[0] && !player[p].inputs.r[1]) {
+      } else if (input[p][0].r && !input[p][1].r) {
         sounds.menuSelect.play();
         targetTool++;
         if (targetTool == 6) {
@@ -319,7 +319,7 @@ export function targetBuilderControls (p){
         case 0:
           //BOX
           if (!holdingA) {
-            if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]) {
+            if (input[p][0].a && !input[p][1].a && !input[p][0].z) {
               // initiate build
               if (stageTemp.box.length < 120) {
                 drawingBox.min = new Vec2D(realCrossHair.x, realCrossHair.y);
@@ -330,7 +330,7 @@ export function targetBuilderControls (p){
               }
             }
           } else {
-            if (player[p].inputs.a[0]) {
+            if (input[p][0].a) {
               // stretch
               drawingBox.max = new Vec2D(realCrossHair.x, realCrossHair.y);
             } else {
@@ -363,7 +363,7 @@ export function targetBuilderControls (p){
         case 1:
           //PLATFORM
           if (!holdingA) {
-            if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]) {
+            if (input[p][0].a && !input[p][1].a && !input[p][0].z) {
               // initiate build
               if (stageTemp.platform.length < 120) {
                 drawingPlatform[0] = new Vec2D(realCrossHair.x, realCrossHair.y);
@@ -374,7 +374,7 @@ export function targetBuilderControls (p){
               }
             }
           } else {
-            if (player[p].inputs.a[0]) {
+            if (input[p][0].a) {
               // stretch
               drawingPlatform[1] = new Vec2D(realCrossHair.x, drawingPlatform[0].y);
             } else {
@@ -419,8 +419,8 @@ export function targetBuilderControls (p){
               ledgeHoverItem.push(0);
             } else {
               ledgeHoverItem.push(1);
-            }          
-            if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]){
+            }
+            if (input[p][0].a && !input[p][1].a && !input[p][0].z){
               let alreadyExist = false;
               for (let j=0;j<stageTemp.ledge.length;j++){
                 if (stageTemp.ledge[j][0] == ledgeHoverItem[1] && stageTemp.ledge[j][1] == ledgeHoverItem[2]){
@@ -439,7 +439,7 @@ export function targetBuilderControls (p){
           break;
         case 3:
           //TARGET
-          if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]) {
+          if (input[p][0].a && !input[p][1].a && !input[p][0].z) {
             if (stageTemp.target.length < 20) {
               stageTemp.draw.target.push(new Vec2D(realCrossHair.x, realCrossHair.y));
               stageTemp.target.push(new Vec2D(crossHairPos.x, crossHairPos.y));
@@ -470,14 +470,14 @@ export function targetBuilderControls (p){
           }
           if (hoverItem != 0) {
             if (!holdingA) {
-              if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]) {
+              if (input[p][0].a && !input[p][1].a && !input[p][0].z) {
                 // initiate build
                 centerItem(hoverItem, realCrossHair);
                 grabbedItem = hoverItem;
                 holdingA = true;
               }
             } else {
-              if (player[p].inputs.a[0]) {
+              if (input[p][0].a) {
                 //MOVING
                 centerItem(hoverItem, realCrossHair);
               } else {
@@ -506,7 +506,7 @@ export function targetBuilderControls (p){
             }
           }
           if (hoverItem != 0) {
-            if (player[p].inputs.a[0] && !player[p].inputs.a[1] && !player[p].inputs.z[0]) {
+            if (input[p][0].a && !input[p][1].a && !input[p][0].z) {
               switch (hoverItem[0]) {
                 case "startingPoint":
                   sounds.deny.play();
@@ -554,25 +554,25 @@ export function targetBuilderControls (p){
         default:
           break;
       }
-      if (player[p].inputs.s[0] && !player[p].inputs.s[1]) {
+      if (input[p][0].s && !input[p][1].s) {
         builderPaused = true;
         sounds.pause.play();
       }
     } else {
-      if (player[p].inputs.lStickAxis[0].y >= 0.7 && player[p].inputs.lStickAxis[1].y < 0.7) {
+      if (input[p][0].lsY >= 0.7 && input[p][1].lsY < 0.7) {
         builderPauseSelected--;
         if (builderPauseSelected < 0) {
           builderPauseSelected = 2;
         }
         sounds.menuSelect.play();
-      } else if (player[p].inputs.lStickAxis[0].y <= -0.7 && player[p].inputs.lStickAxis[1].y > -0.7) {
+      } else if (input[p][0].lsY <= -0.7 && input[p][1].lsY > -0.7) {
         builderPauseSelected++;
         if (builderPauseSelected > 2) {
           builderPauseSelected = 0;
         }
         sounds.menuSelect.play();
       }
-      if (player[p].inputs.a[0] && !player[p].inputs.a[1]) {
+      if (input[p][0].a && !input[p][1].a) {
         switch (builderPauseSelected) {
           case 0:
             sounds.menuForward.play();
@@ -596,8 +596,8 @@ export function targetBuilderControls (p){
             else {
               if (customTargetStages.length < 10){
                 setCookie("custom"+customTargetStages.length,code,36500);
-                  setCustomTargetStages(customTargetStages[customTargetStages.length], {});
-                  setCustomTargetStages(customTargetStages[customTargetStages.length],deepCopyObject(true,customTargetStages[customTargetStages.length-1],stageTemp));
+                 // setCustomTargetStages(customTargetStages.length, {});
+                  setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],stageTemp));
                 $("#cStageInfoEdit").empty().append("Saved as Custom stage "+customTargetStages.length);
               }
               else {
@@ -615,14 +615,14 @@ export function targetBuilderControls (p){
           default:
             break;
         }
-      } else if (player[p].inputs.s[0] && !player[p].inputs.s[1]) {
+      } else if (input[p][0].s && !input[p][1].s) {
         builderPaused = false;
         builderPauseSelected = 0;
         sounds.menuBack.play();
       }
     }
   } else {
-    if (player[p].inputs.a[0] && !player[p].inputs.a[1]) {
+    if (input[p][0].a && !input[p][1].a) {
       showingCode = false;
       $("#customStageContainer").hide();
       sounds.menuForward.play();

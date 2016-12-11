@@ -1,5 +1,5 @@
-import {finishGame, cS, percentShake, screenShake, player} from "main/main";
-import {playSounds, aS, isFinalDeath} from "physics/actionStateShortcuts";
+import {finishGame, characterSelections, percentShake, screenShake, player} from "main/main";
+import {playSounds, actionStates, isFinalDeath} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {drawVfx} from "main/vfx/drawVfx";
 export default {
@@ -7,7 +7,7 @@ export default {
   canBeGrabbed : false,
   ignoreCollision : true,
   dead : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DEADDOWN";
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
@@ -21,17 +21,17 @@ export default {
       percentShake(500,p);
     }
     sounds.kill.play();
-    aS[cS[p]].DEADDOWN.main(p);
+    actionStates[characterSelections[p]].DEADDOWN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     playSounds("DEAD",p);
-    if (!aS[cS[p]].DEADDOWN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DEADDOWN.interrupt(p,input)){
       player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
       if (player[p].timer == 4){
         if (isFinalDeath()){
-          finishGame();
+          finishGame(input);
         }
         else {
           screenShake(500);
@@ -40,13 +40,13 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 60){
       if (player[p].stocks > 0){
-        aS[cS[p]].REBIRTH.init(p);
+        actionStates[characterSelections[p]].REBIRTH.init(p,input);
       }
       else {
-        aS[cS[p]].SLEEP.init(p);
+        actionStates[characterSelections[p]].SLEEP.init(p,input);
       }
       return true;
     }

@@ -1,5 +1,5 @@
-import {executeIntangibility, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {executeIntangibility, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 
 import {framesData} from 'main/characters';
 export default {
@@ -7,21 +7,21 @@ export default {
   canEdgeCancel : false,
   canBeGrabbed : true,
   setVelocities : [],
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNSTANDF";
     player[p].timer = 0;
-    aS[cS[p]].DOWNSTANDF.main(p);
+    actionStates[characterSelections[p]].DOWNSTANDF.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNSTANDF.interrupt(p)){
-      player[p].phys.cVel.x = aS[cS[p]].DOWNSTANDF.setVelocities[player[p].timer-1]*player[p].phys.face;
+    if (!actionStates[characterSelections[p]].DOWNSTANDF.interrupt(p,input)){
+      player[p].phys.cVel.x = actionStates[characterSelections[p]].DOWNSTANDF.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("DOWNSTANDF",p);
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].DOWNSTANDF){
-      aS[cS[p]].WAIT.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].DOWNSTANDF){
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

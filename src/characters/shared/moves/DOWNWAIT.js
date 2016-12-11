@@ -1,5 +1,5 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "DOWNWAIT",
@@ -7,41 +7,41 @@ export default {
   disableTeeter : true,
   canBeGrabbed : false,
   downed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNWAIT";
     player[p].timer = 0;
-    aS[cS[p]].DOWNWAIT.main(p);
+    actionStates[characterSelections[p]].DOWNWAIT.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNWAIT.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNWAIT.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer > 1){
         player[p].hit.hitstun--;
       }
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].DOWNWAIT){
-      aS[cS[p]].DOWNWAIT.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].DOWNWAIT){
+      actionStates[characterSelections[p]].DOWNWAIT.init(p,input);
       return true;
     }
     else if (player[p].phys.jabReset){
       if (player[p].hit.hitstun <= 0){
-        if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7){
-          aS[cS[p]].DOWNSTANDB.init(p);
+        if (input[p][0].lsX*player[p].phys.face < -0.7){
+          actionStates[characterSelections[p]].DOWNSTANDB.init(p,input);
           return true;
         }
-        else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7){
-          aS[cS[p]].DOWNSTANDF.init(p);
+        else if (input[p][0].lsX*player[p].phys.face > 0.7){
+          actionStates[characterSelections[p]].DOWNSTANDF.init(p,input);
           return true;
         }
-        else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1])){
-          aS[cS[p]].DOWNATTACK.init(p);
+        else if ((input[p][0].a && !input[p][1].a) || (input[p][0].b && !input[p][1].b)){
+          actionStates[characterSelections[p]].DOWNATTACK.init(p,input);
           return true;
         }
         else {
-          aS[cS[p]].DOWNSTANDN.init(p);
+          actionStates[characterSelections[p]].DOWNSTANDN.init(p,input);
           return true;
         }
       }
@@ -49,20 +49,20 @@ export default {
         return false;
       }
     }
-    else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.7){
-      aS[cS[p]].DOWNSTANDB.init(p);
+    else if (input[p][0].lsX*player[p].phys.face < -0.7){
+      actionStates[characterSelections[p]].DOWNSTANDB.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].x*player[p].phys.face > 0.7){
-      aS[cS[p]].DOWNSTANDF.init(p);
+    else if (input[p][0].lsX*player[p].phys.face > 0.7){
+      actionStates[characterSelections[p]].DOWNSTANDF.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lStickAxis[0].y > 0.7){
-      aS[cS[p]].DOWNSTANDN.init(p);
+    else if (input[p][0].lsY > 0.7){
+      actionStates[characterSelections[p]].DOWNSTANDN.init(p,input);
       return true;
     }
-    else if ((player[p].inputs.a[0] && !player[p].inputs.a[1]) || (player[p].inputs.b[0] && !player[p].inputs.b[1])){
-      aS[cS[p]].DOWNATTACK.init(p);
+    else if ((input[p][0].a && !input[p][1].a) || (input[p][0].b && !input[p][1].b)){
+      actionStates[characterSelections[p]].DOWNATTACK.init(p,input);
       return true;
     }
     else {

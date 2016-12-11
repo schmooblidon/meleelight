@@ -1,21 +1,21 @@
-import {cS, player} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 export default {
   name : "ENTRANCE",
   canBeGrabbed : false,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ENTRANCE";
     player[p].timer = 0;
     player[p].phys.grounded = false;
-    aS[cS[p]].ENTRANCE.main(p);
+    actionStates[characterSelections[p]].ENTRANCE.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    aS[cS[p]].ENTRANCE.interrupt(p);
+    actionStates[characterSelections[p]].ENTRANCE.interrupt(p,input);
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 60){
-      aS[cS[p]].FALL.init(p);
+      actionStates[characterSelections[p]].FALL.init(p,input);
     }
   }
 };

@@ -3,16 +3,16 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     , checkForTilts
     , checkForSpecials
     , reduceByTraction
-    , aS
+    , actionStates
 } from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
-import {cS, player} from "main/main";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "WALK",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p,addInitV){
+  init : function(p,addInitV,input){
     player[p].actionState = "WALK";
     player[p].timer = 1;
     if (addInitV){
@@ -21,10 +21,10 @@ export default {
         player[p].phys.cVel.x += player[p].charAttributes.walkInitV * player[p].phys.face;
       }
     }
-    aS[cS[p]].WALK.main(p);
+    actionStates[characterSelections[p]].WALK.main(p,input);
   },
-  main : function(p){
-    if (!aS[cS[p]].WALK.interrupt(p)){
+  main : function(p,input){
+    if (!actionStates[characterSelections[p]].WALK.interrupt(p,input)){
       const footstep = [false, false];
       if (player[p].timer < 5){
         footstep[0] = true;
@@ -34,7 +34,7 @@ export default {
       }
 
       //Current Walk Acceleration = ((MaxWalkVel * Xinput) - PreviousFrameVelocity) * (1/(MaxWalkVel * 2)) * (InitWalkVel * WalkAcc)
-      const tempMax = player[p].charAttributes.walkMaxV * player[p].inputs.lStickAxis[0].x;
+      const tempMax = player[p].charAttributes.walkMaxV * input[p][0].lsX;
 
       if (Math.abs(player[p].phys.cVel.x) > Math.abs(tempMax)){
         reduceByTraction(p, true);
@@ -57,58 +57,58 @@ export default {
       }
     }
   },
-  interrupt : function(p){
-    const b = checkForSpecials(p);
-    const t = checkForTilts(p);
-    const s = checkForSmashes(p);
-    const j = checkForJump(p);
-    if (player[p].timer > framesData[cS[p]].WALK){
-      aS[cS[p]].WALK.init(p,false);
+  interrupt : function(p,input){
+    const b = checkForSpecials(p,input);
+    const t = checkForTilts(p,input);
+    const s = checkForSmashes(p,input);
+    const j = checkForJump(p,input);
+    if (player[p].timer > framesData[characterSelections[p]].WALK){
+      actionStates[characterSelections[p]].WALK.init(p,false,input);
       return true;
     }
-    if (player[p].inputs.lStickAxis[0].x === 0){
-      aS[cS[p]].WAIT.init(p);
+    if (input[p][0].lsX === 0){
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+    else if (input[p][0].l || input[p][0].r){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+    else if (input[p][0].lA > 0 || input[p][0].rA > 0){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p,input);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p,input);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p,input);
       return true;
     }
-    else if (checkForSquat(p)){
-      aS[cS[p]].SQUAT.init(p);
+    else if (checkForSquat(p,input)){
+      actionStates[characterSelections[p]].SQUAT.init(p,input);
       return true;
     }
-    else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+    else if (checkForDash(p,input)){
+      actionStates[characterSelections[p]].DASH.init(p,input);
       return true;
     }
-    else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+    else if (checkForSmashTurn(p,input)){
+      actionStates[characterSelections[p]].SMASHTURN.init(p,input);
       return true;
     }
-    else if (checkForTiltTurn(p)){
-      player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-      aS[cS[p]].TILTTURN.init(p);
+    else if (checkForTiltTurn(p,input)){
+      player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+      actionStates[characterSelections[p]].TILTTURN.init(p,input);
       return true;
     }
     else {

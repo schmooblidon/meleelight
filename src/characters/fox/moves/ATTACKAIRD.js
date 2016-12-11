@@ -14,7 +14,7 @@ export default {
   headBonk : false,
   canBeGrabbed : true,
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ATTACKAIRD";
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
@@ -22,13 +22,13 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.dair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.dair.id1;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!this.interrupt(p,input)){
+      fastfall(p,input);
+      airDrift(p,input);
       if (player[p].timer === 4){
         player[p].phys.autoCancel = false;
       }
@@ -55,21 +55,21 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 49){
-      FALL.init(p);
+      FALL.init(p,input);
       return true;
     }
     else {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].phys.autoCancel){
-      LANDING.init(p);
+      LANDING.init(p,input);
     }
     else {
-      LANDINGATTACKAIRD.init(p);
+      LANDINGATTACKAIRD.init(p,input);
     }
   }
 };

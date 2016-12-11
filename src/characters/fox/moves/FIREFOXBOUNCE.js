@@ -11,15 +11,15 @@ export default {
   canBeGrabbed : true,
   setVelocities : [0.00062,0.00062,0.00062,5.27148,5.4568,2.56,0.0638,0.02712,-0.00286,-0.02613,-0.0427,-0.05257,-0.05573,-1.83217],
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "FIREFOXBOUNCE";
     player[p].timer = 0;
     player[p].phys.grounded = false;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (player[p].phys.cVel.x !== 0){
         player[p].phys.cVel.x -= 0.03*player[p].phys.face;
         if (player[p].phys.cVel.x*player[p].phys.face < 0){
@@ -29,12 +29,12 @@ export default {
       player[p].phys.cVel.y = this.setVelocities[player[p].timer-1];
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 14){
       if (player[p].phys.grounded){
       }
       else {
-        FALLSPECIAL.init(p);
+        FALLSPECIAL.init(p,input);
       }
       return true;
     }

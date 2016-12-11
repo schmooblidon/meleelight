@@ -1,8 +1,8 @@
-import {player, cS, percentShake, playerType, edgeOffset, versusMode, showDebug, gameMode} from "main/main";
+import {player, characterSelections, percentShake, playerType, edgeOffset, versusMode, showDebug, gameMode} from "main/main";
 import {framesData} from "main/characters";
 import {sounds} from "main/sfx";
 import {gameSettings} from "settings";
-import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
+import {actionStates, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
 import {deepCopyObject} from "main/util/deepCopyObject";
@@ -12,7 +12,7 @@ import { Box2D} from "../main/util/Box2D";
 import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
-export function land (i,y,t,j){
+export function land (i,y,t,j,input){
   player[i].phys.pos.y = y;
   player[i].phys.grounded = true;
   player[i].phys.doubleJumped = false;
@@ -30,35 +30,35 @@ export function land (i,y,t,j){
   player[i].rotationPoint = new Vec2D(0, 0);
   player[i].colourOverlayBool = false;
   player[i].hitboxes.active = [false, false, false, false];
-  switch (aS[cS[i]][player[i].actionState].landType) {
+  switch (actionStates[characterSelections[i]][player[i].actionState].landType) {
     case 0:
       // LANDING / NIL
       if (player[i].phys.cVel.y >= -1) {
-        aS[cS[i]].WAIT.init(i);
+        actionStates[characterSelections[i]].WAIT.init(i,input);
       } else {
-        aS[cS[i]].LANDING.init(i);
+        actionStates[characterSelections[i]].LANDING.init(i,input);
       }
       break;
     case 1:
       // OWN FUNCTION
-      aS[cS[i]][player[i].actionState].land(i);
+      actionStates[characterSelections[i]][player[i].actionState].land(i,input);
       break;
     case 2:
       // KNOCKDOWN / TECH
       if (player[i].phys.techTimer > 0) {
-        if (player[i].inputs.lStickAxis[0].x * player[i].phys.face > 0.5) {
-          aS[cS[i]].TECHF.init(i);
-        } else if (player[i].inputs.lStickAxis[0].x * player[i].phys.face < -0.5) {
-          aS[cS[i]].TECHB.init(i);
+        if (input[i][0].lsX * player[i].phys.face > 0.5) {
+          actionStates[characterSelections[i]].TECHF.init(i,input);
+        } else if (input[i][0].lsX * player[i].phys.face < -0.5) {
+          actionStates[characterSelections[i]].TECHB.init(i,input);
         } else {
-          aS[cS[i]].TECHN.init(i);
+          actionStates[characterSelections[i]].TECHN.init(i,input);
         }
       } else {
-        aS[cS[i]].DOWNBOUND.init(i);
+        actionStates[characterSelections[i]].DOWNBOUND.init(i,input);
       }
       break;
     default:
-      aS[cS[i]].LANDING.init(i);
+      actionStates[characterSelections[i]].LANDING.init(i,input);
       break;
   }
   player[i].phys.cVel.y = 0;
@@ -66,7 +66,7 @@ export function land (i,y,t,j){
   player[i].hit.hitstun = 0;
 }
 
-export function physics (i){
+export function physics (i,input){
   player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y);
   player[i].phys.facePrev = player[i].phys.face;
     deepCopyObject(true,player[i].phys.prevFrameHitboxes,player[i].hitboxes);
@@ -78,8 +78,8 @@ export function physics (i){
           player[i].hit.angle,
           player[i].hit.knockback,
           player[i].hit.reverse,
-          player[i].inputs.lStickAxis[0].x,
-          player[i].inputs.lStickAxis[0].y,
+          input[i][0].lsX,
+          input[i][0].lsY,
           i
         );
 
@@ -129,20 +129,20 @@ export function physics (i){
       case "GUARD":
       case "DOWNDAMAGE":
         if (player[i].hit.hitlag > 0) {
-          if ((player[i].inputs.lStickAxis[0].x > 0.7 && player[i].inputs.lStickAxis[1].x < 0.7) ||
-              (player[i].inputs.lStickAxis[0].x < -0.7 && player[i].inputs.lStickAxis[1].x > -0.7) ||
-              (player[i].inputs.lStickAxis[0].y > 0.7 && player[i].inputs.lStickAxis[1].y < 0.7) ||
-              (player[i].inputs.lStickAxis[0].y < -0.7 && player[i].inputs.lStickAxis[1].y > -0.7)) {
+          if ((input[i][0].lsX > 0.7 && input[i][1].lsX < 0.7) ||
+              (input[i][0].lsX < -0.7 && input[i][1].lsX > -0.7) ||
+              (input[i][0].lsY > 0.7 && input[i][1].lsY < 0.7) ||
+              (input[i][0].lsY < -0.7 && input[i][1].lsY > -0.7)) {
 
-            if (!((player[i].inputs.lStickAxis[0].x * player[i].inputs.lStickAxis[0].x) + (player[i].inputs.lStickAxis[0].y * player[i].inputs.lStickAxis[0].y) < (0.49))) {
+            if (!((input[i][0].lsX * input[i][0].lsX) + (input[i][0].lsY * input[i][0].lsY) < (0.49))) {
 
-              player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x * 6;
-              player[i].phys.pos.y += player[i].phys.grounded ? 0 : player[i].inputs.lStickAxis[0].y * 6;
+              player[i].phys.pos.x += input[i][0].lsX * 6;
+              player[i].phys.pos.y += player[i].phys.grounded ? 0 : input[i][0].lsY * 6;
             } 
           }
         } else {
-          player[i].phys.pos.x += player[i].inputs.lStickAxis[0].x * 3;
-          player[i].phys.pos.y += player[i].phys.grounded ? 0 : player[i].inputs.lStickAxis[0].y * 3;
+          player[i].phys.pos.x += input[i][0].lsX * 3;
+          player[i].phys.pos.y += player[i].phys.grounded ? 0 : input[i][0].lsY * 3;
         }
         break;
       default:
@@ -157,19 +157,19 @@ export function physics (i){
         player[i].hit.shieldstun = 0;
       }
     }
-    //console.log(aS[cS[i]][player[i].actionState]);
-    player[i].phys.canWallJump = aS[cS[i]][player[i].actionState].wallJumpAble;
+    //console.log(actionStates[characterSelections[i]][player[i].actionState]);
+    player[i].phys.canWallJump = actionStates[characterSelections[i]][player[i].actionState].wallJumpAble;
     player[i].phys.bTurnaroundTimer = Math.max(0, player[i].phys.bTurnaroundTimer - 1);
 
-    if ((player[i].inputs.lStickAxis[0].x > 0.9 && player[i].inputs.lStickAxis[1].x < 0.9) ||
-        (player[i].inputs.lStickAxis[0].x < -0.9 && player[i].inputs.lStickAxis[1].x > -0.9)) {
+    if ((input[i][0].lsX > 0.9 && input[i][1].lsX < 0.9) ||
+        (input[i][0].lsX < -0.9 && input[i][1].lsX > -0.9)) {
 
       player[i].phys.bTurnaroundTimer = 20;
-      player[i].phys.bTurnaroundDirection = Math.sign(player[i].inputs.lStickAxis[0].x);
+      player[i].phys.bTurnaroundDirection = Math.sign(input[i][0].lsX);
     }
 
     player[i].prevActionState = player[i].actionState;
-    aS[cS[i]][player[i].actionState].main(i);
+    actionStates[characterSelections[i]][player[i].actionState].main(i,input);
 
     if (player[i].shocked > 0) {
       player[i].shocked--;
@@ -195,11 +195,11 @@ export function physics (i){
       if (player[i].hasHit) {
         if (player[i].actionState != "CATCHATTACK") {
           if (player[i].phys.grounded) {
-            if (turboGroundedInterrupt(i)) {
+            if (turboGroundedInterrupt(i,input)) {
               player[i].hasHit = false;
             }
           } else {
-            if (turboAirborneInterrupt(i)) {
+            if (turboAirborneInterrupt(i,input)) {
               player[i].hasHit = false;
             }
           }
@@ -283,9 +283,9 @@ export function physics (i){
   }
   // l CANCEL
   if (player[i].phys.lCancelTimer == 0 &&
-    ((player[i].inputs.lAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) ||
-     (player[i].inputs.rAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) ||
-     (player[i].inputs.z[0] && !player[i].inputs.z[1]))) {
+    ((input[i][0].lA > 0 && input[i][1].lA == 0) ||
+     (input[i][0].rA > 0 && input[i][1].lA == 0) ||
+     (input[i][0].z && !input[i][1].z))) {
 
     // if smash 64 lcancel, increase window to 11 frames
     if (gameSettings.lCancelType == 2 && gameMode != 5) {
@@ -314,8 +314,8 @@ export function physics (i){
     player[i].phys.shoulderLockout--;
   }
 
-  if ((player[i].inputs.l[0] && !player[i].inputs.l[1]) ||
-      (player[i].inputs.r[0] && !player[i].inputs.r[1])) {
+  if ((input[i][0].l && !input[i][1].l) ||
+      (input[i][0].r && !input[i][1].r)) {
 
     if (!player[i].phys.grounded) {
       if (player[i].phys.shoulderLockout == 0) {
@@ -340,12 +340,12 @@ export function physics (i){
   if (frame == 0) {
     frame = 1;
   }
-  if (frame > framesData[cS[i]][player[i].actionState]) {
-    frame = framesData[cS[i]][player[i].actionState];
+  if (frame > framesData[characterSelections[i]][player[i].actionState]) {
+    frame = framesData[characterSelections[i]][player[i].actionState];
   }
-  //console.log(aS[cS[i]][player[i].actionState].name+" "+(frame-1));
-  var ecbOffset = ecb[cS[i]][player[i].actionState][frame - 1];
-  if (aS[cS[i]][player[i].actionState].dead) {
+  //console.log(actionStates[characterSelections[i]][player[i].actionState].name+" "+(frame-1));
+  var ecbOffset = ecb[characterSelections[i]][player[i].actionState][frame - 1];
+  if (actionStates[characterSelections[i]][player[i].actionState].dead) {
     ecbOffset = [0, 0, 0, 0];
   }
   /*switch (player[i].actionState){
@@ -370,20 +370,20 @@ export function physics (i){
     player[i].phys.ECBp[0].y = 0 + y;
   }
 
-  if (!aS[cS[i]][player[i].actionState].ignoreCollision) {
+  if (!actionStates[characterSelections[i]][player[i].actionState].ignoreCollision) {
     for (var j = 0; j < activeStage.platform.length; j++) {
       if (player[i].phys.abovePlatforms[j] &&
           player[i].phys.ECBp[0].y < activeStage.platform[j][0].y &&
           player[i].phys.ECBp[0].x >= activeStage.platform[j][0].x &&
           player[i].phys.ECBp[0].x <= activeStage.platform[j][1].x &&
-          ((player[i].inputs.lStickAxis[0].y > -0.56 &&
-            aS[cS[i]][player[i].actionState].canPassThrough) ||
-            !aS[cS[i]][player[i].actionState].canPassThrough)) {
+          ((input[i][0].lsY > -0.56 &&
+            actionStates[characterSelections[i]][player[i].actionState].canPassThrough) ||
+            !actionStates[characterSelections[i]][player[i].actionState].canPassThrough)) {
 
         if (player[i].hit.hitlag > 0) {
           player[i].phys.pos.y = activeStage.platform[j][0].y;
         } else {
-          land(i, activeStage.platform[j][0].y, 1, j);
+          land(i, activeStage.platform[j][0].y, 1, j,input);
         }
       }
     }
@@ -402,24 +402,24 @@ export function physics (i){
       if (player[i].phys.onSurface[0] == 0) {
         var g = player[i].phys.onSurface[1];
         if (player[i].phys.ECBp[0].x < activeStage.ground[g][0].x - 0.1) {
-          if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
+          if (actionStates[characterSelections[i]][player[i].actionState].canEdgeCancel) {
             if (player[i].phys.face == 1) {
               stillGrounded = false;
               backward = true;
-            } else if (player[i].inputs.lStickAxis[0].x < -0.6 ||
+            } else if (input[i][0].lsX < -0.6 ||
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
-                       aS[cS[i]][player[i].actionState].disableTeeter ||
+                       actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
 
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
               player[i].phys.pos.x = activeStage.ground[g][0].x;
-              aS[cS[i]].OTTOTTO.init(i);
+              actionStates[characterSelections[i]].OTTOTTO.init(i,input);
             }
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
-                     !aS[cS[i]][player[i].actionState].inGrab) {
+                     !actionStates[characterSelections[i]][player[i].actionState].inGrab) {
 
             stillGrounded = false;
           } else {
@@ -427,24 +427,24 @@ export function physics (i){
             player[i].phys.pos.x = activeStage.ground[g][0].x;
           }
         } else if (player[i].phys.ECBp[0].x > activeStage.ground[g][1].x + 0.1) {
-          if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
+          if (actionStates[characterSelections[i]][player[i].actionState].canEdgeCancel) {
             if (player[i].phys.face == -1) {
               stillGrounded = false;
               backward = true;
-            } else if (player[i].inputs.lStickAxis[0].x > 0.6 ||
+            } else if (input[i][0].lsX > 0.6 ||
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x ==0) ||
-                       aS[cS[i]][player[i].actionState].disableTeeter ||
+                       actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
 
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
               player[i].phys.pos.x = activeStage.ground[g][1].x;
-              aS[cS[i]].OTTOTTO.init(i);
+              actionStates[characterSelections[i]].OTTOTTO.init(i,input);
             }
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
-                     !aS[cS[i]][player[i].actionState].inGrab) {
+                     !actionStates[characterSelections[i]][player[i].actionState].inGrab) {
 
             stillGrounded = false;
           } else {
@@ -455,24 +455,24 @@ export function physics (i){
       } else {
         var m = player[i].phys.onSurface[1];
         if (player[i].phys.ECBp[0].x < activeStage.platform[m][0].x - 0.1) {
-          if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
+          if (actionStates[characterSelections[i]][player[i].actionState].canEdgeCancel) {
             if (player[i].phys.face == 1) {
               stillGrounded = false;
               backward = true;
-            } else if (player[i].inputs.lStickAxis[0].x < -0.6 ||
+            } else if (input[i][0].lsX < -0.6 ||
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
-                       aS[cS[i]][player[i].actionState].disableTeeter ||
+                       actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
 
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
               player[i].phys.pos.x = activeStage.platform[m][0].x;
-              aS[cS[i]].OTTOTTO.init(i);
+              actionStates[characterSelections[i]].OTTOTTO.init(i,input);
             }
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
-                     !aS[cS[i]][player[i].actionState].inGrab) {
+                     !actionStates[characterSelections[i]][player[i].actionState].inGrab) {
 
             stillGrounded = false;
           } else {
@@ -480,24 +480,24 @@ export function physics (i){
             player[i].phys.pos.x = activeStage.platform[m][0].x;
           }
         } else if (player[i].phys.ECBp[0].x > activeStage.platform[m][1].x + 0.1) {
-          if (aS[cS[i]][player[i].actionState].canEdgeCancel) {
+          if (actionStates[characterSelections[i]][player[i].actionState].canEdgeCancel) {
             if (player[i].phys.face == -1) {
               stillGrounded = false;
               backward = true;
-            } else if (player[i].inputs.lStickAxis[0].x > 0.6 ||
+            } else if (input[i][0].lsX > 0.6 ||
                       (player[i].phys.cVel.x == 0 && player[i].phys.kVel.x == 0) ||
-                       aS[cS[i]][player[i].actionState].disableTeeter ||
+                       actionStates[characterSelections[i]][player[i].actionState].disableTeeter ||
                        player[i].phys.shielding) {
 
               stillGrounded = false;
             } else {
               player[i].phys.cVel.x = 0;
               player[i].phys.pos.x = activeStage.platform[m][1].x;
-              aS[cS[i]].OTTOTTO.init(i);
+              actionStates[characterSelections[i]].OTTOTTO.init(i,input);
             }
           } else if (player[i].phys.cVel.x == 0 &&
                      player[i].phys.kVel.x == 0 &&
-                     !aS[cS[i]][player[i].actionState].inGrab) {
+                     !actionStates[characterSelections[i]][player[i].actionState].inGrab) {
 
             stillGrounded = false;
           } else {
@@ -525,18 +525,18 @@ export function physics (i){
           if (player[i].hit.hitlag == 0) {
             player[i].phys.face = -1;
             if (player[i].phys.techTimer > 0) {
-              if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7) {
-                aS[cS[i]].WALLTECHJUMP.init(i);
+              if (input[i][0].x || input[i][0].y || input[i][0].lsY > 0.7) {
+                actionStates[characterSelections[i]].WALLTECHJUMP.init(i,input);
               } else {
-                aS[cS[i]].WALLTECH.init(i);
+                actionStates[characterSelections[i]].WALLTECH.init(i,input);
               }
             } else {
               drawVfx("wallBounce", new Vec2D(activeStage.wallL[j][1].x, player[i].phys.ECBp[1].y), -1, 0);
-              aS[cS[i]].WALLDAMAGE.init(i);
+              actionStates[characterSelections[i]].WALLDAMAGE.init(i,input);
             }
           }
-        } else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
-          aS[cS[i]][player[i].actionState].onWallCollide(i, "L", j);
+        } else if (actionStates[characterSelections[i]][player[i].actionState].specialWallCollide) {
+          actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, "L", j);
         } else if (player[i].phys.canWallJump) {
           if (player[i].phys.wallJumpTimer == 254) {
             if (player[i].phys.posDelta.x >= 0.5) {
@@ -544,16 +544,16 @@ export function physics (i){
             }
           }
           if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
-                player[i].inputs.lStickAxis[3].x >= 0 &&
-                (player[i].charAttributes.walljump || (gameSettings.everyCharWallJump && gameMode != 5))) {
+if (input[i][0].lsX <= -0.7 &&
+                input[i][3].lsX >= 0 &&
+                (player[i].charAttributes.walljump || gameSettings.everyCharWallJump)) {
 
               player[i].phys.wallJumpTimer = 254;
               player[i].phys.face = -1;
 			  if (!player[i].charAttributes.multiJump) {
-              aS[cS[i]].WALLJUMP.init(i);
+              actionStates[characterSelections[i]].WALLJUMP.init(i,input);
 			  } else {
-              aS[cS[i]].WALLTECHJUMP.init(i);				  
+              actionStates[characterSelections[i]].WALLTECHJUMP.init(i,input);
 			  }
             } else {
               player[i].phys.wallJumpTimer++;
@@ -577,18 +577,18 @@ if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
           if (player[i].hit.hitlag == 0) {
             player[i].phys.face = 1;
             if (player[i].phys.techTimer > 0) {
-              if (player[i].inputs.x[0] || player[i].inputs.y[0] || player[i].inputs.lStickAxis[0].y > 0.7) {
-                aS[cS[i]].WALLTECHJUMP.init(i);
+              if (input[i][0].x || input[i][0].y || input[i][0].lsY > 0.7) {
+                actionStates[characterSelections[i]].WALLTECHJUMP.init(i,input);
               } else {
-                aS[cS[i]].WALLTECH.init(i);
+                actionStates[characterSelections[i]].WALLTECH.init(i,input);
               }
             } else {
               drawVfx("wallBounce", new Vec2D(activeStage.wallR[j][1].x, player[i].phys.ECBp[3].y), 1, 1);
-              aS[cS[i]].WALLDAMAGE.init(i);
+              actionStates[characterSelections[i]].WALLDAMAGE.init(i,input);
             }
           }
-        } else if (aS[cS[i]][player[i].actionState].specialWallCollide) {
-          aS[cS[i]][player[i].actionState].onWallCollide(i, "R", j);
+        } else if (actionStates[characterSelections[i]][player[i].actionState].specialWallCollide) {
+          actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, "R", j);
         } else if (player[i].phys.canWallJump) {
           if (player[i].phys.wallJumpTimer == 254) {
             if (player[i].phys.posDelta.x >= 0.5) {
@@ -596,13 +596,13 @@ if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
             }
           }
           if (player[i].phys.wallJumpTimer >= 0 && player[i].phys.wallJumpTimer < 120) {
-            if (player[i].inputs.lStickAxis[0].x >= 0.7 &&
-                player[i].inputs.lStickAxis[3].x <= 0 &&
+            if (input[i][0].lsX >= 0.7 &&
+                input[i][3].lsX <= 0 &&
                 player[i].charAttributes.walljump) {
 
               player[i].phys.wallJumpTimer = 254;
               player[i].phys.face = 1;
-              aS[cS[i]].WALLJUMP.init(i);
+              actionStates[characterSelections[i]].WALLJUMP.init(i,input);
             } else {
               player[i].phys.wallJumpTimer++;
             }
@@ -624,13 +624,13 @@ if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
     }
     if (!stillGrounded) {
       player[i].phys.grounded = false;
-      if (typeof aS[cS[i]][player[i].actionState].airborneState !== 'undefined') {
-        player[i].actionState = aS[cS[i]][player[i].actionState].airborneState;
+      if (typeof actionStates[characterSelections[i]][player[i].actionState].airborneState !== 'undefined') {
+        player[i].actionState = actionStates[characterSelections[i]][player[i].actionState].airborneState;
       } else {
-        if (aS[cS[i]][player[i].actionState].missfoot && backward) {
-          aS[cS[i]].MISSFOOT.init(i);
+        if (actionStates[characterSelections[i]][player[i].actionState].missfoot && backward) {
+          actionStates[characterSelections[i]].MISSFOOT.init(i,input);
         } else {
-          aS[cS[i]].FALL.init(i);
+          actionStates[characterSelections[i]].FALL.init(i,input);
         }
         if (Math.abs(player[i].phys.cVel.x) > player[i].charAttributes.aerialHmaxV) {
           player[i].phys.cVel.x = Math.sign(player[i].phys.cVel.x) * player[i].charAttributes.aerialHmaxV;
@@ -677,7 +677,7 @@ if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
           if (player[i].hit.hitlag > 0) {
             player[i].phys.pos.y = activeStage.ground[j][0].y;
           } else {
-            land(i, activeStage.ground[j][0].y, 0, j);
+            land(i, activeStage.ground[j][0].y, 0, j,input);
           }
           break;
         }
@@ -689,17 +689,17 @@ if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
             player[i].phys.ECB1[2].y <= activeStage.ceiling[j][0].y) {
 
           player[i].phys.pos.y = activeStage.ceiling[j][0].y - (player[i].phys.ECBp[2].y - player[i].phys.pos.y) - 0.01;
-          if (aS[cS[i]][player[i].actionState].headBonk) {
+          if (actionStates[characterSelections[i]][player[i].actionState].headBonk) {
             if (player[i].hit.hitstun > 0) {
               if (player[i].phys.techTimer > 0) {
-                aS[cS[i]].TECHU.init(i);
+                actionStates[characterSelections[i]].TECHU.init(i,input);
               } else {
                 drawVfx("ceilingBounce", new Vec2D(player[i].phys.ECBp[0].x, activeStage.ceiling[j][0].y), 1);
                 sounds.bounce.play();
-                aS[cS[i]].STOPCEIL.init(i);
+                actionStates[characterSelections[i]].STOPCEIL.init(i,input);
               }
             } else {
-              aS[cS[i]].STOPCEIL.init(i);
+              actionStates[characterSelections[i]].STOPCEIL.init(i,input);
             }
           }
         }
@@ -821,10 +821,10 @@ if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
             y > player[i].phys.ledgeSnapBoxF.max.y) {
 
           if (activeStage.ledge[j][1] == 0) {
-            if (aS[cS[i]][player[i].actionState].canGrabLedge[0]) {
+            if (actionStates[characterSelections[i]][player[i].actionState].canGrabLedge[0]) {
               lsBF = j;
             }
-          } else if (aS[cS[i]][player[i].actionState].canGrabLedge[1]) {
+          } else if (actionStates[characterSelections[i]][player[i].actionState].canGrabLedge[1]) {
             lsBF = j;
           }
         }
@@ -834,39 +834,39 @@ if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
             y > player[i].phys.ledgeSnapBoxF.max.y) {
 
           if (activeStage.ledge[j][1] == 1) {
-            if (aS[cS[i]][player[i].actionState].canGrabLedge[0]) {
+            if (actionStates[characterSelections[i]][player[i].actionState].canGrabLedge[0]) {
               lsBB = j;
             }
-          } else if (aS[cS[i]][player[i].actionState].canGrabLedge[1]) {
+          } else if (actionStates[characterSelections[i]][player[i].actionState].canGrabLedge[1]) {
             lsBB = j;
           }
         }
       }
-      if (player[i].phys.cVel.y < 0 && player[i].inputs.lStickAxis[0].y > -0.5) {
+      if (player[i].phys.cVel.y < 0 && input[i][0].lsY > -0.5) {
         if (lsBF > -1) {
-          if (activeStage.ledge[lsBF][1] * -2 + 1 == player[i].phys.face || aS[cS[i]][player[i].actionState].canGrabLedge[1]) {
+          if (activeStage.ledge[lsBF][1] * -2 + 1 == player[i].phys.face || actionStates[characterSelections[i]][player[i].actionState].canGrabLedge[1]) {
             player[i].phys.onLedge = lsBF;
             player[i].phys.ledgeRegrabTimeout = 30;
             player[i].phys.face = activeStage.ledge[lsBF][1] * -2 + 1;
             player[i].phys.pos = new Vec2D(activeStage.box[activeStage.ledge[lsBF][0]].min.x + edgeOffset[0][0], activeStage.box[activeStage.ledge[
               lsBF][0]].min.y + edgeOffset[0][1]);
-            aS[cS[i]].CLIFFCATCH.init(i);
+            actionStates[characterSelections[i]].CLIFFCATCH.init(i,input);
           }
         } else if (lsBB > -1) {
-          if (activeStage.ledge[lsBB][1] * -2 + 1 == player[i].phys.face || aS[cS[i]][player[i].actionState].canGrabLedge[1]) {
+          if (activeStage.ledge[lsBB][1] * -2 + 1 == player[i].phys.face || actionStates[characterSelections[i]][player[i].actionState].canGrabLedge[1]) {
             player[i].phys.onLedge = lsBB;
             player[i].phys.ledgeRegrabTimeout = 30;
             player[i].phys.face = activeStage.ledge[lsBB][1] * -2 + 1;
             player[i].phys.pos = new Vec2D(activeStage.box[activeStage.ledge[lsBB][0]].max.x + edgeOffset[1][0], activeStage.box[activeStage.ledge[
               lsBB][0]].min.y + edgeOffset[1][1]);
-            aS[cS[i]].CLIFFCATCH.init(i);
+            actionStates[characterSelections[i]].CLIFFCATCH.init(i,input);
           }
         }
       }
     }
   }
 
-  if (!aS[cS[i]][player[i].actionState].dead && player[i].actionState != "SLEEP") {
+  if (!actionStates[characterSelections[i]][player[i].actionState].dead && player[i].actionState != "SLEEP") {
     var state = 0;
     if (player[i].phys.pos.x < activeStage.blastzone.min.x) {
       state = "DEADLEFT";
@@ -886,7 +886,7 @@ if (player[i].inputs.lStickAxis[0].x <= -0.7 &&
       if (player[i].stocks == 0 && versusMode){
         player[i].stocks = 1;
       }
-      aS[cS[i]][state].init(i);
+      actionStates[characterSelections[i]][state].init(i,input);
     }
   }
 

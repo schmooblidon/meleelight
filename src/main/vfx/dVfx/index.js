@@ -21,6 +21,7 @@ import groundBounce from "main/vfx/dVfx/groundBounce";
 import hitCurve from "main/vfx/dVfx/hitCurve";
 import hitFlair from "main/vfx/dVfx/hitFlair";
 import hitSparks from "main/vfx/dVfx/hitSparks";
+import furaFura from "main/vfx/dVfx/furaFura";
 import illusion from "main/vfx/dVfx/illusion";
 import impactLand from "main/vfx/dVfx/impactLand";
 import index from "main/vfx/dVfx/index";
@@ -61,6 +62,7 @@ export default {
   firefoxtail,
   firehit,
   flyingDust,
+  furaFura,
   general,
   groundBounce,
   hitCurve,

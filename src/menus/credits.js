@@ -24,7 +24,7 @@ let cYPos = cYSize / 2;
 let cPlayerXPos = cXSize / 2;
 let cPlayerYPos = cYSize / 2;
 let cScrollingPos = 0;
-let cScrollingMax = 2100;// max scrolling distance in y coords. Can change this when you want more names or w/e
+let cScrollingMax = 2900;// max scrolling distance in y coords. Can change this when you want more names or w/e
 const cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
 let lastHit = [0, 0, false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
@@ -98,13 +98,13 @@ export function ScrollingText (text,yPos,position,information) {
 let creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
 
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
-export function credits (p){ //called once every frame
-   
-  if (player[p].inputs.x[0] && !player[p].inputs.x[1]) {
+export function credits (p,input){ //called once every frame
+
+  if (input[p][0].x && !input[p][1].x) {
     currentLaserColor = (currentLaserColor === laserColors.length - 1) ? 0 : currentLaserColor + 1;
     laserColor = laserColors[currentLaserColor];
   }
-  if (player[p].inputs.y[0] && !player[p].inputs.y[1]) {
+  if (input[p][0].y && !input[p][1].y) {
     currentLaserColor = (currentLaserColor === 0) ? (laserColors.length - 1) : currentLaserColor - 1;
     laserColor = laserColors[currentLaserColor];
   }
@@ -116,13 +116,18 @@ export function credits (p){ //called once every frame
       new ScrollingText("Tatatat0", 950, "Programmer", "Created the AI and credits."),
       new ScrollingText("bites", 1100, "Animation Assistant, Level Design",
         "Helped develop animation process & designed target stages."),
-      new ScrollingText("WwwWario", 1250, "Support", "Helping users troubleshoot and being a homie!"),
-      new ScrollingText("zircon", 1400, "Musician", "Smash Superstars (Menu Theme)"),
-      new ScrollingText("Buoy", 1550, "Musician",
+      new ScrollingText("shf", 1250, "Programmer, Mathematician", "Input conversion and environmental collision."),
+
+      new ScrollingText("Nehgromancer", 1400, "Programmer", "Refactoring and networking."),
+      new ScrollingText("BonesMalones", 1550, "Programmer", "Refactoring and optimization."),
+      new ScrollingText("TJohnW", 1700, "Programmer", "Refactoring and code quality."),
+      new ScrollingText("WwwWario", 1850, "Support", "Helping users troubleshoot and being a homie!"),
+      new ScrollingText("zircon", 2000, "Musician", "Smash Superstars (Menu Theme)"),
+      new ScrollingText("Buoy", 2150, "Musician",
         "Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
-      new ScrollingText("Tom Mauritzon", 1700, "Musician", "Mega Helix (PStadium Theme)"),
-      new ScrollingText("Rozen", 1850, "Musician", "Kumite (Battlefield Theme)"),
-      new ScrollingText("Zack Parrish", 2000, "Musician", "Sunny Side Up (Dreamland Theme)")
+      new ScrollingText("Tom Mauritzon", 2300, "Musician", "Mega Helix (PStadium Theme)"),
+      new ScrollingText("Rozen", 2450, "Musician", "Kumite (Battlefield Theme)"),
+      new ScrollingText("Zack Parrish", 2600, "Musician", "Sunny Side Up (Dreamland Theme)")
     ];
     cScore = 0;
 	cCursorAngle = 0;
@@ -135,7 +140,7 @@ export function credits (p){ //called once every frame
   }
   cScrollingPos -= cScrollingSpeed;
   let yDif = 0;
-  if (player[p].inputs.s[0] === true || player[p].inputs.l[0] === true || player[p].inputs.r[0] === true) {
+  if (input[p][0].s === true || input[p][0].l === true || input[p][0].r === true) {
     //is holding down start. Should increase speed
 	cCursorAngle += 4.5;
     yDif = Math.round(cScrollingSpeed * 1.5);
@@ -159,9 +164,9 @@ export function credits (p){ //called once every frame
   }
 
   //l stick to pos
-  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[p].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX -
+  cPlayerXPos = Math.round(((cBoundX / 2) + ((input[p][0].rawX) * (cBoundX / 2))) - ((cBoundX -
     cXSize) / 2));
-  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[p].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY -
+  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * input[p][0].rawY) * (cBoundY / 2))) - ((cBoundY -
     cYSize) / 2));
   //cast positions to canvas size
   if (cPlayerXPos < 0) {
@@ -179,7 +184,7 @@ export function credits (p){ //called once every frame
 
   if (shoot_cooldown == 0) {
 
-    if (player[p].inputs.a[0] && !(player[p].inputs.a[1])) {
+    if (input[p][0].a && !input[p][1].a) {
       //is shooting
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
@@ -218,15 +223,15 @@ export function credits (p){ //called once every frame
 	  sounds.failure.play();
     }
 	initc = true;
-    player[p].inputs.b[1] = true;
+    input[p][1].b = true;
     cShots = [];
     lastHit = [0, 0, false];
     creditNames = [];
     changeGamemode(1);
-  } else if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
-    sounds.menuBack.play();		
+  } else if (input[p][0].b && !input[p][1].b) {
     initc = true;
-    player[p].inputs.b[1] = true;
+    sounds.menuBack.play();
+    input[p][1].b = true;
     cShots = [];
     lastHit = [0, 0, false];
     creditNames = [];
@@ -398,13 +403,13 @@ export function drawCredits (){
 	  }
 	  for (let i = 0; i < cRectPos.length; i++) {
 	   fg1.moveTo(cPlayerXPos + cRectPos[i][0][0], cPlayerYPos + cRectPos[i][0][1]);
-	   fg1.lineTo(cPlayerXPos + cRectPos[i][1][0], cPlayerYPos + cRectPos[i][1][1]);		  
+	   fg1.lineTo(cPlayerXPos + cRectPos[i][1][0], cPlayerYPos + cRectPos[i][1][1]);
 	  }
 	  //for (let ia = 0; ia < cDefaultAngles.length; i++) {
 	  //	 fg1.moveTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectSpace)));
-	  //  fg1.lineTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)));	
+	  //  fg1.lineTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)));
 	  //}
 	  fg1.closePath();
-	  fg1.stroke();	  
+	  fg1.stroke();
   }
 }
