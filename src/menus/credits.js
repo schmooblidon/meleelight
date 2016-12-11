@@ -98,13 +98,13 @@ export function ScrollingText (text,yPos,position,information) {
 let creditNames = []; //list of scrollingText objects SEE PLEASE:                FILL THIS SHIT IN
 
 //font MUST be Courier because its a monospaced font and every letter in it is the same width. Wouldn't be able to calculate size without it
-export function credits (p){ //called once every frame
-   
-  if (player[p].inputs.x[0] && !player[p].inputs.x[1]) {
+export function credits (p,input){ //called once every frame
+
+  if (input[p][0].x && !input[p][1].x) {
     currentLaserColor = (currentLaserColor === laserColors.length - 1) ? 0 : currentLaserColor + 1;
     laserColor = laserColors[currentLaserColor];
   }
-  if (player[p].inputs.y[0] && !player[p].inputs.y[1]) {
+  if (input[p][0].y && !input[p][1].y) {
     currentLaserColor = (currentLaserColor === 0) ? (laserColors.length - 1) : currentLaserColor - 1;
     laserColor = laserColors[currentLaserColor];
   }
@@ -140,7 +140,7 @@ export function credits (p){ //called once every frame
   }
   cScrollingPos -= cScrollingSpeed;
   let yDif = 0;
-  if (player[p].inputs.s[0] === true || player[p].inputs.l[0] === true || player[p].inputs.r[0] === true) {
+  if (input[p][0].s === true || input[p][0].l === true || input[p][0].r === true) {
     //is holding down start. Should increase speed
 	cCursorAngle += 4.5;
     yDif = Math.round(cScrollingSpeed * 1.5);
@@ -164,9 +164,9 @@ export function credits (p){ //called once every frame
   }
 
   //l stick to pos
-  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[p].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX -
+  cPlayerXPos = Math.round(((cBoundX / 2) + ((input[p][0].rawX) * (cBoundX / 2))) - ((cBoundX -
     cXSize) / 2));
-  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[p].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY -
+  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * input[p][0].rawY) * (cBoundY / 2))) - ((cBoundY -
     cYSize) / 2));
   //cast positions to canvas size
   if (cPlayerXPos < 0) {
@@ -184,7 +184,7 @@ export function credits (p){ //called once every frame
 
   if (shoot_cooldown == 0) {
 
-    if (player[p].inputs.a[0] && !(player[p].inputs.a[1])) {
+    if (input[p][0].a && !input[p][1].a) {
       //is shooting
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
@@ -223,15 +223,15 @@ export function credits (p){ //called once every frame
 	  sounds.failure.play();
     }
 	initc = true;
-    player[p].inputs.b[1] = true;
+    input[p][1].b = true;
     cShots = [];
     lastHit = [0, 0, false];
     creditNames = [];
     changeGamemode(1);
-  } else if (player[p].inputs.b[0] && !player[p].inputs.b[1]) {
-    sounds.menuBack.play();		
+  } else if (input[p][0].b && !input[p][1].b) {
     initc = true;
-    player[p].inputs.b[1] = true;
+    sounds.menuBack.play();
+    input[p][1].b = true;
     cShots = [];
     lastHit = [0, 0, false];
     creditNames = [];
@@ -403,13 +403,13 @@ export function drawCredits (){
 	  }
 	  for (let i = 0; i < cRectPos.length; i++) {
 	   fg1.moveTo(cPlayerXPos + cRectPos[i][0][0], cPlayerYPos + cRectPos[i][0][1]);
-	   fg1.lineTo(cPlayerXPos + cRectPos[i][1][0], cPlayerYPos + cRectPos[i][1][1]);		  
+	   fg1.lineTo(cPlayerXPos + cRectPos[i][1][0], cPlayerYPos + cRectPos[i][1][1]);
 	  }
 	  //for (let ia = 0; ia < cDefaultAngles.length; i++) {
 	  //	 fg1.moveTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectSpace)));
-	  //  fg1.lineTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)));	
+	  //  fg1.lineTo(cPlayerXPos + (Math.cos((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)), cPlayerYPos + (Math.sin((cDefaultAngles[ia] + radiansAngle)) * (cRectLength + cRectSpace)));
 	  //}
 	  fg1.closePath();
-	  fg1.stroke();	  
+	  fg1.stroke();
   }
 }

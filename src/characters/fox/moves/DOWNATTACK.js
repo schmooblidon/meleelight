@@ -8,18 +8,18 @@ export default {
   name : "DOWNATTACK",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNATTACK";
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.downattack1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.downattack1.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.downattack1.id2;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer === 1){
         player[p].phys.intangibleTimer = 26;
@@ -51,9 +51,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 49){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else {

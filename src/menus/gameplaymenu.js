@@ -19,16 +19,17 @@ export function getGameplayCookies (){
     }
   }
 }
-export function gameplayMenuControls (i){
-  if (player[i].inputs.b[0] && !player[i].inputs.b[1]) {
+export function gameplayMenuControls (i, input){
+  var menuMove = false;
+  if (input[i][0].b && !input[i][1].b) {
     sounds.menuBack.play();
-    player[i].inputs.b[1] = true;
+    input[i][1].b = true;
     var keys = Object.keys(gameSettings);
     for (var j = 0; j < keys.length; j++) {
       setCookie(keys[j], gameSettings[keys[j]], 36500);
     }
     changeGamemode(1);
-  } else if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+  } else if (input[i][0].a && !input[i][1].a) {
     sounds.menuSelect.play();
     switch (menuIndex[0]) {
       case 0:
@@ -51,7 +52,7 @@ export function gameplayMenuControls (i){
       default:
         break;
     }
-  } else if (player[i].inputs.lStickAxis[0].y > 0.7 && !(Math.abs(player[i].inputs.lStickAxis[0].x >= 0.7))) {
+  } else if (input[i][0].lsY > 0.7 && !(Math.abs(input[i][0].lsX >= 0.7))) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuIndex[0]--;
@@ -70,7 +71,7 @@ export function gameplayMenuControls (i){
         menuMove = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].y < -0.7 && !(Math.abs(player[i].inputs.lStickAxis[0].x >= 0.7))) {
+  } else if (input[i][0].lsY < -0.7 &&  !(Math.abs(input[i][0].lsX >= 0.7))) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuIndex[0]++;
@@ -89,7 +90,7 @@ export function gameplayMenuControls (i){
         menuMove = true;
       }
     }
-    } else if (player[i].inputs.lStickAxis[0].x > 0.7 && !(Math.abs(player[i].inputs.lStickAxis[0].y >= 0.7))) {
+    } else if (input[i][0].lsX > 0.7 && !(Math.abs(input[i][0].lsY >= 0.7))) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       menuIndex[1]++;
@@ -108,7 +109,7 @@ export function gameplayMenuControls (i){
         menuMove = true;
       }
     }
-    } else if (player[i].inputs.lStickAxis[0].x < -0.7 && !(Math.abs(player[i].inputs.lStickAxis[0].y >= 0.7))){
+    } else if (input[i][0].lsX < -0.7 && !(Math.abs(input[i][0].lsY >= 0.7))){
     if (stickHold == 0) {
       menuIndex[1]--;
       //if (menuIndex[1] > menuHOptions[menuIndex[0]]) {

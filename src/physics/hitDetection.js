@@ -1,8 +1,8 @@
-import {playerType, player, cS, screenShake, gameMode, percentShake} from "main/main";
+import {playerType, player, characterSelections, screenShake, gameMode, percentShake} from "main/main";
 
 import {gameSettings} from "settings";
 import {sounds} from "main/sfx";
-import {turnOffHitboxes, aS} from "physics/actionStateShortcuts";
+import {turnOffHitboxes, actionStates} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../main/util/Vec2D";
 import {Segment2D} from "../main/util/Segment2D";
@@ -18,7 +18,7 @@ export function setPhantonQueue(val){
 }
 const angleConversion = Math.PI / 180;
 
-export function hitDetect (p){
+export function hitDetect (p,input){
     var attackerClank = false;
     for (var i = 0; i < 4; i++) {
         if (playerType[i] > -1) {
@@ -60,8 +60,8 @@ export function hitDetect (p){
                                                 player[p].phys.hurtBoxState = 1;
                                                 player[p].phys.intangibleTimer = 1;
                                                 // double check still in action state for some weird case
-                                                if (aS[cS[p]][player[p].actionState].specialClank) {
-                                                    aS[cS[p]][player[p].actionState].onClank(p);
+                                                if (actionStates[characterSelections[p]][player[p].actionState].specialClank) {
+                                                    actionStates[characterSelections[p]][player[p].actionState].onClank(p,input);
                                                 }
                                             } else {
                                                 if (diff >= 9) {
@@ -69,23 +69,23 @@ export function hitDetect (p){
                                                     // attacker cut through
                                                     player[i].hit.hitlag = Math.floor(player[p].hitboxes.id[j].dmg * (1 / 3) + 3);
                                                     turnOffHitboxes(i);
-                                                    aS[cS[i]].CATCHCUT.init(i);
+                                                    actionStates[characterSelections[i]].CATCHCUT.init(i,input);
                                                 } else if (diff <= -9) {
                                                     // attacker clank
                                                     // victim cut through
                                                     player[p].hit.hitlag = Math.floor(player[i].hitboxes.id[k].dmg * (1 / 3) + 3);
                                                     attackerClank = true;
                                                     turnOffHitboxes(p);
-                                                    aS[cS[p]].CATCHCUT.init(p);
+                                                    actionStates[characterSelections[p]].CATCHCUT.init(p,input);
                                                 } else {
                                                     // both clank
                                                     player[i].hit.hitlag = Math.floor(player[p].hitboxes.id[j].dmg * (1 / 3) + 3);
                                                     player[p].hit.hitlag = Math.floor(player[i].hitboxes.id[k].dmg * (1 / 3) + 3);
                                                     attackerClank = true;
                                                     turnOffHitboxes(i);
-                                                    aS[cS[i]].CATCHCUT.init(i);
+                                                    actionStates[characterSelections[i]].CATCHCUT.init(i,input);
                                                     turnOffHitboxes(p);
-                                                    aS[cS[p]].CATCHCUT.init(p);
+                                                    actionStates[characterSelections[p]].CATCHCUT.init(p,input);
                                                 }
                                                 sounds.clank.play();
                                                 drawVfx("clank", clankHit[1]);
@@ -286,7 +286,7 @@ export function hitHurtCollision (i,p,j,previous,phantom){
         2)));
 }
 
-export function executeHits (){
+export function executeHits (input){
   var grabQueue = [];
   var ignoreGrabs = [false, false, false, false];
   for (var i = 0; i < hitQueue.length; i++) {
@@ -325,7 +325,7 @@ export function executeHits (){
           player[v].hit.reverse = true;
           player[v].phys.face = 1;
         }
-        aS[cS[v]].DAMAGEN2.init(v);
+        actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
         screenShake(player[v].hit.knockback);
         sounds.swordreallystronghit.play();
       }
@@ -334,11 +334,11 @@ export function executeHits (){
         sounds.furaloop.stop(player[v].furaLoopID);
       }
       if (player[a].hitboxes.id[h].type == 2) {
-        if (aS[cS[v]][player[v].actionState].canBeGrabbed) {
+        if (actionStates[characterSelections[v]][player[v].actionState].canBeGrabbed) {
           grabQueue.push([a, v, false]);
         }
       } else if (player[a].hitboxes.id[h].type == 5) {
-        aS[cS[v]].FURASLEEPSTART.init(v);
+        actionStates[characterSelections[v]].FURASLEEPSTART.init(v,input);
       } else {
         ignoreGrabs[v] = true;
         var damage = player[a].hitboxes.id[h].dmg;
@@ -364,7 +364,7 @@ export function executeHits (){
               player[v].phys.grounded = false;
               player[v].phys.shieldHP = 0;
               drawVfx("breakShield", player[v].phys.pos, player[v].phys.face);
-              aS[cS[v]].SHIELDBREAKFALL.init(v);
+              actionStates[characterSelections[v]].SHIELDBREAKFALL.init(v,input);
               sounds.shieldbreak.play();
               break;
             }
@@ -402,21 +402,21 @@ export function executeHits (){
             player[a].phys.cVel.x += attackerPush
           }
 
-          aS[cS[v]].GUARD.init(v);
+          actionStates[characterSelections[v]].GUARD.init(v,input);
 
         } else {
           if (player[v].phys.hurtBoxState == 0 || isThrow) {
             if (!phantom) {
-              var crouching = aS[cS[v]][player[v].actionState].crouch;
+              var crouching = actionStates[characterSelections[v]][player[v].actionState].crouch;
               var vCancel = false;
               if (player[v].phys.vCancelTimer > 0) {
-                if (aS[cS[v]][player[v].actionState].vCancel) {
+                if (actionStates[characterSelections[v]][player[v].actionState].vCancel) {
                   vCancel = true;
                   sounds.vcancel.play();
                 }
               }
               var jabReset = false;
-              if (aS[cS[v]][player[v].actionState].downed && damage < 7) {
+              if (actionStates[characterSelections[v]][player[v].actionState].downed && damage < 7) {
                 jabReset = true;
               }
               player[v].hit.knockback = getKnockback(player[a].hitboxes.id[h], damage, damage, player[v].percent,
@@ -432,8 +432,8 @@ export function executeHits (){
 
               player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
 
-              if (aS[cS[a]][player[a].actionState].specialOnHit) {
-                aS[cS[a]][player[a].actionState].onPlayerHit(a);
+              if (actionStates[characterSelections[a]][player[a].actionState].specialOnHit) {
+                actionStates[characterSelections[a]][player[a].actionState].onPlayerHit(a);
               }
 
               if (!isThrow) {
@@ -474,26 +474,26 @@ export function executeHits (){
               // if victim is grabbing someone, put the victim's grab victim into a grab release
               if (player[v].phys.grabbing > -1) {
                 player[player[v].phys.grabbing].phys.grabbedBy = -1;
-                aS[cS[player[v].phys.grabbing]].CAPTURECUT.init(player[v].phys.grabbing);
+                actionStates[characterSelections[player[v].phys.grabbing]].CAPTURECUT.init(player[v].phys.grabbing,input);
               }
 
               if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)) {
                 if (player[v].phys.grabbedBy > -1) {
                   player[player[v].phys.grabbedBy].phys.grabbing = -1;
-                  aS[cS[player[v].phys.grabbedBy]].WAIT.init(player[v].phys.grabbedBy);
+                  actionStates[characterSelections[player[v].phys.grabbedBy]].WAIT.init(player[v].phys.grabbedBy,input);
                 }
                 player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
                 //console.log(player[v].hit.reverse);
                 if (jabReset) {
-                  aS[cS[v]].DOWNDAMAGE.init(v);
+                  actionStates[characterSelections[v]].DOWNDAMAGE.init(v,input);
                 } else if (player[v].hit.knockback >= 80 || isThrow) {
-                  aS[cS[v]].DAMAGEFLYN.init(v, !isThrow);
+                  actionStates[characterSelections[v]].DAMAGEFLYN.init(v,input, !isThrow);
                 } else {
-                  aS[cS[v]].DAMAGEN2.init(v);
+                  actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
                 }
               } else {
                 if (player[v].actionState != "THROWNPUFFDOWN") {
-                  aS[cS[v]].CAPTUREDAMAGE.init(v);
+                  actionStates[characterSelections[v]].CAPTUREDAMAGE.init(v,input);
                 }
               }
 
@@ -565,14 +565,14 @@ export function executeHits (){
       if (!grabQueue[j][2]) {
         if (player[grabQueue[j][1]].actionState == "GRAB" && player[grabQueue[j][1]].timer > 0 && player[grabQueue[j]
             [1]].timer < 14 && player[grabQueue[j][1]].phys.face != player[grabQueue[j][0]].phys.face) {
-          executeGrabTech(grabQueue[j][0], grabQueue[j][1]);
+          executeGrabTech(grabQueue[j][0], grabQueue[j][1],input);
           grabQueue[j][2] = true;
           ignoreGrabs[grabQueue[j][1]] = true;
         } else {
           for (var k = 0; k < grabQueue.length; k++) {
             if (k != j) {
               if (grabQueue[j][0] == grabQueue[k][1]) {
-                executeGrabTech(grabQueue[j][0], grabQueue[k][0]);
+                executeGrabTech(grabQueue[j][0], grabQueue[k][0],input);
                 grabQueue[j][2] = true;
                 grabQueue[k][2] = true;
                 break;
@@ -595,14 +595,14 @@ export function executeHits (){
           player[a].phys.grabbing = v;
           turnOffHitboxes(a);
           turnOffHitboxes(v);
-          aS[cS[v]].CAPTUREPULLED.init(v);
+          actionStates[characterSelections[v]].CAPTUREPULLED.init(v,input);
         }
       }
     }
   }
 }
 
-export function executeGrabTech (a,v){
+export function executeGrabTech (a,v,input){
     if (player[a].phys.pos.x < player[v].phys.pos.x) {
         player[a].phys.face = 1;
         player[v].phys.face = -1;
@@ -614,8 +614,8 @@ export function executeGrabTech (a,v){
     player[v].phys.grabTech = true;
     turnOffHitboxes(a);
     turnOffHitboxes(v);
-    aS[cS[a]].CAPTURECUT.init(a);
-    aS[cS[v]].CAPTURECUT.init(v);
+    actionStates[characterSelections[a]].CAPTURECUT.init(a,input);
+    actionStates[characterSelections[v]].CAPTURECUT.init(v,input);
     sounds.parry.play();
     drawVfx("shieldup", new Vec2D((player[a].phys.pos.x + player[v].phys.pos.x) / 2, player[a].phys.pos.y + 12), player[
         v].phys.face, 3);
@@ -834,7 +834,7 @@ export function knockbackSounds (type,knockback,v){
     sounds.cheer.play();
     if (knockback < 280) {
       sounds.stronghit.play();
-      switch (cS[v]) {
+      switch (characterSelections[v]) {
         case 0:
           sounds.weakhurt.play();
           break;
@@ -846,7 +846,7 @@ export function knockbackSounds (type,knockback,v){
       }
     } else {
       sounds.strongerhit.play();
-      switch (cS[v]) {
+      switch (characterSelections[v]) {
         case 0:
           sounds.stronghurt.play();
           break;

@@ -14,7 +14,7 @@ import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboar
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
 import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
 
-import {aS} from "physics/actionStateShortcuts";
+import {actionStates} from "physics/actionStateShortcuts";
 import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
 import {
   targetPlayer, targetHitDetection, targetTimerTick, targetTesting, medalsEarned,
@@ -36,13 +36,14 @@ import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
+import {showButton, nullInputs, pollInputs, inputData} from "./input";
 /*globals performance*/
 
 export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
 export const framerate = [0,0,0];
-export var cS = [0,0,0,0];
+export var characterSelections = [0,0,0,0];
 
 export var shine = 0.5;
 
@@ -51,7 +52,7 @@ export let endTargetGame = false;
 export let creditsPlayer = 0;
 
 let gameEnd = false;
-const attemptingControllerReset = [false,false,false,false];
+let controllerResetCountdowns = [125,125,125,125];
 let keyboardOccupied = false;
 
 
@@ -60,8 +61,6 @@ window.mType = [0, 0, 0, 0];
 
 
 export const mType = [0,0,0,0];
-
-export const cd = [new customDeadzone,new customDeadzone,new customDeadzone,new customDeadzone];
 
 export const currentPlayers = [];
 
@@ -142,8 +141,6 @@ export const edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
 export const edgeOrientation = [1,-1];
 
 export const respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
-
-
 
 export var stageSelect = 0;
 
@@ -292,7 +289,7 @@ window.addEventListener("gamepadconnected", function(e) {
 });
 if (navigator.getGamepads) console.log(navigator.getGamepads());
 
-export function matchTimerTick (){
+export function matchTimerTick (input){
   matchTimer -= 0.016667;
 
   if (dom.matchMinutes && dom.matchSeconds) {
@@ -302,7 +299,7 @@ export function matchTimerTick (){
   }
 
   if (matchTimer <= 0) {
-    finishGame();
+    finishGame(input);
   }
 }
 
@@ -551,343 +548,184 @@ export const removePlayer (i){
   playerAmount--;
 }*/
 
-window.interpretInputs = function(i, active) {
-  function axisData (gpd, ax) {
-    return gpdaxis ( gpd, mType[i], ax );
-  };
-  function buttonData (gpd, but) {
-    return gpdbutton (gpd, mType[i], but);
-  };
-  if (mType[i] == 10) {
-    // keyboard controls
-    var stickR = 1;
-    var stickL = 1;
-    var stickU = 1;
-    var stickD = 1;
-    if (gameMode == 3 || gameMode == 5) {
-      stickR = keyMap.lstick.ranges[1];
-      stickL = keyMap.lstick.ranges[2];
-      stickU = keyMap.lstick.ranges[0];
-      stickD = keyMap.lstick.ranges[3];
-    }
-    var lstickX = (keys[keyMap.lstick.right[0]] || keys[keyMap.lstick.right[1]]) ? ((keys[keyMap.lstick.left[0]] ||
-      keys[keyMap.lstick.left[1]]) ? 0 : stickR) : ((keys[keyMap.lstick.left[0]] || keys[keyMap.lstick.left[1]]) ?
-      -stickL : 0);
-    var lstickY = (keys[keyMap.lstick.up[0]] || keys[keyMap.lstick.up[1]]) ? ((keys[keyMap.lstick.down[0]] || keys[
-      keyMap.lstick.down[1]]) ? 0 : stickU) : ((keys[keyMap.lstick.down[0]] || keys[keyMap.lstick.down[1]]) ? -
-      stickD : 0);
+export function interpretInputs  (i, active,playertype, inputBuffer) {
+  let tempBuffer = nullInputs();
 
-    var lAnalog = (keys[keyMap.shoulders.lAnalog[0]] || keys[keyMap.shoulders.lAnalog[1]]) ? keyMap.shoulders.ranges[
-      0] : 0;
-    var rAnalog = (keys[keyMap.shoulders.rAnalog[0]] || keys[keyMap.shoulders.rAnalog[1]]) ? keyMap.shoulders.ranges[
-      1] : 0;
-    if (gameMode == 3 || gameMode == 5) {
-      for (var j = 0; j < 5; j++) {
-        if (keys[keyMap.lstick.modifiers[j][0]]) {
-          lstickX *= keyMap.lstick.modifiers[j][1];
-          lstickY *= keyMap.lstick.modifiers[j][2];
-        }
-        if (keys[keyMap.shoulders.modifiers[j][0]]) {
-          lAnalog *= keyMap.shoulders.modifiers[j][1];
-          rAnalog *= keyMap.shoulders.modifiers[j][2];
-        }
-      }
-    }
-    let [lStickX, lStickY ] = meleeRescale (lstickX, lstickY)
-    player[i].inputs.rawlStickAxis[0].x = lstickX;
-    player[i].inputs.rawlStickAxis[0].y = lstickY;
-    lAnalog = Math.min(1, Math.abs(lAnalog));
-    rAnalog = Math.min(1, Math.abs(rAnalog));
-    var cstickX = (keys[keyMap.cstick.right[0]] || keys[keyMap.cstick.right[1]]) ? ((keys[keyMap.cstick.left[0]] ||
-      keys[keyMap.cstick.left[1]]) ? 0 : 1) : ((keys[keyMap.cstick.left[0]] || keys[keyMap.cstick.left[1]]) ? -1 :
-      0);
-    var cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[
-      keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
-  } else {
-    var gamepad = navigator.getGamepads()[currentPlayers[i]];
-    //console.log(gamepad.axes);
-
-    var lsticks = scaleToMeleeAxes ( axisData(gamepad,"lsX"),  // x-axis data
-                                     axisData(gamepad,"lsY"), // y-axis data
-                                     mType[i],
-                                     true, // true: deadzones
-                                     custcent[i].ls.x, // x-axis "custom center" offset
-                                     custcent[i].ls.y); // y-axis "custom center" offset
-    var csticks = scaleToMeleeAxes ( axisData(gamepad,"csX"),
-                                     axisData(gamepad,"csY"),
-                                     mType[i],
-                                     true,
-                                     custcent[i].cs.x,
-                                     custcent[i].cs.y);
-    [player[i].inputs.rawlStickAxis[0].x,player[i].inputs.rawlStickAxis[0].y] =
-                  scaleToUnitAxes ( axisData(gamepad,"lsX"),
-                                    axisData(gamepad,"lsY"),
-                                    mType[i],
-                                    custcent[i].ls.x,
-                                    custcent[i].ls.y);
-    var lstickX = lsticks[0];
-    var lstickY = lsticks[1];
-    var cstickX = csticks[0];
-    var cstickY = csticks[1];
-
-    if (mType[i] == 3){
-      //console.log(gamepad.buttons[map.rA[mType[i]]]);
-      //-custcent[i].l
-      //-custcent[i].r
-      // FOR XBOX CONTROLLERS
-      var lAnalog = scaleToGCTrigger(buttonData(gamepad,"l").value, 0.2-custcent[i].l, 1); // shifted by +0.2
-      var rAnalog = scaleToGCTrigger(buttonData(gamepad,"r").value, 0.2-custcent[i].r, 1); // shifted by +0.2
-    }
-    else if (mType[i] == 2){
-      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, -0.6); // shifted by +0.867, flipped
-      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, -0.6); // shifted by +0.867, flipped
-    }
-    else if (mType[i] == 7) { //Brook adapter has no L/R analog information, just light presses
-      var lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
-      var rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
-    }
-    else {
-      var lAnalog = scaleToGCTrigger(axisData(gamepad,"lA"),0.867-custcent[i].l, 0.6); // shifted by +0.867
-      var rAnalog = scaleToGCTrigger(axisData(gamepad,"rA"),0.867-custcent[i].r, 0.6); // shifted by +0.867
-    }
+  for (var k = 0; k < 7; k++) {
+    tempBuffer[7-k].lsX  = inputBuffer[6-k].lsX;
+    tempBuffer[7-k].lsY  = inputBuffer[6-k].lsY;
+    tempBuffer[7-k].rawX = inputBuffer[6-k].rawX;
+    tempBuffer[7-k].rawY = inputBuffer[6-k].rawY;
+    tempBuffer[7-k].csX  = inputBuffer[6-k].csX;
+    tempBuffer[7-k].csY  = inputBuffer[6-k].csY;
+    tempBuffer[7-k].lA   = inputBuffer[6-k].lA;
+    tempBuffer[7-k].rA   = inputBuffer[6-k].rA;
+    tempBuffer[7-k].s    = inputBuffer[6-k].s;
+    tempBuffer[7-k].z    = inputBuffer[6-k].z;
+    tempBuffer[7-k].a    = inputBuffer[6-k].a;
+    tempBuffer[7-k].b    = inputBuffer[6-k].b;
+    tempBuffer[7-k].x    = inputBuffer[6-k].x;
+    tempBuffer[7-k].y    = inputBuffer[6-k].y;
+    tempBuffer[7-k].r    = inputBuffer[6-k].r;
+    tempBuffer[7-k].l    = inputBuffer[6-k].l;
+    tempBuffer[7-k].dl   = inputBuffer[6-k].dl;
+    tempBuffer[7-k].dd   = inputBuffer[6-k].dd;
+    tempBuffer[7-k].dr   = inputBuffer[6-k].dr;
+    tempBuffer[7-k].du   = inputBuffer[6-k].du;
   }
+
+  tempBuffer[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys,playertype);
 
   pause[i][1] = pause[i][0];
   frameAdvance[i][1] = frameAdvance[i][0];
 
-  if (mType[i] == 10) {
-    if (keys[keyMap.s[0]] || keys[keyMap.s[1]]) {
+  if (mType[i] == 10) { // keyboard controls
+
+    if (tempBuffer[0].s || tempBuffer[1].s ) {
       pause[i][0] = true;
-    } else {
-      pause[i][0] = false
     }
-    if (keys[keyMap.z[0]] || keys[keyMap.z[1]]) {
+    else {
+      pause[i][0] = false;
+    }
+
+    if (tempBuffer[0].z  || tempBuffer[1].z ) {
       frameAdvance[i][0] = true;
-    } else {
-      frameAdvance[i][0] = false
+    } 
+    else {
+      frameAdvance[i][0] = false;
     }
-  } else {
 
-    if (buttonData(gamepad,"s").pressed || buttonData(gamepad,"du").pressed && gameMode == 5) {
-      pause[i][0] = true;
-    } else {
-      pause[i][0] = false
+    if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode != 4) {
+    frameByFrame = true;
     }
-    if (buttonData(gamepad,"z").pressed) {
-      frameAdvance[i][0] = true;
-    } else {
-      frameAdvance[i][0] = false
-    }
-  }
 
-  if (active) {
-    for (var j = 0; j < 7; j++) {
-      player[i].inputs.lStickAxis[7 - j].x = player[i].inputs.lStickAxis[6 - j].x;
-      player[i].inputs.lStickAxis[7 - j].y = player[i].inputs.lStickAxis[6 - j].y;
-      player[i].inputs.rawlStickAxis[7 - j].x = player[i].inputs.rawlStickAxis[6 - j].x;
-      player[i].inputs.rawlStickAxis[7 - j].y = player[i].inputs.rawlStickAxis[6 - j].y;
-      player[i].inputs.cStickAxis[7 - j].x = player[i].inputs.cStickAxis[6 - j].x;
-      player[i].inputs.cStickAxis[7 - j].y = player[i].inputs.cStickAxis[6 - j].y;
-      player[i].inputs.lAnalog[7 - j] = player[i].inputs.lAnalog[6 - j];
-      player[i].inputs.rAnalog[7 - j] = player[i].inputs.rAnalog[6 - j];
-      player[i].inputs.s[7 - j] = player[i].inputs.s[6 - j];
-      player[i].inputs.z[7 - j] = player[i].inputs.z[6 - j];
-      player[i].inputs.a[7 - j] = player[i].inputs.a[6 - j];
-      player[i].inputs.b[7 - j] = player[i].inputs.b[6 - j];
-      player[i].inputs.x[7 - j] = player[i].inputs.x[6 - j];
-      player[i].inputs.y[7 - j] = player[i].inputs.y[6 - j];
-      player[i].inputs.r[7 - j] = player[i].inputs.r[6 - j];
-      player[i].inputs.l[7 - j] = player[i].inputs.l[6 - j];
-      player[i].inputs.dpadleft[7 - j] = player[i].inputs.dpadleft[6 - j];
-      player[i].inputs.dpaddown[7 - j] = player[i].inputs.dpaddown[6 - j];
-      player[i].inputs.dpadright[7 - j] = player[i].inputs.dpadright[6 - j];
-      player[i].inputs.dpadup[7 - j] = player[i].inputs.dpadup[6 - j];
-    }
-    player[i].inputs.lStickAxis[0].x = lstickX;
-    player[i].inputs.lStickAxis[0].y = lstickY;
-    player[i].inputs.cStickAxis[0].x = cstickX;
-    player[i].inputs.cStickAxis[0].y = cstickY;
-    player[i].inputs.lAnalog[0] = lAnalog;
-    player[i].inputs.rAnalog[0] = rAnalog;
-    if (mType[i] == 10) {
-      player[i].inputs.s[0] = keys[keyMap.s[0]] || keys[keyMap.s[1]];
-      player[i].inputs.x[0] = keys[keyMap.x[0]] || keys[keyMap.x[1]];
-      player[i].inputs.a[0] = keys[keyMap.a[0]] || keys[keyMap.a[1]];
-      player[i].inputs.b[0] = keys[keyMap.b[0]] || keys[keyMap.b[1]];
-      player[i].inputs.y[0] = keys[keyMap.y[0]] || keys[keyMap.y[1]];
-      player[i].inputs.r[0] = keys[keyMap.r[0]] || keys[keyMap.r[1]];
-      player[i].inputs.l[0] = keys[keyMap.l[0]] || keys[keyMap.l[1]];
-      player[i].inputs.dpadleft[0] = keys[keyMap.dl[0]];
-      player[i].inputs.dpaddown[0] = keys[keyMap.dd[0]];
-      player[i].inputs.dpadright[0] = keys[keyMap.dr[0]];
-      player[i].inputs.dpadup[0] = keys[keyMap.du[0]];
-    } else {
-
-      player[i].inputs.s[0] = buttonData(gamepad,"s").pressed;
-      player[i].inputs.x[0] = buttonData(gamepad,"x").pressed;
-      player[i].inputs.a[0] = buttonData(gamepad,"a").pressed;
-      player[i].inputs.b[0] = buttonData(gamepad,"b").pressed;
-      player[i].inputs.y[0] = buttonData(gamepad,"y").pressed;
-      if (mType[i] == 3) {
-        // FOR XBOX CONTROLLERS
-        player[i].inputs.r[0] = buttonData(gamepad,"r").value > 0.95 ? true : false;
-        player[i].inputs.l[0] = buttonData(gamepad,"l").value > 0.95 ? true : false;
-
-        // 4 is lB, 5 is RB
-        if (gamepad.buttons[4].pressed) {
-          player[i].inputs.l[0] = true;
-        }
-      } else if (mType[i] == 9) { // Rock Candy controller
-        player[i].inputs.r[0] = axisData(gamepad,"rA").value > 0.95 ? true : false;
-        player[i].inputs.l[0] = axisData(gamepad,"lA").value > 0.95 ? true : false;
-        if (gamepad.buttons[4].pressed) {
-          player[i].inputs.l[0] = true;
-        }
-      } else {
-        player[i].inputs.r[0] = buttonData(gamepad,"r").pressed;
-        player[i].inputs.l[0] = buttonData(gamepad,"l").pressed;
+    if (active) {
+      if (tempBuffer[0].dl && !tempBuffer[1].dl ) {
+       player[i].showLedgeGrabBox ^= true;
       }
-      if (mType[i] == 9) { // Rock Candy controller, parameters to be confirmed
-        player[i].inputs.dpadleft[0]  = gamepad.axes[6] < -0.5 ? true : false;
-        player[i].inputs.dpadright[0] = gamepad.axes[6] >  0.5 ? true : false;
-        player[i].inputs.dpaddown[0]  = gamepad.axes[7] >  0.5 ? true : false;
-        player[i].inputs.dpadup[0]    = gamepad.axes[7] < -0.5 ? true : false;
+      if (tempBuffer[0].dd && !tempBuffer[1].dd) {
+        player[i].showECB ^= true;
+      }
+      if (tempBuffer[0].dr && !tempBuffer[1].dr) {
+        player[i].showHitbox ^= true;
+      }
+    }
+    if ((tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) && (tempBuffer[0].r ||
+         tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
+      if (tempBuffer[0].b || tempBuffer[1].b) {
+        startGame();
       }
       else {
-        player[i].inputs.dpadleft[0]  = buttonData(gamepad,"dl").pressed;
-        player[i].inputs.dpaddown[0]  = buttonData(gamepad,"dd").pressed;
-        player[i].inputs.dpadright[0] = buttonData(gamepad,"dr").pressed;
-        player[i].inputs.dpadup[0]    = buttonData(gamepad,"du").pressed;
+        endGame(inputBuffer);
       }
     }
 
-    if (!frameByFrame) {
-      if (mType[i] == 10) {
-        player[i].inputs.z[0] = keys[keyMap.z[0]] || keys[keyMap.z[1]];
-      } else {
-        player[i].inputs.z[0] = buttonData(gamepad,"z").pressed;
+    interpretPause(pause[i][0], pause[i][1]);
+
+    if (showDebug) {
+    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
+    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
+    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
+    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
+    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
+    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
+    }
+  }
+  else { // gamepad controls
+
+    if (tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s) {
+      if (tempBuffer[0].b) {
+        startGame();
       }
-      if (player[i].inputs.z[0]) {
-        player[i].inputs.lAnalog[0] = 0.35;
-        player[i].inputs.a[0] = true;
+      else {
+        endGame(inputBuffer);
       }
     }
-    if (player[i].inputs.l[0]) {
-      player[i].inputs.lAnalog[0] = 1;
+
+    if ( tempBuffer[0].s || tempBuffer[0].du.pressed && gameMode == 5) {
+      pause[i][0] = true;
     }
-    if (player[i].inputs.r[0]) {
-      player[i].inputs.rAnalog[0] = 1;
+    else {
+      pause[i][0] = false;
     }
-  } else {
-    if (mType[i] == 10) {
-      if ((keys[keyMap.a[0]] || keys[keyMap.a[1]]) && (keys[keyMap.l[0]] || keys[keyMap.l[1]]) && (keys[keyMap.r[0]] ||
-          keys[keyMap.r[1]]) && (keys[keyMap.s[0]] || keys[keyMap.s[1]])) {
-        if (keys[keyMap.b[0]] || keys[keyMap.b[1]]) {
-          startGame();
-        } else {
-          endGame();
-        }
-      }
+
+
+    if (tempBuffer[0].z && ! tempBuffer[1].z ) {
+      frameAdvance[i][0] = true;
     } else {
-      if (mType[i] == 3) {
-        if (buttonData(gamepad,"a").pressed && buttonData(gamepad,"l").value == 1 && buttonData(gamepad,"r").value == 1 && buttonData(gamepad,"s").pressed) {
-          if (buttonData(gamepad,"b").pressed) {
-            startGame();
-          } else {
-            endGame();
-          }
-        }
-      } else {
-        if (buttonData(gamepad,"a").pressed && buttonData(gamepad,"l").pressed && buttonData(gamepad,"r").pressed && buttonData(gamepad,"s").pressed) {
-          if (buttonData(gamepad,"b").pressed) {
-            startGame();
-          } else {
-            endGame();
-          }
-        }
-      }
+      frameAdvance[i][0] = false;
     }
-    if (frameAdvance[i][0] && !frameAdvance[i][1]) {
+
+    if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode != 4) {
       frameByFrame = true;
     }
-  }
-  if (player[i].inputs.dpadleft[0] && !player[i].inputs.dpadleft[1]) {
-    player[i].showLedgeGrabBox ^= true;
-  }
-  if (player[i].inputs.dpaddown[0] && !player[i].inputs.dpaddown[1]) {
-    player[i].showECB ^= true;
-  }
-  if (player[i].inputs.dpadright[0] && !player[i].inputs.dpadright[1]) {
-    player[i].showHitbox ^= true;
-  }
-  if (mType[i] != 10) {
-    if ((buttonData(gamepad,"z").pressed || buttonData(gamepad,"du").pressed) && buttonData(gamepad,"x").pressed && buttonData(gamepad,"y").pressed && !attemptingControllerReset[i]) {
-      attemptingControllerReset[i] = true;
-      setTimeout(function() {
-        if (buttonData(gamepad,"du").pressed && buttonData(gamepad,"x").pressed && buttonData(gamepad,"y").pressed) {
-          custcent[i].ls = new Vec2D(axisData(gamepad,"lsX"), axisData(gamepad,"lsY") * -1);
-          custcent[i].cs = new Vec2D(axisData(gamepad,"lsX"), axisData(gamepad,"lsY") * -1);
-          custcent[i].l = axisData(gamepad,"lA") + 0.8;
-          custcent[i].r = axisData(gamepad,"RA") + 0.8;
-          console.log("Controller Reset!");
-          $("#resetIndicator" + i).fadeIn(100);
-          $("#resetIndicator" + i).fadeOut(500);
-        }
-        attemptingControllerReset[i] = false;
-      }, 2000);
+
+    if (tempBuffer[0].dl && !tempBuffer[1].dl) {
+      player[i].showLedgeGrabBox ^= true;
     }
+    if (tempBuffer[0].dd && !tempBuffer[1].dd) {
+      player[i].showECB ^= true;
+    }
+    if (tempBuffer[0].dr && !tempBuffer[1].dr) {
+      player[i].showHitbox ^= true;
+    }
+
+    // Controller reset functionality
+    if ((tempBuffer[0].z || tempBuffer[0].du) && tempBuffer[0].x && tempBuffer[0].y) {
+      controllerResetCountdowns[i] -= 1;
+      if (controllerResetCountdowns[i] === 0) {
+        custcent[i].ls = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
+        custcent[i].cs = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
+        custcent[i].l = tempBuffer[0].lA;
+        custcent[i].r = tempBuffer[0].rA;
+        console.log("Controller #"+(i+1)+" was reset!");
+        $("#resetIndicator" + i).fadeIn(100);
+        $("#resetIndicator" + i).fadeOut(500);
+      }
+    }
+    else {
+      controllerResetCountdowns[i] = 125;
+    }
+
+    interpretPause(pause[i][0], pause[i][1]);
+
+    showButton(i, 0,tempBuffer[0].a);
+    showButton(i, 1,tempBuffer[0].b);
+    showButton(i, 2,tempBuffer[0].x);
+    showButton(i, 3,tempBuffer[0].y);
+    showButton(i, 4,tempBuffer[0].z);
+    showButton(i, 5,tempBuffer[0].r);
+    showButton(i, 6,tempBuffer[0].l);
+    showButton(i, 7,tempBuffer[0].s);
+    showButton(i, 8,tempBuffer[0].du);
+    showButton(i, 9,tempBuffer[0].dr);
+    showButton(i,10,tempBuffer[0].dd);
+    showButton(i,11,tempBuffer[0].dl);
+
+    if (showDebug) {
+    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
+    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
+    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
+    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
+    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
+    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
+    }
+
   }
-  if (pause[i][0] && !pause[i][1]) {
+  return tempBuffer;
+
+}
+
+function interpretPause(pause0, pause1) {
+  if (pause0 && !pause1) {
     if (gameMode == 3 || gameMode == 5) {
       playing ^= true;
       if (!playing) {
         sounds.pause.play();
-        //music.battlefield.volume(0.3);
         changeVolume(music, masterVolume[1] * 0.3, 1);
         renderForeground();
       } else {
-        //music.battlefield.volume(0);
         changeVolume(music, masterVolume[1], 1);
-      }
-    }
-  }
-
-  if (showDebug) {
-    $("#lsAxisX" + i).empty().append(lstickX.toFixed(5));
-    $("#lsAxisY" + i).empty().append(lstickY.toFixed(5));
-    $("#csAxisX" + i).empty().append(cstickX.toFixed(5));
-    $("#csAxisY" + i).empty().append(cstickY.toFixed(5));
-    $("#lAnalog" + i).empty().append(lAnalog.toFixed(5));
-    $("#rAnalog" + i).empty().append(rAnalog.toFixed(5));
-  }
-
-  if (mType[i] == 10) {
-    /*for (var j=0;j<12;j++){
-      if ((keyboardMap[j].length > 1)?(keys[keyboardMap[j][0]] || keys[keyboardMap[j][1]] || keys[keyboardMap[j][2]]):keys[keyboardMap[j]]){
-        $("#"+i+"button"+j).show();
-      }
-      else {
-        $("#"+i+"button"+j).hide();
-      }
-    }*/
-  } else {
-    for (var j = 0; j < 12; j++) {
-      var bNum = j;
-      if (mType[i] == 0) {
-        if (bNum > 5) {
-          bNum++;
-        }
-        if (bNum > 7) {
-          bNum++;
-        }
-        if (bNum > 8) {
-          bNum += 2;
-        }
-      }
-      if (gamepad.buttons[bNum].pressed) { // this could cause problems if controller has undefined buttons
-        $("#" + i + "button" + j).show();
-      } else {
-        $("#" + i + "button" + j).hide();
       }
     }
   }
@@ -925,93 +763,93 @@ export function renderToMain (){
   }
 }
 
-
-
-
-export function update (i){
+export function update (i,inputBuffers){
   if (!starting){
     if (currentPlayers[i] != -1){
-      if (playerType[i] === 0){
-        interpretInputs(i,true);
+      if (playerType[i] == 0){
+        // do nothing, use the provided player i inputs
       }
       else if (playerType[i] === 1) {
         if (player[i].actionState != "SLEEP"){
-          runAI(i);
+            runAI(i); // no need to return input since polling returns ai input if they are active
         }
       }
     }
   }
-  physics(i);
+  physics(i, inputBuffers);
 }
 
 let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
-export function gameTick (){
+export function gameTick (oldInputBuffers){
   var start = performance.now();
   var diff = 0;
+
+  let input = [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
+
   if (gameMode == 0 || gameMode == 20) {
     findPlayers();
   } else if (gameMode == 1) {
     //console.log(playerType);
     for (var i = 0; i < ports; i++) {
-      interpretInputs(i, true);
-      menuMove(i);
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
+      menuMove(i, input);
     }
   } else if (gameMode == 10) {
     for (var i = 0; i < ports; i++) {
-      interpretInputs(i, true);
-      audioMenuControls(i);
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
+      audioMenuControls(i, input);
     }
   } else if (gameMode == 11) {
     for (var i = 0; i < ports; i++) {
-      interpretInputs(i, true);
-      gameplayMenuControls(i);
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
+      gameplayMenuControls(i, input);
     }
   } else if (gameMode == 12) {
     for (var i = 0; i < ports; i++) {
-      interpretInputs(i, true);
-      keyboardMenuControls(i);
+      input[i] = interpretInputs(i, true, playerType[i], oldInputBuffers[i]);
+      keyboardMenuControls(i, input);
     }
   } else if (gameMode == 13) {
-    interpretInputs(creditsPlayer, true);
-    credits(creditsPlayer);
+    input[creditsPlayer] = interpretInputs(creditsPlayer, true, playerType[creditsPlayer],oldInputBuffers[creditsPlayer]);
+    credits(creditsPlayer, input);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
-        interpretInputs(i, true);
-        cssControls(i);
+        input[i] = interpretInputs(i, true, playerType[i],oldInputBuffers[i]);
+        cssControls(i, input);
       }
 
-      aS[cS[i]][player[i].actionState].main(i);
+      actionStates[characterSelections[i]][player[i].actionState].main(i,input);
     }
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetect(i);
+        hitDetect(i,input);
       }
     }
-    executeHits();
+    executeHits(input);
       resetHitQueue();
     findPlayers();
   } else if (gameMode == 6) {
     // stage select
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
-        interpretInputs(i, true);
-        sssControls(i);
+        input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+        sssControls(i, input);
       }
     }
   } else if (gameMode == 7) {
     // stage select
-    interpretInputs(targetPlayer, true);
-    tssControls(targetPlayer);
+    input[targetPlayer] = interpretInputs(targetPlayer, true,playerType[targetPlayer],oldInputBuffers[targetPlayer]);
+    tssControls(targetPlayer, input);
   } else if (gameMode == 4) {
-    interpretInputs(targetBuilder, true);
-    targetBuilderControls(targetBuilder);
+    input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+    targetBuilderControls(targetBuilder, input);
   } else if (gameMode == 5) {
     if (endTargetGame) {
-      finishGame();
+      finishGame(input);
     }
     if (playing || frameByFrame) {
       var now = performance.now();
@@ -1019,7 +857,8 @@ export function gameTick (){
       lastUpdate = now;
       destroyArticles();
       executeArticles();
-      update(targetBuilder);
+      input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+      update(targetBuilder,input);
       targetHitDetection(targetBuilder);
       if (!starting) {
         targetTimerTick();
@@ -1029,8 +868,8 @@ export function gameTick (){
           starting = false;
         }
       }
-      if (player[targetBuilder].inputs.s[0] && !player[targetBuilder].inputs.s[1]) {
-        endGame();
+      if (input[targetBuilder][0].s && !input[targetBuilder][1].s) {
+        endGame(input);
       }
       if (frameByFrame) {
         frameByFrameRender = true;
@@ -1057,7 +896,7 @@ export function gameTick (){
       }
     } else {
       if (!gameEnd) {
-        interpretInputs(targetBuilder, false);
+        input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
       }
     }
   } else if (playing || frameByFrame) {
@@ -1078,20 +917,21 @@ export function gameTick (){
     executeArticles();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        update(i);
+        input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+        update(i,input);
       }
     }
     checkPhantoms();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetect(i);
+        hitDetect(i,input);
       }
     }
-    executeHits();
+    executeHits(input);
     articlesHitDetection();
     executeArticleHits();
     if (!starting && !versusMode) {
-      matchTimerTick();
+      matchTimerTick(input);
     } else {
       startTimer -= 0.01666667;
       if (startTimer < 0) {
@@ -1128,7 +968,7 @@ export function gameTick (){
       for (var i = 0; i < 4; i++) {
         if (playerType[i] == 0) {
           if (currentPlayers[i] != -1) {
-            interpretInputs(i, false);
+            input[i] = interpretInputs(i, false,playerType[i],oldInputBuffers[i]);
           }
         }
       }
@@ -1152,7 +992,7 @@ export function gameTick (){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick, 16 - diff);
+  setTimeout(gameTick, 16 - diff, input);
 }
 
 export function clearScreen (){
@@ -1280,7 +1120,7 @@ export function renderTick (){
 }
 
 export function buildPlayerObject (i){
-  player[i] = new playerObject(cS[i],startingPoint[i],startingFace[i]);
+  player[i] = new playerObject(characterSelections[i],startingPoint[i],startingFace[i]);
   player[i].phys.ECB1 = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
   player[i].phys.ECBp = [new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y),new Vec2D(startingPoint[i].x,startingPoint[i].y)];
   player[i].difficulty = cpuDifficulty[i];
@@ -1341,7 +1181,7 @@ export function startGame (){
   playing = true;
 }
 
-export function endGame (){
+export function endGame (input){
   gameEnd = false;
   resetLostStockQueue();
     setPhantonQueue([]);
@@ -1364,12 +1204,7 @@ export function endGame (){
       changeGamemode(7);
     }
   }
-  pause = [
-    [true, true],
-    [true, true],
-    [true, true],
-    [true, true]
-  ];
+  pause = [[true,true],[true,true],[true,true],[true,true]];
   frameAdvance = [
     [true, true],
     [true, true],
@@ -1383,8 +1218,8 @@ export function endGame (){
       if (player[i].actionState == "FURAFURA") {
         sounds.furaloop.stop(player[i].furaLoopID);
       }
-      player[i].inputs.a[0] = true;
-      player[i].inputs.a[1] = true;
+      //input[i][0].a = true; // do
+      //input[i][1].a = true; // not
       player[i].inCSS = true;
       player[i].phys.face = 1;
       player[i].actionState = "WAIT";
@@ -1393,7 +1228,7 @@ export function endGame (){
   }
 }
 
-export function finishGame (){
+export function finishGame (input){
     setEndTargetGame(false);
   gameEnd = true;
   playing = false;
@@ -1408,19 +1243,19 @@ export function finishGame (){
       if (!targetTesting) {
         if (targetStagePlaying < 10) {
           for (var i = 0; i < 3; i++) {
-            if (!medalsEarned[cS[targetPlayer]][targetStagePlaying][i]) {
-              if (Math.round(matchTimer * 100) / 100 <= medalTimes[cS[targetPlayer]][targetStagePlaying][i]) {
-                medalsEarned[cS[targetPlayer]][targetStagePlaying][i] = true;
+            if (!medalsEarned[characterSelections[targetPlayer]][targetStagePlaying][i]) {
+              if (Math.round(matchTimer * 100) / 100 <= medalTimes[characterSelections[targetPlayer]][targetStagePlaying][i]) {
+                medalsEarned[characterSelections[targetPlayer]][targetStagePlaying][i] = true;
               }
             }
           }
         }
-        if (matchTimer < targetRecords[cS[targetPlayer]][targetStagePlaying] || targetRecords[cS[targetPlayer]][
+        if (matchTimer < targetRecords[characterSelections[targetPlayer]][targetStagePlaying] || targetRecords[characterSelections[targetPlayer]][
             targetStagePlaying
           ] == -1) {
-          targetRecords[cS[targetPlayer]][targetStagePlaying] = matchTimer;
+          targetRecords[characterSelections[targetPlayer]][targetStagePlaying] = matchTimer;
           sounds.newRecord.play();
-          setCookie(cS[targetPlayer] + "target" + targetStagePlaying, targetRecords[cS[targetPlayer]][
+          setCookie(characterSelections[targetPlayer] + "target" + targetStagePlaying, targetRecords[characterSelections[targetPlayer]][
             targetStagePlaying
           ], 36500);
         } else {
@@ -1480,7 +1315,7 @@ export function finishGame (){
   music.pStadium.stop();
   music.dreamland.stop();
   setTimeout(function() {
-    endGame()
+    endGame(input)
   }, 2500);
 }
 
@@ -1515,7 +1350,8 @@ export function start (){
   ui = layers.UI.getContext("2d");
   bg1.fillStyle = "rgb(0, 0, 0)";
   bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
-  gameTick();
+  let nullInputBuffers =  [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
+  gameTick(nullInputBuffers);
   renderTick();
 
   $("#effectsButton").click(function() {
@@ -1699,5 +1535,5 @@ export function cacheDom() {
 };
 
 export function setCS(index,val){
-  cS[index] = val;
+  characterSelections[index] = val;
 }

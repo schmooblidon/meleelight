@@ -1,25 +1,25 @@
-import {reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "SHIELDBREAKSTAND",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "SHIELDBREAKSTAND";
     player[p].timer = 0;
-    aS[cS[p]].SHIELDBREAKSTAND.main(p);
+    actionStates[characterSelections[p]].SHIELDBREAKSTAND.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].SHIELDBREAKSTAND.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SHIELDBREAKSTAND.interrupt(p,input)){
       reduceByTraction(p,true);
       player[p].phys.intangibleTimer = 1;
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].SHIELDBREAKSTAND){
-      aS[cS[p]].FURAFURA.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].SHIELDBREAKSTAND){
+      actionStates[characterSelections[p]].FURAFURA.init(p,input);
       return true;
     }
     else {
