@@ -616,7 +616,7 @@ export function physics (i,input){
 
       let relevantGroundTypeAndIndex = [relevantGroundType, relevantGroundIndex];
 
-      [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex, connectednessFunction);
+      [stillGrounded, backward] = dealWithGround(i, relevantGround, relevantGroundTypeAndIndex, connectednessFunction, input);
 
       // squash grounded ECB if there is a low ceiling
       if (stillGrounded) {
