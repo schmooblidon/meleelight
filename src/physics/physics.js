@@ -916,21 +916,15 @@ export function physics (i){
   }*/
   //player[i].phys.ECB1 = [new Vec2D(0+x,ecbOffset[0]+y),new Vec2D(ecbOffset[1]+x,ecbOffset[2]+y),new Vec2D(0+x,ecbOffset[3]+y),new Vec2D(ecbOffset[1]*-1+x,ecbOffset[2]+y)];
 
+  player[i].phys.ECB1 = [
+    new Vec2D( x                                 , y + ecbSquashFactor * ecbOffset[0] ),
+    new Vec2D( x + ecbSquashFactor * ecbOffset[1], y + ecbSquashFactor * ecbOffset[2] ),
+    new Vec2D( x                                 , y + ecbSquashFactor * ecbOffset[3] ),
+    new Vec2D( x - ecbSquashFactor * ecbOffset[1], y + ecbSquashFactor * ecbOffset[2] )
+  ];
+
   if (player[i].phys.grounded || player[i].phys.airborneTimer < 10) {
-    player[i].phys.ECB1 = [
-      new Vec2D( x                                 , y ),
-      new Vec2D( x + ecbSquashFactor * ecbOffset[1], y + ecbSquashFactor *(ecbOffset[0] + ecbOffset[2]) ),
-      new Vec2D( x                                 , y + ecbSquashFactor *(ecbOffset[0] + ecbOffset[3]) ),
-      new Vec2D( x - ecbSquashFactor * ecbOffset[1], y + ecbSquashFactor *(ecbOffset[0] + ecbOffset[2]) )
-    ];
-  }
-  else {
-    player[i].phys.ECB1 = [
-      new Vec2D( x                                 , y + ecbSquashFactor * ecbOffset[0] ),
-      new Vec2D( x + ecbSquashFactor * ecbOffset[1], y + ecbSquashFactor * ecbOffset[2] ),
-      new Vec2D( x                                 , y + ecbSquashFactor * ecbOffset[3] ),
-      new Vec2D( x - ecbSquashFactor * ecbOffset[1], y + ecbSquashFactor * ecbOffset[2] )
-    ];
+    player[i].phys.ECB1[0].y = y;
   }
 
   /*else if (player[i].phys.grounded || player[i].phys.airborneTimer < 10){
