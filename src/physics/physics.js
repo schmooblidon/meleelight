@@ -141,7 +141,7 @@ function fallOffGround(i, side, groundEdgePosition,input) {
   return [stillGrounded, backward];
 }
 // ground type and index is a pair, either ["g", index] or ["p", index]
-function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction,input) {
+function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction, input) {
   let leftmostGroundPoint  = extremePoint(ground,"l");
   let rightmostGroundPoint = extremePoint(ground,"r");
   let [stillGrounded, backward] = [true,false];
@@ -162,10 +162,10 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction,inp
       let [leftGroundType, leftGroundIndex] = maybeLeftGroundTypeAndIndex;
       switch (leftGroundType) {
         case "g":
-          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[leftGroundIndex], ["g",leftGroundIndex],input);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[leftGroundIndex], ["g",leftGroundIndex], connectednessFunction, input);
           break;
         case "p":
-          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[leftGroundIndex], ["p",leftGroundIndex],input);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[leftGroundIndex], ["p",leftGroundIndex], connectednessFunction, input);
           break;
         default: // surface to the left is neither a ground nor a platform
           [stillGrounded, backward] = fallOffGround(i, "l", leftmostGroundPoint,input);
@@ -182,10 +182,10 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction,inp
       let [rightGroundType, rightGroundIndex] = maybeRightGroundTypeAndIndex;
       switch (rightGroundType) {
         case "g":
-          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[rightGroundIndex], ["g",rightGroundIndex],input);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.ground[rightGroundIndex], ["g",rightGroundIndex], connectednessFunction, input);
           break;
         case "p":
-          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[rightGroundIndex], ["p",rightGroundIndex],input);
+          [stillGrounded, backward] = dealWithGround(i, activeStage.platform[rightGroundIndex], ["p",rightGroundIndex], connectednessFunction, input);
           break;
         default: // surface to the right is neither a ground nor a platform
           [stillGrounded, backward] = fallOffGround(i, "r", rightmostGroundPoint,input);
@@ -671,6 +671,8 @@ export function physics (i,input){
         dealWithCollision(i, surfacesMaybeCenterAndTouchingType[0]);
       }
       else {
+        const myNewCenter = surfacesMaybeCenterAndTouchingType[0];
+
         const ecbp0 = new Vec2D ( player[i].phys.ECBp[0].x + surfacesMaybeCenterAndTouchingType[0].x - player[i].phys.pos.x
                                 , player[i].phys.ECBp[0].y + surfacesMaybeCenterAndTouchingType[0].y - player[i].phys.pos.y);
         switch(surfacesMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
@@ -758,106 +760,9 @@ export function physics (i,input){
         player[i].phys.shieldHP = 60;
       }
     }
+  }
 
-    if (!player[i].phys.grounded) {
-      for (var j = 0; j < activeStage.ground.length; j++) {
-        if (player[i].phys.ECBp[0].y < activeStage.ground[j][0].y &&
-            player[i].phys.ECBp[0].x >= activeStage.ground[j][0].x &&
-            player[i].phys.ECBp[0].x <= activeStage.ground[j][1].x &&
-            player[i].phys.ECB1[0].y >= activeStage.ground[j][0].y) {
 
-          if (player[i].hit.hitlag > 0) {
-            player[i].phys.pos.y = activeStage.ground[j][0].y;
-          } else {
-            land(i, activeStage.ground[j][0].y, 0, j,input);
-          }
-          break;
-        }
-      }
-      for (var j = 0; j < activeStage.ceiling.length; j++) {
-        if (player[i].phys.ECBp[2].y > activeStage.ceiling[j][0].y &&
-            player[i].phys.ECBp[0].x >= activeStage.ceiling[j][0].x &&
-            player[i].phys.ECBp[0].x <= activeStage.ceiling[j][1].x &&
-            player[i].phys.ECB1[2].y <= activeStage.ceiling[j][0].y) {
-
-          player[i].phys.pos.y = activeStage.ceiling[j][0].y - (player[i].phys.ECBp[2].y - player[i].phys.pos.y) - 0.01;
-          if (actionStates[characterSelections[i]][player[i].actionState].headBonk) {
-            if (player[i].hit.hitstun > 0) {
-              if (player[i].phys.techTimer > 0) {
-                actionStates[characterSelections[i]].TECHU.init(i,input);
-              } else {
-                drawVfx("ceilingBounce", new Vec2D(player[i].phys.ECBp[0].x, activeStage.ceiling[j][0].y), 1);
-                sounds.bounce.play();
-                actionStates[characterSelections[i]].STOPCEIL.init(i,input);
-              }
-            } else {
-              actionStates[characterSelections[i]].STOPCEIL.init(i,input);
-            }
-          }
-        }
-      }
-    }
-
-    // TOP CORNER COLLISION
-    for (var j = 0; j < activeStage.ground.length; j++) {
-      if (player[i].phys.ECBp[0].y < activeStage.ground[j][0].y &&
-          player[i].phys.ECBp[1].y > activeStage.ground[j][0].y &&
-          player[i].phys.ECB1[0].x <= activeStage.ground[j][0].x) {
-
-        var yDistToBottom = Math.abs(activeStage.ground[j][0].y - player[i].phys.ECBp[0].y);
-        var curECBangle = Math.atan((player[i].phys.ECBp[1].y - player[i].phys.ECBp[0].y) / ecbOffset[1]);
-        var proposedXDistance = yDistToBottom / Math.tan(curECBangle);
-        if (activeStage.ground[j][0].x - player[i].phys.ECBp[0].x < proposedXDistance) {
-          player[i].phys.pos.x = activeStage.ground[j][0].x - proposedXDistance;
-        }
-
-      } else if (player[i].phys.ECBp[0].y < activeStage.ground[j][0].y &&
-                 player[i].phys.ECBp[3].y > activeStage.ground[j][0].y &&
-                 player[i].phys.ECB1[0].x >= activeStage.ground[j][1].x) {
-
-        var yDistToBottom = Math.abs(activeStage.ground[j][1].y - player[i].phys.ECBp[0].y);
-        var curECBangle = Math.atan((player[i].phys.ECBp[3].y - player[i].phys.ECBp[0].y) / ecbOffset[1]);
-        var proposedXDistance = yDistToBottom / Math.tan(curECBangle);
-        if ((activeStage.ground[j][1].x - player[i].phys.ECBp[0].x) * -1 < proposedXDistance) {
-          player[i].phys.pos.x = activeStage.ground[j][1].x + proposedXDistance;
-        }
-      }
-    }
-    // BOTTOM CORNER COLLISION
-    for (var j = 0; j < activeStage.ceiling.length; j++) {
-      if (player[i].phys.ECBp[2].y > activeStage.ceiling[j][0].y &&
-          player[i].phys.ECBp[3].y < activeStage.ceiling[j][0].y &&
-          player[i].phys.ECB1[2].x >= activeStage.ceiling[j][1].x) {
-
-        var yDistToTop = Math.abs(activeStage.ceiling[j][1].y - player[i].phys.ECBp[2].y);
-        var curECBangle = Math.atan((ecbOffset[3] - ecbOffset[2]) / ecbOffset[1]);
-        var proposedXDistance = yDistToTop / Math.tan(curECBangle);
-        if ((activeStage.ceiling[j][1].x - player[i].phys.ECBp[0].x) * -1 < proposedXDistance) {
-          player[i].phys.pos.x = activeStage.ceiling[j][1].x + proposedXDistance;
-        }
-      } else if (player[i].phys.ECBp[2].y > activeStage.ceiling[j][0].y &&
-                 player[i].phys.ECBp[1].y < activeStage.ceiling[j][0].y &&
-                 player[i].phys.ECB1[2].x <= activeStage.ceiling[j][0].x) {
-
-        var yDistToTop = Math.abs(activeStage.ceiling[j][0].y - player[i].phys.ECBp[2].y);
-        var curECBangle = Math.atan((ecbOffset[3] - ecbOffset[2]) / ecbOffset[1]);
-        var proposedXDistance = yDistToTop / Math.tan(curECBangle);
-        if (activeStage.ceiling[j][0].x - player[i].phys.ECBp[2].x < proposedXDistance) {
-          player[i].phys.pos.x = activeStage.ceiling[j][0].x - proposedXDistance;
-        }
-      }
-    }
-  } // END OF IGNORE COLLISION CHECK
-
-  /*for (var j=0;j<stage.ground.length;j++){
-    if (player[i].phys.ECBp[1].x > stage.ground[j][0].x && player[i].phys.ECBp[1].x < stage.ground[j][1].x && player[i].phys.ECBp[1].y > stage.ground[j][0].y && player[i].phys.ECBp[0].y < stage.ground[j][0].y && player[i].phys.ECBp[0].y > stage.ceiling[j][0].y){
-      console.log("top left corner");
-      player[i].phys.pos.x = stage.ground[j][0].x-(ecbOffset[1]*(stage.ground[j][0].y - player[i].phys.ECBp[0].y)/ecbOffset[2]);
-    }
-    else if (player[i].phys.ECBp[3].x < stage.ground[j][1].x && player[i].phys.ECBp[3].x > stage.ground[j][0].x && player[i].phys.ECBp[3].y > stage.ground[j][1].y && player[i].phys.ECBp[0].y < stage.ground[j][1].y && player[i].phys.ECBp[0].y > stage.ceiling[j][1].y){
-      console.log("top right corner");
-    }
-  }*/
 
   player[i].phys.ledgeSnapBoxF = new Box2D(
     [
