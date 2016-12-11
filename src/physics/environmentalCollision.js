@@ -374,6 +374,8 @@ function edgeSweepingCheck( ecb1, ecbp, same, other, position, counterclockwise,
 };
 
 
+// this function returns the absolute horizontal pushout vector for a wall
+// this function recursively looks at adjacent walls if necessary
 function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFunction, ecbpSame, ecbpTop) {
   console.log("'pushoutHorizontally' working with wall "+wallType+""+wallIndex+".");
 
@@ -419,7 +421,7 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFu
     else if (ecbpSame.y >= wallTop.y) { // in this case, push the side point out
       nextWallToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
       if (nextWallToTheSideTypeAndIndex === false || nextWallToTheSideTypeAndIndex[0] !== wallType) {
-        console.log("'pushoutHorizontally': top case, pushing out side point (no adjacent wall).");
+        console.log("'pushoutHorizontally': top case, pushing out side point (no relevant adjacent wall).");
         return (wallSide.x - ecbpSame.x);
       }
       else {
@@ -447,7 +449,7 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFu
       nextWallToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
       if (nextWallToTheSideTypeAndIndex === false || nextWallToTheSideTypeAndIndex[0] !== wallType) {
         // place the relevant top ECB edge on the corner
-        console.log("'pushoutHorizontally': top case, directly pushing out to corner (no adjacent wall).");
+        console.log("'pushoutHorizontally': top case, directly pushing out to corner (no relevant adjacent wall).");
         return (wallSide.x - coordinateIntercept( [ecbpSame, ecbpTop], cornerLine ).x);
       }
       else {
@@ -488,7 +490,7 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFu
       }
 
       if (nextWallToTheSideTypeAndIndex === false || nextWallToTheSideTypeAndIndex[0] !== wallType) {
-        console.log("'pushoutHorizontally': side case, directly pushing out side point (no adjacent wall).");
+        console.log("'pushoutHorizontally': side case, directly pushing out side point (no relevant adjacent wall).");
         return (xIntersect - ecbpSame.x);
       }
       else {
@@ -513,102 +515,88 @@ function pushoutHorizontally ( wall, wallType, wallIndex, stage, connectednessFu
 };
 
 
-
+// this function returns the relative vertical pushout vector, relative to the same-side ECB point
+// this function recursively looks at adjacent surfaces if necessary
 function pushoutVertically ( wall, wallType, wallIndex, stage, connectednessFunction, line) {
+  console.log("'pushoutVertically' working with wall "+wallType+""+wallIndex+".");
+
+  const wallRight  = extremePoint(wall, "r");
+  const wallLeft   = extremePoint(wall, "l");
   const wallTop    = extremePoint(wall, "t");
   const wallBottom = extremePoint(wall, "b");
-  const yIntersect = coordinateIntercept(wall, line).y;
-  const wallAngle = lineAngle(wall);
 
-  if ( yIntersect > wallTop.y ) {
+  const yIntersect = coordinateIntercept(wall, line).y; // line is the vertical line passing through the same-side projected ECB point
+  const wallAngle = lineAngle([wallLeft,wallRight]); // left then right
+  // we are assuming that the chains of connected surfaces go clockwise:
+  //    - left to right for grounds and platforms
+  //    - right to left for ceilings
+
+  let wallSame    = wallBottom; // ground or platform by default
+  let wallOpposite = wallTop;
+  let sign = 1;
+  if (wallType === "c") {
+    wallSame     = wallTop;
+    wallOpposite = wallBottom;
+    sign = -1;
+  }
+
+  if ( sign * yIntersect > sign * wallOpposite.y) {
 
     let dir = "r";
-    if ( ( wallAngle < Math.PI ) !== (wallType === "c") ) { // xor operation
+    if ( wallAngle > Math.PI ) { 
       dir = "l";
-    } 
+    }
 
-    const nextWallAboveTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
-    if (nextWallAboveTypeAndIndex === false || ! (nextWallAboveTypeAndIndex[0] === wallType)) {
-      return wallTop.y;
+    const nextSurfaceToTheSideTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
+    if (     nextSurfaceToTheSideTypeAndIndex === false 
+         || (   wallType === "c"                      && nextSurfaceToTheSideTypeAndIndex[0] !== "c" )
+         || ( ( wallType === "g" || wallType === "p") && nextSurfaceToTheSideTypeAndIndex[0] === "c" ) ) {
+      console.log("'pushoutVertically': directly pushing out ECB point (no relevant adjacent surface)");
+      return wallOpposite.y;
     }
     else {
+      let nextSurfaceToTheSide = false; // initialising
+      const nextSurfaceToTheSideType = nextSurfaceToTheSideTypeAndIndex[0];
+      switch(nextSurfaceToTheSideType) {
+        case "g":
+          nextSurfaceToTheSide = stage.ground  [ nextSurfaceToTheSideTypeAndIndex[1] ];
+          break;
+        case "c":
+          nextSurfaceToTheSide = stage.ceiling [ nextSurfaceToTheSideTypeAndIndex[1] ];
+          break;
+        case "p":
+          nextSurfaceToTheSide = stage.platform[ nextSurfaceToTheSideTypeAndIndex[1] ];
+          break;
+        default:
+          console.log("error in 'pushoutVertically': surface type neither ground, platform nor ceiling.");
+          break;
+      }
+      let nextSurfaceToTheSideOpposite = false; // initialising
       if (wallType === "c") {
-        const nextCeilingAbove = stage.ceiling[ nextWallAboveTypeAndIndex[1] ];
-        if (extremePoint(nextCeilingAbove, "t").y <= wallTop.y ) {
-          return wallTop.y;
-        }
-        else {
-          return pushoutVertically( nextCeilingAbove , "c", nextWallAboveTypeAndIndex[1], stage, connectednessFunction, line);
-        }
-      }
-      else if (wallType === "g") {
-        const nextGroundAbove = stage.ground[ nextWallAboveTypeAndIndex[1] ];
-        if (extremePoint(nextGroundAbove, "t").x <= wallTop.y ) {
-          return wallTop.y;
-        }
-        else {
-          return pushoutVertically( nextGroundAbove, "g", nextWallAboveTypeAndIndex[1], stage, connectednessFunction, line);
-        }
-      }
-      else if (wallType === "p") {
-        const nextPlatformAbove = stage.platform[ nextWallAboveTypeAndIndex[1] ];
-        if (extremePoint(nextPlatformAbove, "t").x <= wallTop.y ) {
-          return wallTop.y;
-        }
-        else {
-          return pushoutVertically( nextPlatformAbove, "p", nextWallAboveTypeAndIndex[1], stage, connectednessFunction, line);
-        }
+        nextSurfaceToTheSideOpposite = extremePoint(nextSurfaceToTheSide, "b");
       }
       else {
-        console.log("error in 'pushoutVertically': surface is not one of 'ground', 'ceiling' or 'platform'.");
+        nextSurfaceToTheSideOpposite = extremePoint(nextSurfaceToTheSide, "t");
       }
-    }
-  }
-  else if ( yIntersect < wallBottom.y ) {
-    let dir = "l";
-    if ( ( wallAngle < Math.PI ) !== (wallType === "c") ) { // xor operation
-      dir = "r";
-    }
-    const nextWallBelowTypeAndIndex = connectednessFunction( [wallType, wallIndex] , dir);
-    if (nextWallBelowTypeAndIndex === false || ! (nextWallBelowTypeAndIndex[0] === wallType)) {
-      return wallBottom.y;
-    }
-    else {
-      if (wallType === "c") {
-        const nextCeilingBelow = stage.ceiling[ nextWallBelowTypeAndIndex[1] ];
-        if (extremePoint(nextCeilingBelow, "b").y >= wallBottom.y ) {
-          return wallBottom.y;
-        }
-        else {
-          return pushoutVertically( nextCeilingBelow , "c", nextWallBelowTypeAndIndex[1], stage, connectednessFunction, line);
-        }
-      }
-      else if (wallType === "g") {
-        const nextGroundBelow = stage.ground[ nextWallBelowTypeAndIndex[1] ];
-        if (extremePoint(nextGroundBelow, "b").y >= wallBottom.y ) {
-          return wallBottom.y;
-        }
-        else {
-          return pushoutVertically( nextGroundBelow, "g", nextWallBelowTypeAndIndex[1], stage, connectednessFunction, line);
-        }
-      }
-      else if (wallType === "p") {
-        const nextPlatformBelow = stage.platform[ nextWallBelowTypeAndIndex[1] ];
-        if (extremePoint(nextPlatformBelow, "b").y <= wallBottom.y ) {
-          return wallBottom.y;
-        }
-        else {
-          return pushoutVertically( nextPlatformBelow, "p", nextWallBelowTypeAndIndex[1], stage, connectednessFunction, line);
-        }
+
+      if (sign * nextSurfaceToTheSideOpposite.y < sign * wallOpposite.y) {
+        console.log("'pushoutVertically': directly pushing out ECB point (next surface is useless)");
+        return wallOpposite.y;
       }
       else {
-        console.log("error in 'pushoutVertically': surface is not one of 'ground', 'ceiling' or 'platform'.");
+        console.log("'pushoutVertically': deferring to adjacent surface.");
+        return pushoutVertically( nextSurfaceToTheSide, nextSurfaceToTheSideType
+                                , nextSurfaceToTheSideTypeAndIndex[1], stage, connectednessFunction, line);
       }
     }
+
   }
+
   else {
+    console.log("'pushoutVertically': directly pushing out ECB point.");
     return yIntersect;
   }
+
 };
 
 function pointSweepingCheck ( wall, wallType, wallIndex, wallTopOrRight, wallBottomOrLeft, stage, connectednessFunction, xOrY, position, ecb1Same, ecbpSame, ecb1Top, ecbpTop){
