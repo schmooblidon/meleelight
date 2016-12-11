@@ -213,14 +213,14 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
 };
 
 function dealWithCeilingCollision(i, newCenter, offsets) {
-  const newECB2 = new Vec2D (newCenter.x, newCenter.y + offsets[3])
+  const newECBTop = new Vec2D (newCenter.x, newCenter.y + offsets[3])
   player[i].phys.pos = newCenter;
   if (aS[cS[i]][player[i].actionState].headBonk) {
     if (player[i].hit.hitstun > 0) {
       if (player[i].phys.techTimer > 0) {
         aS[cS[i]].TECHU.init(i);
       } else {
-        drawVfx("ceilingBounce", newECB2, 1);
+        drawVfx("ceilingBounce", newECBTop, 1);
         sounds.bounce.play();
         aS[cS[i]].STOPCEIL.init(i);
       }
