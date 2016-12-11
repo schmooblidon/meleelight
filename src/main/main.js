@@ -52,7 +52,7 @@ export let endTargetGame = false;
 export let creditsPlayer = 0;
 
 let gameEnd = false;
-const attemptingControllerReset = [false,false,false,false];
+let controllerResetCountdowns = [125,125,125,125];
 let keyboardOccupied = false;
 
 
@@ -141,8 +141,6 @@ export const edgeOffset = [[-2.9,-23.7],[2.9,-23.7]];
 export const edgeOrientation = [1,-1];
 
 export const respawnPoints = [[-50,50,1],[50,50,-1],[25,35,1],[-25,35,-1]];
-
-
 
 export var stageSelect = 0;
 
@@ -551,7 +549,7 @@ export const removePlayer (i){
 }*/
 
 export function interpretInputs  (i, active,playertype, inputBuffer) {
-  let tempBuffer = nullInputs();  
+  let tempBuffer = nullInputs();
 
   for (var k = 0; k < 7; k++) {
     tempBuffer[7-k].lsX  = inputBuffer[6-k].lsX;
@@ -673,20 +671,20 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
 
     // Controller reset functionality
-    if ((tempBuffer[0].z || tempBuffer[0].du) && tempBuffer[0].x && tempBuffer[0].y && !attemptingControllerReset[i]) {
-      attemptingControllerReset[i] = true;
-      setTimeout(function() {
-        if (tempBuffer[0].du && tempBuffer[0].x && tempBuffer[0].y) {
-          custcent[i].ls = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
-          custcent[i].cs = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
-          custcent[i].l = tempBuffer[0].lA;
-          custcent[i].r = tempBuffer[0].rA;
-          console.log("Controller Reset!");
-          $("#resetIndicator" + i).fadeIn(100);
-          $("#resetIndicator" + i).fadeOut(500);
-        }
-        attemptingControllerReset[i] = false;
-      }, 2000);
+    if ((tempBuffer[0].z || tempBuffer[0].du) && tempBuffer[0].x && tempBuffer[0].y) {
+      controllerResetCountdowns[i] -= 1;
+      if (controllerResetCountdowns[i] === 0) {
+        custcent[i].ls = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
+        custcent[i].cs = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
+        custcent[i].l = tempBuffer[0].lA;
+        custcent[i].r = tempBuffer[0].rA;
+        console.log("Controller #"+(i+1)+" was reset!");
+        $("#resetIndicator" + i).fadeIn(100);
+        $("#resetIndicator" + i).fadeOut(500);
+      }
+    }
+    else {
+      controllerResetCountdowns[i] = 125;
     }
 
     interpretPause(pause[i][0], pause[i][1]);
