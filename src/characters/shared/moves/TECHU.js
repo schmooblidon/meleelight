@@ -29,7 +29,7 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!actionStates[characterSelections[p]].TECHU.interrupt(p,input)){
-      fastfall(pminput,input);
+      fastfall(p,input);
       airDrift(p,input);
     }
   },

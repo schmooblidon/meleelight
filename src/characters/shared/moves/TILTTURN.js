@@ -20,7 +20,7 @@ export default {
     }
   },
   interrupt : function(p,input){
-    const t = player[p].timer < 6 ? checkForTilts(p, -1) : checkForTilts(p,input);
+    const t = player[p].timer < 6 ? checkForTilts(p,input, -1) : checkForTilts(p,input);
     const s = checkForSmashes(p,input);
     const j = checkForJump(p,input);
 

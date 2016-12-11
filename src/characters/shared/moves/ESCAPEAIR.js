@@ -34,7 +34,7 @@ export default {
       }
       else {
         airDrift(p,input);
-        fastfall(pminput,input);
+        fastfall(p,input);
       }
       executeIntangibility("ESCAPEAIR",p);
       playSounds("ESCAPEAIR",p);

@@ -34,7 +34,7 @@ export default {
     player[p].timer++;
     if (!actionStates[characterSelections[p]].JUMPB.interrupt(p,input)){
       if (player[p].timer > 1){
-        fastfall(pminput,input);
+        fastfall(p,input);
         airDrift(p,input);
       }
     }

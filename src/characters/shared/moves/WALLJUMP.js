@@ -39,7 +39,7 @@ export default {
       sounds.walljump.play();
     }
     if (!actionStates[characterSelections[p]].WALLJUMP.interrupt(p,input)){
-      fastfall(pminput,input);
+      fastfall(p,input);
       airDrift(p,input);
     }
   },

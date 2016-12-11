@@ -35,7 +35,7 @@ export default {
     playSounds("JUMP",p);
     if (!actionStates[characterSelections[p]].JUMPF.interrupt(p,input)){
       if (player[p].timer > 1){
-        fastfall(pminput,input);
+        fastfall(p,input);
         airDrift(p,input);
       }
     }

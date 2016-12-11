@@ -48,7 +48,7 @@ export default {
         player[p].phys.cVel.x = player[p].phys.face * 0.5;
       }
       if (player[p].timer >= 1){
-        fastfall(pminput,input);
+        fastfall(p,input);
         airDrift(p,input);
       }
     }

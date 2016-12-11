@@ -23,7 +23,7 @@ export default {
     if (player[p].timer > 1){
       if (!actionStates[characterSelections[p]].PASS.interrupt(p,input)){
         if (player[p].phys.passFastfall){
-          fastfall(pminput,input);
+          fastfall(p,input);
         }
         else {
           player[p].phys.cVel.y -= player[p].charAttributes.gravity;

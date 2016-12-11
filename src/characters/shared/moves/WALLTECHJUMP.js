@@ -49,7 +49,7 @@ export default {
         player[p].phys.cVel.y = player[p].charAttributes.wallJumpVelY;
       }
       if (player[p].timer >= 1){
-        fastfall(pminput,input);
+        fastfall(p,input);
         airDrift(p,input);
       }
     }
