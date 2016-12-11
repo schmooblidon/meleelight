@@ -5,7 +5,7 @@ import {gameSettings} from "settings";
 import {aS, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor, squashDownECB, connectednessFromChains, extremePoint} from "physics/environmentalCollision";
+import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor, moveECB, squashDownECB, connectednessFromChains, extremePoint} from "physics/environmentalCollision";
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
@@ -206,6 +206,7 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction) {
     let ecbp0 = player[i].phys.ECBp[0];
     let yIntercept = coordinateIntercept( [ ecbp0, new Vec2D( ecbp0.x , ecbp0.y+1 ) ], ground);
     player[i].phys.pos.y = player[i].phys.pos.y + yIntercept.y - ecbp0.y + additionalOffset;
+    player[i].phys.ECBp = moveECB( player[i].phys.ECBp, new Vec2D(0, yIntercept.y - ecbp0.y + additionalOffset ) );
     player[i].phys.onSurface = [groundOrPlatform, groundTypeAndIndex[1] ]; 
   }
   return [stillGrounded, backward];

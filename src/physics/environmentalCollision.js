@@ -1036,7 +1036,7 @@ function closestCenterAndTouchingType(maybeCenterAndTouchingTypes) {
 };
 
 
-function moveECB (ecb, vec) {
+export function moveECB (ecb, vec) {
   return ( [ new Vec2D (ecb[0].x+vec.x,ecb[0].y+vec.y)
            , new Vec2D (ecb[1].x+vec.x,ecb[1].y+vec.y)
            , new Vec2D (ecb[2].x+vec.x,ecb[2].y+vec.y)
