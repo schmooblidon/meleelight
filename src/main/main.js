@@ -551,27 +551,32 @@ export const removePlayer (i){
 export function interpretInputs  (i, active,playertype, inputBuffer) {
   let tempBuffer = nullInputs();
 
+
+  if (! ( (gameMode == 3 || gameMode == 5) && !playing )) {
+    for (var k = 0; k < 7; k++) {
+      tempBuffer[7-k].lsX  = inputBuffer[6-k].lsX;
+      tempBuffer[7-k].lsY  = inputBuffer[6-k].lsY;
+      tempBuffer[7-k].rawX = inputBuffer[6-k].rawX;
+      tempBuffer[7-k].rawY = inputBuffer[6-k].rawY;
+      tempBuffer[7-k].csX  = inputBuffer[6-k].csX;
+      tempBuffer[7-k].csY  = inputBuffer[6-k].csY;
+      tempBuffer[7-k].lA   = inputBuffer[6-k].lA;
+      tempBuffer[7-k].rA   = inputBuffer[6-k].rA;
+      tempBuffer[7-k].s    = inputBuffer[6-k].s;
+      tempBuffer[7-k].a    = inputBuffer[6-k].a;
+      tempBuffer[7-k].b    = inputBuffer[6-k].b;
+      tempBuffer[7-k].x    = inputBuffer[6-k].x;
+      tempBuffer[7-k].y    = inputBuffer[6-k].y;
+      tempBuffer[7-k].r    = inputBuffer[6-k].r;
+      tempBuffer[7-k].l    = inputBuffer[6-k].l;
+      tempBuffer[7-k].dl   = inputBuffer[6-k].dl;
+      tempBuffer[7-k].dd   = inputBuffer[6-k].dd;
+      tempBuffer[7-k].dr   = inputBuffer[6-k].dr;
+      tempBuffer[7-k].du   = inputBuffer[6-k].du;
+    }
+  }
   for (var k = 0; k < 7; k++) {
-    tempBuffer[7-k].lsX  = inputBuffer[6-k].lsX;
-    tempBuffer[7-k].lsY  = inputBuffer[6-k].lsY;
-    tempBuffer[7-k].rawX = inputBuffer[6-k].rawX;
-    tempBuffer[7-k].rawY = inputBuffer[6-k].rawY;
-    tempBuffer[7-k].csX  = inputBuffer[6-k].csX;
-    tempBuffer[7-k].csY  = inputBuffer[6-k].csY;
-    tempBuffer[7-k].lA   = inputBuffer[6-k].lA;
-    tempBuffer[7-k].rA   = inputBuffer[6-k].rA;
-    tempBuffer[7-k].s    = inputBuffer[6-k].s;
     tempBuffer[7-k].z    = inputBuffer[6-k].z;
-    tempBuffer[7-k].a    = inputBuffer[6-k].a;
-    tempBuffer[7-k].b    = inputBuffer[6-k].b;
-    tempBuffer[7-k].x    = inputBuffer[6-k].x;
-    tempBuffer[7-k].y    = inputBuffer[6-k].y;
-    tempBuffer[7-k].r    = inputBuffer[6-k].r;
-    tempBuffer[7-k].l    = inputBuffer[6-k].l;
-    tempBuffer[7-k].dl   = inputBuffer[6-k].dl;
-    tempBuffer[7-k].dd   = inputBuffer[6-k].dd;
-    tempBuffer[7-k].dr   = inputBuffer[6-k].dr;
-    tempBuffer[7-k].du   = inputBuffer[6-k].du;
   }
 
   tempBuffer[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys,playertype);
