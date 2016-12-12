@@ -680,7 +680,7 @@ export function physics (i,input){
             dealWithGroundCollision(i, alreadyGrounded, newPosition, ecbpBottom, surfacesMaybeCenterAndTouchingType[1][1], input);
             break;
           case "c": // player touching ceiling
-            dealWithCeilingCollision(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset, input);
+            dealWithCeilingCollision(i, newPosition, ecbOffset, input);
             break;
           case "p": // player landed on platform
             dealWithPlatformCollision(i, alreadyGrounded, newPosition, ecbpBottom, surfacesMaybeCenterAndTouchingType[1][1], input);
