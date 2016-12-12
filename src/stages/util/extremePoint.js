@@ -35,7 +35,9 @@ export function extremePoint(wall, extreme) {
       else {
         return v2;
       }
+      break;
     default:
       console.log( "error in 'extremePoint': invalid parameter "+extreme+", not up/top/down/bottom/left/right");
+      break;
   }
 };
