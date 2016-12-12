@@ -74,25 +74,25 @@ function dealWithWallCollision (i, newCenter, wallType,input) {
 
 }
 
-function dealWithPlatformCollision(i, alreadyGrounded, newCenter, ecbp0, j,input) {
+function dealWithPlatformCollision(i, alreadyGrounded, newCenter, ecbpBottom, j, input) {
   if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
   }
   else {
-    land(i, ecbp0 , 1, j,input);
+    land(i, ecbpBottom, 1, j, input);
   }
 }
 
-function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbp0, j,input) {
+function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbpBottom, j, input) {
   if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
   }
   else {
-    land(i, ecbp0, 0, j,input);
+    land(i, ecbpBottom, 0, j, input);
   }
 }
 
-function fallOffGround(i, side, groundEdgePosition,input) {
+function fallOffGround(i, side, groundEdgePosition, input) {
   let [stillGrounded, backward] = [true,false];
   let sign = 1;
   if (side === "r") {
@@ -184,10 +184,10 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction, in
     }
   }
   else {
-    let ecbp0 = player[i].phys.ECBp[0];
-    let yIntercept = coordinateIntercept( [ ecbp0, new Vec2D( ecbp0.x , ecbp0.y+1 ) ], ground);
-    player[i].phys.pos.y = player[i].phys.pos.y + yIntercept.y - ecbp0.y + additionalOffset;
-    player[i].phys.ECBp = moveECB( player[i].phys.ECBp, new Vec2D(0, yIntercept.y - ecbp0.y + additionalOffset ) );
+    let ecbpBottom = player[i].phys.ECBp[0];
+    let yIntercept = coordinateIntercept( [ ecbpBottom, new Vec2D( ecbpBottom.x , ecbpBottom.y+1 ) ], ground);
+    player[i].phys.pos.y = player[i].phys.pos.y + yIntercept.y - ecbpBottom.y + additionalOffset;
+    player[i].phys.ECBp = moveECB( player[i].phys.ECBp, new Vec2D(0, yIntercept.y - ecbpBottom.y + additionalOffset ) );
     player[i].phys.onSurface = [groundOrPlatform, groundTypeAndIndex[1] ];
   }
   return [stillGrounded, backward];
@@ -663,27 +663,27 @@ export function physics (i,input){
         dealWithCollision(i, surfacesMaybeCenterAndTouchingType[0]);
       }
       else {
-        const myNewCenter = surfacesMaybeCenterAndTouchingType[0];
+        const newPosition = surfacesMaybeCenterAndTouchingType[0];
 
-        const ecbp0 = new Vec2D ( player[i].phys.ECBp[0].x + surfacesMaybeCenterAndTouchingType[0].x - player[i].phys.pos.x
-                                , player[i].phys.ECBp[0].y + surfacesMaybeCenterAndTouchingType[0].y - player[i].phys.pos.y);
+        const ecbpBottom = new Vec2D ( player[i].phys.ECBp[0].x + newPosition.x - player[i].phys.pos.x
+                                  , player[i].phys.ECBp[0].y + newPosition.y - player[i].phys.pos.y);
         switch(surfacesMaybeCenterAndTouchingType[1][0][0].toLowerCase()) {
           case "l": // player touching left wall
             notTouchingWalls[0] = false;
-            dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "l",input);
+            dealWithWallCollision(i, newPosition, "l", input);
             break;
           case "r": // player touching right wall
             notTouchingWalls[1] = false;
-            dealWithWallCollision(i, surfacesMaybeCenterAndTouchingType[0], "r",input);
+            dealWithWallCollision(i, newPosition, "r", input);
             break;
           case "g": // player landed on ground
-            dealWithGroundCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1],input);
+            dealWithGroundCollision(i, alreadyGrounded, newPosition, ecbpBottom, surfacesMaybeCenterAndTouchingType[1][1], input);
             break;
           case "c": // player touching ceiling
-            dealWithCeilingCollision(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset,input);
+            dealWithCeilingCollision(i, surfacesMaybeCenterAndTouchingType[0], ecbOffset, input);
             break;
           case "p": // player landed on platform
-            dealWithPlatformCollision(i, alreadyGrounded, surfacesMaybeCenterAndTouchingType[0], ecbp0, surfacesMaybeCenterAndTouchingType[1][1],input);
+            dealWithPlatformCollision(i, alreadyGrounded, newPosition, ecbpBottom, surfacesMaybeCenterAndTouchingType[1][1], input);
             break;
           default:
             console.log("error: unrecognised surface type, not left/right/ground/ceiling/platform");
