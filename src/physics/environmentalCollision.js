@@ -93,7 +93,7 @@ export function coordinateIntercept (line1, line2) {
 // to the final line 'line2' passing through the two points p3 = (x3,y3) and p4 = (x4,y4)
 // there are two sweeping parameters: 
 //   't', which indicates how far along each line we are
-//   's', which indicates how far we are sweeping between line1 and line2
+//   's', which indicates how far we are sweeping between line1 and line2 (the main sweeping parameter)
 // for instance:
 //  s=0 means we are on line1,
 //  s=1 means we are on line2,
@@ -122,24 +122,20 @@ function lineSweepParameters( line1, line2, flip = false) {
   const a2 = x2*y1 - x4*y1 - x1*y2 + x3*y2 - x2*y3 + x4*y3 + x1*y4 - x3*y4;
 
   // s satisfies the equation:   a0 + a1*s + a2*s^2 = 0
-  let s = -1; // initialise s
+  const s = solveQuadraticEquation( a0, a1, a2, sign );
 
-  if ( Math.abs( a0*a0*a2/(a1*a1) ) < 0.0001 ) {
-    s = - a0 / a1;
+  if (s === false || isNaN(s) || s === Infinity || s < 0 || s > 1 ) {
+    return false; // no real solution
   }
   else {
-    s = solveQuadraticEquation( a0, a1, a2, sign );
-    if (s === false) {
-      return false; // non-real parameters
+    const t = (s*(x1-x3) - x1) / ( x2-x1 + s*( x1-x2-x3+x4 ));
+    
+    if (isNaN(t) || t === Infinity || t < 0 || t > 1) {
+      return false;
     }
-  }
-  const t = (s*(x1-x3) - x1) / ( x2-x1 + s*( x1-x2-x3+x4 ));
-
-  if (s < 0 || s > 1 || t < 0 || t > 1 || s === Infinity || t === Infinity || isNaN(s) || isNaN(t)) {
-    return false;
-  }
-  else {
-    return [t,s];
+    else {
+      return [t,s];
+    }
   }
 };
 
