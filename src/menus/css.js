@@ -59,6 +59,7 @@ export function changeCharacter (i,c){
 }
 
 export function cssControls (i, input){
+  let allowRegrab = true;
   if (choosingTag == -1){
     if (input[i][0].b){
       bHold[i]++;
@@ -173,11 +174,12 @@ export function cssControls (i, input){
         152 - 15) * 3 / 166) + 1;
       player[whichCpuGrabbed[i]].difficulty = cpuDifficulty[whichCpuGrabbed[i]];
       if (input[i][0].a && !input[i][1].a) {
+        console.log("This also got triggered.");
         cpuGrabbed[i] = false;
         occupiedCpu[whichCpuGrabbed[i]] = false;
         whichCpuGrabbed[i] = -1;
         handType[i] = 0;
-        //input[i].a[1] = true;
+        allowRegrab = false;
       }
     } else {
       handType[i] = 0;
@@ -237,7 +239,7 @@ export function cssControls (i, input){
           if (!occupiedCpu[s]) {
             if (handPos[i].y >= cpuSlider[s].y - 25 && handPos[i].y <= cpuSlider[s].y + 25 && handPos[i].x >=
               cpuSlider[s].x - 25 && handPos[i].x <= cpuSlider[s].x + 25) {
-              if (input[i][0].a && !input[i][1].a) {
+              if (input[i][0].a && !input[i][1].a && allowRegrab) {
                 cpuGrabbed[i] = true;
                 whichCpuGrabbed[i] = s;
                 occupiedCpu[s] = true;
