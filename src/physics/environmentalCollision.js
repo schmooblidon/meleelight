@@ -1,20 +1,18 @@
-import {Vec2D} from "../main/util/Vec2D";
+import {Vec2D, getXOrYCoord, orthogonalProjection} from "main/util/Vec2D";
 import {dotProd, scalarProd, norm} from "main/linAlg";
+import {findSmallestWithin} from "main/util/findSmallestWithin";
+import {solveQuadraticEquation} from "main/util/solveQuadraticEquation";
+import {lineAngle} from "main/util/lineAngle";
+import {extremePoint} from "stages/util/extremePoint";
+import {connectednessFromChains} from "stages/util/connectednessFromChains";
+import {moveECB} from "main/util/ecbTransform";
+
 
 const magicAngle = Math.PI/6;
 const maximumCollisionDetectionPasses = 15;
-const cornerPushoutMethod = "h"; // corners only push out horizontally
 export const additionalOffset = 0.00001;
 
-function getXOrYCoord(vec, xOrY) {
-  if (xOrY === 0) {
-    return vec.x;
-  }
-  else {
-    return vec.y;
-  }
-};
-
+// next ECB point index, counterclockwise or clockwise
 function turn(number, counterclockwise = true) {
   if (counterclockwise) {
     if (number === 3) {
@@ -30,93 +28,6 @@ function turn(number, counterclockwise = true) {
     }
     else {
       return number-1;
-    }
-  }
-};
-
-function firstNonFalse( list ) {
-  if (list === null || list === undefined || list.length < 1) {
-    return false;
-  }
-  else {
-    const [head, ...tail] = list;
-    if ( head === false ) {
-      return firstNonFalse(tail);
-    }
-    else {
-      return head;
-    }
-  }
-};
-
-
-// for stages to have connected grounds/platforms, they need to provide a 'connectednessFunction'
-// input of a connectedness function: [type, index ], side
-// type is either "g" (ground) or "p" (platform),
-// index is the index of that surface in the stage's list of surfaces (grounds or platforms depending on type)
-// side is either "l" (left) or "r" (right)
-// given such an input, the function should return which ground/platform is connected to that side of the given ground/platform,
-// in the format [ newType, newIndex ],
-// or return 'false' if the ground/platform is not connected on that side to any other ground/platform
-
-// here I am constructing a 'connectednessFunction' from the data of chains of connected grounds/platforms
-// if 'connectednessFunction' is not supplied, it is assumed that no grounds/platforms are connected to any other grounds/platforms
-export function connectednessFromChains(label, side, isLoopThenChains) {
-  return firstNonFalse ( isLoopThenChains.map( (isLoopThenChain) => searchThroughChain(label, side, isLoopThenChain[1], isLoopThenChain[0]) ));
-};
-
-function searchThroughChain(label, side, chain, isLoop, current = false) {
-  if (chain === null || chain === undefined || chain.length < 1) {
-    return false;
-  }
-  else {
-    const lg = chain.length;
-    const [head, ...tail] = chain;
-    const last = chain[lg-1];
-    if (isLoop) {
-      switch(side) {
-        case "l":
-          if (head[0] === label[0] && head[1] === label[1] ) {
-            return last;
-          }
-          else {
-            return searchThroughChain(label, side, tail, false, head);
-          }
-          break;
-        case "r":
-          if (last[0] === label[0] && last[1] === label[1]) {
-            return head;
-          }
-          else {
-            return searchThroughChain(label, side, chain, false);
-          }
-          break;
-      }
-    }
-    else {
-      switch(side) {
-        case "l":
-          if (head[0] === label[0] && head[1] === label[1] ) {
-            return current;
-          }
-          else {
-            return (searchThroughChain(label, side, tail, false, head));
-          }
-          break;
-        case "r":
-          if (head[0] === label[0] && head[1] === label[1]) {
-            if (chain[1] === null || chain[1] === undefined) {
-              return false;
-            }
-            else {
-              return chain[1];
-            }
-          }
-          else {
-            return (searchThroughChain(label, side, tail, false));
-          }
-          break;
-      }
     }
   }
 };
@@ -148,61 +59,6 @@ function isOutside (point, wallTopOrRight, wallBottomOrLeft, wallType) {
   return ( !movingInto(new Vec2D ( point.x - wallBottomOrLeft.x, point.y - wallBottomOrLeft.y ), wallTopOrRight, wallBottomOrLeft, wallType ) );
 };
 
-export function extremePoint(wall, extreme) {
-  const  v1 = wall[0];
-  const  v2 = wall[1];
-  switch (extreme) {
-    case "u":
-    case "t":
-      if (v2.y < v1.y) {
-        return v1;
-      }
-      else {
-        return v2;
-      }
-      break;
-    case "d":
-    case "b":
-      if (v2.y > v1.y) {
-        return v1;
-      }
-      else {
-        return v2;
-      }
-      break;
-    case "l":
-      if (v2.x > v1.x) {
-        return v1;
-      }
-      else {
-        return v2;
-      }
-      break;
-    case "r":
-      if (v2.x < v1.x) {
-        return v1;
-      }
-      else {
-        return v2;
-      }
-    default:
-      console.log( "error in 'extremePoint': invalid parameter "+extreme+", not up/top/down/bottom/left/right");
-  }
-};
-
-
-function lineAngle( line ) { // returns angle of line from the positive x axis, in radians, from 0 to pi
-  const v1 = line[0];
-  const v2 = line[1];
-  const theta = Math.atan2( v2.y - v1.y, v2.x - v1.x  );
-  if (theta < 0) {
-    return (theta + Math.PI);
-  }
-  else {
-    return theta;
-  }
-};
-
 // say line1 passes through the two points p1 = (x1,y1), p2 = (x2,y2)
 // and line2 by the two points p3 = (x3,y3) and p4 = (x4,y4)
 // this function returns the parameter t, such that p3 + t*(p4-p3) is the intersection point of the two lines
@@ -231,37 +87,6 @@ export function coordinateIntercept (line1, line2) {
   return ( new Vec2D( line2[0].x + t*(line2[1].x - line2[0].x ), line2[0].y + t*(line2[1].y - line2[0].y ) ) );
 };
 
-// orthogonally projects a point onto a line
-// line is given by two points it passes through
-function orthogonalProjection(point, line) {
-  const line0 = line[0];
-  const [line0x,line0y] = [line0.x, line0.y];
-  // turn everything into relative coordinates with respect to the point line[0]
-  const pointVec = new Vec2D ( point.x - line0x, point.y - line0y);
-  const lineVec  = new Vec2D ( line[1].x - line0x, line[1].y - line0y);
-  // renormalise line vector
-  const lineNorm = norm(lineVec);
-  const lineElem = scalarProd( 1/lineNorm, lineVec);
-  // vector projection calculation
-  const factor = dotProd(pointVec, lineElem);
-  const projVec = scalarProd(factor, lineElem);
-  // back to absolute coordinates by adding the coordinates of line[0]
-  return (new Vec2D(projVec.x + line0x,projVec.y + line0y));
-};
-
-// solves the quadratic equation a0 + a1 x + a2 x^2 = 0
-// uses the sign to choose the solution
-// do not call this function with parameter a2 = 0
-function solveQuadraticEquation (a0, a1, a2, sign = 1) {
-  const disc = a1*a1 - 4*a0*a2;
-  if (disc < 0) {
-    //console.log("error in function 'solveQuadraticEquation': negative discriminant");
-    return false;
-  }
-  else {
-    return ((-a1 + sign* Math.sqrt(disc)) / (2 * a2) );
-  }
-}
 
 // in this function, we are considering a line that is sweeping,
 // from the initial line 'line1' passing through the two points p1 = (x1,y1), p2 = (x2,y2)
@@ -675,7 +500,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
 // the ECB can only collide a ceiling surface on its top point (or a top edge on a corner)
 // the ECB can only collide a left wall on its right or top points (or a right edge on a corner)
 // the ECB can only collide a right wall on its left or top points (or a left edge on a corner)
-// walls push out horizontally, grounds/ceilings/platform push out vertically
+// walls and corners push out horizontally, grounds/ceilings/platforms push out vertically
 // the chains of connected surfaces go clockwise:
 //    - left to right for grounds
 //    - top to bottom for right walls
@@ -1028,50 +853,6 @@ function closestCenterAndTouchingType(maybeCenterAndTouchingTypes) {
     return newMaybeCenterAndTouchingType;
   }
 };
-
-
-export function moveECB (ecb, vec) {
-  return ( [ new Vec2D (ecb[0].x+vec.x,ecb[0].y+vec.y)
-           , new Vec2D (ecb[1].x+vec.x,ecb[1].y+vec.y)
-           , new Vec2D (ecb[2].x+vec.x,ecb[2].y+vec.y)
-           , new Vec2D (ecb[3].x+vec.x,ecb[3].y+vec.y) ] );
-};
-
-export function squashDownECB (ecb, factor) {
-  return ( [ ecb[0]
-           , new Vec2D ( factor * (ecb[1].x-ecb[0].x) + ecb[0].x , factor * (ecb[1].y-ecb[0].y) + ecb[0].y )
-           , new Vec2D ( ecb[2].x                                , factor * (ecb[2].y-ecb[0].y) + ecb[0].y )
-           , new Vec2D ( factor * (ecb[3].x-ecb[0].x) + ecb[0].x , factor * (ecb[3].y-ecb[0].y) + ecb[0].y ) ] );
-};
-
-// finds the smallest value t of the list with t > min, t <= max
-// returns false if none are found
-function findSmallestWithin(list, min, max, smallestSoFar = false) {
-  if (list === null || list === undefined || list.length < 1) {
-    return smallestSoFar;
-  }
-  else {
-    const [head, ...tail] = list;
-    if (head === false) {
-      return findSmallestWithin(tail, min, max, smallestSoFar);
-    }
-    else if (head > min && head <= max) {
-      if (smallestSoFar === false) {
-        return findSmallestWithin(tail, min, max, head);
-      }
-      else if (head > smallestSoFar) {
-        return findSmallestWithin(tail, min, max, smallestSoFar);
-      }
-      else {
-        return findSmallestWithin(tail, min, max, head);
-      }
-    }
-    else {
-      return findSmallestWithin(tail, min, max, smallestSoFar);
-    }
-  }
-};
-
 
 export function groundedECBSquashFactor( ecb, ceilings ) {
   const ceilingYValues = ceilings.map ( (ceil) => {

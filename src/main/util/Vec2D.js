@@ -5,3 +5,12 @@ export function Vec2D(x, y) {
     return this.x * vector.x + this.y * vector.y;
   };
 }
+
+export function getXOrYCoord(vec, xOrY) {
+  if (xOrY === 0) {
+    return vec.x;
+  }
+  else {
+    return vec.y;
+  }
+};

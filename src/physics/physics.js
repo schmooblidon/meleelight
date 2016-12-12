@@ -5,38 +5,24 @@ import {gameSettings} from "settings";
 import {actionStates, turboAirborneInterrupt, turboGroundedInterrupt, turnOffHitboxes} from "./actionStateShortcuts";
 import {getLaunchAngle, getHorizontalVelocity, getVerticalVelocity, getHorizontalDecay, getVerticalDecay} from "physics/hitDetection";
 import {lostStockQueue} from 'main/render';
-import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor, moveECB, squashDownECB, connectednessFromChains, extremePoint} from "physics/environmentalCollision";
+import {getNewMaybeCenterAndTouchingType, coordinateIntercept, additionalOffset, groundedECBSquashFactor} from "physics/environmentalCollision";
 import {deepCopyObject} from "main/util/deepCopyObject";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
-import { Box2D} from "../main/util/Box2D";
-import {Vec2D} from "../main/util/Vec2D";
+import {Box2D} from "main/util/Box2D";
+import {Vec2D} from "main/util/Vec2D";
+import {zipLabels} from "main/util/zipLabels";
+import {toList} from "main/util/toList";
+import {extremePoint} from "stages/util/extremePoint";
+import {connectednessFromChains} from "stages/util/connectednessFromChains";
+import {moveECB, squashDownECB} from "main/util/ecbTransform";
 /* eslint-disable */
 
 
-// this is a workaround for the moment because I am being lazy
-export function customZip ( list, string, start = 0 ) {
-  if (list.length === 0) {
-    return [];
-  }
-  else {
-    const [head, ...tail] = list;
-    return ( [[head, [string, start]]] . concat( customZip(tail, string, start+1) ) ) ;
-  }
-}
-// temporary workaround for custom stage data being objects and not arrays
-function customId(list) {
-  if (list.length === 0) {
-    return [];
-  }
-  else {
-    const [head, ...tail] = list;
-    return ( [head] . concat (customId(tail)));
-  }
-}
 function dealWithCollision(i, newCenter) {
   player[i].phys.pos = newCenter;
 }
+
 function dealWithWallCollision (i, newCenter, wallType,input) {
   player[i].phys.pos = newCenter;
 
@@ -87,6 +73,7 @@ function dealWithWallCollision (i, newCenter, wallType,input) {
   }
 
 }
+
 function dealWithPlatformCollision(i, alreadyGrounded, newCenter, ecbp0, j,input) {
   if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
@@ -95,6 +82,7 @@ function dealWithPlatformCollision(i, alreadyGrounded, newCenter, ecbp0, j,input
     land(i, ecbp0 , 1, j,input);
   }
 }
+
 function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbp0, j,input) {
   if (player[i].hit.hitlag > 0 || alreadyGrounded) {
     player[i].phys.pos = newCenter;
@@ -103,6 +91,7 @@ function dealWithGroundCollision(i, alreadyGrounded, newCenter, ecbp0, j,input) 
     land(i, ecbp0, 0, j,input);
   }
 }
+
 function fallOffGround(i, side, groundEdgePosition,input) {
   let [stillGrounded, backward] = [true,false];
   let sign = 1;
@@ -140,6 +129,7 @@ function fallOffGround(i, side, groundEdgePosition,input) {
   }
   return [stillGrounded, backward];
 }
+
 // ground type and index is a pair, either ["g", index] or ["p", index]
 function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction, input) {
   let leftmostGroundPoint  = extremePoint(ground,"l");
@@ -202,6 +192,7 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction, in
   }
   return [stillGrounded, backward];
 }
+
 function dealWithCeilingCollision(i, newCenter, offsets,input) {
   const newECBTop = new Vec2D (newCenter.x, newCenter.y + offsets[3]);
   player[i].phys.pos = newCenter;
@@ -219,6 +210,7 @@ function dealWithCeilingCollision(i, newCenter, offsets,input) {
     }
   }
 }
+
 export function land (i,newCenter,t,j,input){
   player[i].phys.pos = newCenter;
   player[i].phys.grounded = true;
@@ -620,7 +612,7 @@ export function physics (i,input){
 
       // squash grounded ECB if there is a low ceiling
       if (stillGrounded) {
-        ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, customId(activeStage.ceiling) );
+        ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, toList(activeStage.ceiling) );
         if (! (ecbSquashFactor === false ) && ecbSquashFactor < 1 && ecbSquashFactor > 0) {
           player[i].phys.ECBp = squashDownECB(player[i].phys.ECBp, ecbSquashFactor - additionalOffset );
         }
@@ -641,10 +633,10 @@ export function physics (i,input){
     // --------------------------------------------------------------
     // BELOW: this is recomputed every frame and should be avoided
 
-    let stageWalls = customZip(activeStage.wallL,"l").concat( customZip(activeStage.wallR,"r") );
-    let stageGrounds = customZip(activeStage.ground,"g");
-    let stageCeilings =customZip(activeStage.ceiling,"c");
-    let stagePlatforms = customZip(activeStage.platform, "p");
+    let stageWalls = zipLabels(activeStage.wallL,"l").concat( zipLabels(activeStage.wallR,"r") );
+    let stageGrounds = zipLabels(activeStage.ground,"g");
+    let stageCeilings = zipLabels(activeStage.ceiling,"c");
+    let stagePlatforms = zipLabels(activeStage.platform, "p");
 
     // ABOVE: this is recomputed every frame and should be avoided
     // --------------------------------------------------------------

@@ -24,6 +24,25 @@ export function manhattanDist (center1, center2) {
 };
 
 
+// orthogonally projects a point onto a line
+// line is given by two points it passes through
+export function orthogonalProjection(point, line) {
+  const line0 = line[0];
+  const [line0x,line0y] = [line0.x, line0.y];
+  // turn everything into relative coordinates with respect to the point line[0]
+  const pointVec = new Vec2D ( point.x - line0x, point.y - line0y);
+  const lineVec  = new Vec2D ( line[1].x - line0x, line[1].y - line0y);
+  // renormalise line vector
+  const lineNorm = norm(lineVec);
+  const lineElem = scalarProd( 1/lineNorm, lineVec);
+  // vector projection calculation
+  const factor = dotProd(pointVec, lineElem);
+  const projVec = scalarProd(factor, lineElem);
+  // back to absolute coordinates by adding the coordinates of line[0]
+  return (new Vec2D(projVec.x + line0x,projVec.y + line0y));
+};
+
+
 // Computes the inverse of a 2x2 matrix.
 export function inverseMatrix([
   [x1, x2],
