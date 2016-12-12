@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["C:/Users/Sam/Documents/Code/Javascript/meleelight/dist/js/index.js","e65a7b7a47a43b86c8ff4fdd68997f36"],["C:/Users/Sam/Documents/Code/Javascript/meleelight/dist/js/main.js","9d7e3e37b1e235d68c2f4d27d89c0b2f"]];
+var precacheConfig = [["C:/Users/Sam/Documents/Code/Javascript/meleelight/dist/js/index.js","d7a862c66d3f231991fd97fc18157e41"],["C:/Users/Sam/Documents/Code/Javascript/meleelight/dist/js/main.js","af2770ba0b84971de468e4373b1a8a7c"]];
 var cacheName = 'sw-precache-v2-meleelight-' + (self.registration ? self.registration.scope : '');
 
 
