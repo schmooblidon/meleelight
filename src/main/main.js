@@ -503,6 +503,10 @@ export function changeGamemode (newGamemode){
     case 13:
       drawCreditsInit();
       break;
+      // Multiplayer Modes
+    case 14:
+      drawMPMenuInit();
+      break;
       // startup
     case 20:
       break;
@@ -823,6 +827,11 @@ export function gameTick (oldInputBuffers){
   } else if (gameMode == 13) {
     input[creditsPlayer] = interpretInputs(creditsPlayer, true, playerType[creditsPlayer],oldInputBuffers[creditsPlayer]);
     credits(creditsPlayer, input);
+  }else if (gameMode == 14) {
+    for (var i = 0; i < ports; i++) {
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
+      menuMove(i, input);
+    }
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
