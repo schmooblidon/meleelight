@@ -643,7 +643,7 @@ function findCollision (ecbp, ecb1, position, wall, wallType, wallIndex, stage, 
         otherInteriorECBside = "r";
       }
 
-      if ( !isOutside(corner, ecbp[same], ecbp[2], otherInteriorECBside) && isOutside ( corner, ecb1[same], ecb1[2], otherInteriorECBside) ) {
+      if ( !isOutside(otherCorner, ecbp[same], ecbp[2], otherInteriorECBside) && isOutside ( otherCorner, ecb1[same], ecb1[2], otherInteriorECBside) ) {
         otherEdgeSweepResult = edgeSweepingCheck( ecb1, ecbp, same, 2, position, otherCounterclockwise, otherCorner, wallType);
       }
     }
