@@ -2,11 +2,9 @@
 
 import {Vec2D} from "./Vec2D";
 
-import type {Vec2DType} from "./Vec2D";
+export type ECB = [Vec2D, Vec2D, Vec2D, Vec2D];
 
-export type ECB = [Vec2DType, Vec2DType, Vec2DType, Vec2DType];
-
-export function moveECB (ecb : ECB, vec : Vec2DType) : ECB {
+export function moveECB (ecb : ECB, vec : Vec2D) : ECB {
   return ( [ new Vec2D (ecb[0].x+vec.x,ecb[0].y+vec.y)
            , new Vec2D (ecb[1].x+vec.x,ecb[1].y+vec.y)
            , new Vec2D (ecb[2].x+vec.x,ecb[2].y+vec.y)

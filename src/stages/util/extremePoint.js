@@ -1,9 +1,8 @@
 // @flow
 
 import {Vec2D} from "../../main/util/Vec2D";
-import type {Vec2DType} from "../../main/util/Vec2D";
 
-export function extremePoint(wall : [Vec2DType, Vec2DType], extreme : string) : Vec2DType {
+export function extremePoint(wall : [Vec2D, Vec2D], extreme : string) : Vec2D {
   const  v1 = wall[0];
   const  v2 = wall[1];
   switch (extreme) {

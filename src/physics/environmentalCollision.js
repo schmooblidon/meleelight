@@ -10,34 +10,32 @@ import {extremePoint} from "../stages/util/extremePoint";
 import {connectednessFromChains} from "../stages/util/connectednessFromChains";
 import {moveECB} from "../main/util/ecbTransform";
 
-import type {Vec2DType} from "../main/util/Vec2D";
-import type {Box2DType} from "../main/util/Box2D";
 import type {ECB} from "../main/util/ecbTransform";
 import type {ConnectednessFunction} from "../stages/util/connectednessFromChains";
 
 
 
 type Stage = {
-  box           : Array< Box2DType >,
-  platform      : Array< [Vec2DType, Vec2DType] >,
-  ground        : Array< [Vec2DType, Vec2DType] >,
-  ceiling       : Array< [Vec2DType, Vec2DType] >,
-  wallL         : Array< [Vec2DType, Vec2DType] >,
-  wallR         : Array< [Vec2DType, Vec2DType] >,
-  startingPoint : [Vec2DType, Vec2DType, Vec2DType, Vec2DType],
+  box           : Array< Box2D >,
+  platform      : Array< [Vec2D, Vec2D] >,
+  ground        : Array< [Vec2D, Vec2D] >,
+  ceiling       : Array< [Vec2D, Vec2D] >,
+  wallL         : Array< [Vec2D, Vec2D] >,
+  wallR         : Array< [Vec2D, Vec2D] >,
+  startingPoint : [Vec2D, Vec2D, Vec2D, Vec2D],
   startingFace  : [number, number, number, number],
-  respawnPoints : [Vec2DType, Vec2DType, Vec2DType, Vec2DType],
+  respawnPoints : [Vec2D, Vec2D, Vec2D, Vec2D],
   respawnFace   : [number, number, number, number],
-  blastzone     : Box2DType,
+  blastzone     : Box2D,
   ledge         : Array< [number, number] >,
-  ledgePos      : Array< Vec2DType >,
+  ledgePos      : Array< Vec2D >,
   scale         : number,
   offset        : [number, number],
   connected?    : Array< [boolean, Array< [ string, number] > ] >
 }
 
 
-type MaybeCenterAndTouchingTypeType = null | [Vec2DType, null | [string, number], number];
+type MaybeCenterAndTouchingTypeType = null | [Vec2D, null | [string, number], number];
 
 
 const magicAngle : number = Math.PI/6;
@@ -65,7 +63,7 @@ function turn(number : number, counterclockwise : boolean = true ) : number {
 };
 
 // returns true if the vector is moving into the wall, false otherwise
-function movingInto (vec : Vec2DType, wallTopOrRight : Vec2DType, wallBottomOrLeft : Vec2DType, wallType : string) : boolean {
+function movingInto (vec : Vec2D, wallTopOrRight : Vec2D, wallBottomOrLeft : Vec2D, wallType : string) : boolean {
   let sign = 1;
   switch (wallType) {
     case "l": // left wall
@@ -85,7 +83,7 @@ function movingInto (vec : Vec2DType, wallTopOrRight : Vec2DType, wallBottomOrLe
 
 // returns true if point is to the right of a "left" wall, or to the left of a "right" wall,
 // and false otherwise
-function isOutside (point : Vec2DType, wallTopOrRight : Vec2DType, wallBottomOrLeft : Vec2DType, wallType : string) : boolean {
+function isOutside (point : Vec2D, wallTopOrRight : Vec2D, wallBottomOrLeft : Vec2D, wallType : string) : boolean {
   //const vec = new Vec2D ( point.x - wallBottom.x, point.y - wallBottom.y );
   //return ( !movingInto(vec, wallTop, wallBottom, wallType ) );
   return ( !movingInto(new Vec2D ( point.x - wallBottomOrLeft.x, point.y - wallBottomOrLeft.y ), wallTopOrRight, wallBottomOrLeft, wallType ) );
@@ -95,7 +93,7 @@ function isOutside (point : Vec2DType, wallTopOrRight : Vec2DType, wallBottomOrL
 // and line2 by the two points p3 = (x3,y3) and p4 = (x4,y4)
 // this function returns the parameter t, such that p3 + t*(p4-p3) is the intersection point of the two lines
 // please ensure this function is not called on parallel lines
-function coordinateInterceptParameter (line1 : [Vec2DType, Vec2DType], line2 : [Vec2DType, Vec2DType]) : number {
+function coordinateInterceptParameter (line1 : [Vec2D, Vec2D], line2 : [Vec2D, Vec2D]) : number {
   //const x1 = line1[0].x;
   //const x2 = line1[1].x;
   //const x3 = line2[0].x;
@@ -114,7 +112,7 @@ function coordinateInterceptParameter (line1 : [Vec2DType, Vec2DType], line2 : [
 
 // find the intersection of two lines
 // please ensure this function is not called on parallel lines
-export function coordinateIntercept (line1 : [Vec2DType, Vec2DType], line2 : [Vec2DType, Vec2DType]) : Vec2DType {
+export function coordinateIntercept (line1 : [Vec2D, Vec2D], line2 : [Vec2D, Vec2D]) : Vec2D {
   const t = coordinateInterceptParameter(line1, line2);
   return ( new Vec2D( line2[0].x + t*(line2[1].x - line2[0].x ), line2[0].y + t*(line2[1].y - line2[0].y ) ) );
 };
@@ -135,7 +133,7 @@ export function coordinateIntercept (line1 : [Vec2DType, Vec2DType], line2 : [Ve
 // which correspond to when the swept line hits the origin O (at coordinates (0,0))
 // if either of the parameters is not between 0 and 1, this function instead returns null
 // see '/doc/linesweep.png' for a visual representation of the situation
-function lineSweepParameters( line1 : [Vec2DType, Vec2DType], line2 : [Vec2DType, Vec2DType], flip : boolean = false) : [number, number] | null {
+function lineSweepParameters( line1 : [Vec2D, Vec2D], line2 : [Vec2D, Vec2D], flip : boolean = false) : [number, number] | null {
   let sign = 1;
   if (flip) {
     sign = -1;
@@ -173,8 +171,8 @@ function lineSweepParameters( line1 : [Vec2DType, Vec2DType], line2 : [Vec2DType
 
 
 function edgeSweepingCheck( ecb1 : ECB, ecbp : ECB, same : number, other : number
-                          , position : Vec2DType, counterclockwise : boolean
-                          , corner : Vec2DType, wallType : string) : null | [null | string, Vec2DType, number] {
+                          , position : Vec2D, counterclockwise : boolean
+                          , corner : Vec2D, wallType : string) : null | [null | string, Vec2D, number] {
 
   // the relevant ECB edge, that might collide with the corner, is the edge between ECB points 'same' and 'other'
   let interiorECBside = "l";   
@@ -231,9 +229,9 @@ function edgeSweepingCheck( ecb1 : ECB, ecbp : ECB, same : number, other : numbe
 
 // this function returns the absolute horizontal pushout vector for a wall
 // this function recursively looks at adjacent walls if necessary
-function pushoutHorizontally ( wall : [Vec2DType, Vec2DType], wallType : string, wallIndex : number
+function pushoutHorizontally ( wall : [Vec2D, Vec2D], wallType : string, wallIndex : number
                              , stage : Stage, connectednessFunction : ConnectednessFunction
-                             , ecbpSame : Vec2DType, ecbpTop : Vec2DType) : number {
+                             , ecbpSame : Vec2D, ecbpTop : Vec2D) : number {
   console.log("'pushoutHorizontally' working with wall "+wallType+""+wallIndex+".");
 
   const wallRight  = extremePoint(wall, "r");
@@ -374,8 +372,8 @@ function pushoutHorizontally ( wall : [Vec2DType, Vec2DType], wallType : string,
 
 // this function returns the relative vertical pushout vector, relative to the same-side ECB point
 // this function recursively looks at adjacent surfaces if necessary
-function pushoutVertically ( wall : [Vec2DType, Vec2DType], wallType : string, wallIndex : number
-                           , stage : Stage, connectednessFunction : ConnectednessFunction, line : [Vec2DType, Vec2DType]) : number {
+function pushoutVertically ( wall : [Vec2D, Vec2D], wallType : string, wallIndex : number
+                           , stage : Stage, connectednessFunction : ConnectednessFunction, line : [Vec2D, Vec2D]) : number {
   console.log("'pushoutVertically' working with wall "+wallType+""+wallIndex+".");
 
   const wallRight  = extremePoint(wall, "r");
@@ -459,12 +457,12 @@ function pushoutVertically ( wall : [Vec2DType, Vec2DType], wallType : string, w
 
 };
 
-function pointSweepingCheck ( wall : [Vec2DType, Vec2DType], wallType : string, wallIndex : number
-                            , wallTopOrRight : Vec2DType, wallBottomOrLeft : Vec2DType
+function pointSweepingCheck ( wall : [Vec2D, Vec2D], wallType : string, wallIndex : number
+                            , wallTopOrRight : Vec2D, wallBottomOrLeft : Vec2D
                             , stage : Stage, connectednessFunction : ConnectednessFunction
-                            , xOrY : number, position : Vec2DType
-                            , ecb1Same : Vec2DType, ecbpSame : Vec2DType
-                            , ecb1Top  : Vec2DType, ecbpTop  : Vec2DType ) : null | [null | string, Vec2DType, number] {
+                            , xOrY : number, position : Vec2D
+                            , ecb1Same : Vec2D, ecbpSame : Vec2D
+                            , ecb1Top  : Vec2D, ecbpTop  : Vec2D ) : null | [null | string, Vec2D, number] {
 
   let relevantECB1Point = ecb1Same;
   let relevantECBpPoint = ecbpSame;
@@ -535,9 +533,9 @@ function pointSweepingCheck ( wall : [Vec2DType, Vec2DType], wallType : string, 
 // the sweeping parameter s corresponds to the location of the collision, between ECB1 and ECBp
 // terminology in the comments: a wall is a segment with an inside and an outside,
 // which is contained in an infinite line, extending both ways, which also has an inside and an outside
-function findCollision (ecbp : ECB, ecb1 : ECB, position : Vec2DType
-                       , wall : [Vec2DType, Vec2DType], wallType : string, wallIndex : number
-                       , stage : Stage, connectednessFunction : ConnectednessFunction) : null | [null | string, Vec2DType, number] {
+function findCollision (ecbp : ECB, ecb1 : ECB, position : Vec2D
+                       , wall : [Vec2D, Vec2D], wallType : string, wallIndex : number
+                       , stage : Stage, connectednessFunction : ConnectednessFunction) : null | [null | string, Vec2D, number] {
 
 // STANDING ASSUMPTIONS
 // the ECB can only collide a ground/platform surface on its bottom point (or a bottom edge on a corner of the ground/platform)
@@ -640,7 +638,7 @@ function findCollision (ecbp : ECB, ecb1 : ECB, position : Vec2DType
 
     let counterclockwise = true; // whether (same ECB point -> other ECB point) is counterclockwise or not
     let closestEdgeCollision = null; // false for now
-    let corner : null | Vec2DType = null;
+    let corner : null | Vec2D = null;
 
     // case 1
     if ( getXOrYCoord(ecb1[same], xOrY) > getXOrYCoord(wallTopOrRight, xOrY) ) {
@@ -804,9 +802,9 @@ function findCollision (ecbp : ECB, ecb1 : ECB, position : Vec2DType
 //          option 2: '[newPosition, null, s]'             (collision, but no longer touching) 
 //          option 3: '[newPosition, wallTypeAndIndex, s]' (collision, still touching wall with given type and index)
 // s is the sweeping parameter
-function loopOverWalls( ecbp : ECB, ecb1 : ECB, position : Vec2DType
-                      , wallAndThenWallTypeAndIndexs : Array<[[Vec2DType, Vec2DType], [string, number]]>
-                      , oldMaybeCenterAndTouchingType : null | [Vec2DType, null | [string, number], number]
+function loopOverWalls( ecbp : ECB, ecb1 : ECB, position : Vec2D
+                      , wallAndThenWallTypeAndIndexs : Array<[[Vec2D, Vec2D], [string, number]]>
+                      , oldMaybeCenterAndTouchingType : null | [Vec2D, null | [string, number], number]
                       , stage : Stage, connectednessFunction : ConnectednessFunction, passNumber : number ) : MaybeCenterAndTouchingTypeType {
   console.log("'loopOverWalls' pass number "+passNumber+".");
   let newCollisionHappened = false;
@@ -904,7 +902,7 @@ function closestCenterAndTouchingType(maybeCenterAndTouchingTypes : Array<MaybeC
   }
 };
 
-export function groundedECBSquashFactor( ecb : ECB, ceilings : Array< [Vec2DType, Vec2DType]> ) : null | number {
+export function groundedECBSquashFactor( ecb : ECB, ceilings : Array< [Vec2D, Vec2D]> ) : null | number {
   const ceilingYValues = ceilings.map ( (ceil) => {
     if (ecb[0].x < ceil[0].x || ecb[0].x > ceil[1].x) {
       return null;
@@ -922,8 +920,8 @@ export function groundedECBSquashFactor( ecb : ECB, ceilings : Array< [Vec2DType
   }
 };
 
-export function getNewMaybeCenterAndTouchingType(ecbp : ECB, ecb1 : ECB, position : Vec2DType
-                                                , wallAndThenWallTypeAndIndexs : Array< [ [Vec2DType, Vec2DType], [string, number]] >
+export function getNewMaybeCenterAndTouchingType(ecbp : ECB, ecb1 : ECB, position : Vec2D
+                                                , wallAndThenWallTypeAndIndexs : Array< [ [Vec2D, Vec2D], [string, number]] >
                                                 , stage : Stage, connectednessFunction : ConnectednessFunction) : MaybeCenterAndTouchingTypeType {
   // start at loop number 1, with no collisions given
   return loopOverWalls(ecbp, ecb1, position, wallAndThenWallTypeAndIndexs, null, stage, connectednessFunction, 1 );
