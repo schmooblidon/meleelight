@@ -615,8 +615,9 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
         player[i].showHitbox ^= true;
       }
     }
-    if ((tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) && (tempBuffer[0].r ||
-         tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
+    if ( (gameMode == 3 || gameMode == 5)
+    	   && (tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) 
+    	   && (tempBuffer[0].r || tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
       if (tempBuffer[0].b || tempBuffer[1].b) {
         startGame();
       }
@@ -638,7 +639,9 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   }
   else { // gamepad controls
 
-    if (tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s) {
+    if ( (gameMode == 3 || gameMode == 5) &&
+             ( tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s ) 
+    	 && (! ( tempBuffer[1].a && tempBuffer[1].l && tempBuffer[1].r && tempBuffer[1].s ))) {
       if (tempBuffer[0].b) {
         startGame();
       }
