@@ -1,9 +1,9 @@
 // @flow
 
 import {Vec2D} from "../../main/util/Vec2D";
-import type Vec2DType from "../../main/util/Vec2D";
+import type {Vec2DType} from "../../main/util/Vec2D";
 
-export function extremePoint(wall : [Vec2DType, Vec2DType], extreme : string) : Vec2DType | null {
+export function extremePoint(wall : [Vec2DType, Vec2DType], extreme : string) : Vec2DType {
   const  v1 = wall[0];
   const  v2 = wall[1];
   switch (extreme) {
@@ -39,6 +39,6 @@ export function extremePoint(wall : [Vec2DType, Vec2DType], extreme : string) : 
       }
     default:
       console.log( "error in 'extremePoint': invalid parameter "+extreme+", not up/top/down/bottom/left/right");
-      return null;
+      return v1; // just to make the type checker happy
   }
 };

@@ -1,8 +1,8 @@
 // @flow
 
-import {Vec2D} from "../main/util/Vec2D";
+import {Vec2D} from "./Vec2D";
 
-import type Vec2DType from "../main/util/Vec2D";
+import type {Vec2DType} from "./Vec2D";
 
 export function lineAngle( line : [Vec2DType, Vec2DType] ) : number { // returns angle of line from the positive x axis, in radians, from 0 to pi
   const v1 = line[0];

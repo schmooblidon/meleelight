@@ -2,13 +2,13 @@
 
 import {Vec2D} from "./util/Vec2D";
 
-import type Vec2DType from "./util/Vec2D";
+import type {Vec2DType} from "./util/Vec2D";
 
 export function dotProd(vec1 : Vec2DType, vec2 : Vec2DType) : number {
   return (vec1.x * vec2.x + vec1.y * vec2.y);
 };
 
-export function scalarProd( lambda : number, vec : Vec2DType) : Vec2D {
+export function scalarProd( lambda : number, vec : Vec2DType) : Vec2DType {
   return ( new Vec2D ( lambda * vec.x, lambda * vec.y ));
 };
 

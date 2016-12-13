@@ -1,8 +1,8 @@
 // @flow
 
-import {Vec2D} from "main/util/Vec2D";
+import {Vec2D} from "./Vec2D";
 
-import type Vec2DType from "main/util/Vec2D";
+import type {Vec2DType} from "./Vec2D";
 
 
 export type Box2DType = {

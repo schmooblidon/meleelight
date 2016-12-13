@@ -1,6 +1,6 @@
 // @flow
 
-export function firstNonNull( list : Array<T | null>) : T | null {
+export function firstNonNull<T>( list : Array< T | null>) : T | null {
   if (list.length < 1) {
     return null;
   }
