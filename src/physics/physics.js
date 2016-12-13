@@ -23,7 +23,7 @@ function dealWithCollision(i, newCenter) {
   player[i].phys.pos = newCenter;
 }
 
-function dealWithWallCollision (i, newCenter, wallType,input) {
+function dealWithWallCollision (i, newCenter, wallType, input) {
   player[i].phys.pos = newCenter;
 
   let wallLabel = "L";

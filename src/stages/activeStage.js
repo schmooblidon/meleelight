@@ -1,4 +1,3 @@
-
 import vsstages from 'stages/vs-stages/vs-stages';
 import tstages from 'stages/targetstages/tstages';
 import {Box2D} from "../main/util/Box2D";
@@ -64,6 +63,7 @@ export let activeStage = {
   scale: 4.5,
   offset: [600, 480],
 };
+
 
 export function setActiveStageBuilderTestStage( stageTemp ) {
   activeStage = stageTemp;

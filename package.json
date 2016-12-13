@@ -50,7 +50,8 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-loader": "^1.6.1",
     "happypack": "^3.0.0",
-    "sw-precache-webpack-plugin": "^0.6.3"
+    "sw-precache-webpack-plugin": "^0.6.3",
+    "flow-bin": "^0.37.0"
   },
   "babel": {
     "presets": [
