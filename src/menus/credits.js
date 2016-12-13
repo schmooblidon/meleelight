@@ -24,7 +24,8 @@ let cYPos = cYSize / 2;
 let cPlayerXPos = cXSize / 2;
 let cPlayerYPos = cYSize / 2;
 let cScrollingPos = 0;
-let cScrollingMax = 2900;// max scrolling distance in y coords. Can change this when you want more names or w/e
+let cScrollingMax = 4925;// max scrolling distance in y coords. Can change this when you want more names or w/e
+let cIsBuffered = false;
 const cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
 let lastHit = [0, 0, false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
@@ -64,10 +65,18 @@ export function ScrollingText (text,yPos,position,information) {
 		  this.canRender = false;
 	  }
   };
-    this.isHovering = function(x, y) {
+    this.isHovering = function(x, y, z=false) {
 	  const size = this.size();
-	  if (x >= size[0][0] && x <= size[0][1] && y >= size[1][0] && y <= size[1][1]) {
+	  if (z === false) {
+	  const magicalNumber = 3;
+	  if (x >= size[0][0] - magicalNumber && x <= size[0][1] + magicalNumber && y >= size[1][0] - magicalNumber && y <= size[1][1] + magicalNumber) {
 		  return true;
+	  }
+	  } else {
+	  const magicalNumber = 15;
+	  if (x >= size[0][0] - magicalNumber && x <= size[0][1] + magicalNumber && y >= size[1][0] - magicalNumber && y <= size[1][1] + magicalNumber) {
+		  return true;
+	  }		  
 	  }
 	  return false;
   }
@@ -109,25 +118,23 @@ export function credits (p,input){ //called once every frame
     laserColor = laserColors[currentLaserColor];
   }
   if (initc) {
-	cScrollingPos = 0;
+    let cScrollingMax = 4925;// max scrolling distance in y coords. Can change this when you want more names or w/e
+    let cIsBuffered = false;
+    cScrollingPos = 0;
     lastHit = [0, 0, false]; //see notes above
     creditNames = [
       new ScrollingText("Schmoo", 800, "Creator, Main Developer", "Made the game."),
-      new ScrollingText("Tatatat0", 950, "Programmer", "Created the AI and credits."),
-      new ScrollingText("bites", 1100, "Animation Assistant, Level Design",
+      new ScrollingText("Tatatat0", 1250, "Programmer", "Created the AI and credits."),
+      new ScrollingText("bites", 1700, "Animation Assistant, Level Design",
         "Helped develop animation process & designed target stages."),
-      new ScrollingText("shf", 1250, "Programmer, Mathematician", "Input conversion and environmental collision."),
-
-      new ScrollingText("Nehgromancer", 1400, "Programmer", "Refactoring and networking."),
-      new ScrollingText("BonesMalones", 1550, "Programmer", "Refactoring and optimization."),
-      new ScrollingText("TJohnW", 1700, "Programmer", "Refactoring and code quality."),
-      new ScrollingText("WwwWario", 1850, "Support", "Helping users troubleshoot and being a homie!"),
-      new ScrollingText("zircon", 2000, "Musician", "Smash Superstars (Menu Theme)"),
-      new ScrollingText("Buoy", 2150, "Musician",
+      new ScrollingText("WwwWario", 2150, "Support", "Helping users troubleshoot and being a homie!"),
+      new ScrollingText("zircon", 2600, "Musician", "Smash Superstars (Menu Theme)"),
+	  new ScrollingText("mrjhrock2010",3050,"Support","Helping out the peeps"),
+      new ScrollingText("Buoy", 3500, "Musician",
         "Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
-      new ScrollingText("Tom Mauritzon", 2300, "Musician", "Mega Helix (PStadium Theme)"),
-      new ScrollingText("Rozen", 2450, "Musician", "Kumite (Battlefield Theme)"),
-      new ScrollingText("Zack Parrish", 2600, "Musician", "Sunny Side Up (Dreamland Theme)")
+      new ScrollingText("Tom Mauritzon", 3950, "Musician", "Mega Helix (PStadium Theme)"),
+      new ScrollingText("Rozen", 4400, "Musician", "Kumite (Battlefield Theme)"),
+      new ScrollingText("Zack Parrish", 4850, "Musician", "Sunny Side Up (Dreamland Theme)")
     ];
     cScore = 0;
 	cCursorAngle = 0;
@@ -184,14 +191,18 @@ export function credits (p,input){ //called once every frame
 
   if (shoot_cooldown == 0) {
 
-    if (input[p][0].a && !input[p][1].a) {
+    if ((input[p][0].a && !input[p][1].a) || cIsBuffered) {
       //is shooting
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(1200, 0), 1));
       shoot_cooldown = 8;
+      cIsBuffered = false;
     }
   } else {
+    if (input[p][0].a && !input[p][1].a) {
+      cIsBuffered = true;
+    }
     shoot_cooldown -= 1;
   }
 
@@ -366,7 +377,7 @@ export function drawCredits (){
   if (initc === false) {
 	 for (let i = 0; i < creditNames.length; i++) {
         if (!(creditNames[i].isShot)) {
-          if (creditNames[i].isHovering(cPlayerXPos,cPlayerYPos)) {
+          if (creditNames[i].isHovering(cPlayerXPos,cPlayerYPos,true)) {
              fg1.strokeStyle = "rgba(204, 0, 0, 0.7)";
           }
         }
