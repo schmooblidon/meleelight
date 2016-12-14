@@ -140,12 +140,12 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction, in
     groundOrPlatform = 1;
   }
 
-  let maybeLeftGroundTypeAndIndex  = false;
-  let maybeRightGroundTypeAndIndex = false;
+  let maybeLeftGroundTypeAndIndex  = null;
+  let maybeRightGroundTypeAndIndex = null;
 
   if ( player[i].phys.ECBp[0].x < leftmostGroundPoint.x) {
     maybeLeftGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"l");
-    if (maybeLeftGroundTypeAndIndex === false) { // no other ground to the left
+    if (maybeLeftGroundTypeAndIndex === null) { // no other ground to the left
       [stillGrounded, backward] = fallOffGround(i, "l", leftmostGroundPoint,input);
     }
     else {
@@ -165,7 +165,7 @@ function dealWithGround(i, ground, groundTypeAndIndex, connectednessFunction, in
   }
   else if ( player[i].phys.ECBp[0].x > rightmostGroundPoint.x) {
     maybeRightGroundTypeAndIndex = connectednessFunction(groundTypeAndIndex,"r");
-    if (maybeRightGroundTypeAndIndex === false) { // no other ground to the right
+    if (maybeRightGroundTypeAndIndex === null) { // no other ground to the right
       [stillGrounded, backward] = fallOffGround(i, "r", rightmostGroundPoint,input);
     }
     else {
@@ -613,7 +613,7 @@ export function physics (i,input){
       // squash grounded ECB if there is a low ceiling
       if (stillGrounded) {
         ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, toList(activeStage.ceiling) );
-        if (! (ecbSquashFactor === null ) && ecbSquashFactor < 1 && ecbSquashFactor > 0) {
+        if (ecbSquashFactor !== null && ecbSquashFactor < 1 && ecbSquashFactor > 0) {
           player[i].phys.ECBp = squashDownECB(player[i].phys.ECBp, ecbSquashFactor - additionalOffset );
         }
         else {
