@@ -645,7 +645,7 @@ function findCollision (ecbp : ECB, ecb1 : ECB, position : Vec2D
       counterclockwise = !flip;
       other = turn(same, counterclockwise);
       if ( getXOrYCoord(ecbp[other], xOrY) < getXOrYCoord(wallTopOrRight, xOrY) ) { 
-        let corner = wallTopOrRight;
+        corner = wallTopOrRight;
       }
     }
 
@@ -654,7 +654,7 @@ function findCollision (ecbp : ECB, ecb1 : ECB, position : Vec2D
       counterclockwise = flip;
       other = turn(same, counterclockwise);
       if ( getXOrYCoord(ecbp[other], xOrY) > getXOrYCoord(wallBottomOrLeft, xOrY) ) { 
-        let corner = wallBottomOrLeft;
+        corner = wallBottomOrLeft;
       }
     }
 
