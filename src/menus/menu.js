@@ -98,13 +98,13 @@ export function menuMove(i, input) {
         positionPlayersInCSS();
       } else {
         if (menuSelected == MATCHMAKING) {
-         // changeGamemode(15)//TODO make gaem mode
+
         } else {
           if (menuSelected == P2PMP) {
-           // changeGamemode(16)//TODO make gaem mode
+            changeGamemode(14)
           } else {
             if (menuSelected == SERVERMP) {
-             // changeGamemode(17)//TODO make gaem mode
+
             }
           }
         }

@@ -37,6 +37,7 @@ import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData} from "./input";
+import GlobalChat from "./multiplayer/globalchat";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -505,7 +506,7 @@ export function changeGamemode (newGamemode){
       break;
       // Multiplayer Modes
     case 14:
-      drawMPMenuInit();
+      new GlobalChat();
       break;
       // startup
     case 20:
