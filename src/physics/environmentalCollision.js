@@ -10,32 +10,13 @@ import {extremePoint} from "../stages/util/extremePoint";
 import {connectednessFromChains} from "../stages/util/connectednessFromChains";
 import {moveECB} from "../main/util/ecbTransform";
 
-import type {ECB} from "../main/util/ecbTransform";
-import type {ConnectednessFunction} from "../stages/util/connectednessFromChains";
+//import type {ECB} from "../main/util/ecbTransform";
+//import type {ConnectednessFunction} from "../stages/util/connectednessFromChains";
+import type {Stage} from "../stages/stage";
 
-
-
-type Stage = {
-  box           : Array< Box2D >,
-  platform      : Array< [Vec2D, Vec2D] >,
-  ground        : Array< [Vec2D, Vec2D] >,
-  ceiling       : Array< [Vec2D, Vec2D] >,
-  wallL         : Array< [Vec2D, Vec2D] >,
-  wallR         : Array< [Vec2D, Vec2D] >,
-  startingPoint : [Vec2D, Vec2D, Vec2D, Vec2D],
-  startingFace  : [number, number, number, number],
-  respawnPoints : [Vec2D, Vec2D, Vec2D, Vec2D],
-  respawnFace   : [number, number, number, number],
-  blastzone     : Box2D,
-  ledge         : Array< [number, number] >,
-  ledgePos      : Array< Vec2D >,
-  scale         : number,
-  offset        : [number, number],
-  connected?    : Array< [boolean, Array< [ string, number] > ] >
-}
-
-
-type MaybeCenterAndTouchingTypeType = null | [Vec2D, null | [string, number], number];
+// replicated here before of duplicate imports bug
+type ConnectednessFunction = (label : [string, number], side : string) => null | [string, number];
+type ECB = [Vec2D, Vec2D, Vec2D, Vec2D];
 
 
 const magicAngle : number = Math.PI/6;
@@ -792,15 +773,13 @@ function findCollision (ecbp : ECB, ecb1 : ECB, position : Vec2D
 };
 
 
+type MaybeCenterAndTouchingTypeType = null | [Vec2D, null | [string, number], number];
+
 // this function loops over all walls/surfaces it is provided, calculating the collision offsets that each ask for,
 // and at each iteration returning the smallest possible offset (i.e. collision with smallest sweeping parameter)
 // a 'wallAndThenWallTypeAndIndex' is of the form '[wall, [wallType, index]]'
 // where "index" is the index of the wall in the list of walls of that type in the stage
-// this function returns a 'maybeCenterAndTouchingType'
-// which is one of the following three options: 
-//          option 1: 'null'                               (no collision) 
-//          option 2: '[newPosition, null, s]'             (collision, but no longer touching) 
-//          option 3: '[newPosition, wallTypeAndIndex, s]' (collision, still touching wall with given type and index)
+// this function returns a 'maybeCenterAndTouchingType', as described in the above type declaration
 // s is the sweeping parameter
 function loopOverWalls( ecbp : ECB, ecb1 : ECB, position : Vec2D
                       , wallAndThenWallTypeAndIndexs : Array<[[Vec2D, Vec2D], [string, number]]>

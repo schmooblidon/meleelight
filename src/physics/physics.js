@@ -613,7 +613,7 @@ export function physics (i,input){
       // squash grounded ECB if there is a low ceiling
       if (stillGrounded) {
         ecbSquashFactor = groundedECBSquashFactor( player[i].phys.ECBp, toList(activeStage.ceiling) );
-        if (! (ecbSquashFactor === false ) && ecbSquashFactor < 1 && ecbSquashFactor > 0) {
+        if (! (ecbSquashFactor === null ) && ecbSquashFactor < 1 && ecbSquashFactor > 0) {
           player[i].phys.ECBp = squashDownECB(player[i].phys.ECBp, ecbSquashFactor - additionalOffset );
         }
         else {
@@ -654,11 +654,11 @@ export function physics (i,input){
     let surfacesMaybeCenterAndTouchingType = getNewMaybeCenterAndTouchingType(player[i].phys.ECBp, player[i].phys.ECB1, player[i].phys.pos
                                                                              , relevantSurfaces, activeStage, connectednessFunction );
 
-    if (surfacesMaybeCenterAndTouchingType === false) {
+    if (surfacesMaybeCenterAndTouchingType === null) {
       // no collision, do nothing
     }
     else {
-      if (surfacesMaybeCenterAndTouchingType[1] === false ) {
+      if (surfacesMaybeCenterAndTouchingType[1] === null ) {
         // collision but player no longer touching surface
         dealWithCollision(i, surfacesMaybeCenterAndTouchingType[0]);
       }

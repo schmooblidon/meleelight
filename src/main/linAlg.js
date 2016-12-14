@@ -45,7 +45,7 @@ export function orthogonalProjection(point : Vec2D, line : [Vec2D, Vec2D]) : Vec
 
 // Computes the inverse of a 2x2 matrix.
 export function inverseMatrix( [[x1, x2 ],[y1, y2]] : [[number, number], [number,number]] ) : null | [[number, number], [number,number]] {
-  let det = x1 * y2 - x2 * y1;
+  const det = x1 * y2 - x2 * y1;
   if (Math.abs(det) < 0.00001) {
     console.log("error in inverseMatrix: determinant too small");
     return null;
