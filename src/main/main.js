@@ -650,7 +650,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       }
     }
 
-    if ( tempBuffer[0].s || tempBuffer[0].du.pressed && gameMode == 5) {
+    if ( tempBuffer[0].s || tempBuffer[0].du && gameMode == 5) {
       pause[i][0] = true;
     }
     else {
