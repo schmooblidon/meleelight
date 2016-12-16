@@ -1610,11 +1610,10 @@ export const baseActionStates = {
   init : function(p,input){
     player[p].actionState = "GUARDON";
     player[p].timer = 0;
-	player[p].willUnshield = false;
     player[p].phys.shielding = true;
     player[p].phys.shieldPosition = new Vec2D(0,0);
     player[p].phys.powerShielded = false;
-	player[p].cStickJump = false;
+	  player[p].cStickJump = false;
     shieldSize(p,true,input);
     if (Math.max(input[p][0].lA,input[p][0].rA) == 1){
       player[p].phys.powerShieldActive = true;
@@ -1657,14 +1656,11 @@ export const baseActionStates = {
     }
   },
   interrupt : function(p,input){
-    if (input[p][0].lA < 0.3 && input[p][0].rA < 0.3){
-		player[p].willUnshield = true;
-    }
     if (!player[p].inCSS){
       var j = checkForJump(p,input);
       if (j[0] || input[p][0].csY > 0.65){
         player[p].phys.shielding = false;
-		player[p].cStickJump = true;
+		    player[p].cStickJump = true;
         actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
         return true;
       }
@@ -1721,7 +1717,7 @@ export const baseActionStates = {
   init : function(p,input){
     player[p].actionState = "GUARD";
     player[p].timer = 0;
-	player[p].cStickJump = false;
+	  player[p].cStickJump = false;
     player[p].phys.powerShieldActive = false;
     player[p].phys.powerShieldReflectActive = false;
     actionStates[characterSelections[p]].GUARD.main(p,input);
@@ -1744,16 +1740,21 @@ export const baseActionStates = {
     }
   },
   interrupt : function(p,input){
-	if (player[p].willUnshield === true){
-        player[p].phys.shielding = false;
-        actionStates[characterSelections[p]].GUARDOFF.init(p,input);
-        return;		
-	}
     if (!player[p].inCSS){
       var j = checkForJump(p,input);
-      if (j[0] || input[p][0].csY > 0.66){
+      if (input[p][0].lA < 0.3 && input[p][0].rA < 0.3){
         player[p].phys.shielding = false;
-		player[p].cStickJump = true;
+        actionStates[characterSelections[p]].GUARDOFF.init(p,input);
+        return true;
+      }
+      else if (input[p][0].csY > 0.66){
+        player[p].phys.shielding = false;
+        player[p].cStickJump = true;
+        actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
+        return true;
+      }
+      else if (j[0]){
+        player[p].phys.shielding = false;
         actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
         return true;
       }
@@ -1780,12 +1781,6 @@ export const baseActionStates = {
       else if (input[p][0].lsY < -0.65 && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] == 1){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].PASS.init(p,input);
-        return true;
-      }
-      else if (input[p][0].lA < 0.3 && input[p][0].rA < 0.3){
-		console.log(player[p].actionState);
-        player[p].phys.shielding = false;
-        actionStates[characterSelections[p]].GUARDOFF.init(p,input);
         return true;
       }
       else if (player[p].timer > 1){
@@ -1822,7 +1817,7 @@ export const baseActionStates = {
 	player[p].cStickJump = false;
     player[p].actionState = "GUARDOFF";
     player[p].timer = 0;
-	player[p].cStickJump = false;
+	  player[p].cStickJump = false;
     sounds.shieldoff.play();
     actionStates[characterSelections[p]].GUARDOFF.main(p,input);
   },
@@ -1896,7 +1891,7 @@ export const baseActionStates = {
         return true;
       } else if (input[p][0].csY > 0.66){
         player[p].phys.shielding = false;
-		player[p].cStickJump = true;
+		    player[p].cStickJump = true;
         actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
         return true;
       }

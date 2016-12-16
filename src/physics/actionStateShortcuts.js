@@ -246,6 +246,9 @@ export function shieldSize (p,lock,input){
    //shield size * 0.575 * model scaling
   //(shield size * 0.575 * hp/60) + (1-input)*0.60714*shieldsize
   player[p].phys.shieldAnalog = Math.max(input[p][0].lA, input[p][0].rA);
+  if (player[p].phys.shieldAnalog === 0){
+    player[p].phys.shieldAnalog = 1;
+  }
   if (lock && player[p].phys.shieldAnalog == 0) {
     player[p].phys.shieldAnalog = 1;
   }
