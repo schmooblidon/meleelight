@@ -1,5 +1,5 @@
 import {getTransparency} from "main/vfx/transparency";
-import {bg1, bg2, fg1, fg2, layers} from "main/main";
+import {bg1, bg2, fg1, fg2, layers, gameMode} from "main/main";
 import {targetDestroyed} from "target/targetplay";
 import {rotateVector, twoPi} from "main/render";
 import {activeStage} from "stages/activeStage";
@@ -26,6 +26,8 @@ for (var i = 0; i < 5; i++) {
 }
 let ang = 0;
 export let backgroundType = 0;
+
+let snowBalls = [];
 
 export function drawStageInit() {
     fg1.strokeStyle = "#db80cc";
@@ -161,6 +163,9 @@ export function drawBackground() {
     else {
         drawTunnel();
     }
+    if (gameMode != 4){
+        drawSnow();
+    }
 };
 
 export function drawTunnel() {
@@ -189,6 +194,7 @@ export function drawTunnel() {
 };
 
 export function drawStars() {
+    /*
     bgSparkle--;
     for (var p = 0; p < 20; p++) {
         if (bgStars[p].pos.x > 1250 || bgStars[p].pos.y > 800 || bgStars[p].pos.x < -50 || bgStars[p].pos.y < -50) {
@@ -216,7 +222,7 @@ export function drawStars() {
     }
     if (bgSparkle == 0) {
         bgSparkle = 2;
-    }
+    }*/
     bg2.globalAlpha = 1;
     for (var k = 1; k > -1; k--) {
         for (var j = 0; j < 9; j++) {
@@ -299,3 +305,79 @@ export function drawStars() {
         bg2.fill();
     }
 };
+
+export function snowBall(){
+  this.size = (Math.random() > 0.3) ? Math.floor(Math.random()*3)+1 : Math.floor(Math.random()*7)+4;
+  this.velx = this.size/5;
+  this.vely = Math.max(1,this.size/6);
+  this.landed = false;
+  this.melted = 0;
+  this.x = activeStage.blastzone.min.x+10+Math.random()*(activeStage.blastzone.max.x - activeStage.blastzone.min.x);
+  this.y = activeStage.blastzone.max.y-20;
+  this.prevX = this.x;
+  this.prevY = this.y;
+}
+
+export function createSnow(){
+  snowBalls = [];
+  for (var i=0;i<60;i++){
+    snowBalls.push(new snowBall());
+    snowBalls[i].y = activeStage.blastzone.min.y+(activeStage.blastzone.max.y-activeStage.blastzone.min.y)*Math.random();
+  }
+}
+
+export function snowCollision(i){
+  var s = snowBalls[i];
+  for (var j=0;j<activeStage.ground.length;j++){
+    if (s.x >= activeStage.ground[j][0].x && s.x <= activeStage.ground[j][1].x && s.prevY > activeStage.ground[j][0].y && s.y <= activeStage.ground[j][0].y){
+      s.y = activeStage.ground[j][0].y;
+      return true;
+    }
+  }
+  for (var j=0;j<activeStage.platform.length;j++){
+    if (j != activeStage.movingPlat && s.x >= activeStage.platform[j][0].x && s.x <= activeStage.platform[j][1].x && s.prevY > activeStage.platform[j][0].y && s.y <= activeStage.platform[j][0].y){
+      s.y = activeStage.platform[j][0].y;
+      return true;
+    }
+  }
+  for (var j=0;j<activeStage.wallR.length;j++){
+    if (s.y <= activeStage.wallR[j][0].y && s.y >= activeStage.wallR[j][1].y && s.prevX > activeStage.wallR[j][0].x && s.x <= activeStage.wallR[j][0].x){
+      s.x = activeStage.wallR[j][0].x;
+      return true;
+    }
+  }
+  return false;
+}
+
+export function drawSnow(){
+  for (var i=0;i<60;i++){
+    if (snowBalls[i].landed){
+      snowBalls[i].melted++;
+      bg2.fillStyle = "rgba(255,255,255,"+(1-(snowBalls[i].melted/60))+")";
+      if (snowBalls[i].melted > 60){
+        snowBalls[i] = new snowBall();
+      }
+    }
+    else {
+      bg2.fillStyle = "white";
+      snowBalls[i].prevX = snowBalls[i].x;
+      snowBalls[i].prevY = snowBalls[i].y;
+      snowBalls[i].x -= snowBalls[i].velx;
+      snowBalls[i].y -= snowBalls[i].vely;
+      if (snowBalls[i].y < activeStage.blastzone.min.y+10){
+        snowBalls[i] = new snowBall();
+      }
+      else {
+        if (snowBalls[i].size > 1.5 && snowBalls[i].size < 5){
+          if (snowCollision(i)){
+            snowBalls[i].landed = true;
+          }
+        }
+      }
+    }
+    bg2.beginPath();
+    bg2.arc((snowBalls[i].x*activeStage.scale)+activeStage.offset[0],(snowBalls[i].y*-activeStage.scale)+activeStage.offset[1],snowBalls[i].size,0,twoPi);
+    bg2.closePath();
+    bg2.fill();
+  }
+}

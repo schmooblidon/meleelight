@@ -6,7 +6,7 @@ import {drawStartUp} from 'menus/startup';
 import {menuMove, drawMainMenuInit, drawMainMenu} from "menus/menu";
 import {sounds} from "main/sfx";
 import {drawStartScreenInit, drawStartScreen} from "menus/startscreen";
-import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType} from "stages/stagerender";
+import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType, createSnow} from "stages/stagerender";
 import {drawSSSInit, sssControls, drawSSS} from "menus/stageselect";
 import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "menus/audiomenu";
 import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "menus/gameplaymenu";
@@ -1148,6 +1148,7 @@ export function initializePlayers (i,target){
 export function startGame (){
   setVsStage(stageSelect);
     setBackgroundType(Math.round(Math.random()));
+  createSnow();
   changeGamemode(3);
   resetVfxQueue();
   for (var n = 0; n < 4; n++) {
