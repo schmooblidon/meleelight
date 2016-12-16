@@ -189,6 +189,8 @@ Unsure where to begin contributing to Melee Light? You can start by looking thro
 
 * Include screenshots and animated GIFs in your pull request whenever possible.
 * Follow the [Airbnb](https://github.com/airbnb/javascript) and [Flow](https://github.com/ryyppy/flow-guide/tree/master/styleguide) styleguides.
+* These rules are applied by ESLint where currently enabled. Should you find yourself updating code that is still not covered, It would be much appreciated if you update the source to conform to these linter rules.
+ * Should you wish to go above and beyond these rules please be sure that the build can complete successfully.
  * Document new code  
  * Avoid platform-dependent code:
     * Use `require('fs-plus').getHomeDirectory()` to get the home directory.
