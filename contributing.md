@@ -193,6 +193,7 @@ Unsure where to begin contributing to Melee Light? You can start by looking thro
 * These rules are applied by ESLint where currently enabled. Should you find yourself updating code that is still not covered, It would be much appreciated if you update the source to conform to these linter rules.
  * Should you wish to go above and beyond these rules please be sure that the build can complete successfully.
  * Document new code  
+ ** Note ** We have had several contributors attempt to auto beutify/auto-correct errors in the entire project. While we appreciate the gesture and intent, it has given us pause as it has resulted in more difficulty and bugs for the most knowlegable(the guys with the real nuanced understanding of the core mechanics and intended bugs) than originally anticipated and may result in undue rework. Please be sure to initiate a discussion about any large spanning changes prior to investing your time.
  * Avoid platform-dependent code:
     * Use `require('fs-plus').getHomeDirectory()` to get the home directory.
     * Use `path.join()` to concatenate filenames.
