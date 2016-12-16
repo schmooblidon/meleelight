@@ -72,7 +72,7 @@ Before creating bug reports, please check the issues page [issues](https://githu
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
 * **Use a clear and descriptive title** for the issue to identify the problem.
-* **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you started the game, e.g. which browser you are using. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you moved a character and they dissapeared, explain which moves were taken, what buttons were pressed, and if the game recovered afterwards.
+* **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you started the game, e.g. which browser you are using. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you moved a character and they disappeared, explain which moves were taken, what buttons were pressed, and if the game recovered afterwards.
 * **Provide specific examples to demonstrate the steps**. Should you provide code, include links to files or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, please use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
 * **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
 * **Explain which behavior you expected to see instead and why.**
@@ -135,7 +135,8 @@ Before creating enhancement suggestions, please check [this list](#before-submit
 #### Before Submitting An Enhancement Suggestion
 
 * **Refresh the browser you are using.** — you might discover that the enhancement is already available. 
- * **Perform a [cursory search](https://github.com/schmooblidon/meleelight/issues)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
+* **Try a download build.** Latest download builds are available from [this link](https://github.com/schmooblidon/meleelight/archive/download.zip), and have the latest features. Unzip, and open index.html with your browser.
+* **Perform a [cursory search](https://github.com/schmooblidon/meleelight/issues)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 
@@ -203,48 +204,41 @@ Unsure where to begin contributing to Melee Light? You can start by looking thro
   
 ## FAQ
 
--Q. Will Online ever be available?
-  A. Most likely sometime in the future.
+*Q. Will Online ever be available?
+*A. Most likely sometime in the future.
 
--Q. How many characters will there be?
-  A. What's planned right now is Top 8, excluding ICs.
+*Q. How many characters will there be?
+*A. What's planned right now is Top 8, excluding ICs.
 
--Q. How can I get my controller to work?
-  A. Ask Schmoo or WwwWario on Discord and they will try their
-  best to help you.
+*Q. How can I get my controller to work?
+*A. Ask Schmoo or WwwWario on Discord and they will try their best to help you.
 
--Q. Why doesn't the official adapter work on Chrome?
-  A. Because Chrome won't allow direct input.
+*Q. Why doesn't the official adapter work on Chrome?
+*A. Because Chrome won't allow direct input. The latest WebVR-enabled experimental versions of Chrome have improved gamepad support, you might want to try those.
 
--Q. Why does my screen get stuck on the loading screen in the downloaded game?
-  A. You need to run MeleeLightDebug.html, if it still doesn't load we'll try to help.
+*Q. Why does my screen get stuck on the loading screen in the downloaded game?
+*A. If you are using an old download, you need to run MeleeLightDebug.html, if it still doesn't load we'll try to help.
 
--Q. You can go through the walls on Target Test Stages! Do you guys know about this?
-  A. Yes.
+*Q. You can go through the walls on Target Test Stages! Do you guys know about this?
+*A. Yes. The collision detection is currently being reworked, and will fix these issues.
 
--Q. Why does my game not load and when it does load certain
-  things makes it crash?
-  A. This game is still being developed, all will be fixed a long the way.
+*Q. Why does my game not load and when it does load certain things makes it crash?
+*A. This game is still being developed, all will be fixed along the way.
 
--Q. How does Melee Light compare to Melee?
-  A. The Devs are trying their best to replicate Vanilla Melee.
+*Q. How does Melee Light compare to Melee?
+*A. The Devs are trying their best to replicate Vanilla Melee.
 
--Q. Who made this project?
-  A. The head Developers are Schmoo, Tatatat0, Bites, BonesMalones, Nehgromancer, shf, and ShortFuse.
+*Q. Who made this project?
+*A. The head Developers are Schmoo, Tatatat0, Bites, BonesMalones, Nehgromancer, shf, and ShortFuse.
 
--Q. I found a bug, is there a way to report it?
-  A. Join the Discord and there's a text channel you can report
-  bugs in. There's also Custom Stage sharing, idea sharing, and
-  much more. It's also a very good way to get in contact with us.
+*Q. I found a bug, is there a way to report it?
+*A. Join the Discord and there's a text channel you can report bugs in. There's also Custom Stage sharing, idea sharing, and much more. It's also a very good way to get in contact with us.
 
--Q. Why is my controller not supported?
-  A. If your browser detects your controller, support for the controller can be added. 
-  Check this website http://rawgit.com/backbone-input/gamepad/master/examples/monitor.html to see if your controller is detected.
-  If your controller is detected by this page, but doesn't work in game, contact one of the Devs.
-  If your controller is not detected by this page, you might have better luck with    another web browser.
+*Q. Why is my controller not supported?
+*A. If your browser detects your controller, support for the controller can be added. Check this website http://rawgit.com/backbone-input/gamepad/master/examples/monitor.html to see if your controller is detected. If your controller is detected by this page, but doesn't work in game, contact one of the Devs.  If your controller is not detected by this page, you might have better luck with    another web browser.
 
--Q. Where can I download the game?
-  A. Download from https://github.com/schmooblidon/meleelight/archive/download.zip, unzip and open index.html with your internet browser of choice.(edited)
+*Q. Where can I download the game?
+*A. Download from https://github.com/schmooblidon/meleelight/archive/download.zip, unzip and open index.html with your internet browser of choice.
   
   ## Additional notes
   
