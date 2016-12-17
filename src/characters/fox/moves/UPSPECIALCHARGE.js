@@ -69,7 +69,7 @@ export default {
               } else {
                 ang = 0;
               }
-            } else {
+            } else if (input[p][0].lsY > 0) {
               ang = Math.atan(input[p][0].lsY/input[p][0].lsX);              
             }
           } else {
