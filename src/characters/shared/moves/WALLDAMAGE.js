@@ -19,10 +19,10 @@ export default {
   },
   main : function(p,input){
     player[p].timer++;
-    if (player[p].hit.hitstun % 10 == 0){
+    if (player[p].hit.hitstun % 10 === 0){
       drawVfx("flyingDust",player[p].phys.pos);
     }
-    if (player[p].timer == 2){
+    if (player[p].timer === 2){
       player[p].phys.kVel.y *= 0.8;
       player[p].phys.kVel.x *= -0.8;
       player[p].phys.kDec.x *= -1;

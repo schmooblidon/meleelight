@@ -55,6 +55,7 @@ export default {
     }
   },
   interrupt : function(p,input){
+    let b;
     if (player[p].timer > framesData[characterSelections[p]].DAMAGEN2){
       if (player[p].hit.hitstun > 0){
         player[p].timer--;
@@ -72,10 +73,10 @@ export default {
     }
     else if (player[p].hit.hitstun <= 0 && !player[p].inCSS){
       if (player[p].phys.grounded){
-        var b = checkForSpecials(p,input);
-        var t = checkForTilts(p,input);
-        var s = checkForSmashes(p,input);
-        var j = checkForJump(p,input);
+        b = checkForSpecials(p, input);
+        const t = checkForTilts(p, input);
+        const s = checkForSmashes(p, input);
+        const j = checkForJump(p, input);
         if (j[0]){
           actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
           return true;
@@ -126,8 +127,8 @@ export default {
         }
       }
       else {
-        var a = checkForAerials(p,input);
-        var b = checkForSpecials(p,input);
+        const a = checkForAerials(p, input);
+        b = checkForSpecials(p, input);
         if (a[0]){
           actionStates[characterSelections[p]][a[1]].init(p,input);
           return true;

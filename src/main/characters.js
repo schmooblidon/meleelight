@@ -40,3 +40,13 @@ export function charObject(num) {
   this.animations = 0;
   this.hitboxes = hitboxes[num];
 }
+
+export const ecb = [];
+
+export function getEcB(index){
+  return ecb[index];
+}
+
+export function setEcbData(index,val){
+  ecb[index] = val;
+}

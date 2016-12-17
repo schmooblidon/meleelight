@@ -22,7 +22,7 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!actionStates[characterSelections[p]].DOWNBOUND.interrupt(p,input)){
-      if (player[p].timer == 1){
+      if (player[p].timer === 1){
         reduceByTraction(p,true);
       }
       else {

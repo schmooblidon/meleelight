@@ -13,7 +13,7 @@ export default {
     player[p].actionState = "ESCAPEAIR";
     player[p].timer = 0;
     if (Math.abs(input[p][0].lsX) > 0 || Math.abs(input[p][0].lsY) > 0){
-      var ang = getAngle(input[p][0].lsX,input[p][0].lsY);
+      const ang = getAngle(input[p][0].lsX, input[p][0].lsY);
       player[p].phys.cVel.x = 3.1 * Math.cos(ang);
       player[p].phys.cVel.y = 3.1 * Math.sin(ang);
     }

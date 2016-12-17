@@ -1,8 +1,8 @@
 import { characterSelections, player} from "main/main";
-import {Vec2D} from "main/util";
 import {actionStates} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 export default {
   name : "CAPTUREPULLED",
   canEdgeCancel : false,
@@ -21,7 +21,7 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!actionStates[characterSelections[p]].CAPTUREPULLED.interrupt(p,input)){
-      if (player[p].timer == 2){
+      if (player[p].timer === 2){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+(-16.41205*player[p].phys.face),player[player[p].phys.grabbedBy].phys.pos.y);
       }
     }

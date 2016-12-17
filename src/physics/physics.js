@@ -10,6 +10,7 @@ import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
 import { Box2D} from "../main/util/Box2D";
 import {Vec2D} from "../main/util/Vec2D";
+import {ecb} from "../main/characters";
 /* eslint-disable */
 
 export function land (i,y,t,j,input){

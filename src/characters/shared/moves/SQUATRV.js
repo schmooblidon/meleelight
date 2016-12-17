@@ -19,10 +19,10 @@ export default {
     }
   },
   interrupt : function(p,input){
-    var b = checkForSpecials(p,input);
-    var t = checkForTilts(p,input);
-    var s = checkForSmashes(p,input);
-    var j = checkForJump(p,input);
+    const b = checkForSpecials(p, input);
+    const t = checkForTilts(p, input);
+    const s = checkForSmashes(p, input);
+    const j = checkForJump(p, input);
     if (player[p].timer > framesData[characterSelections[p]].SQUATRV){
       actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;

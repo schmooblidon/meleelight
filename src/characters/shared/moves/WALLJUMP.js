@@ -24,7 +24,7 @@ export default {
     player[p].phys.wallJumpCount++;
     player[p].hit.hitlag = 5;
     player[p].hit.knockback = 0;
-    if (player[p].phys.face == 1){
+    if (player[p].phys.face === 1){
       drawVfx("tech",player[p].phys.ECBp[3]);
     }
     else {
@@ -35,7 +35,7 @@ export default {
   },
   main : function(p,input){
     player[p].timer++;
-    if (player[p].timer == 2){
+    if (player[p].timer === 2){
       sounds.walljump.play();
     }
     if (!actionStates[characterSelections[p]].WALLJUMP.interrupt(p,input)){
@@ -45,8 +45,8 @@ export default {
   },
   interrupt : function(p,input){
     if (player[p].timer > 1){
-      var a = checkForAerials(p,input);
-      var b = checkForSpecials(p,input);
+      const a = checkForAerials(p, input);
+      const b = checkForSpecials(p, input);
       if (a[0]){
         actionStates[characterSelections[p]][a[1]].init(p,input);
         return true;

@@ -11,18 +11,19 @@ export default {
     actionStates[characterSelections[p]].RUNTURN.main(p,input);
   },
   main : function(p,input){
+    let tempAcc;
     player[p].timer++;
     if (!actionStates[characterSelections[p]].RUNTURN.interrupt(p,input)){
-      if (player[p].timer == player[p].charAttributes.runTurnBreakPoint+1){
+      if (player[p].timer === player[p].charAttributes.runTurnBreakPoint+1){
         player[p].phys.face *= -1;
       }
 
       if (player[p].timer <= player[p].charAttributes.runTurnBreakPoint && input[p][0].lsX * player[p].phys.face < -0.3){
-        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(input[p][0].lsX))*(player[p].charAttributes.dAccA))*player[p].phys.face;
+        tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(input[p][0].lsX)) * (player[p].charAttributes.dAccA)) * player[p].phys.face;
         player[p].phys.cVel.x -= tempAcc;
       }
       else if (player[p].timer > player[p].charAttributes.runTurnBreakPoint && input[p][0].lsX * player[p].phys.face > 0.3){
-        var tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(input[p][0].lsX))*(player[p].charAttributes.dAccA))*player[p].phys.face;
+        tempAcc = (player[p].charAttributes.dAccA - (1 - Math.abs(input[p][0].lsX)) * (player[p].charAttributes.dAccA)) * player[p].phys.face;
         player[p].phys.cVel.x += tempAcc;
       }
       else {
@@ -34,7 +35,7 @@ export default {
         reduceByTraction(p,true);
       }*/
 
-      if (player[p].timer == player[p].charAttributes.runTurnBreakPoint){
+      if (player[p].timer === player[p].charAttributes.runTurnBreakPoint){
         if (player[p].phys.cVel.x * player[p].phys.face > 0){
           player[p].timer--;
         }
@@ -42,7 +43,7 @@ export default {
     }
   },
   interrupt : function(p,input){
-    var j = checkForJump(p,input);
+    const j = checkForJump(p, input);
     if (j[0]){
       actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;

@@ -11,7 +11,7 @@ export default {
   canBeGrabbed : true,
   landType : 0,
   vCancel : true,
-  init : function(p,type){
+  init : function(p,type,input){
     player[p].actionState = "JUMPF";
     player[p].timer = 0;
     if (type){
@@ -41,8 +41,8 @@ export default {
     }
   },
   interrupt : function(p,input){
-    var a = checkForAerials(p,input);
-    var b = checkForSpecials(p,input);
+    const a = checkForAerials(p, input);
+    const b = checkForSpecials(p, input);
     if (a[0]){
       actionStates[characterSelections[p]][a[1]].init(p,input);
       return true;

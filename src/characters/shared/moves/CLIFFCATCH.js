@@ -1,8 +1,9 @@
 import {playSounds, actionStates, turnOffHitboxes} from "physics/actionStateShortcuts";
 import {characterSelections,  player} from "main/main";
-import {Vec2D} from "main/util";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
+import {Vec2D} from "../../../main/util/Vec2D";
+import {framesData} from "../../../main/characters";
 export default {
   name : "CLIFFCATCH",
   canGrabLedge : false,
@@ -35,13 +36,13 @@ export default {
     player[p].timer++;
     playSounds("CLIFFCATCH",p);
     if (!actionStates[characterSelections[p]].CLIFFCATCH.interrupt(p,input)){
-      var x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
-      var y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
+      const x = activeStage.ledge[player[p].phys.onLedge][1] ? activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x : activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
+      const y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
       player[p].phys.pos = new Vec2D(x+(actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][1]);
     }
   },
   interrupt : function(p,input){
-    if (player[p].timer > frames[characterSelections[p]].CLIFFCATCH){
+    if (player[p].timer > framesData[characterSelections[p]].CLIFFCATCH){
       actionStates[characterSelections[p]].CLIFFWAIT.init(p,input);
       return true;
     }

@@ -31,7 +31,7 @@ export default {
   },
   interrupt : function(p,input){
     if (!player[p].inCSS){
-      var j = checkForJump(p,input);
+      const j = checkForJump(p, input);
       if (j[0] || input[p][0].csY > 0.66){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
@@ -57,7 +57,7 @@ export default {
         actionStates[characterSelections[p]].ESCAPEB.init(p,input);
         return true;
       }
-      else if (input[p][0].lsY < -0.65 && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] == 1){
+      else if (input[p][0].lsY < -0.65 && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] === 1){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].PASS.init(p,input);
         return true;

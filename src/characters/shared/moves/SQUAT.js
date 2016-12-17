@@ -19,11 +19,11 @@ export default {
     }
   },
   interrupt : function(p,input){
-    var b = checkForSpecials(p,input);
-    var t = checkForTilts(p,input);
-    var s = checkForSmashes(p,input);
-    var j = checkForJump(p,input);
-    if (player[p].timer == 4 && (input[p][0].lsY < -0.65 || input[p][1].lsY < -0.65 || input[p][2].lsY < -0.65) && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] == 1){
+    const b = checkForSpecials(p, input);
+    const t = checkForTilts(p, input);
+    const s = checkForSmashes(p, input);
+    const j = checkForJump(p, input);
+    if (player[p].timer === 4 && (input[p][0].lsY < -0.65 || input[p][1].lsY < -0.65 || input[p][2].lsY < -0.65) && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] === 1){
       actionStates[characterSelections[p]].PASS.init(p,input);
       return true;
     }
