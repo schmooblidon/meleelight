@@ -6,24 +6,25 @@ import {player, setCookie, changeGamemode, ports, bg1, bg1 as fg1, layers, fg2 a
 import {sounds} from "main/sfx";
 import {twoPi} from "main/render";
 import {stickHoldEach, stickHold, increaseStick, resetStick} from "menus/menu";
+import {music} from "../main/sfx";
 /* eslint-disable */
 
 // sounds, music
 export const masterVolume = [0.5,0.3];
 const audioMenuNames = ["Sounds","Music"];
 let audioMenuSelected = 0;
-export function audioMenuControls (i){
+export function audioMenuControls (i, input){
   let menuMove = false;
   let audioLevelMoveUp = false;
   let audioLevelMoveDown = false;
-  if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
+  if (input[i][0].b && !input[i][1].b){
 	fg1.textAlign = "left";
     sounds.menuBack.play();
-    player[i].inputs.b[1] = true;
+    //input[i].b[1] = true;
     setCookie("soundsLevel", masterVolume[0], 36500);
     setCookie("musicLevel", masterVolume[1], 36500);
     changeGamemode(1);
-  } else if (player[i].inputs.lStickAxis[0].y > 0.7) {
+  } else if (input[i][0].lsY > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioMenuSelected--;
@@ -37,7 +38,7 @@ export function audioMenuControls (i){
         menuMove = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].y < -0.7) {
+  } else if (input[i][0].lsY < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioMenuSelected++;
@@ -51,7 +52,7 @@ export function audioMenuControls (i){
         menuMove = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].x > 0.7) {
+  } else if (input[i][0].lsX > 0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioLevelMoveUp = true;
@@ -63,7 +64,7 @@ export function audioMenuControls (i){
         audioLevelMoveUp = true;
       }
     }
-  } else if (player[i].inputs.lStickAxis[0].x < -0.7) {
+  } else if (input[i][0].lsX < -0.7) {
     stickHoldEach[i] = true;
     if (stickHold == 0) {
       audioLevelMoveDown = true;
@@ -98,19 +99,17 @@ export function audioMenuControls (i){
       audioMenuSelected = 0;
     }
   } else if (audioLevelMoveUp) {
+    sounds.menuSelect.play();
     masterVolume[audioMenuSelected] += 0.1;
     if (masterVolume[audioMenuSelected] > 1) {
       masterVolume[audioMenuSelected] = 1;
-    } else {
-	  sounds.menuSelect.play();
-	}
+    }
   } else if (audioLevelMoveDown) {
+    sounds.menuSelect.play();
     masterVolume[audioMenuSelected] -= 0.1;
     if (masterVolume[audioMenuSelected] < 0) {
       masterVolume[audioMenuSelected] = 0;
-    } else { 
-	  sounds.menuSelect.play();
-	}
+    }
   }
   if (audioLevelMoveDown || audioLevelMoveUp) {
     if (audioMenuSelected == 0) {
@@ -179,7 +178,7 @@ export function drawAudioMenu (){
     ui.lineTo(1000, 350 + i * 250);
     ui.closePath();
     ui.fill();
-    if (i == 0) {	
+    if (i == 0) {
       var bgGrad = ui.createLinearGradient(200, 0, 1200, 0);
       bgGrad.addColorStop(0, "rgb(12, 75, 13)");
       bgGrad.addColorStop(1, "rgb(15, 75, 255)");

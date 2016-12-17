@@ -1,26 +1,26 @@
-import {executeIntangibility, reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {executeIntangibility, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "DOWNSTANDN",
   canEdgeCancel : true,
   disableTeeter : true,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DOWNSTANDN";
     player[p].timer = 0;
-    aS[cS[p]].DOWNSTANDN.main(p);
+    actionStates[characterSelections[p]].DOWNSTANDN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].DOWNSTANDN.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DOWNSTANDN.interrupt(p,input)){
       reduceByTraction(p,true);
       executeIntangibility("DOWNSTANDN",p);
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].DOWNSTANDN){
-      aS[cS[p]].WAIT.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].DOWNSTANDN){
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

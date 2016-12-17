@@ -1,7 +1,8 @@
-import {airDrift, fastfall, aS, turnOffHitboxes} from "physics/actionStateShortcuts";
-import {cS, drawVfx, player} from "main/main";
+import {airDrift, fastfall, actionStates, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "TECHU",
   canPassThrough : true,
@@ -10,7 +11,7 @@ export default {
   headBonk : false,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "TECHU";
     player[p].timer = 0;
     player[p].phys.cVel.y = 0;
@@ -23,18 +24,18 @@ export default {
     drawVfx("tech",player[p].phys.ECBp[2]);
     sounds.tech.play();
     turnOffHitboxes(p);
-    aS[cS[p]].TECHU.main(p);
+    actionStates[characterSelections[p]].TECHU.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].TECHU.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!actionStates[characterSelections[p]].TECHU.interrupt(p,input)){
+      fastfall(p,input);
+      airDrift(p,input);
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].TECHU){
-      aS[cS[p]].FALL.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].TECHU){
+      actionStates[characterSelections[p]].FALL.init(p,input);
       return true;
     }
     else {

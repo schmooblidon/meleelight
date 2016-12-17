@@ -5,7 +5,8 @@ import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import {articles} from "physics/article";
 import {sounds} from "main/sfx";
 import {turnOffHitboxes} from "physics/actionStateShortcuts";
-import {drawVfx, player} from "main/main";
+import { player} from "main/main";
+import {drawVfx} from "main/vfx/drawVfx";
 
 export default {
   name : "SIDESPECIALGROUND",
@@ -17,7 +18,7 @@ export default {
   headBonk : false,
   canBeGrabbed : true,
   airborneState : "SIDESPECIALAIR",
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "SIDESPECIALGROUND";
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
@@ -25,21 +26,21 @@ export default {
     drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
     turnOffHitboxes(p);
     sounds.star.play();
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (player[p].phys.grounded){
         if (player[p].timer === 21){
           articles.ILLUSION.init(p,1);
           player[p].phys.cVel.x = 18.72*player[p].phys.face;
-          if ((player[p].inputs.b[0] || player[p].inputs.b[1]) && !player[p].inputs.b[2]){
+          if ((input[p][0].b || input[p][1].b) && !input[p][2].b){
             player[p].timer = 24;
           }
         }
         else if (player[p].timer === 22 || player[p].timer === 23){
-          if (player[p].inputs.b[0] && !player[p].inputs.b[1]){
+          if (input[p][0].b && !input[p][1].b){
             player[p].timer = 24;
           }
         }
@@ -61,7 +62,7 @@ export default {
       else {
         player[p].actionState = "SIDESPECIALAIR";
         player[p].timer--;
-        SIDESPECIALAIR.main(p);
+        SIDESPECIALAIR.main(p,input);
       }
 
       if (player[p].timer >= 21 && player[p].timer <= 24){
@@ -69,13 +70,13 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 63){
       if (player[p].phys.grounded){
-        WAIT.init(p);
+        WAIT.init(p,input);
       }
       else {
-        FALLSPECIAL.init(p);
+        FALLSPECIAL.init(p,input);
       }
       return true;
     }
@@ -83,7 +84,7 @@ export default {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
 
   }
 };

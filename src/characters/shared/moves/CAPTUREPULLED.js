@@ -1,13 +1,14 @@
-import {drawVfx, cS, player} from "main/main";
-import {Vec2D} from "main/characters";
-import {aS} from "physics/actionStateShortcuts";
+import { characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 export default {
   name : "CAPTUREPULLED",
   canEdgeCancel : false,
   canBeGrabbed : false,
   inGrab : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CAPTUREPULLED";
     player[p].timer = 0;
     player[p].phys.grounded = true;
@@ -15,20 +16,20 @@ export default {
     player[p].phys.onSurface = [player[player[p].phys.grabbedBy].phys.onSurface[0],player[player[p].phys.grabbedBy].phys.onSurface[1]];
     player[p].phys.stuckTimer = 100+(2*player[p].percent);
     sounds.grabbed.play();
-    aS[cS[p]].CAPTUREPULLED.main(p);
+    actionStates[characterSelections[p]].CAPTUREPULLED.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].CAPTUREPULLED.interrupt(p)){
-      if (player[p].timer == 2){
+    if (!actionStates[characterSelections[p]].CAPTUREPULLED.interrupt(p,input)){
+      if (player[p].timer === 2){
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+(-16.41205*player[p].phys.face),player[player[p].phys.grabbedBy].phys.pos.y);
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 2){
-      aS[cS[p]].CAPTUREWAIT.init(p);
-      aS[cS[p]].CATCHWAIT.init(player[p].phys.grabbedBy);
+      actionStates[characterSelections[p]].CAPTUREWAIT.init(p,input);
+      actionStates[characterSelections[p]].CATCHWAIT.init(player[p].phys.grabbedBy,input);
       drawVfx("tech",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+10));
       return true;
     }

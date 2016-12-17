@@ -1,4 +1,4 @@
-import {cpuDifficulty, cS, player, changeGamemode, playerType,bg1,ui, palettes, pPal, clearScreen, versusMode, tagText,
+import {cpuDifficulty, characterSelections, player, changeGamemode, playerType,bg1,ui, palettes, pPal, clearScreen, versusMode, tagText,
     pause
     , hasTag
     , randomTags
@@ -8,11 +8,12 @@ import {cpuDifficulty, cS, player, changeGamemode, playerType,bg1,ui, palettes, 
     , ports
     , setVersusMode
 } from "main/main";
-import {Vec2D, chars} from "main/characters";
 import {drawArrayPathCompress, twoPi} from "main/render";
 import {sounds} from "main/sfx";
-import {aS} from "physics/actionStateShortcuts";
+import {actionStates} from "physics/actionStateShortcuts";
 import {setCS} from "../main/main";
+import {chars} from "../main/characters";
+import {Vec2D} from "../main/util/Vec2D";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -53,12 +54,14 @@ export function changeCharacter (i,c){
   setCS(i,c);
   player[i].actionState = "WAIT";
   player[i].timer = 0;
-  player[i].charAttributes = chars[cS[i]].attributes;
-  player[i].charHitboxes = chars[cS[i]].hitboxes;
+  player[i].charAttributes = chars[characterSelections[i]].attributes;
+  player[i].charHitboxes = chars[characterSelections[i]].hitboxes;
 }
-export function cssControls (i){
+
+export function cssControls (i, input){
+  let allowRegrab = true;
   if (choosingTag == -1){
-    if (player[i].inputs.b[0]){
+    if (input[i][0].b){
       bHold[i]++;
       if (bHold[i] == 30) {
         sounds.menuBack.play();
@@ -67,8 +70,8 @@ export function cssControls (i){
     } else {
       bHold[i] = 0;
     }
-    handPos[i].x += player[i].inputs.lStickAxis[0].x * 12;
-    handPos[i].y += -player[i].inputs.lStickAxis[0].y * 12;
+    handPos[i].x += input[i][0].lsX * 12;
+    handPos[i].y += -input[i][0].lsY * 12;
     if (handPos[i].x > 1200) {
       handPos[i].x = 1200;
     } else if (handPos[i].x < 0) {
@@ -81,7 +84,7 @@ export function cssControls (i){
     }
     if (handPos[i].y < 400 && handPos[i].y > 160) {
       handType[i] = 1;
-      if (player[i].inputs.b[0] && !player[i].inputs.b[1] && playerType[i] == 0 && whichTokenGrabbed[i] == -1) {
+      if (input[i][0].b && !input[i][1].b && playerType[i] == 0 && whichTokenGrabbed[i] == -1) {
         handType[i] = 2;
         tokenPos[i] = new Vec2D(handPos[i].x, handPos[i].y);
         tokenGrabbed[i] = true;
@@ -99,7 +102,7 @@ export function cssControls (i){
               changeCharacter(whichTokenGrabbed[i], 0);
               sounds.menuSelect.play();
             }
-            if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+            if (input[i][0].a && !input[i][1].a) {
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
               tokenPos[whichTokenGrabbed[i]] = new Vec2D(473 + (whichTokenGrabbed[i] % 2) * 40, 268 + (
@@ -113,7 +116,7 @@ export function cssControls (i){
               changeCharacter(whichTokenGrabbed[i], 1);
               sounds.menuSelect.play();
             }
-            if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+            if (input[i][0].a && !input[i][1].a) {
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
@@ -128,7 +131,7 @@ export function cssControls (i){
               changeCharacter(whichTokenGrabbed[i], 2);
               sounds.menuSelect.play();
             }
-            if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+            if (input[i][0].a && !input[i][1].a) {
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
@@ -145,7 +148,7 @@ export function cssControls (i){
           if (!occupiedToken[j] && (playerType[j] == 1 || i == j)) {
             if (handPos[i].y > tokenPos[j].y - 20 && handPos[i].y < tokenPos[j].y + 20 && handPos[i].x > tokenPos[j].x -
               20 && handPos[i].x < tokenPos[j].x + 20) {
-              if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+              if (input[i][0].a && !input[i][1].a) {
                 handType[i] = 2;
                 whichTokenGrabbed[i] = j;
                 tokenPos[whichTokenGrabbed[i]] = new Vec2D(handPos[i].x, handPos[i].y);
@@ -170,12 +173,13 @@ export function cssControls (i){
       cpuDifficulty[whichCpuGrabbed[i]] = Math.round((cpuSlider[whichCpuGrabbed[i]].x - whichCpuGrabbed[i] * 225 -
         152 - 15) * 3 / 166) + 1;
       player[whichCpuGrabbed[i]].difficulty = cpuDifficulty[whichCpuGrabbed[i]];
-      if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+      if (input[i][0].a && !input[i][1].a) {
+        console.log("This also got triggered.");
         cpuGrabbed[i] = false;
         occupiedCpu[whichCpuGrabbed[i]] = false;
         whichCpuGrabbed[i] = -1;
         handType[i] = 0;
-        player[i].inputs.a[1] = true;
+        allowRegrab = false;
       }
     } else {
       handType[i] = 0;
@@ -191,7 +195,7 @@ export function cssControls (i){
       whichTokenGrabbed[i] = -1;
       for (var j = 0; j < 4; j++) {
         if (handPos[i].y > 430 && handPos[i].y < 485 && handPos[i].x > 109 + j * 225 && handPos[i].x < 207 + j * 225) {
-          if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+          if (input[i][0].a && !input[i][1].a) {
             sounds.menuSelect.play();
             togglePort(j);
             hasTag[j] = false;
@@ -200,14 +204,14 @@ export function cssControls (i){
       }
     }
     if (handPos[i].y < 160 && handPos[i].x > 920) {
-      if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+      if (input[i][0].a && !input[i][1].a) {
         sounds.menuBack.play();
         changeGamemode(1);
       }
     }
 
     let tok;
-    if (player[i].inputs.x[0] && !player[i].inputs.x[1]) {
+    if (input[i][0].x && !input[i][1].x) {
       sounds.menuSelect.play();
       if (whichTokenGrabbed[i] != -1) { tok = whichTokenGrabbed[i]; } else { tok = i; }
       pPal[tok]++;
@@ -215,7 +219,7 @@ export function cssControls (i){
         pPal[tok] = 0;
       }
     }
-    if (player[i].inputs.y[0] && !player[i].inputs.y[1]) {
+    if (input[i][0].y && !input[i][1].y) {
       sounds.menuSelect.play();
       if (whichTokenGrabbed[i] != -1) { tok = whichTokenGrabbed[i]; } else { tok = i; }
       pPal[tok]--;
@@ -224,7 +228,7 @@ export function cssControls (i){
       }
     }
     if (handPos[i].y > 100 && handPos[i].y < 160 && handPos[i].x > 380 && handPos[i].x < 910) {
-      if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+      if (input[i][0].a && !input[i][1].a) {
         sounds.menuSelect.play();
        setVersusMode( 1 - versusMode);
       }
@@ -235,7 +239,7 @@ export function cssControls (i){
           if (!occupiedCpu[s]) {
             if (handPos[i].y >= cpuSlider[s].y - 25 && handPos[i].y <= cpuSlider[s].y + 25 && handPos[i].x >=
               cpuSlider[s].x - 25 && handPos[i].x <= cpuSlider[s].x + 25) {
-              if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+              if (input[i][0].a && !input[i][1].a && allowRegrab) {
                 cpuGrabbed[i] = true;
                 whichCpuGrabbed[i] = s;
                 occupiedCpu[s] = true;
@@ -249,7 +253,7 @@ export function cssControls (i){
     }
 
     if (handPos[i].y > 640 && handPos[i].y < 680 && handPos[i].x > 130 + i * 225 && handPos[i].x < 310 + i * 225) {
-      if (player[i].inputs.a[0] && !player[i].inputs.a[1]) {
+      if (input[i][0].a && !input[i][1].a) {
         // do tag
         if (handPos[i].x < 154 + i * 225) {
           // random
@@ -272,20 +276,18 @@ export function cssControls (i){
         }
       }
     }
-  } else if (choosingTag == i && ((player[i].inputs.a[0] && !player[i].inputs.a[1]) || keys[13])) {
+  } else if (choosingTag == i && ((input[i][0].a && !input[i][1].a) || keys[13])) {
     sounds.menuSelect.play();
     tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
     $("#pTagEdit" + choosingTag).hide();
     choosingTag = -1;
-    pause[i][0] = true;
-    pause[i][1] = true;
   }
   if (readyToFight && choosingTag == -1) {
     if (pause[i][0] && !pause[i][1]) {
       sounds.menuForward.play();
       changeGamemode(6);
     }
-  } else if (choosingTag == -1 && player[i].inputs.dpadup[0] && !player[i].inputs.dpadup[1]) {
+  } else if (choosingTag == -1 && input[i][0].du && !input[i][1].du) {
     sounds.menuForward.play();
     changeGamemode(6);
   }
@@ -702,7 +704,7 @@ export function drawCSS (){
       }
       var face = player[i].phys.face;
 
-      var model = animations[cS[i]][aS[cS[i]][player[i].actionState].name][frame - 1];
+      var model = animations[characterSelections[i]][actionStates[characterSelections[i]][player[i].actionState].name][frame - 1];
 
       switch (player[i].actionState) {
         case 15:
@@ -712,12 +714,12 @@ export function drawCSS (){
         case 61:
         case 72:
         case 94:
-          var model = animations[cS[i]][aS[cS[i]][player[i].actionState].name][0];
+          var model = animations[characterSelections[i]][actionStates[characterSelections[i]][player[i].actionState].name][0];
           break;
         default:
           break;
       }
-      if (aS[cS[i]][player[i].actionState].reverseModel) {
+      if (actionStates[characterSelections[i]][player[i].actionState].reverseModel) {
         face *= -1;
       } else if (player[i].actionState == 4) {
         if (frame > 5) {
@@ -879,7 +881,7 @@ export function drawCSS (){
       ui.fillStyle = "rgb(207, 207, 207)";
 
       ui.fillText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
-      ui.strokeText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);	  
+      ui.strokeText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
 	  }
   }
   for (let i = 3; i >= 0; i--) {

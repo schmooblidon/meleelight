@@ -1,8 +1,9 @@
 
 import UPSPECIALLAUNCH from "characters/fox/moves/UPSPECIALLAUNCH";
 import {reduceByTraction, turnOffHitboxes} from "physics/actionStateShortcuts";
-import {drawVfx, player} from "main/main";
+import { player} from "main/main";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
 
 export default {
   name : "UPSPECIALCHARGE",
@@ -15,7 +16,7 @@ export default {
   disableTeeter : true,
   airborneState : "UPSPECIALCHARGE",
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "UPSPECIALCHARGE";
     player[p].timer = 0;
     player[p].phys.cVel.x *= 0.8;
@@ -25,11 +26,11 @@ export default {
     sounds.foxupbburn.play();
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.upb1.id0;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       const frame = (player[p].timer-1) % 10;
       drawVfx("firefoxcharge",player[p].phys.pos,player[p].phys.face,frame);
 
@@ -53,7 +54,7 @@ export default {
 
       if (player[p].timer === 42){
         let ang = Math.PI/2;
-        if (player[p].inputs.lStickAxis[0].x === 0 && player[p].inputs.lStickAxis[0].y === 0){
+        if (input[p][0].lsX === 0 && input[p][0].lsY === 0){
           if (player[p].phys.grounded){
             if (player[p].phys.face === 1){
               ang = 0;
@@ -64,11 +65,11 @@ export default {
           }
         }
         else {
-          ang = Math.atan(player[p].inputs.lStickAxis[0].y/player[p].inputs.lStickAxis[0].x);
+          ang = Math.atan(input[p][0].lsY/input[p][0].lsX);
         }
 
-        if (player[p].inputs.lStickAxis[0].x < 0){
-          if (player[p].inputs.lStickAxis[0].y < 0){
+        if (input[p][0].lsX < 0){
+          if (input[p][0].lsY < 0){
             ang += Math.PI;
           }
           else {
@@ -102,15 +103,15 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 42){
-      UPSPECIALLAUNCH.init(p);
+      UPSPECIALLAUNCH.init(p,input);
     }
     else {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     // do nothing
   }
 };

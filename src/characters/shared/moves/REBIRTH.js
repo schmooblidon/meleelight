@@ -1,19 +1,19 @@
-import {cS, player} from "main/main";
-import {aS} from "physics/actionStateShortcuts";
-import {stage} from "main/main";
+import {characterSelections, player} from "main/main";
+import {actionStates} from "physics/actionStateShortcuts";
+import {activeStage} from "stages/activeStage";
 export default {
   name : "REBIRTH",
   canBeGrabbed : false,
   ignoreCollision : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "REBIRTH";
     player[p].timer = 1;
-    player[p].phys.pos.x = stage.respawnPoints[p].x;
-    player[p].phys.pos.y = stage.respawnPoints[p].y+135;
+    player[p].phys.pos.x = activeStage.respawnPoints[p].x;
+    player[p].phys.pos.y = activeStage.respawnPoints[p].y+135;
     //player[p].phys.grounded = true;
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = -1.5;
-    player[p].phys.face = stage.respawnFace[p];
+    player[p].phys.face = activeStage.respawnFace[p];
     player[p].phys.doubleJumped = false;
     player[p].phys.fastfalled = false;
     player[p].phys.jumpsUsed = 0;
@@ -28,15 +28,15 @@ export default {
     player[p].burning = 0;
     player[p].shocked = 0;
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer+= 1;
-    if (!aS[cS[p]].REBIRTH.interrupt(p)){
+    if (!actionStates[characterSelections[p]].REBIRTH.interrupt(p,input)){
       player[p].phys.outOfCameraTimer = 0;
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 90){
-      aS[cS[p]].REBIRTHWAIT.init(p);
+      actionStates[characterSelections[p]].REBIRTHWAIT.init(p,input);
       return true;
     }
     else {

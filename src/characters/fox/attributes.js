@@ -1,4 +1,4 @@
-import {    offsets,  Vec2D, createHitboxObject, createHitbox,
+import {    offsets,
     setCharAttributes
     , CHARIDS
     , charObject
@@ -7,6 +7,9 @@ import {    offsets,  Vec2D, createHitboxObject, createHitbox,
     , setIntangibility
     , setActionSounds,setFrames, setOffsets
 } from "main/characters";
+import {Vec2D} from "../../main/util/Vec2D";
+import {createHitboxObject} from "../../main/util/createHitboxObject";
+import {createHitbox} from "../../main/util/createHitBox";
 /* eslint-disable indent, camelcase */
 
 
@@ -742,4 +745,4 @@ for (let l = 0; l < 20; l++) {
   offsets[CHARIDS.FOX_ID].thrown.id0.push(new Vec2D(0,12));
 }
 
-setChars(CHARIDS.FOX_ID, new charObject(2));
+setChars(CHARIDS.FOX_ID, new charObject(CHARIDS.FOX_ID));

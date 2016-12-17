@@ -1,8 +1,10 @@
-import {transparency} from "main/vfx";
-import {Vec2D} from "main/characters";
-import {bg1, bg2, fg1, fg2, stage, layers} from "main/main";
+import {getTransparency} from "main/vfx/transparency";
+import {bg1, bg2, fg1, fg2, layers} from "main/main";
 import {targetDestroyed} from "target/targetplay";
 import {rotateVector, twoPi} from "main/render";
+import {activeStage} from "stages/activeStage";
+import {Vec2D} from "../main/util/Vec2D";
+
 /* eslint-disable */
 
 const bgPos = [[-30, 500, 300, 500, 900, 500, 1230, 450, 358], [-30, 400, 300, 400, 900, 400, 1230, 350, 179]];
@@ -28,91 +30,91 @@ export let backgroundType = 0;
 export function drawStageInit() {
     fg1.strokeStyle = "#db80cc";
     fg1.lineWidth = 1;
-    for (var j = 0; j < stage.ground.length; j++) {
+    for (var j = 0; j < activeStage.ground.length; j++) {
         fg1.beginPath();
-        fg1.moveTo((stage.ground[j][0].x * stage.scale) + stage.offset[0], (stage.ground[j][0].y * -stage.scale) + stage.offset[1]);
-        fg1.lineTo((stage.ground[j][1].x * stage.scale) + stage.offset[0], (stage.ground[j][1].y * -stage.scale) + stage.offset[1]);
+        fg1.moveTo((activeStage.ground[j][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.ground[j][0].y * -activeStage.scale) + activeStage.offset[1]);
+        fg1.lineTo((activeStage.ground[j][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.ground[j][1].y * -activeStage.scale) + activeStage.offset[1]);
         fg1.closePath();
         fg1.stroke();
     }
     fg1.strokeStyle = "#ed6767";
-    for (var j = 0; j < stage.ceiling.length; j++) {
+    for (var j = 0; j < activeStage.ceiling.length; j++) {
         fg1.beginPath();
-        fg1.moveTo((stage.ceiling[j][0].x * stage.scale) + stage.offset[0], (stage.ceiling[j][0].y * -stage.scale) + stage.offset[1]);
-        fg1.lineTo((stage.ceiling[j][1].x * stage.scale) + stage.offset[0], (stage.ceiling[j][1].y * -stage.scale) + stage.offset[1]);
+        fg1.moveTo((activeStage.ceiling[j][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.ceiling[j][0].y * -activeStage.scale) + activeStage.offset[1]);
+        fg1.lineTo((activeStage.ceiling[j][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.ceiling[j][1].y * -activeStage.scale) + activeStage.offset[1]);
         fg1.closePath();
         fg1.stroke();
     }
     fg1.strokeStyle = "#4794c6";
-    for (var j = 0; j < stage.platform.length; j++) {
-        if (j != stage.movingPlat) {
+    for (var j = 0; j < activeStage.platform.length; j++) {
+        if (j != activeStage.movingPlat) {
             fg1.beginPath();
-            fg1.moveTo((stage.platform[j][0].x * stage.scale) + stage.offset[0], (stage.platform[j][0].y * -stage.scale) + stage.offset[1]);
-            fg1.lineTo((stage.platform[j][1].x * stage.scale) + stage.offset[0], (stage.platform[j][1].y * -stage.scale) + stage.offset[1]);
+            fg1.moveTo((activeStage.platform[j][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[j][0].y * -activeStage.scale) + activeStage.offset[1]);
+            fg1.lineTo((activeStage.platform[j][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[j][1].y * -activeStage.scale) + activeStage.offset[1]);
             fg1.closePath();
             fg1.stroke();
         }
     }
     fg1.strokeStyle = "#47c648";
-    for (var k = 0; k < stage.wallL.length; k++) {
+    for (var k = 0; k < activeStage.wallL.length; k++) {
         fg1.beginPath();
-        fg1.moveTo((stage.wallL[k][0].x * stage.scale) + stage.offset[0], (stage.wallL[k][0].y * -stage.scale) + stage.offset[1]);
-        fg1.lineTo((stage.wallL[k][1].x * stage.scale) + stage.offset[0], (stage.wallL[k][1].y * -stage.scale) + stage.offset[1]);
+        fg1.moveTo((activeStage.wallL[k][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.wallL[k][0].y * -activeStage.scale) + activeStage.offset[1]);
+        fg1.lineTo((activeStage.wallL[k][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.wallL[k][1].y * -activeStage.scale) + activeStage.offset[1]);
         fg1.closePath();
         fg1.stroke();
     }
     fg1.strokeStyle = "#9867de";
-    for (var l = 0; l < stage.wallR.length; l++) {
+    for (var l = 0; l < activeStage.wallR.length; l++) {
         fg1.beginPath();
-        fg1.moveTo((stage.wallR[l][0].x * stage.scale) + stage.offset[0], (stage.wallR[l][0].y * -stage.scale) + stage.offset[1]);
-        fg1.lineTo((stage.wallR[l][1].x * stage.scale) + stage.offset[0], (stage.wallR[l][1].y * -stage.scale) + stage.offset[1]);
+        fg1.moveTo((activeStage.wallR[l][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.wallR[l][0].y * -activeStage.scale) + activeStage.offset[1]);
+        fg1.lineTo((activeStage.wallR[l][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.wallR[l][1].y * -activeStage.scale) + activeStage.offset[1]);
         fg1.closePath();
         fg1.stroke();
     }
 };
 
 export function drawStage() {
-    if (stage.movingPlat > -1) {
+    if (activeStage.movingPlat > -1) {
         fg2.strokeStyle = "#4794c6";
         fg2.beginPath();
-        fg2.moveTo((stage.platform[stage.movingPlat][0].x * stage.scale) + stage.offset[0], (stage.platform[stage.movingPlat][0].y * -stage.scale) + stage.offset[1]);
-        fg2.lineTo((stage.platform[stage.movingPlat][1].x * stage.scale) + stage.offset[0], (stage.platform[stage.movingPlat][1].y * -stage.scale) + stage.offset[1]);
+        fg2.moveTo((activeStage.platform[activeStage.movingPlat][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[activeStage.movingPlat][0].y * -activeStage.scale) + activeStage.offset[1]);
+        fg2.lineTo((activeStage.platform[activeStage.movingPlat][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[activeStage.movingPlat][1].y * -activeStage.scale) + activeStage.offset[1]);
         fg2.closePath();
         fg2.stroke();
     }
     fg2.fillStyle = boxFill;
 
-    for (var j = 0; j < stage.box.length; j++) {
-        fg2.fillRect((stage.box[j].min.x * stage.scale) + stage.offset[0], (stage.box[j].max.y * -stage.scale) + stage.offset[1], (stage.box[j].max.x - stage.box[j].min.x) * stage.scale, (stage.box[j].max.y - stage.box[j].min.y) * stage.scale);
+    for (var j = 0; j < activeStage.box.length; j++) {
+        fg2.fillRect((activeStage.box[j].min.x * activeStage.scale) + activeStage.offset[0], (activeStage.box[j].max.y * -activeStage.scale) + activeStage.offset[1], (activeStage.box[j].max.x - activeStage.box[j].min.x) * activeStage.scale, (activeStage.box[j].max.y - activeStage.box[j].min.y) * activeStage.scale);
     }
     fg2.strokeStyle = "#e7a44c";
-    for (var j = 0; j < stage.ledge.length; j++) {
-        var e = stage.ledge[j];
+    for (var j = 0; j < activeStage.ledge.length; j++) {
+        var e = activeStage.ledge[j];
         fg2.beginPath();
         if (e[1]) {
-            fg2.moveTo(stage.box[e[0]].max.x * stage.scale + stage.offset[0], (stage.box[e[0]].max.y - Math.min(10, (stage.box[e[0]].max.y - stage.box[e[0]].min.y) / 2)) * -stage.scale + stage.offset[1]);
-            fg2.lineTo(stage.box[e[0]].max.x * stage.scale + stage.offset[0], stage.box[e[0]].max.y * -stage.scale + stage.offset[1]);
-            fg2.lineTo((stage.box[e[0]].max.x - Math.min(10, (stage.box[e[0]].max.x - stage.box[e[0]].min.x) / 2)) * stage.scale + stage.offset[0], stage.box[e[0]].max.y * -stage.scale + stage.offset[1]);
+            fg2.moveTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0], (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1]);
+            fg2.lineTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0], activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1]);
+            fg2.lineTo((activeStage.box[e[0]].max.x - Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0], activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1]);
         }
         else {
-            fg2.moveTo(stage.box[e[0]].min.x * stage.scale + stage.offset[0], (stage.box[e[0]].max.y - Math.min(10, (stage.box[e[0]].max.y - stage.box[e[0]].min.y) / 2)) * -stage.scale + stage.offset[1]);
-            fg2.lineTo(stage.box[e[0]].min.x * stage.scale + stage.offset[0], stage.box[e[0]].max.y * -stage.scale + stage.offset[1]);
-            fg2.lineTo((stage.box[e[0]].min.x + Math.min(10, (stage.box[e[0]].max.x - stage.box[e[0]].min.x) / 2)) * stage.scale + stage.offset[0], stage.box[e[0]].max.y * -stage.scale + stage.offset[1]);
+            fg2.moveTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0], (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1]);
+            fg2.lineTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0], activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1]);
+            fg2.lineTo((activeStage.box[e[0]].min.x + Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0], activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1]);
         }
         fg2.closePath();
         fg2.stroke();
         fg2.fill();
         fg2.fill();
     }
-    if (typeof stage.target != "undefined") {
-        for (var k = 0; k < stage.target.length; k++) {
+    if (typeof activeStage.target != "undefined") {
+        for (var k = 0; k < activeStage.target.length; k++) {
             if (!targetDestroyed[k]) {
-                var x = stage.target[k].x * stage.scale + stage.offset[0];
-                var y = stage.target[k].y * -stage.scale + stage.offset[1];
+                var x = activeStage.target[k].x * activeStage.scale + activeStage.offset[0];
+                var y = activeStage.target[k].y * -activeStage.scale + activeStage.offset[1];
                 for (var j = 0; j < 5; j++) {
                     fg2.fillStyle = (j % 2) ? "white" : "red";
                     fg2.beginPath();
-                    fg2.arc(x, y, (25 - j * 5) * (stage.scale / 4.5), 0, twoPi);
+                    fg2.arc(x, y, (25 - j * 5) * (activeStage.scale / 4.5), 0, twoPi);
                     fg2.closePath();
                     fg2.fill();
                 }
@@ -127,7 +129,7 @@ export function setBackgroundType(val) {
 export function bgStar() {
     var vSeed = Math.random();
     this.velocity = new Vec2D(5 * vSeed * Math.sign(0.5 - Math.random()), 5 * (1 - vSeed) * Math.sign(0.5 - Math.random()));
-    if (transparency) {
+    if (getTransparency()) {
         this.colour = "hsl(" + 358 * Math.random() + ", 100%, 50%)";
     }
     else {
@@ -202,7 +204,7 @@ export function drawStars() {
 
         if (bgSparkle == 0) {
             bg2.fillStyle = bgStars[p].colour;
-            if (transparency) {
+            if (getTransparency()) {
                 bg2.globalAlpha = Math.min(bgStars[p].life / 300, 1);
             }
             bg2.beginPath();
@@ -275,7 +277,7 @@ export function drawStars() {
                     break;
             }
         }
-        if (transparency) {
+        if (getTransparency()) {
             boxFill = "hsla(" + bgPos[k][8] + ", 100%, 50%, " + (0.15 - k * 0.07) + ")";
         }
         else {

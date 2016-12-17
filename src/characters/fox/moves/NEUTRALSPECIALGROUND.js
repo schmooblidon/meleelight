@@ -1,10 +1,11 @@
 
 import WAIT from "characters/shared/moves/WAIT";
 import {articles} from "physics/article";
-import {Vec2D} from "main/characters";
-import {drawVfx, player} from "main/main";
+import { player} from "main/main";
 import {sounds} from "main/sfx";
 import {reduceByTraction} from "physics/actionStateShortcuts";
+import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 
 export default {
   name : "NEUTRALSPECIALGROUND",
@@ -13,18 +14,18 @@ export default {
   disableTeeter : true,
   canBeGrabbed : true,
   airborneState : "NEUTRALSPECIALAIR",
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "NEUTRALSPECIALGROUND";
     player[p].timer = 0;
     player[p].phys.laserCombo = false;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       reduceByTraction(p);
       if (player[p].timer >= 4 && player[p].timer <= 16){
-        if (player[p].inputs.b[0] && !player[p].inputs.b[1]){
+        if (input[p][0].b && !input[p][1].b){
           player[p].phys.laserCombo = true;
         }
       }
@@ -48,9 +49,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 40){
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else {

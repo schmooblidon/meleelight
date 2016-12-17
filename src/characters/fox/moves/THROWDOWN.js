@@ -1,32 +1,34 @@
 
 import WAIT from "characters/shared/moves/WAIT";
 import CATCHCUT from "characters/shared/moves/CATCHCUT";
-import {Vec2D,framesData} from "main/characters";
-import {drawVfx, cS, player} from "main/main";
+import {framesData} from "main/characters";
+import { characterSelections, player} from "main/main";
 import {sounds} from "main/sfx";
 import {articles} from "physics/article";
-import {randomShout, turnOffHitboxes, aS} from "physics/actionStateShortcuts";
+import {randomShout, turnOffHitboxes, actionStates} from "physics/actionStateShortcuts";
 
 import {hitQueue} from 'physics/hitDetection';
+import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 export default {
   name : "THROWDOWN",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
-    aS[cS[player[p].phys.grabbing]].THROWNFOXDOWN.init(player[p].phys.grabbing);
-    const frame = framesData[cS[player[p].phys.grabbing]].THROWNFOXDOWN;
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXDOWN.init(player[p].phys.grabbing);
+    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXDOWN;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
-    randomShout(cS[p]);
-    this.main(p);
+    randomShout(characterSelections[p]);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     const prevFrame = player[p].timer;
     player[p].timer+=33/player[p].phys.releaseFrame;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (Math.floor(player[p].timer+0.01) === 33){
         player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
@@ -60,14 +62,14 @@ export default {
 
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 43){
       player[p].phys.grabbing = -1;
-      WAIT.init(p);
+      WAIT.init(p,input);
       return true;
     }
     else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p);
+      CATCHCUT.init(p,input);
       return true;
     }
     else {

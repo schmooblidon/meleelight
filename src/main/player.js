@@ -1,4 +1,7 @@
-import {Vec2D, chars, Box2D} from "main/characters";
+
+import {chars} from "./characters";
+import {Vec2D} from "./util/Vec2D";
+import {Box2D} from "./util/Box2D";
 /* eslint-disable */
 
 export function ActiveHitbox(size, offset, dmg, angle, kg, bk, sk, type) {
@@ -98,14 +101,14 @@ export function physicsObject(pos, face) {
 }
 export function inputObject() {
 
-  this.lStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0,
-    0), new Vec2D(0, 0), new Vec2D(0, 0)];
-  this.rawlStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(
-    0, 0), new Vec2D(0, 0), new Vec2D(0, 0)];
-  this.cStickAxis = [new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0, 0), new Vec2D(0,
-    0), new Vec2D(0, 0), new Vec2D(0, 0)];
-  this.lAnalog = [0, 0, 0, 0, 0, 0, 0, 0];
-  this.rAnalog = [0, 0, 0, 0, 0, 0, 0, 0];
+  this.lsX = [0,0,0,0,0,0,0,0];
+  this.lsY = [0, 0, 0, 0, 0, 0, 0, 0];
+  this.rawX = [0, 0, 0, 0, 0, 0, 0, 0];
+ this.rawY = [0, 0, 0, 0, 0, 0, 0, 0];
+  this.csX = [0, 0, 0, 0, 0, 0, 0, 0];
+  this.csY = [0, 0, 0, 0, 0, 0, 0, 0];
+  this.lA = [0, 0, 0, 0, 0, 0, 0, 0];
+  this.rA = [0, 0, 0, 0, 0, 0, 0, 0];
   this.s = [false, false, false, false, false, false, false, false];
   this.z = [false, false, false, false, false, false, false, false];
   this.a = [false, false, false, false, false, false, false, false];
@@ -114,10 +117,10 @@ export function inputObject() {
   this.y = [false, false, false, false, false, false, false, false];
   this.r = [false, false, false, false, false, false, false, false];
   this.l = [false, false, false, false, false, false, false, false];
-  this.dpadleft = [false, false, false, false, false, false, false];
-  this.dpaddown = [false, false, false, false, false, false, false];
-  this.dpadright = [false, false, false, false, false, false, false];
-  this.dpadup = [false, false, false, false, false, false, false];
+  this.dl = [false, false, false, false, false, false, false];
+  this.dd = [false, false, false, false, false, false, false];
+  this.dr = [false, false, false, false, false, false, false];
+  this.du = [false, false, false, false, false, false, false];
 }
 export function playerObject(character, pos, face) {
   this.phys = new physicsObject(pos, face);

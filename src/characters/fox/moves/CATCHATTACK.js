@@ -7,16 +7,16 @@ export default {
   name : "CATCHATTACK",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "CATCHATTACK";
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.pummel.id0;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (player[p].timer === 10){
         player[p].hitboxes.active = [true,false,false,false];
         player[p].hitboxes.frame = 0;
@@ -26,9 +26,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 24){
-      CATCHWAIT.init(p);
+      CATCHWAIT.init(p,input);
       return true;
     }
     else {

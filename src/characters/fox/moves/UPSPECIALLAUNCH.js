@@ -3,9 +3,10 @@ import WAIT from "characters/shared/moves/WAIT";
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import FIREFOXBOUNCE from "characters/fox/moves/FIREFOXBOUNCE";
 import {turnOffHitboxes, airDrift, fastfall, reduceByTraction} from "physics/actionStateShortcuts";
-import {drawVfx, player} from "main/main";
-import {Vec2D} from "main/characters";
+import { player} from "main/main";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 
 export default {
   name : "UPSPECIALLAUNCH",
@@ -18,7 +19,7 @@ export default {
   disableTeeter : true,
   airborneState : "UPSPECIALLAUNCH",
   landType : 1,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "UPSPECIALLAUNCH";
     player[p].timer = 0;
     sounds.foxupbshout.play();
@@ -35,11 +36,11 @@ export default {
       player[p].phys.face = 1;
     }
     player[p].rotationPoint = new Vec2D(0,40);
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
+    if (!this.interrupt(p,input)){
       if (player[p].timer < 31){
         if (player[p].timer%2){
           drawVfx("firefoxtail",player[p].phys.posPrev,player[p].phys.face);
@@ -68,8 +69,8 @@ export default {
           reduceByTraction(p);
         }
         else {
-          fastfall(p);
-          airDrift(p);
+          fastfall(p,input);
+          airDrift(p,input);
         }
       }
       else if (player[p].timer >= 6){
@@ -91,13 +92,13 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 50){
       if (player[p].phys.grounded){
-        WAIT.init(p);
+        WAIT.init(p,input);
       }
       else {
-        FALLSPECIAL.init(p);
+        FALLSPECIAL.init(p,input);
       }
       return true;
     }
@@ -105,11 +106,11 @@ export default {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].timer < 31){
       // BOUNCE
       drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
-      FIREFOXBOUNCE.init(p);
+      FIREFOXBOUNCE.init(p,input);
     }
     else {
       drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);

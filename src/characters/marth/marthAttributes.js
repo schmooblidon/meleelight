@@ -1,4 +1,4 @@
-import { Vec2D, offsets,   createHitboxObject, charObject,  createHitbox,
+import {  offsets,    charObject,
     setChars
     ,
     CHARIDS
@@ -13,6 +13,9 @@ import { Vec2D, offsets,   createHitboxObject, charObject,  createHitbox,
     ,
     setActionSounds,setFrames
 } from "main/characters";
+import {Vec2D} from "../../main/util/Vec2D";
+import {createHitboxObject} from "../../main/util/createHitboxObject";
+import {createHitbox} from "../../main/util/createHitBox";
 /* eslint-disable */
 
  setCharAttributes(CHARIDS.MARTH_ID, {
@@ -1182,4 +1185,4 @@ for (var l=0;l<20;l++){
   offsets[CHARIDS.MARTH_ID].thrown.id0.push(new Vec2D(0,12));
 }
 
-setChars(CHARIDS.MARTH_ID,new charObject(0));
+setChars(CHARIDS.MARTH_ID,new charObject(CHARIDS.MARTH_ID));

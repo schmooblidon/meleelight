@@ -4,11 +4,12 @@ import {checkForAerials, tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn
     , checkForTilts
     , checkForSpecials
     , reduceByTraction
-    , aS
+    , actionStates
     , turnOffHitboxes
 } from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
-import {Vec2D,framesData} from "main/characters";
+import {characterSelections, player} from "main/main";
+import {framesData} from "main/characters";
+import {Vec2D} from "../../../main/util/Vec2D";
 export default {
   name : "DAMAGEN2",
   canEdgeCancel : true,
@@ -19,7 +20,7 @@ export default {
   canBeGrabbed : true,
   landType : 1,
   missfoot : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "DAMAGEN2";
     player[p].timer = 0;
     player[p].phys.grabbing = -1;
@@ -29,16 +30,16 @@ export default {
     player[p].rotationPoint = new Vec2D(0,0);
     player[p].colourOverlayBool = false;
     turnOffHitboxes(p);
-    aS[cS[p]].DAMAGEN2.main(p);
+    actionStates[characterSelections[p]].DAMAGEN2.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     if (player[p].inCSS){
       player[p].timer+= 0.7;
     }
     else {
       player[p].timer++;
     }
-    if (!aS[cS[p]].DAMAGEN2.interrupt(p)){
+    if (!actionStates[characterSelections[p]].DAMAGEN2.interrupt(p,input)){
       if (player[p].timer > 1){
         player[p].hit.hitstun--;
         if (!player[p].phys.grounded){
@@ -53,71 +54,72 @@ export default {
       }
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].DAMAGEN2){
+  interrupt : function(p,input){
+    let b;
+    if (player[p].timer > framesData[characterSelections[p]].DAMAGEN2){
       if (player[p].hit.hitstun > 0){
         player[p].timer--;
         return false;
       }
       else {
         if (player[p].phys.grounded || player[p].inCSS){
-          aS[cS[p]].WAIT.init(p);
+          actionStates[characterSelections[p]].WAIT.init(p,input);
         }
         else {
-          aS[cS[p]].FALL.init(p);
+          actionStates[characterSelections[p]].FALL.init(p,input);
         }
         return true;
       }
     }
     else if (player[p].hit.hitstun <= 0 && !player[p].inCSS){
       if (player[p].phys.grounded){
-        var b = checkForSpecials(p);
-        var t = checkForTilts(p);
-        var s = checkForSmashes(p);
-        var j = checkForJump(p);
+        b = checkForSpecials(p, input);
+        const t = checkForTilts(p, input);
+        const s = checkForSmashes(p, input);
+        const j = checkForJump(p, input);
         if (j[0]){
-          aS[cS[p]].KNEEBEND.init(p,j[1]);
+          actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
           return true;
         }
-        else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-          aS[cS[p]].GUARDON.init(p);
+        else if (input[p][0].l || input[p][0].r){
+          actionStates[characterSelections[p]].GUARDON.init(p,input);
           return true;
         }
-        else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
-          aS[cS[p]].GUARDON.init(p);
+        else if (input[p][0].lA > 0 || input[p][0].rA > 0){
+          actionStates[characterSelections[p]].GUARDON.init(p,input);
           return true;
         }
         else if (b[0]){
-          aS[cS[p]][b[1]].init(p);
+          actionStates[characterSelections[p]][b[1]].init(p,input);
           return true;
         }
         else if (s[0]){
-          aS[cS[p]][s[1]].init(p);
+          actionStates[characterSelections[p]][s[1]].init(p,input);
           return true;
         }
         else if (t[0]){
-          aS[cS[p]][t[1]].init(p);
+          actionStates[characterSelections[p]][t[1]].init(p,input);
           return true;
         }
-        else if (checkForSquat(p)){
-          aS[cS[p]].SQUAT.init(p);
+        else if (checkForSquat(p,input)){
+          actionStates[characterSelections[p]].SQUAT.init(p,input);
           return true;
         }
-        else if (checkForDash(p)){
-          aS[cS[p]].DASH.init(p);
+        else if (checkForDash(p,input)){
+          actionStates[characterSelections[p]].DASH.init(p,input);
           return true;
         }
-        else if (checkForSmashTurn(p)){
-          aS[cS[p]].SMASHTURN.init(p);
+        else if (checkForSmashTurn(p,input)){
+          actionStates[characterSelections[p]].SMASHTURN.init(p,input);
           return true;
         }
-        else if (checkForTiltTurn(p)){
-          player[p].phys.dashbuffer = tiltTurnDashBuffer(p);
-          aS[cS[p]].TILTTURN.init(p);
+        else if (checkForTiltTurn(p,input)){
+          player[p].phys.dashbuffer = tiltTurnDashBuffer(p,input);
+          actionStates[characterSelections[p]].TILTTURN.init(p,input);
           return true;
         }
-        else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
-          aS[cS[p]].WALK.init(p,true);
+        else if (Math.abs(input[p][0].lsX) > 0.3){
+          actionStates[characterSelections[p]].WALK.init(p,true,input);
           return true;
         }
         else {
@@ -125,31 +127,31 @@ export default {
         }
       }
       else {
-        var a = checkForAerials(p);
-        var b = checkForSpecials(p);
+        const a = checkForAerials(p, input);
+        b = checkForSpecials(p, input);
         if (a[0]){
-          aS[cS[p]][a[1]].init(p);
+          actionStates[characterSelections[p]][a[1]].init(p,input);
           return true;
         }
-        else if ((player[p].inputs.l[0] && !player[p].inputs.l[1]) || (player[p].inputs.r[0] && !player[p].inputs.r[1])){
-          aS[cS[p]].ESCAPEAIR.init(p);
+        else if ((input[p][0].l && !input[p][1].l) || (input[p][0].r && !input[p][1].r)){
+          actionStates[characterSelections[p]].ESCAPEAIR.init(p,input);
           return true;
         }
-        else if (((player[p].inputs.x[0] && !player[p].inputs.x[1]) || (player[p].inputs.y[0] && !player[p].inputs.y[1]) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
-          if (player[p].inputs.lStickAxis[0].x*player[p].phys.face < -0.3){
-            aS[cS[p]].JUMPAERIALB.init(p);
+        else if (((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && (!player[p].phys.doubleJumped || (player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump))){
+          if (input[p][0].lsX*player[p].phys.face < -0.3){
+            actionStates[characterSelections[p]].JUMPAERIALB.init(p,input);
           }
           else {
-            aS[cS[p]].JUMPAERIALF.init(p);
+            actionStates[characterSelections[p]].JUMPAERIALF.init(p,input);
           }
           return true;
         }
         else if (b[0]){
-          aS[cS[p]][b[1]].init(p);
+          actionStates[characterSelections[p]][b[1]].init(p,input);
           return true;
         }
-        else if ((player[p].inputs.lStickAxis[0].x > 0.7 && player[p].inputs.lStickAxis[1].x < 0.7) || (player[p].inputs.lStickAxis[0].x < -0.7 && player[p].inputs.lStickAxis[1].x > -0.7) || (player[p].inputs.lStickAxis[0].y > 0.7 && player[p].inputs.lStickAxis[1].y < 0.7) || (player[p].inputs.lStickAxis[0].y < -0.7 && player[p].inputs.lStickAxis[1].y > -0.7)){
-          aS[cS[p]].FALL.init(p);
+        else if ((input[p][0].lsX > 0.7 && input[p][1].lsX < 0.7) || (input[p][0].lsX < -0.7 && input[p][1].lsX > -0.7) || (input[p][0].lsY > 0.7 && input[p][1].lsY < 0.7) || (input[p][0].lsY < -0.7 && input[p][1].lsY > -0.7)){
+          actionStates[characterSelections[p]].FALL.init(p,input);
           return true;
         }
         else {
@@ -161,9 +163,9 @@ export default {
       return false;
     }
   },
-  land : function(p){
+  land : function(p,input){
     if (player[p].hit.hitstun <= 0){
-      aS[cS[p]].LANDING.init(p);
+      actionStates[characterSelections[p]].LANDING.init(p,input);
     }
   }
 };

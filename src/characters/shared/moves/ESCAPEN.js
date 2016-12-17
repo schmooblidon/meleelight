@@ -1,32 +1,33 @@
-import {executeIntangibility, reduceByTraction, playSounds, aS} from "physics/actionStateShortcuts";
+import {executeIntangibility, reduceByTraction, playSounds, actionStates} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
-import {cS, drawVfx, player} from "main/main";
+import {characterSelections,  player} from "main/main";
 import {framesData} from 'main/characters';
+import {drawVfx} from "main/vfx/drawVfx";
 export default {
   name : "ESCAPEN",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "ESCAPEN";
     player[p].timer = 0;
     player[p].phys.shielding = false;
     drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
-    aS[cS[p]].ESCAPEN.main(p);
+    actionStates[characterSelections[p]].ESCAPEN.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
     playSounds("ESCAPEN",p);
-    if (!aS[cS[p]].ESCAPEN.interrupt(p)){
-      if (player[p].timer == 1){
+    if (!actionStates[characterSelections[p]].ESCAPEN.interrupt(p,input)){
+      if (player[p].timer === 1){
         sounds.spotdodge.play();
       }
       reduceByTraction(p,true);
       executeIntangibility("ESCAPEN",p);
     }
   },
-  interrupt : function(p){
-    if (player[p].timer > framesData[cS[p]].ESCAPEN){
-      aS[cS[p]].WAIT.init(p);
+  interrupt : function(p,input){
+    if (player[p].timer > framesData[characterSelections[p]].ESCAPEN){
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else {

@@ -1,10 +1,11 @@
 
 import FALL from "characters/shared/moves/FALL";
 import {articles} from "physics/article";
-import {Vec2D} from "main/characters";
-import {drawVfx, player} from "main/main";
+import { player} from "main/main";
 import {sounds} from "main/sfx";
 import {airDrift, fastfall} from "physics/actionStateShortcuts";
+import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 
 export default {
   name : "NEUTRALSPECIALAIR",
@@ -14,19 +15,19 @@ export default {
   headBonk : false,
   canBeGrabbed : true,
   landType : 0,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "NEUTRALSPECIALAIR";
     player[p].timer = 0;
     player[p].phys.laserCombo = false;
-    this.main(p);
+    this.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!this.interrupt(p)){
-      fastfall(p);
-      airDrift(p);
+    if (!this.interrupt(p,input)){
+      fastfall(p,input);
+      airDrift(p,input);
       if (player[p].timer >= 4 && player[p].timer <= 14){
-        if (player[p].inputs.b[0] && !player[p].inputs.b[1]){
+        if (input[p][0].b && !input[p][1].b){
           player[p].phys.laserCombo = true;
         }
       }
@@ -50,9 +51,9 @@ export default {
       }
     }
   },
-  interrupt : function(p){
+  interrupt : function(p,input){
     if (player[p].timer > 36){
-      FALL.init(p);
+      FALL.init(p,input);
       return true;
     }
     else {

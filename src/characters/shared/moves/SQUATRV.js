@@ -1,5 +1,5 @@
-import {checkForSmashTurn, checkForJump, checkForSmashes, checkForTilts, checkForSpecials, reduceByTraction, aS} from "physics/actionStateShortcuts";
-import {cS, player} from "main/main";
+import {checkForSmashTurn, checkForJump, checkForSmashes, checkForTilts, checkForSpecials, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
 export default {
   name : "SQUATRV",
@@ -7,60 +7,60 @@ export default {
   canBeGrabbed : true,
   crouch : true,
   disableTeeter : true,
-  init : function(p){
+  init : function(p,input){
     player[p].actionState = "SQUATRV";
     player[p].timer = 0;
-    aS[cS[p]].SQUATRV.main(p);
+    actionStates[characterSelections[p]].SQUATRV.main(p,input);
   },
-  main : function(p){
+  main : function(p,input){
     player[p].timer++;
-    if (!aS[cS[p]].SQUATRV.interrupt(p)){
+    if (!actionStates[characterSelections[p]].SQUATRV.interrupt(p,input)){
       reduceByTraction(p,true);
     }
   },
-  interrupt : function(p){
-    var b = checkForSpecials(p);
-    var t = checkForTilts(p);
-    var s = checkForSmashes(p);
-    var j = checkForJump(p);
-    if (player[p].timer > framesData[cS[p]].SQUATRV){
-      aS[cS[p]].WAIT.init(p);
+  interrupt : function(p,input){
+    const b = checkForSpecials(p, input);
+    const t = checkForTilts(p, input);
+    const s = checkForSmashes(p, input);
+    const j = checkForJump(p, input);
+    if (player[p].timer > framesData[characterSelections[p]].SQUATRV){
+      actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
     else if (j[0]){
-      aS[cS[p]].KNEEBEND.init(p,j[1]);
+      actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
     }
-    else if (player[p].inputs.l[0] || player[p].inputs.r[0]){
-      aS[cS[p]].GUARDON.init(p);
+    else if (input[p][0].l || input[p][0].r){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
-    else if (player[p].inputs.lAnalog[0] > 0 || player[p].inputs.rAnalog[0] > 0){
-      aS[cS[p]].GUARDON.init(p);
+    else if (input[p][0].lA > 0 || input[p][0].rA > 0){
+      actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
     else if (b[0]){
-      aS[cS[p]][b[1]].init(p);
+      actionStates[characterSelections[p]][b[1]].init(p,input);
       return true;
     }
     else if (s[0]){
-      aS[cS[p]][s[1]].init(p);
+      actionStates[characterSelections[p]][s[1]].init(p,input);
       return true;
     }
     else if (t[0]){
-      aS[cS[p]][t[1]].init(p);
+      actionStates[characterSelections[p]][t[1]].init(p,input);
       return true;
     }
-    /*else if (checkForDash(p)){
-      aS[cS[p]].DASH.init(p);
+    /*else if (checkForDash(p,input)){
+      actionStates[characterSelections[p]].DASH.init(p,input);
       return true;
     }*/
-    else if (checkForSmashTurn(p)){
-      aS[cS[p]].SMASHTURN.init(p);
+    else if (checkForSmashTurn(p,input)){
+      actionStates[characterSelections[p]].SMASHTURN.init(p,input);
       return true;
     }
-    else if (Math.abs(player[p].inputs.lStickAxis[0].x) > 0.3){
-      aS[cS[p]].WALK.init(p,true);
+    else if (Math.abs(input[p][0].lsX) > 0.3){
+      actionStates[characterSelections[p]].WALK.init(p,true,input);
       return true;
     }
     else {
