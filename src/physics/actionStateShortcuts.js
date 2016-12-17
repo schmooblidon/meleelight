@@ -4,6 +4,7 @@ import {intangibility, actionSounds} from "main/characters";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../main/util/Vec2D";
 import {gameSettings} from "settings";
+import {deepCopyObject} from "../main/util/deepCopyObject";
 /* eslint-disable */
 export function randomShout (char){
   //playSfx("shout"+Math.round(0.5+Math.random()*5.99));
@@ -522,7 +523,7 @@ export function turboGroundedInterrupt (p,input){
 
 export const actionStates = [];
 export function setupActionStates(index, val){
-  actionStates[index] = val;
+  actionStates[index]= deepCopyObject(true,actionStates[index],  val);
 }
 
 /* char id:
