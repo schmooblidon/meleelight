@@ -1657,9 +1657,14 @@ export const baseActionStates = {
   interrupt : function(p,input){
     if (!player[p].inCSS){
       var j = checkForJump(p,input);
-      if (j[0] || input[p][0].csY > 0.65){
+      if (input[p][0].csY > 0.65){
         player[p].phys.shielding = false;
-		    player[p].cStickJump = true;
+        player[p].cStickJump = true;
+        actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
+        return true;
+      }
+      else if (j[0]){
+        player[p].phys.shielding = false;
         actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
         return true;
       }
