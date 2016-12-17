@@ -5,18 +5,36 @@ import {nullInputs} from "../input";
 import {setPlayerType} from "../main";
 
 
+let roomId = (() =>{
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  })
+})();
 
+$("#mpcode").prop("value",roomId);
+function startRoom() {
+  if(hostRoom === null){
+    hostRoom = new Peer(null, {
+      host: 'localhost',
+      port: 9000,
+      path: '/peerjs',
+      logFunction: function (...args) {
 
- const hostRoom = new Peer(null, {
-    host: 'localhost',
-    port: 9000,
-    path: '/peerjs',
-    logFunction: function (...args) {
+        console.log(args);
+      },
+      debug: 3
+    });
+    hostRoom.on('open', (id)=>{
+      console.log("peerid = " + id);
+       $("#mpcode").prop("value",id);
+    });
+  } else {
+    return null;
+  }
+}
+let hostRoom = null;
 
-      console.log(args);
-    },
-    debug: 3
-  });
  const connectedPeers = {};
  const peerConnections = {};
  const playerInputBuffer = [];
@@ -74,24 +92,25 @@ export function updateNetworkInputs(inputBuffer,playerSlot){
   //connect to global chat
  export function connectToMPRoom() {
 
-    hostRoom.on('open', (id)=>{
-      console.log("peerid = " + id);
-      $("#mpcode").val(id);
 
-    });
+
     $("#player1").on('click',(e)=>{
+      startRoom();
       connectToUser($("#mpcode").val(),0);
       setPlayerType(0,2);
     });
     $("#player2").on('click',(e)=>{
+      startRoom();
       connectToUser($("#mpcode").val(),1);
       setPlayerType(1,2);
     });
     $("#player3").on('click',(e)=>{
+      startRoom();
       connectToUser($("#mpcode").val(),2);
       setPlayerType(2,2);
     });
     $("#player4").on('click',(e)=>{
+      startRoom()
       connectToUser($("#mpcode").val(),3);
       setPlayerType(3,2);
     });

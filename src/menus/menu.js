@@ -102,6 +102,7 @@ export function menuMove(i, input) {
         } else {
           if (menuSelected == P2PMP) {
             changeGamemode(14)
+            positionPlayersInCSS();
           } else {
             if (menuSelected == SERVERMP) {
 

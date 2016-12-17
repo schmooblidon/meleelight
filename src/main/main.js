@@ -510,6 +510,7 @@ export function changeGamemode (newGamemode){
       // Multiplayer Modes
     case 14:
       connectToMPRoom();
+      changeGamemode(2);
       break;
       // startup
     case 20:
