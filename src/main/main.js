@@ -37,7 +37,7 @@ import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData} from "./input";
-import GlobalChat from "./multiplayer/globalchat";
+import {updateNetworkInputs, connectToMPRoom} from "./multiplayer/mproom";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -405,6 +405,9 @@ export function findPlayers (){
   }
 }
 
+export function setPlayerType(playerSlot,type){
+  playerType[playerSlot] = type;
+}
 
 export function addPlayer (gamepad,gType){
   ports++;
@@ -415,7 +418,7 @@ export function addPlayer (gamepad,gType){
 
 export function togglePort (i){
   playerType[i]++;
-  if (playerType[i] == 2) {
+  if (playerType[i] == 3) {
     playerType[i] = -1;
   }
   if (playerType[i] == 0 && ports <= i) {
@@ -506,7 +509,7 @@ export function changeGamemode (newGamemode){
       break;
       // Multiplayer Modes
     case 14:
-      new GlobalChat();
+      connectToMPRoom();
       break;
       // startup
     case 20:
@@ -724,6 +727,10 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
     }
 
+  }
+
+  if(playertype === 2){
+    updateNetworkInputs(tempBuffer,i);
   }
   return tempBuffer;
 
@@ -984,7 +991,7 @@ export function gameTick (oldInputBuffers){
   } else {
     if (!gameEnd) {
       for (var i = 0; i < 4; i++) {
-        if (playerType[i] == 0) {
+        if (playerType[i] == 0 ||playerType[i] == 2) {
           if (currentPlayers[i] != -1) {
             input[i] = interpretInputs(i, false,playerType[i],oldInputBuffers[i]);
           }

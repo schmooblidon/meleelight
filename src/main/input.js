@@ -7,6 +7,7 @@ import {
 import {Vec2D} from "./util/Vec2D";
 import {keyMap} from "../settings";
 import {playing} from "./main";
+import {retrieveNetworkInputs} from "./multiplayer/mproom";
 
 export const button = {
   "a" : 0, 
@@ -121,6 +122,8 @@ export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, 
   }
     else if (playertype === 0) {
     input = pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
+  } else if (playertype === 2) {
+    input = pollNetworkInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
   }
   return input;
 }
@@ -335,6 +338,10 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
 
   return input;
 };
+
+function pollNetworkInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
+ return retrieveNetworkInputs(playerSlot);
+}
 
 export function showButton(i, but, bool) {
   if (bool) {

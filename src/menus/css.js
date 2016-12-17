@@ -574,7 +574,7 @@ export function drawCSS (){
   ui.restore();
   for (var i = 0; i < 4; i++) {
     if (playerType[i] > -1) {
-      if (playerType[i] == 0) {
+      if (playerType[i] == 0 || playerType[i] == 2) {
         switch (i) {
           case 0:
             ui.fillStyle = "rgb(218, 51, 51)";
