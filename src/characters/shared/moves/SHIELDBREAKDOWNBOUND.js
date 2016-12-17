@@ -20,7 +20,7 @@ export default {
     player[p].timer++;
     if (!actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.interrupt(p,input)){
       player[p].phys.intangibleTimer = 1;
-      if (player[p].timer == 1){
+      if (player[p].timer === 1){
         reduceByTraction(p,true);
       }
       else {

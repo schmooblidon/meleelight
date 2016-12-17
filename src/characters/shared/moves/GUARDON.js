@@ -1,8 +1,8 @@
 import {checkForJump, shieldDepletion, playSounds, shieldTilt, reduceByTraction, actionStates, shieldSize} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {characterSelections, player} from "main/main";
-import {Vec2D} from "main/util";
 import {framesData} from "../../../main/characters";
+import {Vec2D} from "../../../main/util/Vec2D";
 export default {
   name : "GUARDON",
   canEdgeCancel : true,
@@ -15,7 +15,7 @@ export default {
     player[p].phys.shieldPosition = new Vec2D(0,0);
     player[p].phys.powerShielded = false;
     shieldSize(p,true,input);
-    if (Math.max(input[p][0].lA,input[p][0].rA) == 1){
+    if (Math.max(input[p][0].lA,input[p][0].rA) === 1){
       player[p].phys.powerShieldActive = true;
       player[p].phys.powerShieldReflectActive = true;
     }
@@ -33,17 +33,17 @@ export default {
     else {
       player[p].timer++;
       playSounds("GUARDON",p);
-      if (player[p].timer == 3){
+      if (player[p].timer === 3){
         player[p].phys.powerShieldReflectActive = false;
       }
-      if (player[p].timer == 5){
+      if (player[p].timer === 5){
         player[p].phys.powerShieldActive = false;
       }
       /*if (player[p].timer == 2 && Math.max(input[p][0].lA,input[p][0].rA) == 1){
         player[p].phys.powerShieldActive = true;
       }*/
       if (!actionStates[characterSelections[p]].GUARDON.interrupt(p,input)){
-        if (player[p].timer == 1){
+        if (player[p].timer === 1){
           sounds.shieldup.play();
         }
         if (!player[p].inCSS){
@@ -57,7 +57,7 @@ export default {
   },
   interrupt : function(p,input){
     if (!player[p].inCSS){
-      var j = checkForJump(p,input);
+      const j = checkForJump(p, input);
       if (j[0] || input[p][0].csY > 0.65){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
@@ -83,7 +83,7 @@ export default {
         actionStates[characterSelections[p]].ESCAPEB.init(p,input);
         return true;
       }
-      else if (player[p].timer > 1 && input[p][0].lsY < -0.65 && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] == 1){
+      else if (player[p].timer > 1 && input[p][0].lsY < -0.65 && input[p][6].lsY > -0.3 && player[p].phys.onSurface[0] === 1){
         player[p].phys.shielding = false;
         actionStates[characterSelections[p]].PASS.init(p,input);
         return true;

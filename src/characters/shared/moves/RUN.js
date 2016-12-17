@@ -16,26 +16,23 @@ export default {
       player[p].timer = 1;
     }
     if (!actionStates[characterSelections[p]].RUN.interrupt(p,input)){
-      var footstep = [false,false];
+      const footstep = [false, false];
       if (player[p].timer < 2){
         footstep[0] = true;
       }
       if (player[p].timer < 10){
         footstep[1] = true;
       }
-      var tempMax = input[p][0].lsX * player[p].charAttributes.dMaxV;
+      const tempMax = input[p][0].lsX * player[p].charAttributes.dMaxV;
 
       //Current Run Acceleration = ((MaxRunVel * Xinput) - PreviousFrameVelocity) * (1/(MaxRunVel * 2.5)) * (DRAA + (DRAB/Math.sign(Xinput)))
 
-      var tempAcc = ((player[p].charAttributes.dMaxV * input[p][0].lsX) - player[p].phys.cVel.x) * (1/(player[p].charAttributes.dMaxV * 2.5)) * (player[p].charAttributes.dAccA + (player[p].charAttributes.dAccB / Math.sign(input[p][0].lsX)));
-
-
-      player[p].phys.cVel.x += tempAcc;
+      player[p].phys.cVel.x += ((player[p].charAttributes.dMaxV * input[p][0].lsX) - player[p].phys.cVel.x) * (1 / (player[p].charAttributes.dMaxV * 2.5)) * (player[p].charAttributes.dAccA + (player[p].charAttributes.dAccB / Math.sign(input[p][0].lsX)));
       if (player[p].phys.cVel.x * player[p].phys.face > tempMax * player[p].phys.face){
         player[p].phys.cVel.x = tempMax;
       }
 
-      var time = (player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.dMaxV;
+      const time = (player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.dMaxV;
       if (time > 0){
         player[p].timer += time;
       }
@@ -48,7 +45,7 @@ export default {
     }
   },
   interrupt : function(p,input){
-    var j = checkForJump(p,input);
+    const j = checkForJump(p, input);
     if (input[p][0].a && !input[p][1].a){
       if (input[p][0].lA > 0 || input[p][0].rA > 0){
         actionStates[characterSelections[p]].GRAB.init(p,input);

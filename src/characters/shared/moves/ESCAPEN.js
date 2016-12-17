@@ -18,7 +18,7 @@ export default {
     player[p].timer++;
     playSounds("ESCAPEN",p);
     if (!actionStates[characterSelections[p]].ESCAPEN.interrupt(p,input)){
-      if (player[p].timer == 1){
+      if (player[p].timer === 1){
         sounds.spotdodge.play();
       }
       reduceByTraction(p,true);

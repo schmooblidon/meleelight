@@ -19,7 +19,7 @@ export default {
     if (!actionStates[characterSelections[p]].ESCAPEF.interrupt(p,input)){
       player[p].phys.cVel.x = actionStates[characterSelections[p]].ESCAPEF.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("ESCAPEF",p);
-      if (player[p].timer == 4){
+      if (player[p].timer === 4){
         sounds.roll.play();
       }
     }

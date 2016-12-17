@@ -23,8 +23,8 @@ export default {
     }
   },
   interrupt : function(p,input){
-    var a = checkForAerials(p,input);
-    var b = checkForSpecials(p,input);
+    const a = checkForAerials(p, input);
+    const b = checkForSpecials(p, input);
     if (a[0]){
       actionStates[characterSelections[p]][a[1]].init(p,input);
       return true;

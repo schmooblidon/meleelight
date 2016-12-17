@@ -21,7 +21,7 @@ export default {
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = 0;
     player[p].phys.intangibleTimer = Math.max(player[p].phys.intangibleTimer,14);
-    if (player[p].phys.face == 1){
+    if (player[p].phys.face === 1){
       drawVfx("tech",player[p].phys.ECBp[3]);
     }
     else {
@@ -41,7 +41,7 @@ export default {
       player[p].timer++;
     }
     if (!actionStates[characterSelections[p]].WALLTECH.interrupt(p,input)){
-      if (player[p].timer == 2){
+      if (player[p].timer === 2){
         sounds.walljump.play();
       }
       if (player[p].timer > 0.89 && player[p].timer < 0.91){
@@ -55,8 +55,8 @@ export default {
   },
   interrupt : function(p,input){
     if (player[p].timer > 1){
-      var a = checkForAerials(p,input);
-      var b = checkForSpecials(p,input);
+      const a = checkForAerials(p, input);
+      const b = checkForSpecials(p, input);
       if (a[0]){
         actionStates[characterSelections[p]][a[1]].init(p,input);
         return true;

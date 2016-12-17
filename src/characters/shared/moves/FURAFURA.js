@@ -1,9 +1,10 @@
 import {mashOut, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
-import { Vec2D} from "main/util";
+
 import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {drawVfx} from "main/vfx/drawVfx";
 import {actionSounds, framesData} from "../../../main/characters";
+import {Vec2D} from "../../../main/util/Vec2D";
 export default {
   name : "FURAFURA",
   canEdgeCancel : true,
@@ -19,14 +20,14 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!actionStates[characterSelections[p]].FURAFURA.interrupt(p,input)){
-      if (player[p].timer % 100 == 65){
+      if (player[p].timer % 100 === 65){
         sounds[actionSounds[characterSelections[p]].FURAFURA[0][1]].play();
       }
       reduceByTraction(p,true);
-      if (player[p].timer % 49 == 0){
+      if (player[p].timer % 49 === 0){
         drawVfx("furaFura",new Vec2D(player[p].phys.pos.x+(3+Math.random()*2)*player[p].phys.face,player[p].phys.pos.y+11+Math.random()*3),player[p].phys.face);
       }
-      if (player[p].timer % 49 == 20){
+      if (player[p].timer % 49 === 20){
         drawVfx("furaFura",new Vec2D(player[p].phys.pos.x+(5+Math.random()*2)*player[p].phys.face,player[p].phys.pos.y+8+Math.random()*3),player[p].phys.face);
       }
       if (player[p].phys.shieldHP > 30){

@@ -745,4 +745,4 @@ for (let l = 0; l < 20; l++) {
   offsets[CHARIDS.FOX_ID].thrown.id0.push(new Vec2D(0,12));
 }
 
-setChars(CHARIDS.FOX_ID, new charObject(2));
+setChars(CHARIDS.FOX_ID, new charObject(CHARIDS.FOX_ID));

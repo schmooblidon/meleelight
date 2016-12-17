@@ -1,4 +1,4 @@
-import {sounds, sounds} from "main/sfx";
+import {sounds} from "main/sfx";
 import {executeIntangibility, playSounds, actionStates} from "physics/actionStateShortcuts";
 import {characterSelections, player} from "main/main";
 import {framesData} from 'main/characters';
@@ -19,7 +19,7 @@ export default {
     if (!actionStates[characterSelections[p]].ESCAPEB.interrupt(p,input)){
       player[p].phys.cVel.x = actionStates[characterSelections[p]].ESCAPEB.setVelocities[player[p].timer-1]*player[p].phys.face;
       executeIntangibility("ESCAPEB",p);
-      if (player[p].timer == 4){
+      if (player[p].timer === 4){
         sounds.roll.play();
       }
     }

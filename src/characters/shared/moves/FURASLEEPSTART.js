@@ -15,22 +15,23 @@ export default {
     actionStates[characterSelections[p]].FURASLEEPSTART.main(p,input);
   },
   main : function(p,input){
+    let newCol;
     player[p].timer++;
     if (!actionStates[characterSelections[p]].FURASLEEPSTART.interrupt(p,input)){
       player[p].phys.stuckTimer--;
       reduceByTraction(p,true);
-      var originalColour = palettes[pPal[p]][0];
+      let originalColour = palettes[pPal[p]][0];
       originalColour = originalColour.substr(4,originalColour.length-5);
-      var colourArray = originalColour.split(",");
+      const colourArray = originalColour.split(",");
       //rgb(207, 45, 190)
-      var part = player[p].timer%30;
+      const part = player[p].timer % 30;
       if (part < 25){
         player[p].colourOverlayBool = true;
         if (part < 13){
-          var newCol = blendColours(colourArray,[207,45,190],Math.min(1,part/12));
+          newCol = blendColours(colourArray, [207, 45, 190], Math.min(1, part / 12));
         }
         else {
-          var newCol = blendColours(colourArray,[207,45,190],Math.max(0,1-(part-12/12)));
+          newCol = blendColours(colourArray, [207, 45, 190], Math.max(0, 1 - (part - 12 / 12)));
         }
         player[p].colourOverlay = "rgb("+newCol[0]+","+newCol[1]+","+newCol[2]+")";
       }

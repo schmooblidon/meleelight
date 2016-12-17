@@ -20,13 +20,13 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!actionStates[characterSelections[p]].STOPCEIL.interrupt(p,input)){
-      if (player[p].timer == 2){
+      if (player[p].timer === 2){
         player[p].phys.kVel.y *= -0.8;
         player[p].phys.kVel.x *= 0.8;
-        player[p].phys.kDec.y *= -1
+        player[p].phys.kDec.y *= -1;
       }
       if (player[p].hit.hitstun > 0){
-        if (player[p].hit.hitstun % 10 == 0){
+        if (player[p].hit.hitstun % 10 === 0){
           drawVfx("flyingDust",player[p].phys.pos);
         }
         player[p].hit.hitstun--;

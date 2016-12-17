@@ -246,6 +246,9 @@ export function shieldSize (p,lock,input){
    //shield size * 0.575 * model scaling
   //(shield size * 0.575 * hp/60) + (1-input)*0.60714*shieldsize
   player[p].phys.shieldAnalog = Math.max(input[p][0].lA, input[p][0].rA);
+  if (player[p].phys.shieldAnalog === 0){
+    player[p].phys.shieldAnalog = 1;
+  }
   if (lock && player[p].phys.shieldAnalog == 0) {
     player[p].phys.shieldAnalog = 1;
   }
@@ -365,6 +368,9 @@ export function checkForSpecials (p,input){
 }
 
 export function checkForAerials (p,input){
+  //console.log(p);
+  //console.log(input);
+  //console.log(input[p]);
   if (input[p][0].csX * player[p].phys.face >= 0.3 && input[p][1].csX * player[p].phys
     .face < 0.3 && Math.abs(input[p][0].csX) > Math.abs(input[p][0].csY) - 0.1) {
     return [true, "ATTACKAIRF"];

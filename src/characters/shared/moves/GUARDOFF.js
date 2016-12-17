@@ -29,7 +29,8 @@ export default {
     }
   },
   interrupt : function(p,input){
-    var j = checkForJump(p,input);
+    let s;
+    const j = checkForJump(p, input);
     if (j[0] && !player[p].inCSS){
       actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
@@ -40,8 +41,8 @@ export default {
     }
     else if (player[p].phys.powerShielded){
       if (!player[p].inCSS){
-        var t = checkForTilts(p,input);
-        var s = checkForSmashes(p,input);
+        const t = checkForTilts(p, input);
+        s = checkForSmashes(p, input);
         if (s[0]){
           actionStates[characterSelections[p]][s[1]].init(p,input);
           return true;
@@ -76,7 +77,7 @@ export default {
         }
       }
       else {
-        var s = checkForSmashes(p,input);
+        s = checkForSmashes(p, input);
         if (s[0]){
           actionStates[characterSelections[p]][s[1]].init(p,input);
           return true;

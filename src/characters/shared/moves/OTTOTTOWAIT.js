@@ -14,7 +14,7 @@ export default {
   init : function(p,input){
     player[p].actionState = "OTTOTTOWAIT";
     player[p].timer = 1;
-    if (characterSelections[p] != 1){
+    if (characterSelections[p] !== 1){
       sounds[actionSounds[characterSelections[p]].OTTOTTOWAIT[0][1]].play();
     }
     player[p].phys.cVel.x = 0;
@@ -23,17 +23,17 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (player[p].timer > framesData[characterSelections[p]].OTTOTTOWAIT){
-      player[p].timer = 0
+      player[p].timer = 0;
     }
     if (!actionStates[characterSelections[p]].OTTOTTOWAIT.interrupt(p,input)){
 
     }
   },
   interrupt : function(p,input){
-    var b = checkForSpecials(p,input);
-    var t = checkForTilts(p,input);
-    var s = checkForSmashes(p,input);
-    var j = checkForJump(p,input);
+    const b = checkForSpecials(p, input);
+    const t = checkForTilts(p, input);
+    const s = checkForSmashes(p, input);
+    const j = checkForJump(p, input);
     if (j[0]){
       actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
