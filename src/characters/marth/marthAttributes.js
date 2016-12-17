@@ -1185,4 +1185,4 @@ for (var l=0;l<20;l++){
   offsets[CHARIDS.MARTH_ID].thrown.id0.push(new Vec2D(0,12));
 }
 
-setChars(CHARIDS.MARTH_ID,new charObject(0));
+setChars(CHARIDS.MARTH_ID,new charObject(CHARIDS.MARTH_ID));

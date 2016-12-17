@@ -11,7 +11,7 @@ export default {
   headBonk : true,
   canBeGrabbed : true,
   landType : 2,
-  init : function(p,drawStuff){
+  init : function(p,input,drawStuff){
     player[p].actionState = "DAMAGEFLYN";
     player[p].timer = 0;
     player[p].phys.grabbing = -1;
@@ -33,7 +33,7 @@ export default {
   },
   main : function(p,input){
     if (player[p].phys.thrownHitbox){
-      if (player[p].timer == 1 && player[p].phys.cVel.y+player[p].phys.kVel.y > 0){
+      if (player[p].timer === 1 && player[p].phys.cVel.y+player[p].phys.kVel.y > 0){
         player[p].hitboxes.active = [true,false,false,false];
         player[p].hitboxes.frame = 0;
       }
@@ -47,7 +47,7 @@ export default {
     if (player[p].timer < framesData[characterSelections[p]].DAMAGEFLYN){
       player[p].timer++;
     }
-    if (player[p].hit.hitstun % 10 == 0){
+    if (player[p].hit.hitstun % 10 === 0){
       drawVfx("flyingDust",player[p].phys.pos);
     }
     if (!actionStates[characterSelections[p]].DAMAGEFLYN.interrupt(p,input)){
@@ -66,7 +66,7 @@ export default {
     }
   },
   interrupt : function(p,input){
-    if (player[p].timer > 1 && player[p].hit.hitstun == 0){
+    if (player[p].timer > 1 && player[p].hit.hitstun === 0){
       actionStates[characterSelections[p]].DAMAGEFALL.init(p,input);
       player[p].phys.thrownHitbox = false;
       return true;

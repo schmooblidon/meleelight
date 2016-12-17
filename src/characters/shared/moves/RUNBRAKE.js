@@ -19,7 +19,7 @@ export default {
     }
   },
   interrupt : function(p,input){
-    var j = checkForJump(p,input);
+    const j = checkForJump(p, input);
     if (j[0]){
       actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;
