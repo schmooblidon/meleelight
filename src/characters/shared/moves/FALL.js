@@ -10,14 +10,13 @@ export default {
   canBeGrabbed : true,
   landType : 0,
   vCancel : true,
-  init : function(p,input,disableInputs){
-    const dInputs = disableInputs || false;
+  init : function(p,input,disableInputs = false){
     player[p].actionState = "FALL";
     player[p].timer = 0;
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].FALL.main(p, dInputs);
+    actionStates[characterSelections[p]].FALL.main(p,input,disableInputs);
   },
-  main : function(p,input,disableInputs){
+  main : function(p,input,disableInputs = false){
     player[p].timer++;
     if (disableInputs){
       player[p].phys.cVel.y -= player[p].charAttributes.gravity;
@@ -30,7 +29,7 @@ export default {
       }
     }
   },
-  interrupt : function(p,input,disableInputs){
+  interrupt : function(p,input){
     const a = checkForAerials(p,input);
     const b = checkForSpecials(p,input);
     if (a[0]){

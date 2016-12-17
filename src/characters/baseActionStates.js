@@ -1060,27 +1060,26 @@ export const baseActionStates = {
   canBeGrabbed : true,
   landType : 0,
   vCancel : true,
-  init : function(p,input,disableInputs){
-    var dInputs = disableInputs || false;
+  init : function(p,input,disableInputs = false){
     player[p].actionState = "FALL";
     player[p].timer = 0;
     turnOffHitboxes(p);
-    actionStates[characterSelections[p]].FALL.main(p,input,dInputs);
+    actionStates[characterSelections[p]].FALL.main(p,input,disableInputs);
   },
-  main : function(p,input,disableInputs){
+  main : function(p,input,disableInputs = false){
     player[p].timer++;
     if (disableInputs){
       player[p].phys.cVel.y -= player[p].charAttributes.gravity;
       airDrift(p,input);
     }
     else {
-      if (!actionStates[characterSelections[p]].FALL.interrupt(p,input,input)){
+      if (!actionStates[characterSelections[p]].FALL.interrupt(p,input)){
         fastfall(p,input);
         airDrift(p,input);
       }
     }
   },
-  interrupt : function(p,input,disableInputs){
+  interrupt : function(p,input){
     var a = checkForAerials(p,input);
     var b = checkForSpecials(p,input);
     if (a[0]){
