@@ -52,47 +52,20 @@ export default {
         }
       }
 
-      if (player[p].timer === 42){
-        let ang = Math.PI/2;
-        if (input[p][0].lsX === 0 && input[p][0].lsY === 0){
-          if (player[p].phys.grounded){
-            ang = Math.PI / 2
-          }
-        }
-        else {
-          if (player[p].phys.grounded) {
-            if (Math.abs(input[p][0].lsX) < 0.66 && input[p][0].lsY < 0.66) {
-              ang = 0; 
-            } else if (!(Math.abs(input[p][0].lsX) < 0.66) && input[p][0].lsY < 0.66) {
-              if (input[p][0].lsX < -0.66) {
-                ang = Math.PI;
-              } else {
-                ang = 0;
-              }
-            } else if (input[p][0].lsY > 0) {
-              ang = Math.atan(input[p][0].lsY/input[p][0].lsX);              
+      if (player[p].timer === 42) {
+        let ang = Math.atan2(input[p][0].lsY, input[p][0].lsX) || (Math.PI / 2);
+
+        // Bound grounded angles below horizontal to PI or 0 exclusively
+        if (player[p].phys.grounded) {
+          if (ang < 0) {
+            if (ang < -Math.PI / 2) {
+              ang = Math.PI;
+            } else {
+              ang =  0;
             }
-          } else {
-          ang = Math.atan(input[p][0].lsY/input[p][0].lsX);
           }
         }
 
-        if (input[p][0].lsX < 0){
-          if (input[p][0].lsY < 0){
-            ang += Math.PI;
-          }
-          else {
-            ang += Math.PI;
-          }
-        }
-        if (player[p].phys.grounded){
-          if (ang < 0){
-            ang = 0;
-          }
-          else if (ang > Math.PI){
-            ang = Math.PI;
-          }
-        }
         player[p].phys.upbAngleMultiplier = ang;
       }
       else if (player[p].timer >= 16 && !player[p].phys.grounded){
