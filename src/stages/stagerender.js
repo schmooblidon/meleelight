@@ -27,11 +27,22 @@ for (var i = 0; i < 5; i++) {
 let ang = 0;
 export let backgroundType = 0;
 
+export let snowCount = 70;
+export let snowMeltTime = 200;
+
 let snowBalls = [];
 
+export const holy = new Image();
+holy.src = "assets/holy.png";
+
+export const wreath = new Image();
+wreath.src = "assets/wreath.png";
+
 export function drawStageInit() {
-    fg1.strokeStyle = "#db80cc";
+    //fg1.strokeStyle = "#db80cc";
+    fg1.strokeStyle = "white";
     fg1.lineWidth = 1;
+    
     for (var j = 0; j < activeStage.ground.length; j++) {
         fg1.beginPath();
         fg1.moveTo((activeStage.ground[j][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.ground[j][0].y * -activeStage.scale) + activeStage.offset[1]);
@@ -39,7 +50,7 @@ export function drawStageInit() {
         fg1.closePath();
         fg1.stroke();
     }
-    fg1.strokeStyle = "#ed6767";
+    //fg1.strokeStyle = "#ed6767";
     for (var j = 0; j < activeStage.ceiling.length; j++) {
         fg1.beginPath();
         fg1.moveTo((activeStage.ceiling[j][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.ceiling[j][0].y * -activeStage.scale) + activeStage.offset[1]);
@@ -47,17 +58,40 @@ export function drawStageInit() {
         fg1.closePath();
         fg1.stroke();
     }
-    fg1.strokeStyle = "#4794c6";
+    fg1.save();
+    fg1.beginPath();
     for (var j = 0; j < activeStage.platform.length; j++) {
-        if (j != activeStage.movingPlat) {
-            fg1.beginPath();
-            fg1.moveTo((activeStage.platform[j][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[j][0].y * -activeStage.scale) + activeStage.offset[1]);
-            fg1.lineTo((activeStage.platform[j][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[j][1].y * -activeStage.scale) + activeStage.offset[1]);
-            fg1.closePath();
-            fg1.stroke();
-        }
+      if (j != activeStage.movingPlat){
+        var x1 = (activeStage.platform[j][0].x * activeStage.scale) + activeStage.offset[0];
+        var x2 = (activeStage.platform[j][1].x * activeStage.scale) + activeStage.offset[0]
+        fg1.rect(x1, (activeStage.platform[j][0].y * -activeStage.scale) + activeStage.offset[1], x2-x1,2*activeStage.scale);
+      }
     }
-    fg1.strokeStyle = "#47c648";
+    fg1.clip();
+    fg1.lineWidth = 6;
+    fg1.fillStyle = "white";
+    fg1.fillRect(0,0,1200,750);
+    fg1.strokeStyle = "red";
+    fg1.beginPath();
+    for (var j=0;j<110;j++){ 
+      fg1.moveTo(j*20,0);
+      fg1.lineTo(j*20-750,750);
+    }
+    fg1.stroke();
+    fg1.restore();
+    
+    bg1.save();
+    bg1.globalAlpha = 0.4;
+    bg1.beginPath();
+    for (var j = 0; j < activeStage.box.length; j++) {
+      bg1.rect((activeStage.box[j].min.x * activeStage.scale) + activeStage.offset[0], (activeStage.box[j].max.y * -activeStage.scale) + activeStage.offset[1], (activeStage.box[j].max.x - activeStage.box[j].min.x) * activeStage.scale, (activeStage.box[j].max.y - activeStage.box[j].min.y) * activeStage.scale);
+    }
+    bg1.clip();
+    bg1.drawImage(holy,0,0);
+    bg1.restore();
+
+    
+    //fg1.strokeStyle = "#47c648";
     for (var k = 0; k < activeStage.wallL.length; k++) {
         fg1.beginPath();
         fg1.moveTo((activeStage.wallL[k][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.wallL[k][0].y * -activeStage.scale) + activeStage.offset[1]);
@@ -65,7 +99,7 @@ export function drawStageInit() {
         fg1.closePath();
         fg1.stroke();
     }
-    fg1.strokeStyle = "#9867de";
+    //fg1.strokeStyle = "#9867de";
     for (var l = 0; l < activeStage.wallR.length; l++) {
         fg1.beginPath();
         fg1.moveTo((activeStage.wallR[l][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.wallR[l][0].y * -activeStage.scale) + activeStage.offset[1]);
@@ -75,21 +109,47 @@ export function drawStageInit() {
     }
 };
 
+let swirlTimer = 0;
+
 export function drawStage() {
-    if (activeStage.movingPlat > -1) {
-        fg2.strokeStyle = "#4794c6";
+    /*if (activeStage.movingPlat > -1) {
+        fg2.strokeStyle = "white";
         fg2.beginPath();
         fg2.moveTo((activeStage.platform[activeStage.movingPlat][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[activeStage.movingPlat][0].y * -activeStage.scale) + activeStage.offset[1]);
         fg2.lineTo((activeStage.platform[activeStage.movingPlat][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[activeStage.movingPlat][1].y * -activeStage.scale) + activeStage.offset[1]);
         fg2.closePath();
         fg2.stroke();
-    }
+    }*/
     fg2.fillStyle = boxFill;
 
-    for (var j = 0; j < activeStage.box.length; j++) {
-        fg2.fillRect((activeStage.box[j].min.x * activeStage.scale) + activeStage.offset[0], (activeStage.box[j].max.y * -activeStage.scale) + activeStage.offset[1], (activeStage.box[j].max.x - activeStage.box[j].min.x) * activeStage.scale, (activeStage.box[j].max.y - activeStage.box[j].min.y) * activeStage.scale);
+    fg2.save();
+    fg2.beginPath();
+    for (var j = 0; j < activeStage.platform.length; j++) {
+        var x1 = (activeStage.platform[j][0].x * activeStage.scale) + activeStage.offset[0];
+        var x2 = (activeStage.platform[j][1].x * activeStage.scale) + activeStage.offset[0];
+        fg2.rect(x1, (activeStage.platform[j][0].y * -activeStage.scale) + activeStage.offset[1], x2-x1,2*activeStage.scale);
     }
-    fg2.strokeStyle = "#e7a44c";
+    fg2.clip();
+    fg2.lineWidth = 6;
+    fg2.fillStyle = "white";
+    fg2.fillRect(0,0,1200,750);
+    fg2.strokeStyle = "red";
+    fg2.beginPath();
+    swirlTimer++;
+    if (swirlTimer > 20){
+      swirlTimer = 0;
+    }
+    for (var j=0;j<110;j++){ 
+      fg2.moveTo(j*20+swirlTimer,0);
+      fg2.lineTo(j*20-750+swirlTimer,750);
+    }
+    fg2.stroke();
+    fg2.restore();
+
+    /*for (var j = 0; j < activeStage.box.length; j++) {
+        fg2.fillRect((activeStage.box[j].min.x * activeStage.scale) + activeStage.offset[0], (activeStage.box[j].max.y * -activeStage.scale) + activeStage.offset[1], (activeStage.box[j].max.x - activeStage.box[j].min.x) * activeStage.scale, (activeStage.box[j].max.y - activeStage.box[j].min.y) * activeStage.scale);
+    }*/
+    fg2.strokeStyle = "white";
     for (var j = 0; j < activeStage.ledge.length; j++) {
         var e = activeStage.ledge[j];
         fg2.beginPath();
@@ -119,7 +179,9 @@ export function drawStage() {
                     fg2.arc(x, y, (25 - j * 5) * (activeStage.scale / 4.5), 0, twoPi);
                     fg2.closePath();
                     fg2.fill();
+
                 }
+                fg2.drawImage(wreath,x-27,y-22,54,54)
             }
         }
     }
@@ -142,7 +204,7 @@ export function bgStar() {
 };
 export function drawBackgroundInit() {
     var bgGrad = bg1.createLinearGradient(0, 0, 0, 500);
-    bgGrad.addColorStop(0, "rgb(24, 17, 66)");
+    bgGrad.addColorStop(0, "rgb(46, 100, 147)");
     bgGrad.addColorStop(1, "black");
     bg1.fillStyle = bgGrad;
     bg1.fillRect(-100, -100, layers.BG1.width + 200, layers.BG1.height + 200);
@@ -157,12 +219,12 @@ export function drawBackgroundInit() {
 };
 
 export function drawBackground() {
-    if (backgroundType == 0) {
+    /*if (backgroundType == 0) {
         drawStars();
     }
     else {
         drawTunnel();
-    }
+    }*/
     if (gameMode != 4){
         drawSnow();
     }
@@ -308,19 +370,19 @@ export function drawStars() {
 
 export function snowBall(){
   this.size = (Math.random() > 0.3) ? Math.floor(Math.random()*3)+1 : Math.floor(Math.random()*7)+4;
-  this.velx = this.size/5;
+  this.velx = this.size/5*(1-Math.random()*0.5);
   this.vely = Math.max(1,this.size/6);
   this.landed = false;
   this.melted = 0;
-  this.x = activeStage.blastzone.min.x+10+Math.random()*(activeStage.blastzone.max.x - activeStage.blastzone.min.x);
-  this.y = activeStage.blastzone.max.y-20;
+  this.x = activeStage.blastzone.min.x+40+Math.random()*(activeStage.blastzone.max.x - activeStage.blastzone.min.x - 40);
+  this.y = activeStage.blastzone.max.y-60;
   this.prevX = this.x;
   this.prevY = this.y;
 }
 
 export function createSnow(){
   snowBalls = [];
-  for (var i=0;i<60;i++){
+  for (var i=0;i<1500;i++){
     snowBalls.push(new snowBall());
     snowBalls[i].y = activeStage.blastzone.min.y+(activeStage.blastzone.max.y-activeStage.blastzone.min.y)*Math.random();
   }
@@ -350,33 +412,48 @@ export function snowCollision(i){
 }
 
 export function drawSnow(){
-  for (var i=0;i<60;i++){
+  var melting = [];
+  bg2.fillStyle = "white";
+  bg2.beginPath();
+  for (var i=0;i<snowCount;i++){
     if (snowBalls[i].landed){
       snowBalls[i].melted++;
-      bg2.fillStyle = "rgba(255,255,255,"+(1-(snowBalls[i].melted/60))+")";
-      if (snowBalls[i].melted > 60){
+      if (snowBalls[i].melted > snowMeltTime){
         snowBalls[i] = new snowBall();
+      } else {
+        melting.push(i);
       }
     }
     else {
-      bg2.fillStyle = "white";
       snowBalls[i].prevX = snowBalls[i].x;
       snowBalls[i].prevY = snowBalls[i].y;
       snowBalls[i].x -= snowBalls[i].velx;
       snowBalls[i].y -= snowBalls[i].vely;
-      if (snowBalls[i].y < activeStage.blastzone.min.y+10){
+      if (snowBalls[i].y < activeStage.blastzone.min.y+30){
+        snowBalls[i] = new snowBall();
+      }
+      else if (snowBalls[i].x < activeStage.blastzone.min.x+40){
         snowBalls[i] = new snowBall();
       }
       else {
-        if (snowBalls[i].size > 1.5 && snowBalls[i].size < 5){
+        if (snowBalls[i].size >= 2 && snowBalls[i].size < 5){
           if (snowCollision(i)){
             snowBalls[i].landed = true;
           }
         }
       }
+      var x = (snowBalls[i].x*activeStage.scale)+activeStage.offset[0];
+      var y = (snowBalls[i].y*-activeStage.scale)+activeStage.offset[1];
+      bg2.moveTo(x,y);
+      bg2.arc(x,y,snowBalls[i].size,0,twoPi);
     }
+  }
+  bg2.closePath();
+  bg2.fill();
+  for (var i=0;i<melting.length;i++){
+    bg2.fillStyle = "rgba(255,255,255,"+(1-(snowBalls[melting[i]].melted/snowMeltTime))+")";
     bg2.beginPath();
-    bg2.arc((snowBalls[i].x*activeStage.scale)+activeStage.offset[0],(snowBalls[i].y*-activeStage.scale)+activeStage.offset[1],snowBalls[i].size,0,twoPi);
+    bg2.arc((snowBalls[melting[i]].x*activeStage.scale)+activeStage.offset[0],(snowBalls[melting[i]].y*-activeStage.scale)+activeStage.offset[1],snowBalls[melting[i]].size,0,twoPi);
     bg2.closePath();
     bg2.fill();
   }
