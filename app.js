@@ -4,9 +4,8 @@ var app = express();
 app.use(express.static('./dist'));
 
 app.get('/', function(req, res) {
-  res.redirect('/meleelightikd.html');
+  res.redirect('/meleelight.html');
 });
 
-app.listen(3000, function() {
-  console.log('Melee Light running on port 3000');
+app.listen(80, function() {
 });
