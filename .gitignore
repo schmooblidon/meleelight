@@ -55,3 +55,11 @@ yarn-error.log*
 dist/js
 .tmp
 .happypack
+MeleeLight-darwin-x64/*
+MeleeLight-linux-armv7l/*
+MeleeLight-linux-ia32/*
+MeleeLight-linux-x64/*
+MeleeLight-mas-x64/*
+MeleeLight-win32-ia32/*
+MeleeLight-win32-x64/*
+node_modules/*
