@@ -8,6 +8,7 @@ import {setTargetPointerPos} from "../stages/targetselect";
 import {setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
 import {music} from "../main/sfx";
+import {connectToMPRoom} from "../main/multiplayer/mproom";
 /* eslint-disable */
 
 let menuSelected = 0;
@@ -15,14 +16,14 @@ let menuSelected = 0;
 const menuText = [
   ["VS. Melee", "Target Test", "Target Builder", "Options"],
   ["Audio", "Gameplay", "Keyboard Controls", "Credits"],
-    ["Local VS","Matchmaking","P2P","Server"]
+  ["Local VS", "Matchmaking", "P2P", "Server"]
 ];
 const menuExplanation = [
   ["Multiplayer Battles!", "Smash ten targets!", "Build target test stages!", "Game setup."],
   ["Select audio levels.", "Change gameplay settings.", "Customize keyboard controls.", "Who did this?"],
-    ["One box this screen.","Ranked Mode","Hostless Muliplayer","Hosted Multiplayer"]
+  ["One box this screen.", "Ranked Mode", "Hostless Muliplayer", "Hosted Multiplayer"]
 ];
-const menuTitle = ["Main Menu", "Options","Battle Mode"];
+const menuTitle = ["Main Menu", "Options", "Battle Mode"];
 let menuColourOffset = 0;
 const menuColours = [238, 358, 117, 55];
 let menuCurColour = 238;
@@ -91,7 +92,7 @@ export function menuMove(i, input) {
           }
         }
       }
-    } else if(menuMode === MPMENU){
+    } else if (menuMode === MPMENU) {
 
       if (menuSelected == LOCALVS) {
         changeGamemode(2);
@@ -101,7 +102,8 @@ export function menuMove(i, input) {
 
         } else {
           if (menuSelected == P2PMP) {
-            changeGamemode(14)
+             connectToMPRoom();
+            changeGamemode(2);
             positionPlayersInCSS();
           } else {
             if (menuSelected == SERVERMP) {
@@ -110,7 +112,7 @@ export function menuMove(i, input) {
           }
         }
       }
-    }else {
+    } else {
 
       if (menuSelected == AUDIOOPTIONS) {
         //audio menu
@@ -144,7 +146,7 @@ export function menuMove(i, input) {
       menuSelected = OPTIONS;
       menuMove = true;
       sounds.menuBack.play();
-    } else if (menuMode == MPMENU){
+    } else if (menuMode == MPMENU) {
       menuMode = TOPLEVEL;
       menuSelected = VSMODE;
       menuMove = true;

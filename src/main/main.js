@@ -37,7 +37,7 @@ import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData} from "./input";
-import {updateNetworkInputs, connectToMPRoom} from "./multiplayer/mproom";
+import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs} from "./multiplayer/mproom";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -349,8 +349,23 @@ export function findPlayers (){
       }
     }
   }
-  for (var i = 0; i < gps.length; i++) {
-    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
+  for (var controllerIndex = 0; controllerIndex < gps.length; controllerIndex++) {
+    if(playerType[controllerIndex] === 2){
+      var alreadyIn = false;
+      for (var k = 0; k < ports; k++) {
+        if (currentPlayers[k] === controllerIndex) {
+          alreadyIn = true;
+        }
+      }
+      if (!alreadyIn) {
+        if (ports < 4) {
+          addPlayer(controllerIndex, 99);
+        }
+      }
+      continue;
+    }
+
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[controllerIndex] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
       null);
     if (typeof gamepad != "undefined" && gamepad != null) {
       var detected = false;
@@ -368,7 +383,7 @@ export function findPlayers (){
           if (gamepad.buttons[controllerMaps[gType][button.s]].pressed) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == i) {
+              if (currentPlayers[k] == controllerIndex) {
                 alreadyIn = true;
               }
             }
@@ -379,7 +394,7 @@ export function findPlayers (){
                 if (ports == 0) {
                   music.menu.play("menuStart");
                 }
-                addPlayer(i, gType);
+                addPlayer(controllerIndex, gType);
               }
             }
           }
@@ -387,13 +402,13 @@ export function findPlayers (){
           if (gamepad.buttons[controllerMaps[gType][button.a]].pressed) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == i) {
+              if (currentPlayers[k] == controllerIndex) {
                 alreadyIn = true;
               }
             }
             if (!alreadyIn) {
               if (ports < 4) {
-                addPlayer(i, gType);
+                addPlayer(controllerIndex, gType);
               }
             }
           }
@@ -409,11 +424,18 @@ export function setPlayerType(playerSlot,type){
   playerType[playerSlot] = type;
 }
 
-export function addPlayer (gamepad,gType){
-  ports++;
-  currentPlayers[ports - 1] = gamepad;
-  playerType[ports - 1] = 0;
-  mType[ports - 1] = gType;
+export function addPlayer (controllerIndex,gType){
+  if(gType === 99){
+    ports++;
+    currentPlayers[ports - 1] = controllerIndex;
+    playerType[ports - 1] = 2;
+    mType[ports - 1] = gType;
+  }else {
+    ports++;
+    currentPlayers[ports - 1] = controllerIndex;
+    playerType[ports - 1] = 0;
+    mType[ports - 1] = gType;
+  }
 }
 
 export function togglePort (i){
@@ -509,8 +531,9 @@ export function changeGamemode (newGamemode){
       break;
       // Multiplayer Modes
     case 14:
+      drawCSSInit();
       connectToMPRoom();
-      changeGamemode(2);
+
       break;
       // startup
     case 20:
@@ -731,7 +754,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   }
 
   if(playertype === 2){
-    updateNetworkInputs(tempBuffer,i);
+    updateNetworkInputs(tempBuffer[0],i);
   }
   return tempBuffer;
 

@@ -119,11 +119,10 @@ export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, 
     return aiInputBank[playerSlot][0];
   }else if (controllerType == 10) { // keyboard controls
     input = pollKeyboardInputs(gameMode, frameByFrame, keys);
-  }
-    else if (playertype === 0) {
-    input = pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
-  } else if (playertype === 2) {
+  } else if (playertype === 2 || controllerType === 99) {
     input = pollNetworkInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
+  }else if (playertype === 0) {
+    input = pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
   }
   return input;
 }
@@ -340,7 +339,7 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
 };
 
 function pollNetworkInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
- return retrieveNetworkInputs(playerSlot);
+ return retrieveNetworkInputs(playerSlot,controllerIndex);
 }
 
 export function showButton(i, but, bool) {
