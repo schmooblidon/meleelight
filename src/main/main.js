@@ -36,8 +36,9 @@ import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
-import {showButton, nullInputs, pollInputs, inputData} from "./input";
-import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs} from "./multiplayer/mproom";
+import {showButton, nullInputs, pollInputs, inputData, nullInput} from "./input";
+import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs} from "./multiplayer/mproom";
+import {deepCopyObject} from "./util/deepCopyObject";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -63,7 +64,15 @@ window.mType = [0, 0, 0, 0];
 
 export const mType = [0,0,0,0];
 
+export  function setMtype(index,val){
+  mType[index] = val;
+}
+
 export const currentPlayers = [];
+
+export function setCurrentPlayer(index,val){
+  currentPlayers[index] =val;
+}
 
 export const playerAmount = 0;
 
@@ -753,7 +762,9 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
   }
 
-  if(playertype === 2){
+  if(giveInputs[i] === true){
+    //turns out keyboards leave gaps in the input buffer
+    deepCopyObject(true,nullInput(),tempBuffer[0]);
     updateNetworkInputs(tempBuffer[0],i);
   }
   return tempBuffer;

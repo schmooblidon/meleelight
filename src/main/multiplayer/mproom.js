@@ -2,11 +2,23 @@
 import * as pdep from 'main/multiplayer/peer';
 import $ from 'jquery';
 import {nullInputs} from "../input";
-import {setPlayerType, ports, addPlayer, currentPlayers, findPlayers} from "../main";
+import {
+  setPlayerType,
+  ports,
+  addPlayer,
+  currentPlayers,
+  findPlayers,
+  playerType,
+  mType,
+  setMtype,
+  setCurrentPlayer, player
+} from "../main";
+import {deepCopyObject} from "../util/deepCopyObject";
 
 
 let peer = null;
 let peerId = null;
+
 function startRoom() {
   peer = new Peer('', {
     host: location.hostname,
@@ -19,8 +31,9 @@ function startRoom() {
   //set up room for people to join
   peer.on('open', function (id) {
     peerId = id;
-    alert('Ask your friend to join using your peer ID: ' + peerId);
+
     $('#mpcode').prop("value", id);
+    alert('Ask your friend to join using your peer ID: ' + peerId + "you can copy it from the header of this window");
   });
 
   //oops?
@@ -30,22 +43,28 @@ function startRoom() {
 
   //player joins the room
   peer.on('connection', function (conn) {
-    console.log("new player joined");
+   // console.log("new player joined");
     connectedPeers[conn.peer] = 1;
     peerConnections[conn.peer] = conn;
-    giveInputs[ports] = false;
-    setPlayerType(ports, 2);
+    setNetInputFlag(ports, false);
+
 
     //take the new connection and set up data connection handler
     conn.on('open', function () {
+      conn.send({"syncClient": "syncClient", "ports": ports - 1, "currentPlayers": currentPlayers});
       // Receive messages from the connection when the handshake is done
-      conn.on('data', function (data) {
-        console.log("recieving inputs");
-        console.log(data);
-        if (data.inputBuffer && data.playerSlot) {
-          updateNetworkInputs(data.playerSlot, data.inputBuffer);
-        }
-      });
+
+    });
+    conn.on('data', function (data) {
+     // console.log("recieving data");
+      // console.log(data);
+      if (data.syncHost) {
+        syncHost(ports);
+      }
+      if (data.inputBuffer && (data.playerSlot !== undefined)) {
+        saveNetworkInputs(data.playerSlot,data.inputBuffer);
+        player[data.playerSlot] = deepCopyObject(true, {},data.playerInfo);
+      }
     });
     //oops?
     conn.on('error', function (err) {
@@ -55,7 +74,7 @@ function startRoom() {
 
   // HTTP routing timeout rule
   function ping() {
-    console.log(peer);
+   // console.log(peer);
     peer.socket.send({
       type: 'ping'
     });
@@ -71,15 +90,19 @@ const peerConnections = {};
 const playerInputBuffer = [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
 let loadingRoom = false;
 
-const giveInputs = {};
+export const giveInputs = {};
+
+export function setNetInputFlag(name, val) {
+  giveInputs[name] = val;
+}
 
 function sendInputsOverNet(inputBuffer, playerSlot) {
   eachActiveConnection(function (c) {
     if (c.label === 'mpRoom') {
       for (let key of Object.keys(peerConnections)) {
         if (key) {
-          console.log("sending inputs");
-          c.send({"playerSlot": playerSlot, "inputBuffer": inputBuffer});
+       //   console.log("sending inputs");
+          c.send({"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":player[playerSlot]});
         }
       }
 
@@ -89,41 +112,19 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
 
 export function updateNetworkInputs(inputBuffer, playerSlot) {
 
-  if (giveInputs[playerSlot]) {
-    let tempBuffer = nullInputs();
+  playerInputBuffer[playerSlot][0] = inputBuffer;
 
-    playerInputBuffer[playerSlot] = inputBuffer;
+  sendInputsOverNet(inputBuffer, playerSlot);
 
-    sendInputsOverNet(inputBuffer, playerSlot);
-    for (var k = 0; k < 7; k++) {
-      tempBuffer[7 - k].lsX = inputBuffer[6 - k].lsX;
-      tempBuffer[7 - k].lsY = inputBuffer[6 - k].lsY;
-      tempBuffer[7 - k].rawX = inputBuffer[6 - k].rawX;
-      tempBuffer[7 - k].rawY = inputBuffer[6 - k].rawY;
-      tempBuffer[7 - k].csX = inputBuffer[6 - k].csX;
-      tempBuffer[7 - k].csY = inputBuffer[6 - k].csY;
-      tempBuffer[7 - k].lA = inputBuffer[6 - k].lA;
-      tempBuffer[7 - k].rA = inputBuffer[6 - k].rA;
-      tempBuffer[7 - k].s = inputBuffer[6 - k].s;
-      tempBuffer[7 - k].a = inputBuffer[6 - k].a;
-      tempBuffer[7 - k].b = inputBuffer[6 - k].b;
-      tempBuffer[7 - k].x = inputBuffer[6 - k].x;
-      tempBuffer[7 - k].y = inputBuffer[6 - k].y;
-      tempBuffer[7 - k].r = inputBuffer[6 - k].r;
-      tempBuffer[7 - k].l = inputBuffer[6 - k].l;
-      tempBuffer[7 - k].dl = inputBuffer[6 - k].dl;
-      tempBuffer[7 - k].dd = inputBuffer[6 - k].dd;
-      tempBuffer[7 - k].dr = inputBuffer[6 - k].dr;
-      tempBuffer[7 - k].du = inputBuffer[6 - k].du;
-      tempBuffer[7 - k].z = inputBuffer[6 - k].z;
-    }
+}
 
-    playerInputBuffer[playerSlot] = tempBuffer;
-  }
+export function saveNetworkInputs(playerSlot, inputBuffer) {
+  playerInputBuffer[playerSlot][0] = inputBuffer;
+
 }
 
 export function retrieveNetworkInputs(playerSlot) {
-  return playerInputBuffer[playerSlot];
+  return playerInputBuffer[playerSlot][0];
 }
 
 
@@ -144,16 +145,53 @@ function getHostRoom() {
   return peer;
 }
 
+function syncClient(exactportnumber) {
+  let portSnapshot = ports;
+  let tempCurrentPlayers = deepCopyObject(true, {}, currentPlayers);
+  let playersToBeReassigned = tempCurrentPlayers.length;
+  let mTypeSnapshot = deepCopyObject(true, {}, mType);
+  //add host players
+  for (let i = 0; i < exactportnumber; i++) {
+    setPlayerType(i, 2);
+    setMtype(i, 99);
+    setCurrentPlayer(i, i);
+  }
+  //reassign current players
+  for (let i = 0; i < playersToBeReassigned; i++) {
+    if (tempCurrentPlayers[i] != -1)
+      addPlayer(portSnapshot, mTypeSnapshot[i]);
+    portSnapshot++;
+  }
+}
+
+function syncHost(exactportnumber) {
+  let portSnapshot = ports;
+  //add joining players
+  for (let j = 0; j < portSnapshot; j++) {
+    setNetInputFlag(j, true);
+  }
+
+  for (let i = 0; i < exactportnumber; i++) {
+    addPlayer(portSnapshot + i, 99);
+  }
+}
+
+
 function connect(c) {
   // Handle a join connection.
   if (c.label === 'mpRoom') {
+    c.send({"syncHost": "syncHost", "ports": ports - 1, "currentPlayers": currentPlayers});
+    c.on('data', (data) => {
+      if (data.syncClient) {
+        console.log("negotiate player position and controller index");
+        // console.log(data);
+        syncClient(ports)
+      }
+      // console.log("receiving inputs");
 
-    c.on('data',  (data)=> {
-
-      console.log("receiving inputs");
-      console.log(data);
-      if (data.inputBuffer && data.playerSlot) {
-        updateNetworkInputs(data.playerSlot, data.inputBuffer);
+      if (data.inputBuffer && (data.playerSlot !== undefined)) {
+        saveNetworkInputs(data.playerSlot, data.inputBuffer);
+        player[data.playerSlot] = deepCopyObject(true, {},data.playerInfo);
       }
     });
     c.on('close', () => {
@@ -193,13 +231,13 @@ function connectToUser(userName) {
 
     const playerConnection = peer.connect(requestedPeer, {
       label: 'mpRoom',
-      serialization: 'binary',
+      serialization: 'json',
       reliable: true
     });
 
     playerConnection.on('open', function () {
       connect(playerConnection);
-      giveInputs[ports] = true;
+      setNetInputFlag(ports, true);
 
 
     });

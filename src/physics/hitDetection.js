@@ -117,6 +117,9 @@ export function hitDetect (p,input){
                                                 storedPhantom = j;
                                             } else {
                                                 hitQueue.push([i, p, j, false, false, false, false]);
+                                                if(player[p].hitboxes)
+                                                if(player[p].hitboxes.hitList)
+                                                if(player[p].hitboxes.hitList instanceof Array)
                                                 player[p].hitboxes.hitList.push(i);
                                                 setHasHit(p, j);
                                                 break;
