@@ -230,8 +230,7 @@ function connectToUser(userName) {
 
     const playerConnection = peer.connect(requestedPeer, {
       label: 'mpRoom',
-      serialization: 'json',
-      reliable: true
+      serialization: 'json'
     });
 
     playerConnection.on('open', function () {
