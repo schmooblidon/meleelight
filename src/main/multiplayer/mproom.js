@@ -54,9 +54,10 @@ function startRoom() {
       // Receive messages from the connection when the handshake is done
 
     });
-    conn.on('data', function (data) {
+    conn.on('data', function (d) {
      // console.log("recieving data");
       // console.log(data);
+     let data = JSON.parse(atob(d));
       if (data.syncHost) {
         syncHost(ports);
       }
@@ -101,7 +102,8 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
       for (let key of Object.keys(peerConnections)) {
         if (key) {
        //   console.log("sending inputs");
-          c.send({"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":player[playerSlot]});
+        let payload = btoa(JSON.stringify({"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":player[playerSlot]}));
+          c.send(payload);
         }
       }
 
@@ -230,7 +232,8 @@ function connectToUser(userName) {
 
     const playerConnection = peer.connect(requestedPeer, {
       label: 'mpRoom',
-      serialization: 'json'
+      serialization: 'none',
+      reliable:true
     });
 
     playerConnection.on('open', function () {
