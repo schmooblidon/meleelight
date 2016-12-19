@@ -1,7 +1,11 @@
 var express = require('express');
 var app = express();
 var ExpressPeerServer = require('peer').ExpressPeerServer;
+app.use(express.static('./dist'));
 
+app.get('/', function(req, res) {
+  res.redirect('/meleelight.html');
+});
 var server = app.listen(9000);
 
 var options = {
