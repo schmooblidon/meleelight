@@ -6,7 +6,10 @@ app.use(express.static('./dist'));
 app.get('/', function(req, res) {
   res.redirect('/meleelight.html');
 });
-var server = app.listen(8080);
+
+app.set('port', (process.env.PORT || 5000));
+
+var server = app.listen((process.env.PORT || 5000));
 
 var options = {
   debug: true
