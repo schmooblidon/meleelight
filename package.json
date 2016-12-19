@@ -11,6 +11,7 @@
     "serve": "node app",
     "buildall": "npm run animations && npm run build ",
     "heroku-postbuild": "npm run buildall",
+    "preinstall": " npm install ",
     "postinstall": " npm run animations && npm run build "
   },
   "engines": {
