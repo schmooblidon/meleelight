@@ -2,13 +2,13 @@
   "name": "meleelight",
   "version": "0.0.1",
   "description": "Melee Light Platform Fighter",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "build": "webpack --progress --colors --config=bin/webpack/build.config.js",
     "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
     "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
     "release": "node bin/release.js",
-    "serve": "node index",
+    "serve": "node app",
     "start": "npm run animations && npm run build && npm run serve"
   },
   "engines": {
