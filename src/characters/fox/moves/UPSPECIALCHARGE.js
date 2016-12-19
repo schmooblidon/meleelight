@@ -56,7 +56,7 @@ export default {
         let ang = Math.PI/2;
         if (input[p][0].lsX === 0 && input[p][0].lsY === 0){
           if (player[p].phys.grounded){
-            ang = Math.PI / 2
+            ang = Math.PI / 2;
           }
         }
         else {
@@ -73,7 +73,7 @@ export default {
               ang = Math.atan(input[p][0].lsY/input[p][0].lsX);              
             }
           } else {
-          ang = Math.atan(input[p][0].lsY/input[p][0].lsX);
+            ang = Math.atan(input[p][0].lsY/input[p][0].lsX);
           }
         }
 
