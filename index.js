@@ -4,7 +4,7 @@ var ExpressPeerServer = require('peer').ExpressPeerServer;
 app.use(express.static('./dist'));
 
 app.get('/', function(req, res) {
-  res.redirect('/meleelightikd.html');
+  res.redirect('/meleelight.html');
 });
 app.set('port', (process.env.PORT || 5000));
 
