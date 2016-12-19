@@ -38,9 +38,7 @@
     "jquery": "1.11.3",
     "optimist": "^0.6.1",
     "peer": "^0.2.8",
-    "yargs": "^6.4.0"
-  },
-  "devDependencies": {
+    "yargs": "^6.4.0",
     "webpack": "^1.13.3",
     "webpack-notifier": "^1.4.1",
     "babel-core": "^6.18.2",
