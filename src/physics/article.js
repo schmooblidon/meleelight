@@ -290,7 +290,7 @@ export function articlesHitDetection (){
     }
 }
 
-export function executeArticleHits (){
+export function executeArticleHits (input){
     for (var i = 0; i < articleHitQueue.length; i++) {
         var a = articleHitQueue[i][0];
         var v = articleHitQueue[i][1];

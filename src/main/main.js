@@ -989,7 +989,7 @@ export function gameTick (oldInputBuffers){
     }
     executeHits(input);
     articlesHitDetection();
-    executeArticleHits();
+    executeArticleHits(input);
     if (!starting && !versusMode) {
       matchTimerTick(input);
     } else {
