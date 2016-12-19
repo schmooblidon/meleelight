@@ -9,7 +9,8 @@
     "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
     "release": "node bin/release.js",
     "serve": "node app",
-    "start": "npm run animations && npm run build && npm run serve"
+    "buildall": "npm run animations && npm run build ",
+    "heroku-postbuild": "npm run buildall"
   },
   "engines": {
     "node": "7.2.0",
