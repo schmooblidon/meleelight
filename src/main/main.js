@@ -586,7 +586,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
   if (mType[i] == 10) { // keyboard controls
 
-    if (tempBuffer[0].s || tempBuffer[1].s ) {
+    if (tempBuffer[0].s || tempBuffer[1].s || (gameMode === 5 && (tempBuffer[0].du || tempBuffer[1].du) ) ) {
       pause[i][0] = true;
     }
     else {
