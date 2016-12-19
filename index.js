@@ -10,7 +10,7 @@ var server = app.listen(9000);
 
 var options = {
   debug: true
-}
+};
 
 //var server = require('http').createServer(app);
 
