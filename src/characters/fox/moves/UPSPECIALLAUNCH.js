@@ -27,16 +27,17 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.upb2.id0;
     player[p].hitboxes.active = [true,false,false,false];
     player[p].hitboxes.frame = 0;
-    player[p].rotation = (player[p].phys.upbAngleMultiplier-Math.PI/2)*-1;
-    //console.log(player[p].rotation*180/Math.PI);
-    if (player[p].rotation < 0){
-      player[p].phys.face = -1;
+    player[p].rotation = (player[p].phys.upbAngleMultiplier - Math.PI / 2) * -1;
+    // if we arent going straight up
+    if (player[p].phys.upbAngleMultiplier !== Math.PI / 2) {
+      if (Math.abs(player[p].phys.upbAngleMultiplier) > Math.PI / 2) {
+        player[p].phys.face = -1;
+      } else {
+        player[p].phys.face = 1;
+      }
     }
-    else if (player[p].rotation > 0 && !(player[p].rotation === Math.PI)){
-      player[p].phys.face = 1;
-    }
-    player[p].rotationPoint = new Vec2D(0,40);
-    this.main(p,input);
+    player[p].rotationPoint = new Vec2D(0, 40);
+    this.main(p, input);
   },
   main : function(p,input){
     player[p].timer++;
