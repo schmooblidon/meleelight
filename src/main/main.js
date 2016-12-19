@@ -593,7 +593,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       pause[i][0] = false;
     }
 
-    if (tempBuffer[0].z  || tempBuffer[1].z ) {
+    if ((tempBuffer[0].z  || tempBuffer[1].z) && (gameMode != 5)) {
       frameAdvance[i][0] = true;
     } 
     else {
@@ -860,6 +860,7 @@ export function gameTick (oldInputBuffers){
       finishGame(input);
     }
     if (playing || frameByFrame) {
+	  
       var now = performance.now();
       var dt = now - lastUpdate;
       lastUpdate = now;
@@ -904,6 +905,21 @@ export function gameTick (oldInputBuffers){
       }
     } else {
       if (!gameEnd) {
+		//fg1.clearRect(0,0,1200,750);
+		//fg2.clearRect(0,0,1200,750);
+        clearScreen();
+		if (!starting) {
+	        targetTimerTick();		
+		}
+        if (getShowSFX()) {
+          drawBackground();
+        }
+        drawStage();
+        renderPlayer(targetBuilder);
+        renderArticles();
+        renderVfx();
+        renderOverlay(true);
+		renderForeground();
         input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
       }
     }
@@ -937,7 +953,7 @@ export function gameTick (oldInputBuffers){
     }
     executeHits(input);
     articlesHitDetection();
-    executeArticleHits(input);
+    executeArticleHits();
     if (!starting && !versusMode) {
       matchTimerTick(input);
     } else {
@@ -1053,7 +1069,7 @@ export function renderTick (){
         renderPlayer(targetBuilder);
         renderArticles();
         renderVfx();
-        renderOverlay(false);
+        renderOverlay(true);
 
         if (showDebug) {
           var diff = performance.now() - rStart;
