@@ -39,6 +39,8 @@ import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData} from "./input";
 /*globals performance*/
 
+export const holiday = 1;
+
 export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
@@ -1147,8 +1149,10 @@ export function initializePlayers (i,target){
 
 export function startGame (){
   setVsStage(stageSelect);
-    setBackgroundType(Math.round(Math.random()));
-  createSnow();
+  setBackgroundType(Math.round(Math.random()));
+  if (holiday == 1){
+    createSnow();
+  }
   changeGamemode(3);
   resetVfxQueue();
   for (var n = 0; n < 4; n++) {

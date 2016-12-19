@@ -1,4 +1,4 @@
-import {changeGamemode,ui, layers, bg1} from "main/main";
+import {changeGamemode,ui, layers, bg1, fg1, holiday} from "main/main";
 import {drawArrayPathCompress} from "main/render";
 /* eslint-disable */
 
@@ -7,9 +7,16 @@ var hohlogo = new Image();
 hohlogo.src = "assets/hohlogo.png";
 var schmoologo = new Image();
 schmoologo.src = "assets/schmoologo.png";
+let christmasbackdrop = new Image();
+christmasbackdrop.src = "assets/christmasbackdrop.png";
 
 export function drawStartUp (){
   startUpTimer++;
+  if (startUpTimer == 1 && holiday == 1){
+    fg1.globalAlpha = 0.3;
+    fg1.drawImage(christmasbackdrop,0,0,1200,750);
+    fg1.globalAlpha = 1;
+  }
   ui.clearRect(0, 0, layers.UI.width, layers.UI.height);
   bg1.fillStyle = "rgb(0,0,0)";
   bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
@@ -20,7 +27,7 @@ export function drawStartUp (){
     drawArrayPathCompress(ui, "rgb(255,255,255)", 1, 300, 650, LOGO, 0.5, 0.5, 0, 0, 0);
     ui.clip();
     ui.drawImage(schmoologo, 100, Math.round(200 - startUpTimer / 3));
-    drawArrayPathCompress(ui, "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
+    drawArrayPathCompress(ui, (holiday == 1) ? "rgb(76,76,76)" : "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
     ui.restore();
     if (startUpTimer > 180) {
       ui.fillStyle = "rgba(0,0,0," + Math.min(1, (startUpTimer - 180) / 20) + ")";

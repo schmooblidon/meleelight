@@ -13,6 +13,7 @@ import {
     tagText
     , gameMode
     , startTimer
+    , holiday
 } from "main/main";
 import {gameSettings} from "settings";
 import {makeColour} from "main/vfx/makeColour";
@@ -396,7 +397,7 @@ export function renderOverlay(showStock) {
     }
     if (showStock) {
         ui.font = "900 53px Arial";
-        ui.lineWidth = 2;
+        ui.lineWidth = (holiday == 1) ? 3 : 2;
         ui.textAlign = "end";
         ui.save();
         ui.scale(0.8, 1);

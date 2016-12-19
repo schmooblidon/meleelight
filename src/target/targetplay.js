@@ -11,6 +11,7 @@ import {player, changeGamemode,  initializePlayers, matchTimer
 
     , setEndTargetGame
     , setStage
+    , holiday
 } from "main/main";
 import {renderPlayer} from "main/render";
 import {sounds} from "main/sfx";
@@ -133,7 +134,9 @@ export function startTargetGame (p,test){
   if (test){
     setActiveStageBuilderTestStage(stageTemp);
   }
-  createSnow();
+  if (holiday == 1){
+    createSnow();
+  }
   targetTesting = test;
     setBackgroundType(Math.round(Math.random()));
   changeGamemode(5);
