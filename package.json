@@ -39,8 +39,8 @@
     "express": "^4.14.0",
     "howler": "^2.0.1",
     "jquery": "1.11.3",
-    "peer": "^0.2.8"
-    "yargs": "^6.4.0",
+    "peer": "^0.2.8",
+    "yargs": "^6.4.0"
   },
   "devDependencies": {
     "webpack": "^1.13.3",
