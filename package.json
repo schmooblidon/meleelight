@@ -33,19 +33,19 @@
   "homepage": "https://github.com/schmooblidon/meleelight#readme",
   "dependencies": {
 
+    "fs-extra": "^1.0.0",
+
     "can": "^3.2.2",
     "express": "^4.14.0",
     "howler": "^2.0.1",
     "jquery": "1.11.3",
     "peer": "^0.2.8"
-
+    "yargs": "^6.4.0",
   },
   "devDependencies": {
-    "fs-extra": "^1.0.0",
-
     "webpack": "^1.13.3",
     "webpack-notifier": "^1.4.1",
-    "yargs": "^6.4.0",
+
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.8",
