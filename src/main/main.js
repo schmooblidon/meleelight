@@ -1068,7 +1068,7 @@ let otherFrame = true;
 let fps30 = false;
 export function renderTick (){
   window.requestAnimationFrame(renderTick);
-  otherFrame ^= true
+  otherFrame ^= true;
   if ((fps30 && otherFrame) || !fps30) {
     //console.log("------");
     if (gameMode == 20) {
@@ -1343,7 +1343,7 @@ export function finishGame (input){
     }
   } else {
     if (matchTimer <= 0) {
-      text = "Time!"
+      text = "Time!";
       sounds.time.play();
       textGrad.addColorStop(0, "black");
       textGrad.addColorStop(0.5, "black");

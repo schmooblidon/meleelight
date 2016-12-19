@@ -14,7 +14,7 @@ import {
   setCurrentPlayer, player
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
-
+import msgpack from 'msgpack-lite';
 
 let peer = null;
 let peerId = null;
@@ -57,7 +57,7 @@ function startRoom() {
     conn.on('data', function (d) {
      // console.log("recieving data");
       // console.log(data);
-     let data = JSON.parse(atob(d));
+     let data = msgpack.decode(d);
       if (data.syncHost) {
         syncHost(ports);
       }
@@ -102,7 +102,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
       for (let key of Object.keys(peerConnections)) {
         if (key) {
        //   console.log("sending inputs");
-        let payload = btoa(JSON.stringify({"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":player[playerSlot]}));
+        let payload = msgpack.encode({"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":player[playerSlot]});
           c.send(payload);
         }
       }

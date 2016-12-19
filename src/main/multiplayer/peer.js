@@ -240,21 +240,27 @@
     }
 
 // Returns true if the send succeeds.
-    DataConnection.prototype._trySend = function (msg) {
-      try {
-        this._dc.send(msg);
-      } catch (e) {
-        this._buffering = true;
-
-        var self = this;
-        setTimeout(function () {
+    DataConnection.prototype._trySend = function(msg) {
+      var self = this;
+      function buffering() {
+        self._buffering = true;
+        setTimeout(function() {
           // Try again.
           self._buffering = false;
           self._tryBuffer();
         }, 100);
         return false;
       }
-      return true;
+      if (self._dc.bufferedAmount > 15 * 1024 * 1024) {
+        return buffering();
+      } else {
+        try {
+          this._dc.send(msg);
+        } catch (e) {
+          return buffering();
+        }
+        return true;
+      }
     }
 
 // Try to send the first message in the buffer.
