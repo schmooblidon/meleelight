@@ -593,7 +593,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       pause[i][0] = false;
     }
 
-    if ((tempBuffer[0].z  || tempBuffer[1].z) && (gameMode != 5)) {
+    if ((tempBuffer[0].z  || tempBuffer[1].z)) {
       frameAdvance[i][0] = true;
     } 
     else {
@@ -905,22 +905,22 @@ export function gameTick (oldInputBuffers){
       }
     } else {
       if (!gameEnd) {
-		//fg1.clearRect(0,0,1200,750);
-		//fg2.clearRect(0,0,1200,750);
+		    //fg1.clearRect(0,0,1200,750);
+		    //fg2.clearRect(0,0,1200,750);
         clearScreen();
-		if (!starting) {
-	        targetTimerTick();		
-		}
-        if (getShowSFX()) {
-          drawBackground();
-        }
-        drawStage();
-        renderPlayer(targetBuilder);
-        renderArticles();
-        renderVfx();
-        renderOverlay(true);
-		renderForeground();
-        input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+		  if (!starting) {
+	      targetTimerTick();		
+		  }
+      if (getShowSFX()) {
+        drawBackground();
+      }
+      drawStage();
+      renderPlayer(targetBuilder);
+      renderArticles();
+      renderVfx();
+      renderOverlay(true);
+		  renderForeground();
+      input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
       }
     }
   } else if (playing || frameByFrame) {
