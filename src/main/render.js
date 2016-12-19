@@ -10,9 +10,12 @@ import {
     palettes,
     pPal,
     hasTag,
-    tagText
-    , gameMode
-    , startTimer
+    tagText, 
+	gameMode,
+    startTimer,
+	fg1,
+	bg1,
+	bg2
 } from "main/main";
 import {gameSettings} from "settings";
 import {makeColour} from "main/vfx/makeColour";
@@ -460,6 +463,9 @@ export function setLostStockQueue(index,val){
 
 export function renderForeground() {
     // pause UI
+	fg1.textAlign = "center";
+    fg2.textAlign = "center";
+	ui.textAlign = "left";
     ui.fillStyle = "#8e8e8e";
     ui.save();
     ui.fillRect(45, 48, 300, 24);
