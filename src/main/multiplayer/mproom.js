@@ -14,7 +14,6 @@ import {
   setCurrentPlayer, player
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
-import msgpack from 'msgpack-lite';
 
 let peer = null;
 let peerId = null;
@@ -57,13 +56,13 @@ function startRoom() {
     conn.on('data', function (d) {
      // console.log("recieving data");
       // console.log(data);
-     let data = msgpack.decode(d);
+     let data = d;
       if (data.syncHost) {
         syncHost(ports);
       }
       if (data.inputBuffer && (data.playerSlot !== undefined)) {
         saveNetworkInputs(data.playerSlot,data.inputBuffer);
-        player[data.playerSlot] = deepCopyObject(true, {},data.playerInfo);
+        player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot],data.playerInfo);
       }
     });
     //oops?
@@ -102,7 +101,11 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
       for (let key of Object.keys(peerConnections)) {
         if (key) {
        //   console.log("sending inputs");
-        let payload = msgpack.encode({"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":player[playerSlot]});
+          //dont be lazy like me;
+        let playerPayload =  deepCopyObject(true,{},player[playerSlot]);
+        delete playerPayload.charAttributes;
+        delete playerPayload.charHitboxes;
+        let payload = {"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":playerPayload};
           c.send(payload);
         }
       }
@@ -160,7 +163,7 @@ function syncClient(exactportnumber) {
   //reassign current players
   for (let i = 0; i < playersToBeReassigned; i++) {
     if (tempCurrentPlayers[i] != -1)
-      addPlayer(portSnapshot, mTypeSnapshot[i]);
+      addPlayer(portSnapshot - 1, mTypeSnapshot[i]);
     portSnapshot++;
   }
 }
@@ -192,7 +195,7 @@ function connect(c) {
 
       if (data.inputBuffer && (data.playerSlot !== undefined)) {
         saveNetworkInputs(data.playerSlot, data.inputBuffer);
-        player[data.playerSlot] = deepCopyObject(true, {},data.playerInfo);
+        player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot],data.playerInfo);
       }
     });
     c.on('close', () => {
@@ -232,7 +235,7 @@ function connectToUser(userName) {
 
     const playerConnection = peer.connect(requestedPeer, {
       label: 'mpRoom',
-      serialization: 'none',
+      serialization: 'json',
       reliable:true
     });
 

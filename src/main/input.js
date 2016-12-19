@@ -6,7 +6,7 @@ import {
 } from "main/linAlg";
 import {Vec2D} from "./util/Vec2D";
 import {keyMap} from "../settings";
-import {playing} from "./main";
+import {playing, currentPlayers} from "./main";
 import {retrieveNetworkInputs, giveInputs} from "./multiplayer/mproom";
 
 export const button = {
@@ -215,7 +215,7 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
 function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
   let input = nullInput();
 
-  let gamepad = navigator.getGamepads()[controllerIndex];
+  let gamepad = navigator.getGamepads()[currentPlayers[controllerIndex]];
 
 
 

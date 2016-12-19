@@ -127,7 +127,6 @@ export function playerObject(character, pos, face) {
   this.actionState = "ENTRANCE";
   this.prevActionState = "";
   this.timer = 0;
-  this.inputs = new inputObject();
   this.charAttributes = chars[character].attributes;
   this.charHitboxes = chars[character].hitboxes;
   this.showLedgeGrabBox = false;
