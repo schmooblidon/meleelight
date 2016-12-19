@@ -10,7 +10,8 @@
     "release": "node bin/release.js",
     "serve": "node app",
     "buildall": "npm run animations && npm run build ",
-    "heroku-postbuild": "npm run buildall"
+    "heroku-postbuild": "npm run buildall",
+    "postinstall": " npm run animations && npm run build "
   },
   "engines": {
     "node": "7.2.0",
