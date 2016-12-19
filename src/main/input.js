@@ -428,6 +428,8 @@ var controllerIDMap = new Map();
 controllerIDMap.set("Mayflash", 0); // Mayflash 4 port, ID: MAYFLASH GameCube Controller Adapter
 controllerIDMap.set("0079-1843", 0);
 controllerIDMap.set("79-1843", 0);
+controllerIDMap.set("0079-1847", 0);
+controllerIDMap.set("79-1847", 0);
 
 controllerIDMap.set("NEXILUX", 0); // NEXILUX GAMECUBE Controller Adapter
 controllerIDMap.set("0079-1845", 0);
