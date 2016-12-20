@@ -150,7 +150,7 @@ export function tssControls (i, input){
       }
       else {
         setCookie("custom"+customTargetStages.length,code,36500);
-          setCustomTargetStages(customTargetStages.length, {});
+          //setCustomTargetStages(customTargetStages.length, {});
           setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
         redrawCustomStageBoxes();
       }
