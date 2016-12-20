@@ -37,7 +37,7 @@ import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData, nullInput} from "./input";
-import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs} from "./multiplayer/mproom";
+import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,connectToMPServer} from "./multiplayer/streamclient";
 import {deepCopyObject} from "./util/deepCopyObject";
 /*globals performance*/
 
@@ -541,7 +541,11 @@ export function changeGamemode (newGamemode){
       // Multiplayer Modes
     case 14:
       drawCSSInit();
-      connectToMPRoom();
+      // connectToMPRoom();
+      break;
+    case 15:
+      drawCSSInit();
+      connectToMPServer();
 
       break;
       // startup

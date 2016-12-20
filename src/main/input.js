@@ -7,7 +7,7 @@ import {
 import {Vec2D} from "./util/Vec2D";
 import {keyMap} from "../settings";
 import {playing, currentPlayers} from "./main";
-import {retrieveNetworkInputs, giveInputs} from "./multiplayer/mproom";
+import {retrieveNetworkInputs, giveInputs} from "./multiplayer/streamclient";
 
 export const button = {
   "a" : 0, 

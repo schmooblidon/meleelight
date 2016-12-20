@@ -92,9 +92,9 @@ const peerConnections = {};
 const playerInputBuffer = [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
 let loadingRoom = false;
 
-export const giveInputs = {};
+ const giveInputs = {};
 
-export function setNetInputFlag(name, val) {
+ function setNetInputFlag(name, val) {
   giveInputs[name] = val;
 }
 
@@ -117,7 +117,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
   });
 }
 
-export function updateNetworkInputs(inputBuffer, playerSlot) {
+ function updateNetworkInputs(inputBuffer, playerSlot) {
 
   playerInputBuffer[playerSlot][0] = inputBuffer;
 
@@ -125,18 +125,18 @@ export function updateNetworkInputs(inputBuffer, playerSlot) {
 
 }
 
-export function saveNetworkInputs(playerSlot, inputBuffer) {
+ function saveNetworkInputs(playerSlot, inputBuffer) {
   playerInputBuffer[playerSlot][0] = inputBuffer;
 
 }
 
-export function retrieveNetworkInputs(playerSlot) {
+ function retrieveNetworkInputs(playerSlot) {
   return playerInputBuffer[playerSlot][0];
 }
 
 
 //connect to global chat
-export function connectToMPRoom() {
+ function connectToMPRoom() {
 
   startRoom();
   loadingRoom = true;

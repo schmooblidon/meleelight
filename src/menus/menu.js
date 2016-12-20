@@ -8,7 +8,7 @@ import {setTargetPointerPos} from "../stages/targetselect";
 import {setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
 import {music} from "../main/sfx";
-import {connectToMPRoom} from "../main/multiplayer/mproom";
+import {connectToMPServer} from "../main/multiplayer/streamclient";
 /* eslint-disable */
 
 let menuSelected = 0;
@@ -95,19 +95,21 @@ export function menuMove(i, input) {
     } else if (menuMode === MPMENU) {
 
       if (menuSelected == LOCALVS) {
-        changeGamemode(2);
-        positionPlayersInCSS();
+       // changeGamemode(2);
+       // positionPlayersInCSS();
       } else {
         if (menuSelected == MATCHMAKING) {
 
         } else {
           if (menuSelected == P2PMP) {
-             connectToMPRoom();
-            changeGamemode(2);
-            positionPlayersInCSS();
+            //  connectToMPRoom();
+            // changeGamemode(2);
+            // positionPlayersInCSS();
           } else {
             if (menuSelected == SERVERMP) {
-
+              connectToMPServer();
+              changeGamemode(2);
+              positionPlayersInCSS();
             }
           }
         }

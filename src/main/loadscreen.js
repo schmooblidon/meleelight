@@ -1,11 +1,10 @@
 let scriptsLoaded = 0;
 const scripts = [{
   path: "./js/main.js",
-  // path: "https://raw.githubusercontent.com/schmooblidon/meleelight/download/js/main.js",
   text: "core code",
   size: 1.8 * 1024 * 1024,
   loaded: 0,
-} ];
+}];
 
 const totalSize = scripts.reduce((prev, script) => prev + script.size, 0);
 
