@@ -929,7 +929,9 @@ export function gameTick (oldInputBuffers){
     executeArticles();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+        if( !starting) {
+          input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+        }
         update(i,input);
       }
     }
