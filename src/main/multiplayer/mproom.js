@@ -25,8 +25,7 @@ function startRoom() {
     path: '/peerjs',
     debug: 3,
     config: {'iceServers': [
-      { url: 'stun:stunsturns.herokuapp.com:37708' },
-      { url: 'turn:stunsturns.herokuapp.com:80', credential: 'marlonmckinnie@gmail.com' }
+      { url: 'stun:stunsturns.herokuapp.com:37708' }
     ]}
   });
 
