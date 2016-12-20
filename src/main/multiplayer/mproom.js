@@ -23,7 +23,11 @@ function startRoom() {
     host: location.hostname,
     port: location.port || (location.protocol === 'https:' ? 443 : 80),
     path: '/peerjs',
-    debug: 3
+    debug: 3,
+    config: {'iceServers': [
+      { url: 'stun:stunsturns.herokuapp.com:37708' },
+      { url: 'turn:stunsturns.herokuapp.com:80', credential: 'marlonmckinnie@gmail.com' }
+    ]}
   });
 
   //set up room for people to join
