@@ -13,9 +13,7 @@ import {
     tagText, 
 	gameMode,
     startTimer,
-	fg1,
-	bg1,
-	bg2
+     holiday
 } from "main/main";
 import {gameSettings} from "settings";
 import {makeColour} from "main/vfx/makeColour";
@@ -399,7 +397,7 @@ export function renderOverlay(showStock) {
     }
     if (showStock) {
         ui.font = "900 53px Arial";
-        ui.lineWidth = 2;
+        ui.lineWidth = (holiday == 1) ? 3 : 2;
         ui.textAlign = "end";
         ui.save();
         ui.scale(0.8, 1);
@@ -463,9 +461,6 @@ export function setLostStockQueue(index,val){
 
 export function renderForeground() {
     // pause UI
-	fg1.textAlign = "center";
-    fg2.textAlign = "center";
-	ui.textAlign = "left";
     ui.fillStyle = "#8e8e8e";
     ui.save();
     ui.fillRect(45, 48, 300, 24);

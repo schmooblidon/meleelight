@@ -6,7 +6,7 @@ import {drawStartUp} from 'menus/startup';
 import {menuMove, drawMainMenuInit, drawMainMenu} from "menus/menu";
 import {sounds} from "main/sfx";
 import {drawStartScreenInit, drawStartScreen} from "menus/startscreen";
-import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType} from "stages/stagerender";
+import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType, createSnow} from "stages/stagerender";
 import {drawSSSInit, sssControls, drawSSS} from "menus/stageselect";
 import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "menus/audiomenu";
 import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "menus/gameplaymenu";
@@ -38,6 +38,9 @@ import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData} from "./input";
 /*globals performance*/
+
+export const holiday = 0;
+export var snowCount = 150;
 
 export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
@@ -103,12 +106,12 @@ export let versusMode = 0;
 export const randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
 
 export const palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
-["rgb(4, 255, 134)","rgb(154, 254, 170)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
+["rgb(95, 216, 84)","rgb(184, 253, 154)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
 ["rgb(5, 195, 255)","rgb(121, 223, 255)","rgba(218, 96, 254, ","rgb(231, 134, 255)","rgba(230, 144, 255, "],
 ["rgb(255, 187, 70)","rgb(248, 255, 122)","rgba(80, 182, 255, ","rgb(255, 142, 70)","rgba(139, 203, 249, "],
 ["rgb(177, 89, 255)","rgb(203, 144, 255)","rgba(144, 255, 110, ","rgb(247, 126, 250)","rgba(190, 255, 170, "],
 ["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgb(255, 112, 66)","rgba(111, 214, 168, "],
-["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgb(191, 119, 119)","rgba(175, 172, 172, "]];
+["rgb(232, 232, 208)","rgb(255, 255, 255)","rgba(244, 255, 112, ","rgb(191, 119, 119)","rgba(255, 255, 200, "]];
 
 
 export const hasTag = [false,false,false,false];
@@ -1163,7 +1166,10 @@ export function initializePlayers (i,target){
 
 export function startGame (){
   setVsStage(stageSelect);
-    setBackgroundType(Math.round(Math.random()));
+  setBackgroundType(Math.round(Math.random()));
+  if (holiday == 1){
+    createSnow();
+  }
   changeGamemode(3);
   resetVfxQueue();
   for (var n = 0; n < 4; n++) {
@@ -1344,6 +1350,9 @@ export function finishGame (input){
 }
 
 export function start (){
+  if (holiday === 1){
+    $("#layerButton").after('<div id="snowButton" class="gameButton" style="width:90px"><img src="assets/christmas/snowflake.png" height=17 width=17 style="display:inline-block"/><p style="width:30px;display:inline-block"><span id="snowButtonEdit">150</span></p><div id="snowMinus" class="snowControl" style="display:inline-block;padding:3px"><p style="padding:0;font-size:20px">-</p></div><div id="snowPlus" style="display:inline-block;padding:3px"><p style="padding:0;font-size:17px">+</p></div></div>');
+  }
   for (var i=0;i<4;i++){
     buildPlayerObject(i);
     player[i].phys.face = 1;
@@ -1506,6 +1515,22 @@ export function start (){
   }, function() {
     $("#appsDropdown").hide();
   });
+  if (holiday === 1){
+    $("#snowMinus").click(function() {
+      snowCount-=20;
+      if (snowCount < 0){
+        snowCount = 0;
+      }
+      $("#snowButtonEdit").text(snowCount);
+    });
+    $("#snowPlus").click(function() {
+      snowCount+=20;
+      if (snowCount > 1200){
+        snowCount = 1200;
+      }
+      $("#snowButtonEdit").text(snowCount);
+    });
+  }
   resize();
 }
 window.start = start;
