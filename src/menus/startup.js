@@ -8,7 +8,7 @@ hohlogo.src = "assets/hohlogo.png";
 var schmoologo = new Image();
 schmoologo.src = "assets/schmoologo.png";
 let christmasbackdrop = new Image();
-christmasbackdrop.src = "assets/christmasbackdrop.png";
+christmasbackdrop.src = "assets/christmas/christmasbackdrop.png";
 
 export function drawStartUp (){
   startUpTimer++;

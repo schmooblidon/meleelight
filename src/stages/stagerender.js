@@ -1,5 +1,5 @@
 import {getTransparency} from "main/vfx/transparency";
-import {bg1, bg2, fg1, fg2, layers, gameMode, holiday} from "main/main";
+import {bg1, bg2, fg1, fg2, layers, gameMode, holiday, snowCount} from "main/main";
 import {targetDestroyed} from "target/targetplay";
 import {rotateVector, twoPi} from "main/render";
 import {activeStage} from "stages/activeStage";
@@ -26,17 +26,23 @@ for (var i = 0; i < 5; i++) {
 }
 let ang = 0;
 export let backgroundType = 0;
-
-export let snowCount = 70;
 export let snowMeltTime = 200;
 
 let snowBalls = [];
 
-const wreath = new Image();
-wreath.src = "assets/wreath.png";
+const targetbauble = new Image();
+targetbauble.src = "assets/christmas/targetbauble.png";
 
 const scandypattern = new Image();
-scandypattern.src = "assets/scandypattern.png";
+scandypattern.src = "assets/christmas/scandypattern.png";
+
+const fabric = new Image();
+fabric.src = "assets/christmas/fabric.png";
+
+const randall = [new Image(),new Image(),new Image()];
+randall[0].src = "assets/stage/randall1.png";
+randall[1].src = "assets/stage/randall2.png";
+randall[2].src = "assets/stage/randall3.png";
 
 export function drawStageInit() {
     fg1.strokeStyle = (holiday == 1) ? "white" : "#db80cc";
@@ -59,7 +65,15 @@ export function drawStageInit() {
     }
 
     if (holiday == 1){
-
+      fg1.save();
+      fg1.globalAlpha = 1;
+      fg1.beginPath();
+      for (var j = 0; j < activeStage.box.length; j++) {
+        fg1.rect((activeStage.box[j].min.x * activeStage.scale) + activeStage.offset[0], (activeStage.box[j].max.y * -activeStage.scale) + activeStage.offset[1], (activeStage.box[j].max.x - activeStage.box[j].min.x) * activeStage.scale, (activeStage.box[j].max.y - activeStage.box[j].min.y) * activeStage.scale);
+      }
+      fg1.clip();
+      fg1.drawImage(scandypattern,0,0,1200,750);
+      fg1.restore();
       fg1.save();
       fg1.beginPath();
       for (var j = 0; j < activeStage.platform.length; j++) {
@@ -81,17 +95,6 @@ export function drawStageInit() {
       }
       fg1.stroke();
       fg1.restore();
-      
-      bg1.save();
-      bg1.globalAlpha = 1;
-      bg1.beginPath();
-      for (var j = 0; j < activeStage.box.length; j++) {
-        bg1.rect((activeStage.box[j].min.x * activeStage.scale) + activeStage.offset[0], (activeStage.box[j].max.y * -activeStage.scale) + activeStage.offset[1], (activeStage.box[j].max.x - activeStage.box[j].min.x) * activeStage.scale, (activeStage.box[j].max.y - activeStage.box[j].min.y) * activeStage.scale);
-      }
-      bg1.clip();
-      bg1.drawImage(scandypattern,0,0,1200,750);
-      bg1.restore();
-
     } else {
       fg1.strokeStyle = "#4794c6";
       for (var j = 0; j < activeStage.platform.length; j++) {
@@ -121,19 +124,82 @@ export function drawStageInit() {
         fg1.closePath();
         fg1.stroke();
     }
+
+    if (holiday == 1){
+      var ex1 = 0;
+      var ex2 = 0;
+      fg1.save();
+      fg1.lineCap="round";
+      for (var n = 0; n < 2; n++){
+        if (n == 0){
+          ex1 = 0;
+          ex2 = Math.floor(1.5*activeStage.scale);
+          fg1.beginPath();
+        }
+        else {
+          ex1 = Math.floor(1*activeStage.scale);
+          ex2 = Math.floor(-1*activeStage.scale);
+          fg1.setLineDash([Math.floor(1.5*activeStage.scale), Math.floor(3.5*activeStage.scale)]);
+          
+        }
+        for (var j = 0; j < activeStage.ledge.length; j++) {
+          var e = activeStage.ledge[j];
+          if (n == 1){
+            fg1.lineWidth = Math.floor(0.8*activeStage.scale)+1;
+            fg1.strokeStyle = "#43401D";
+            fg1.beginPath();
+          }
+          if (e[1]) {
+              fg1.moveTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0] -ex1, (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1] +ex2);
+              fg1.lineTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0] -ex1, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex1);
+              fg1.lineTo((activeStage.box[e[0]].max.x - Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0] -ex2, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex1);
+          }
+          else {
+              fg1.moveTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0] +ex1, (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1] +ex2);
+              fg1.lineTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0] +ex1, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex1);
+              fg1.lineTo((activeStage.box[e[0]].min.x + Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0] +ex2, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex1);
+          }
+          if (n == 1) {
+            fg1.closePath();
+            fg1.stroke();
+            fg1.lineWidth = Math.floor(0.8*activeStage.scale);
+            fg1.strokeStyle = "white";
+            fg1.stroke();
+          }   
+        }
+        if (n == 0) {
+          fg1.closePath();
+          fg1.save();
+          fg1.clip();
+          fg1.drawImage(fabric,0,0);
+          fg1.restore();
+        }  
+
+      }
+      fg1.restore();
+      fg1.lineCap = "butt";
+      fg1.lineWidth = 1;
+    }
 };
 
 let swirlTimer = 0;
 let swirlSwitch = false;
 
+let randallTimer = 0;
+
 export function drawStage() {
     if (activeStage.movingPlat > -1) {
-        fg2.strokeStyle = (holiday == 1) ? "white" : "#4794c6";
+        /*fg2.strokeStyle = (holiday == 1) ? "white" : "#4794c6";
         fg2.beginPath();
         fg2.moveTo((activeStage.platform[activeStage.movingPlat][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[activeStage.movingPlat][0].y * -activeStage.scale) + activeStage.offset[1]);
         fg2.lineTo((activeStage.platform[activeStage.movingPlat][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[activeStage.movingPlat][1].y * -activeStage.scale) + activeStage.offset[1]);
         fg2.closePath();
-        fg2.stroke();
+        fg2.stroke();*/
+        randallTimer++;
+        if (randallTimer === 30){
+          randallTimer = 0;
+        }
+        bg2.drawImage(randall[Math.floor(randallTimer/10)],(activeStage.platform[activeStage.movingPlat][0].x * activeStage.scale) + activeStage.offset[0]-20, (activeStage.platform[activeStage.movingPlat][0].y * -activeStage.scale) + activeStage.offset[1]-20,100,100);
     }
     fg2.fillStyle = boxFill;
 
@@ -143,40 +209,52 @@ export function drawStage() {
       }
     }
 
-    fg2.strokeStyle = (holiday == 1) ? "white" : "#e7a44c";
-    for (var j = 0; j < activeStage.ledge.length; j++) {
-        var e = activeStage.ledge[j];
+    fg2.strokeStyle = "#e7a44c";
+    
+    var ex = 0;
+    if (holiday != 1){
+      for (var j = 0; j < activeStage.ledge.length; j++) {
+        var e = activeStage.ledge[j];   
         fg2.beginPath();
         if (e[1]) {
-            fg2.moveTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0], (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1]);
-            fg2.lineTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0], activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1]);
-            fg2.lineTo((activeStage.box[e[0]].max.x - Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0], activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1]);
+            fg2.moveTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0] -ex, (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1] +ex);
+            fg2.lineTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0] -ex, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex);
+            fg2.lineTo((activeStage.box[e[0]].max.x - Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0] -ex, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex);
         }
         else {
-            fg2.moveTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0], (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1]);
-            fg2.lineTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0], activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1]);
-            fg2.lineTo((activeStage.box[e[0]].min.x + Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0], activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1]);
+            fg2.moveTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0] +ex, (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1] +ex);
+            fg2.lineTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0] +ex, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex);
+            fg2.lineTo((activeStage.box[e[0]].min.x + Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0] +ex, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex);
         }
         fg2.closePath();
         fg2.stroke();
         fg2.fill();
         fg2.fill();
+      }
     }
+      
     if (typeof activeStage.target != "undefined") {
+        fg2.strokeStyle = "rgba(255,255,255,0.4)";
+        fg2.lineWidth = 1;
         for (var k = 0; k < activeStage.target.length; k++) {
             if (!targetDestroyed[k]) {
                 var x = activeStage.target[k].x * activeStage.scale + activeStage.offset[0];
                 var y = activeStage.target[k].y * -activeStage.scale + activeStage.offset[1];
-                for (var j = 0; j < 5; j++) {
+                if (holiday == 1){
+                  fg2.drawImage(targetbauble,x-17,y-25,35,43);
+                  fg2.beginPath();
+                  fg2.moveTo(x,y-23);
+                  fg2.lineTo(x,0);
+                  fg2.closePath();
+                  fg2.stroke();
+                } else {
+                  for (var j = 0; j < 5; j++) {
                     fg2.fillStyle = (j % 2) ? "white" : "red";
                     fg2.beginPath();
                     fg2.arc(x, y, (25 - j * 5) * (activeStage.scale / 4.5), 0, twoPi);
                     fg2.closePath();
                     fg2.fill();
-
-                }
-                if (holiday == 1){
-                  fg2.drawImage(wreath,x-27,y-22,54,54)
+                  }
                 }
             }
         }
@@ -368,12 +446,12 @@ export function drawStars() {
 };
 
 export function snowBall(){
-  this.size = (Math.random() > 0.3) ? Math.floor(Math.random()*3)+1 : Math.floor(Math.random()*7)+4;
+  this.size = (Math.random() > 0.02) ? Math.floor(Math.random()*3)+1 : Math.floor(Math.random()*3)+5;
   this.velx = this.size/5*(1-Math.random()*0.5);
   this.vely = Math.max(1,this.size/6);
   this.landed = false;
   this.melted = 0;
-  this.x = activeStage.blastzone.min.x+40+Math.random()*(activeStage.blastzone.max.x - activeStage.blastzone.min.x - 40);
+  this.x = activeStage.blastzone.min.x+40+Math.random()*(activeStage.blastzone.max.x - activeStage.blastzone.min.x - 40)+(this.size >= 5 ? Math.random()*60 : 0);
   this.y = activeStage.blastzone.max.y-60;
   this.prevX = this.x;
   this.prevY = this.y;
@@ -413,6 +491,8 @@ export function snowCollision(i){
 export function drawSnow(){
   var melting = [];
   bg2.fillStyle = "white";
+  fg2.fillStyle = "white";
+  fg2.beginPath();
   bg2.beginPath();
   for (var i=0;i<snowCount;i++){
     if (snowBalls[i].landed){
@@ -438,16 +518,24 @@ export function drawSnow(){
         if (snowBalls[i].size >= 2 && snowBalls[i].size < 5){
           if (snowCollision(i)){
             snowBalls[i].landed = true;
-            snowBalls[i].size += 0.5;
+            snowBalls[i].size += 1;
           }
         }
       }
       var x = (snowBalls[i].x*activeStage.scale)+activeStage.offset[0];
       var y = (snowBalls[i].y*-activeStage.scale)+activeStage.offset[1];
-      bg2.moveTo(x,y);
-      bg2.arc(x,y,snowBalls[i].size,0,twoPi);
+      if (snowBalls[i].size >= 5){
+        fg2.moveTo(x,y);
+        fg2.arc(x,y,snowBalls[i].size,0,twoPi);
+      }
+      else {
+        bg2.moveTo(x,y);
+        bg2.arc(x,y,snowBalls[i].size,0,twoPi);
+      }
     }
   }
+  fg2.closePath();
+  fg2.fill();
   bg2.closePath();
   bg2.fill();
   for (var i=0;i<melting.length;i++){

@@ -39,7 +39,8 @@ import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData} from "./input";
 /*globals performance*/
 
-export const holiday = 1;
+export const holiday = 0;
+export var snowCount = 150;
 
 export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
@@ -1333,6 +1334,9 @@ export function finishGame (input){
 }
 
 export function start (){
+  if (holiday === 1){
+    $("#layerButton").after('<div id="snowButton" class="gameButton" style="width:90px"><img src="assets/christmas/snowflake.png" height=17 width=17 style="display:inline-block"/><p style="width:30px;display:inline-block"><span id="snowButtonEdit">150</span></p><div id="snowMinus" class="snowControl" style="display:inline-block;padding:3px"><p style="padding:0;font-size:20px">-</p></div><div id="snowPlus" style="display:inline-block;padding:3px"><p style="padding:0;font-size:17px">+</p></div></div>');
+  }
   for (var i=0;i<4;i++){
     buildPlayerObject(i);
     player[i].phys.face = 1;
@@ -1495,6 +1499,22 @@ export function start (){
   }, function() {
     $("#appsDropdown").hide();
   });
+  if (holiday === 1){
+    $("#snowMinus").click(function() {
+      snowCount-=20;
+      if (snowCount < 0){
+        snowCount = 0;
+      }
+      $("#snowButtonEdit").text(snowCount);
+    });
+    $("#snowPlus").click(function() {
+      snowCount+=20;
+      if (snowCount > 1200){
+        snowCount = 1200;
+      }
+      $("#snowButtonEdit").text(snowCount);
+    });
+  }
   resize();
 }
 window.start = start;
