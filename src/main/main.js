@@ -39,7 +39,7 @@ import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData} from "./input";
 /*globals performance*/
 
-export const holiday = 0;
+export const holiday = 1;
 export var snowCount = 150;
 
 export const player = [0,0,0,0];
