@@ -372,10 +372,11 @@ const rockx360Map    = [ 0, 1, 2, 3, 5, 4 , 4 , 7, 12, 15, 13, 14,  0,   1,   3,
 // ID number 10 reserved for keyboard
                     //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 const wiiULinuxMap   = [ 0, 3, 1, 2, 6, 5 , 4 , 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 11, Official Wii U GC Adapter using wii-u-gc-adapter on Linux
+const tigerChromeMap = [ 0, 1, 2, 3, 6, 5 , 4 , 7, 11, 9 , 10, 8 ,  0,   1,   2,   5,  7,  6  ]; // ID 12, TigerGame 3-in-1 adapter on chrome
                     //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 
 export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map, rockx360Map
-                              , null      , wiiULinuxMap];
+                              , null      , wiiULinuxMap, tigerChromeMap];
 
 // Checking gamepad inputs are well defined
 export function gpdaxis ( gpd, gpdID, ax ) { // gpd.axes[n] but checking axis index is in range
@@ -464,8 +465,8 @@ controllerIDMap.set("045e-028e", 3);
 controllerIDMap.set("45e-28e", 3);
 
 // ID 4, TigerGame 3-in-1 adapter
-controllerIDMap.set("TigerGame", 4); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
-controllerIDMap.set("0926-2526", 4);
+// has a different mapping on Chrome, so no ID string check
+controllerIDMap.set("0926-2526", 4); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
 controllerIDMap.set("926-2526", 4);
 
 // ID 5, Retrolink adapter
@@ -499,6 +500,11 @@ controllerIDMap.set("e6f-11f", 9);
 // ID 11, Nintendo Wii U Adapter on Linux using wii-u-gc-adapter
 controllerIDMap.set("0000-0000-Wii U GameCube Adapter", 11);
 
+// ID 12, TigerGame 3-in-1 adapter on Chrome
+controllerIDMap.set("TigerGame", 12); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
+// has a different mapping on Firefox, so no product/vendor check
+
+
 //--END OF CONTROLLER IDs-------------------------------------
     
 
@@ -517,6 +523,7 @@ export function controllerNameFromIDnumber(number) {
       return "Xbox 360 compatible controller";
       break;
     case 4:
+    case 12:
       return "TigerGame 3-in-1";
       break;
     case 5:
@@ -747,7 +754,7 @@ function meleeAxesRescale ( [x,y], bool ) {
 // number : controller ID, to rescale axes dependent on controller raw input
 // bool == false means no deadzone, bool == true means deadzone
 export function scaleToMeleeAxes ( x, y, number = 0, bool = false, customCenterX = 0, customCenterY = 0 ) {
-    if (number === 0 || number == 4 || number === 5 || number === 7) { // gamecube controllers
+    if (number === 0 || number == 4 || number === 5 || number === 7 || number === 11 || number === 12) { // gamecube controllers
          x = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
          y = (-y+customCenterY+1)*255/2; // y incurs a sign flip
          //console.log("You are using raw GC controller data.");
