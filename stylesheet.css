@@ -1,0 +1,251 @@
+@charset "utf-8";
+body {
+	background-color: #272727;
+	font-family:'Ubuntu Mono', Consolas, "Courier New" ;
+	font-weight: 400;
+	color:#FFFFFF;
+	margin:0;
+	overflow: hidden;
+}
+
+#header {
+	font-family:'Ubuntu Mono', Consolas, "Courier New" ;
+}
+
+.spoilerbutton {
+	height:40px;
+	Width:100px;
+	font-size:20px;
+	background-color:#787878;
+	cursor:pointer;
+	text-align:center;
+	vertical-align: middle;
+	line-height:36px;
+}
+
+.spoilerbutton p {
+	margin-top:5px;
+}
+
+.spoilerbuttonhighlight {
+	background-color: #4d4d4d;
+
+}
+.spoilercontent {
+	background-color:rgba(150, 145, 145, 0.36);
+	padding:20px;
+}
+
+.semititle {
+	font-size:22px;
+	font-weight:bold;
+	text-decoration:underline;
+}
+#header {
+	display:block;
+	background-color: #000000;
+	height:60px;
+}
+#logo {
+	margin:10px;
+	float:left;
+	display:inline-block;
+	border-radius:10px;
+}
+#titlelogo {
+	margin-right:20px;
+	float:left;
+	display:inline-block;
+}
+.button {
+	display:inline-block;
+	position:relative;
+	width:80px;
+	height:60px;
+	background-color:#272727;
+	text-align:center;
+	cursor:pointer;
+	vertical-align: top;
+}
+.longbutton {
+	width:100px;
+}
+.doublebutton {
+	width:100px;
+}
+.button p {
+	margin-top:22px;
+	font-weight:bold;
+}
+.doublebutton p {
+	margin-top:12px;
+}
+
+.doublelongbutton {
+	width:100px;
+}
+
+.doublelongbutton p {
+	margin-top:12px;
+}
+
+.buttonhighlighted {
+	background-color:#6A6A6A;
+	color:#FFFFFF;
+}
+.bodyhighlight {
+	background-color:#6A6A6A;
+}
+.butSep {
+	height:60px;
+	width:2px;
+	display:inline-block;
+	vertical-align: top;
+	background-color:#3e3e3e;
+}
+
+#appsButton {
+	position:relative;
+}
+
+#appsDropdown {
+	position:relative;
+	height:120px;
+	width:100px;
+	bottom:1px;
+	z-index:250;
+	display:none;
+}
+
+#main {
+	font-family: Consolas,"lucida console","Courier New" ;
+	margin:0px;
+	padding:0px 0px 0px 0px;
+	display:inline-block;
+	height:auto;
+	min-height:760px;
+	width:100%;
+	background-color:#3E3E3E;
+	position:relative;
+	bottom:0px;
+}
+.falcontile {
+	background-image:url(assets/kneetilev2.png);
+}
+.shinetile {
+	background-image:url(assets/shinetile.png);
+}
+.turnipset1tile {
+	background-image:url(assets/turnipset1tilev5.png);
+}
+.turnipset2tile {
+	background-image:url(assets/turnipset2tile.png);
+}
+.randalltile {
+	background-image:url(assets/randalltile.jpg);
+}
+#pagetitle {
+	display:inline-block;
+	height:45px;
+	width:100%;
+}
+#ptitle {
+	margin:5px 0px 0px 82px;
+	font-size:2em;
+	font-weight:bold;
+}
+#side-container {
+	width:300px;
+	background-color:#969696;
+	float:right;
+	position:static;
+	right:0px;
+	display:inline-block;
+	z-index:0;
+}
+#ad {
+	height:600px;
+	width:300px;
+	color:#000000;
+	text-align:center;
+	display:inline-block;
+	float:right;
+	margin-bottom:20px;
+}
+#main-content {
+	display:inline-block;
+	z-index:40;
+	position:relative;
+}
+#side-container h2 {
+	text-align:center;
+	margin:0px 0px 0px 0px;
+}
+#sugboxcontainer {
+	width:320px;
+	height:195px;
+}
+.suggestion-box {
+	margin:20px;
+	width:280px;
+	border:3px solid black;
+	border-radius:5px;
+	text-align:center;
+}
+#suggestiontext {
+	width:230px;
+	position:relative;
+	left:40px;
+	bottom:15px;
+}
+.sugbtn {
+	width:120px;
+	height:40px;
+	background-color:#353535;
+	position: relative;
+	left: 110px;
+	bottom:20px;
+	margin-bottom:20px;
+	color:white;
+	text-align:center;
+	cursor:pointer;
+}
+.sugbtn img {
+	float:left;
+}
+.sugbtn p {
+	padding-top:10px;
+}
+.sugbtnhighlight {
+	background-color:#6E6E6E;
+	color:#D1D1D1;
+}
+a:link {
+	text-decoration:none;
+	color:white;
+}
+a:visited {
+	text-decoration:none;
+	color:white;
+}
+.smalltext {
+	font-size:14px;
+}
+#socialmediaicons{
+	display:inline-block;
+	float:right;
+	position:relative;
+	margin-top:5px;
+	margin-right:10px;
+}
+.socialmedia {
+	background-color:#272727;
+	width:50px;
+	height:50px;
+	border-radius:5px;
+	display:inline-block;
+	margin-left:5px;
+}
+.socialmediahighlight {
+	background-color:#3395f0;
+}
