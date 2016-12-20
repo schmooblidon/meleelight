@@ -7,7 +7,6 @@ import {
 import {Vec2D} from "./util/Vec2D";
 import {keyMap} from "../settings";
 import {playing} from "./main";
-import {isCloseToOneOf} from "./util/isCloseToOneOf";
 
 export const button = {
   "a" : 0, 
@@ -317,6 +316,7 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   else if (controllerType === 13) { // Betop controller, d-pad buttons data is shoved into a single axis
     const dpadData = gamepad.axes[9];
 
+    /*
     const down = 0.14285719394683838; // random constant from controller
     const downLeft = 3*down;
     const left = 1-2*down;
@@ -327,12 +327,19 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     const right = -downLeft;
     const downRight = -down;
 
-    //const neutral = 1+2*down;
+    const neutral = 1+2*down;
 
-    input.dl = isCloseToOneOf(dPadData, [downLeft , left , upLeft   ], 0.1);
-    input.dr = isCloseToOneOf(dPadData, [downRight, right, upRight  ], 0.1);
-    input.dd = isCloseToOneOf(dPadData, [downLeft , down , downRight], 0.1);
-    input.du = isCloseToOneOf(dPadData, [upLeft   , up   , upRight  ], 0.1);
+    input.dl = isCloseToOneOf(dpadData, [downLeft , left , upLeft   ], 0.1);
+    input.dr = isCloseToOneOf(dpadData, [downRight, right, upRight  ], 0.1);
+    input.dd = isCloseToOneOf(dpadData, [downLeft , down , downRight], 0.1);
+    input.du = isCloseToOneOf(dpadData, [upLeft   , up   , upRight  ], 0.1);
+    */
+
+    input.dl = dpadData >  0.3 && dpadData < 1.1;
+    input.dr = dpadData > -0.8 && dpadData < 0;
+    input.dd = dpadData > -0.2 && dpadData < 0.5;
+    input.du = dpadData < -0.5 || (dpadData > 0.9 && dpadData < 1.1);
+
   }
   else {
     input.dl = buttonData("dl").pressed;
