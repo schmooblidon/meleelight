@@ -126,13 +126,12 @@ export function tssControls (i, input){
         }
         else {
           if (targetSelected > 9){
-            setTargetStagePlaying(targetSelected);
             setActiveStageCustomTarget(targetSelected-10);
           }
           else {
             setActiveStageTarget(targetSelected);
           }
-          //setActiveStageTarget( targetSelected);
+          setTargetStagePlaying(targetSelected);
           startTargetGame(i,false);
         }
       }

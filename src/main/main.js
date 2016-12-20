@@ -1282,14 +1282,10 @@ export function finishGame (input){
             }
           }
         }
-        if (matchTimer < targetRecords[characterSelections[targetPlayer]][targetStagePlaying] || targetRecords[characterSelections[targetPlayer]][
-            targetStagePlaying
-          ] == -1) {
+        if (matchTimer < targetRecords[characterSelections[targetPlayer]][targetStagePlaying] || targetRecords[characterSelections[targetPlayer]][targetStagePlaying] == -1) {
           targetRecords[characterSelections[targetPlayer]][targetStagePlaying] = matchTimer;
           sounds.newRecord.play();
-          setCookie(characterSelections[targetPlayer] + "target" + targetStagePlaying, targetRecords[characterSelections[targetPlayer]][
-            targetStagePlaying
-          ], 36500);
+          setCookie(characterSelections[targetPlayer] + "target" + targetStagePlaying, targetRecords[characterSelections[targetPlayer]][targetStagePlaying], 36500);
         } else {
           sounds.complete.play();
         }
