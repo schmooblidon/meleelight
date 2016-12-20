@@ -909,6 +909,13 @@ export function foxAI(i) {
       return;
     }
   }
+  if (player[i].currentAction == "SHIELDMULTISHINE") {
+	  if (player[nearest].actionState.substr(0,4) != "GUAR" || ["WAIT","KNEEBEND","JUMPF","DOWNSPECIALGROUND","DOWNSPECIALAIR"].indexOf(paction) || Math.abs(px - player[nearest].phys.pos.x) >= 15) {
+		  //end MULTISHINE
+		  player[i].currentAction = "NONE";
+		  player[i].currentSubaction = "NONE";
+	  }
+  }
   if (player[i].currentAction == "RESPAWNMULTISHINE") {
     if (player[i].currentSubaction == "NONE") {
       if (!(isDead)) { //should finish multishining
