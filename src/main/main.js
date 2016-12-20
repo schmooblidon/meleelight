@@ -334,6 +334,7 @@ export function findPlayers (){
       if (keys[13] || keys[keyMap.s[0]] || keys[keyMap.s[1]]) {
         if (ports < 4) {
           changeGamemode(1);
+          $("#keyboardPrompt").hide();
           keyboardOccupied = true;
           sounds.menuForward.play();
           if (ports == 0) {
@@ -377,6 +378,7 @@ export function findPlayers (){
             if (!alreadyIn) {
               if (ports < 4) {
                 changeGamemode(1);
+                $("#keyboardPrompt").hide();
                 sounds.menuForward.play();
                 if (ports == 0) {
                   music.menu.play("menuStart");
@@ -911,19 +913,21 @@ export function gameTick (oldInputBuffers){
 		    //fg1.clearRect(0,0,1200,750);
 		    //fg2.clearRect(0,0,1200,750);
         clearScreen();
-		  if (!starting) {
-	      targetTimerTick();		
-		  }
-      if (getShowSFX()) {
-        drawBackground();
-      }
-      drawStage();
-      renderPlayer(targetBuilder);
-      renderArticles();
-      renderVfx();
-      renderOverlay(true);
-		  renderForeground();
-      input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+  		  if (!starting) {
+  	      targetTimerTick();		
+  		  }
+        if (getShowSFX()) {
+          drawBackground();
+        }
+        drawStage();
+        renderPlayer(targetBuilder);
+        renderArticles();
+        renderVfx();
+        renderOverlay(true);
+  		  renderForeground();
+        if (!starting){
+          input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+        }
       }
     }
   } else if (playing || frameByFrame) {
@@ -944,7 +948,9 @@ export function gameTick (oldInputBuffers){
     executeArticles();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+        if (!starting){
+          input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+        }
         update(i,input);
       }
     }
@@ -1349,6 +1355,42 @@ export function finishGame (input){
   }, 2500);
 }
 
+function onFullScreenChange() {
+  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+
+  // if in fullscreen mode fullscreenElement won't be null
+  var cont = document.getElementById("topButtonContainer");
+  var icn = document.querySelectorAll(".topButton");
+  if (fullscreenElement != null){
+    cont.style.transition = "opacity 0.5s linear 0s";
+    cont.style.opacity = 0;;
+    setTimeout(function(){
+        var i;
+        for (i = 0; i < icn.length; i++) {
+          icn[i].style.height = "5px";
+        }
+        cont.style.height = "5px";
+        resize();
+      }, 500);
+    $("#keyboardPrompt").hide();
+    $("#keyboardControlsImg").hide();
+    $("#controllerSupportContainer").hide();
+    $("#debugButtonEdit").empty().append("OFF");
+    $("#debug").hide();
+    $("#players").hide();
+    $("body").css("overflow", "hidden");
+    showHeader = false;
+  } else {
+    var i;
+    for (i = 0; i < icn.length; i++) {
+      icn[i].style.height = "25px";
+    }
+    cont.style.height = "31px";
+    cont.style.transition = "opacity 0.5s linear 0s";
+    cont.style.opacity = 1;
+  }
+}
+
 export function start (){
   if (holiday === 1){
     $("#layerButton").after('<div id="snowButton" class="gameButton" style="width:90px"><img src="assets/christmas/snowflake.png" height=17 width=17 style="display:inline-block"/><p style="width:30px;display:inline-block"><span id="snowButtonEdit">150</span></p><div id="snowMinus" class="snowControl" style="display:inline-block;padding:3px"><p style="padding:0;font-size:20px">-</p></div><div id="snowPlus" style="display:inline-block;padding:3px"><p style="padding:0;font-size:17px">+</p></div></div>');
@@ -1367,6 +1409,7 @@ export function start (){
     getGameplayCookies();
   $("#keyboardButton").click(function(){
     $("#keyboardControlsImg").toggle();
+    $("#keyboardPrompt").hide();
   });
   $("#controllerButton").click(function() {
     $("#controllerSupportContainer").toggle();
@@ -1494,6 +1537,10 @@ export function start (){
     }
     resize();
   });
+
+  document.addEventListener("fullscreenchange", onFullScreenChange, false);
+  document.addEventListener("webkitfullscreenchange", onFullScreenChange, false);
+  document.addEventListener("mozfullscreenchange", onFullScreenChange, false);
 
   $(".topButton").hover(function() {
     $(this).children(".buttonDetails").toggle();

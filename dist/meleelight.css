@@ -160,6 +160,78 @@ body {
   background-image:url(assets/header-icons/keyboardicon.png);
 }
 
+#keyboardPrompt {
+  width: 260px;
+  height:80px;
+  position: absolute;
+  top:40px;
+  background-color: #454545;
+  border-radius:5px;
+  color:white;
+  border:1px solid white;
+  animation-name: floating;
+  -webkit-animation-name: floating;
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-duration: 4s;
+  z-index:5;
+}
+
+
+@keyframes floating {
+  0% {
+    transform: translate(0%,0%);  
+  }
+  25% {
+    transform: translate(0%,15%); 
+  } 
+  50% {
+    transform: translate(0%,5%); 
+  } 
+  75% {
+    transform: translate(0%,15%); 
+  } 
+  100% {
+    transform: translate(0%,0%);
+  }     
+}
+@-webkit-keyframes floating {
+  0% {
+    -webkit-transform: translate(0%,0%);  
+  }
+  25% {
+    -webkit-transform: translate(0%,15%); 
+  } 
+  50% {
+    -webkit-transform: translate(0%,5%); 
+  } 
+  75% {
+    -webkit-transform: translate(0%,15%); 
+  } 
+  100% {
+    -webkit-transform: translate(0%,0%);
+  }     
+}
+
+#kPSmallText {
+  font-size:10px;
+  top:-17px;
+  vertical-align: top;
+  position: relative;
+}
+
+#kPBigText {
+  font-size: 25px;
+}
+
+#keyboardPrompt p {
+  margin: 0;
+  padding:10px;
+  text-align: center;
+}
+
 #controllerButton {
   width: 33px;
   background-image:url(assets/header-icons/controllericon.png);
@@ -194,12 +266,13 @@ body {
   border-radius: 5px;
   color:white;
   display:none;
+  z-index:6;
 }
 
 .buttonDetails p {
   font-size:15px;
   text-align: center;
-  padding:7px;
+  padding:2px;
 }
 
 #fullscreenButton .buttonDetails {

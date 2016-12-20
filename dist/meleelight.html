@@ -10,9 +10,9 @@
       <div id="loadPercent"><p><span id="loadPercentEdit">0</span>%</p></div>
       <div id="loadText"><p id="loadTextEdit">Loading...</p></div>
     </div>
-    <div id="topButtonContainer" onmouseover="restore()" onmouseout="wipe()">
+    <div id="topButtonContainer">
       <a href=""><div id="downloadButton" class="topButton"><div class="buttonDetails"><p>Download Melee Light</p></div></div></a>
-        <div id="keyboardButton" class="topButton"><img id="keyboardControlsImg" width="860" height="616" src="http://i.imgur.com/vdfvaII.png"/><div class="buttonDetails"><p>Default Keyboard Controls</p></div></div><div id="controllerButton" class="topButton"><div id="controllerSupportContainer">
+        <div id="keyboardButton" class="topButton"><img id="keyboardControlsImg" width="860" height="616" src="http://i.imgur.com/vdfvaII.png"/><div class="buttonDetails"><p>Default Keyboard Controls</p></div><div id="keyboardPrompt"><p id="kPBigText">^ Keyboard Controls</p><p id="kPSmallText">Remappable from the ingame menu<br>Options > Keyboard Controls</p></div></div><div id="controllerButton" class="topButton"><div id="controllerSupportContainer">
           <div class="controllerBox">
             <div class="controllerName"><p>MayFlash 2-Port</p></div>
             <div class="controllerDriver"><p><span class="native">Native</span></p></div>
@@ -87,7 +87,7 @@
           </div>
           <div class="controllerBox">
             <div class="controllerName"><p>Official Nintendo Wii U</p></div>
-            <div class="controllerDriver"><p><span class="driver"><a href="http://m4sv.com/page/wii-u-gcn-usb-driver">vJoy Driver</a></span></p></div>
+            <div class="controllerDriver"><p><span class="driver"><a href="http://m4sv.com/page/wii-u-gcn-usb-driver" target="_blank">vJoy Driver</a></span></p></div>
             <div class="controllerBrowser">
               <div class="browserBox">
                 <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/></div>
@@ -195,8 +195,8 @@
           </div>
           <div id="controllerMessage"><p>You may need to refresh the page or restart your browser. Close the browser from the system tray to be thorough</p></div>
         </div><div class="buttonDetails"><p>Supported Controllers</p></div></div>
-        <a href="https://github.com/schmooblidon/meleelight"><div id="githubButton" class="topButton"><div class="buttonDetails"><p>Fork me on github</p></div></div></a>
-        <a href="https://discord.gg/qagFayt"><div id="discordButton" class="topButton"><div class="buttonDetails"><p>Join Discord</p></div></div></a>
+        <a href="https://github.com/schmooblidon/meleelight" target="_blank"><div id="githubButton" class="topButton"><div class="buttonDetails"><p>Fork me on github</p></div></div></a>
+        <a href="https://discord.gg/qagFayt" target="_blank"><div id="discordButton" class="topButton"><div class="buttonDetails"><p>Join Discord</p></div></div></a>
         <div id="hideButton" class="topButton"><div class="buttonDetails"><p>Toggle Header</p></div></div>
         <div id="fullscreenButton" class="topButton"><div class="buttonDetails"><p>Toggle Fullscreen</p></div></div>
       </div>
@@ -254,9 +254,6 @@
     </div>
   </div>
   <script>
-    var cont = document.getElementById("topButtonContainer");
-    var icn = document.querySelectorAll(".topButton");
-    wipe();
     window.offlineMode = true;
     (function() {
       if('serviceWorker' in navigator) {
@@ -284,31 +281,6 @@
       document.body.appendChild(script);
       script.src = src;
     });
-
-    function restore() {
-      var i;
-      for (i = 0; i < icn.length; i++) {
-        icn[i].style.height = "25px";
-      }
-      cont.style.height = "31px";
-      cont.style.transition = "opacity 0.5s linear 0s";
-      cont.style.opacity = 1;
-    }
-
-    function wipe() {
-      setTimeout(function(){
-        cont.style.transition = "opacity 0.5s linear 0s";
-        cont.style.opacity = 0;
-      }, 10000);
-      setTimeout(function(){
-        var i;
-        for (i = 0; i < icn.length; i++) {
-          icn[i].style.height = "5px";
-        }
-        cont.style.height = "5px";
-      }, 10500);
-    }
-
   </script>
   </body>
 </html>
