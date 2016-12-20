@@ -910,28 +910,7 @@ export function gameTick (oldInputBuffers){
       }
     } else {
       if (!gameEnd) {
-<<<<<<< HEAD
-		    //fg1.clearRect(0,0,1200,750);
-		    //fg2.clearRect(0,0,1200,750);
-        clearScreen();
-  		  if (!starting) {
-  	      targetTimerTick();		
-  		  }
-        if (getShowSFX()) {
-          drawBackground();
-        }
-        drawStage();
-        renderPlayer(targetBuilder);
-        renderArticles();
-        renderVfx();
-        renderOverlay(true);
-  		  renderForeground();
-        if (!starting){
-          input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
-        }
-=======
         input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
->>>>>>> 022ae2aad31fb06bba4eaca752facd7254c73d5b
       }
     }
   } else if (playing || frameByFrame) {
@@ -952,11 +931,7 @@ export function gameTick (oldInputBuffers){
     executeArticles();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-<<<<<<< HEAD
-        if (!starting){
-=======
-        if( !starting) {
->>>>>>> 022ae2aad31fb06bba4eaca752facd7254c73d5b
+        if(!starting) {
           input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
         }
         update(i,input);
@@ -965,7 +940,7 @@ export function gameTick (oldInputBuffers){
     checkPhantoms();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetect(i,input);
+        hitDetect(i,input); 
       }
     }
     executeHits(input);
