@@ -621,8 +621,8 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       }
     }
     if ( (gameMode == 3 || gameMode == 5)
-    	   && (tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) 
-    	   && (tempBuffer[0].r || tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
+         && (tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) 
+         && (tempBuffer[0].r || tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
       if (tempBuffer[0].b || tempBuffer[1].b) {
         startGame();
       }
@@ -646,7 +646,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
     if ( (gameMode == 3 || gameMode == 5) &&
              ( tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s ) 
-    	 && (! ( tempBuffer[1].a && tempBuffer[1].l && tempBuffer[1].r && tempBuffer[1].s ))) {
+       && (! ( tempBuffer[1].a && tempBuffer[1].l && tempBuffer[1].r && tempBuffer[1].s ))) {
       if (tempBuffer[0].b) {
         startGame();
       }
@@ -865,7 +865,7 @@ export function gameTick (oldInputBuffers){
       finishGame(input);
     }
     if (playing || frameByFrame) {
-	  
+    
       var now = performance.now();
       var dt = now - lastUpdate;
       lastUpdate = now;
@@ -910,6 +910,7 @@ export function gameTick (oldInputBuffers){
       }
     } else {
       if (!gameEnd) {
+<<<<<<< HEAD
 		    //fg1.clearRect(0,0,1200,750);
 		    //fg2.clearRect(0,0,1200,750);
         clearScreen();
@@ -928,6 +929,9 @@ export function gameTick (oldInputBuffers){
         if (!starting){
           input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
         }
+=======
+        input[targetBuilder] = interpretInputs(targetBuilder, false,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+>>>>>>> 022ae2aad31fb06bba4eaca752facd7254c73d5b
       }
     }
   } else if (playing || frameByFrame) {
@@ -948,7 +952,11 @@ export function gameTick (oldInputBuffers){
     executeArticles();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
+<<<<<<< HEAD
         if (!starting){
+=======
+        if( !starting) {
+>>>>>>> 022ae2aad31fb06bba4eaca752facd7254c73d5b
           input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
         }
         update(i,input);
@@ -1098,6 +1106,21 @@ export function renderTick (){
           dom.renderLow.innerHTML = Math.round(renderTime[2]);
           dom.renderPeak.innerHTML = renderTime[3];
         }
+      }
+      else if (!gameEnd) {
+        clearScreen();
+        if (!starting) {
+          targetTimerTick();    
+        }
+        if (getShowSFX()) {
+          drawBackground();
+        }
+        drawStage();
+        renderPlayer(targetBuilder);
+        renderArticles();
+        renderVfx();
+        renderOverlay(true);
+        renderForeground();
       }
     } else if (playing || frameByFrameRender) {
       /*delta = timestamp - lastFrameTimeMs; // get the delta time since last frame
@@ -1286,14 +1309,10 @@ export function finishGame (input){
             }
           }
         }
-        if (matchTimer < targetRecords[characterSelections[targetPlayer]][targetStagePlaying] || targetRecords[characterSelections[targetPlayer]][
-            targetStagePlaying
-          ] == -1) {
+        if (matchTimer < targetRecords[characterSelections[targetPlayer]][targetStagePlaying] || targetRecords[characterSelections[targetPlayer]][targetStagePlaying] == -1) {
           targetRecords[characterSelections[targetPlayer]][targetStagePlaying] = matchTimer;
           sounds.newRecord.play();
-          setCookie(characterSelections[targetPlayer] + "target" + targetStagePlaying, targetRecords[characterSelections[targetPlayer]][
-            targetStagePlaying
-          ], 36500);
+          setCookie(characterSelections[targetPlayer] + "target" + targetStagePlaying, targetRecords[characterSelections[targetPlayer]][targetStagePlaying], 36500);
         } else {
           sounds.complete.play();
         }

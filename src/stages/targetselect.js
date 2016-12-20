@@ -126,13 +126,12 @@ export function tssControls (i, input){
         }
         else {
           if (targetSelected > 9){
-            setTargetStagePlaying(targetSelected);
             setActiveStageCustomTarget(targetSelected-10);
           }
           else {
             setActiveStageTarget(targetSelected);
           }
-          //setActiveStageTarget( targetSelected);
+          setTargetStagePlaying(targetSelected);
           startTargetGame(i,false);
         }
       }
@@ -150,7 +149,7 @@ export function tssControls (i, input){
       }
       else {
         setCookie("custom"+customTargetStages.length,code,36500);
-          setCustomTargetStages(customTargetStages.length, {});
+          //setCustomTargetStages(customTargetStages.length, {});
           setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
         redrawCustomStageBoxes();
       }

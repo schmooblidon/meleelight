@@ -644,6 +644,9 @@ export function drawTargetStage (){
       if (hoverItem[0] == "target" && hoverItem[1] == i){
         ui.fillStyle = (j%2)?"white":"rgb(241, 111, 111)";
       }
+      else {
+        ui.fillStyle = (j%2)?"white":"red";
+      }
       ui.beginPath();
       ui.arc(x, y, 25 - j * 5, 0, twoPi);
       ui.closePath();
