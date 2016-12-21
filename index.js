@@ -6,7 +6,7 @@ app.use(express.static('./dist'));
 app.get('/', function(req, res) {
   res.redirect('/meleelight.html');
 });
-var server = app.listen(8080);
+var server = app.listen(80);
 
 var options = {
   debug: true

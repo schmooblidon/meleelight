@@ -58,7 +58,7 @@ function createConfig(options) {
     plugins.push(
         new HappyPack({
           // loaders is the only required parameter:
-          loaders: [ 'babel?presets[]=es2015' ],
+          loaders: [ 'babel?presets[]=es2015,presets[]=stage-0' ],
           threads:8
 
         })
@@ -90,7 +90,7 @@ function createConfig(options) {
     plugins.push(
         new HappyPack({
           // loaders is the only required parameter:
-          loaders: [ 'babel?presets[]=es2015' ],
+          loaders: [ 'babel?presets[]=es2015,presets[]=stage-0' ],
           threads:8
 
         })

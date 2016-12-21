@@ -2,19 +2,18 @@
   "name": "meleelight",
   "version": "0.0.1",
   "description": "Melee Light Platform Fighter",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "build": "webpack --progress --colors --config=bin/webpack/build.config.js",
     "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
     "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
     "release": "node bin/release.js",
     "serve": "node app",
-    "startlocal": "electron ."
+    "postinstall": " npm run animations && npm run build "
   },
   "engines": {
     "node": "7.2.0",
-    "npm": "3.10.9",
-    "yarn": "0.17.8"
+    "npm": "3.10.9"
   },
   "repository": {
     "type": "git",
@@ -30,37 +29,33 @@
   },
   "homepage": "https://github.com/schmooblidon/meleelight#readme",
   "dependencies": {
-
+    "can": "^3.2.2",
+    "express": "^4.14.0",
+    "fs-extra": "^1.0.0",
     "howler": "^2.0.1",
-    "jquery": "1.11.3"
-
-  },
-  "devDependencies": {
+    "jquery": "1.11.3",
+    "optimist": "^0.6.1",
+    "peer": "^0.2.8",
+    "yargs": "^6.4.0",
+    "webpack": "^1.13.3",
+    "webpack-notifier": "^1.4.1",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.8",
     "babel-preset-es2015": "^6.18.0",
-    "babel-preset-stage-2": "^6.18.0",
+    "babel-preset-stage-0": "6.16.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-loader": "^1.6.1",
-    "express": "^4.14.0",
-    "fs-extra": "^1.0.0",
-    "electron": "^1.4.1",
-    "electron-packager": "^8.3.0",
     "happypack": "^3.0.0",
-    "sw-precache-webpack-plugin": "^0.6.3",
-    "webpack": "^1.13.3",
-    "webpack-notifier": "^1.4.1",
-    "yargs": "^6.4.0"
+    "sw-precache-webpack-plugin": "^0.6.3"
   },
- 
   "babel": {
     "presets": [
       "es2015",
-      "stage-2"
+      "stage-0"
     ],
     "ignore": [
       "src/characters/**/*animations.js"

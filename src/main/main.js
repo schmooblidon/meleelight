@@ -36,7 +36,9 @@ import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
-import {showButton, nullInputs, pollInputs, inputData} from "./input";
+import {showButton, nullInputs, pollInputs, inputData, nullInput} from "./input";
+import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs} from "./multiplayer/mproom";
+import {deepCopyObject} from "./util/deepCopyObject";
 /*globals performance*/
 
 export const holiday = 1;
@@ -65,7 +67,15 @@ window.mType = [0, 0, 0, 0];
 
 export const mType = [0,0,0,0];
 
+export  function setMtype(index,val){
+  mType[index] = val;
+}
+
 export const currentPlayers = [];
+
+export function setCurrentPlayer(index,val){
+  currentPlayers[index] =val;
+}
 
 export const playerAmount = 0;
 
@@ -352,8 +362,23 @@ export function findPlayers (){
       }
     }
   }
-  for (var i = 0; i < gps.length; i++) {
-    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
+  for (var controllerIndex = 0; controllerIndex < gps.length; controllerIndex++) {
+    if(playerType[controllerIndex] === 2){
+      var alreadyIn = false;
+      for (var k = 0; k < ports; k++) {
+        if (currentPlayers[k] === controllerIndex) {
+          alreadyIn = true;
+        }
+      }
+      if (!alreadyIn) {
+        if (ports < 4) {
+          addPlayer(controllerIndex, 99);
+        }
+      }
+      continue;
+    }
+
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[controllerIndex] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
       null);
     if (typeof gamepad != "undefined" && gamepad != null) {
       var detected = false;
@@ -371,7 +396,7 @@ export function findPlayers (){
           if (gamepad.buttons[controllerMaps[gType][button.s]].pressed) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == i) {
+              if (currentPlayers[k] == controllerIndex) {
                 alreadyIn = true;
               }
             }
@@ -383,7 +408,7 @@ export function findPlayers (){
                 if (ports == 0) {
                   music.menu.play("menuStart");
                 }
-                addPlayer(i, gType);
+                addPlayer(controllerIndex, gType);
               }
             }
           }
@@ -391,13 +416,13 @@ export function findPlayers (){
           if (gamepad.buttons[controllerMaps[gType][button.a]].pressed) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == i) {
+              if (currentPlayers[k] == controllerIndex) {
                 alreadyIn = true;
               }
             }
             if (!alreadyIn) {
               if (ports < 4) {
-                addPlayer(i, gType);
+                addPlayer(controllerIndex, gType);
               }
             }
           }
@@ -409,17 +434,27 @@ export function findPlayers (){
   }
 }
 
+export function setPlayerType(playerSlot,type){
+  playerType[playerSlot] = type;
+}
 
-export function addPlayer (gamepad,gType){
-  ports++;
-  currentPlayers[ports - 1] = gamepad;
-  playerType[ports - 1] = 0;
-  mType[ports - 1] = gType;
+export function addPlayer (controllerIndex,gType){
+  if(gType === 99){
+    ports++;
+    currentPlayers[ports - 1] = controllerIndex;
+    playerType[ports - 1] = 2;
+    mType[ports - 1] = gType;
+  }else {
+    ports++;
+    currentPlayers[ports - 1] = controllerIndex;
+    playerType[ports - 1] = 0;
+    mType[ports - 1] = gType;
+  }
 }
 
 export function togglePort (i){
   playerType[i]++;
-  if (playerType[i] == 2) {
+  if (playerType[i] == 3) {
     playerType[i] = -1;
   }
   if (playerType[i] == 0 && ports <= i) {
@@ -507,6 +542,12 @@ export function changeGamemode (newGamemode){
       // credits
     case 13:
       drawCreditsInit();
+      break;
+      // Multiplayer Modes
+    case 14:
+      drawCSSInit();
+      connectToMPRoom();
+
       break;
       // startup
     case 20:
@@ -725,6 +766,12 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
 
   }
+
+  if(giveInputs[i] === true){
+    //turns out keyboards leave gaps in the input buffer
+    deepCopyObject(true,nullInput(),tempBuffer[0]);
+    updateNetworkInputs(tempBuffer[0],i);
+  }
   return tempBuffer;
 
 }
@@ -828,6 +875,11 @@ export function gameTick (oldInputBuffers){
   } else if (gameMode == 13) {
     input[creditsPlayer] = interpretInputs(creditsPlayer, true, playerType[creditsPlayer],oldInputBuffers[creditsPlayer]);
     credits(creditsPlayer, input);
+  }else if (gameMode == 14) {
+    for (var i = 0; i < ports; i++) {
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
+      menuMove(i, input);
+    }
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
@@ -982,7 +1034,7 @@ export function gameTick (oldInputBuffers){
   } else {
     if (!gameEnd) {
       for (var i = 0; i < 4; i++) {
-        if (playerType[i] == 0) {
+        if (playerType[i] == 0 ||playerType[i] == 2) {
           if (currentPlayers[i] != -1) {
             input[i] = interpretInputs(i, false,playerType[i],oldInputBuffers[i]);
           }
