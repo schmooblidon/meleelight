@@ -1264,17 +1264,17 @@ function CPULedge(cpu, p) {
     } else if (randomSeed <= 9) { //tournament winner
       cpu.currentAction = "TOURNAMENTWINNER";
       returnInput.lsY = 1.0;
-    } else if (randomSeed <= 12) { //ledge jump
+    /*} else if (randomSeed <= 12) { //ledge jump
       cpu.currentAction = "LEDGEJUMP";
       returnInput.lsY = -1.0;
-      returnInput.x = true;
-    } else if (randomSeed <= 16) { //ledgedash
+      returnInput.x = true;*/
+    /*} else if (randomSeed <= 16) { //ledgedash
       if (player[p].difficulty >= 1) {
         //cpu.timer = 0;
         cpu.currentAction = "LEDGEDASH";
         returnInput.lsY = -1.0;
         returnInput.x = true;
-      }
+      }*/
     } else if (randomSeed <= 20) { //ledgeairattack
       if (player[p].difficulty > 1) {
         cpu.currentAction = "LEDGEAIRATTACK";
@@ -1562,8 +1562,8 @@ export function CPUrecover (cpu,p) {
       if (characterSelections[p] == 2 && returnInput.lsY == 1.0) {
         returnInput.lsX = 0.0;
       }
-    } else {
-      //hi
+    } else if (characterSelections[p] == 0 && cpu.actionState == "UPSPECIAL"){
+      returnInput.lsX = 0.35 * Math.sign(closest.x - cpu.phys.pos.x);
     }
     return returnInput;
   }
