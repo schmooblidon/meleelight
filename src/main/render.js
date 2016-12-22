@@ -461,6 +461,7 @@ export function setLostStockQueue(index,val){
 
 export function renderForeground() {
     // pause UI
+     ui.textAlign = "start";
     ui.fillStyle = "#8e8e8e";
     ui.save();
     ui.fillRect(45, 48, 300, 24);

@@ -862,7 +862,9 @@ export function gameTick (oldInputBuffers){
       lastUpdate = now;
       destroyArticles();
       executeArticles();
-      input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+      if (!starting){
+        input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+      }
       update(targetBuilder,input);
       targetHitDetection(targetBuilder);
       if (!starting) {
@@ -1055,7 +1057,7 @@ export function renderTick (){
         renderPlayer(targetBuilder);
         renderArticles();
         renderVfx();
-        renderOverlay(true);
+        renderOverlay(false);
 
         if (showDebug) {
           var diff = performance.now() - rStart;
@@ -1088,7 +1090,7 @@ export function renderTick (){
         renderPlayer(targetBuilder);
         renderArticles();
         renderVfx();
-        renderOverlay(true);
+        renderOverlay(false);
         renderForeground();
       }
     } else if (playing || frameByFrameRender) {
