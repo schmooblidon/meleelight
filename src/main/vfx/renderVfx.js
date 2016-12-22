@@ -8,7 +8,7 @@ export function renderVfx (otherFrame){
   for (let j = 0; j < vfxQueue.length; j++) {
     vfxQueue[j][1]++;
     if (vfxQueue[j][0].frames >= vfxQueue[j][1]) {
-      if (getShowSFX()) {
+      if (getShowSFX() || vfxQueue[j][0].name === "start") {
         if (!altFrame) {
           dVfx[vfxQueue[j][0].name](j);
         }
