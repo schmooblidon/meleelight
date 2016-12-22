@@ -583,7 +583,6 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     tempBuffer[7-k].csY  = inputBuffer[7-k-pastOffset].csY;
     tempBuffer[7-k].lA   = inputBuffer[7-k-pastOffset].lA;
     tempBuffer[7-k].rA   = inputBuffer[7-k-pastOffset].rA;
-    tempBuffer[7-k].s    = inputBuffer[7-k-pastOffset].s;
     tempBuffer[7-k].a    = inputBuffer[7-k-pastOffset].a;
     tempBuffer[7-k].b    = inputBuffer[7-k-pastOffset].b;
     tempBuffer[7-k].x    = inputBuffer[7-k-pastOffset].x;
