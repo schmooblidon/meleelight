@@ -932,13 +932,7 @@ export function gameTick (oldInputBuffers){
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
         if(!starting) {
-          console.log("oldInputBuffers[i][0].x="+oldInputBuffers[i][0].x+".");
-          console.log("oldInputBuffers[i][1].x="+oldInputBuffers[i][1].x+".");
-          console.log("oldInputBuffers[i][2].x="+oldInputBuffers[i][2].x+".");
           input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
-          console.log("input[i][0].x="+input[i][0].x+".");
-          console.log("input[i][1].x="+input[i][1].x+".");
-          console.log("input[i][2].x="+input[i][2].x+".");
         }
         update(i,input);
       }
