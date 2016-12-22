@@ -79,6 +79,7 @@ export const activePorts = [];
 export let playing = false;
 
 export let frameByFrame = false;
+export let wasFrameByFrame = false;
 export let frameByFrameRender = false;
 
 export let findingPlayers = true;
@@ -565,23 +566,12 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   pause[i][1] = pause[i][0];
   frameAdvance[i][1] = frameAdvance[i][0];
 
-  if (    (mType[i] === 10 && (tempBuffer[0].z ||  tempBuffer[1].z)) 
-       || (mType[i] !== 10 && (tempBuffer[0].z && !tempBuffer[1].z))
-     )  { 
-    frameAdvance[i][0] = true;
-  }
-  else {
-    frameAdvance[i][0] = false;
-  }
-
-  if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode !== 4) {
-    frameByFrame = true;
-  }
-
   let pastOffset = 0;
-  if ( (gameMode !== 3 && gameMode !== 5) || playing || frameByFrame ) {
+  if ( (gameMode !== 3 && gameMode !== 5) || playing || wasFrameByFrame ) {
     pastOffset = 1;
   }
+
+  wasFrameByFrame = false;
 
   for (var k = 0; k < 7; k++) {
     tempBuffer[7-k].lsX  = inputBuffer[7-k-pastOffset].lsX;
@@ -603,6 +593,19 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     tempBuffer[7-k].dd   = inputBuffer[7-k-pastOffset].dd;
     tempBuffer[7-k].dr   = inputBuffer[7-k-pastOffset].dr;
     tempBuffer[7-k].du   = inputBuffer[7-k-pastOffset].du;
+  }
+
+  if (    (mType[i] === 10 && (tempBuffer[0].z ||  tempBuffer[1].z)) 
+       || (mType[i] !== 10 && (tempBuffer[0].z && !tempBuffer[1].z))
+     )  { 
+    frameAdvance[i][0] = true;
+  }
+  else {
+    frameAdvance[i][0] = false;
+  }
+
+  if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode !== 4) {
+    frameByFrame = true;
   }
 
   if (mType[i] == 10) { // keyboard controls
@@ -882,6 +885,7 @@ export function gameTick (oldInputBuffers){
       }
       if (frameByFrame) {
         frameByFrameRender = true;
+        wasFrameByFrame = true;
       }
       frameByFrame = false;
 
@@ -924,10 +928,17 @@ export function gameTick (oldInputBuffers){
     getActiveStage().movingPlatforms();
     destroyArticles();
     executeArticles();
+
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
         if(!starting) {
+          console.log("oldInputBuffers[i][0].x="+oldInputBuffers[i][0].x+".");
+          console.log("oldInputBuffers[i][1].x="+oldInputBuffers[i][1].x+".");
+          console.log("oldInputBuffers[i][2].x="+oldInputBuffers[i][2].x+".");
           input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+          console.log("input[i][0].x="+input[i][0].x+".");
+          console.log("input[i][1].x="+input[i][1].x+".");
+          console.log("input[i][2].x="+input[i][2].x+".");
         }
         update(i,input);
       }
@@ -951,6 +962,7 @@ export function gameTick (oldInputBuffers){
     }
     if (frameByFrame) {
       frameByFrameRender = true;
+      wasFrameByFrame = true;
     }
     frameByFrame = false;
 
