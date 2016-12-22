@@ -566,7 +566,9 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   tempBuffer[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys,playertype);
 
   let pastOffset = 0;
-  if ( (gameMode !== 3 && gameMode !== 5) || playing || wasFrameByFrame || (!playing && pause[i][0] && !pause[i][1])) {
+  if ( (gameMode !== 3 && gameMode !== 5) || (playing && (pause[i][1] || !pause[i][0]))
+                                          || wasFrameByFrame 
+                                          || (!playing && pause[i][0] && !pause[i][1])) {
     pastOffset = 1;
   }
 
