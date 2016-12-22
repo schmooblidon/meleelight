@@ -557,21 +557,22 @@ export const removePlayer (i){
 export function interpretInputs  (i, active,playertype, inputBuffer) {
   let tempBuffer = nullInputs();
 
+  // keep updating Z and Start all the time, even when paused
   for (var k = 0; k < 7; k++) {
     tempBuffer[7-k].z    = inputBuffer[6-k].z;
+    tempBuffer[7-k].s    = inputBuffer[6-k].s;
   }
 
   tempBuffer[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys,playertype);
 
-  pause[i][1] = pause[i][0];
-  frameAdvance[i][1] = frameAdvance[i][0];
-
   let pastOffset = 0;
-  if ( (gameMode !== 3 && gameMode !== 5) || playing || wasFrameByFrame ) {
+  if ( (gameMode !== 3 && gameMode !== 5) || playing || wasFrameByFrame || (!playing && pause[i][0] && !pause[i][1])) {
     pastOffset = 1;
   }
 
+  pause[i][1] = pause[i][0];
   wasFrameByFrame = false;
+  frameAdvance[i][1] = frameAdvance[i][0];
 
   for (var k = 0; k < 7; k++) {
     tempBuffer[7-k].lsX  = inputBuffer[7-k-pastOffset].lsX;
@@ -617,17 +618,6 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       pause[i][0] = false;
     }
 
-    if (active) {
-      if (tempBuffer[0].dl && !tempBuffer[1].dl ) {
-       player[i].showLedgeGrabBox ^= true;
-      }
-      if (tempBuffer[0].dd && !tempBuffer[1].dd) {
-        player[i].showECB ^= true;
-      }
-      if (tempBuffer[0].dr && !tempBuffer[1].dr) {
-        player[i].showHitbox ^= true;
-      }
-    }
     if ( (gameMode == 3 || gameMode == 5)
          && (tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) 
          && (tempBuffer[0].r || tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
@@ -668,16 +658,6 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
     else {
       pause[i][0] = false;
-    }
-
-    if (tempBuffer[0].dl && !tempBuffer[1].dl) {
-      player[i].showLedgeGrabBox ^= true;
-    }
-    if (tempBuffer[0].dd && !tempBuffer[1].dd) {
-      player[i].showECB ^= true;
-    }
-    if (tempBuffer[0].dr && !tempBuffer[1].dr) {
-      player[i].showHitbox ^= true;
     }
 
     // Controller reset functionality
@@ -721,6 +701,18 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
     }
 
+  }
+
+  if (active) {
+    if (tempBuffer[0].dl && !tempBuffer[1].dl ) {
+     player[i].showLedgeGrabBox ^= true;
+    }
+    if (tempBuffer[0].dd && !tempBuffer[1].dd) {
+      player[i].showECB ^= true;
+    }
+    if (tempBuffer[0].dr && !tempBuffer[1].dr) {
+      player[i].showHitbox ^= true;
+    }
   }
 
   return tempBuffer;
