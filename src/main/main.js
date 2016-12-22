@@ -21,7 +21,7 @@ import {
   targetRecords, targetsDestroyed, targetStagePlaying , getTargetCookies , giveMedals, medalTimes
 } from "target/targetplay";
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
-import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
+import {targetBuilder, targetBuilderControls, renderTargetBuilder, showingCode} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
@@ -216,7 +216,7 @@ export function setKeyBinding (val){
   keyBinding = val;
 }
 export function overrideKeyboardEvent (e){
-  if (choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116){
+  if (!showingCode && choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116){
     switch(e.type){
       case "keydown":
         if (!keys[e.keyCode]) {
