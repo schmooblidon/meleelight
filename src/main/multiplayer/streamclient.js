@@ -21,8 +21,8 @@ export function logIntoServer() {
 
 function startRoom() {
 
-let GAME_ID=  ds.getUid();
-let playerID=  ds.getUid();
+let GAME_ID=  ds.getUid().replace("-","");
+let playerID=  ds.getUid().replace("-","");
   ds.on('connectionStateChanged', function (connectionState) {
     var cssClass;
 
@@ -40,55 +40,56 @@ let playerID=  ds.getUid();
   });
 
   ds.record.getRecord(GAME_ID + '-status').whenReady(statusRecord => {
-    const oldValue = statusRecord.get(`player${playerID}-online`)
-    statusRecord.set(`player${playerID}-online`, {"playerID":playerID,"ports": ports, "currentPlayers": currentPlayers,"online":!oldValue});
-    statusRecord.discard()
-
+     statusRecord.set(`player${playerID}-online`, {"playerID":playerID,"ports": ports, "currentPlayers": currentPlayers});
+    playerStatusRecords[playerID] = statusRecord;
     $('#mpcode').prop("value", GAME_ID);
-    alert('Ask your friend to join using your peer ID: ' + GAME_ID + "you can copy it from the header of this window");
+    alert('Ask your friend to join using your game ID: ' + GAME_ID + "you can copy it from the header of this window");
     setNetInputFlag(ports, false);
+
+    let playerDataRecord = ds.record.getRecord(GAME_ID + '-player/' + playerID);
+
+    playerDataRecord.whenReady(record => {
+
+      //TODO iterate over ports to establish inital group
+      let playerPayload =  deepCopyObject(true,{},player[playerStatusRecords[playerID].ports - 1]);
+      delete playerPayload.charAttributes;
+      delete playerPayload.charHitboxes;
+      record.set({
+        name: playerID,
+        playerSlot:ports - 1,
+        inputBuffer:nullInput(),
+        playerInfo:playerPayload
+      })
+    });
+
   });
 
-  const statusRecord = client.record.getRecord(GAME_ID + '-status');
-    statusRecord.subscribe(`player${playerID}-online`, statusData => {
-      let online = statusData.get("online");
-      if (online === true) {
-        playerStatusRecords[playerID] = statusData;
-
-        if (playerStatusRecords[playerID] && (playerID !== GAME_ID)) {
-          let data = playerStatusRecords[playerID].get();
-          syncHost(data.get(ports) - 1);
-
-
-        }
-      }
-  }, true);
-
-
- let record = client.record.getRecord(GAME_ID + '-player/' + playerID);
-
-  record.whenReady(record => {
-    let playerPayload =  deepCopyObject(true,{},player[playerStatusRecords[playerID].playerSlot]);
-    delete playerPayload.charAttributes;
-    delete playerPayload.charHitboxes;
-    record.set({
-      name: playerID,
-      playerSlot:ports - 1,
-      inputBuffer:nullInput(),
-      playerInfo:playerPayload
-    })
-  });
+  // const statusRecord = ds.record.getRecord(GAME_ID + '-status');
+  //   statusRecord.subscribe(`player${playerID}-online`, statusData => {
+  //
+  //       playerStatusRecords[playerID] = statusData;
+  //
+  //       if (playerStatusRecords[playerID] && (playerID !== GAME_ID)) {
+  //
+  //         syncHost( statusData.ports - 1);
+  //
+  //
+  //     }
+  // }, true);
 
 
 
-  record.subscribe(GAME_ID + '-player/' + playerID, data => {
-    if(data){
-      if (data.inputBuffer && (data.playerSlot !== undefined)) {
-        saveNetworkInputs(data.playerSlot, data.inputBuffer);
-        player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
-      }
-    }
-  });
+
+
+
+  // record.subscribe(GAME_ID + '-player/' + playerID, data => {
+  //   if(data){
+  //     if (data.inputBuffer && (data.playerSlot !== undefined)) {
+  //       saveNetworkInputs(data.playerSlot, data.inputBuffer);
+  //       player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+  //     }
+  //   }
+  // });
 
 
 
@@ -204,8 +205,8 @@ function connect(record,name) {
   // Handle a join connection.
 
 
- let statusRecords = ds.record.getList(name+'/playerStatus/'+name).getEntries();
-
+ let statusRecords = ds.record.getList(name + '-status').getEntries();
+console.log(statusRecords);
  if(statusRecords.length === 0){
    alert("error room appears to be empty");
  }else if(statusRecords.length >= 1){
@@ -217,8 +218,10 @@ function connect(record,name) {
 
    // statusRecord.set({"name":name,"syncHost": "syncHost", "ports": ports - 1, "currentPlayers": currentPlayers});
   //  playerStatusRecords[name]= statusRecord;
-ds.record.listen('player/'+name,function(){
-  let data =ds.record.getRecord('player/'+name);
+ds.record.listen(name+'/player/*',function(match){
+  console.log(match);
+  let data =ds.record.getRecord('player/'+match);
+
   if (data.syncClient) {
     console.log("negotiate player position and controller index");
     // console.log(data);
