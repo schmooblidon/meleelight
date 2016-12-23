@@ -34,7 +34,7 @@ function startRoom() {
     peerId = id;
 
     $('#mpcode').prop("value", id);
-    alert('Ask your friend to join using your peer ID: ' + peerId + "you can copy it from the header of this window");
+    alert('Ask your friend to join using your peer ID: ' + peerId + " you can copy it from the header of this window");
   });
 
   //oops?

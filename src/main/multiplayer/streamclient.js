@@ -24,7 +24,7 @@ export function logIntoServer() {
 }
 
 function getPlayerStatusRecord(playerID) {
-  return playerStatusRecords[playerID].get()[`playerStatus/`];
+  return playerStatusRecords[playerID];
 }
 function startRoom() {
   GAME_ID = ds.getUid().replace("-", "");
@@ -47,13 +47,13 @@ function startRoom() {
   });
 
    ds.record.getRecord(GAME_ID + '-game').whenReady(statusRecord => {
-    console.log("set up game status "+ GAME_ID);
+  //  console.log("set up game status "+ GAME_ID);
     statusRecord.set(`playerStatus/`, {
       "playerID": playerID,
       "ports": ports,
       "currentPlayers": currentPlayers
     });
-    playerStatusRecords[playerID] = statusRecord;
+    playerStatusRecords[playerID] = statusRecord.get();
     $('#mpcode').prop("value", GAME_ID);
     alert('Ask your friend to join using your game ID: ' + GAME_ID + "you can copy it from the header of this window");
     setNetInputFlag(ports, false);
@@ -69,26 +69,26 @@ function startRoom() {
       });
    //TODO iterate over ports to establish inital group
 
-   ds.record.listen('playerStatus/*', match => {
+   ds.event.subscribe('playerStatus/', match=> {
+     if(match.playerID === playerID){
+       return;
+     }
      console.log("subscriber game status "+ match);
-     ds.record.getRecord(match).whenReady(function (statusRecord) {
-       statusRecord.subscribe(match, statusData => {
-         console.log("subscriber player "+ match);
-         playerStatusRecords[playerID] = statusRecord;
 
-         syncHost(statusData.ports - 1);
+     playerStatusRecords[playerID] = statusRecord;
+     syncHost(match.ports );
 
-       }, true);
-     });
    });
 
-   ds.record.listen('player/*', data => {
-      console.log("listener player/*  "+ GAME_ID);
-      console.log(data);
+   ds.event.subscribe('player/', data => {
+    //  console.log("listener player  "+ GAME_ID);
+    //  console.log(data);
       if (data) {
-        if (data.inputBuffer && (data.playerSlot !== undefined)) {
-          saveNetworkInputs(data.playerSlot, data.inputBuffer);
-          player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+        if (data.playerID !== = playerID) {
+          if (data.inputBuffer && (data.playerSlot !== undefined)) {
+            saveNetworkInputs(data.playerSlot, data.inputBuffer);
+            player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+          }
         }
       }
     });
@@ -126,21 +126,19 @@ export function setNetInputFlag(name, val) {
 }
 
 function sendInputsOverNet(inputBuffer, playerSlot) {
-  eachActiveConnection(function (c) {
 
-    for (let key of Object.keys(peerConnections)) {
-      if (key) {
+
+
         //   console.log("sending inputs");
         //dont be lazy like me;
         let playerPayload = deepCopyObject(true, {}, player[playerSlot]);
         delete playerPayload.charAttributes;
         delete playerPayload.charHitboxes;
-        let payload = {"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
-        peerConnections[key].set(payload);
-      }
-    }
+        let payload = {"playerID":playerID,"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
+        ds.event.emit('player/',payload);
 
-  });
+
+
 }
 
 export function updateNetworkInputs(inputBuffer, playerSlot) {
@@ -219,19 +217,18 @@ function connect(record, name) {
     playerStatusRecords[name] = record;
 
     syncClient(data[playerstatus].ports);
-    record.set('playerStatus/'+playerID, {
+    ds.event.emit('playerStatus/', {
       "playerID": playerID,
       "syncHost": "syncHost",
       "ports": ports - 1,
       "currentPlayers": currentPlayers
     });
-    let playerPayload = deepCopyObject(true, {}, player[slots]);
+    let playerPayload = deepCopyObject(true, {}, player[ports]);
     delete playerPayload.charAttributes;
     delete playerPayload.charHitboxes;
-    let payload = {"playerSlot": slots, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
-    record.set('player/'+playerID,payload);
-    ds.event.emit( 'playerStatus/'+playerID );
-    ds.event.emit( 'player/'+playerID );
+    let payload = {"playerSlot": ports, "inputBuffer": playerInputBuffer, "playerInfo": playerPayload};
+    ds.event.emit('player/',payload);
+
   }
 
 

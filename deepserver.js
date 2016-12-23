@@ -11,6 +11,7 @@ const server = new DeepstreamServer({
   host: 'localhost',
   port: 6020
 });
+server.set('logLevel', 'ERROR');
 
 /*
  Optionally you can specify settings to set in complex objects, such as dataTransforms, a HTTPServer
