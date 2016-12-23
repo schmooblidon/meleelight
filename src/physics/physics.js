@@ -70,7 +70,7 @@ export function land (i,y,t,j,input){
 export function physics (i,input){
   player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y);
   player[i].phys.facePrev = player[i].phys.face;
-  player[i].phys.prevFrameHitboxes= deepCopyObject(true,{},player[i].hitboxes);
+  player[i].phys.prevFrameHitboxes=  deepCopyObject(true,player[i].phys.prevFrameHitboxes,player[i].hitboxes);
   if (player[i].hit.hitlag > 0){
     player[i].hit.hitlag--;
     if (player[i].hit.hitlag == 0 && player[i].hit.knockback > 0) {
