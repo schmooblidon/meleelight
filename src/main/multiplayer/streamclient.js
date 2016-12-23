@@ -84,7 +84,7 @@ function startRoom() {
     //  console.log("listener player  "+ GAME_ID);
     //  console.log(data);
       if (data) {
-        if (data.playerID !== = playerID) {
+        if (data.playerID !== playerID) {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
             saveNetworkInputs(data.playerSlot, data.inputBuffer);
             player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
@@ -127,17 +127,13 @@ export function setNetInputFlag(name, val) {
 
 function sendInputsOverNet(inputBuffer, playerSlot) {
 
-
-
         //   console.log("sending inputs");
         //dont be lazy like me;
-        let playerPayload = deepCopyObject(true, {}, player[playerSlot]);
+        let playerPayload = Object.assign({}, player[playerSlot]);
         delete playerPayload.charAttributes;
         delete playerPayload.charHitboxes;
         let payload = {"playerID":playerID,"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
         ds.event.emit('player/',payload);
-
-
 
 }
 
@@ -215,7 +211,7 @@ function connect(record, name) {
   } else {
     let playerstatus = Object.keys(data)[0];
     playerStatusRecords[name] = record;
-
+    setNetInputFlag(ports, true);
     syncClient(data[playerstatus].ports);
     ds.event.emit('playerStatus/', {
       "playerID": playerID,
@@ -223,15 +219,13 @@ function connect(record, name) {
       "ports": ports - 1,
       "currentPlayers": currentPlayers
     });
-    let playerPayload = deepCopyObject(true, {}, player[ports]);
+    let playerPayload = Object.assign({}, player[ports]);
     delete playerPayload.charAttributes;
     delete playerPayload.charHitboxes;
-    let payload = {"playerSlot": ports, "inputBuffer": playerInputBuffer, "playerInfo": playerPayload};
+    let payload = {"playerID":playerID,"playerSlot": ports, "inputBuffer": playerInputBuffer, "playerInfo": playerPayload};
     ds.event.emit('player/',payload);
 
   }
-
-
 
   peerConnections[name] = record;
 
