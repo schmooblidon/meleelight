@@ -3,7 +3,7 @@ const scripts = [{
   path: "./js/main.js",
   // path: "https://raw.githubusercontent.com/schmooblidon/meleelight/download/js/main.js",
   text: "core code",
-  size: 8.604 * 1024 * 1024,
+  size: 7.7436 * 1024 * 1024,
   loaded: 0,
 } ];
 
