@@ -7,7 +7,7 @@ import {
 import {Vec2D} from "./util/Vec2D";
 import {keyMap} from "../settings";
 import {playing} from "./main";
-import {retrieveNetworkInputs} from "./multiplayer/mproom";
+import {retrieveNetworkInputs, giveInputs} from "./multiplayer/mproom";
 
 export const button = {
   "a" : 0, 
@@ -56,9 +56,9 @@ export function inputData ( list = [false, false, false, false, false, false, fa
         rawX : list[18],
         rawY : list[19]
   }
-};
+}
 
-const nullInput = ()=>{return new inputData ()};
+export const  nullInput = ()=>{return new inputData ()};
 
 export const nullInputs = ()=>{return [ new inputData ( )
                           , new inputData ( )
@@ -115,7 +115,7 @@ export const aiInputBank = [aiPlayer1,aiPlayer2,aiPlayer3,aiPlayer4];
 export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, controllerIndex, keys,playertype) {
   // input is the input for player i in the current frame
   let input = nullInput(); // initialise with default values
-  if(playertype !== 0 && gameMode === 3 ){
+  if(playertype === 1 && gameMode === 3 ){
     return aiInputBank[playerSlot][0];
   }else if (controllerType == 10) { // keyboard controls
     input = pollKeyboardInputs(gameMode, frameByFrame, keys);
