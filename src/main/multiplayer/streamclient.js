@@ -19,7 +19,7 @@ let GAME_ID;
 let playerID;
 
 export function logIntoServer() {
-  ds = deepstream('localhost:6020').login(null, _onLoggedIn);
+  ds = deepstream(loction.hostname+":"+location.port).login(null, _onLoggedIn);
 
 }
 
