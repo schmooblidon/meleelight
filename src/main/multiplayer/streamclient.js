@@ -15,14 +15,21 @@ import {deepCopyObject} from "../util/deepCopyObject";
 let ds = null;
 let peerId = null;
 let connectionReady = false;
+let GAME_ID;
+let playerID;
+
 export function logIntoServer() {
-  ds = deepstream('localhost:6020').login( null, _onLoggedIn );
+  ds = deepstream('localhost:6020').login(null, _onLoggedIn);
+
 }
 
+function getPlayerStatusRecord(playerID) {
+  return playerStatusRecords[playerID].get()[`playerStatus/`];
+}
 function startRoom() {
+  GAME_ID = ds.getUid().replace("-", "");
+  playerID = ds.getUid().replace("-", "");
 
-let GAME_ID=  ds.getUid().replace("-","");
-let playerID=  ds.getUid().replace("-","");
   ds.on('connectionStateChanged', function (connectionState) {
     var cssClass;
 
@@ -39,66 +46,64 @@ let playerID=  ds.getUid().replace("-","");
     console.log("connection status : " + cssClass);
   });
 
-  ds.record.getRecord(GAME_ID + '-status').whenReady(statusRecord => {
-     statusRecord.set(`player${playerID}-online`, {"playerID":playerID,"ports": ports, "currentPlayers": currentPlayers});
+   ds.record.getRecord(GAME_ID + '-game').whenReady(statusRecord => {
+    console.log("set up game status "+ GAME_ID);
+    statusRecord.set(`playerStatus/`, {
+      "playerID": playerID,
+      "ports": ports,
+      "currentPlayers": currentPlayers
+    });
     playerStatusRecords[playerID] = statusRecord;
     $('#mpcode').prop("value", GAME_ID);
     alert('Ask your friend to join using your game ID: ' + GAME_ID + "you can copy it from the header of this window");
     setNetInputFlag(ports, false);
-
-    let playerDataRecord = ds.record.getRecord(GAME_ID + '-player/' + playerID);
-
-    playerDataRecord.whenReady(record => {
-
-      //TODO iterate over ports to establish inital group
-      let playerPayload =  deepCopyObject(true,{},player[playerStatusRecords[playerID].ports - 1]);
-      delete playerPayload.charAttributes;
-      delete playerPayload.charHitboxes;
-      record.set({
+   let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1]);
+   delete playerPayload.charAttributes;
+   delete playerPayload.charHitboxes;
+   statusRecord.set('player/',
+      {
         name: playerID,
-        playerSlot:ports - 1,
-        inputBuffer:nullInput(),
-        playerInfo:playerPayload
-      })
+        playerSlot: ports - 1,
+        inputBuffer: nullInput(),
+        playerInfo: playerPayload
+      });
+   //TODO iterate over ports to establish inital group
+
+   ds.record.listen('playerStatus/*', match => {
+     console.log("subscriber game status "+ match);
+     ds.record.getRecord(match).whenReady(function (statusRecord) {
+       statusRecord.subscribe(match, statusData => {
+         console.log("subscriber player "+ match);
+         playerStatusRecords[playerID] = statusRecord;
+
+         syncHost(statusData.ports - 1);
+
+       }, true);
+     });
+   });
+
+   ds.record.listen('player/*', data => {
+      console.log("listener player/*  "+ GAME_ID);
+      console.log(data);
+      if (data) {
+        if (data.inputBuffer && (data.playerSlot !== undefined)) {
+          saveNetworkInputs(data.playerSlot, data.inputBuffer);
+          player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+        }
+      }
     });
 
+
+
   });
-
-  // const statusRecord = ds.record.getRecord(GAME_ID + '-status');
-  //   statusRecord.subscribe(`player${playerID}-online`, statusData => {
-  //
-  //       playerStatusRecords[playerID] = statusData;
-  //
-  //       if (playerStatusRecords[playerID] && (playerID !== GAME_ID)) {
-  //
-  //         syncHost( statusData.ports - 1);
-  //
-  //
-  //     }
-  // }, true);
-
-
-
-
-
-
-  // record.subscribe(GAME_ID + '-player/' + playerID, data => {
-  //   if(data){
-  //     if (data.inputBuffer && (data.playerSlot !== undefined)) {
-  //       saveNetworkInputs(data.playerSlot, data.inputBuffer);
-  //       player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
-  //     }
-  //   }
-  // });
-
 
 
 
 
 }
 function _onLoggedIn() {
-   connectionReady = true;
-   startRoom();
+  connectionReady = true;
+  startRoom();
 
   $("#player1").on('click', (e) => {
     var destId = prompt("Hosts's peer ID:");
@@ -123,17 +128,17 @@ export function setNetInputFlag(name, val) {
 function sendInputsOverNet(inputBuffer, playerSlot) {
   eachActiveConnection(function (c) {
 
-      for (let key of Object.keys(peerConnections)) {
-        if (key) {
-          //   console.log("sending inputs");
-          //dont be lazy like me;
-          let playerPayload = deepCopyObject(true, {}, player[playerSlot]);
-          delete playerPayload.charAttributes;
-          delete playerPayload.charHitboxes;
-          let payload = {"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
-          peerConnections[key].set(payload);
-        }
+    for (let key of Object.keys(peerConnections)) {
+      if (key) {
+        //   console.log("sending inputs");
+        //dont be lazy like me;
+        let playerPayload = deepCopyObject(true, {}, player[playerSlot]);
+        delete playerPayload.charAttributes;
+        delete playerPayload.charHitboxes;
+        let payload = {"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
+        peerConnections[key].set(payload);
       }
+    }
 
   });
 }
@@ -160,7 +165,6 @@ export function retrieveNetworkInputs(playerSlot) {
 export function connectToMPServer() {
 
   logIntoServer();
-
 
 
 }
@@ -201,47 +205,34 @@ function syncHost(exactportnumber) {
 }
 
 
-function connect(record,name) {
+function connect(record, name) {
   // Handle a join connection.
 
 
- let statusRecords = ds.record.getList(name + '-status').getEntries();
-console.log(statusRecords);
- if(statusRecords.length === 0){
-   alert("error room appears to be empty");
- }else if(statusRecords.length >= 1){
-   for (let j = 0 ; j < statusRecords.length ;j++) {
-     playerStatusRecords[statusRecords[j]] = ds.record.getRecord(statusRecords[j]);
-     //TODO handle syncing
-   }
- }
+  let data = record.get();
 
-   // statusRecord.set({"name":name,"syncHost": "syncHost", "ports": ports - 1, "currentPlayers": currentPlayers});
-  //  playerStatusRecords[name]= statusRecord;
-ds.record.listen(name+'/player/*',function(match){
-  console.log(match);
-  let data =ds.record.getRecord('player/'+match);
 
-  if (data.syncClient) {
-    console.log("negotiate player position and controller index");
-    // console.log(data);
-    syncClient(ports)
+  if (Object.keys(data).length === 0 && data.constructor === Object) {
+    alert("error room appears to be empty");
+  } else {
+    let playerstatus = Object.keys(data)[0];
+    playerStatusRecords[name] = record;
+
+    syncClient(data[playerstatus].ports);
+    record.set('playerStatus/'+playerID, {
+      "playerID": playerID,
+      "syncHost": "syncHost",
+      "ports": ports - 1,
+      "currentPlayers": currentPlayers
+    });
+    let playerPayload = deepCopyObject(true, {}, player[slots]);
+    delete playerPayload.charAttributes;
+    delete playerPayload.charHitboxes;
+    let payload = {"playerSlot": slots, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
+    record.set('player/'+playerID,payload);
+    ds.event.emit( 'playerStatus/'+playerID );
+    ds.event.emit( 'player/'+playerID );
   }
-  // console.log("receiving inputs");
-
-  if (data.inputBuffer && (data.playerSlot !== undefined)) {
-    saveNetworkInputs(data.playerSlot, data.inputBuffer);
-    player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
-  }
-});
-
-
-    // record.on('close', () => {
-    //   console.log(record.peer + ' has left the game.');
-    //   delete peerConnections[record.peer];
-    //   delete connectedPeers[record.peer];
-    //
-    // });
 
 
 
@@ -271,9 +262,10 @@ function connectToUser(userName) {
   const requestedPeer = userName;
   if (!connectedPeers[requestedPeer]) {
 
-   let playerRecord=  ds.record.getRecord( 'player/' + requestedPeer);
-     connect(playerRecord,requestedPeer);
-     setNetInputFlag(ports, true);
+    let playerRecord = ds.record.getRecord(requestedPeer + '-game').whenReady(statusRecord => {
+      connect(statusRecord, requestedPeer);
+      setNetInputFlag(ports, true);
+    });
 
 
     peerConnections[requestedPeer] = playerRecord;
