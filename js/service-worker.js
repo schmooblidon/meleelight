@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["C:/Users/Schmooblidon/documents/physics/meleelight/dist/js/index.js","69d007b95d4bcd45402ec8f68764941f"],["C:/Users/Schmooblidon/documents/physics/meleelight/dist/js/main.js","ac5ec07fe020ce68a3b0d04c7875ea7a"]];
+var precacheConfig = [["C:/Users/Schmooblidon/documents/physics/meleelight/dist/js/index.js","319831c2a4a5ff3e959664d83d330878"],["C:/Users/Schmooblidon/documents/physics/meleelight/dist/js/main.js","c8ccb2a0409864548d30fba38e6c3375"]];
 var cacheName = 'sw-precache-v2-meleelight-' + (self.registration ? self.registration.scope : '');
 
 
