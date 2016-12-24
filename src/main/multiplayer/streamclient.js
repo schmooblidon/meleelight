@@ -70,7 +70,7 @@ function startRoom() {
       });
    //TODO iterate over ports to establish inital group
 
-   ds.event.subscribe('playerStatus/', match=> {
+   ds.event.subscribe(GAME_ID +'playerStatus/', match=> {
      if(match.playerID === playerID){
        return;
      }
@@ -81,7 +81,7 @@ function startRoom() {
 
    });
 
-   ds.event.subscribe('player/', data => {
+   ds.event.subscribe(GAME_ID +'player/', data => {
     //  console.log("listener player  "+ GAME_ID);
     //  console.log(data);
       if (data) {
@@ -135,7 +135,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
         delete playerPayload.charHitboxes;
         delete playerPayload.phys;
         let payload = {"playerID":playerID,"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
-        ds.event.emit('player/',payload);
+        ds.event.emit(GAME_ID +'player/',payload);
 
 }
 
@@ -215,7 +215,7 @@ function connect(record, name) {
     playerStatusRecords[name] = record;
     setNetInputFlag(ports, true);
     syncClient(data[playerstatus].ports);
-    ds.event.emit('playerStatus/', {
+    ds.event.emit(name +'playerStatus/', {
       "playerID": playerID,
       "syncHost": "syncHost",
       "ports": ports - 1,
@@ -226,7 +226,7 @@ function connect(record, name) {
     delete playerPayload.charHitboxes;
     delete playerPayload.phys;
     let payload = {"playerID":playerID,"playerSlot": ports, "inputBuffer": playerInputBuffer, "playerInfo": playerPayload};
-    ds.event.emit('player/',payload);
+    ds.event.emit(name +'player/',payload);
 
   }
 
