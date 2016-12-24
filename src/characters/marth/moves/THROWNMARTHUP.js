@@ -24,7 +24,11 @@ export default  {
     player[p].timer++;
     if (!marth.THROWNMARTHUP.interrupt(p, input)) {
       if (player[p].timer > 0) {
-        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + marth.THROWNMARTHUP.offset[player[p].timer - 1][0] * player[p].phys.face, player[player[p].phys.grabbedBy].phys.pos.y + marth.THROWNMARTHUP.offset[player[p].timer - 1][1]);
+        let playerTimer = player[p].timer - 1;
+        if(playerTimer > (marth.THROWNMARTHUP.offset.length - 1)){
+          playerTimer = marth.THROWNMARTHUP.offset.length;
+        }
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + marth.THROWNMARTHUP.offset[playerTimer][0] * player[p].phys.face, player[player[p].phys.grabbedBy].phys.pos.y + marth.THROWNMARTHUP.offset[playerTimer][1]);
       }
     }
   },
