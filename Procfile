@@ -1,1 +1,1 @@
-web: node deepserver
+web: node app
