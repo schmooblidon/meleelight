@@ -19,7 +19,7 @@ let GAME_ID;
 let playerID;
 let HOST_GAME_ID;
 export function logIntoServer() {
-  ds = deepstream("deepml.herokuapp.com:80").login(null, _onLoggedIn);
+  ds = deepstream("wss://deepml.herokuapp.com:443").login(null, _onLoggedIn);
 
 }
 
