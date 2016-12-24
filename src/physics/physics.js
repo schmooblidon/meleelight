@@ -11,6 +11,7 @@ import {activeStage} from "stages/activeStage";
 import { Box2D} from "../main/util/Box2D";
 import {Vec2D} from "../main/util/Vec2D";
 import {ecb} from "../main/characters";
+import {createHitboxes} from "../main/player";
 /* eslint-disable */
 
 export function land (i,y,t,j,input){
@@ -939,6 +940,13 @@ if (input[i][0].lsX <= -0.7 &&
   player[i].phys.isInterpolated = false;
   for (var j = 0; j < 4; j++) {
     if (player[i].hitboxes.active[j] && player[i].phys.prevFrameHitboxes.active[j]) {
+      if(!player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame]){
+        player[i].phys.prevFrameHitboxes = new createHitboxes();
+      }
+      if(!player[i].phys.hitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame]){
+        player[i].phys.hitboxes = new createHitboxes();
+      }
+
       var h1 = new Vec2D(
         player[i].phys.posPrev.x + (player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame].x * player[i].phys.facePrev),
         player[i].phys.posPrev.y + player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame].y
