@@ -1,19 +1,5 @@
-var express = require('express');
-var app = express();
-app.use(express.static('./dist'));
 
-app.get('/', function(req, res) {
-  res.redirect('/meleelight.html');
-});
-
-app.set('port', (process.env.PORT || 5000));
-
-const appServer = app.listen((process.env.PORT || 5000));
-
-
-
-
-const DeepstreamServer = require('deepstream.io')
+const DeepstreamServer = require('deepstream.io');
 const C = DeepstreamServer.constants;
 /*
  The server can take
@@ -24,10 +10,10 @@ const C = DeepstreamServer.constants;
  */
 const server = new DeepstreamServer({
   host: 'localhost',
-  port: ${DEEPPORT}
+  port: process.env.PORT
 });
 server.set('logLevel', 'ERROR');
-
+console.log("using port "+process.env.PORT);
 /*
  Optionally you can specify settings to set in complex objects, such as dataTransforms, a HTTPServer
  or a plugin which you want to reuse within your application
