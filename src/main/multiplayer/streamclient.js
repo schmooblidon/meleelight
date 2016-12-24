@@ -62,6 +62,8 @@ function startRoom() {
    delete playerPayload.prevFrameHitboxes;
    delete playerPayload.timer;
    delete playerPayload.actionState;
+   delete playerPayload.grabbedBy;
+   delete playerPayload.grabbing;
    statusRecord.set(GAME_ID+'player/',
       {
         name: playerID,
@@ -138,6 +140,8 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
         delete playerPayload.prevFrameHitboxes;
         delete playerPayload.timer;
         delete playerPayload.actionState;
+        delete playerPayload.grabbedBy;
+        delete playerPayload.grabbing;
         let payload = {"playerID":playerID,"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
         ds.event.emit(HOST_GAME_ID +'player/',payload);
 
@@ -231,6 +235,8 @@ function connect(record, name) {
     delete playerPayload.prevFrameHitboxes;
     delete playerPayload.timer;
     delete playerPayload.actionState;
+    delete playerPayload.grabbedBy;
+    delete playerPayload.grabbing;
     let payload = {"playerID":playerID,"playerSlot": ports, "inputBuffer": playerInputBuffer, "playerInfo": playerPayload};
     ds.event.emit(name +'player/',payload);
 
