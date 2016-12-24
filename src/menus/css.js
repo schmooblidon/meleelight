@@ -61,7 +61,11 @@ export function setChosenChar(index,charSelected){
   chosenChar[index] = charSelected;
   tokenGrabbed[index] = false;
   occupiedToken[index] = false;
-  tokenPos[index] = new Vec2D(charIconPos[index].x + (index % 2) * 40, charIconPos[index].y + (index > 1 ? 40 : 0));
+ setTokenPos(index,charSelected);
+  player[i].actionState = "WAIT";
+  player[i].timer = 0;
+  player[i].charAttributes = chars[characterSelections[charSelected]].attributes;
+  player[i].charHitboxes = chars[characterSelections[charSelected]].hitboxes;
   whichTokenGrabbed[index] = -1;
 }
 
