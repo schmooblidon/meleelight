@@ -17,7 +17,7 @@ let peerId = null;
 let connectionReady = false;
 let GAME_ID;
 let playerID;
-
+let HOST_GAME_ID;
 export function logIntoServer() {
   ds = deepstream("deepml.herokuapp.com:80").login(null, _onLoggedIn);
 
@@ -133,7 +133,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
         delete playerPayload.charAttributes;
         delete playerPayload.charHitboxes;
         let payload = {"playerID":playerID,"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
-        ds.event.emit(GAME_ID +'player/',payload);
+        ds.event.emit(HOST_GAME_ID +'player/',payload);
 
 }
 
@@ -252,7 +252,7 @@ function eachActiveConnection(fn) {
 function connectToUser(userName) {
   const requestedPeer = userName;
   if (!connectedPeers[requestedPeer]) {
-
+    HOST_GAME_ID = requestedPeer;
     let playerRecord = ds.record.getRecord(requestedPeer + '-game').whenReady(statusRecord => {
       connect(statusRecord, requestedPeer);
       setNetInputFlag(ports, true);
