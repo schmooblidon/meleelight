@@ -48,7 +48,7 @@ function startRoom() {
 
    ds.record.getRecord(GAME_ID + '-game').whenReady(statusRecord => {
   //  console.log("set up game status "+ GAME_ID);
-    statusRecord.set(`playerStatus/`, {
+    statusRecord.set(GAME_ID+'playerStatus/', {
       "playerID": playerID,
       "ports": ports,
       "currentPlayers": currentPlayers
@@ -60,7 +60,8 @@ function startRoom() {
    let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1]);
    delete playerPayload.charAttributes;
    delete playerPayload.charHitboxes;
-   statusRecord.set('player/',
+   delete playerPayload.hitboxes;
+   statusRecord.set(GAME_ID+'player/',
       {
         name: playerID,
         playerSlot: ports - 1,
@@ -132,6 +133,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
         let playerPayload = Object.assign({}, player[playerSlot]);
         delete playerPayload.charAttributes;
         delete playerPayload.charHitboxes;
+        delete playerPayload.hitboxes;
         let payload = {"playerID":playerID,"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
         ds.event.emit(HOST_GAME_ID +'player/',payload);
 
@@ -222,6 +224,7 @@ function connect(record, name) {
     let playerPayload = Object.assign({}, player[ports]);
     delete playerPayload.charAttributes;
     delete playerPayload.charHitboxes;
+    delete playerPayload.hitboxes;
     let payload = {"playerID":playerID,"playerSlot": ports, "inputBuffer": playerInputBuffer, "playerInfo": playerPayload};
     ds.event.emit(name +'player/',payload);
 
