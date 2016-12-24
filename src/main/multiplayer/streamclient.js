@@ -11,15 +11,17 @@ import {
   setMtype,
   setCurrentPlayer, player
   , setCS
+  , changeGamemode
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
+import {setVsStage} from "../../stages/activeStage";
 let ds = null;
 let peerId = null;
 let connectionReady = false;
 let GAME_ID;
 let playerID;
-let HOST_GAME_ID;
+let HOST_GAME_ID = null;
 export function logIntoServer() {
   ds = deepstream("wss://deepml.herokuapp.com:443").login(null, _onLoggedIn);
 
@@ -101,7 +103,12 @@ function startRoom() {
         setChosenChar(data.playerSlot, data.charSelected);
         setTokenPos(data.playerSlot, data.charSelected);
       }
-    })
+    });
+    ds.event.subscribe(GAME_ID + 'gameMode/', data => {
+      if (data) {
+        changeGamemode(data.gameMode);
+      }
+    });
 
   });
 
@@ -262,6 +269,17 @@ function connect(record, name) {
       setTokenPos(data.playerSlot, data.charSelected);
     }
   });
+  ds.event.subscribe(name + 'gameMode/', data => {
+    if (data) {
+      changeGamemode(data.gameMode);
+
+    }
+  });
+  ds.event.subscribe(name + 'changeStage/', data => {
+    if (data) {
+      setVsStage(data.stage);
+    }
+  });
   peerConnections[name] = record;
 
 }
@@ -301,10 +319,22 @@ function connectToUser(userName) {
 
 }
 
-//host has authority for now
+
 export function syncCharacter(index, charSelection) {
-  if (giveInputs[index] === true) {
+  if (giveInputs[index] === true && HOST_GAME_ID !== null) {
     ds.event.emit(HOST_GAME_ID + 'charSelection/', {"playerSlot": index, "charSelected": charSelection});
+  }
+}
+
+export function syncGameMode( gameMode) {
+  if(HOST_GAME_ID !== null) {
+    ds.event.emit(HOST_GAME_ID + 'gameMode/', {"gameMode": gameMode});
+  }
+}
+
+export function syncStage( stage) {
+  if(HOST_GAME_ID !== null && GAME_ID === HOST_GAME_ID) {
+    ds.event.emit(HOST_GAME_ID + 'changeStage/', {"stage": stage});
   }
 }
 

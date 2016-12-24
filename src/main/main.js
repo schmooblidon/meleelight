@@ -37,7 +37,7 @@ import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData, nullInput} from "./input";
-import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,connectToMPServer} from "./multiplayer/streamclient";
+import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,connectToMPServer, syncGameMode} from "./multiplayer/streamclient";
 import {deepCopyObject} from "./util/deepCopyObject";
 import {setChosenChar} from "../menus/css";
 /*globals performance*/
@@ -487,6 +487,7 @@ export function changeGamemode (newGamemode){
   bg1.fillStyle = "black";
   bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
   fg1.clearRect(0, 0, layers.FG1.width, layers.FG1.height);
+  syncGameMode(newGamemode);
   gameMode = newGamemode;
   switch (newGamemode) {
     // TITLESCREEN

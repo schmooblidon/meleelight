@@ -3,6 +3,7 @@ import vsstages from 'stages/vs-stages/vs-stages';
 import tstages from 'stages/targetstages/tstages';
 import {Box2D} from "../main/util/Box2D";
 import {Vec2D} from "../main/util/Vec2D";
+import {syncStage} from "../main/multiplayer/streamclient";
 const stageMapping = {
   0: "battlefield",
   1: "ystory",
@@ -12,6 +13,7 @@ const stageMapping = {
 
 export function setVsStage(val) {
   activeStage = vsstages[stageMapping[val]];
+  syncStage(activeStage);
 }
 
 export const targetStageMapping = {
