@@ -10,6 +10,7 @@ import {
   mType,
   setMtype,
   setCurrentPlayer, player
+  , setCS
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 let ds = null;
@@ -94,7 +95,11 @@ function startRoom() {
       }
     });
 
-
+ds.event.subscribe(GAME_ID +'charSelection/',data=>{
+  if(data){
+    setCS(data.playerSlot,data.charSelected)
+  }
+})
 
   });
 
@@ -241,6 +246,11 @@ function connect(record, name) {
       }
     }
   });
+  ds.event.subscribe(name +'charSelection/',data=>{
+    if(data){
+      setCS(data.playerSlot,data.charSelected)
+    }
+  });
   peerConnections[name] = record;
 
 }
@@ -280,6 +290,11 @@ function connectToUser(userName) {
 
 }
 
-
+//host has authority for now
+export function syncCharacter(index,charSelection){
+  if(giveInputs[index]===true) {
+    ds.event.emit(HOST_GAME_ID + 'charSelection/', {"playerSlot": index, "charSelected": charSelection});
+  }
+}
 
 

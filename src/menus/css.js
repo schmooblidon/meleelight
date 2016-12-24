@@ -14,6 +14,7 @@ import {actionStates} from "physics/actionStateShortcuts";
 import {setCS} from "../main/main";
 import {chars} from "../main/characters";
 import {Vec2D} from "../main/util/Vec2D";
+import {syncCharacter} from "../main/multiplayer/streamclient";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -52,6 +53,7 @@ export let rtfFlashD = 1;
 
 export function changeCharacter (i,c){
   setCS(i,c);
+  syncCharacter(i,c);
   player[i].actionState = "WAIT";
   player[i].timer = 0;
   player[i].charAttributes = chars[characterSelections[i]].attributes;
