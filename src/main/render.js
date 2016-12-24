@@ -72,7 +72,7 @@ export function renderPlayer(i) {
         frame = framesData[characterSelections[i]][player[i].actionState];
     }
     if(animations[characterSelections[i]][player[i].actionState][frame - 1] === undefined){
-        frame = animations[characterSelections[i]][player[i].actionState].length - 2;
+      return;
     }
 
     var model = animations[characterSelections[i]][player[i].actionState][frame - 1];
