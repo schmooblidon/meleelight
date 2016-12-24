@@ -6,9 +6,9 @@ app.get('/', function(req, res) {
   res.redirect('/meleelight.html');
 });
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (${APPPORT} || 5000));
 
-const appServer = app.listen((process.env.PORT || 5000));
+const appServer = app.listen((${APPPORT} || 5000));
 
 
 
@@ -24,7 +24,7 @@ const C = DeepstreamServer.constants;
  */
 const server = new DeepstreamServer({
   host: 'localhost',
-  port: process.env.PORT
+  port: ${DEEPPORT}
 });
 server.set('logLevel', 'ERROR');
 
