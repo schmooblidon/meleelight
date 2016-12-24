@@ -942,6 +942,9 @@ if (input[i][0].lsX <= -0.7 &&
       if(player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame] === undefined){
         continue;
       }
+      if(player[i].hitboxes.id[j].offset[player[i].hitboxes.frame] === undefined){
+        continue;
+      }
 
       var h1 = new Vec2D(
         player[i].phys.posPrev.x + (player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame].x * player[i].phys.facePrev),
