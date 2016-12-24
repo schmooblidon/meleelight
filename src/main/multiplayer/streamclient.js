@@ -58,7 +58,8 @@ function startRoom() {
     alert('Ask your friend to join using your game ID: ' + GAME_ID + "you can copy it from the header of this window");
     setNetInputFlag(ports, false);
    let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1]);
-
+   delete playerPayload.charAttributes;
+   delete playerPayload.charHitboxes;
    statusRecord.set('player/',
       {
         name: playerID,
@@ -129,7 +130,8 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
         //   console.log("sending inputs");
         //dont be lazy like me;
         let playerPayload = Object.assign({}, player[playerSlot]);
-
+        delete playerPayload.charAttributes;
+        delete playerPayload.charHitboxes;
         let payload = {"playerID":playerID,"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
         ds.event.emit('player/',payload);
 
@@ -218,7 +220,8 @@ function connect(record, name) {
       "currentPlayers": currentPlayers
     });
     let playerPayload = Object.assign({}, player[ports]);
-
+    delete playerPayload.charAttributes;
+    delete playerPayload.charHitboxes;
     let payload = {"playerID":playerID,"playerSlot": ports, "inputBuffer": playerInputBuffer, "playerInfo": playerPayload};
     ds.event.emit('player/',payload);
 
