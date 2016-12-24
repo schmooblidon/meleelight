@@ -229,7 +229,18 @@ function connect(record, name) {
     ds.event.emit(name +'player/',payload);
 
   }
-
+  ds.event.subscribe(name +'player/', data => {
+    //  console.log("listener player  "+ GAME_ID);
+    //  console.log(data);
+    if (data) {
+      if (data.playerID !== playerID) {
+        if (data.inputBuffer && (data.playerSlot !== undefined)) {
+          saveNetworkInputs(data.playerSlot, data.inputBuffer);
+          player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+        }
+      }
+    }
+  });
   peerConnections[name] = record;
 
 }
