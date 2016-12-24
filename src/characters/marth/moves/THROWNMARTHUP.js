@@ -26,7 +26,7 @@ export default  {
       if (player[p].timer > 0) {
         let playerTimer = player[p].timer - 1;
         if(playerTimer > (marth.THROWNMARTHUP.offset.length - 1)){
-          playerTimer = marth.THROWNMARTHUP.offset.length;
+          playerTimer = marth.THROWNMARTHUP.offset.length -1;
         }
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + marth.THROWNMARTHUP.offset[playerTimer][0] * player[p].phys.face, player[player[p].phys.grabbedBy].phys.pos.y + marth.THROWNMARTHUP.offset[playerTimer][1]);
       }
