@@ -24,7 +24,7 @@ const C = DeepstreamServer.constants;
  */
 const server = new DeepstreamServer({
   host: 'localhost',
-  port: 6020
+  port: process.env.PORT
 });
 server.set('logLevel', 'ERROR');
 
