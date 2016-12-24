@@ -940,7 +940,7 @@ if (input[i][0].lsX <= -0.7 &&
   for (var j = 0; j < 4; j++) {
     if (player[i].hitboxes.active[j] && player[i].phys.prevFrameHitboxes.active[j]) {
       if(player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame] === undefined){
-        return;
+        continue;
       }
 
       var h1 = new Vec2D(
