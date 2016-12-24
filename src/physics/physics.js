@@ -940,11 +940,8 @@ if (input[i][0].lsX <= -0.7 &&
   player[i].phys.isInterpolated = false;
   for (var j = 0; j < 4; j++) {
     if (player[i].hitboxes.active[j] && player[i].phys.prevFrameHitboxes.active[j]) {
-      if(!player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame]){
-        player[i].phys.prevFrameHitboxes = new createHitboxes();
-      }
-      if(!player[i].phys.hitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame]){
-        player[i].phys.hitboxes = new createHitboxes();
+      if(player[i].phys.prevFrameHitboxes.id[j].offset[player[i].phys.prevFrameHitboxes.frame] === undefined){
+        continue;
       }
 
       var h1 = new Vec2D(

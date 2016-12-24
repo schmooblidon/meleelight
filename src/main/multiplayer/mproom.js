@@ -105,7 +105,6 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
         let playerPayload =  deepCopyObject(true,{},player[playerSlot]);
         delete playerPayload.charAttributes;
         delete playerPayload.charHitboxes;
-        delete playerPayload.phys;
         let payload = {"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":playerPayload};
           c.send(payload);
         }
