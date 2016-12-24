@@ -55,8 +55,7 @@ function startRoom() {
     });
     playerStatusRecords[playerID] = statusRecord.get();
     $('#mpcode').prop("value", GAME_ID);
-    alert('Ask your friend to join using your game ID: ' + GAME_ID + "you can copy it from the header of this window");
-    setNetInputFlag(ports, false);
+      setNetInputFlag(ports - 1, false);
    let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1]);
    delete playerPayload.charAttributes;
    delete playerPayload.charHitboxes;
