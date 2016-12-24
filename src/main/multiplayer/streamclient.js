@@ -55,7 +55,7 @@ function startRoom() {
     });
     playerStatusRecords[playerID] = statusRecord.get();
     $('#mpcode').prop("value", GAME_ID);
-      setNetInputFlag(ports - 1, false);
+      setNetInputFlag(ports, false);
    let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1]);
    delete playerPayload.charAttributes;
    delete playerPayload.charHitboxes;
@@ -77,6 +77,7 @@ function startRoom() {
 
      playerStatusRecords[playerID] = statusRecord;
      syncHost(match.ports );
+     HOST_GAME_ID = GAME_ID;
 
    });
 
@@ -257,7 +258,7 @@ function connectToUser(userName) {
     HOST_GAME_ID = requestedPeer;
     let playerRecord = ds.record.getRecord(requestedPeer + '-game').whenReady(statusRecord => {
       connect(statusRecord, requestedPeer);
-      setNetInputFlag(ports, true);
+
     });
 
 
