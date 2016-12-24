@@ -1523,7 +1523,7 @@ export function start (){
         document.webkitCancelFullScreen();
       }
     }
-    resize();
+    // resize();
   });
 
   $(".topButton").hover(function() {
