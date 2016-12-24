@@ -156,7 +156,7 @@ export function hitHitCollision (i,p,j,k){
   if(framePos1 > 1){
     framePos1 = 1;
   }
-  let framePos2 = player[p].hitboxes.frame;
+  let framePos2 = player[i].hitboxes.frame;
   if(framePos2 > 1){
     framePos2 = 1;
   }
@@ -178,7 +178,7 @@ export function hitShieldCollision (i,p,j,previous){
       }
         var hbpos = new Vec2D(player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[checkPreviousFrame].x * player[p].phys.facePrev), player[p].phys.posPrev.y + player[p].phys.prevFrameHitboxes.id[j].offset[checkPreviousFrame].y);
     } else {
-      let checkFrame = player[p].phys.hitboxes.frame;
+      let checkFrame = player[p].hitboxes.frame;
       if( checkFrame> 1){
         checkFrame = 1;
       }
