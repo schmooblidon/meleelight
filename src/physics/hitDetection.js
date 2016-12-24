@@ -254,6 +254,9 @@ export function interpolatedHitHurtCollision (i,p,j,phantom){
 export function hitHurtCollision (i,p,j,previous,phantom){
     phantom = phantom || false;
     var offset = player[p].hitboxes.id[j].offset[player[p].hitboxes.frame];
+    if (offset === undefined){
+      return false;
+    }
     if (player[p].actionState == "DAMAGEFLYN") {
         offset = player[p].hitboxes.id[j].offset[0];
     }
