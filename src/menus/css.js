@@ -51,6 +51,23 @@ export let readyToFight = false;
 export let rtfFlash = 25;
 export let rtfFlashD = 1;
 
+//in order
+//marth
+//puff
+//fox
+const charIconPos = [new Vec2D(475,268),new Vec2D(568,268),new Vec2D(663,268)];
+
+export function setChosenChar(index,charSelected){
+  chosenChar[index] = charSelected;
+  tokenGrabbed[index] = false;
+  occupiedToken[index] = false;
+  tokenPos[index] = new Vec2D(charIconPos[index].x + (index % 2) * 40, charIconPos[index].y + (index > 1 ? 40 : 0));
+  whichTokenGrabbed[index] = -1;
+}
+
+export function setTokenPos(index,val){
+  tokenPos[index] =charIconPos[val];
+}
 export function changeCharacter (i,c){
   setCS(i,c);
   syncCharacter(i,c);

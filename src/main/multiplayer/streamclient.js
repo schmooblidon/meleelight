@@ -13,6 +13,7 @@ import {
   , setCS
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
+import {setTokenPos, setChosenChar} from "../../menus/css";
 let ds = null;
 let peerId = null;
 let connectionReady = false;
@@ -47,44 +48,44 @@ function startRoom() {
     console.log("connection status : " + cssClass);
   });
 
-   ds.record.getRecord(GAME_ID + '-game').whenReady(statusRecord => {
-  //  console.log("set up game status "+ GAME_ID);
-    statusRecord.set(GAME_ID+'playerStatus/', {
+  ds.record.getRecord(GAME_ID + '-game').whenReady(statusRecord => {
+    //  console.log("set up game status "+ GAME_ID);
+    statusRecord.set(GAME_ID + 'playerStatus/', {
       "playerID": playerID,
       "ports": ports,
       "currentPlayers": currentPlayers
     });
     playerStatusRecords[playerID] = statusRecord.get();
     $('#mpcode').prop("value", GAME_ID);
-      setNetInputFlag(ports, false);
-   let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1]);
-   delete playerPayload.charAttributes;
-   delete playerPayload.charHitboxes;
-   delete playerPayload.prevFrameHitboxes;
-   statusRecord.set(GAME_ID+'player/',
-      {
-        name: playerID,
-        playerSlot: ports - 1,
-        inputBuffer: nullInput(),
-        playerInfo: playerPayload
-      });
-   //TODO iterate over ports to establish inital group
+    setNetInputFlag(ports, false);
+    let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1]);
+    delete playerPayload.charAttributes;
+    delete playerPayload.charHitboxes;
+    delete playerPayload.prevFrameHitboxes;
+    statusRecord.set(GAME_ID + 'player/',
+        {
+          name: playerID,
+          playerSlot: ports - 1,
+          inputBuffer: nullInput(),
+          playerInfo: playerPayload
+        });
+    //TODO iterate over ports to establish inital group
 
-   ds.event.subscribe(GAME_ID +'playerStatus/', match=> {
-     if(match.playerID === playerID){
-       return;
-     }
-     console.log("subscriber game status "+ match);
+    ds.event.subscribe(GAME_ID + 'playerStatus/', match => {
+      if (match.playerID === playerID) {
+        return;
+      }
+      console.log("subscriber game status " + match);
 
-     playerStatusRecords[playerID] = statusRecord;
-     syncHost(match.ports );
-     HOST_GAME_ID = GAME_ID;
+      playerStatusRecords[playerID] = statusRecord;
+      syncHost(match.ports);
+      HOST_GAME_ID = GAME_ID;
 
-   });
+    });
 
-   ds.event.subscribe(GAME_ID +'player/', data => {
-    //  console.log("listener player  "+ GAME_ID);
-    //  console.log(data);
+    ds.event.subscribe(GAME_ID + 'player/', data => {
+      //  console.log("listener player  "+ GAME_ID);
+      //  console.log(data);
       if (data) {
         if (data.playerID !== playerID) {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
@@ -95,15 +96,14 @@ function startRoom() {
       }
     });
 
-ds.event.subscribe(GAME_ID +'charSelection/',data=>{
-  if(data){
-    setCS(data.playerSlot,data.charSelected)
-  }
-})
+    ds.event.subscribe(GAME_ID + 'charSelection/', data => {
+      if (data) {
+        setChosenChar(data.playerSlot, data.charSelected);
+        setTokenPos(data.playerSlot, data.charSelected);
+      }
+    })
 
   });
-
-
 
 
 }
@@ -133,14 +133,19 @@ export function setNetInputFlag(name, val) {
 
 function sendInputsOverNet(inputBuffer, playerSlot) {
 
-        //   console.log("sending inputs");
-        //dont be lazy like me;
-        let playerPayload = Object.assign({}, player[playerSlot]);
-        delete playerPayload.charAttributes;
-        delete playerPayload.charHitboxes;
-        delete playerPayload.prevFrameHitboxes;
-        let payload = {"playerID":playerID,"playerSlot": playerSlot, "inputBuffer": inputBuffer, "playerInfo": playerPayload};
-        ds.event.emit(HOST_GAME_ID +'player/',payload);
+  //   console.log("sending inputs");
+  //dont be lazy like me;
+  let playerPayload = Object.assign({}, player[playerSlot]);
+  delete playerPayload.charAttributes;
+  delete playerPayload.charHitboxes;
+  delete playerPayload.prevFrameHitboxes;
+  let payload = {
+    "playerID": playerID,
+    "playerSlot": playerSlot,
+    "inputBuffer": inputBuffer,
+    "playerInfo": playerPayload
+  };
+  ds.event.emit(HOST_GAME_ID + 'player/', payload);
 
 }
 
@@ -220,7 +225,7 @@ function connect(record, name) {
     playerStatusRecords[name] = record;
     setNetInputFlag(ports, true);
     syncClient(data[playerstatus].ports);
-    ds.event.emit(name +'playerStatus/', {
+    ds.event.emit(name + 'playerStatus/', {
       "playerID": playerID,
       "syncHost": "syncHost",
       "ports": ports - 1,
@@ -230,11 +235,16 @@ function connect(record, name) {
     delete playerPayload.charAttributes;
     delete playerPayload.charHitboxes;
     delete playerPayload.prevFrameHitboxes;
-    let payload = {"playerID":playerID,"playerSlot": ports, "inputBuffer": playerInputBuffer, "playerInfo": playerPayload};
-    ds.event.emit(name +'player/',payload);
+    let payload = {
+      "playerID": playerID,
+      "playerSlot": ports,
+      "inputBuffer": playerInputBuffer,
+      "playerInfo": playerPayload
+    };
+    ds.event.emit(name + 'player/', payload);
 
   }
-  ds.event.subscribe(name +'player/', data => {
+  ds.event.subscribe(name + 'player/', data => {
     //  console.log("listener player  "+ GAME_ID);
     //  console.log(data);
     if (data) {
@@ -246,9 +256,10 @@ function connect(record, name) {
       }
     }
   });
-  ds.event.subscribe(name +'charSelection/',data=>{
-    if(data){
-      setCS(data.playerSlot,data.charSelected)
+  ds.event.subscribe(name + 'charSelection/', data => {
+    if (data) {
+      setChosenChar(data.playerSlot, data.charSelected);
+      setTokenPos(data.playerSlot, data.charSelected);
     }
   });
   peerConnections[name] = record;
@@ -291,8 +302,8 @@ function connectToUser(userName) {
 }
 
 //host has authority for now
-export function syncCharacter(index,charSelection){
-  if(giveInputs[index]===true) {
+export function syncCharacter(index, charSelection) {
+  if (giveInputs[index] === true) {
     ds.event.emit(HOST_GAME_ID + 'charSelection/', {"playerSlot": index, "charSelected": charSelection});
   }
 }

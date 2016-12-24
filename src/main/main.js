@@ -39,6 +39,7 @@ import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData, nullInput} from "./input";
 import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,connectToMPServer} from "./multiplayer/streamclient";
 import {deepCopyObject} from "./util/deepCopyObject";
+import {setChosenChar} from "../menus/css";
 /*globals performance*/
 
 export const player = [0,0,0,0];
@@ -1600,4 +1601,5 @@ export function cacheDom() {
 
 export function setCS(index,val){
   characterSelections[index] = val;
+  setChosenChar(index,val);
 }
