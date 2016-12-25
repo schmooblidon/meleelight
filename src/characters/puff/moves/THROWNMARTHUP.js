@@ -24,6 +24,9 @@ export default {
     player[p].timer++;
     if (!puff.THROWNMARTHUP.interrupt(p, input)) {
       if (player[p].timer > 0) {
+        if(player[p].phys.grabbedBy === -1){
+          return;
+        }
         player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + puff.THROWNMARTHUP.offset[player[p].timer - 1][0] * player[p].phys.face, player[player[p].phys.grabbedBy].phys.pos.y + puff.THROWNMARTHUP.offset[player[p].timer - 1][1]);
       }
     }

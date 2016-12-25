@@ -14,7 +14,7 @@ export default {
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
     if(player[p].phys.grabbing === -1){
-     return;
+      return;
     }
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD.init(player[p].phys.grabbing,input);
     const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD;
