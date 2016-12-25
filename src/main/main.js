@@ -1602,5 +1602,4 @@ export function cacheDom() {
 
 export function setCS(index,val){
   characterSelections[index] = val;
-  setChosenChar(index,val);
 }
