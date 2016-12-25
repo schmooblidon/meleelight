@@ -331,7 +331,7 @@ export function syncGameMode( gameMode) {
 }
 
 export function syncStage( stage) {
-  if(HOST_GAME_ID !== null && GAME_ID === HOST_GAME_ID) {
+  if(HOST_GAME_ID !== null ) {
     ds.event.emit(HOST_GAME_ID + 'changeStage/', {"stage": stage});
   }
 }
