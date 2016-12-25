@@ -3,6 +3,7 @@ import {player, changeGamemode, bg1,fg1,bg2,ui, clearScreen, shine, startGame, l
     , setStageSelect
 } from "main/main";
 import {twoPi} from "main/render";
+import {syncStartGame} from "../main/multiplayer/streamclient";
 /* eslint-disable */
 
 let stageSelected = 4;
@@ -64,6 +65,7 @@ export function sssControls (i, input){
       default:
         break;
     }*/
+    syncStartGame(stageSelected);
     startGame();
   }
 }

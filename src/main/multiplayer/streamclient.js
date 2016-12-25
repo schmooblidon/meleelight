@@ -12,6 +12,8 @@ import {
   setCurrentPlayer, player
   , setCS
   , changeGamemode
+  , setStageSelect
+  , startGame
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
@@ -278,6 +280,12 @@ function connect(record, name) {
       setNetStage(data.stage);
     }
   });
+  ds.event.subscribe(name + 'startGame/', data => {
+    if (data) {
+      setStageSelect(data.stageSelected);
+      startGame();
+    }
+  });
   peerConnections[name] = record;
 
 }
@@ -333,6 +341,12 @@ export function syncGameMode( gameMode) {
 export function syncStage( stage) {
   if(HOST_GAME_ID !== null ) {
     ds.event.emit(HOST_GAME_ID + 'changeStage/', {"stage": stage});
+  }
+}
+
+export function syncStartGame( stageSelected) {
+  if(HOST_GAME_ID !== null ) {
+    ds.event.emit(HOST_GAME_ID + 'startGame/', {"stageSelected": stageSelected});
   }
 }
 
