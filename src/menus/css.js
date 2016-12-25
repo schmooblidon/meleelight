@@ -64,8 +64,8 @@ export function setChosenChar(index,charSelected){
  setTokenPos(index,charSelected);
   player[index].actionState = "WAIT";
   player[index].timer = 0;
-  player[index].charAttributes = chars[characterSelections[charSelected]].attributes;
-  player[index].charHitboxes = chars[characterSelections[charSelected]].hitboxes;
+  player[index].charAttributes = chars[characterSelections[index]].attributes;
+  player[index].charHitboxes = chars[characterSelections[index]].hitboxes;
   whichTokenGrabbed[index] = -1;
 }
 

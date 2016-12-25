@@ -101,7 +101,6 @@ function startRoom() {
     ds.event.subscribe(GAME_ID + 'charSelection/', data => {
       if (data) {
         setChosenChar(data.playerSlot, data.charSelected);
-        setTokenPos(data.playerSlot, data.charSelected);
       }
     });
     ds.event.subscribe(GAME_ID + 'gameMode/', data => {
@@ -266,7 +265,6 @@ function connect(record, name) {
   ds.event.subscribe(name + 'charSelection/', data => {
     if (data) {
       setChosenChar(data.playerSlot, data.charSelected);
-      setTokenPos(data.playerSlot, data.charSelected);
     }
   });
   ds.event.subscribe(name + 'gameMode/', data => {
