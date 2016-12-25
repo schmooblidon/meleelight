@@ -14,7 +14,7 @@ import {actionStates} from "physics/actionStateShortcuts";
 import {setCS} from "../main/main";
 import {chars} from "../main/characters";
 import {Vec2D} from "../main/util/Vec2D";
-import {syncCharacter} from "../main/multiplayer/streamclient";
+import {syncCharacter, syncGameMode} from "../main/multiplayer/streamclient";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -89,6 +89,7 @@ export function cssControls (i, input){
       if (bHold[i] == 30) {
         sounds.menuBack.play();
         changeGamemode(1);
+        syncGameMode(1);
       }
     } else {
       bHold[i] = 0;
@@ -230,6 +231,7 @@ export function cssControls (i, input){
       if (input[i][0].a && !input[i][1].a) {
         sounds.menuBack.play();
         changeGamemode(1);
+        syncGameMode(1);
       }
     }
 
@@ -309,10 +311,12 @@ export function cssControls (i, input){
     if (pause[i][0] && !pause[i][1]) {
       sounds.menuForward.play();
       changeGamemode(6);
+      syncGameMode(6);
     }
   } else if (choosingTag == -1 && input[i][0].du && !input[i][1].du) {
     sounds.menuForward.play();
     changeGamemode(6);
+    syncGameMode(6);
   }
 }
 

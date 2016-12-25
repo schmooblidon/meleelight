@@ -487,7 +487,7 @@ export function changeGamemode (newGamemode){
   bg1.fillStyle = "black";
   bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
   fg1.clearRect(0, 0, layers.FG1.width, layers.FG1.height);
-  syncGameMode(newGamemode);
+
   gameMode = newGamemode;
   switch (newGamemode) {
     // TITLESCREEN
