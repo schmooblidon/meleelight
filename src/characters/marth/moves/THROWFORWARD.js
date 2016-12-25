@@ -13,7 +13,7 @@ export default  {
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
     if(player[p].phys.grabbing === -1){
-      this.interrupt(p,input);
+      return;
     }
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHFORWARD.init(player[p].phys.grabbing, input);
     turnOffHitboxes(p);
