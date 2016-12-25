@@ -42,9 +42,9 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
     can.fillStyle = col;
     can.beginPath();
     // for each shape
-  if(path === undefined) {
-    return;
-  }
+  if(path !== undefined) {
+
+
 
     for (var j = 0; j < path.length; j++) {
         // first 2 numbers are starting vector points
@@ -58,6 +58,7 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
                 scaleY) + rpY);
         }
     }
+  }
     can.closePath();
     can.fill();
     can.restore();
