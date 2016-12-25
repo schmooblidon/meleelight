@@ -4,6 +4,7 @@ import tstages from 'stages/targetstages/tstages';
 import {Box2D} from "../main/util/Box2D";
 import {Vec2D} from "../main/util/Vec2D";
 import {syncStage} from "../main/multiplayer/streamclient";
+import {deepCopyObject} from "../main/util/deepCopyObject";
 const stageMapping = {
   0: "battlefield",
   1: "ystory",
@@ -13,7 +14,7 @@ const stageMapping = {
 
 export function setVsStage(val) {
   activeStage = vsstages[stageMapping[val]];
-  syncStage(activeStage);
+  syncStage(deepCopyObject(true,{},activeStage));
 }
 export function setNetStage(val){
   activeStage = val;
