@@ -78,7 +78,7 @@ window.resizeHeader = function() {
 let showHeader = true;
 if (typeof offlineMode !== "undefined") {
   if (offlineMode) {
-    showHeader = false;
+    // showHeader = false;
   }
 }
 window.resize = function() {
