@@ -58,6 +58,7 @@ export let rtfFlashD = 1;
 const charIconPos = [new Vec2D(475,268),new Vec2D(568,268),new Vec2D(663,268)];
 
 export function setChosenChar(index,charSelected){
+  setCS(index,charSelected);
   chosenChar[index] = charSelected;
   tokenGrabbed[index] = false;
   occupiedToken[index] = false;

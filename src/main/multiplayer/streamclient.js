@@ -319,9 +319,9 @@ function connectToUser(userName) {
 
 
 export function syncCharacter(index, charSelection) {
-  if (giveInputs[index] === true && HOST_GAME_ID !== null) {
-    ds.event.emit(HOST_GAME_ID + 'charSelection/', {"playerSlot": index, "charSelected": charSelection});
-  }
+   if(HOST_GAME_ID !== null) {
+     ds.event.emit(HOST_GAME_ID + 'charSelection/', {"playerSlot": index, "charSelected": charSelection});
+   }
 }
 
 export function syncGameMode( gameMode) {
