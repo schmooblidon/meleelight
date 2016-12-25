@@ -108,6 +108,11 @@ function startRoom() {
         changeGamemode(data.gameMode);
       }
     });
+    ds.event.subscribe(GAME_ID + 'changeStage/', data => {
+      if(data) {
+        setVsStage((data.stage))
+      }
+    });
 
   });
 
