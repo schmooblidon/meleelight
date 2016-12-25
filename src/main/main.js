@@ -6,7 +6,7 @@ import {drawStartUp} from 'menus/startup';
 import {menuMove, drawMainMenuInit, drawMainMenu} from "menus/menu";
 import {sounds} from "main/sfx";
 import {drawStartScreenInit, drawStartScreen} from "menus/startscreen";
-import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType} from "stages/stagerender";
+import {drawBackgroundInit, drawStageInit, drawBackground, drawStage, setBackgroundType, createSnow} from "stages/stagerender";
 import {drawSSSInit, sssControls, drawSSS} from "menus/stageselect";
 import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "menus/audiomenu";
 import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "menus/gameplaymenu";
@@ -21,7 +21,7 @@ import {
   targetRecords, targetsDestroyed, targetStagePlaying , getTargetCookies , giveMedals, medalTimes
 } from "target/targetplay";
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
-import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
+import {targetBuilder, targetBuilderControls, renderTargetBuilder, showingCode} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
@@ -41,6 +41,9 @@ import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,
 import {deepCopyObject} from "./util/deepCopyObject";
 import {setChosenChar} from "../menus/css";
 /*globals performance*/
+
+export const holiday = 1;
+export var snowCount = 150;
 
 export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
@@ -87,6 +90,7 @@ export const activePorts = [];
 export let playing = false;
 
 export let frameByFrame = false;
+export let wasFrameByFrame = false;
 export let frameByFrameRender = false;
 
 export let findingPlayers = true;
@@ -114,12 +118,12 @@ export let versusMode = 0;
 export const randomTags = ["NEO!","SELF","NOVA","PNDA","Panda","LFFN","Scorp","AZ","AXE","Tempo","TMPO","[A]rmada","WBALLZ","Westballz","PPMD","Kreygasm","M2K","Mang0","USA","SCAR","TOPH","(.Y.)","HBOX","HungryBox","PLUP","Shroomed","SFAT","Wizz","Lucky","S2J","SilentWolf","aMSa","S2J","Hax$"];
 
 export const palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206, 111, ","rgb(244, 68, 68)","rgba(255, 225, 167, "],
-["rgb(4, 255, 134)","rgb(154, 254, 170)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
+["rgb(95, 216, 84)","rgb(184, 253, 154)","rgba(252, 95, 95, ","rgb(255, 182, 96)","rgba(254, 141, 141, "],
 ["rgb(5, 195, 255)","rgb(121, 223, 255)","rgba(218, 96, 254, ","rgb(231, 134, 255)","rgba(230, 144, 255, "],
 ["rgb(255, 187, 70)","rgb(248, 255, 122)","rgba(80, 182, 255, ","rgb(255, 142, 70)","rgba(139, 203, 249, "],
 ["rgb(177, 89, 255)","rgb(203, 144, 255)","rgba(144, 255, 110, ","rgb(247, 126, 250)","rgba(190, 255, 170, "],
 ["rgb(182, 131, 70)","rgb(252, 194, 126)","rgba(47, 186, 123, ","rgb(255, 112, 66)","rgba(111, 214, 168, "],
-["rgb(166, 166, 166)","rgb(255, 255, 255)","rgba(255, 255, 255, ","rgb(191, 119, 119)","rgba(175, 172, 172, "]];
+["rgb(232, 232, 208)","rgb(255, 255, 255)","rgba(244, 255, 112, ","rgb(191, 119, 119)","rgba(255, 255, 200, "]];
 
 
 export const hasTag = [false,false,false,false];
@@ -224,7 +228,7 @@ export function setKeyBinding (val){
   keyBinding = val;
 }
 export function overrideKeyboardEvent (e){
-  if (choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116){
+  if (!showingCode && choosingTag == -1 && e.keyCode != 122 && e.keyCode != 116){
     switch(e.type){
       case "keydown":
         if (!keys[e.keyCode]) {
@@ -342,6 +346,7 @@ export function findPlayers (){
       if (keys[13] || keys[keyMap.s[0]] || keys[keyMap.s[1]]) {
         if (ports < 4) {
           changeGamemode(1);
+          $("#keyboardPrompt").hide();
           keyboardOccupied = true;
           sounds.menuForward.play();
           if (ports == 0) {
@@ -400,6 +405,7 @@ export function findPlayers (){
             if (!alreadyIn) {
               if (ports < 4) {
                 changeGamemode(1);
+                $("#keyboardPrompt").hide();
                 sounds.menuForward.play();
                 if (ports == 0) {
                   music.menu.play("menuStart");
@@ -598,73 +604,71 @@ export const removePlayer (i){
 export function interpretInputs  (i, active,playertype, inputBuffer) {
   let tempBuffer = nullInputs();
 
-
-  if (! ( (gameMode == 3 || gameMode == 5) && !playing )) {
-    for (var k = 0; k < 7; k++) {
-      tempBuffer[7-k].lsX  = inputBuffer[6-k].lsX;
-      tempBuffer[7-k].lsY  = inputBuffer[6-k].lsY;
-      tempBuffer[7-k].rawX = inputBuffer[6-k].rawX;
-      tempBuffer[7-k].rawY = inputBuffer[6-k].rawY;
-      tempBuffer[7-k].csX  = inputBuffer[6-k].csX;
-      tempBuffer[7-k].csY  = inputBuffer[6-k].csY;
-      tempBuffer[7-k].lA   = inputBuffer[6-k].lA;
-      tempBuffer[7-k].rA   = inputBuffer[6-k].rA;
-      tempBuffer[7-k].s    = inputBuffer[6-k].s;
-      tempBuffer[7-k].a    = inputBuffer[6-k].a;
-      tempBuffer[7-k].b    = inputBuffer[6-k].b;
-      tempBuffer[7-k].x    = inputBuffer[6-k].x;
-      tempBuffer[7-k].y    = inputBuffer[6-k].y;
-      tempBuffer[7-k].r    = inputBuffer[6-k].r;
-      tempBuffer[7-k].l    = inputBuffer[6-k].l;
-      tempBuffer[7-k].dl   = inputBuffer[6-k].dl;
-      tempBuffer[7-k].dd   = inputBuffer[6-k].dd;
-      tempBuffer[7-k].dr   = inputBuffer[6-k].dr;
-      tempBuffer[7-k].du   = inputBuffer[6-k].du;
-    }
-  }
+  // keep updating Z and Start all the time, even when paused
   for (var k = 0; k < 7; k++) {
     tempBuffer[7-k].z    = inputBuffer[6-k].z;
+    tempBuffer[7-k].s    = inputBuffer[6-k].s;
   }
 
   tempBuffer[0] = pollInputs(gameMode, frameByFrame, mType[i], i, currentPlayers[i], keys,playertype);
 
+  let pastOffset = 0;
+  if ( (gameMode !== 3 && gameMode !== 5) || (playing && (pause[i][1] || !pause[i][0]))
+                                          || wasFrameByFrame 
+                                          || (!playing && pause[i][0] && !pause[i][1])) {
+    pastOffset = 1;
+  }
+
   pause[i][1] = pause[i][0];
+  wasFrameByFrame = false;
   frameAdvance[i][1] = frameAdvance[i][0];
+
+  for (var k = 0; k < 7; k++) {
+    tempBuffer[7-k].lsX  = inputBuffer[7-k-pastOffset].lsX;
+    tempBuffer[7-k].lsY  = inputBuffer[7-k-pastOffset].lsY;
+    tempBuffer[7-k].rawX = inputBuffer[7-k-pastOffset].rawX;
+    tempBuffer[7-k].rawY = inputBuffer[7-k-pastOffset].rawY;
+    tempBuffer[7-k].csX  = inputBuffer[7-k-pastOffset].csX;
+    tempBuffer[7-k].csY  = inputBuffer[7-k-pastOffset].csY;
+    tempBuffer[7-k].lA   = inputBuffer[7-k-pastOffset].lA;
+    tempBuffer[7-k].rA   = inputBuffer[7-k-pastOffset].rA;
+    tempBuffer[7-k].a    = inputBuffer[7-k-pastOffset].a;
+    tempBuffer[7-k].b    = inputBuffer[7-k-pastOffset].b;
+    tempBuffer[7-k].x    = inputBuffer[7-k-pastOffset].x;
+    tempBuffer[7-k].y    = inputBuffer[7-k-pastOffset].y;
+    tempBuffer[7-k].r    = inputBuffer[7-k-pastOffset].r;
+    tempBuffer[7-k].l    = inputBuffer[7-k-pastOffset].l;
+    tempBuffer[7-k].dl   = inputBuffer[7-k-pastOffset].dl;
+    tempBuffer[7-k].dd   = inputBuffer[7-k-pastOffset].dd;
+    tempBuffer[7-k].dr   = inputBuffer[7-k-pastOffset].dr;
+    tempBuffer[7-k].du   = inputBuffer[7-k-pastOffset].du;
+  }
+
+  if (    (mType[i] === 10 && (tempBuffer[0].z ||  tempBuffer[1].z)) 
+       || (mType[i] !== 10 && (tempBuffer[0].z && !tempBuffer[1].z))
+     )  { 
+    frameAdvance[i][0] = true;
+  }
+  else {
+    frameAdvance[i][0] = false;
+  }
+
+  if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode !== 4) {
+    frameByFrame = true;
+  }
 
   if (mType[i] == 10) { // keyboard controls
 
-    if (tempBuffer[0].s || tempBuffer[1].s ) {
+    if (tempBuffer[0].s || tempBuffer[1].s || (gameMode === 5 && (tempBuffer[0].du || tempBuffer[1].du) ) ) {
       pause[i][0] = true;
     }
     else {
       pause[i][0] = false;
     }
 
-    if (tempBuffer[0].z  || tempBuffer[1].z ) {
-      frameAdvance[i][0] = true;
-    } 
-    else {
-      frameAdvance[i][0] = false;
-    }
-
-    if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode != 4) {
-    frameByFrame = true;
-    }
-
-    if (active) {
-      if (tempBuffer[0].dl && !tempBuffer[1].dl ) {
-       player[i].showLedgeGrabBox ^= true;
-      }
-      if (tempBuffer[0].dd && !tempBuffer[1].dd) {
-        player[i].showECB ^= true;
-      }
-      if (tempBuffer[0].dr && !tempBuffer[1].dr) {
-        player[i].showHitbox ^= true;
-      }
-    }
     if ( (gameMode == 3 || gameMode == 5)
-    	   && (tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) 
-    	   && (tempBuffer[0].r || tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
+         && (tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) 
+         && (tempBuffer[0].r || tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
       if (tempBuffer[0].b || tempBuffer[1].b) {
         startGame();
       }
@@ -688,7 +692,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
     if ( (gameMode == 3 || gameMode == 5) &&
              ( tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s ) 
-    	 && (! ( tempBuffer[1].a && tempBuffer[1].l && tempBuffer[1].r && tempBuffer[1].s ))) {
+       && (! ( tempBuffer[1].a && tempBuffer[1].l && tempBuffer[1].r && tempBuffer[1].s ))) {
       if (tempBuffer[0].b) {
         startGame();
       }
@@ -702,27 +706,6 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
     else {
       pause[i][0] = false;
-    }
-
-
-    if (tempBuffer[0].z && ! tempBuffer[1].z ) {
-      frameAdvance[i][0] = true;
-    } else {
-      frameAdvance[i][0] = false;
-    }
-
-    if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode != 4) {
-      frameByFrame = true;
-    }
-
-    if (tempBuffer[0].dl && !tempBuffer[1].dl) {
-      player[i].showLedgeGrabBox ^= true;
-    }
-    if (tempBuffer[0].dd && !tempBuffer[1].dd) {
-      player[i].showECB ^= true;
-    }
-    if (tempBuffer[0].dr && !tempBuffer[1].dr) {
-      player[i].showHitbox ^= true;
     }
 
     // Controller reset functionality
@@ -773,6 +756,18 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     deepCopyObject(true,nullInput(),tempBuffer[0]);
     updateNetworkInputs(tempBuffer[0],i);
   }
+  if (active) {
+    if (tempBuffer[0].dl && !tempBuffer[1].dl ) {
+     player[i].showLedgeGrabBox ^= true;
+    }
+    if (tempBuffer[0].dd && !tempBuffer[1].dd) {
+      player[i].showECB ^= true;
+    }
+    if (tempBuffer[0].dr && !tempBuffer[1].dr) {
+      player[i].showHitbox ^= true;
+    }
+  }
+
   return tempBuffer;
 
 }
@@ -918,12 +913,15 @@ export function gameTick (oldInputBuffers){
       finishGame(input);
     }
     if (playing || frameByFrame) {
+    
       var now = performance.now();
       var dt = now - lastUpdate;
       lastUpdate = now;
       destroyArticles();
       executeArticles();
-      input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+      if (!starting){
+        input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
+      }
       update(targetBuilder,input);
       targetHitDetection(targetBuilder);
       if (!starting) {
@@ -939,6 +937,7 @@ export function gameTick (oldInputBuffers){
       }
       if (frameByFrame) {
         frameByFrameRender = true;
+        wasFrameByFrame = true;
       }
       frameByFrame = false;
 
@@ -981,21 +980,24 @@ export function gameTick (oldInputBuffers){
     getActiveStage().movingPlatforms();
     destroyArticles();
     executeArticles();
+
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+        if(!starting) {
+          input[i] = interpretInputs(i, true,playerType[i],oldInputBuffers[i]);
+        }
         update(i,input);
       }
     }
     checkPhantoms();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        hitDetect(i,input);
+        hitDetect(i,input); 
       }
     }
     executeHits(input);
     articlesHitDetection();
-    executeArticleHits(input);
+    executeArticleHits();
     if (!starting && !versusMode) {
       matchTimerTick(input);
     } else {
@@ -1006,6 +1008,7 @@ export function gameTick (oldInputBuffers){
     }
     if (frameByFrame) {
       frameByFrameRender = true;
+      wasFrameByFrame = true;
     }
     frameByFrame = false;
 
@@ -1132,6 +1135,21 @@ export function renderTick (){
           dom.renderPeak.innerHTML = renderTime[3];
         }
       }
+      else if (!gameEnd) {
+        clearScreen();
+        if (!starting) {
+          targetTimerTick();    
+        }
+        if (getShowSFX()) {
+          drawBackground();
+        }
+        drawStage();
+        renderPlayer(targetBuilder);
+        renderArticles();
+        renderVfx();
+        renderOverlay(false);
+        renderForeground();
+      }
     } else if (playing || frameByFrameRender) {
       /*delta = timestamp - lastFrameTimeMs; // get the delta time since last frame
       lastFrameTimeMs = timestamp;
@@ -1205,7 +1223,10 @@ export function initializePlayers (i,target){
 
 export function startGame (){
   setVsStage(stageSelect);
-    setBackgroundType(Math.round(Math.random()));
+  setBackgroundType(Math.round(Math.random()));
+  if (holiday == 1){
+    createSnow();
+  }
   changeGamemode(3);
   resetVfxQueue();
   for (var n = 0; n < 4; n++) {
@@ -1316,14 +1337,10 @@ export function finishGame (input){
             }
           }
         }
-        if (matchTimer < targetRecords[characterSelections[targetPlayer]][targetStagePlaying] || targetRecords[characterSelections[targetPlayer]][
-            targetStagePlaying
-          ] == -1) {
+        if (matchTimer < targetRecords[characterSelections[targetPlayer]][targetStagePlaying] || targetRecords[characterSelections[targetPlayer]][targetStagePlaying] == -1) {
           targetRecords[characterSelections[targetPlayer]][targetStagePlaying] = matchTimer;
           sounds.newRecord.play();
-          setCookie(characterSelections[targetPlayer] + "target" + targetStagePlaying, targetRecords[characterSelections[targetPlayer]][
-            targetStagePlaying
-          ], 36500);
+          setCookie(characterSelections[targetPlayer] + "target" + targetStagePlaying, targetRecords[characterSelections[targetPlayer]][targetStagePlaying], 36500);
         } else {
           sounds.complete.play();
         }
@@ -1385,7 +1402,46 @@ export function finishGame (input){
   }, 2500);
 }
 
+function onFullScreenChange() {
+  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+
+  // if in fullscreen mode fullscreenElement won't be null
+  var cont = document.getElementById("topButtonContainer");
+  var icn = document.querySelectorAll(".topButton");
+  if (fullscreenElement != null){
+    cont.style.transition = "opacity 0.5s linear 0s";
+    cont.style.opacity = 0;;
+    setTimeout(function(){
+        var i;
+        for (i = 0; i < icn.length; i++) {
+          icn[i].style.height = "5px";
+        }
+        cont.style.height = "5px";
+        resize();
+      }, 500);
+    $("#keyboardPrompt").hide();
+    $("#keyboardControlsImg").hide();
+    $("#controllerSupportContainer").hide();
+    $("#debugButtonEdit").empty().append("OFF");
+    $("#debug").hide();
+    $("#players").hide();
+    $("body").css("overflow", "hidden");
+    showHeader = false;
+  } else {
+    var i;
+    for (i = 0; i < icn.length; i++) {
+      icn[i].style.height = "25px";
+    }
+    cont.style.height = "31px";
+    cont.style.transition = "opacity 0.5s linear 0s";
+    cont.style.opacity = 1;
+  }
+}
+
 export function start (){
+  if (holiday === 1){
+    $("#layerButton").after('<div id="snowButton" class="gameButton" style="width:90px"><img src="assets/christmas/snowflake.png" height=17 width=17 style="display:inline-block"/><p style="width:30px;display:inline-block"><span id="snowButtonEdit">150</span></p><div id="snowMinus" class="snowControl" style="display:inline-block;padding:3px"><p style="padding:0;font-size:20px">-</p></div><div id="snowPlus" style="display:inline-block;padding:3px"><p style="padding:0;font-size:17px">+</p></div></div>');
+  }
   for (var i=0;i<4;i++){
     buildPlayerObject(i);
     player[i].phys.face = 1;
@@ -1400,6 +1456,7 @@ export function start (){
     getGameplayCookies();
   $("#keyboardButton").click(function(){
     $("#keyboardControlsImg").toggle();
+    $("#keyboardPrompt").hide();
   });
   $("#controllerButton").click(function() {
     $("#controllerSupportContainer").toggle();
@@ -1528,6 +1585,10 @@ export function start (){
     // resize();
   });
 
+  document.addEventListener("fullscreenchange", onFullScreenChange, false);
+  document.addEventListener("webkitfullscreenchange", onFullScreenChange, false);
+  document.addEventListener("mozfullscreenchange", onFullScreenChange, false);
+
   $(".topButton").hover(function() {
     $(this).children(".buttonDetails").toggle();
   });
@@ -1548,6 +1609,22 @@ export function start (){
   }, function() {
     $("#appsDropdown").hide();
   });
+  if (holiday === 1){
+    $("#snowMinus").click(function() {
+      snowCount-=20;
+      if (snowCount < 0){
+        snowCount = 0;
+      }
+      $("#snowButtonEdit").text(snowCount);
+    });
+    $("#snowPlus").click(function() {
+      snowCount+=20;
+      if (snowCount > 1200){
+        snowCount = 1200;
+      }
+      $("#snowButtonEdit").text(snowCount);
+    });
+  }
   resize();
 }
 window.start = start;

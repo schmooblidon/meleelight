@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 import DOWNSPECIALGROUND from "characters/fox/moves/DOWNSPECIALGROUND";
 import JUMPAERIALB from "characters/shared/moves/JUMPAERIALB";
 import JUMPAERIALF from "characters/shared/moves/JUMPAERIALF";
@@ -9,6 +9,7 @@ import {sounds} from "main/sfx";
 import {turnOffHitboxes} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../../../main/util/Vec2D";
+import {gameSettings} from "settings";
 
 export default {
   name : "DOWNSPECIALAIR",
@@ -124,7 +125,7 @@ export default {
   interrupt : function(p,input){
     if (player[p].timer >= 4 && player[p].timer <= 32){
       if (!player[p].phys.doubleJumped){
-        if ((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY >= 0.7 && input[p][3].lsY < 0.7)){
+        if ((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (gameSettings["tapJumpOffp" + (p + 1)] == false && input[p][0].lsY >= 0.7 && input[p][3].lsY < 0.7)){
           if (input[p][0].lsX*player[p].phys.face < -0.3){
             JUMPAERIALB.init(p,input);
           }

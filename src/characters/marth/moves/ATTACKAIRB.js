@@ -1,6 +1,6 @@
 import {player} from "../../../main/main";
 import marth from "./index";
-import {turnOffHitboxes, fastfall, airDrift, checkForAerials} from "../../../physics/actionStateShortcuts";
+import {turnOffHitboxes, fastfall, airDrift, checkForAerials, checkForDoubleJump} from "../../../physics/actionStateShortcuts";
 import {drawVfx} from "../../../main/vfx/drawVfx";
 import {Vec2D} from "../../../main/util/Vec2D";
 import {sounds} from "../../../main/sfx";
@@ -67,7 +67,7 @@ export default {
     }
     else if (player[p].timer > 34) {
       const a = checkForAerials(p, input);
-      if (((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && !player[p].phys.doubleJumped) {
+      if (checkForDoubleJump(p,input) && !player[p].phys.doubleJumped) {
         if (input[p][0].lsX * player[p].phys.face < -0.3) {
           JUMPAERIALB.init(p, input);
         }

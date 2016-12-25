@@ -82,7 +82,7 @@ export function tssControls (i, input){
             for (var k = targetSelected; k < 10 + customTargetStages.length; k++) {
               setCookie(j + "target" + k, getCookie(j + "target" + (k + 1)), 36500);
             }
-            setCookie(j + "target" + customTargetStages.length, null, 36500);
+            setCookie(j + "target" + (10 + customTargetStages.length), null, 36500);
           }
 
           customTargetStages.splice(targetSelected - 10, 1);
@@ -92,8 +92,8 @@ export function tssControls (i, input){
           //dupe
           if (customTargetStages.length < 10){
             setCookie("custom"+customTargetStages.length,getCookie("custom"+(targetSelected-10)),36500);
-              setCustomTargetStages(customTargetStages.length,{});
-              setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],customTargetStages[targetSelected-10]));
+              customTargetStages.push({});
+              setCustomTargetStages(customTargetStages.length - 1,deepCopyObject(true,customTargetStages[customTargetStages.length - 1],customTargetStages[targetSelected-10]));
           }
           else {
             promptTimer = 60;
@@ -126,13 +126,12 @@ export function tssControls (i, input){
         }
         else {
           if (targetSelected > 9){
-            setTargetStagePlaying(targetSelected);
             setActiveStageCustomTarget(targetSelected-10);
           }
           else {
             setActiveStageTarget(targetSelected);
           }
-          //setActiveStageTarget( targetSelected);
+          setTargetStagePlaying(targetSelected);
           startTargetGame(i,false);
         }
       }
@@ -150,7 +149,7 @@ export function tssControls (i, input){
       }
       else {
         setCookie("custom"+customTargetStages.length,code,36500);
-          setCustomTargetStages(customTargetStages.length, {});
+          //setCustomTargetStages(customTargetStages.length, {});
           setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
         redrawCustomStageBoxes();
       }

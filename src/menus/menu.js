@@ -228,6 +228,7 @@ export function drawMainMenuInit() {
   bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
 
   fg1.lineWidth = 5;
+  /*
   fg1.strokeStyle = "rgb(0, 0, 0)";
   for (var i = 0; i < 60; i++) {
     fg1.beginPath();
@@ -235,6 +236,7 @@ export function drawMainMenuInit() {
     fg1.lineTo(1200, 750 - (i * 15));
     fg1.stroke();
   }
+  */  
   fg1.strokeStyle = "rgba(3, 31, 219,0.5)";
   fg1.fillStyle = "hsla(" + menuCurColour + ",100%,50%,0.5)";
   fg1.save();

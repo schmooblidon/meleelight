@@ -596,8 +596,8 @@ export function targetBuilderControls (p, input){
             else {
               if (customTargetStages.length < 10){
                 setCookie("custom"+customTargetStages.length,code,36500);
-                 // setCustomTargetStages(customTargetStages.length, {});
-                  setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],stageTemp));
+                customTargetStages.push({});
+                setCustomTargetStages(customTargetStages.length - 1,deepCopyObject(true,customTargetStages[customTargetStages.length - 1],stageTemp));
                 $("#cStageInfoEdit").empty().append("Saved as Custom stage "+customTargetStages.length);
               }
               else {
@@ -643,6 +643,9 @@ export function drawTargetStage (){
     for (let j=0;j<5;j++){
       if (hoverItem[0] == "target" && hoverItem[1] == i){
         ui.fillStyle = (j%2)?"white":"rgb(241, 111, 111)";
+      }
+      else {
+        ui.fillStyle = (j%2)?"white":"red";
       }
       ui.beginPath();
       ui.arc(x, y, 25 - j * 5, 0, twoPi);

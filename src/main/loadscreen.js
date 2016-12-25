@@ -2,7 +2,7 @@ let scriptsLoaded = 0;
 const scripts = [{
   path: "./js/main.js",
   text: "core code",
-  size: 1.8 * 1024 * 1024,
+  size: 7.7436 * 1024 * 1024,
   loaded: 0,
 }];
 

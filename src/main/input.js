@@ -309,11 +309,39 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   input.z = buttonData("z").pressed;
 
 
-  if (controllerType == 9) { // Rock Candy controller, parameters to be confirmed
+  if (controllerType === 9) { // Rock Candy controller, parameters to be confirmed
     input.dl = gamepad.axes[6] < -0.5 ? true : false;
     input.dr = gamepad.axes[6] >  0.5 ? true : false;
     input.dd = gamepad.axes[7] >  0.5 ? true : false;
     input.du = gamepad.axes[7] < -0.5 ? true : false;
+  }
+  else if (controllerType === 13) { // Betop controller, d-pad buttons data is shoved into a single axis
+    const dpadData = gamepad.axes[9];
+
+    /*
+    const down = 0.14285719394683838; // random constant from controller
+    const downLeft = 3*down;
+    const left = 1-2*down;
+    const upLeft = 1;
+    // symmetry through the axis going from between (upLeft and up) to between (down and downRight)
+    const up = - upLeft;
+    const upRight = -left;
+    const right = -downLeft;
+    const downRight = -down;
+
+    const neutral = 1+2*down;
+
+    input.dl = isCloseToOneOf(dpadData, [downLeft , left , upLeft   ], 0.1);
+    input.dr = isCloseToOneOf(dpadData, [downRight, right, upRight  ], 0.1);
+    input.dd = isCloseToOneOf(dpadData, [downLeft , down , downRight], 0.1);
+    input.du = isCloseToOneOf(dpadData, [upLeft   , up   , upRight  ], 0.1);
+    */
+
+    input.dl = dpadData >  0.3 && dpadData < 1.1;
+    input.dr = dpadData > -0.8 && dpadData < 0;
+    input.dd = dpadData > -0.2 && dpadData < 0.5;
+    input.du = dpadData < -0.5 || (dpadData > 0.9 && dpadData < 1.1);
+
   }
   else {
     input.dl = buttonData("dl").pressed;
@@ -378,10 +406,12 @@ const rockx360Map    = [ 0, 1, 2, 3, 5, 4 , 4 , 7, 12, 15, 13, 14,  0,   1,   3,
 // ID number 10 reserved for keyboard
                     //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 const wiiULinuxMap   = [ 0, 3, 1, 2, 6, 5 , 4 , 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 11, Official Wii U GC Adapter using wii-u-gc-adapter on Linux
+const tigerChromeMap = [ 0, 1, 2, 3, 6, 5 , 4 , 7, 11, 9 , 10, 8 ,  0,   1,   2,   5,  7,  6  ]; // ID 12, TigerGame 3-in-1 adapter on chrome
+const betopMap       = [ 1, 2, 0, 3, 5, 7 , 6 , 9, 12, 13, 14, 15,  0,   1,   2,   5,  7,  6  ]; // ID 13, TigerGame 3-in-1 adapter on chrome (d-pad are axes not buttons, axes to be confirmed)
                     //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 
-export const controllerMaps = [mayflashMap, vJoyMap, raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map, rockx360Map
-                              , null      , wiiULinuxMap];
+export const controllerMaps = [ mayflashMap, vJoyMap     , raphnetV2_9Map, xbox360Map, tigergameMap, retrolinkMap, raphnetV3_2Map, brookMap, ps4Map, rockx360Map
+                              , null       , wiiULinuxMap, tigerChromeMap, betopMap   ];
 
 // Checking gamepad inputs are well defined
 export function gpdaxis ( gpd, gpdID, ax ) { // gpd.axes[n] but checking axis index is in range
@@ -434,6 +464,8 @@ var controllerIDMap = new Map();
 controllerIDMap.set("Mayflash", 0); // Mayflash 4 port, ID: MAYFLASH GameCube Controller Adapter
 controllerIDMap.set("0079-1843", 0);
 controllerIDMap.set("79-1843", 0);
+controllerIDMap.set("0079-1847", 0);
+controllerIDMap.set("79-1847", 0);
 
 controllerIDMap.set("NEXILUX", 0); // NEXILUX GAMECUBE Controller Adapter
 controllerIDMap.set("0079-1845", 0);
@@ -468,8 +500,8 @@ controllerIDMap.set("045e-028e", 3);
 controllerIDMap.set("45e-28e", 3);
 
 // ID 4, TigerGame 3-in-1 adapter
-controllerIDMap.set("TigerGame", 4); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
-controllerIDMap.set("0926-2526", 4);
+// has a different mapping on Chrome, so no ID string check
+controllerIDMap.set("0926-2526", 4); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
 controllerIDMap.set("926-2526", 4);
 
 // ID 5, Retrolink adapter
@@ -503,6 +535,15 @@ controllerIDMap.set("e6f-11f", 9);
 // ID 11, Nintendo Wii U Adapter on Linux using wii-u-gc-adapter
 controllerIDMap.set("0000-0000-Wii U GameCube Adapter", 11);
 
+// ID 12, TigerGame 3-in-1 adapter on Chrome
+controllerIDMap.set("TigerGame", 12); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
+// has a different mapping on Firefox, so no product/vendor check
+
+// ID 13, Betop Controller
+controllerIDMap.set("Betop Controller", 13);
+controllerIDMap.set("20bc-1264", 13);
+
+
 //--END OF CONTROLLER IDs-------------------------------------
     
 
@@ -521,6 +562,7 @@ export function controllerNameFromIDnumber(number) {
       return "Xbox 360 compatible controller";
       break;
     case 4:
+    case 12:
       return "TigerGame 3-in-1";
       break;
     case 5:
@@ -540,6 +582,9 @@ export function controllerNameFromIDnumber(number) {
       break;
     case 11:
       return "Linux wii-u-gc-adapter";
+      break;
+    case 13:
+      return "Betop controller";
       break;
     default:
       return "error: controller detected but not supported";
@@ -751,7 +796,7 @@ function meleeAxesRescale ( [x,y], bool ) {
 // number : controller ID, to rescale axes dependent on controller raw input
 // bool == false means no deadzone, bool == true means deadzone
 export function scaleToMeleeAxes ( x, y, number = 0, bool = false, customCenterX = 0, customCenterY = 0 ) {
-    if (number === 0 || number == 4 || number === 5 || number === 7) { // gamecube controllers
+    if (number === 0 || number == 4 || number === 5 || number === 7 || number === 11 || number === 12) { // gamecube controllers
          x = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
          y = (-y+customCenterY+1)*255/2; // y incurs a sign flip
          //console.log("You are using raw GC controller data.");

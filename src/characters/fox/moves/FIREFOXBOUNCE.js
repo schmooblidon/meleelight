@@ -1,5 +1,7 @@
 
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
+import WAIT from "characters/shared/moves/WAIT";
+import LANDING from "characters/shared/moves/LANDING";
 import {player} from "main/main";
 
 export default {
@@ -32,6 +34,7 @@ export default {
   interrupt : function(p,input){
     if (player[p].timer > 14){
       if (player[p].phys.grounded){
+        WAIT.init(p,input);
       }
       else {
         FALLSPECIAL.init(p,input);
@@ -41,5 +44,8 @@ export default {
     else {
       return false;
     }
+  },
+  land : function(p,input){
+    LANDING.init(p,input);
   }
 };

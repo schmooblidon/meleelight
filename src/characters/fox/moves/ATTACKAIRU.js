@@ -6,7 +6,7 @@ import JUMPAERIALB from "characters/shared/moves/JUMPAERIALB";
 import JUMPAERIALF from "characters/shared/moves/JUMPAERIALF";
 import FALL from "characters/shared/moves/FALL";
 import {player} from "main/main";
-import {turnOffHitboxes, fastfall, airDrift, checkForAerials} from "physics/actionStateShortcuts";
+import {turnOffHitboxes, fastfall, airDrift, checkForAerials, checkForDoubleJump} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 
 export default {
@@ -74,7 +74,7 @@ export default {
     }
     else if (player[p].timer > 35){
       const a = checkForAerials(p,input);
-      if (((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && !player[p].phys.doubleJumped){
+      if (checkForDoubleJump(p,input) && !player[p].phys.doubleJumped){
         if (input[p][0].lsX*player[p].phys.face < -0.3){
           JUMPAERIALB.init(p,input);
         }

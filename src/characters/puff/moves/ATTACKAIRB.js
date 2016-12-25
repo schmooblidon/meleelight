@@ -1,5 +1,5 @@
 import {player} from "../../../main/main";
-import {turnOffHitboxes, checkForAerials, fastfall, airDrift} from "../../../physics/actionStateShortcuts";
+import {turnOffHitboxes, checkForAerials, fastfall, airDrift, checkForMultiJump} from "../../../physics/actionStateShortcuts";
 import puff from "./index";
 import {sounds} from "../../../main/sfx";
 import FALL from "../../shared/moves/FALL";
@@ -56,7 +56,7 @@ export default {
     }
     else if (player[p].timer > 30) {
       const a = checkForAerials(p, input);
-      if (((input[p][0].x && !input[p][1].x) || (input[p][0].y && !input[p][1].y) || (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7)) && player[p].phys.jumpsUsed < 5) {
+      if (checkForMultiJump(p,input) && player[p].phys.jumpsUsed < 5) {
         puff.JUMPAERIALF.init(p, input);
         return true;
       }

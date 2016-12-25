@@ -6,6 +6,10 @@ export function deepCopyObject(deep, target, ...object) {
     for (let i = 2; i < arguments.length; i++) {
       const obj = arguments[i];
 
+      if (arguments.length === 3 && obj instanceof Array){
+        result = [];
+      } 
+
       if (!obj)
         continue;
 
@@ -16,10 +20,6 @@ export function deepCopyObject(deep, target, ...object) {
           else
             result[key] = obj[key];
         }
-      }
-      // adds length property for arrays
-      if (obj instanceof Array) {
-        result.length = obj.length;
       }
     }
 

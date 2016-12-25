@@ -11,11 +11,12 @@ import {player, changeGamemode,  initializePlayers, matchTimer
 
     , setEndTargetGame
     , setStage
+    , holiday
 } from "main/main";
 import {renderPlayer} from "main/render";
 import {sounds} from "main/sfx";
 import {stageTemp} from "target/targetbuilder";
-import { setBackgroundType} from "stages/stagerender";
+import { setBackgroundType, createSnow} from "stages/stagerender";
 import {aArticles, articles, resetAArticles, interpolatedArticleCircleCollision, destroyArticleQueue} from "physics/article";
 import {interpolatedHitCircleCollision} from "physics/hitDetection";
 import {drawVfx} from "main/vfx/drawVfx";
@@ -132,6 +133,9 @@ export function startTargetGame (p,test){
   setEndTargetGame(false);
   if (test){
     setActiveStageBuilderTestStage(stageTemp);
+  }
+  if (holiday == 1){
+    createSnow();
   }
   targetTesting = test;
     setBackgroundType(Math.round(Math.random()));
