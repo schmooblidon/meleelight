@@ -15,7 +15,7 @@ import {
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
-import {setVsStage} from "../../stages/activeStage";
+import {setVsStage, setNetStage} from "../../stages/activeStage";
 let ds = null;
 let peerId = null;
 let connectionReady = false;
@@ -275,7 +275,7 @@ function connect(record, name) {
   });
   ds.event.subscribe(name + 'changeStage/', data => {
     if (data) {
-      setVsStage(data.stage);
+      setNetStage(data.stage);
     }
   });
   peerConnections[name] = record;
