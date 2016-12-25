@@ -16,7 +16,7 @@ export function setVsStage(val) {
   syncStage(activeStage);
 }
 export function setNetStage(val){
-  activeStage = vsstages[stageMapping[val]];
+  activeStage = val;
 }
 
 export const targetStageMapping = {
