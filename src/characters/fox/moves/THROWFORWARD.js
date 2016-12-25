@@ -13,6 +13,9 @@ export default {
   init : function(p,input){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
+    if(player[p].phys.grabbing === -1){
+      this.interrupt(p,input);
+    }
     actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD.init(player[p].phys.grabbing,input);
     const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD;
     player[p].phys.releaseFrame = frame+1;

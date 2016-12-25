@@ -42,6 +42,10 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
     can.fillStyle = col;
     can.beginPath();
     // for each shape
+  if(path === undefined) {
+    return;
+  }
+
     for (var j = 0; j < path.length; j++) {
         // first 2 numbers are starting vector points
         var x = (path[j][0] * scaleX * face) + rpX;
@@ -71,6 +75,9 @@ export function renderPlayer(i) {
     }
     if (frame > framesData[characterSelections[i]][player[i].actionState]) {
         frame = framesData[characterSelections[i]][player[i].actionState];
+    }
+    if(animations[characterSelections[i]][player[i].actionState] === undefined){
+      return;
     }
     if(animations[characterSelections[i]][player[i].actionState][frame - 1] === undefined){
       return;
