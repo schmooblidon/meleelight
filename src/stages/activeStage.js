@@ -14,7 +14,7 @@ const stageMapping = {
 
 export function setVsStage(val) {
   activeStage = vsstages[stageMapping[val]];
-  syncStage(deepCopyObject(true,{},activeStage));
+  syncStage(vsstages[stageMapping[val]]);
 }
 export function setNetStage(val){
   activeStage = val;

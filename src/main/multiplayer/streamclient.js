@@ -17,7 +17,7 @@ import {
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
-import {setVsStage, setNetStage} from "../../stages/activeStage";
+import { setNetStage} from "../../stages/activeStage";
 let ds = null;
 let peerId = null;
 let connectionReady = false;
@@ -113,7 +113,7 @@ function startRoom() {
     ds.event.subscribe(GAME_ID + 'startGame/', data => {
       if (data) {
         setStageSelect(data.stageSelected);
-        startGame();
+
       }
     });
 
