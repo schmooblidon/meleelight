@@ -17,7 +17,6 @@ import {
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
-import { setNetStage} from "../../stages/activeStage";
 let ds = null;
 let peerId = null;
 let connectionReady = false;
@@ -113,7 +112,7 @@ function startRoom() {
     ds.event.subscribe(GAME_ID + 'startGame/', data => {
       if (data) {
         setStageSelect(data.stageSelected);
-
+        startGame();
       }
     });
 
@@ -281,11 +280,7 @@ function connect(record, name) {
 
     }
   });
-  ds.event.subscribe(name + 'changeStage/', data => {
-    if (data) {
-      setNetStage(data.stage);
-    }
-  });
+
   ds.event.subscribe(name + 'startGame/', data => {
     if (data) {
       setStageSelect(data.stageSelected);
@@ -344,11 +339,7 @@ export function syncGameMode( gameMode) {
   }
 }
 
-export function syncStage( stage) {
-  if(HOST_GAME_ID !== null ) {
-    ds.event.emit(HOST_GAME_ID + 'changeStage/', {"stage": stage});
-  }
-}
+
 
 export function syncStartGame( stageSelected) {
   if(HOST_GAME_ID !== null ) {
