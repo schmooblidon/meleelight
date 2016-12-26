@@ -1061,7 +1061,7 @@ export function gameTick (oldInputBuffers){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick, 16 - diff, input);
+  setTimeout(gameTick, 16, input);
 }
 
 export function clearScreen (){
