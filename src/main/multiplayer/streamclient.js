@@ -82,6 +82,10 @@ function startRoom() {
 
       playerStatusRecords[playerID] = statusRecord;
       syncHost(match.ports);
+      let totalPlayersRecord=   ds.record.getRecord(GAME_ID+'totalPlayers');
+      totalPlayersRecord.set('totalPlayers',ports);
+      ds.event.emit(GAME_ID+'totalPlayers',{'totalPlayers':ports});
+
       HOST_GAME_ID = GAME_ID;
 
     });

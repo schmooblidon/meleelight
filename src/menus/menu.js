@@ -9,6 +9,7 @@ import {setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
 import {music} from "../main/sfx";
 import {connectToMPServer} from "../main/multiplayer/streamclient";
+import {connectAsSpectator} from "../main/multiplayer/spectatorclient";
 /* eslint-disable */
 
 let menuSelected = 0;
@@ -16,7 +17,7 @@ let menuSelected = 0;
 const menuText = [
   ["VS. Melee", "Target Test", "Target Builder", "Options"],
   ["Audio", "Gameplay", "Keyboard Controls", "Credits"],
-  ["Local VS", "Matchmaking", "P2P", "Server"]
+  ["Local VS", "Spectate", "P2P", "Server"]
 ];
 const menuExplanation = [
   ["Multiplayer Battles!", "Smash ten targets!", "Build target test stages!", "Game setup."],
@@ -51,7 +52,7 @@ const KEYBOARDOPTIONS = 2;
 const CREDITS = 3;
 //mp level
 const LOCALVS = 0;
-const MATCHMAKING = 1;
+const SPECTATING = 1;
 const P2PMP = 2;
 const SERVERMP = 3;
 
@@ -98,8 +99,9 @@ export function menuMove(i, input) {
        // changeGamemode(2);
        // positionPlayersInCSS();
       } else {
-        if (menuSelected == MATCHMAKING) {
-
+        if (menuSelected == SPECTATING) {
+          connectAsSpectator();
+          changeGamemode(2);
         } else {
           if (menuSelected == P2PMP) {
             //  connectToMPRoom();
