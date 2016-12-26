@@ -128,7 +128,10 @@ export const palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206
 
 export const hasTag = [false,false,false,false];
 export const tagText = ["","","",""];
-
+export function setTagText(index,value){
+  tagText[index] = value;
+  hasTag[index] = true;
+}
 export const pPal = [0,1,2,3];
 
 export const costumeTimeout = [];

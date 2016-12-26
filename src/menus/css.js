@@ -14,7 +14,7 @@ import {actionStates} from "physics/actionStateShortcuts";
 import {setCS} from "../main/main";
 import {chars} from "../main/characters";
 import {Vec2D} from "../main/util/Vec2D";
-import {syncCharacter, syncGameMode} from "../main/multiplayer/streamclient";
+import {syncCharacter, syncGameMode, syncTagText} from "../main/multiplayer/streamclient";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -286,6 +286,7 @@ export function cssControls (i, input){
           sounds.menuSelect.play();
           hasTag[i] = true;
           tagText[i] = randomTags[Math.round((randomTags.length - 1) * Math.random())];
+          syncTagText(i,tagText[i]);
         } else if (handPos[i].x > 286 + i * 225) {
           // remove
           sounds.menuSelect.play();
@@ -305,6 +306,7 @@ export function cssControls (i, input){
   } else if (choosingTag == i && ((input[i][0].a && !input[i][1].a) || keys[13])) {
     sounds.menuSelect.play();
     tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
+    syncTagText(choosingTag,tagText[choosingTag]);
     $("#pTagEdit" + choosingTag).hide();
     choosingTag = -1;
   }

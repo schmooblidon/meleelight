@@ -14,6 +14,7 @@ import {
   , changeGamemode
   , setStageSelect
   , startGame
+  , setTagText
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
@@ -120,6 +121,11 @@ function startRoom() {
       if (data) {
         setStageSelect(data.stageSelected);
         startGame();
+      }
+    });
+    ds.event.subscribe(GAME_ID + 'setTag/', data => {
+      if (data) {
+        setTagText(data.playerSlot,data.tagText);
       }
     });
 
@@ -311,6 +317,11 @@ function connect(record, name) {
       startGame();
     }
   });
+  ds.event.subscribe(name + 'setTag/', data => {
+    if (data) {
+      setTagText(data.playerSlot,data.tagText);
+    }
+  });
   peerConnections[name] = record;
 
 }
@@ -368,6 +379,12 @@ export function syncGameMode( gameMode) {
 export function syncStartGame( stageSelected) {
   if(HOST_GAME_ID !== null ) {
     ds.event.emit(HOST_GAME_ID + 'startGame/', {"stageSelected": stageSelected});
+  }
+}
+
+export function syncTagText( playerSlot,tagText) {
+  if(HOST_GAME_ID !== null ) {
+    ds.event.emit(HOST_GAME_ID + 'setTag/', {"playerSlot": playerSlot,"tagText":tagText});
   }
 }
 
