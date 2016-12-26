@@ -24,6 +24,9 @@ export default {
       if (player[p].timer > 0){
         if(player[p].phys) {
           if (player[p].phys.grabbedBy !== -1) {
+            if(player[p].timer > this.offset.length){
+              player[p].timer = this.offset.length -1;
+            }
             player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + this.offset[player[p].timer - 1][0] * player[p].phys.face, player[player[p].phys.grabbedBy].phys.pos.y + this.offset[player[p].timer - 1][1]);
           }
         }
