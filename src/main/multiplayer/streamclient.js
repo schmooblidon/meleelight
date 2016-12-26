@@ -15,6 +15,9 @@ import {
   , setStageSelect
   , startGame
   , setTagText
+  , gameMode
+  , stageSelect
+  , matchTimer
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
@@ -85,7 +88,9 @@ function startRoom() {
       syncHost(match.ports);
       let totalPlayersRecord=   ds.record.getRecord(GAME_ID+'totalPlayers');
       totalPlayersRecord.set('totalPlayers',ports);
-      ds.event.emit(GAME_ID+'totalPlayers',{'totalPlayers':ports});
+      totalPlayersRecord.set('gameMode',gameMode);
+      totalPlayersRecord.set('stageSelect',stageSelect);
+      ds.event.emit(GAME_ID+'totalPlayers',{'totalPlayers':ports,"gameMode":gameMode,"stageSelect":stageSelect});
       statusRecord.set(GAME_ID + 'playerStatus/', {
         "playerID": playerID,
         "ports": ports,
@@ -120,6 +125,7 @@ function startRoom() {
     ds.event.subscribe(GAME_ID + 'startGame/', data => {
       if (data) {
         setStageSelect(data.stageSelected);
+        ds.record.getRecord(GAME_ID+'totalPlayers').set('stageSelect',data.stageSelected);
         startGame();
       }
     });
@@ -127,6 +133,12 @@ function startRoom() {
       if (data) {
         setTagText(data.playerSlot,data.tagText);
       }
+    });
+
+    ds.event.subscribe(GAME_ID + 'getMatchTimer/', data => {
+
+      syncMatchTimer( matchTimer);
+
     });
 
   });
@@ -385,6 +397,11 @@ export function syncStartGame( stageSelected) {
 export function syncTagText( playerSlot,tagText) {
   if(HOST_GAME_ID !== null ) {
     ds.event.emit(HOST_GAME_ID + 'setTag/', {"playerSlot": playerSlot,"tagText":tagText});
+  }
+}
+export function syncMatchTimer( timer) {
+  if(HOST_GAME_ID !== null ) {
+    ds.event.emit(HOST_GAME_ID + 'matchTimer/', {"matchTimer": timer});
   }
 }
 

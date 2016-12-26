@@ -189,6 +189,10 @@ export function setMatchTimer (val){
   matchTimer = val;
 }
 
+export function getMatchTimer(){
+  return matchTimer;
+}
+
 export let usingLocalStorage = false;
 if (typeof(Storage) !== "undefined") {
   // Code for localStorage/sessionStorage.

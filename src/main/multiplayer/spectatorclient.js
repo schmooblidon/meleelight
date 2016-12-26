@@ -14,9 +14,16 @@ import {
   , changeGamemode
   , setStageSelect
   , startGame
+  , setPlaying
+  , holiday
+  , setMatchTimer
+  , setFindingPlayers
+
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
+import {setVsStage} from "../../stages/activeStage";
+import {setBackgroundType, createSnow, drawStageInit} from "../../stages/stagerender";
 let ds = null;
 let peerId = null;
 let connectionReady = false;
@@ -71,8 +78,6 @@ const playerStatusRecords = {};
 const playerInputBuffer = [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
 
 
-
-
 export function saveNetworkInputs(playerSlot, inputBuffer) {
   playerInputBuffer[playerSlot][0] = inputBuffer;
 
@@ -102,12 +107,32 @@ function syncSpectator(exactportnumber) {
 function connect(record, name) {
   // Handle a join connection.
 
-  ds.record.getRecord(name+'totalPlayers').whenReady(totalPlayerRecord=>{
+  ds.record.getRecord(name + 'totalPlayers').whenReady(totalPlayerRecord => {
     syncSpectator(totalPlayerRecord.get().totalPlayers);
+
+    changeGamemode(totalPlayerRecord.get().gameMode);
+    setStageSelect(totalPlayerRecord.get().stageSelect);
+
+
+    ds.event.emit(name+'getMatchTimer');
+
+    if (totalPlayerRecord.get().gameMode === 2) {
+      startGame();
+
+    }
   });
 
   ds.event.subscribe(name + 'totalPlayers', data => {
-syncSpectator(data.totalPlayers);
+    syncSpectator(data.totalPlayers);
+    changeGamemode(data.gameMode);
+    setStageSelect(data.stageSelect);
+
+
+
+    if (data.gameMode === 2) {
+      startGame();
+
+    }
   });
   ds.event.subscribe(name + 'player/', data => {
     //  console.log("listener player  "+ GAME_ID);
@@ -137,6 +162,12 @@ syncSpectator(data.totalPlayers);
     if (data) {
       setStageSelect(data.stageSelected);
       startGame();
+    }
+  });
+
+  ds.event.subscribe(name + 'matchTimer/', data => {
+    if (data) {
+      setMatchTimer(data.stageSelected);
     }
   });
   peerConnections[name] = record;
