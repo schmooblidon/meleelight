@@ -24,8 +24,16 @@ export default {
   main: function (p, input) {
     player[p].timer++;
     if (!marth.THROWNMARTHBACK.interrupt(p, input)) {
-      if (player[p].timer > 0) {
-        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + marth.THROWNMARTHBACK.offset[player[p].timer - 1][0] * player[p].phys.face, player[player[p].phys.grabbedBy].phys.pos.y + marth.THROWNMARTHBACK.offset[player[p].timer - 1][1]);
+      let timer = player[p].timer;
+      if (timer > 0) {
+        let grabbedBy = player[p].phys.grabbedBy;
+        if(grabbedBy === -1){
+          return;
+        }
+        if(timer > marth.THROWNMARTHBACK.offset.length){
+          timer = marth.THROWNMARTHBACK.offset.length -1;
+        }
+        player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x + marth.THROWNMARTHBACK.offset[timer - 1][0] * player[p].phys.face, player[grabbedBy].phys.pos.y + marth.THROWNMARTHBACK.offset[timer - 1][1]);
       }
     }
   },
