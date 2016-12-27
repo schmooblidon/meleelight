@@ -215,7 +215,7 @@ function pollKeyboardInputs(gameMode, frameByFrame, keys) {
 function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
   let input = nullInput();
 
-  let gamepad = navigator.getGamepads()[currentPlayers[controllerIndex]];
+  let gamepad = navigator.getGamepads()[controllerIndex];
 
 
 
