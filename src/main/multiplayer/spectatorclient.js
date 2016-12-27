@@ -116,7 +116,7 @@ function connect(record, name) {
 
     ds.event.emit(name+'getMatchTimer');
 
-    if (totalPlayerRecord.get().gameMode === 2) {
+    if (totalPlayerRecord.get().gameMode === 2 ||totalPlayerRecord.get().gameMode === 3) {
       startGame();
 
     }
@@ -129,7 +129,7 @@ function connect(record, name) {
 
 
 
-    if (data.gameMode === 2) {
+    if (data.gameMode === 2|| data.gameMode === 3) {
       startGame();
 
     }
