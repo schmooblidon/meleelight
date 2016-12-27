@@ -25,7 +25,7 @@ export default  {
     if (!puff.THROWNPUFFDOWN.interrupt(p, input)) {
       let timer = player[p].timer;
       if (timer > 0) {
-        let grabbedBy = player[p].phys.grabbedBy;
+        const grabbedBy = player[p].phys.grabbedBy;
         if(grabbedBy === -1){
           return;
         }

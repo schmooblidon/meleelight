@@ -27,11 +27,16 @@ export default {
   main: function (p, input) {
     player[p].timer++;
     if (!puff.THROWNPUFFBACK.interrupt(p, input)) {
-      if (player[p].timer > 0) {
-        if(player[p].phys.grabbedBy === -1){
+      let timer = player[p].timer;
+      if (timer > 0) {
+        const grabbedBy = player[p].phys.grabbedBy;
+        if(grabbedBy === -1){
           return;
         }
-        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + puff.THROWNPUFFBACK.offset[player[p].timer - 1][0] * player[p].phys.face * -1, player[player[p].phys.grabbedBy].phys.pos.y + puff.THROWNPUFFBACK.offset[player[p].timer - 1][1]);
+        if(timer > puff.THROWNPUFFBACK.offset.length){
+          timer = puff.THROWNPUFFBACK.offset.length - 1;
+        }
+        player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x + puff.THROWNPUFFBACK.offset[timer - 1][0] * player[p].phys.face * -1, player[grabbedBy].phys.pos.y + puff.THROWNPUFFBACK.offset[timer - 1][1]);
         /*if (player[p].timer > 13 && player[p].timer < 19){
          player[p].phys.pos.x += actionStates[0].THROWNPUFFBACK.offsetVel[player[p].timer-14]*player[p].phys.face;
          }*/
