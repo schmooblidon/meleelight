@@ -58,4 +58,4 @@ Character.prototype.setupActionStates = function(actionStates)
     deepCopyObject(true, this.actionStates, actionStates);
 }
 
-export default Character;
+module.exports = Character;
