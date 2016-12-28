@@ -40,12 +40,18 @@ export default {
       WAIT.init(p, input);
       return true;
     }
-    else if (player[p].timer < 7 && player[player[p].phys.grabbing].phys.grabbedBy !== p) {
-      CATCHCUT.init(p, input);
-      return true;
-    }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1){
+        return;
+      }
+      if (player[p].timer < 7 && player[grabbing].phys.grabbedBy !== p) {
+            CATCHCUT.init(p, input);
+            return true;
+          }
+          else {
+            return false;
+          }
     }
   }
 };
