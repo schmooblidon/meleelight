@@ -40,13 +40,18 @@ export default {
       WAIT.init(p, input);
       return true;
     }
-    else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p) {
-      console.log("test");
-      CATCHCUT.init(p, input);
-      return true;
-    }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1 ){
+        return;
+      }
+      if (player[p].timer < player[p].phys.releaseFrame && player[grabbing].phys.grabbedBy !== p) {
+        CATCHCUT.init(p, input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };
