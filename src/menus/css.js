@@ -11,7 +11,7 @@ import {cpuDifficulty, characterSelections, player, changeGamemode, playerType,b
 import {drawArrayPathCompress, twoPi} from "main/render";
 import {sounds} from "main/sfx";
 import {actionStates} from "physics/actionStateShortcuts";
-import {setCS} from "../main/main";
+import {setCS, gameMode} from "../main/main";
 import {chars} from "../main/characters";
 import {Vec2D} from "../main/util/Vec2D";
 import {syncCharacter, syncGameMode, syncTagText} from "../main/multiplayer/streamclient";
@@ -31,6 +31,9 @@ export const handGrab = new Image();
 handGrab.src = "assets/hand/handgrab.png";
 
 export let choosingTag = -1;
+export function setChoosingTag(val){
+  choosingTag = val;
+}
 export const handType = [0,0,0,0];
 export const handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
 export const tokenPos = [new Vec2D(475,268),new Vec2D(515,268),new Vec2D(475,308),new Vec2D(515,308)];
@@ -82,6 +85,14 @@ export function changeCharacter (i,c){
   player[i].charHitboxes = chars[characterSelections[i]].hitboxes;
 }
 
+function cancelSetTag() {
+  sounds.menuSelect.play();
+  tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
+  syncTagText(choosingTag, tagText[choosingTag]);
+  $("#pTagEdit" + choosingTag).hide();
+  choosingTag = -1;
+}
+
 export function cssControls (i, input){
   let allowRegrab = true;
   if (choosingTag == -1){
@@ -90,7 +101,6 @@ export function cssControls (i, input){
       if (bHold[i] == 30) {
         sounds.menuBack.play();
         changeGamemode(1);
-        syncGameMode(1);
       }
     } else {
       bHold[i] = 0;
@@ -232,7 +242,6 @@ export function cssControls (i, input){
       if (input[i][0].a && !input[i][1].a) {
         sounds.menuBack.play();
         changeGamemode(1);
-        syncGameMode(1);
       }
     }
 
@@ -278,7 +287,10 @@ export function cssControls (i, input){
       }
     }
 
-    if (handPos[i].y > 640 && handPos[i].y < 680 && handPos[i].x > 130 + i * 225 && handPos[i].x < 310 + i * 225) {
+    if (handPos[i].y > 640 && handPos[i].y < 680 && handPos[i].x > 130 + i * 225 && handPos[i].x < 310 + i * 225 ) {
+      if(gameMode !== 2){
+        cancelSetTag();
+      }
       if (input[i][0].a && !input[i][1].a) {
         // do tag
         if (handPos[i].x < 154 + i * 225) {
@@ -304,11 +316,7 @@ export function cssControls (i, input){
       }
     }
   } else if (choosingTag == i && ((input[i][0].a && !input[i][1].a) || keys[13])) {
-    sounds.menuSelect.play();
-    tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
-    syncTagText(choosingTag,tagText[choosingTag]);
-    $("#pTagEdit" + choosingTag).hide();
-    choosingTag = -1;
+    cancelSetTag();
   }
   if (readyToFight && choosingTag == -1) {
     if (pause[i][0] && !pause[i][1]) {
@@ -719,6 +727,10 @@ export function drawCSS (){
       case 1:
         text = "CPU";
         ui.fillStyle = "rgb(161, 161, 161)";
+        break;
+        case 2:
+        text = "NET";
+        ui.fillStyle = "rgb(66, 241, 244)";
         break;
       default:
         break;

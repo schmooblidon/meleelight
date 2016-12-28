@@ -20,7 +20,7 @@ import {
   , matchTimer
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
-import {setTokenPos, setChosenChar} from "../../menus/css";
+import {setTokenPos, setChosenChar, setChoosingTag} from "../../menus/css";
 let ds = null;
 let peerId = null;
 let connectionReady = false;
@@ -126,6 +126,18 @@ function startRoom() {
       if (data) {
         setStageSelect(data.stageSelected);
         ds.record.getRecord(GAME_ID+'totalPlayers').set('stageSelect',data.stageSelected);
+        $("#pTagEdit" + 0).hide();
+        $("#pTagEdit" + 1).hide();
+        $("#pTagEdit" + 2).hide();
+        $("#pTagEdit" + 3).hide();
+        $("#pTagEdit" + 4).hide();
+        $("#pTagEdit" + 0).blur();
+        $("#pTagEdit" + 1).blur();
+        $("#pTagEdit" + 2).blur();
+        $("#pTagEdit" + 3).blur();
+        $("#pTagEdit" + 4).blur();
+        document.getSelection().removeAllRanges();
+        setChoosingTag(-1);
         startGame();
       }
     });
