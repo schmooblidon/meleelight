@@ -42,7 +42,7 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
     can.fillStyle = col;
     can.beginPath();
     // for each shape
-  if(path !== undefined || path !== null) {
+  if(path !== undefined && path !== null && path.length !== undefined) {
 
 
 
