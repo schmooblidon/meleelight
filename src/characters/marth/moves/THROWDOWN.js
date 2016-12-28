@@ -46,13 +46,12 @@ export default {
         return;
       }
       if (player[p].timer < 13 && player[grabbing].phys.grabbedBy !== p) {
-            console.log("test");
-            CATCHCUT.init(p, input);
-            return true;
-          }
-          else {
-            return false;
-          }
+        CATCHCUT.init(p, input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

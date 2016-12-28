@@ -28,7 +28,7 @@ export default  {
     player[p].timer++;
     if (!marth.THROWNMARTHUP.interrupt(p, input)) {
       if (player[p].timer > 0) {
-        let playerTimer = player[p].timer - 1;
+        let playerTimer = player[p].timer;
         if(playerTimer > (marth.THROWNMARTHUP.offset.length)){
           playerTimer = marth.THROWNMARTHUP.offset.length -1;
         }
