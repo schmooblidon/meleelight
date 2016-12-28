@@ -11,7 +11,11 @@ export default {
   //[0.08,0.22,0.24,0,-0.68,-1.67,-2.69,-3.47,-4.04,-4.61]
   init: function (p, input) {
     player[p].actionState = "THROWNFOXFORWARD";
-    if (player[p].phys.grabbedBy < p) {
+    const grabbedBy = player[p].phys.grabbedBy;
+    if(grabbedBy === -1){
+      return;
+    }
+    if (grabbedBy < p) {
       player[p].timer = -1;
     }
     else {

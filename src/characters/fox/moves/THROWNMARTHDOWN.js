@@ -10,7 +10,11 @@ export default {
   offset : [[-9.91,4.76],[-11.99,5.49],[-13.10,5.88],[-13.10,5.88],[-13.10,5.88],[-13.33,5.45],[-13.76,3.95],[-13.44,2.14],[-12.48,-0.03],[-10.43,-3.03],[-10.43,-3.03]],
   init : function(p,input){
     player[p].actionState = "THROWNMARTHDOWN";
-    if (player[p].phys.grabbedBy < p){
+    const grabbedBy = player[p].phys.grabbedBy;
+    if(grabbedBy === -1){
+      return;
+    }
+    if (grabbedBy < p){
       player[p].timer = -1;
     }
     else {
@@ -18,7 +22,7 @@ export default {
     }
     player[p].phys.grounded = false;
     player[p].phys.face *= -1;
-    player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
+    player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x,player[grabbedBy].phys.pos.y);
     this.main(p,input);
   },
   main : function(p,input){

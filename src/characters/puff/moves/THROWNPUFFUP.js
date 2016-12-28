@@ -10,7 +10,11 @@ export default {
   offset: [[-10.63, -3.65], [-9.46, -4.14], [-7.29, -4.39], [-2.98, -3.79], [2.65, -2.33], [4.95, -0.64], [4.95, -0.64]],
   init: function (p, input) {
     player[p].actionState = "THROWNPUFFUP";
-    if (player[p].phys.grabbedBy < p) {
+    const grabbedBy = player[p].phys.grabbedBy;
+    if(grabbedBy === -1){
+      return;
+    }
+    if (grabbedBy < p) {
       player[p].timer = -1;
     }
     else {

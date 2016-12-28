@@ -13,9 +13,13 @@ export default {
   init: function (p, input) {
     player[p].actionState = "THROWUP";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNPUFFUP.init(player[p].phys.grabbing, input);
+    const grabbing = player[p].phys.grabbing;
+    if(grabbing === -1){
+      return;
+    }
+    actionStates[characterSelections[grabbing]].THROWNPUFFUP.init(grabbing, input);
     turnOffHitboxes(p);
-    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNPUFFUP;
+    const frame = framesData[characterSelections[grabbing]].THROWNPUFFUP;
     player[p].phys.releaseFrame = frame + 1;
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
     puff.THROWUP.main(p, input);
