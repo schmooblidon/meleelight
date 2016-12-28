@@ -283,6 +283,8 @@ let result = data.get();
     alert("error room appears to be empty");
   }else if(result.gameMode === 3){
     alert("The match is currently in progress. please wait until it has completed");
+  }else if(currentPlayers.length > 1){
+    alert("Too many players your current session. Only one player may join per browser until I figure out a solution");
   }else if(result.gameMode === 6){
     alert("The host is already in stage select. Please wait until the match has completed or have the host return to character select");
   } else {
@@ -316,43 +318,44 @@ let result = data.get();
 
 
     });
-  }
-  ds.event.subscribe(name + 'player/', data => {
-    //  console.log("listener player  "+ GAME_ID);
-    //  console.log(data);
-    if (data) {
-      if (data.playerID !== playerID) {
-        if (data.inputBuffer && (data.playerSlot !== undefined)) {
-          saveNetworkInputs(data.playerSlot, data.inputBuffer);
-          player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+
+    ds.event.subscribe(name + 'player/', data => {
+      //  console.log("listener player  "+ GAME_ID);
+      //  console.log(data);
+      if (data) {
+        if (data.playerID !== playerID) {
+          if (data.inputBuffer && (data.playerSlot !== undefined)) {
+            saveNetworkInputs(data.playerSlot, data.inputBuffer);
+            player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+          }
         }
       }
-    }
-  });
-  ds.event.subscribe(name + 'charSelection/', data => {
-    if (data) {
-      setChosenChar(data.playerSlot, data.charSelected);
-    }
-  });
-  ds.event.subscribe(name + 'gameMode/', data => {
-    if (data) {
-      changeGamemode(data.gameMode);
+    });
+    ds.event.subscribe(name + 'charSelection/', data => {
+      if (data) {
+        setChosenChar(data.playerSlot, data.charSelected);
+      }
+    });
+    ds.event.subscribe(name + 'gameMode/', data => {
+      if (data) {
+        changeGamemode(data.gameMode);
 
-    }
-  });
+      }
+    });
 
-  ds.event.subscribe(name + 'startGame/', data => {
-    if (data) {
-      setStageSelect(data.stageSelected);
-      startGame();
-    }
-  });
-  ds.event.subscribe(name + 'setTag/', data => {
-    if (data) {
-      setTagText(data.playerSlot,data.tagText);
-    }
-  });
-  peerConnections[name] = record;
+    ds.event.subscribe(name + 'startGame/', data => {
+      if (data) {
+        setStageSelect(data.stageSelected);
+        startGame();
+      }
+    });
+    ds.event.subscribe(name + 'setTag/', data => {
+      if (data) {
+        setTagText(data.playerSlot, data.tagText);
+      }
+    });
+    peerConnections[name] = record;
+  }
   });
 
 }
