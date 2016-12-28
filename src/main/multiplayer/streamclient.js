@@ -270,6 +270,8 @@ let result = data.get();
     alert("error room appears to be empty");
   }else if(result.gameMode === 3){
     alert("The match is currently in progress. please wait until it has completed");
+  }else if(result.gameMode === 6){
+    alert("The host is already in stage select. Please wait until the match has completed or have the host return to character select");
   } else {
     let playerstatus = Object.keys(result)[0];
     playerStatusRecords[name] = record;
