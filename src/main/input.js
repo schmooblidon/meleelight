@@ -215,7 +215,9 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   let input = nullInput();
 
   let gamepad = navigator.getGamepads()[controllerIndex];
-if(gamepad === undefined){
+if(gamepad === undefined || gamepad === null){
+  console.log("controller at playerSlot :"+playerSlot);
+  console.log("controller at controllerIndex :"+controllerIndex);
   console.log("controller may be unplugged");
   return nullInput();
 }
