@@ -161,7 +161,7 @@ function _onLoggedIn() {
   connectionReady = true;
   startRoom();
 
-  $("#player1").on('click', (e) => {
+  $("#joinServer").on('click', (e) => {
     var destId = prompt("Hosts's peer ID:");
     connectToUser(destId);
   });
@@ -248,8 +248,9 @@ function syncClient(exactportnumber) {
       setCurrentPlayer(i, i);
       setNetInputFlag(exactportnumber, false);
     }
-    //reassign current players
-    addPlayer(exactportnumber , mTypeSnapshot[0]);
+    //reassign player 1
+    //TODO figure out how to join wiht multiple in original party
+    addPlayer(tempCurrentPlayers[0] , mTypeSnapshot[0]);
     setNetInputFlag(exactportnumber, true);
   }else {
 
