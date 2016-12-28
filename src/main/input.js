@@ -255,25 +255,28 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   let lAnalog = 0;
   let rAnalog = 0;
 
+  switch (controllerType) {
+    case 3:
+    case 5:
+    case 14:
+      lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[playerSlot].l, 1); // shifted by +0.2
+      rAnalog = scaleToGCTrigger(buttonData("r").value, 0.2-custcent[playerSlot].r, 1); // shifted by +0.2
+      break;
+    case 2:
+      lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, -0.6); // shifted by +0.867, flipped
+      rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, -0.6); // shifted by +0.867, flipped
+      break;
+    case 7: //Brook adapter has no L/R analog information, just light presses
+      lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
+      rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
+      break;
+    default:
+      lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, 0.6); // shifted by +0.867
+      rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, 0.6); // shifted by +0.867
+      break;
+  }
 
-  if (controllerType == 3){
-    lAnalog = scaleToGCTrigger(buttonData("l").value, 0.2-custcent[playerSlot].l, 1); // shifted by +0.2
-    rAnalog = scaleToGCTrigger(buttonData("r").value, 0.2-custcent[playerSlot].r, 1); // shifted by +0.2
-  }
-  else if (controllerType == 2){
-    lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, -0.6); // shifted by +0.867, flipped
-    rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, -0.6); // shifted by +0.867, flipped
-  }
-  else if (controllerType == 7) { //Brook adapter has no L/R analog information, just light presses
-    lAnalog = gamepad.buttons[6].pressed ? 0.3 : 0;
-    rAnalog = gamepad.buttons[7].pressed ? 0.3 : 0;
-  }
-  else {
-    lAnalog = scaleToGCTrigger(axisData("lA"),0.867-custcent[playerSlot].l, 0.6); // shifted by +0.867
-    rAnalog = scaleToGCTrigger(axisData("rA"),0.867-custcent[playerSlot].r, 0.6); // shifted by +0.867
-  }
-
-  if (controllerType == 3) {
+  if (controllerType === 3) {
     // FOR XBOX CONTROLLERS
     input.r = buttonData("r").value > 0.95 ? true : false;
     input.l = buttonData("l").value > 0.95 ? true : false;
@@ -282,7 +285,7 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
     if (gamepad.buttons[4].pressed) {
       input.l = true;
     }
-  } else if (controllerType == 9) { // Rock Candy controller
+  } else if (controllerType === 9) { // Rock Candy controller
     input.r = axisData("rA").value > 0.95 ? true : false;
     input.l = axisData("lA").value > 0.95 ? true : buttonData("l").pressed;
   } else {
@@ -391,7 +394,7 @@ const vJoyMap        = [ 0, 1, 2, 3, 4, 5 , 6 , 7, 8 , 11, 9 , 10,  0,   1,   3,
 const raphnetV2_9Map = [ 4, 3, 2, 1, 7, 6 , 5 , 0, 8 , 10, 9 , 11,  0,   1,   3,   4,  5,  6  ]; // ID 2, raphnet v.2.9 N64 adapter
 const xbox360Map     = [ 0, 2, 1, 3, 5, 7 , 6 , 9, 12, 15, 13, 14,  0,   1,   2,   3,  6,  7  ]; // ID 3, Xbox 360 (XInput Standard Gamepad)
 const tigergameMap   = [ 0, 1, 2, 3, 6, 5 , 4 , 7, 11, 9 , 10, 8 ,  0,   1,   2,   3,  5,  4  ]; // ID 4, TigerGame 3-in-1 adapter
-const retrolinkMap   = [ 2, 3, 1, 0, 6, 5 , 4 , 9, 10, 11, 8 , 7 ,  0,   1,   2,   5,  3,  4  ]; // ID 5, Retrolink adapter
+const retrolinkMap   = [ 2, 3, 1, 0, 6, 5 , 4 , 9, 10, 11, 8 , 7 ,  0,   1,   2,   4,  5,  6  ]; // ID 5, Retrolink adapter
 const raphnetV3_2Map = [ 0, 1, 7, 8, 2, 5 , 4 , 3, 10, 13, 11, 12,  0,   1,   3,   4,  5,  2  ]; // ID 6, Raphnet v 3.2,3.3
 const brookMap       = [ 0, 1, 2, 3, 4, 10, 11, 8, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 7, Brook adapter (d-pad values might be wrong, user had broken d-pad)
 const ps4Map         = [ 1, 0, 2, 3, 5, 7 , 6 , 9, 12, 15, 13, 14,  0,   1,   2,   5,  3,  4  ]; // ID 8, PS4 controller
@@ -401,7 +404,7 @@ const rockx360Map    = [ 0, 1, 2, 3, 5, 4 , 4 , 7, 12, 15, 13, 14,  0,   1,   3,
                     //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 const wiiULinuxMap   = [ 0, 3, 1, 2, 6, 5 , 4 , 7, 8 , 11, 9 , 10,  0,   1,   3,   4,  2,  5  ]; // ID 11, Official Wii U GC Adapter using wii-u-gc-adapter on Linux
 const tigerChromeMap = [ 0, 1, 2, 3, 6, 5 , 4 , 7, 11, 9 , 10, 8 ,  0,   1,   2,   5,  7,  6  ]; // ID 12, TigerGame 3-in-1 adapter on chrome
-const betopMap       = [ 1, 2, 0, 3, 5, 7 , 6 , 9, 12, 13, 14, 15,  0,   1,   2,   5,  7,  6  ]; // ID 13, TigerGame 3-in-1 adapter on chrome (d-pad are axes not buttons, axes to be confirmed)
+const betopMap       = [ 1, 2, 0, 3, 5, 7 , 6 , 9, 12, 13, 14, 15,  0,   1,   2,   5,  7,  6  ]; // ID 13, Betop controller (d-pad are axes not buttons, axes to be confirmed)
 const dualActionMap  = [ 0, 2, 3, 1, 5, 7 , 6 , 8, 12, 15, 13, 14,  0,   1,   2,   3,  5,  4  ]; // ID 14, Logitech Dual Action
                     //   a  b  x  y  z  r   l   s  du  dr  dd  dl  lsX  lsY  csX  csY  lA  rA
 
