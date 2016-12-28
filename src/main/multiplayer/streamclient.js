@@ -274,6 +274,14 @@ function syncHost() {
 function connect(record, name) {
   // Handle a join connection.
 
+  ds.record.getRecord(name + 'totalPlayers').whenReady(totalPlayerRecord => {
+
+
+    if (totalPlayerRecord.get().totalPlayers > 3) {
+      alert("Host room is full");
+
+    } else {
+
 
     record.whenReady(data =>{
 
@@ -357,7 +365,8 @@ let result = data.get();
     peerConnections[name] = record;
   }
   });
-
+    }
+  });
 }
 
 function eachActiveConnection(fn) {
