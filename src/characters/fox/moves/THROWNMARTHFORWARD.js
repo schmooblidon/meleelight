@@ -27,10 +27,11 @@ export default {
         if(timer > this.offset.length){
           timer = this.offset.length -1;
         }
-        if(player[p].phys.grabbedBy === -1){
+        const grabbedBy = player[p].phys.grabbedBy;
+        if(grabbedBy === -1){
           return;
         }
-        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+this.offset[timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+this.offset[timer-1][1]);
+        player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x+this.offset[timer-1][0]*player[p].phys.face,player[grabbedBy].phys.pos.y+this.offset[timer-1][1]);
       }
     }
   },

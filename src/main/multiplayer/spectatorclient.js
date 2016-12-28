@@ -103,11 +103,23 @@ function syncSpectator(exactportnumber) {
 
 }
 
+function clearRoster() {
+
+  //add host players
+  for (let i = 0; i < 4; i++) {
+    setPlayerType(i, -1);
+    setMtype(i, 99);
+    setCurrentPlayer(i, -1);
+  }
+
+}
+
 
 function connect(record, name) {
   // Handle a join connection.
 
   ds.record.getRecord(name + 'totalPlayers').whenReady(totalPlayerRecord => {
+    clearRoster();
     syncSpectator(totalPlayerRecord.get().totalPlayers);
 
     changeGamemode(totalPlayerRecord.get().gameMode);
@@ -116,20 +128,21 @@ function connect(record, name) {
 
     ds.event.emit(name+'getMatchTimer');
 
-    if (totalPlayerRecord.get().gameMode === 2 ||totalPlayerRecord.get().gameMode === 3) {
+    if (totalPlayerRecord.get().gameMode === 3) {
       startGame();
 
     }
   });
 
   ds.event.subscribe(name + 'totalPlayers', data => {
+    clearRoster();
     syncSpectator(data.totalPlayers);
     changeGamemode(data.gameMode);
     setStageSelect(data.stageSelect);
 
 
 
-    if (data.gameMode === 2|| data.gameMode === 3) {
+    if ( data.gameMode === 3) {
       startGame();
 
     }

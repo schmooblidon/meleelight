@@ -22,13 +22,15 @@ export default {
   main: function (p, input) {
     player[p].timer++;
     if (!puff.THROWNPUFFUP.interrupt(p, input)) {
-      if (player[p].timer > 0) {
+      let timer = player[p].timer;
+      if (timer > 0) {
         if (player[p].phys) {
-          if (player[p].phys.grabbedBy !== -1) {
-            if(player[p].timer > puff.THROWNPUFFUP.offset.length){
-              player[p].timer = puff.THROWNPUFFUP.offset.length -1;
+          const grabbedBy = player[p].phys.grabbedBy;
+          if (grabbedBy !== -1) {
+            if(timer > puff.THROWNPUFFUP.offset.length){
+              timer = puff.THROWNPUFFUP.offset.length -1;
             }
-            player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + puff.THROWNPUFFUP.offset[player[p].timer - 1][0] * player[p].phys.face, player[player[p].phys.grabbedBy].phys.pos.y + puff.THROWNPUFFUP.offset[player[p].timer - 1][1]);
+            player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x + puff.THROWNPUFFUP.offset[timer - 1][0] * player[p].phys.face, player[grabbedBy].phys.pos.y + puff.THROWNPUFFUP.offset[timer - 1][1]);
           }
         }
       }
