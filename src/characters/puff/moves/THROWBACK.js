@@ -50,12 +50,12 @@ export default  {
         return;
       }
       if (player[p].timer < player[p].phys.releaseFrame && player[grabbing].phys.grabbedBy !== p) {
-            CATCHCUT.init(p, input);
-            return true;
-          }
-          else {
-            return false;
-          }
+        CATCHCUT.init(p, input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

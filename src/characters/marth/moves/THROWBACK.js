@@ -46,12 +46,12 @@ export default {
         return;
       }
       if (player[p].timer < 7 && player[grabbing].phys.grabbedBy !== p) {
-            CATCHCUT.init(p, input);
-            return true;
-          }
-          else {
-            return false;
-          }
+        CATCHCUT.init(p, input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

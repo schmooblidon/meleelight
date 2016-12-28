@@ -262,16 +262,19 @@ function connect(record, name) {
   // Handle a join connection.
 
 
-  let data = record.get();
+    record.whenReady(data =>{
 
+let result = data.get();
 
-  if (Object.keys(data).length === 0 && data.constructor === Object) {
+  if (Object.keys(result).length === 0 && result.constructor === Object) {
     alert("error room appears to be empty");
+  }else if(result.gameMode === 3){
+    alert("The match is currently in progress. please wait until it has completed");
   } else {
-    let playerstatus = Object.keys(data)[0];
+    let playerstatus = Object.keys(result)[0];
     playerStatusRecords[name] = record;
 
-    syncClient(data[playerstatus].ports);
+    syncClient(result[playerstatus].ports);
     ds.event.emit(name + 'playerStatus/', {
       "playerID": playerID,
       "ports": ports - 1,
@@ -335,6 +338,7 @@ function connect(record, name) {
     }
   });
   peerConnections[name] = record;
+  });
 
 }
 
@@ -391,6 +395,7 @@ export function syncGameMode( gameMode) {
 export function syncStartGame( stageSelected) {
   if(HOST_GAME_ID !== null ) {
     ds.event.emit(HOST_GAME_ID + 'startGame/', {"stageSelected": stageSelected});
+    ds.record.getRecord(HOST_GAME_ID + '-game').set('gameMode',gameMode);
   }
 }
 
