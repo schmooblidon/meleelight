@@ -1,5 +1,5 @@
 import {characterSelections, player} from "main/main";
-import {actionStates} from "physics/actionStateShortcuts";
+import {actionStates, checkForDoubleJump, checkForAerials, checkForSpecials} from "physics/actionStateShortcuts";
 import {framesData} from 'main/characters';
 export default {
   name : "REBIRTHWAIT",
@@ -16,7 +16,39 @@ export default {
       player[p].phys.outOfCameraTimer = 0;
     }
   },
-  interrupt : function(p,input){
+  interrupt : function(p,input){    
+    const a = checkForAerials(p, input);
+    const b = checkForSpecials(p, input);
+    const j = checkForDoubleJump(p, input);
+    if (a[0]){
+      player[p].phys.grounded = false;
+      player[p].phys.invincibleTimer = 120;
+      actionStates[characterSelections[p]][a[1]].init(p, input);
+      return true;
+    } 
+    else if ((input[p][0].l && !input[p][1].l) || (input[p][0].r && !input[p][1].r)){
+      player[p].phys.grounded = false;
+      player[p].phys.invincibleTimer = 120;
+      actionStates[characterSelections[p]].ESCAPEAIR.init(p, input);
+      return true;
+    } 
+    else if (j) {
+      player[p].phys.grounded = false;
+      player[p].phys.invincibleTimer = 120;
+      if (input[p][0].lsX*player[p].phys.face < -0.3){
+        actionStates[characterSelections[p]].JUMPAERIALB.init(p, input);
+      } 
+      else {
+        actionStates[characterSelections[p]].JUMPAERIALF.init(p, input);
+      }    
+      return true;
+    }
+    else if (b[0]){
+      player[p].phys.grounded = false;
+      player[p].phys.invincibleTimer = 120;
+      actionStates[characterSelections[p]][b[1]].init(p, input);
+      return true;
+    }
     if (player[p].timer > framesData[characterSelections[p]].WAIT){
       actionStates[characterSelections[p]].REBIRTHWAIT.init(p,input);
       return true;
