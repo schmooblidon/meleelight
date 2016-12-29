@@ -291,9 +291,15 @@ export function hitHurtCollision (i,p,j,previous,phantom){
         offset = player[p].hitboxes.id[j].offset[0];
     }
     if (previous) {
-        var hbpos = new Vec2D(player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes
-                .frame].x * player[p].phys.facePrev), player[p].phys.posPrev.y + player[p].phys.prevFrameHitboxes.id[j].offset[
-                player[p].phys.prevFrameHitboxes.frame].y);
+      let prevframe = player[p].phys.prevFrameHitboxes.frame;
+      if(prevframe > 1){
+        prevframe = 1;
+      }
+      const prevoffset = player[p].phys.prevFrameHitboxes.id[j].offset[prevframe];
+      if(prevoffset === undefined){
+        return false;
+      }
+      var hbpos = new Vec2D(player[p].phys.posPrev.x + (prevoffset.x * player[p].phys.facePrev), player[p].phys.posPrev.y + prevoffset.y);
     } else {
         var hbpos = new Vec2D(player[p].phys.pos.x + (offset.x * player[p].phys.face), player[p].phys.pos.y + offset.y);
     }
