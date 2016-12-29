@@ -327,6 +327,9 @@ export function executeHits (input){
   var ignoreGrabs = [false, false, false, false];
   for (var i = 0; i < hitQueue.length; i++) {
     var v = hitQueue[i][0];
+    if(v === -1){
+      continue;
+    }
     var a = hitQueue[i][1];
     var h = hitQueue[i][2];
     var shieldHit = hitQueue[i][3];
