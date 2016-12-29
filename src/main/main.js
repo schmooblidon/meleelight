@@ -341,14 +341,14 @@ export function findPlayers (){
           if (ports == 0) {
             music.menu.play("menuStart");
           }
-          addPlayer(ports, 10);
+          addPlayer(ports, "keyboard");
         }
       }
     } else {
       if (keys[keyMap.a[0]] || keys[keyMap.a[1]]) {
         if (ports < 4) {
           keyboardOccupied = true;
-          addPlayer(ports, 10);
+          addPlayer(ports, "keyboard");
         }
       }
     }
@@ -410,11 +410,11 @@ export function findPlayers (){
 }
 
 
-export function addPlayer (gamepad, gpdInfo){
+export function addPlayer (i, controllerInfo){
   ports++;
-  currentPlayers[ports - 1] = gamepad;
+  currentPlayers[ports - 1] = i;
   playerType[ports - 1] = 0;
-  mType[ports - 1] = gpdInfo;
+  mType[ports - 1] = controllerInfo;
 }
 
 export function togglePort (i){
