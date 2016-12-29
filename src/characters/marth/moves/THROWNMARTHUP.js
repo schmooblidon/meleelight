@@ -36,7 +36,7 @@ export default  {
         if(grabbedBy === -1){
           return;
         }
-        player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x + marth.THROWNMARTHUP.offset[playerTimer][0] * player[p].phys.face, player[grabbedBy].phys.pos.y + marth.THROWNMARTHUP.offset[playerTimer][1]);
+        player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x + marth.THROWNMARTHUP.offset[playerTimer - 1][0] * player[p].phys.face, player[grabbedBy].phys.pos.y + marth.THROWNMARTHUP.offset[playerTimer - 1][1]);
       }
     }
   },
