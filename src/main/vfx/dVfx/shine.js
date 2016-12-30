@@ -4,8 +4,8 @@ import {fg2} from "main/main";
 import {drawHexagon} from "main/vfx/drawHexagon";
 import {activeStage} from "stages/activeStage";
 import {stars} from "main/vfx/stars";
+import {vfx} from "main/vfx";
 
-const blue = "rgba(52, 189, 229, 0.82)";
 const lightBlue = "rgba(196, 252, 254, 0.82)";
 const white =  "rgba(235, 250, 255, 0.9)";
 
@@ -16,12 +16,6 @@ export default(j) =>{
   let r;
   let a;
   let b;
-
-  const starShapeMin = 0.3 * activeStage.scale;
-  const starShapeMax = 1.1 * activeStage.scale;
-  const starSides = 4;
-  const starAngle = 0;
-  const starCount = 12;
 
   if (vfxQueue[j][1] === 1) {
     fg2.fillStyle = lightBlue;
@@ -39,7 +33,7 @@ export default(j) =>{
     fg2.lineTo(0, -r);
     fg2.closePath();
     fg2.fill();
-    stars(0, 0, starShapeMin, starShapeMax, starSides, starAngle, starCount, 1 * activeStage.scale, 7.5 * activeStage.scale );
+    stars(tX,tY, 2+3*Math.floor(Math.random()), 1.5 * activeStage.scale, 5.5 * activeStage.scale );
   } else if (vfxQueue[j][1] === 2) {
     fg2.fillStyle = lightBlue;
     drawHexagon(6.6 * activeStage.scale, tX, tY, 10);
@@ -56,7 +50,7 @@ export default(j) =>{
     fg2.lineTo(b, -r + a);
     fg2.closePath();
     fg2.fill();
-    stars(0, 0, starShapeMin, starShapeMax, starSides, starAngle, starCount, 4 * activeStage.scale, 9 * activeStage.scale );
+    stars(tX,tY, 3+3*Math.floor(Math.random()), 4 * activeStage.scale, 7 * activeStage.scale );
   } else {
     fg2.fillStyle = lightBlue;
     drawHexagon(8.1 * activeStage.scale, tX, tY, 10);
@@ -73,7 +67,7 @@ export default(j) =>{
     fg2.lineTo(b, r - a);
     fg2.closePath();
     fg2.fill();
-    stars(0, 0, starShapeMin, starShapeMax, starSides, starAngle, starCount, 5 * activeStage.scale, 10 * activeStage.scale );
+    stars(tX,tY, 2+3*Math.floor(Math.random()), 6 * activeStage.scale, 8 * activeStage.scale );
   }
   fg2.restore();
 };
