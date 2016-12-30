@@ -8,13 +8,13 @@ export default(j) =>{
   const tX = (player[vfxQueue[j][3]].phys.pos.x * activeStage.scale) + activeStage.offset[0];
   const tY = ((player[vfxQueue[j][3]].phys.pos.y + 6) * -activeStage.scale) + activeStage.offset[1];
   part = Math.round(player[vfxQueue[j][3]].shineLoop / 2);
-  fg2.fillStyle = "rgb(143, 228, 255)";
+  fg2.fillStyle = "rgba(52, 189, 229, 0.92)";
   if (part === 1) {
-    drawHexagon(4 * activeStage.scale, tX, tY, 14);
+    drawHexagon(4 * activeStage.scale, tX, tY, 8);
   } else if (part === 2) {
-    drawHexagon(6 * activeStage.scale, tX, tY, 14);
+    drawHexagon(6 * activeStage.scale, tX, tY, 12);
   } else if (part === 3) {
-    drawHexagon(8 * activeStage.scale, tX, tY, 14);
+    drawHexagon(8 * activeStage.scale, tX, tY, 16);
   } else {
     console.log(vfxQueue[j][3]);
   }

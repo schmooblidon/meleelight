@@ -36,6 +36,7 @@ import shocked from "main/vfx/dVfx/shocked";
 import sing from "main/vfx/dVfx/sing";
 import sing2 from "main/vfx/dVfx/sing2";
 import sing3 from "main/vfx/dVfx/sing3";
+import star from "main/vfx/dVfx/star";
 import start from "main/vfx/dVfx/start";
 import swing from "main/vfx/dVfx/swing";
 import targetDestroy from "main/vfx/dVfx/targetDestroy";
@@ -82,6 +83,7 @@ export default {
   sing,
   sing2,
   sing3,
+  star,
   start,
   swing,
   targetDestroy,
