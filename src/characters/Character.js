@@ -1,61 +1,64 @@
 import {deepCopyObject} from "../main/util/deepCopyObject";
 
-function Character(charID)
+class Character
 {
-    this.charID = charID;
-    this.hitboxes = null;
-    this.offsets = null;
-    this.charAttributes = null;
-    this.intangibility = null;
-    this.framesData = null;
-    this.actionSounds = null;
-    this.ecb = null;
-    this.actionStates = null;
-}
+    constructor(charID)
+    {
+        this.charID = charID;
+        this.hitboxes = null;
+        this.offsets = null;
+        this.charAttributes = null;
+        this.intangibility = null;
+        this.framesData = null;
+        this.actionSounds = null;
+        this.ecb = null;
+        this.actionStates = null;
+    }
 
-Character.prototype.setHitBoxes = function(hitboxes)
-{
-    this.hitboxes = hitboxes;
-};
+    setHitBoxes(hitboxes)
+    {
+        this.hitboxes = hitboxes;
+    };
 
-Character.prototype.setOffsets = function(offsets)
-{
-    this.offsets = offsets;
-};
+    setOffsets(offsets)
+    {
+        this.offsets = offsets;
+    };
 
-Character.prototype.setCharAttributes = function(charAttributes)
-{
-    this.charAttributes = charAttributes;
-};
+    setCharAttributes(charAttributes)
+    {
+        this.charAttributes = charAttributes;
+    };
 
-Character.prototype.setIntangibility = function(intangibility)
-{
-    this.intangibility = intangibility;
-};
+    setIntangibility(intangibility)
+    {
+        this.intangibility = intangibility;
+    };
 
-Character.prototype.setFrames = function(framesData)
-{
-    this.framesData = framesData;
-};
+    setFrames(framesData)
+    {
+        this.framesData = framesData;
+    };
 
-Character.prototype.setActionSounds = function(actionSounds)
-{
-    this.actionSounds = actionSounds;
-};
+    setActionSounds(actionSounds)
+    {
+        this.actionSounds = actionSounds;
+    };
 
-Character.prototype.getEcB = function()
-{
-    return this.ecb;
-};
+    getEcB()
+    {
+        return this.ecb;
+    };
 
-Character.prototype.setEcbData = function(ecb)
-{
-    this.ecb = val;
-};
+    setEcbData(ecb)
+    {
+        this.ecb = val;
+    };
 
-Character.prototype.setupActionStates = function(actionStates)
-{
-    deepCopyObject(true, this.actionStates, actionStates);
+    setupActionStates(actionStates)
+    {
+        deepCopyObject(true, this.actionStates, actionStates);
+    }
 }
 
 module.exports = Character;
