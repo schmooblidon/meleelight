@@ -22,8 +22,7 @@ import {
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
-import {setVsStage} from "../../stages/activeStage";
-import {setBackgroundType, createSnow, drawStageInit} from "../../stages/stagerender";
+import msgpack from 'msgpack-lite';
 let ds = null;
 let peerId = null;
 let connectionReady = false;
