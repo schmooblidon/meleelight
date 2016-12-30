@@ -760,6 +760,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
   if(giveInputs[i] === true){
     //turns out keyboards leave gaps in the input buffer
+    deepCopyObject(true,nullInput(),tempBuffer[0]);
     updateNetworkInputs(tempBuffer[0],i);
   }
   if (active) {
