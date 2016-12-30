@@ -26,7 +26,6 @@ import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHi
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
 import {toggleTransparency,getTransparency} from "main/vfx/transparency";
 import {drawVfx} from "main/vfx/drawVfx";
 import {resetVfxQueue} from "main/vfx/vfxQueue";
@@ -36,7 +35,9 @@ import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
-import {showButton, nullInputs, pollInputs, inputData} from "./input";
+import {keyboardMap, showButton, nullInputs, pollInputs, inputData} from "../input/input";
+import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
+import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 /*globals performance*/
 
 export const holiday = 1;
@@ -59,11 +60,10 @@ let controllerResetCountdowns = [125,125,125,125];
 let keyboardOccupied = false;
 
 
+window.mType = [null, null, null, null];
 
-window.mType = [0, 0, 0, 0];
 
-
-export const mType = [0,0,0,0];
+export const mType = [null,null,null,null];
 
 export const currentPlayers = [];
 
@@ -341,35 +341,34 @@ export function findPlayers (){
           if (ports == 0) {
             music.menu.play("menuStart");
           }
-          addPlayer(ports, 10);
+          addPlayer(ports, "keyboard");
         }
       }
     } else {
       if (keys[keyMap.a[0]] || keys[keyMap.a[1]]) {
         if (ports < 4) {
           keyboardOccupied = true;
-          addPlayer(ports, 10);
+          addPlayer(ports, "keyboard");
         }
       }
     }
   }
   for (var i = 0; i < gps.length; i++) {
-    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
-      null);
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : null);
     if (typeof gamepad != "undefined" && gamepad != null) {
       var detected = false;
-      var gType = 0;
-      let gamepadIDnumber = controllerIDNumberFromGamepadID(gamepad.id);
-      if (gamepadIDnumber == -1) {
+      const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
+
+      if (maybeNameAndInfo === null) {
         console.log("error: controller detected but not supported");
       } else {
         detected ^= true;
-        gType = gamepadIDnumber;
-        console.log("You are using ".concat(controllerNameFromIDnumber(gamepadIDnumber)));
+        var [gpdName, gpdInfo] = maybeNameAndInfo;
+        console.log("You are using "+gpdName+".");
       }
       if (detected) {
         if (gameMode < 2 || gameMode == 20) {
-          if (gamepad.buttons[controllerMaps[gType][button.s]].pressed) {
+          if (buttonState(gamepad, gpdInfo, "s")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
               if (currentPlayers[k] == i) {
@@ -384,12 +383,12 @@ export function findPlayers (){
                 if (ports == 0) {
                   music.menu.play("menuStart");
                 }
-                addPlayer(i, gType);
+                addPlayer(i, gpdInfo);
               }
             }
           }
         } else {
-          if (gamepad.buttons[controllerMaps[gType][button.a]].pressed) {
+          if (buttonState(gamepad, gpdInfo, "a")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
               if (currentPlayers[k] == i) {
@@ -398,7 +397,7 @@ export function findPlayers (){
             }
             if (!alreadyIn) {
               if (ports < 4) {
-                addPlayer(i, gType);
+                addPlayer(i, gpdInfo);
               }
             }
           }
@@ -411,11 +410,11 @@ export function findPlayers (){
 }
 
 
-export function addPlayer (gamepad,gType){
+export function addPlayer (i, controllerInfo){
   ports++;
-  currentPlayers[ports - 1] = gamepad;
+  currentPlayers[ports - 1] = i;
   playerType[ports - 1] = 0;
-  mType[ports - 1] = gType;
+  mType[ports - 1] = controllerInfo;
 }
 
 export function togglePort (i){
@@ -597,20 +596,22 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     tempBuffer[7-k].du   = inputBuffer[7-k-pastOffset].du;
   }
 
-  if (    (mType[i] === 10 && (tempBuffer[0].z ||  tempBuffer[1].z)) 
-       || (mType[i] !== 10 && (tempBuffer[0].z && !tempBuffer[1].z))
-     )  { 
-    frameAdvance[i][0] = true;
-  }
-  else {
-    frameAdvance[i][0] = false;
+  if (mType !== null) {
+    if (    (mType[i] === "keyboard" && (tempBuffer[0].z ||  tempBuffer[1].z)) 
+         || (mType[i] !== "keyboard" && (tempBuffer[0].z && !tempBuffer[1].z))
+       )  { 
+      frameAdvance[i][0] = true;
+    }
+    else {
+      frameAdvance[i][0] = false;
+    }
   }
 
   if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode !== 4) {
     frameByFrame = true;
   }
 
-  if (mType[i] == 10) { // keyboard controls
+  if (mType[i] == "keyboard") { // keyboard controls
 
     if (tempBuffer[0].s || tempBuffer[1].s || (gameMode === 5 && (tempBuffer[0].du || tempBuffer[1].du) ) ) {
       pause[i][0] = true;
@@ -641,7 +642,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
     }
   }
-  else { // gamepad controls
+  else if (mType !== null) {// gamepad controls
 
     if ( (gameMode == 3 || gameMode == 5) &&
              ( tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s ) 
