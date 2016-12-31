@@ -49,6 +49,7 @@
     "jquery": "1.11.3",
     "msgpack-lite": "^0.1.26",
     "optimist": "^0.6.1",
+    "pako": "^1.0.4",
     "peer": "^0.2.8",
     "sw-precache-webpack-plugin": "^0.6.3",
     "webpack": "^1.13.3",

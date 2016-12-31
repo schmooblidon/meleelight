@@ -24,6 +24,7 @@ import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar} from "../../menus/css";
 import {setVsStage} from "../../stages/activeStage";
 import {setBackgroundType, createSnow, drawStageInit} from "../../stages/stagerender";
+import pako from 'pako';
 let ds = null;
 let peerId = null;
 let connectionReady = false;
@@ -147,9 +148,8 @@ function connect(record, name) {
 
     }
   });
-  ds.event.subscribe(name + 'player/', data => {
-    //  console.log("listener player  "+ GAME_ID);
-    //  console.log(data);
+  ds.event.subscribe(name + 'player/', answer => {
+    const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
     if (data) {
       if (data.playerID !== playerID) {
         if (data.inputBuffer && (data.playerSlot !== undefined)) {

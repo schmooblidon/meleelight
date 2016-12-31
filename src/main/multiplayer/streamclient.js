@@ -18,9 +18,13 @@ import {
   , gameMode
   , stageSelect
   , matchTimer
+  , characterSelections
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar, setChoosingTag} from "../../menus/css";
+import pako from 'pako';
+
+
 let ds = null;
 let peerId = null;
 let connectionReady = false;
@@ -100,8 +104,8 @@ function startRoom() {
 
     });
 
-    ds.event.subscribe(GAME_ID + 'player/', data => {
-
+    ds.event.subscribe(GAME_ID + 'player/', answer => {
+  const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
       if (data) {
         if (data.playerID !== playerID) {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
@@ -196,7 +200,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
     "inputBuffer": inputBuffer,
     "playerInfo": playerPayload
   };
-  ds.event.emit(HOST_GAME_ID + 'player/', payload);
+  ds.event.emit(HOST_GAME_ID + 'player/',{"bstring": pako.deflate(JSON.stringify(payload), { to: 'string' })});
 
 }
 
@@ -315,7 +319,8 @@ let result = data.get();
       "inputBuffer": playerInputBuffer,
       "playerInfo": playerPayload
     };
-    ds.event.emit(name + 'player/', payload);
+    ds.event.emit(name + 'player/',{"bstring": pako.deflate(JSON.stringify(payload),{to:'string',level:9})});
+    ds.event.emit(name + 'charSelection/', {"playerSlot": ports -1, "charSelected": characterSelections[0]});
 
     ds.event.subscribe(name + 'playerStatus/', match => {
       if (match.playerID === playerID) {
@@ -327,9 +332,8 @@ let result = data.get();
 
     });
 
-    ds.event.subscribe(name + 'player/', data => {
-      //  console.log("listener player  "+ GAME_ID);
-      //  console.log(data);
+    ds.event.subscribe(name + 'player/', answer => {
+      const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
       if (data) {
         if (data.playerID !== playerID) {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
