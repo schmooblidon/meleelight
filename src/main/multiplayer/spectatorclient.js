@@ -1,32 +1,22 @@
 /*eslint-disable*/
 import $ from 'jquery';
-import {nullInputs, nullInput} from "../input";
+import {nullInputs} from "../input";
 import deepstream from 'deepstream.io-client-js';
 import {
   setPlayerType,
-  ports,
-  addPlayer,
-  currentPlayers,
-  mType,
   setMtype,
   setCurrentPlayer, player
-  , setCS
   , changeGamemode
   , setStageSelect
   , startGame
-  , setPlaying
-  , holiday
   , setMatchTimer
-  , setFindingPlayers
+
 
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
-import {setTokenPos, setChosenChar} from "../../menus/css";
-import {setVsStage} from "../../stages/activeStage";
-import {setBackgroundType, createSnow, drawStageInit} from "../../stages/stagerender";
+import { setChosenChar} from "../../menus/css";
 import pako from 'pako';
 let ds = null;
-let peerId = null;
 let connectionReady = false;
 let GAME_ID;
 let playerID;
@@ -71,11 +61,9 @@ function onSpectate() {
   });
 }
 
-let hostRoom = null;
 
 const connectedPeers = {};
 const peerConnections = {};
-const playerStatusRecords = {};
 const playerInputBuffer = [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
 
 
