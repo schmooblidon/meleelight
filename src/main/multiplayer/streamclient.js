@@ -32,8 +32,33 @@ let GAME_ID;
 let playerID;
 let HOST_GAME_ID = null;
 let joinedGame = false;
+const usServer = 'wss://deepml.herokuapp.com:443';
+const eurServer = 'wss://deepmleur.herokuapp.com:443';
+let pickedServer = 'america';
+$("#america").on("click", function () {
+localStorage.setItem('pickedServer','america');
+  $("#europe").attr('checked', false);
+});
+
+$("#europe").on("click", function () {
+  localStorage.setItem('pickedServer','europe');
+  $("#america").attr('checked', false);
+});
+if(localStorage.getItem('pickedServer') === 'america' || localStorage.getItem('pickedServer') === null){
+  $("#america").attr('checked', true);
+  $("#europe").attr('checked', false);
+  localStorage.setItem('pickedServer','america');
+} else {
+  $("#europe").attr('checked', true);
+  $("#america").attr('checked', false);
+  localStorage.setItem('pickedServer','europe');
+}
 export function logIntoServer() {
-  ds = deepstream("wss://deepml.herokuapp.com:443").login(null, _onLoggedIn);
+  if(localStorage.getItem('pickedServer') === 'america') {
+    ds = deepstream(usServer).login(null, _onLoggedIn);
+  } else {
+    ds = deepstream(eurServer).login(null, _onLoggedIn);
+  }
 
 }
 
