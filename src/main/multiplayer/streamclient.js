@@ -200,7 +200,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
     "inputBuffer": inputBuffer,
     "playerInfo": playerPayload
   };
-  ds.event.emit(HOST_GAME_ID + 'player/',{"bstring": pako.deflate(JSON.stringify(payload), { to: 'string' })});
+  ds.event.emit(HOST_GAME_ID + 'player/',{"bstring": pako.deflate(JSON.stringify(payload), { to: 'string',level:9 })});
 
 }
 
