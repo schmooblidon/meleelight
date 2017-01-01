@@ -38,11 +38,19 @@ let pickedServer = 'america';
 $("#america").on("click", function () {
 localStorage.setItem('pickedServer','america');
   $("#europe").attr('checked', false);
+  ds = deepstream(usServer).login(null, _onLoggedIn);
+  GAME_ID = ds.getUid().replace("-", "");
+  playerID = ds.getUid().replace("-", "");
+
 });
 
 $("#europe").on("click", function () {
   localStorage.setItem('pickedServer','europe');
   $("#america").attr('checked', false);
+  ds = deepstream(eurServer).login(null, _onLoggedIn);
+  GAME_ID = ds.getUid().replace("-", "");
+  playerID = ds.getUid().replace("-", "");
+
 });
 if(localStorage.getItem('pickedServer') === 'america' || localStorage.getItem('pickedServer') === null){
   $("#america").attr('checked', true);
