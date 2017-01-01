@@ -40,6 +40,7 @@ import {showButton, nullInputs, pollInputs, inputData, nullInput} from "./input"
 import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,connectToMPServer, syncGameMode} from "./multiplayer/streamclient";
 import {deepCopyObject} from "./util/deepCopyObject";
 import {setChosenChar} from "../menus/css";
+import {saveGameState} from "./replay";
 /*globals performance*/
 
 export const holiday = 1;
@@ -846,6 +847,7 @@ let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
+
 export function gameTick (oldInputBuffers){
   var start = performance.now();
   var diff = 0;
@@ -1068,6 +1070,9 @@ export function gameTick (oldInputBuffers){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
+
+    saveGameState(input,ports);
+
   setTimeout(gameTick, 16, input);
 }
 
@@ -1445,6 +1450,7 @@ function onFullScreenChange() {
   }
 }
 
+
 export function start (){
   if (holiday === 1){
     $("#layerButton").after('<div id="snowButton" class="gameButton" style="width:90px"><img src="assets/christmas/snowflake.png" height=17 width=17 style="display:inline-block"/><p style="width:30px;display:inline-block"><span id="snowButtonEdit">150</span></p><div id="snowMinus" class="snowControl" style="display:inline-block;padding:3px"><p style="padding:0;font-size:20px">-</p></div><div id="snowPlus" style="display:inline-block;padding:3px"><p style="padding:0;font-size:17px">+</p></div></div>');
@@ -1632,6 +1638,14 @@ export function start (){
       $("#snowButtonEdit").text(snowCount);
     });
   }
+
+  $("#replay").change(function() {
+
+
+    // grab the first image in the FileList object and pass it to the function
+    loadReplay(this.files[0]);
+  });
+
   resize();
 }
 window.start = start;
