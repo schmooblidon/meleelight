@@ -1,4 +1,19 @@
 import {characterSelections, player, gameMode, versusMode, playerType} from "main/main";
+import FOXMOVES from "characters/fox/moves/index";
+import PUFFMOVES from "characters/puff/moves/index";
+import MARTHMOVES from "characters/marth/moves/index";
+import GRAB from "characters/fox/moves/GRAB";
+import KNEEBEND from "characters/shared/moves/KNEEBEND";
+import DASH from "characters/shared/moves/DASH";
+import SMASHTURN from "characters/shared/moves/SMASHTURN";
+import TILTTURN from "characters/shared/moves/TILTTURN";
+import WALK from "characters/shared/moves/WALK";
+import WAIT from "characters/shared/moves/WAIT";
+import LANDING from "characters/shared/moves/LANDING";
+import LANDINGATTACKAIRB from "characters/shared/moves/LANDINGATTACKAIRB";
+import JUMPAERIALB from "characters/shared/moves/JUMPAERIALB";
+import JUMPAERIALF from "characters/shared/moves/JUMPAERIALF";
+import FALL from "characters/shared/moves/FALL";
 import {sounds} from "main/sfx";
 import {intangibility, actionSounds} from "main/characters";
 import {drawVfx} from "main/vfx/drawVfx";
@@ -327,6 +342,36 @@ export function checkForTilts (p,input,reverse){
     }
   } else {
     return [false, false];
+  }
+}
+
+export function checkForIASA(p,input,isAerial) {
+  if (player[p].timer > player[p].IASATimer) {
+    if (isAerial) {
+      const a = checkForAerials(p,input);
+      if ((checkForDoubleJump(p, input) && (!player[p].phys.doubleJumped)) || (checkForMultiJump(p, input) && player[p].phys.jumpsUsed < 5 && player[p].charAttributes.multiJump)){
+        if (input[p][0].lsX*player[p].phys.face < -0.3){
+          JUMPAERIALB.init(p,input);
+        } else {
+          JUMPAERIALF.init(p,input);
+        }
+          return true;
+        } else if (a[0]) {
+          if (characterSelections[p] == 0) {
+            MARTHMOVES[a[1]].init(p,input);
+          } else if (characterSelections[p] == 1) {
+            PUFFMOVES[a[1]].init(p,input);
+          } else if (characterSelections[p] == 2) {
+            FOXMOVES[a[1]].init(p,input);
+          }
+          return true;
+        } else {
+          return false;
+        }
+    } else { //isn't aerial
+    
+    }
+    
   }
 }
 

@@ -7,7 +7,7 @@ import JUMPAERIALF from "characters/shared/moves/JUMPAERIALF";
 import FALL from "characters/shared/moves/FALL";
 import {player} from "main/main";
 import {sounds} from "main/sfx";
-import {turnOffHitboxes, airDrift, fastfall, checkForAerials, checkForDoubleJump} from "physics/actionStateShortcuts";
+import {turnOffHitboxes, airDrift, fastfall, checkForAerials, checkForDoubleJump, checkForIASA} from "physics/actionStateShortcuts";
 
 export default {
   name : "ATTACKAIRB",
@@ -22,6 +22,7 @@ export default {
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
     player[p].inAerial = true;
+    player[p].IASATimer = 37;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.bair1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.bair1.id1;
@@ -65,27 +66,9 @@ export default {
     if (player[p].timer > 39){
       FALL.init(p,input);
       return true;
-    }
-    else if (player[p].timer > 37){
-      const a = checkForAerials(p,input);
-      if (checkForDoubleJump(p, input) && !player[p].phys.doubleJumped){
-        if (input[p][0].lsX*player[p].phys.face < -0.3){
-          JUMPAERIALB.init(p,input);
-        }
-        else {
-          JUMPAERIALF.init(p,input);
-        }
-        return true;
-      }
-      else if (a[0]){
-        MOVES[a[1]].init(p,input);
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-    else {
+    } else if (checkForIASA(p,input,true)){
+      return true;
+    } else {
       return false;
     }
   },
