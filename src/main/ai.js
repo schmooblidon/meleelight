@@ -1,4 +1,4 @@
-import {aiInputBank as inputs} from "./input";
+import {aiInputBank} from "./input";
 import {player, characterSelections as cS, playerType} from "./main";
 import {gameSettings} from "../settings";
 import {activeStage as aS} from "../stages/activeStage";
@@ -30,15 +30,15 @@ export function NearestEnemy(cpu,p){
   return nearestEnemy;
 }
 export function generalAI(i) {
-  inputs[i][0].lsX = 0;
-  inputs[i][0].lsY = 0;
-  inputs[i][0].x = false;
-  inputs[i][0].b = false;
-  inputs[i][0].l = 0;
-  inputs[i][0].lA = 0;
-  inputs[i][0].csX = 0;
-  inputs[i][0].csY = 0;
-  inputs[i][0].a = false;
+  aiInputBank[i][0].lsX = 0;
+  aiInputBank[i][0].lsY = 0;
+  aiInputBank[i][0].x = false;
+  aiInputBank[i][0].b = false;
+  aiInputBank[i][0].l = 0;
+  aiInputBank[i][0].lA = 0;
+  aiInputBank[i][0].csX = 0;
+  aiInputBank[i][0].csY = 0;
+  aiInputBank[i][0].a = false;
   var willWalk = false;
   const paction = player[i].actionState;
   const px = player[i].phys.pos.x;
