@@ -1,5 +1,5 @@
 import {player} from "../../../main/main";
-import {turnOffHitboxes, checkForAerials, fastfall, airDrift, checkForMultiJump} from "../../../physics/actionStateShortcuts";
+import {turnOffHitboxes, airDrift, fastfall, checkForAerials, checkForMultiDoubleJump, checkForIASA} from "../../../physics/actionStateShortcuts";
 import puff from "./index";
 import {sounds} from "../../../main/sfx";
 import FALL from "../../shared/moves/FALL";
@@ -18,6 +18,7 @@ export default {
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
     player[p].inAerial = true;
+    player[p].IASATimer = 30;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.bair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.bair.id1;
@@ -53,22 +54,9 @@ export default {
     if (player[p].timer > 39) {
       FALL.init(p, input);
       return true;
-    }
-    else if (player[p].timer > 30) {
-      const a = checkForAerials(p, input);
-      if (checkForMultiJump(p,input) && player[p].phys.jumpsUsed < 5) {
-        puff.JUMPAERIALF.init(p, input);
-        return true;
-      }
-      else if (a[0]) {
-        puff[a[1]].init(p, input);
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-    else {
+    } else if (checkForIASA(p,input,true)){
+      return true;
+    } else {
       return false;
     }
   },
