@@ -15,7 +15,7 @@ export default {
   landType: 1,
   init: function (p, input) {
     player[p].actionState = "ATTACKAIRF";
-    player[p].timer = 0;
+    player[p].timer = 34;
     player[p].phys.autoCancel = true;
     player[p].inAerial = true;
     player[p].hitboxes.id[0] = player[p].charHitboxes.fair1.id0;
@@ -60,21 +60,9 @@ export default {
       FALL.init(p, input);
       return true;
     }
-    else if (player[p].timer > 34) {
-      const a = checkForAerials(p, input);
-      if (checkForMultiJump(p, input) && player[p].phys.jumpsUsed < 5) {
-        puff.JUMPAERIALF.init(p, input);
-        return true;
-      }
-      else if (a[0]) {
-        puff[a[1]].init(p, input);
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-    else {
+    } else if (checkForIASA(p,input,true)){
+      return true;
+    } else {
       return false;
     }
   },
