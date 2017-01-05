@@ -18,7 +18,7 @@ export default {
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
     player[p].inAerial = true;
-    player[p].IASATimer = 64;
+    player[p].IASATimer = 63;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.dair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.dair.id1;
