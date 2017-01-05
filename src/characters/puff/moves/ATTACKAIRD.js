@@ -1,5 +1,5 @@
 import {player} from "../../../main/main";
-import {turnOffHitboxes, fastfall, airDrift} from "../../../physics/actionStateShortcuts";
+import {turnOffHitboxes, airDrift, fastfall, checkForAerials, checkForDoubleJump, checkForIASA} from "../../../physics/actionStateShortcuts";
 import puff from "./index";
 import {sounds} from "../../../main/sfx";
 import FALL from "../../shared/moves/FALL";
@@ -18,6 +18,7 @@ export default {
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
     player[p].inAerial = true;
+    player[p].IASATimer = 64;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.dair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.dair.id1;
@@ -60,8 +61,9 @@ export default {
     if (player[p].timer > 49) {
       FALL.init(p, input);
       return true;
-    }
-    else {
+    } else if (checkForIASA(p,input,true)){
+      return true;
+    } else {
       return false;
     }
   },
