@@ -1,6 +1,7 @@
 /*eslint-disable*/
 import $ from 'jquery';
 import {nullInputs, nullInput} from "../input";
+import {encodeInput, decodeInput} from "./encode";
 import deepstream from 'deepstream.io-client-js';
 import {
   setPlayerType,
@@ -111,7 +112,7 @@ function startRoom() {
         {
           name: playerID,
           playerSlot: ports - 1,
-          inputBuffer: nullInput(),
+          inputData: String.fromCharCode(0,0,32639,32639),
           playerInfo: playerPayload
         });
     //TODO iterate over ports to establish inital group
@@ -141,8 +142,8 @@ function startRoom() {
   const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
       if (data) {
         if (data.playerID !== playerID) {
-          if (data.inputBuffer && (data.playerSlot !== undefined)) {
-            saveNetworkInputs(data.playerSlot, data.inputBuffer);
+          if (data.inputData && (data.playerSlot !== undefined)) {
+            saveNetworkInputs(data.playerSlot, data.inputData);
             player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
           }
         }
@@ -199,7 +200,7 @@ function _onLoggedIn() {
   startRoom();
 
   $("#joinServer").on('click', (e) => {
-    var destId = prompt("Hosts's peer ID:");
+    var destId = prompt("Host's peer ID:");
     connectToUser(destId);
   });
 }
@@ -227,10 +228,11 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
   delete playerPayload.charAttributes;
   delete playerPayload.charHitboxes;
   delete playerPayload.prevFrameHitboxes;
+  const inputData = encodeInput(inputBuffer);
   let payload = {
     "playerID": playerID,
     "playerSlot": playerSlot,
-    "inputBuffer": inputBuffer,
+    "inputData": inputData,
     "playerInfo": playerPayload
   };
   ds.event.emit(HOST_GAME_ID + 'player/',{"bstring": pako.deflate(JSON.stringify(payload), { to: 'string' })});
@@ -245,9 +247,9 @@ export function updateNetworkInputs(inputBuffer, playerSlot) {
 
 }
 
-export function saveNetworkInputs(playerSlot, inputBuffer) {
-  playerInputBuffer[playerSlot][0] = inputBuffer;
+export function saveNetworkInputs(playerSlot, inputData) {
 
+  playerInputBuffer[playerSlot][0] = decodeInput(inputData);  
 }
 
 export function retrieveNetworkInputs(playerSlot) {
@@ -315,7 +317,7 @@ function connect(record, name) {
 
 
     if (totalPlayerRecord.get().totalPlayers > 3) {
-      alert("Host room is full");
+      alert("Host room is full.");
 
     } else {
 
@@ -325,13 +327,13 @@ function connect(record, name) {
 let result = data.get();
 
   if (Object.keys(result).length === 0 && result.constructor === Object) {
-    alert("error room appears to be empty");
+    alert("Error: room appears to be empty.");
   }else if(result.gameMode === 3){
-    alert("The match is currently in progress. please wait until it has completed");
+    alert("The match is currently in progress. Please wait until it has completed.");
   }else if(currentPlayers.length > 1){
-    alert("Too many players your current session. Only one player may join per browser until I figure out a solution");
+    alert("Too many players in your current session. Only one player may join per browser until I figure out a solution.");
   }else if(result.gameMode === 6){
-    alert("The host is already in stage select. Please wait until the match has completed or have the host return to character select");
+    alert("The host is already in stage select. Please wait until the match has completed, or have the host return to character select.");
   } else {
     let playerstatus = Object.keys(result)[0];
     playerStatusRecords[name] = record;
@@ -349,7 +351,7 @@ let result = data.get();
     let payload = {
       "playerID": playerID,
       "playerSlot": ports - 1,
-      "inputBuffer": playerInputBuffer,
+      "inputData": encodeInput(playerInputBuffer),
       "playerInfo": playerPayload
     };
     ds.event.emit(name + 'player/',{"bstring": pako.deflate(JSON.stringify(payload),{to:'string',level:9})});
@@ -369,8 +371,8 @@ let result = data.get();
       const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
       if (data) {
         if (data.playerID !== playerID) {
-          if (data.inputBuffer && (data.playerSlot !== undefined)) {
-            saveNetworkInputs(data.playerSlot, data.inputBuffer);
+          if (data.inputData && (data.playerSlot !== undefined)) {
+            saveNetworkInputs(data.playerSlot, data.inputData);
             player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
           }
         }

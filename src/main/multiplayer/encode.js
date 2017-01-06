@@ -1,36 +1,52 @@
-import {inputData} from "main/input";
+import {inputData, meleeRound} from "../input";
 
 
 function axisToByte( value ) {
-  return Math.floor( (value + 1) * 255/2);
+  if (value <= -1 ) {
+    return 0;
+  }
+  else if (value >= 1) {
+    return 255;
+  }
+  else {
+    return Math.round( (value + 1) * 255/2);
+  }
 }
 
 function triggerToByte ( value ) {
-  return Math.floor( value * 255 );  
+  if (value <= 0) {
+    return 0;
+  }
+  else if (value >= 1) {
+    return 255;
+  }
+  else {
+    return Math.round( value * 255 );  
+  }
 }
 
 function byteToAxis ( byte ) {
-  return byte * 2 / 255 - 1;
+  return meleeRound(byte * 2 / 255 - 1);
 }
 
 function byteToTrigger ( byte ) {
-  return byte/255;
+  return meleeRound(byte/255);
 }
 
 function inputToBytes (input) {
   const byte0 = boolsToByte(input.a, input.b, input.x, input.y, input.s, input.z, input.l, input.r);
   const byte1 = boolsToByte(input.du, input.dr, input.dd, input.dl, false, false, false, false);
-  const byte2 = axisToByte(lsX);
-  const byte3 = axisToByte(lsY);
-  const byte4 = axisToByte(csX);
-  const byte5 = axisToByte(csY);
+  const byte2 = axisToByte(input.lsX);
+  const byte3 = axisToByte(input.lsY);
+  const byte4 = axisToByte(input.csX);
+  const byte5 = axisToByte(input.csY);
   const byte6 = triggerToByte(input.lA);
   const byte7 = triggerToByte(input.rA);
   return [byte0, byte1, byte2, byte3, byte4, byte5, byte6, byte7];
 }
 
 function bytesToInput( bytes ){
-  let input = new inputData ();
+  const input = new inputData ();
 
   const bools0 = byteToBools(bytes[0]);
   input.a = bools0[0];
@@ -57,12 +73,23 @@ function bytesToInput( bytes ){
 }
 
 function boolsToByte( b0, b1, b2, b3, b4, b5, b6, b7) {
-  return [b0?1:0 + b1?2:0 + b2?4:0 + b3?8:0 + b4?16:0 + b5?32:0 + b6?64:0 + b7?128:0]];
+  return b0?1:0 + b1?2:0 + b2?4:0 + b3?8:0 + b4?16:0 + b5?32:0 + b6?64:0 + b7?128:0;
 }
 
 function byteToBools( byte ) {
-  const digits = byte.toString(2);
-  return digits.map ((d) => d === '1' ? true : false);
+  let digits = byte.toString(2).split("");
+  const lg = digits.length;
+  const leadingZeroes = [];
+  if (lg < 8) {
+    for (let i = 0; i < 8-lg; i++) {
+      leadingZeroes.push(0);
+    }
+    digits = leadingZeroes.concat(digits);
+  }
+  else if (lg > 8) {
+    digits = digits.slice(0,8);
+  }
+  return digits.map ((d) => { return (d === "1") ? true : false ;});
 }
 
 function bytesToString(bytes) {
@@ -78,4 +105,13 @@ function stringToBytes(string) {
          , string.charCodeAt(1)
          , string.charCodeAt(2)
          , string.charCodeAt(3) ];
+}
+
+
+export function encodeInput(input) {
+  return bytesToString(inputToBytes(input));
+}
+
+export function decodeInput(string) {
+  return bytesToInput(stringToBytes(string));
 }
