@@ -1018,7 +1018,16 @@ export function gameTick (oldInputBuffers){
       wasFrameByFrame = true;
     }
     frameByFrame = false;
+    setTimeout(()=> {  for (var i = 0; i < 4; i++) {
+      if (playerType[i] > -1) {
+        if(!starting) {
 
+            interpretInputs(i, true, playerType[i], oldInputBuffers[i]);
+
+          }
+        }
+      }
+    },8);
     if (showDebug) {
       diff = performance.now() - start;
       gamelogicTime[0] += diff;
