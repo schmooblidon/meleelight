@@ -23,6 +23,7 @@ import {
 import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar, setChoosingTag} from "../../menus/css";
 import pako from 'pako';
+import {gameSettings, updateGameSettings} from "../../settings";
 
 
 let ds = null;
@@ -30,7 +31,9 @@ let peerId = null;
 let connectionReady = false;
 let GAME_ID;
 let playerID;
-let HOST_GAME_ID = null;
+export let HOST_GAME_ID = null;
+export let inServerMode = false;
+export let meHost = true;
 let joinedGame = false;
 const usServer = 'wss://deepml.herokuapp.com:443';
 const eurServer = 'wss://deepmleur.herokuapp.com:443';
@@ -76,7 +79,7 @@ function getPlayerStatusRecord(playerID) {
 function startRoom() {
   GAME_ID = ds.getUid().replace("-", "");
   playerID = ds.getUid().replace("-", "");
-
+  inServerMode = true;
   ds.on('connectionStateChanged', function (connectionState) {
     var cssClass;
 
@@ -98,7 +101,9 @@ function startRoom() {
     statusRecord.set(GAME_ID + 'playerStatus/', {
       "playerID": playerID,
       "ports": ports,
-      "currentPlayers": currentPlayers
+      "currentPlayers": currentPlayers,
+      "gameSettings":gameSettings,
+      "characterSelections":characterSelections,
     });
     playerStatusRecords[playerID] = statusRecord.get();
     $('#mpcode').prop("value", GAME_ID);
@@ -122,16 +127,20 @@ function startRoom() {
       }
 
       playerStatusRecords[playerID] = statusRecord;
-      syncHost(match.ports);
+      syncHost(match);
       let totalPlayersRecord=   ds.record.getRecord(GAME_ID+'totalPlayers');
       totalPlayersRecord.set('totalPlayers',ports);
       totalPlayersRecord.set('gameMode',gameMode);
+      totalPlayersRecord.set('currentPlayers',currentPlayers);
       totalPlayersRecord.set('stageSelect',stageSelect);
-      ds.event.emit(GAME_ID+'totalPlayers',{'totalPlayers':ports,"gameMode":gameMode,"stageSelect":stageSelect});
+      totalPlayersRecord.set('characterSelections',characterSelections);
+      ds.event.emit(GAME_ID+'totalPlayers',{'totalPlayers':ports,"gameMode":gameMode,"stageSelect":stageSelect,"characterSelections":characterSelections,"currentPlayers":currentPlayers});
       statusRecord.set(GAME_ID + 'playerStatus/', {
         "playerID": playerID,
         "ports": ports,
-        "currentPlayers": currentPlayers
+        "currentPlayers": currentPlayers,
+        "characterSelections":characterSelections,
+        "gameSettings":gameSettings
       });
       HOST_GAME_ID = GAME_ID;
 
@@ -267,13 +276,16 @@ function getHostRoom() {
   return connectedPeers;
 }
 
-function syncClient(exactportnumber) {
+function syncClient(data) {
+  const exactportnumber = data.ports;
+  const charselected = data.characterSelections;
   let portSnapshot = ports;
   if(joinedGame === false) {
     joinedGame = true;
     let tempCurrentPlayers = deepCopyObject(true, {}, currentPlayers);
     let playersToBeReassigned = tempCurrentPlayers.length;
     let mTypeSnapshot = deepCopyObject(true, {}, mType);
+    let charSelectedSnapshot = deepCopyObject(true, {}, characterSelections);
     //add host players
     for(let v =ports;v <= exactportnumber - 1;v++){
 
@@ -283,12 +295,14 @@ function syncClient(exactportnumber) {
       setPlayerType(i, 2);
       setMtype(i, 99);
       setCurrentPlayer(i, i);
-      setNetInputFlag(exactportnumber, false);
+      setNetInputFlag(i, false);
+      setCS(i,charselected[i]);
     }
     //reassign player 1
     //TODO figure out how to join wiht multiple in original party
     addPlayer(tempCurrentPlayers[0] , mTypeSnapshot[0]);
     setNetInputFlag(exactportnumber, true);
+    setCS(exactportnumber,charSelectedSnapshot[0]);
   }else {
 
     for(let j = ports;ports < exactportnumber + 1 ;j++){
@@ -298,13 +312,15 @@ function syncClient(exactportnumber) {
 
 }
 
-function syncHost() {
+function syncHost(data) {
 
   //add joining players
-
+  //TODO Currently assuming only one player joins
+  setCS(data.ports,data.characterSelections[data.ports]);
   setNetInputFlag(0, true);
     addPlayer(ports, 99);
   setNetInputFlag(ports, false);
+
 }
 
 
@@ -314,7 +330,8 @@ function connect(record, name) {
   ds.record.getRecord(name + 'totalPlayers').whenReady(totalPlayerRecord => {
 
 
-    if (totalPlayerRecord.get().totalPlayers > 3) {
+    const hostStateRecord = totalPlayerRecord.get();
+    if (hostStateRecord.totalPlayers > 3) {
       alert("Host room is full");
 
     } else {
@@ -336,11 +353,15 @@ let result = data.get();
     let playerstatus = Object.keys(result)[0];
     playerStatusRecords[name] = record;
 
-    syncClient(result[playerstatus].ports);
+    syncClient(result[playerstatus]);
+    meHost = false;
+    updateGameSettings(result[playerstatus].gameSettings);
+
     ds.event.emit(name + 'playerStatus/', {
       "playerID": playerID,
       "ports": ports - 1,
-      "currentPlayers": currentPlayers
+      "currentPlayers": currentPlayers,
+      "characterSelections":characterSelections
     });
     let playerPayload = Object.assign({}, player[ports]);
     delete playerPayload.charAttributes;
@@ -353,14 +374,14 @@ let result = data.get();
       "playerInfo": playerPayload
     };
     ds.event.emit(name + 'player/',{"bstring": pako.deflate(JSON.stringify(payload),{to:'string',level:9})});
-    ds.event.emit(name + 'charSelection/', {"playerSlot": ports -1, "charSelected": characterSelections[0]});
+    // ds.event.emit(name + 'charSelection/', {"playerSlot": ports -1, "charSelected": characterSelections[0]});
 
     ds.event.subscribe(name + 'playerStatus/', match => {
       if (match.playerID === playerID) {
         return;
       }
 
-      syncClient(match.ports);
+      syncClient(match);
 
 
     });
@@ -383,7 +404,9 @@ let result = data.get();
     });
     ds.event.subscribe(name + 'gameMode/', data => {
       if (data) {
-        changeGamemode(data.gameMode);
+        if(data.gameMode === 2 || data.gameMode === 3 || data.gameMode === 6) {
+          changeGamemode(data.gameMode);
+        }
 
       }
     });
@@ -406,23 +429,7 @@ let result = data.get();
   });
 }
 
-function eachActiveConnection(fn) {
-  const actives = Object.keys(connectedPeers);
-  const checkedIds = {};
-  for (let val of actives) {
 
-    if (!checkedIds[val]) {
-      const conns = getHostRoom()[val];
-      let i = 0;
-      const ii = conns.length;
-      for (; i < ii; i += 1) {
-        const conn = conns[i];
-        fn(conn);
-      }
-    }
-    checkedIds[val] = 1;
-  }
-}
 
 function connectToUser(userName) {
   const requestedPeer = userName;
@@ -446,6 +453,18 @@ export function syncCharacter(index, charSelection) {
    if(HOST_GAME_ID !== null) {
      ds.event.emit(HOST_GAME_ID + 'charSelection/', {"playerSlot": index, "charSelected": charSelection});
    }
+   if(meHost) {
+    ds.record.getRecord(GAME_ID + '-game').whenReady(statusRecord => {
+      //  console.log("set up game status "+ GAME_ID);
+      statusRecord.set(GAME_ID + 'playerStatus/', {
+        "playerID": playerID,
+        "ports": ports,
+        "currentPlayers": currentPlayers,
+        "gameSettings": gameSettings,
+        "characterSelections":characterSelections
+      });
+    });
+  }
 }
 
 export function syncGameMode( gameMode) {

@@ -14,7 +14,8 @@ import {actionStates} from "physics/actionStateShortcuts";
 import {setCS, gameMode} from "../main/main";
 import {chars} from "../main/characters";
 import {Vec2D} from "../main/util/Vec2D";
-import {syncCharacter, syncGameMode, syncTagText} from "../main/multiplayer/streamclient";
+import {syncCharacter, syncGameMode, syncTagText, inServerMode} from "../main/multiplayer/streamclient";
+import {gameSettings} from "../settings";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -53,7 +54,49 @@ export let readyToFight = false;
 
 export let rtfFlash = 25;
 export let rtfFlashD = 1;
+const gameSettingsText = {
+  turbo : "Turbo Mode",
+  lCancelType : "L-Cancel Type", // 0- normal | 1 - Auto | 2 - smash 64
+  blastzoneWrapping : "",
+  flashOnLCancel : "Flash on L-Cancel",
+  dustLessPerfectWavedash : "",
+  phantomThreshold : "",
+  everyCharWallJump : "Everyone Walljumps", //0 - off | 1 - on
+  tapJumpOffp1: "Player 1 tap-jump",
+  tapJumpOffp2: "Player 2 tap-jump",
+  tapJumpOffp3: "Player 3 tap-jump",
+  tapJumpOffp4: "Player 4 tap-jump",
+};
 
+const gameSettingsValueTranslation = {
+  turbo : (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  lCancelType : (value)=>{
+    return (value === 0)? "NORMAL":(value === 1)? "AUTO":"SMASH 64";
+  }, // 0- normal | 1 - Auto | 2 - smash 64
+  blastzoneWrapping : "",
+  flashOnLCancel : (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  dustLessPerfectWavedash : "",
+  phantomThreshold : "",
+  everyCharWallJump : (value)=>{
+    return (value === 0)? "OFF":"ON";
+  }, //0 - off | 1 - on
+  tapJumpOffp1: (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  tapJumpOffp2: (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  tapJumpOffp3: (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  tapJumpOffp4: (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+};
 //in order
 //marth
 //puff
@@ -1033,6 +1076,21 @@ export function drawCSS (){
       }
     }
   }
+
+  if(inServerMode){
+    ui.fillStyle = "white";
+
+    var keys = Object.keys(gameSettings);
+    let spacer = 50;
+    for (var j = 0; j < keys.length; j++) {
+      if(gameSettingsText[keys[j]] !== "") {
+        ui.fillText(gameSettingsText[keys[j]] + ":" + gameSettingsValueTranslation[keys[j]](gameSettings[keys[j]]), 820, 130 +  spacer);
+        spacer = spacer + 30;
+      }
+    }
+
+  }
+
   if (readyToFight) {
     ui.save();
     ui.fillStyle = "rgba(223, 31, 31, 0.8)";
@@ -1097,4 +1155,7 @@ export function drawCSS (){
     ui.fillText("Press A to finish", 250 + choosingTag * 225, 600);
     ui.textAlign = "start";
   }
+
+
+
 }
