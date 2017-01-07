@@ -43,7 +43,7 @@ import {setChosenChar} from "../menus/css";
 import {saveGameState} from "./replay";
 /*globals performance*/
 
-export const holiday = 1;
+export const holiday = 0;
 export var snowCount = 150;
 
 export const player = [0,0,0,0];
