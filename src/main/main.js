@@ -42,7 +42,7 @@ import {deepCopyObject} from "./util/deepCopyObject";
 import {setChosenChar} from "../menus/css";
 /*globals performance*/
 
-export const holiday = 1;
+export const holiday = 0;
 export var snowCount = 150;
 
 export const player = [0,0,0,0];
