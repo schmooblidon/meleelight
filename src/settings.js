@@ -54,3 +54,7 @@ export const gameSettings = {
   tapJumpOffp3: 0,
   tapJumpOffp4: 0,
 };
+
+export function updateGameSettings(settings){
+  Object.assign(gameSettings,settings);
+}
