@@ -1,20 +1,19 @@
 import {
   player,
-  currentPlayers,
-  interpretInputs,
   playing,
   playerType,
   startGame,
   characterSelections,
   setCS
   , addPlayer
+  , stageSelect
+  , setStageSelect
 } from "./main";
 import {deepCopyObject} from "./util/deepCopyObject";
 import pako from "pako";
-
+import $ from 'jquery';
 import localforage from 'localforage';
 import {aiInputBank} from "./input";
-import {activeStage, setVsStage} from "../stages/activeStage";
 const fullGameState = {};
 fullGameState.inputs = [];
 fullGameState.playerData = [];
@@ -24,10 +23,24 @@ export let replayActive = false;
 const result = [];
 let playingFrame = 0;
 const replayInputs = [];
-const replayPlayerData =[];
-const replayFrameData =[];
-let lastFrametime= performance.now();
+const replayPlayerData = [];
+const replayFrameData = [];
+let lastFrametime = performance.now();
 export let gameTickDelay = 0;
+export let replaysOn = $("#replayson").attr('checked');
+$("#replayson").on("click", () => {
+  localStorage.setItem('replayson', !replaysOn);
+  $("#replayson").attr('checked', !replaysOn);
+  replaysOn = !replaysOn;
+
+});
+
+export function updateGameTickDelay(val) {
+  gameTickDelay = val;
+}
+const prevFramePlayer = [];
+
+
 function compressObject(obj) {
   return pako.deflate(JSON.stringify(obj));
 }
@@ -35,9 +48,9 @@ function decompressObject(obj) {
   return JSON.parse(pako.inflate(obj, {to: 'string'}));
 }
 export function saveGameState(input) {
-  if (playing) {
-    var now = performance.now();
-    var frameDelay = now - lastFrametime;
+  if (playing && replaysOn) {
+    const now = performance.now();
+    const frameDelay = now - lastFrametime;
     lastFrametime = now;
     for (let i = 0; i < playerType.length; i++) {
       //TODO compare to previous frame and only save diff
@@ -63,18 +76,21 @@ export function saveGameState(input) {
         delete playerSaveData.prevFrameHitboxes;
         fullGameState.playerData[i] = playerSaveData;
       }
+      // console.log(diff(prevFramePlayer[i], player[i]));
+      prevFramePlayer[i] = deepCopyObject(true, prevFramePlayer[i], player[i]);
+
     }
     fullGameState.frameDelay = frameDelay;
     snapShot.push(compressObject({frameCount, fullGameState}));
     frameCount++;
 
   }
-  if (!playing && (frameCount > 0)) {
+  if (!playing && (frameCount > 0) && replaysOn) {
     frameCount = 0;
     const headerFrame = {};
     const replayname = 'replay-' + new Date() + '.json';
     const wholeReplay = [];
-    wholeReplay.push(compressObject(activeStage));
+    wholeReplay.push(compressObject(stageSelect));
     wholeReplay.push(compressObject(playerType));
     wholeReplay.push(compressObject(characterSelections));
     wholeReplay.push(snapShot);
@@ -123,7 +139,7 @@ export function loadReplay(file) {
     const decompressed = decompressObject(event.currentTarget.result, {to: 'string'});
 
     replayActive = true;
-    setVsStage(decompressObject(decompressed[0]));
+    setStageSelect(decompressObject(decompressed[0]));
 
     const deplayerTypes = decompressObject(decompressed[1]);
 
@@ -162,3 +178,28 @@ export function retrieveReplayInputs(playerSlot) {
   gameTickDelay = replayFrameData[playingFrame];
   return returnInput;
 }
+
+const isEmptyObject = function (obj) {
+  let name;
+  for (name in obj) {
+    return false;
+  }
+  return true;
+};
+
+const diff = function (obj1, obj2) {
+  const result = {};
+  let change;
+  for (const key in obj1) {
+    if (typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
+      change = diff(obj1[key], obj2[key]);
+      if (isEmptyObject(change) === false) {
+        result[key] = change;
+      }
+    }
+    else if (obj2[key] !== obj1[key]) {
+      result[key] = obj2[key];
+    }
+  }
+  return result;
+};
