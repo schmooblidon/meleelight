@@ -157,8 +157,8 @@ function startRoom() {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
             const now = performance.now();
             let frameDelay = now - lastRecievedPacket;
-            if(frameDelay > 500){
-              frameDelay = 500;
+            if(frameDelay > 300){
+              frameDelay = 300;
             }
             lastRecievedPacket = now;
             updateGameTickDelay(frameDelay);
@@ -405,8 +405,8 @@ let result = data.get();
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
             const now = performance.now();
             let frameDelay = now - lastRecievedPacket;
-            if(frameDelay > 500){
-              frameDelay = 500;
+            if(frameDelay > 300){
+              frameDelay = 300;
             }
             lastRecievedPacket = now;
             updateGameTickDelay(frameDelay);
