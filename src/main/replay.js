@@ -1,33 +1,84 @@
-import {player, currentPlayers, interpretInputs, playing, playerType} from "./main";
+import {
+  player,
+  currentPlayers,
+  interpretInputs,
+  playing,
+  playerType,
+  startGame,
+  characterSelections,
+  setCS
+  , addPlayer
+} from "./main";
 import {deepCopyObject} from "./util/deepCopyObject";
 import pako from "pako";
-const fullGameState = [{}];
-let frameCount = 0;
-let snapShot = [];
+
 import localforage from 'localforage';
 import {aiInputBank} from "./input";
-import {activeStage} from "../stages/activeStage";
-
-export function saveGameState(input, ports) {
+import {activeStage, setVsStage} from "../stages/activeStage";
+const fullGameState = {};
+fullGameState.inputs = [];
+fullGameState.playerData = [];
+let frameCount = 0;
+let snapShot = [];
+export let replayActive = false;
+const result = [];
+let playingFrame = 0;
+const replayInputs = [];
+const replayPlayerData =[];
+const replayFrameData =[];
+let lastFrametime= performance.now();
+export let gameTickDelay = 0;
+function compressObject(obj) {
+  return pako.deflate(JSON.stringify(obj));
+}
+function decompressObject(obj) {
+  return JSON.parse(pako.inflate(obj, {to: 'string'}));
+}
+export function saveGameState(input) {
   if (playing) {
-    for (let i = 0; i < ports; i++) {
+    var now = performance.now();
+    var frameDelay = now - lastFrametime;
+    lastFrametime = now;
+    for (let i = 0; i < playerType.length; i++) {
+      //TODO compare to previous frame and only save diff
       if (playerType[i] === 1) {
-        fullGameState[i].inputs = deepCopyObject(true, {}, aiInputBank[i][0]);
-      } else {
-        fullGameState[i].inputs = deepCopyObject(true, {}, input[i]);
+        fullGameState.inputs[i] = deepCopyObject(true, {}, aiInputBank[i][0]);
+        const playerSaveData = deepCopyObject(true, {}, player[i]);
+        delete playerSaveData.charAttributes;
+        delete playerSaveData.charHitboxes;
+        delete playerSaveData.prevFrameHitboxes;
+        fullGameState.playerData[i] = playerSaveData;
+      } else if (playerType[i] === 0) {
+        fullGameState.inputs[i] = deepCopyObject(true, {}, input[i][0]);
+        const playerSaveData = deepCopyObject(true, {}, player[i]);
+        delete playerSaveData.charAttributes;
+        delete playerSaveData.charHitboxes;
+        delete playerSaveData.prevFrameHitboxes;
+        fullGameState.playerData[i] = playerSaveData;
+      } else if (playerType[i] === 2) {
+        fullGameState.inputs[i] = deepCopyObject(true, {}, input[i][0]);
+        const playerSaveData = deepCopyObject(true, {}, player[i]);
+        delete playerSaveData.charAttributes;
+        delete playerSaveData.charHitboxes;
+        delete playerSaveData.prevFrameHitboxes;
+        fullGameState.playerData[i] = playerSaveData;
       }
     }
-    snapShot.push(pako.deflate(JSON.stringify({frameCount, fullGameState})));
+    fullGameState.frameDelay = frameDelay;
+    snapShot.push(compressObject({frameCount, fullGameState}));
     frameCount++;
 
   }
   if (!playing && (frameCount > 0)) {
     frameCount = 0;
     const headerFrame = {};
-    headerFrame.activeStage = activeStage;
-    headerFrame.currentPlayers = currentPlayers;
-    replayname = 'replay-' + new Date() + '.bin';
-    localforage.setItem(replayname, snapShot).then((value) => {
+    const replayname = 'replay-' + new Date() + '.json';
+    const wholeReplay = [];
+    wholeReplay.push(compressObject(activeStage));
+    wholeReplay.push(compressObject(playerType));
+    wholeReplay.push(compressObject(characterSelections));
+    wholeReplay.push(snapShot);
+    localforage.setItem(replayname, wholeReplay).then((value) => {
       let resultAsUint8Array;
       localforage.getItem(replayname).then((value) => {
         // This code runs once the value has been loaded
@@ -53,7 +104,7 @@ const saveData = (function () {
   document.body.appendChild(a);
   a.style = "display: none";
   return function (data, fileName) {
-    const blob = new Blob([data], {type: "octet/stream"});
+    const blob = new Blob([compressObject(data)], {type: "octet/stream"});
     const url = window.URL.createObjectURL(blob);
     a.href = url;
     a.download = fileName;
@@ -64,20 +115,50 @@ const saveData = (function () {
 
 export function loadReplay(file) {
 
-  var reader = new FileReader();
+  const reader = new FileReader();
 
-  // inject an image with the src url
   reader.onload = function (event) {
-    const result = [];
-    for (let i = 0; i < event.detail.length; i++) {
-      result.push(JSON.parse(pako.inflate(event.detail[i], {to: 'string'})));
+
+
+    const decompressed = decompressObject(event.currentTarget.result, {to: 'string'});
+
+    replayActive = true;
+    setVsStage(decompressObject(decompressed[0]));
+
+    const deplayerTypes = decompressObject(decompressed[1]);
+
+    //ASSUMING PLAYER 1 IS ALWAYS POPULATED
+    for (let j = 1; j < deplayerTypes.length; j++) {
+      if (deplayerTypes[j] !== -1) {
+        addPlayer(j, 0);
+      }
     }
 
+    const decharacterSelections = decompressObject(decompressed[2]);
+    for (let j = 0; j < decharacterSelections.length; j++) {
+      setCS(j, decharacterSelections[j]);
+    }
+    const replayInputPackage = decompressed[3];
+    for (let n = 0; n < replayInputPackage.length; n++) {
+      const stateData = decompressObject(replayInputPackage[n]);
+      replayInputs.push(stateData.fullGameState.inputs);
+      replayPlayerData.push(stateData.fullGameState.playerData);
+      replayFrameData.push(stateData.fullGameState.frameDelay);
+    }
     startGame();
   };
+  reader.readAsBinaryString(file);
 
-  // when the file is read it triggers the onload event above.
-  reader.readAsDataURL(file);
+//   // when the file is read it triggers the onload event above.
+//   reader.readAsDataURL(file);
 
 
+}
+
+export function retrieveReplayInputs(playerSlot) {
+  const returnInput = replayInputs[playingFrame][playerSlot];
+  player[playerSlot] = deepCopyObject(true, player[playerSlot], replayPlayerData[playingFrame][playerSlot]);
+  playingFrame++;
+  gameTickDelay = replayFrameData[playingFrame];
+  return returnInput;
 }

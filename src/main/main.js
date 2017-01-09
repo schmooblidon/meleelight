@@ -40,7 +40,7 @@ import {showButton, nullInputs, pollInputs, inputData, nullInput} from "./input"
 import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,connectToMPServer, syncGameMode} from "./multiplayer/streamclient";
 import {deepCopyObject} from "./util/deepCopyObject";
 import {setChosenChar} from "../menus/css";
-import {saveGameState} from "./replay";
+import {saveGameState, loadReplay, gameTickDelay} from "./replay";
 /*globals performance*/
 
 export const holiday = 0;
@@ -1082,7 +1082,7 @@ export function gameTick (oldInputBuffers){
 
     saveGameState(input,ports);
 
-  setTimeout(gameTick, 16, input);
+  setTimeout(gameTick, 16 + gameTickDelay, input);
 }
 
 export function clearScreen (){
