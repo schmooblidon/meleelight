@@ -40,6 +40,7 @@ let lastRecievedPacket = 0;
 const usServer = 'wss://deepml.herokuapp.com:443';
 const eurServer = 'wss://deepmleur.herokuapp.com:443';
 let pickedServer = 'america';
+let packetNumber = 0;
 $("#america").on("click", function () {
 localStorage.setItem('pickedServer','america');
   $("#europe").attr('checked', false);
@@ -149,17 +150,18 @@ function startRoom() {
     });
 
     ds.event.subscribe(GAME_ID + 'player/', answer => {
-      const now = performance.now();
-      let frameDelay = now - lastRecievedPacket;
-      if(frameDelay > 500){
-        frameDelay = 500;
-      }
-      lastRecievedPacket = now;
-      updateGameTickDelay(frameDelay);
+
   const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
       if (data) {
         if (data.playerID !== playerID) {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
+            const now = performance.now();
+            let frameDelay = now - lastRecievedPacket;
+            if(frameDelay > 500){
+              frameDelay = 500;
+            }
+            lastRecievedPacket = now;
+            updateGameTickDelay(frameDelay);
             saveNetworkInputs(data.playerSlot, data.inputBuffer);
             player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
           }
@@ -396,17 +398,18 @@ let result = data.get();
     });
 
     ds.event.subscribe(name + 'player/', answer => {
-      const now = performance.now();
-      let frameDelay = now - lastRecievedPacket;
-      if(frameDelay > 500){
-        frameDelay = 500;
-      }
-      lastRecievedPacket = now;
-      updateGameTickDelay(frameDelay);
+
       const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
       if (data) {
         if (data.playerID !== playerID) {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
+            const now = performance.now();
+            let frameDelay = now - lastRecievedPacket;
+            if(frameDelay > 500){
+              frameDelay = 500;
+            }
+            lastRecievedPacket = now;
+            updateGameTickDelay(frameDelay);
             saveNetworkInputs(data.playerSlot, data.inputBuffer);
             player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
           }
