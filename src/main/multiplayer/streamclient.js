@@ -24,6 +24,7 @@ import {deepCopyObject} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar, setChoosingTag} from "../../menus/css";
 import pako from 'pako';
 import {gameSettings, updateGameSettings} from "../../settings";
+import { updateGameTickDelay} from "../replay";
 
 
 let ds = null;
@@ -35,6 +36,7 @@ export let HOST_GAME_ID = null;
 export let inServerMode = false;
 export let meHost = true;
 let joinedGame = false;
+let lastRecievedPacket = 0;
 const usServer = 'wss://deepml.herokuapp.com:443';
 const eurServer = 'wss://deepmleur.herokuapp.com:443';
 let pickedServer = 'america';
@@ -147,6 +149,13 @@ function startRoom() {
     });
 
     ds.event.subscribe(GAME_ID + 'player/', answer => {
+      const now = performance.now();
+      let frameDelay = now - lastRecievedPacket;
+      if(frameDelay > 500){
+        frameDelay = 500;
+      }
+      lastRecievedPacket = now;
+      updateGameTickDelay(frameDelay);
   const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
       if (data) {
         if (data.playerID !== playerID) {
@@ -242,7 +251,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
     "inputBuffer": inputBuffer,
     "playerInfo": playerPayload
   };
-  ds.event.emit(HOST_GAME_ID + 'player/',{"bstring": pako.deflate(JSON.stringify(payload), { to: 'string' })});
+  ds.event.emit(HOST_GAME_ID + 'player/',{"bstring": pako.deflate(JSON.stringify(payload), { to: 'string',level:9 })});
 
 }
 
@@ -387,6 +396,13 @@ let result = data.get();
     });
 
     ds.event.subscribe(name + 'player/', answer => {
+      const now = performance.now();
+      let frameDelay = now - lastRecievedPacket;
+      if(frameDelay > 500){
+        frameDelay = 500;
+      }
+      lastRecievedPacket = now;
+      updateGameTickDelay(frameDelay);
       const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
       if (data) {
         if (data.playerID !== playerID) {

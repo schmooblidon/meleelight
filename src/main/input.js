@@ -7,6 +7,7 @@ import {
 import {Vec2D} from "./util/Vec2D";
 import {keyMap} from "../settings";
 import {retrieveNetworkInputs} from "./multiplayer/streamclient";
+import {retrieveReplayInputs,replayActive} from "./replay";
 
 export const button = {
   "a" : 0, 
@@ -114,7 +115,9 @@ export const aiInputBank = [aiPlayer1,aiPlayer2,aiPlayer3,aiPlayer4];
 export function pollInputs (gameMode, frameByFrame, controllerType, playerSlot, controllerIndex, keys,playertype) {
   // input is the input for player i in the current frame
   let input = nullInput(); // initialise with default values
-  if(playertype === 1 && gameMode === 3 ){
+  if(replayActive){
+    input = pollReplayInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame);
+  }else if(playertype === 1 && gameMode === 3 ){
     return aiInputBank[playerSlot][0];
   }else if (controllerType == 10) { // keyboard controls
     input = pollKeyboardInputs(gameMode, frameByFrame, keys);
@@ -374,6 +377,10 @@ if(gamepad === undefined || gamepad === null){
 
 function pollNetworkInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
  return retrieveNetworkInputs(playerSlot,controllerIndex);
+}
+
+function pollReplayInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
+return retrieveReplayInputs(playerSlot,controllerIndex);
 }
 
 export function showButton(i, but, bool) {
