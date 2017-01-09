@@ -1072,9 +1072,9 @@ export function gameTick (oldInputBuffers){
 
     saveGameState(input,ports);
 
-  setTimeout(gameTick, Math.max(16, Math.floor(gameTickDelay)/2), input);
-  console.log("gametickdelay :"+gameTickDelay/2);
-  console.log("final value :"+Math.max(16, Math.floor(gameTickDelay)/2));
+  setTimeout(gameTick, Math.max(16, Math.floor(gameTickDelay)), input);
+  console.log("gametickdelay :"+gameTickDelay);
+  console.log("final value :"+Math.max(16, Math.floor(gameTickDelay)));
 }
 
 export function clearScreen (){
