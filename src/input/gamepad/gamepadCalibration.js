@@ -7,6 +7,7 @@ import {Vec2D} from "../../main/util/Vec2D";
 import {deepCopyObject} from "../../main/util/deepCopyObject";
 import {setCustomGamepadInfo} from "./gamepads/custom";
 import {setUsingCustomControls} from "../../main/main";
+import {updateControllerMenu} from "../../menus/controllermenu.js";
 
 import type {ButtonInfo, StickInfo, StickCardinals, TriggerInfo, DPadInfo, GamepadInfo} from "./gamepadInfo";
 import type {Gamepad, Button} from "./gamepad";
@@ -52,7 +53,7 @@ export function runCalibration ( i : number, gamepad : Gamepad ) : void {
                       , ids : [{name : "custom controller"}]
                       };
   
-  const interval = 1000; // 1 second
+  const interval = 3000; // 3 second
 
   const startText = "Beginning calibration of controller "+(i+1)+". Do not press anything.";
 
@@ -90,6 +91,7 @@ function calibrateGamepad ( i : number, gamepad : Gamepad
 
   switch(passNumber) { // fire events
     case 0:
+      newText = text;
       setTimeout(function(){
         deepCopyObject(true, gamepad.buttons, newButtons0);
         deepCopyObject(true, gamepad.axes, newAxes0);
@@ -247,10 +249,13 @@ function calibrateGamepad ( i : number, gamepad : Gamepad
       setCustomGamepadInfo(i, gamepadInfo);
       setUsingCustomControls(i);
       setCalibrationInProgress(i, false);
+      updateControllerMenu(passNumber, "Calibration complete!");
       return;
     default:
       break;
   }
+
+  updateControllerMenu(passNumber, newText);
 
   if (newText === undefined) {
     newTextTimer = textTimer-1;

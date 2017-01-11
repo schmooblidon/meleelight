@@ -11,6 +11,7 @@ import {drawSSSInit, sssControls, drawSSS} from "menus/stageselect";
 import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "menus/audiomenu";
 import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "menus/gameplaymenu";
 import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
+import {drawControllerMenuInit, drawControllerMenu} from "menus/controllermenu";
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
 import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
 
@@ -458,6 +459,7 @@ export function positionPlayersInCSS (){
 }
 
 // 20:Startup
+// 14:Controller Menu
 // 13:Data Menu
 // 12:Keyboard Controls
 // 11:Gameplay Menu
@@ -528,6 +530,10 @@ export function changeGamemode (newGamemode){
       // credits
     case 13:
       drawCreditsInit();
+      break;
+      // controller menu
+    case 14:
+      drawControllerMenuInit();
       break;
       // startup
     case 20:
@@ -843,6 +849,8 @@ export function gameTick (oldInputBuffers){
   } else if (gameMode == 13) {
     input[creditsPlayer] = interpretInputs(creditsPlayer, true, playerType[creditsPlayer],oldInputBuffers[creditsPlayer]);
     credits(creditsPlayer, input);
+  } else if (gameMode == 14) {
+    // controller callibration
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
@@ -1057,6 +1065,8 @@ export function renderTick (){
       drawKeyboardMenu();
     } else if (gameMode == 13) {
       drawCredits();
+    } else if (gameMode == 14) {
+      drawControllerMenu();
     } else if (gameMode == 0) {
       drawStartScreen();
     } else if (gameMode == 1) {

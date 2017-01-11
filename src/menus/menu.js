@@ -1,5 +1,5 @@
 import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen,
-    setCreditsPlayer
+    setCreditsPlayer, currentPlayers
 } from "main/main";
 import {sounds} from "main/sfx";
 import { setTargetPlayer} from "target/targetplay";
@@ -7,19 +7,23 @@ import { setTargetPointerPos} from "../stages/targetselect";
 import {  setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
 import {music} from "../main/sfx";
+import {runCalibration} from "../input/gamepad/gamepadCalibration";
 /* eslint-disable */
 
  let menuSelected = 0;
 
 const menuText = [
   ["VS. Melee", "Target Test", "Target Builder", "Options"],
-  ["Audio", "Gameplay", "Keyboard Controls", "Credits"]
+  ["Audio", "Gameplay", "Controls", "Credits"],
+  ["Controller", "Keyboard"]
 ];
 const menuExplanation = [
   ["Multiplayer Battles!", "Smash ten targets!", "Build target test stages!", "Game setup."],
-  ["Select audio levels.", "Change gameplay settings.", "Customize keyboard controls.", "Who did this?"]
+  ["Select audio levels.", "Change gameplay settings.", "Customize & callibrate controls.", "Who did this?"],
+  ["Customize & callibrate controller.", "Customize keyboard controls."]
 ];
-const menuTitle = ["Main Menu", "Options"];
+const menuCount = [4, 4, 2];
+const menuTitle = ["Main Menu", "Options", "Controls"];
 let menuColourOffset = 0;
 const menuColours = [238, 358, 117, 55];
 let menuCurColour = 238;
@@ -62,7 +66,7 @@ export function menuMove (i, input){
         menuSelected = 0;
         menuMove = true;
       }
-    } else {
+    } else if (menuMode === 1) {
       if (menuSelected == 0) {
         //audio menu
         changeGamemode(10);
@@ -70,20 +74,36 @@ export function menuMove (i, input){
         //gameplay menu
         changeGamemode(11);
       } else if (menuSelected == 2) {
-        changeGamemode(12);
-        //keyboard menu
-        setKeyBinding(false);
+        // controls
+        menuMode = 2;
+        menuSelected = 0;
+        menuMove = true;
       }
       else if (menuSelected == 3){
         //credits
           setCreditsPlayer(i);
         changeGamemode(13);
       }
+    } else {
+      if (menuSelected === 0) {
+        // map controller
+        changeGamemode(14);
+        runCalibration(i,navigator.getGamepads()[currentPlayers[i]]);
+      } else {
+        changeGamemode(12);
+        //keyboard menu
+        setKeyBinding(false);
+      }
     }
   } else if (input[i][0].b && !input[i][1].b) {
     if (menuMode == 1) {
       menuMode = 0;
       menuSelected = 3;
+      menuMove = true;
+      sounds.menuBack.play();
+    } else if (menuMode === 2) {
+      menuMode = 1;
+      menuSelected = 2;
       menuMove = true;
       sounds.menuBack.play();
     }
@@ -133,9 +153,9 @@ export function menuMove (i, input){
     menuTimer = 0;
     sounds.menuSelect.play();
     if (menuSelected == -1) {
-      menuSelected = 3;
+      menuSelected = menuCount[menuMode] - 1;
     }
-    if (menuSelected == 4) {
+    if (menuSelected == menuCount[menuMode]) {
       menuSelected = 0;
     }
     if ((previousMenuS == 1 && menuSelected == 2) || (previousMenuS == 2 && menuSelected == 1)) {
@@ -341,7 +361,7 @@ export function drawMainMenu (){
   ui.fillStyle = "rgba(0, 0, 0, 0.76)";
   ui.lineWidth = 5;
   ui.strokeStyle = "rgba(255, 214, 0, 0.95)";
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < menuCount[menuMode]; i++) {
     ui.beginPath();
     ui.moveTo(420 - i * 65, 200 + i * 100);
     ui.lineTo(970 - i * 65, 200 + i * 100);
@@ -358,7 +378,7 @@ export function drawMainMenu (){
     ui.stroke();
   }
   ui.fillStyle = "rgb(254, 238, 27)";
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < menuCount[menuMode]; i++) {
     var x = 1000;
     if (menuSelected == i) {
       x = 0;
