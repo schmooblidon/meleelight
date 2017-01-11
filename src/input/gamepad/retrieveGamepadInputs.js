@@ -3,8 +3,9 @@
 import {Vec2D} from "../../main/util/Vec2D";
 
 import type {GamepadInfo} from "./gamepadInfo";
+import type {Gamepad} from "./gamepad";
 
-export function buttonState(gamepad : any, gamepadInfo : GamepadInfo, but : string) : bool {
+export function buttonState(gamepad : Gamepad, gamepadInfo : GamepadInfo, but : string) : bool {
   const info = gamepadInfo[but];
   let state = false;
   if (info !== null && info !== undefined) {
@@ -25,7 +26,7 @@ export function buttonState(gamepad : any, gamepadInfo : GamepadInfo, but : stri
   return state;
 };
 
-export function triggerValue(gamepad : any, gamepadInfo : GamepadInfo, trig : string) : number {
+export function triggerValue(gamepad : Gamepad, gamepadInfo : GamepadInfo, trig : string) : number {
   const info = gamepadInfo[trig];
   let val = 0;
   if (info !== null && info !== undefined) {
@@ -46,7 +47,7 @@ export function triggerValue(gamepad : any, gamepadInfo : GamepadInfo, trig : st
   return val;
 }
 
-export function stickValue(gamepad : any, gamepadInfo : GamepadInfo, stick : string) : Vec2D {
+export function stickValue(gamepad : Gamepad, gamepadInfo : GamepadInfo, stick : string) : Vec2D {
   const info = gamepadInfo[stick];
   let x = 0;
   let y = 0;
@@ -81,7 +82,7 @@ export function stickValue(gamepad : any, gamepadInfo : GamepadInfo, stick : str
 
 type DPad = { up : bool, down : bool, left : bool, right : bool }
 
-export function dPadState(gamepad : any, gamepadInfo : GamepadInfo) : DPad {
+export function dPadState(gamepad : Gamepad, gamepadInfo : GamepadInfo) : DPad {
   const info = gamepadInfo.dpad;
   let up = false;
   let down = false;
