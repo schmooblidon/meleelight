@@ -7,6 +7,7 @@ import {playing} from "../main/main";
 import {buttonState, triggerValue, stickValue, dPadState } from "./gamepad/retrieveGamepadInputs";
 import {gamepadInfoList} from "./gamepad/gamepadInfoList";
 import {scaleToGCTrigger, scaleToMeleeAxes, scaleToUnitAxes} from "./meleeInputs";
+import {runCalibration} from "./gamepad/gamepadCalibration";
 import $ from 'jquery';
 
 import type {GamepadInfo, StickCardinals} from "./gamepad/gamepadInfo";
@@ -348,6 +349,14 @@ function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
   input.dr = dPadData.right;
   input.du = dPadData.up;
 
+  // -------------------------------------------------------
+  // temporary calibration trigger
+
+  if (input.z && input.x && input.b && input.dd) {
+    runCalibration(controllerIndex, gamepad);
+  }
+
+
   return input;
 };
 
@@ -379,5 +388,11 @@ const customCenters = function() {
   this.r = 0;
 };
 
-export const custcent = [new customCenters, new customCenters, new customCenters, new customCenters];
+const custcent = [new customCenters, new customCenters, new customCenters, new customCenters];
 
+export function setCustomCenters( i : number, ls0 : Vec2D, cs0 : Vec2D, l0 : number, r0 : number) : void {
+  custcent[i].ls = ls0;
+  custcent[i].cs = cs0;
+  custcent[i].l = l0;
+  custcent[i].r = r0;
+}

@@ -35,8 +35,10 @@ import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
-import {keyboardMap, showButton, nullInputs, pollInputs, inputData} from "../input/input";
+import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
+import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
+import {runCalibration} from "../input/gamepad/gamepadCalibration";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 /*globals performance*/
 
@@ -59,6 +61,13 @@ let gameEnd = false;
 let controllerResetCountdowns = [125,125,125,125];
 let keyboardOccupied = false;
 
+export let usingCustomControls = [false, false, false, false];
+
+export function setUsingCustomControls( i: number) : void {
+  usingCustomControls[i] = true;
+}
+
+export let firstTimeDetected = [true, true, true, true];
 
 window.mType = [null, null, null, null];
 
@@ -357,16 +366,28 @@ export function findPlayers (){
     var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : null);
     if (typeof gamepad != "undefined" && gamepad != null) {
       var detected = false;
-      const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
-
-      if (maybeNameAndInfo === null) {
-        console.log("error: controller detected but not supported");
-      } else {
-        detected ^= true;
-        var [gpdName, gpdInfo] = maybeNameAndInfo;
-        console.log("You are using "+gpdName+".");
+      var gpdName;
+      var gpdInfo;
+      if (usingCustomControls[i] && customGamepadInfo[i] !== null) {
+        gpdName = "custom controls";
+        gpdInfo = customGamepadInfo;
+        detected = true;
+      }
+      else {
+        const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
+        if (maybeNameAndInfo === null) {
+          console.log("Error in 'findPlayers': controller "+(i+1)+" detected but not supported.");
+          console.log("Try manual calibration of your controller."); // TODO: say how to do this
+        } else {
+          detected = true;
+          [gpdName, gpdInfo] = maybeNameAndInfo;
+        }
       }
       if (detected) {
+        if (firstTimeDetected[i]) {
+          console.log("Controller "+(i+1)+" is: "+gpdName+".");
+          firstTimeDetected[i] = false;
+        }
         if (gameMode < 2 || gameMode == 20) {
           if (buttonState(gamepad, gpdInfo, "s")) {
             var alreadyIn = false;
@@ -666,10 +687,12 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     if ((tempBuffer[0].z || tempBuffer[0].du) && tempBuffer[0].x && tempBuffer[0].y) {
       controllerResetCountdowns[i] -= 1;
       if (controllerResetCountdowns[i] === 0) {
-        custcent[i].ls = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
-        custcent[i].cs = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
-        custcent[i].l = tempBuffer[0].lA;
-        custcent[i].r = tempBuffer[0].rA;
+        setCustomCenters( i
+                        , new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY)
+                        , new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY)
+                        , tempBuffer[0].lA
+                        , tempBuffer[0].rA
+                        )
         console.log("Controller #"+(i+1)+" was reset!");
         $("#resetIndicator" + i).fadeIn(100);
         $("#resetIndicator" + i).fadeOut(500);

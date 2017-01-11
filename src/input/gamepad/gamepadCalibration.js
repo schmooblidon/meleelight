@@ -1,14 +1,300 @@
 // @flow
 /*eslint indent:0*/
+/*eslint prefer-arrow-callback:0*/
+/*eslint prefer-const:0*/
 
 import {Vec2D} from "../../main/util/Vec2D";
+import {deepCopyObject} from "../../main/util/deepCopyObject";
+import {setCustomGamepadInfo} from "./gamepads/custom";
+import {setUsingCustomControls} from "../../main/main";
 
 import type {ButtonInfo, StickInfo, StickCardinals, TriggerInfo, DPadInfo, GamepadInfo} from "./gamepadInfo";
 import type {Gamepad, Button} from "./gamepad";
 
-function scanForButton ( buttons0 : Array<Button>, buttons1 : Array<Button>
-                       , axes0 : Array<number>, axes1 : Array<number>
+
+const calibrationInProgress = [false, false, false, false];
+function setCalibrationInProgress (i : number, bool : bool) : void {
+  calibrationInProgress[i] = bool;
+}
+
+export function runCalibration ( i : number, gamepad : Gamepad ) : void {
+  if (calibrationInProgress[i]) {
+    return;
+  }
+  setCalibrationInProgress(i, true);
+  let buttons0;
+  let buttons1;
+  let axes0;
+  let axes1;
+
+  let buttonsL;
+  let buttonsR;
+  let buttonsU;
+  let axesL;
+  let axesR;
+  let axesU;
+
+  // initialise gamepad info
+  const gamepadInfo = { a : null
+                      , b : null
+                      , x : null
+                      , y : null
+                      , s : null
+                      , l : null
+                      , r : null
+                      , z : null
+                      , lA : null
+                      , rA : null
+                      , dpad : null
+                      , ls : null
+                      , cs : null
+                      , isGC : false
+                      , ids : [{name : "custom controller"}]
+                      };
+  
+  const interval = 1000; // 1 second
+
+  const startText = "Beginning calibration of controller "+(i+1)+". Do not press anything.";
+
+  calibrateGamepad( i, gamepad
+                  , buttons0, buttons1, buttonsL, buttonsR, buttonsU
+                  , axes0, axes1, axesL, axesR, axesU
+                  , gamepadInfo
+                  , 0, interval
+                  , startText, interval
+                  );
+
+}
+
+function calibrateGamepad ( i : number, gamepad : Gamepad
+                          , buttons0 : ?Array<Button>, buttons1 : ?Array<Button>
+                          , buttonsL : ?Array<Button>, buttonsR : ?Array<Button>, buttonsU : ?Array<Button>
+                          , axes0 : ?Array<number>, axes1 : ?Array<number>
+                          , axesL : ?Array<number>, axesR : ?Array<number>, axesU : ?Array<number>
+                          , gamepadInfo : GamepadInfo
+                          , passNumber : number, interval : number
+                          , text : string, textTimer : number ) : void {
+
+  let newText;
+  let newTextTimer;
+  let newButtons0;
+  let newButtons1;
+  let newAxes0;
+  let newAxes1;
+  let newButtonsL;
+  let newButtonsR;
+  let newButtonsU;
+  let newAxesL;
+  let newAxesR;
+  let newAxesU;
+
+  switch(passNumber) { // fire events
+    case 0:
+      setTimeout(function(){
+        deepCopyObject(true, gamepad.buttons, newButtons0);
+        deepCopyObject(true, gamepad.axes, newAxes0);
+      }, interval);      
+      break;
+    case 1:
+      newText = "Press A.";
+      setTimeout(function(){ 
+        gamepadInfo.a = scanForButton(buttons0, gamepad.buttons, axes0, gamepad.axes);
+      }, interval);
+      break;
+    case 2:
+      newText = "Press B.";
+      setTimeout(function(){ 
+        gamepadInfo.b = scanForButton(buttons0, gamepad.buttons, axes0, gamepad.axes);
+      }, interval);
+      break;
+    case 3:
+      newText = "Press X.";
+      setTimeout(function(){ 
+        gamepadInfo.x = scanForButton(buttons0, gamepad.buttons, axes0, gamepad.axes);
+      }, interval);
+      break;
+    case 4:
+      newText = "Press Y.";
+      setTimeout(function(){ 
+        gamepadInfo.y = scanForButton(buttons0, gamepad.buttons, axes0, gamepad.axes);
+      }, interval);
+      break;
+    case 5:
+      newText = "Press start.";
+      setTimeout(function(){ 
+        gamepadInfo.s = scanForButton(buttons0, gamepad.buttons, axes0, gamepad.axes);
+      }, interval);
+      break;
+    case 6:
+      newText = "Press L trigger.";
+      setTimeout(function(){ 
+        gamepadInfo.l = scanForButton(buttons0, gamepad.buttons, axes0, gamepad.axes, true);
+      }, interval);
+      break;
+    case 7:
+      newText = "Press R trigger.";
+      setTimeout(function(){ 
+        gamepadInfo.r = scanForButton(buttons0, gamepad.buttons, axes0, gamepad.axes, true);
+      }, interval);
+      break;
+    case 8:
+      newText = "Press Z.";
+      setTimeout(function(){ 
+        gamepadInfo.z = scanForButton(buttons0, gamepad.buttons, axes0, gamepad.axes);
+      }, interval);
+      break;
+    case 9:
+      newText = "Push L trigger all the way.";
+      setTimeout(function(){ 
+        gamepadInfo.lA = scanForTrigger(buttons0, gamepad.buttons, axes0, gamepad.axes);
+      }, interval);
+      break;
+    case 10:
+      newText = "Push R trigger all the way.";
+      setTimeout(function(){ 
+        gamepadInfo.rA = scanForTrigger(buttons0, gamepad.buttons, axes0, gamepad.axes);
+      }, interval);
+      break;
+    case 11:
+      newText = "Move the left analog stick all the way to the left.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsL);
+        deepCopyObject(true, gamepad.axes, newAxesL);
+      }, interval);
+      break;
+    case 12:
+      newText = "Move the left analog stick all the way to the right.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsR);
+        deepCopyObject(true, gamepad.axes, newAxesR);
+      }, interval);
+      break;
+    case 13:
+      newText = "Move the left analog stick all the way to the top.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsU);
+        deepCopyObject(true, gamepad.axes, newAxesU);
+      }, interval);
+      break;
+    case 14:
+      newText = "Move the left analog stick all the way to the bottom.";
+      setTimeout(function(){ 
+        gamepadInfo.ls = scanForStick( buttons0, buttonsL, buttonsR, buttonsU, gamepad.buttons
+                                     , axes0, axesL, axesR, axesU, gamepad.axes);
+      }, interval);
+      break;
+    case 15:
+      newText = "Move the c-stick all the way to the left.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsL);
+        deepCopyObject(true, gamepad.axes, newAxesL);
+      }, interval);
+      break;
+    case 16:
+      newText = "Move the c-stick all the way to the right.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsR);
+        deepCopyObject(true, gamepad.axes, newAxesR);
+      }, interval);
+      break;
+    case 17:
+      newText = "Move the c-stick all the way to the top.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsU);
+        deepCopyObject(true, gamepad.axes, newAxesU);
+      }, interval);
+      break;
+    case 18:
+      newText = "Move the c-stick all the way to the bottom.";
+      setTimeout(function(){ 
+        gamepadInfo.cs = scanForStick( buttons0, buttonsL, buttonsR, buttonsU, gamepad.buttons
+                                     , axes0, axesL, axesR, axesU, gamepad.axes);
+      }, interval);
+      break;
+    case 19:
+      newText = "Press d-pad left.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsL);
+        deepCopyObject(true, gamepad.axes, newAxesL);
+      }, interval);
+      break;
+    case 20:
+      newText = "Press d-pad right.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsR);
+        deepCopyObject(true, gamepad.axes, newAxesR);
+      }, interval);
+      break;
+    case 21:
+      newText = "Press d-pad up.";
+      setTimeout(function(){ 
+        deepCopyObject(true, gamepad.buttons, newButtonsU);
+        deepCopyObject(true, gamepad.axes, newAxesU);
+      }, interval);
+      break;
+    case 22:
+      newText = "Press d-pad down.";
+      setTimeout(function(){ 
+        gamepadInfo.dpad = scanForDPad( buttons0, buttonsL, buttonsR, buttonsU, gamepad.buttons
+                                      , axes0, axesL, axesR, axesU, gamepad.axes);
+      }, interval);
+      break;
+    case 23:
+      console.log("Controller "+(i+1)+" calibration complete.");
+      if (gamepadInfo.lA !== null && (gamepadInfo.lA.kind === "value" || gamepadInfo.lA.kind === "axis")) {
+        gamepadInfo.isGC = Math.abs(gamepadInfo.lA.min + 0.866) < 0.01 ? true : false; // hacky but hey
+      }
+      setCustomGamepadInfo(i, gamepadInfo);
+      setUsingCustomControls(i);
+      setCalibrationInProgress(i, false);
+      return;
+    default:
+      break;
+  }
+
+  if (newText === undefined) {
+    newTextTimer = textTimer-1;
+  }
+  else {
+    newTextTimer = interval;
+    console.log(text+" Timer: "+interval+" ms.");
+  }
+  if (textTimer === 0) {
+    console.log(text+" Timer: 0 ms.");
+  }
+
+  newButtons0 = newButtons0 === undefined ? buttons0 : newButtons0;
+  newButtons1 = newButtons1 === undefined ? buttons1 : newButtons1;
+  newAxes0 = newAxes0 === undefined ? axes0 : newAxes0;
+  newAxes1 = newAxes1 === undefined ? axes1 : newAxes1;
+  newButtonsL = newButtonsL === undefined ? buttonsL : newButtonsL;
+  newButtonsR = newButtonsR === undefined ? buttonsR : newButtonsR;
+  newButtonsU = newButtonsU === undefined ? buttonsU : newButtonsU;
+  newAxesL = newAxesL === undefined ? axesL : newAxesL;
+  newAxesR = newAxesR === undefined ? axesR : newAxesR;
+  newAxesU = newAxesU === undefined ? axesU : newAxesU;
+
+  setTimeout( function() {
+    calibrateGamepad( i, gamepad
+                    , newButtons0, newButtons1, newButtonsL, newButtonsR, newButtonsU
+                    , newAxes0, newAxes1, newAxesL, newAxesR, newAxesU
+                    , gamepadInfo
+                    , passNumber+1, interval
+                    , newText === undefined ? text : newText, newTextTimer);
+  }, interval);
+}
+
+
+function scanForButton ( buttons0 : ?Array<Button>, buttons1 : ?Array<Button>
+                       , axes0 : ?Array<number>, axes1 : ?Array<number>
+                       , onlyPressed : bool = false
                        ) : null | ButtonInfo {
+  if (   buttons0 === null || buttons0 === undefined
+      || buttons1 === null || buttons1 === undefined
+      || axes0 === null || axes0 === undefined
+      || axes1 === null || axes1 === undefined ) { 
+    return null;
+  }
   let buttonInfo = null;
 
   const bLg = buttons1.length;
@@ -18,12 +304,12 @@ function scanForButton ( buttons0 : Array<Button>, buttons1 : Array<Button>
       buttonInfo = { kind : "pressed", index : i };
       break;
     }
-    else if (detectedButtonValue(buttons0[i].value, buttons1[i].value)) {
+    else if (!onlyPressed && detectedButtonValue(buttons0[i].value, buttons1[i].value)) {
       buttonInfo = { kind : "value", index : i, threshold : 0.75 };
       break;
     }
   }
-  if (buttonInfo === null) {
+  if (!onlyPressed && buttonInfo === null) {
     const aLg = axes1.length;
     for (let j = 0; j < aLg; j++) {
       if (detectedButtonValue(axes0[j], axes1[j])) {
@@ -43,9 +329,15 @@ function detectedButtonValue ( value0 : number, value1 : number ) : bool {
 };
 
 
-function scanForTrigger ( buttons0 : Array<Button>, buttons1 : Array<Button>
-                        , axes0 : Array<number>, axes1 : Array<number>
+function scanForTrigger ( buttons0 : ?Array<Button>, buttons1 : ?Array<Button>
+                        , axes0 : ?Array<number>, axes1 : ?Array<number>
                         ) : null | TriggerInfo {
+  if (   buttons0 === null || buttons0 === undefined
+      || buttons1 === null || buttons1 === undefined
+      || axes0 === null || axes0 === undefined
+      || axes1 === null || axes1 === undefined ) { 
+    return null;
+  }
   const aLg = axes1.length;
   let minMax;
   let triggerInfo = null;
@@ -82,12 +374,24 @@ function getMinAndMax(axis0 : number, axis1 : number) : [number, number] {
   return [min, max];
 }
 
-function scanForStick ( buttons0 : Array<Button>
-                      , buttonsL : Array<Button>, buttonsR : Array<Button>
-                      , buttonsU : Array<Button>, buttonsD : Array<Button>
-                      , axes0 : Array<number>
-                      , axesL : Array<number>, axesR : Array<number>
-                      , axesU : Array<number>, axesD : Array<number> ) : null | StickInfo {
+function scanForStick ( buttons0 : ?Array<Button>
+                      , buttonsL : ?Array<Button>, buttonsR : ?Array<Button>
+                      , buttonsU : ?Array<Button>, buttonsD : ?Array<Button>
+                      , axes0 : ?Array<number>
+                      , axesL : ?Array<number>, axesR : ?Array<number>
+                      , axesU : ?Array<number>, axesD : ?Array<number> ) : null | StickInfo {
+  if (   buttons0 === null || buttons0 === undefined
+      || buttonsL === null || buttonsL === undefined
+      || buttonsR === null || buttonsR === undefined
+      || buttonsU === null || buttonsU === undefined
+      || buttonsD === null || buttonsD === undefined
+      || axes0 === null || axes0 === undefined
+      || axesL === null || axesL === undefined
+      || axesR === null || axesR === undefined
+      || axesU === null || axesU === undefined
+      || axesD === null || axesD === undefined ) { 
+    return null;
+  }
   let stickInfo = null;
 
   let xDiff = 0;
@@ -155,12 +459,24 @@ function scanForStick ( buttons0 : Array<Button>
 
 }
 
-function scanForDPad ( buttons0 : Array<Button>
-                     , buttonsL : Array<Button>, buttonsR : Array<Button>
-                     , buttonsU : Array<Button>, buttonsD : Array<Button>
-                     , axes0 : Array<number>
-                     , axesL : Array<number>, axesR : Array<number>
-                     , axesU : Array<number>, axesD : Array<number> ) : null | DPadInfo {
+function scanForDPad ( buttons0 : ?Array<Button>
+                     , buttonsL : ?Array<Button>, buttonsR : ?Array<Button>
+                     , buttonsU : ?Array<Button>, buttonsD : ?Array<Button>
+                     , axes0 : ?Array<number>
+                     , axesL : ?Array<number>, axesR : ?Array<number>
+                     , axesU : ?Array<number>, axesD : ?Array<number> ) : null | DPadInfo {
+  if (   buttons0 === null || buttons0 === undefined
+      || buttonsL === null || buttonsL === undefined
+      || buttonsR === null || buttonsR === undefined
+      || buttonsU === null || buttonsU === undefined
+      || buttonsD === null || buttonsD === undefined
+      || axes0 === null || axes0 === undefined
+      || axesL === null || axesL === undefined
+      || axesR === null || axesR === undefined
+      || axesU === null || axesU === undefined
+      || axesD === null || axesD === undefined ) { 
+    return null;
+  }
   let dPadInfo = null;
 
   const bLg = buttons0.length;
