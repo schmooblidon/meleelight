@@ -157,8 +157,8 @@ function startRoom() {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
             const now = performance.now();
             let frameDelay = now - lastRecievedPacket;
-            if(frameDelay > 300){
-              frameDelay = 300;
+            if (frameDelay > 33) {
+              frameDelay = 33;
             }
             lastRecievedPacket = now;
             updateGameTickDelay(frameDelay);
@@ -399,33 +399,33 @@ let result = data.get();
 
     ds.event.subscribe(name + 'player/', answer => {
 
-      const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
-      if (data) {
-        if (data.playerID !== playerID) {
-          if (data.inputBuffer && (data.playerSlot !== undefined)) {
-            const now = performance.now();
-            let frameDelay = now - lastRecievedPacket;
-            if(frameDelay > 300){
-              frameDelay = 300;
+            const data = JSON.parse(pako.inflate(answer.bstring, {to: 'string', level: 9}));
+            if (data) {
+              if (data.playerID !== playerID) {
+                if (data.inputBuffer && (data.playerSlot !== undefined)) {
+                  const now = performance.now();
+                  let frameDelay = now - lastRecievedPacket;
+                  if (frameDelay > 33) {
+                    frameDelay = 33;
+                  }
+                  lastRecievedPacket = now;
+                  updateGameTickDelay(frameDelay);
+                  saveNetworkInputs(data.playerSlot, data.inputBuffer);
+                  player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+                }
+              }
             }
-            lastRecievedPacket = now;
-            updateGameTickDelay(frameDelay);
-            saveNetworkInputs(data.playerSlot, data.inputBuffer);
-            player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
-          }
-        }
-      }
-    });
-    ds.event.subscribe(name + 'charSelection/', data => {
-      if (data) {
-        setChosenChar(data.playerSlot, data.charSelected);
-      }
-    });
-    ds.event.subscribe(name + 'gameMode/', data => {
-      if (data) {
-        if(data.gameMode === 2 || data.gameMode === 3 || data.gameMode === 6) {
-          changeGamemode(data.gameMode);
-        }
+          });
+          ds.event.subscribe(name + 'charSelection/', data => {
+            if (data) {
+              setChosenChar(data.playerSlot, data.charSelected);
+            }
+          });
+          ds.event.subscribe(name + 'gameMode/', data => {
+            if (data) {
+              if (data.gameMode === 2 || data.gameMode === 3 || data.gameMode === 6) {
+                changeGamemode(data.gameMode);
+              }
 
       }
     });
