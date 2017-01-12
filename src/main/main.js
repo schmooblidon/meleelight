@@ -39,7 +39,6 @@ import {Vec2D} from "./util/Vec2D";
 import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
-import {runCalibration} from "../input/gamepad/gamepadCalibration";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 /*globals performance*/
 
@@ -364,14 +363,14 @@ export function findPlayers (){
     }
   }
   for (var i = 0; i < gps.length; i++) {
-    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : null);
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[i] : null);
     if (typeof gamepad != "undefined" && gamepad != null) {
       var detected = false;
       var gpdName;
       var gpdInfo;
       if (usingCustomControls[i] && customGamepadInfo[i] !== null) {
         gpdName = "custom controls";
-        gpdInfo = customGamepadInfo;
+        gpdInfo = customGamepadInfo[i];
         detected = true;
       }
       else {

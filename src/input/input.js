@@ -349,14 +349,6 @@ function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
   input.dr = dPadData.right;
   input.du = dPadData.up;
 
-  // -------------------------------------------------------
-  // temporary calibration trigger
-
-  if (input.z && input.x && input.b && input.dd) {
-    runCalibration(controllerIndex, gamepad);
-  }
-
-
   return input;
 };
 

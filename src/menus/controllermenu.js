@@ -8,7 +8,7 @@ import {twoPi} from "main/render";
 
 let controllerTimer = 3000/16.667;
 
-export function updateControllerMenu(passNumber, text){
+export function updateControllerMenu(passNumber, text, interval){
   fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
   fg1.fillStyle = "rgba(255,255,255,0.8)";
   fg1.font = "700 50px Arial";
@@ -22,10 +22,10 @@ export function updateControllerMenu(passNumber, text){
   } else {
     fg1.fillText(text, 600, 350);
   }
-  if (passNumber === 23) {
+  if (passNumber === 21) {
     setTimeout(function(){changeGamemode(1)}, 2000);
   } else {
-    controllerTimer = 3000/16.667;
+    controllerTimer = interval/16.667;
   }
 }
 

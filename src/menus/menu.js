@@ -88,7 +88,7 @@ export function menuMove (i, input){
       if (menuSelected === 0) {
         // map controller
         changeGamemode(14);
-        runCalibration(i,navigator.getGamepads()[currentPlayers[i]]);
+        runCalibration(i);
       } else {
         changeGamemode(12);
         //keyboard menu

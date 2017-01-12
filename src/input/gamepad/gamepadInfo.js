@@ -1,4 +1,5 @@
 // @flow
+/*eslint indent:0*/
 
 import {Vec2D} from "../../main/util/Vec2D";
 
@@ -38,3 +39,20 @@ export type GamepadInfo = { a  : ButtonInfo
                           , isGC : bool
                           , ids : Array<GamepadID>
                           }
+
+export const nullGamepadInfo = { a : null
+                               , b : null
+                               , x : null
+                               , y : null
+                               , s : null
+                               , l : null
+                               , r : null
+                               , z : null
+                               , lA : null
+                               , rA : null
+                               , dpad : null
+                               , ls : null
+                               , cs : null
+                               , isGC : false
+                               , ids : []
+                               };
