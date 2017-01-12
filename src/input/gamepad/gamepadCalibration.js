@@ -57,7 +57,7 @@ export function runCalibration ( i : number ) : void {
   const j = currentPlayers[i];
 
   const gamepadInfo : GamepadInfo = nullGamepadInfo;
-  gamepadInfo.ids = [{id: "custom controller"}];
+  gamepadInfo.ids = [ { name : "custom controller" } ];
   calibrateGamepad( i, j, gamepadInfo
                   , nullSnapshots
                   , 0, interval
