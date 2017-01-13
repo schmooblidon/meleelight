@@ -4,6 +4,9 @@ import {fg2} from "../../main/main";
 import {Vec2D} from "../../main/util/Vec2D";
 import {nullInput} from "../input";
 
+// eslint-disable-next-line no-duplicate-imports
+import type {Input} from "../input";
+
 const purple = "#474d81ff";
 const mediumPurple  = "#3f4579ff";
 const darkPurple = "#32396eff";
@@ -54,7 +57,7 @@ const csYScale = -10;
 const triggerScale = -10;
 const buttonOffset = -5;
 
-export function drawGCController( maybeInput : any ) : void {
+export function drawGCController( maybeInput : ?Input ) : void {
   let input = maybeInput;
   if (maybeInput === null || maybeInput === undefined) {
     input = nullInput();

@@ -12,52 +12,50 @@ import $ from 'jquery';
 
 import type {GamepadInfo, StickCardinals} from "./gamepad/gamepadInfo";
 
-export const button = {
-  "a" : 0, 
-  "b" : 1,
-  "x" : 2,
-  "y" : 3,
-  "z" : 4,
-  "r" : 5,
-  "l" : 6,
-  "s" : 7,  // start
-  "du": 8,  // d-pad up
-  "dr": 9,  // d-pad right
-  "dd": 10, // d-pad down
-  "dl": 11  // d-pad left
-};
-
-export const axis = {
-  "lsX": 12, // left analog stick left/right
-  "lsY": 13, // left analog stick up/down
-  "csX": 14, // c-stick left/right
-  "csY": 15, // c-stick up/down
-  "lA" : 16, // L button analog sensor
-  "rA" : 17  // R button analog sensor
-};
+export type Input = { a : bool
+                    , b : bool
+                    , x : bool
+                    , y : bool
+                    , z : bool
+                    , l : bool
+                    , r : bool
+                    , s : bool
+                    , du : bool
+                    , dl : bool
+                    , dr : bool
+                    , dd : bool
+                    , lA : number
+                    , rA : number
+                    , lsX : number
+                    , lsY : number
+                    , csX : number
+                    , csY : number
+                    , rawX : number
+                    , rawY : number };
+export type InputBuffer = Array<Input>;
 
 type InputList = [bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, number, number, number, number, number, number, number, number];
 
-export function inputData ( list : InputList = [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0] ) : any {
+export function inputData ( list : InputList = [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0] ) : Input {
  return {
-    a : list[button["a"]],
-    b : list[button["b"]],
-    x : list[button["x"]],
-    y : list[button["y"]],
-    z : list[button["z"]],
-    r : list[button["r"]],
-    l : list[button["l"]],
-    s : list[button["s"]],
-    du : list[button["du"]],
-    dr : list[button["dr"]],
-    dd : list[button["dd"]],
-    dl : list[button["dl"]],
-    lsX : list[axis["lsX"]],
-    lsY : list[axis["lsY"]],
-    csX : list[axis["csX"]],
-    csY : list[axis["csY"]],
-    lA : list[axis["lA"]],
-    rA : list[axis["rA"]],
+    a : list[0],
+    b : list[1],
+    x : list[2],
+    y : list[3],
+    z : list[4],
+    r : list[5],
+    l : list[6],
+    s : list[7],
+    du : list[8],
+    dr : list[9],
+    dd : list[10],
+    dl : list[11],
+    lsX : list[12],
+    lsY : list[13],
+    csX : list[14],
+    csY : list[15],
+    lA : list[16],
+    rA : list[17],
     rawX : list[18],
     rawY : list[19]
   };
@@ -117,7 +115,7 @@ export const aiInputBank = [aiPlayer1,aiPlayer2,aiPlayer3,aiPlayer4];
 // should be able to move out the "frameByFrame" aspect of the following function
 // it is only used to make z button mean "left trigger value = 0.35" + "A = true".
 export function pollInputs ( gameMode : number, frameByFrame : bool, controllerInfo : "keyboard" | GamepadInfo
-                           , playerSlot : number, controllerIndex : number, keys : any, playertype : number ) : any {
+                           , playerSlot : number, controllerIndex : number, keys : {[key: number] : bool}, playertype : number ) : Input {
   // input is the input for player i in the current frame
   let input = nullInput(); // initialise with default values
   if(playertype !== 0 && gameMode === 3 ){
@@ -132,7 +130,7 @@ export function pollInputs ( gameMode : number, frameByFrame : bool, controllerI
   return input;
 }
 
-function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : any) : any {
+function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : {[key: number] : bool}) : Input {
   const input = nullInput(); // initialise with default values
 
   let stickR = 1;
@@ -218,7 +216,7 @@ function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : any) 
 }
 
 function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
-                          , playerSlot : number, controllerIndex : number, frameByFrame : bool ) : any {
+                          , playerSlot : number, controllerIndex : number, frameByFrame : bool ) : Input {
 
   const input = nullInput();
 
