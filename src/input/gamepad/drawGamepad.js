@@ -16,8 +16,7 @@ const swatches = {  purple : { light: "#503e8aff", medium: "#48387dff", dark:"#3
                  ,  white  : { light: "#f4f4f4ff", medium: "#e1e1e1ff", dark:"#5e5e5eff", fade : ["#717171ff", "#595959ff", "#6e6e6eff", "#8d8d8dff"] }
                  ,  red    : { light: "#b41e1eff", medium: "#a11212ff", dark:"#7e0e0eff", fade : ["#650b0bff", "#7d0e0eff", "#8a0f0fff", "#921010ff"] }
                  ,  blue   : { light: "#293061ff", medium: "#374080ff", dark:"#293061ff", fade : ["#3f3f3fff", "#4b64b7ff", "#5a6dbdff", "#6577c3ff"] }
-                 ,  green  : { light: "#63b11aff", medium: "#5c9e1fff", dark:"#375815ff", fade : ["#416d14ff", "#4c7f17ff", "#548d1aff", "#5d9b1cff"] }
-                 };
+                 ,  green  : { light: "#63b11aff", medium: "#5c9e1fff", dark:"#375815ff", fade : ["#416d14ff", "#4c7f17ff", "#548d1aff", "#5d9b1cff"] } };
 
 // fixed colours
 const grey = "#cdcdcdff";
@@ -74,82 +73,44 @@ export function drawGCController( colour : ControllerColour, maybeInput : ?Input
   const darkBase = swatches[colour].dark;
 
   let input = maybeInput;
-  if (maybeInput === null || maybeInput === undefined) {
+  if (input === null || input === undefined) {
     input = nullInput();
   }
-  drawSVGPath(rTrigger, input.r ? midGrey : grey, strokeWidth, darkGrey, new Vec2D( 0, triggerScale*input.rA));
-  drawSVGPath(lTrigger, input.l ? midGrey : grey, strokeWidth, darkGrey, new Vec2D( 0, triggerScale*input.lA));
-  drawSVGPath(input.z ? zPressed : zUnpressed, input.z ? darkZColour : zColour, strokeWidth, darkZColour, null);
 
-  drawGCControllerBase();
+  let svgObjects = "";
 
-  // left analog stick
-  fg2.beginPath();
-  fg2.arc(lStick.center.x + lsXScale * input.lsX, lStick.center.y + lsYScale * input.lsY, lStick.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = grey;
-  fg2.fill();
+  svgObjects += makeIntoSVGPath(rTrigger, input.r ? midGrey : grey, strokeWidth, darkGrey);
+  svgObjects += makeIntoSVGPath(lTrigger, input.l ? midGrey : grey, strokeWidth, darkGrey);
+  svgObjects += makeIntoSVGPath(input.z ? zPressed : zUnpressed, input.z ? darkZColour : zColour, strokeWidth, darkZColour);
 
-  // c-stick
-  fg2.beginPath();
-  fg2.arc(cStick.center.x + csXScale * input.csX, cStick.center.y + csYScale * input.csY, cStick.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = cColour;
-  fg2.fill();
-  fg2.strokeStyle = darkCColour;
-  fg2.lineWidth = strokeWidth;
-  fg2.stroke();
+  svgObjects += gcControllerBase(base, mediumBase, darkBase);
 
-  // A button
-  fg2.beginPath();
-  fg2.arc(aButton.center.x, aButton.center.y + (input.a? buttonOffset : 0), aButton.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = input.a ? darkAColour : aColour;
-  fg2.fill();
+  svgObjects += makeIntoSVGCircle( lStick.center, lStick.radius, grey, null, null );
+  svgObjects += makeIntoSVGCircle( cStick.center, cStick.radius, cColour, strokeWidth, darkCColour );
+  svgObjects += makeIntoSVGCircle( aButton.center, aButton.radius, aColour, null, null );
+  svgObjects += makeIntoSVGCircle( bButton.center, bButton.radius, bColour, null, null );
+  svgObjects += makeIntoSVGCircle( startButton.center, startButton.radius, grey, null, null );
+  svgObjects += makeIntoSVGPath(xButton, input.x ? midGrey : grey, null, null);
+  svgObjects += makeIntoSVGPath(yButton, input.y ? midGrey : grey, null, null);
+  svgObjects += makeIntoSVGPath(dPadShape, grey, strokeWidth, grey);
+  svgObjects += makeIntoSVGCircle( dPadDisk.center, dPadDisk.radius, darkGrey, null, null );
+  svgObjects += makeIntoSVGPath(dPadUp   , input.du ? darkGrey : midGrey, strokeWidth, midGrey);
+  svgObjects += makeIntoSVGPath(dPadDown , input.dd ? darkGrey : midGrey, strokeWidth, midGrey);
+  svgObjects += makeIntoSVGPath(dPadLeft , input.dl ? darkGrey : midGrey, strokeWidth, midGrey);
+  svgObjects += makeIntoSVGPath(dPadRight, input.dr ? darkGrey : midGrey, strokeWidth, midGrey);
 
-  // B button
-  fg2.beginPath();
-  fg2.arc(bButton.center.x, bButton.center.y + (input.b? buttonOffset : 0), bButton.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = input.b ? darkBColour : bColour;
-  fg2.fill();
-
-  drawSVGPath(xButton, input.x ? midGrey : grey, null, null, new Vec2D( 0, input.x ? buttonOffset : 0));
-  drawSVGPath(yButton, input.y ? midGrey : grey, null, null, new Vec2D( 0, input.y ? buttonOffset : 0));
-
-  // start button
-  fg2.beginPath();
-  fg2.arc(startButton.center.x, startButton.center.y + (input.s ? buttonOffset : 0), startButton.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = input.s ? midGrey : grey;
-  fg2.fill();
-
-  drawSVGPath(dPadShape, grey, strokeWidth, grey, null);
-
-  // d-pad center disk
-  fg2.beginPath();
-  fg2.arc(dPadDisk.center.x, dPadDisk.center.y, dPadDisk.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = darkGrey;
-  fg2.fill();
-
-  // d-pad arrows
-  drawSVGPath(dPadUp, input.du ? darkGrey : midGrey, strokeWidth, midGrey, null);
-  drawSVGPath(dPadDown, input.dd ? darkGrey : midGrey, strokeWidth, midGrey, null);
-  drawSVGPath(dPadLeft, input.dl ? darkGrey : midGrey, strokeWidth, midGrey, null);
-  drawSVGPath(dPadRight, input.dr ? darkGrey : midGrey, strokeWidth, midGrey, null);
+  drawSVGObjects( svgObjects );
 }
 
-function drawGCControllerBase () : void {
-  let svgPaths = "";
-  svgPaths += makeIntoSVGPath(baseShape, base, strokeWidth, darkBase);
-  svgPaths += makeIntoSVGPath(leftLobe, base, strokeWidth, darkBase);
-  svgPaths += makeIntoSVGPath(rightLobe, base, strokeWidth, darkBase);
-  svgPaths += makeIntoSVGPath(lsOctagon, darkGrey, strokeWidth, darkBase);
-  svgPaths += makeIntoSVGPath(csOctagon, cColour, strokeWidth, darkBasz);
-
-  drawSVGPaths(svgPaths, null);
-
-  // d-pad inset
-  fg2.beginPath();
-  fg2.arc(dPadInset.center.x, dPadInset.center.y, dPadInset.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = mediumBase;
-  fg2.fill();
-
+function gcControllerBase (base, mediumBase, darkBase) : string {
+  let svgObjects = "";
+  svgObjects += makeIntoSVGPath(baseShape, base, strokeWidth, darkBase);
+  svgObjects += makeIntoSVGPath(leftLobe, base, strokeWidth, darkBase);
+  svgObjects += makeIntoSVGPath(rightLobe, base, strokeWidth, darkBase);
+  svgObjects += makeIntoSVGPath(lsOctagon, darkGrey, strokeWidth, darkBase);
+  svgObjects += makeIntoSVGPath(csOctagon, cColour, strokeWidth, darkBase);
+  svgObjects += makeIntoSVGCircle( dPadInset.center, dPadInset.radius, mediumBase, null, null );
+  return svgObjects;
 };
 
 
@@ -162,9 +123,18 @@ function makeIntoSVGPath ( path : string, fillColour : string, stroke : ?number,
   return "<path style=\x22"+style+"\x22 d=\x22"+path+"\x22 />";
 }
 
+function makeIntoSVGCircle ( center : Vec2D, radius : number, fillColour : string, stroke : ?number, strokeColour : ?string) : string {
+  let strokeStyle = "";
+  if (stroke !== null && stroke !== undefined && strokeColour !== null && strokeColour !== undefined) {
+    strokeStyle = "stroke:"+strokeColour.substring(0,7)+";stroke-width:"+stroke+";stroke-linecap:round;stroke-linejoin:round;";
+  }
+  const style = "opacity:1;fill:"+fillColour.substring(0,7)+";fill-rule=evenodd;fill-opacity:1;"+strokeStyle+"";
+  return "<circle style=\x22"+style+"\x22 cx=\x22"+center.x+"\x22 cy=\x22"+center.y+"\x22 r=\x22"+radius+"\x22 />";
+}
 
-function drawSVGPaths( svgPaths : string, offset : ?Vec2D ) : void {
-  const svg = "<svg xmlns=\x22http://www.w3.org/2000/svg\x22 width=\x22720\x22 height=\x22720\x22 viewBox=\x220 0 720 720\x22> "+svgPaths+" </svg>";
+
+function drawSVGObjects( svgObjects : string, offset : ?Vec2D ) : void {
+  const svg = "<svg version=\x221.1\x22 id=\x22trajectory\x22 xmlns=\x22http://www.w3.org/2000/svg\x22 xmlns:xlink=\x22http://www.w3.org/1999/xlink\x22 x=\x220px\x22 y=\x220px\x22 width=\x22720px\x22 height=\x22720px\x22 viewBox=\x220 0 720 720\x22 enable-background=\x22new 0 0 720 720\x22 xml:space=\x22preserve\x22 style=\x22position:absolute\x22>"+svgObjects+"</svg>";
   const image = new Image();
   const svgBlob = new Blob([svg], {type : 'image/svg+xml'});
   const DOMURL = window.URL || window.webkitURL || window;
@@ -177,9 +147,4 @@ function drawSVGPaths( svgPaths : string, offset : ?Vec2D ) : void {
   else {
     fg2.drawImage(image, offset.x, offset.y);
   }
-}
-
-function drawSVGPath( path : string, fillColour : string, stroke : ?number, strokeColour : ?string, offset : ?Vec2D ) : void {
-  const svgPath = makeIntoSVGPath(path, fillColour, stroke, strokeColour);
-  drawSVGPaths(svgPath, offset);
 }
