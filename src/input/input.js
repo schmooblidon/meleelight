@@ -288,8 +288,8 @@ function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
   // -------------------------------------------------------
   // triggers
 
-  input.l = buttonState(gamepad, gamepadInfo, "y");
-  input.r = buttonState(gamepad, gamepadInfo, "z");
+  input.l = buttonState(gamepad, gamepadInfo, "l");
+  input.r = buttonState(gamepad, gamepadInfo, "r");
 
   if (gamepadInfo.lA !== null) {
     const lA = gamepadInfo.lA;
