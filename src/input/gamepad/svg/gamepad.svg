@@ -1,5 +1,5 @@
 
-<svg version="1.1" id="trajectory" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="720px" height="720px" viewBox="0 0 720 720" enable-background="new 0 0 720 720" xml:space="preserve" style="position:absolute">
+<svg id="gamepadSVG" version="1.1" id="trajectory" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="720px" height="720px" viewBox="0 0 720 720" enable-background="new 0 0 720 720" xml:space="preserve" style="position:absolute">
 
     <g id="triggers">
         <g id="R">
