@@ -40,6 +40,7 @@ import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCen
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
+import {updateGamepadSVGState} from "../input/gamepad/drawGamepad";
 /*globals performance*/
 
 export const holiday = 1;
@@ -580,6 +581,7 @@ export const removePlayer (i){
 }*/
 
 export function interpretInputs  (i, active,playertype, inputBuffer) {
+
   let tempBuffer = nullInputs();
 
   // keep updating Z and Start all the time, even when paused
@@ -744,6 +746,8 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       player[i].showHitbox ^= true;
     }
   }
+
+  updateGamepadSVGState(i, tempBuffer[0]);
 
   return tempBuffer;
 
