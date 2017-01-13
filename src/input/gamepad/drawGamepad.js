@@ -2,6 +2,7 @@
 
 import {fg2} from "../../main/main";
 import {Vec2D} from "../../main/util/Vec2D";
+import {nullInput} from "../input";
 
 const purple = "#474d81ff";
 const mediumPurple  = "#3f4579ff";
@@ -32,45 +33,47 @@ const yButton = "m 526.01197,243.45415 c -4.46112,1.70967 -14.65431,1.23681 -19.
 const startButton = { radius : 16.079573, center : new Vec2D (359.90088,294.66632) };
 const lTrigger = "M 184.51437,131.09074 C 130.21971,82.852018 62.3217,132.65746 63.25399,194.92407 Z";
 const rTrigger = "m 535.2874,131.09074 c 54.29466,-48.238722 122.19267,1.56672 121.26038,63.83333 z";
-const zButton = "m 524.67323,133.45493 4.354,-6.18763 c 55.81061,-5.247 95.32054,15.29986 122.95771,37.34506 l -17.09925,21.58268 z";
+const zUnpressed = "m 524.67323,133.45493 4.354,-6.18763 c 55.81061,-5.247 95.32054,15.29986 122.95771,37.34506 l -17.09925,21.58268 z";
+const zPressed = "m 524.67323,133.45493 4.354,-6.18763 c 55.81061,-5.247 91.32054,22.29986 117.70771,45.34506 l -11.84925,13.58268 z";
 const lsOctagon = "m 80.226121,297.63988 18.074647,-43.63607 43.636062,-18.07465 43.63606,18.07465 18.07465,43.63606 -18.07464,43.63607 -43.63607,18.07465 -43.636058,-18.07465 z";
 const csOctagon = "m 416.07682,448.25513 16.69067,-40.29485 40.29485,-16.69068 40.29486,16.69067 16.69067,40.29485 -16.69067,40.29486 -40.29485,16.69067 -40.29485,-16.69067 z";
 const lStick = { radius : 43.773998, center : new Vec2D (141.93683,297.63986) };
 const cStick = { radius : 25.7679, center : new Vec2D (473.06235,448.25513) };
 const dPadShape = "m 202.81348,436.56071 32.36779,0.0403 -0.0403,-32.36779 23.38883,0 -0.0403,32.3678 32.36778,-0.0403 0,23.38884 -32.36778,-0.0403 0.0403,32.36778 -23.38883,0 0.0403,-32.36778 -32.36778,0.0403 z";
-const dPadInset = { radius : 56.422726, center : new Vec2D (448.25513,246.83537) };
+const dPadInset = { radius : 56.422726, center : new Vec2D (246.83537,448.25513) };
 const dPadDisk = { radius : 11.875, center : new Vec2D (246.83537,448.25513) };
 const dPadUp = "m 246.83538,409.4543 7.89066,13.44202 -15.78133,0 z";
 const dPadDown = "m 246.83538,487.05596 -7.89066,-13.44202 15.78133,0 z";
 const dPadLeft = "m 208.03455,448.25513 13.44202,-7.89066 0,15.78133 z";
 const dPadRight = "m 285.63621,448.25513 -13.44202,7.89066 0,-15.78133 z";
 
-export function drawGCController() : void { // can make this display inputs by changing colours and using offsets
-  drawSVGPath(rTrigger, grey, strokeWidth, darkGrey, null);
-  drawSVGPath(lTrigger, grey, strokeWidth, darkGrey, null);
-  drawSVGPath(zButton, zColour, strokeWidth, darkZColour, null);
-  drawSVGPath(baseShape, purple, strokeWidth, darkPurple, null);
-  drawSVGPath(leftLobe, purple, strokeWidth, darkPurple, null);
-  drawSVGPath(rightLobe, purple, strokeWidth, darkPurple, null);
+const lsXScale = 20;
+const lsYScale = -20;
+const csXScale = 10;
+const csYScale = -10;
+const triggerScale = -10;
+const buttonOffset = -5;
 
-  // d-pad inset
-  fg2.beginPath();
-  fg2.arc(dPadInset.center.x, dPadInset.center.y, dPadInset.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = mediumPurple;
-  fg2.fill();
+export function drawGCController( maybeInput : any ) : void {
+  let input = maybeInput;
+  if (maybeInput === null || maybeInput === undefined) {
+    input = nullInput();
+  }
+  drawSVGPath(rTrigger, input.r ? midGrey : grey, strokeWidth, darkGrey, new Vec2D( 0, triggerScale*input.rA));
+  drawSVGPath(lTrigger, input.l ? midGrey : grey, strokeWidth, darkGrey, new Vec2D( 0, triggerScale*input.lA));
+  drawSVGPath(input.z ? zPressed : zUnpressed, input.z ? darkZColour : zColour, strokeWidth, darkZColour, null);
 
-  drawSVGPath(lsOctagon, darkGrey, strokeWidth, darkPurple, null);
-  drawSVGPath(csOctagon, cColour, strokeWidth, darkPurple, null);
+  drawGCControllerBase();
 
   // left analog stick
   fg2.beginPath();
-  fg2.arc(lStick.center.x, lStick.center.y, lStick.radius, 0, 2 * Math.PI, false);
+  fg2.arc(lStick.center.x + lsXScale * input.lsX, lStick.center.y + lsYScale * input.lsY, lStick.radius, 0, 2 * Math.PI, false);
   fg2.fillStyle = grey;
   fg2.fill();
 
   // c-stick
   fg2.beginPath();
-  fg2.arc(cStick.center.x, cStick.center.y, cStick.radius, 0, 2 * Math.PI, false);
+  fg2.arc(cStick.center.x + csXScale * input.csX, cStick.center.y + csYScale * input.csY, cStick.radius, 0, 2 * Math.PI, false);
   fg2.fillStyle = cColour;
   fg2.fill();
   fg2.strokeStyle = darkCColour;
@@ -79,23 +82,23 @@ export function drawGCController() : void { // can make this display inputs by c
 
   // A button
   fg2.beginPath();
-  fg2.arc(aButton.center.x, aButton.center.y, aButton.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = aColour;
+  fg2.arc(aButton.center.x, aButton.center.y + (input.a? buttonOffset : 0), aButton.radius, 0, 2 * Math.PI, false);
+  fg2.fillStyle = input.a ? darkAColour : aColour;
   fg2.fill();
 
   // B button
   fg2.beginPath();
-  fg2.arc(bButton.center.x, bButton.center.y, bButton.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = bColour;
+  fg2.arc(bButton.center.x, bButton.center.y + (input.b? buttonOffset : 0), bButton.radius, 0, 2 * Math.PI, false);
+  fg2.fillStyle = input.b ? darkBColour : bColour;
   fg2.fill();
 
-  drawSVGPath(xButton, grey, null, null, null);
-  drawSVGPath(yButton, grey, null, null, null);
+  drawSVGPath(xButton, input.x ? midGrey : grey, null, null, new Vec2D( 0, input.x ? buttonOffset : 0));
+  drawSVGPath(yButton, input.y ? midGrey : grey, null, null, new Vec2D( 0, input.y ? buttonOffset : 0));
 
   // start button
   fg2.beginPath();
-  fg2.arc(startButton.center.x, startButton.center.y, startButton.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = grey;
+  fg2.arc(startButton.center.x, startButton.center.y + (input.s ? buttonOffset : 0), startButton.radius, 0, 2 * Math.PI, false);
+  fg2.fillStyle = input.s ? midGrey : grey;
   fg2.fill();
 
   drawSVGPath(dPadShape, grey, strokeWidth, grey, null);
@@ -107,19 +110,43 @@ export function drawGCController() : void { // can make this display inputs by c
   fg2.fill();
 
   // d-pad arrows
-  drawSVGPath(dPadUp, midGrey, strokeWidth, midGrey, null);
-  drawSVGPath(dPadDown, midGrey, strokeWidth, midGrey, null);
-  drawSVGPath(dPadLeft, midGrey, strokeWidth, midGrey, null);
-  drawSVGPath(dPadRight, midGrey, strokeWidth, midGrey, null);
+  drawSVGPath(dPadUp, input.du ? darkGrey : midGrey, strokeWidth, midGrey, null);
+  drawSVGPath(dPadDown, input.dd ? darkGrey : midGrey, strokeWidth, midGrey, null);
+  drawSVGPath(dPadLeft, input.dl ? darkGrey : midGrey, strokeWidth, midGrey, null);
+  drawSVGPath(dPadRight, input.dr ? darkGrey : midGrey, strokeWidth, midGrey, null);
 }
 
-function drawSVGPath( path : string, fillColour : string, stroke : ?number, strokeColour : ?string, offset : ?Vec2D ) : void {
+function drawGCControllerBase () : void {
+  let svgPaths = "";
+  svgPaths += makeIntoSVGPath(baseShape, purple, strokeWidth, darkPurple);
+  svgPaths += makeIntoSVGPath(leftLobe, purple, strokeWidth, darkPurple);
+  svgPaths += makeIntoSVGPath(rightLobe, purple, strokeWidth, darkPurple);
+  svgPaths += makeIntoSVGPath(lsOctagon, darkGrey, strokeWidth, darkPurple);
+  svgPaths += makeIntoSVGPath(csOctagon, cColour, strokeWidth, darkPurple);
+
+  drawSVGPaths(svgPaths, null);
+
+  // d-pad inset
+  fg2.beginPath();
+  fg2.arc(dPadInset.center.x, dPadInset.center.y, dPadInset.radius, 0, 2 * Math.PI, false);
+  fg2.fillStyle = mediumPurple;
+  fg2.fill();
+
+};
+
+
+function makeIntoSVGPath ( path : string, fillColour : string, stroke : ?number, strokeColour : ?string) : string {
   let strokeStyle = "";
   if (stroke !== null && stroke !== undefined && strokeColour !== null && strokeColour !== undefined) {
     strokeStyle = "stroke:"+strokeColour.substring(0,7)+";stroke-width:"+stroke+";stroke-linecap:round;stroke-linejoin:round;";
   }
   const style = "opacity:1;fill:"+fillColour.substring(0,7)+";fill-rule=evenodd;fill-opacity:1;"+strokeStyle+"";
-  const svg = "<svg xmlns=\x22http://www.w3.org/2000/svg\x22 width=\x22720\x22 height=\x22720\x22 viewBox=\x220 0 720 720\x22> <path style=\x22"+style+"\x22 d=\x22"+path+"\x22 /> </svg>";
+  return "<path style=\x22"+style+"\x22 d=\x22"+path+"\x22 />";
+}
+
+
+function drawSVGPaths( svgPaths : string, offset : ?Vec2D ) : void {
+  const svg = "<svg xmlns=\x22http://www.w3.org/2000/svg\x22 width=\x22720\x22 height=\x22720\x22 viewBox=\x220 0 720 720\x22> "+svgPaths+" </svg>";
   const image = new Image();
   const svgBlob = new Blob([svg], {type : 'image/svg+xml'});
   const DOMURL = window.URL || window.webkitURL || window;
@@ -132,4 +159,9 @@ function drawSVGPath( path : string, fillColour : string, stroke : ?number, stro
   else {
     fg2.drawImage(image, offset.x, offset.y);
   }
+}
+
+function drawSVGPath( path : string, fillColour : string, stroke : ?number, strokeColour : ?string, offset : ?Vec2D ) : void {
+  const svgPath = makeIntoSVGPath(path, fillColour, stroke, strokeColour);
+  drawSVGPaths(svgPath, offset);
 }

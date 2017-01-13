@@ -63,7 +63,7 @@ export function inputData ( list : InputList = [false, false, false, false, fals
   };
 };
 
-const nullInput = () => new inputData ();
+export const nullInput = () => new inputData ();
 
 export const nullInputs = () => [ new inputData ( )
                                 , new inputData ( )
