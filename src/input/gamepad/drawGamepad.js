@@ -84,48 +84,49 @@ export function drawGCController( colour : ControllerColour, maybeInput : ?Input
 
   let svgObjects = "";
 
-  svgObjects += makeIntoSVGPath(rTrigger, input.r ? midGrey : grey, strokeWidth, darkGrey, new Vec2D(0, triggerScale*input.rA));
-  svgObjects += makeIntoSVGPath(lTrigger, input.l ? midGrey : grey, strokeWidth, darkGrey, new Vec2D(0, triggerScale*input.lA));
-  svgObjects += makeIntoSVGPath(input.z ? zPressed : zUnpressed, input.z ? darkZColour : zColour, strokeWidth, darkZColour, null);
+  svgObjects += makeIntoSVGPath(rTrigger, "R", input.r ? midGrey : grey, strokeWidth, darkGrey, new Vec2D(0, triggerScale*input.rA));
+  svgObjects += makeIntoSVGPath(lTrigger, "L", input.l ? midGrey : grey, strokeWidth, darkGrey, new Vec2D(0, triggerScale*input.lA));
+  svgObjects += makeIntoSVGPath(zPressed , "ZPressed", input.z ? darkZColour : zColour, strokeWidth, darkZColour, null);
+  svgObjects += makeIntoSVGPath(zUnpressed, "ZUnpressed", input.z ? darkZColour : zColour, strokeWidth, darkZColour, null);
 
   svgObjects += gcControllerBase(base, mediumBase, darkBase);
 
-  svgObjects += makeIntoSVGCircle( lStick.center, lStick.radius, grey, null, null, new Vec2D(lsXScale * input.lsX, lsYScale * input.lsY) );
-  svgObjects += makeIntoSVGCircle( cStick.center, cStick.radius, cColour, strokeWidth, darkCColour, new Vec2D(csXScale * input.csX, csYScale * input.csY)  );
-  svgObjects += makeIntoSVGCircle( aButton.center, aButton.radius, aColour, null, null, null );
-  svgObjects += makeIntoSVGCircle( bButton.center, bButton.radius, bColour, null, null, null );
-  svgObjects += makeIntoSVGCircle( startButton.center, startButton.radius, grey, null, null, null );
-  svgObjects += makeIntoSVGPath(xButton, input.x ? midGrey : grey, null, null, null);
-  svgObjects += makeIntoSVGPath(yButton, input.y ? midGrey : grey, null, null, null);
-  svgObjects += makeIntoSVGPath(dPadShape, grey, strokeWidth, grey, null);
-  svgObjects += makeIntoSVGCircle( dPadDisk.center, dPadDisk.radius, darkGrey, null, null, null );
-  svgObjects += makeIntoSVGPath(dPadUp   , input.du ? darkGrey : midGrey, strokeWidth, midGrey, null);
-  svgObjects += makeIntoSVGPath(dPadDown , input.dd ? darkGrey : midGrey, strokeWidth, midGrey, null);
-  svgObjects += makeIntoSVGPath(dPadLeft , input.dl ? darkGrey : midGrey, strokeWidth, midGrey, null);
-  svgObjects += makeIntoSVGPath(dPadRight, input.dr ? darkGrey : midGrey, strokeWidth, midGrey, null);
+  svgObjects += makeIntoSVGCircle(lStick.center, lStick.radius, "lStick", grey, null, null, new Vec2D(lsXScale * input.lsX, lsYScale * input.lsY) );
+  svgObjects += makeIntoSVGCircle(cStick.center, cStick.radius, "cStick", cColour, strokeWidth, darkCColour, new Vec2D(csXScale * input.csX, csYScale * input.csY)  );
+  svgObjects += makeIntoSVGCircle(aButton.center, aButton.radius, "A", aColour, null, null, null );
+  svgObjects += makeIntoSVGCircle(bButton.center, bButton.radius, "B", bColour, null, null, null );
+  svgObjects += makeIntoSVGCircle(startButton.center, startButton.radius, "start", grey, null, null, null );
+  svgObjects += makeIntoSVGPath(xButton, "X", input.x ? midGrey : grey, null, null, null);
+  svgObjects += makeIntoSVGPath(yButton, "Y", input.y ? midGrey : grey, null, null, null);
+  svgObjects += makeIntoSVGPath(dPadShape, "dPadShape",  grey, strokeWidth, grey, null);
+  svgObjects += makeIntoSVGCircle( dPadDisk.center, dPadDisk.radius, "dPadDisk", darkGrey, null, null, null );
+  svgObjects += makeIntoSVGPath(dPadUp   , "du", input.du ? darkGrey : midGrey, strokeWidth, midGrey, null);
+  svgObjects += makeIntoSVGPath(dPadDown , "dd", input.dd ? darkGrey : midGrey, strokeWidth, midGrey, null);
+  svgObjects += makeIntoSVGPath(dPadLeft , "dl", input.dl ? darkGrey : midGrey, strokeWidth, midGrey, null);
+  svgObjects += makeIntoSVGPath(dPadRight, "dr", input.dr ? darkGrey : midGrey, strokeWidth, midGrey, null);
 
 
-  svgObjects += makeIntoSVGPath(slash1, fade[1], null, null, null);
-  svgObjects += makeIntoSVGPath(slash2, fade[2], null, null, null);
-  svgObjects += makeIntoSVGPath(slash3, fade[3], null, null, null);
-  svgObjects += makeIntoSVGPath(marth , fade[0], null, null, null);
+  svgObjects += makeIntoSVGPath(slash1, "slash1", fade[1], null, null, null);
+  svgObjects += makeIntoSVGPath(slash2, "slash2", fade[2], null, null, null);
+  svgObjects += makeIntoSVGPath(slash3, "slash3", fade[3], null, null, null);
+  svgObjects += makeIntoSVGPath(marth , "marth" , fade[0], null, null, null);
 
   drawSVGObjects( svgObjects );
 }
 
 function gcControllerBase (base, mediumBase, darkBase) : string {
   let svgObjects = "";
-  svgObjects += makeIntoSVGPath(baseShape, base, strokeWidth, darkBase, null);
-  svgObjects += makeIntoSVGPath(leftLobe, base, strokeWidth, darkBase, null);
-  svgObjects += makeIntoSVGPath(rightLobe, base, strokeWidth, darkBase, null);
-  svgObjects += makeIntoSVGPath(lsOctagon, darkGrey, strokeWidth, darkBase, null);
-  svgObjects += makeIntoSVGPath(csOctagon, cColour, strokeWidth, darkBase, null);
-  svgObjects += makeIntoSVGCircle( dPadInset.center, dPadInset.radius, mediumBase, null, null, null);
+  svgObjects += makeIntoSVGPath(baseShape, "base", base, strokeWidth, darkBase, null);
+  svgObjects += makeIntoSVGPath(leftLobe, "lobeL", base, strokeWidth, darkBase, null);
+  svgObjects += makeIntoSVGPath(rightLobe, "lobeR", base, strokeWidth, darkBase, null);
+  svgObjects += makeIntoSVGPath(lsOctagon, "lsOctagon", darkGrey, strokeWidth, darkBase, null);
+  svgObjects += makeIntoSVGPath(csOctagon, "csOctagon", cColour, strokeWidth, darkBase, null);
+  svgObjects += makeIntoSVGCircle( dPadInset.center, dPadInset.radius, "dPadInset", mediumBase, null, null, null);
   return svgObjects;
 };
 
 
-function makeIntoSVGPath ( path : string, fillColour : string, stroke : ?number, strokeColour : ?string, offset : ?Vec2D) : string {
+function makeIntoSVGPath ( path : string, id : string,  fillColour : string, stroke : ?number, strokeColour : ?string, offset : ?Vec2D) : string {
   let strokeStyle = "";
   if (stroke !== null && stroke !== undefined && strokeColour !== null && strokeColour !== undefined) {
     strokeStyle = "stroke:"+strokeColour.substring(0,7)+";stroke-width:"+stroke+";stroke-linecap:round;stroke-linejoin:round;";
@@ -135,10 +136,10 @@ function makeIntoSVGPath ( path : string, fillColour : string, stroke : ?number,
   if (offset !== null && offset !== undefined) {
     transform = " transform=\x22translate("+offset.x+","+offset.y+")\x22";
   }
-  return "<path style=\x22"+style+"\x22 d=\x22"+path+"\x22"+transform+"/>";
+  return "<path id=\x22"+id+"\x22 style=\x22"+style+"\x22 d=\x22"+path+"\x22"+transform+"/>";
 }
 
-function makeIntoSVGCircle ( center : Vec2D, radius : number, fillColour : string, stroke : ?number, strokeColour : ?string, offset : ?Vec2D) : string {
+function makeIntoSVGCircle ( center : Vec2D, radius : number, id : string, fillColour : string, stroke : ?number, strokeColour : ?string, offset : ?Vec2D) : string {
   let strokeStyle = "";
   if (stroke !== null && stroke !== undefined && strokeColour !== null && strokeColour !== undefined) {
     strokeStyle = "stroke:"+strokeColour.substring(0,7)+";stroke-width:"+stroke+";stroke-linecap:round;stroke-linejoin:round;";
@@ -148,7 +149,7 @@ function makeIntoSVGCircle ( center : Vec2D, radius : number, fillColour : strin
   if (offset !== null && offset !== undefined) {
     transform = " transform=\x22translate("+offset.x+","+offset.y+")\x22";
   }
-  return "<circle style=\x22"+style+"\x22 cx=\x22"+center.x+"\x22 cy=\x22"+center.y+"\x22 r=\x22"+radius+"\x22"+transform+"/>";
+  return "<circle id=\x22"+id+"\x22 style=\x22"+style+"\x22 cx=\x22"+center.x+"\x22 cy=\x22"+center.y+"\x22 r=\x22"+radius+"\x22"+transform+"/>";
 }
 
 
