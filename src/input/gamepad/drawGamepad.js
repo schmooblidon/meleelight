@@ -7,14 +7,22 @@ import {nullInput} from "../input";
 // eslint-disable-next-line no-duplicate-imports
 import type {Input} from "../input";
 
-const purple = "#474d81ff";
-const mediumPurple  = "#3f4579ff";
-const darkPurple = "#32396eff";
+// controller colours
+export type ControllerColour = "purple" | "orange" | "black" | "white" | "red" | "blue" | "green";
+type Swatch = { light : string, medium : string, dark : string, fade : [string, string, string, string] };
+const swatches = {  purple : { light: "#503e8aff", medium: "#48387dff", dark:"#362a5eff", fade : ["#312656ff", "#5a50b1ff", "#665db7ff", "#7169bcff"] }
+                 ,  orange : { light: "#d69a1fff", medium: "#cd9005ff", dark:"#876114ff", fade : ["#cd9005ff", "#aa7704ff", "#b88104ff", "#c38905ff"] }
+                 ,  black  : { light: "#2b2b2bff", medium: "#3f3f3fff", dark:"#000000ff", fade : ["#717171ff", "#595959ff", "#6e6e6eff", "#8d8d8dff"] }
+                 ,  white  : { light: "#f4f4f4ff", medium: "#e1e1e1ff", dark:"#5e5e5eff", fade : ["#717171ff", "#595959ff", "#6e6e6eff", "#8d8d8dff"] }
+                 ,  red    : { light: "#b41e1eff", medium: "#a11212ff", dark:"#7e0e0eff", fade : ["#650b0bff", "#7d0e0eff", "#8a0f0fff", "#921010ff"] }
+                 ,  blue   : { light: "#293061ff", medium: "#374080ff", dark:"#293061ff", fade : ["#3f3f3fff", "#4b64b7ff", "#5a6dbdff", "#6577c3ff"] }
+                 ,  green  : { light: "#63b11aff", medium: "#5c9e1fff", dark:"#375815ff", fade : ["#416d14ff", "#4c7f17ff", "#548d1aff", "#5d9b1cff"] }
+                 };
 
+// fixed colours
 const grey = "#cdcdcdff";
 const midGrey = "#b0b0b0ff";
 const darkGrey = "#919191ff";
-
 const aColour = "#29a9a1ff";
 const darkAColour = "#1c736dff";
 const bColour = "#e73148ff";
@@ -26,6 +34,7 @@ const darkCColour = "#b68e0bff";
 
 const strokeWidth = 4;
 
+// path information
 const baseShape = "m 616.63658,582.96965 c 14.40804,41.89003 64.08591,49.66889 83.87203,-10.63167 12.40361,-37.80148 21.66045,-84.61353 5.31583,-279.96718 C 689.93825,102.49642 359.90089,104.24938 359.90089,104.24938 c 0,0 -330.03737,-1.75296 -345.92356,188.12142 -16.34462,195.35365 -7.08778,242.1657 5.31583,279.96718 19.78612,60.30056 69.46399,52.5217 83.87203,10.63167 31.89499,-92.73175 -2.95325,-245.7096 256.7357,-246.8909 259.68894,1.1813 224.8407,154.15915 256.73569,246.8909 z";
 const leftLobe = "m 276.4973,295.41336 c -2.76465,-71.45188 -57.96655,-129.4719 -129.4719,-129.47189 -71.50535,0 -129.47189,57.96654 -129.47189,129.47189 0,71.50535 49.58485,115.69615 98.14963,126.05033 30.39146,6.47956 36.32601,27.52071 40.39654,44.2119 10.04435,41.18684 40.81253,75.41679 92.25025,75.41679 51.43772,0 92.40239,-41.70374 93.13623,-93.13623 0.59065,-41.3967 -12.76165,-55.54833 -41.1592,-86.04845 -21.07174,-22.63192 -23.17545,-49.58634 -23.82966,-66.49434 z";
 const rightLobe = "m 443.30447,295.41336 c 2.76465,-71.45188 57.96655,-129.4719 129.4719,-129.47189 71.50535,0 129.47189,57.96654 129.47189,129.47189 0,71.50535 -49.58485,115.69615 -98.14963,126.05033 -30.39146,6.47956 -36.32601,27.52071 -40.39654,44.2119 -10.04435,41.18684 -40.81253,75.41679 -92.25025,75.41679 -51.43772,0 -92.40239,-41.70374 -93.13623,-93.13623 -0.59065,-41.3967 12.76165,-55.54833 41.1592,-86.04845 21.07174,-22.63192 23.17545,-49.58634 23.82966,-66.49434 z";
@@ -50,6 +59,7 @@ const dPadDown = "m 246.83538,487.05596 -7.89066,-13.44202 15.78133,0 z";
 const dPadLeft = "m 208.03455,448.25513 13.44202,-7.89066 0,15.78133 z";
 const dPadRight = "m 285.63621,448.25513 -13.44202,7.89066 0,-15.78133 z";
 
+// button/stick/trigger movement constants
 const lsXScale = 20;
 const lsYScale = -20;
 const csXScale = 10;
@@ -57,7 +67,12 @@ const csYScale = -10;
 const triggerScale = -10;
 const buttonOffset = -5;
 
-export function drawGCController( maybeInput : ?Input ) : void {
+export function drawGCController( colour : ControllerColour, maybeInput : ?Input ) : void {
+
+  const base = swatches[colour].light;
+  const mediumBase = swatches[colour].medium;
+  const darkBase = swatches[colour].dark;
+
   let input = maybeInput;
   if (maybeInput === null || maybeInput === undefined) {
     input = nullInput();
@@ -121,18 +136,18 @@ export function drawGCController( maybeInput : ?Input ) : void {
 
 function drawGCControllerBase () : void {
   let svgPaths = "";
-  svgPaths += makeIntoSVGPath(baseShape, purple, strokeWidth, darkPurple);
-  svgPaths += makeIntoSVGPath(leftLobe, purple, strokeWidth, darkPurple);
-  svgPaths += makeIntoSVGPath(rightLobe, purple, strokeWidth, darkPurple);
-  svgPaths += makeIntoSVGPath(lsOctagon, darkGrey, strokeWidth, darkPurple);
-  svgPaths += makeIntoSVGPath(csOctagon, cColour, strokeWidth, darkPurple);
+  svgPaths += makeIntoSVGPath(baseShape, base, strokeWidth, darkBase);
+  svgPaths += makeIntoSVGPath(leftLobe, base, strokeWidth, darkBase);
+  svgPaths += makeIntoSVGPath(rightLobe, base, strokeWidth, darkBase);
+  svgPaths += makeIntoSVGPath(lsOctagon, darkGrey, strokeWidth, darkBase);
+  svgPaths += makeIntoSVGPath(csOctagon, cColour, strokeWidth, darkBasz);
 
   drawSVGPaths(svgPaths, null);
 
   // d-pad inset
   fg2.beginPath();
   fg2.arc(dPadInset.center.x, dPadInset.center.y, dPadInset.radius, 0, 2 * Math.PI, false);
-  fg2.fillStyle = mediumPurple;
+  fg2.fillStyle = mediumBase;
   fg2.fill();
 
 };
