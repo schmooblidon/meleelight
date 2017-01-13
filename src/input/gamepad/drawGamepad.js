@@ -169,19 +169,6 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
 
 }
 
-/*
-const lsXScale = 45;
-const lsYScale = -45;
-const lsXConstant = 3;
-const lsYConstant = 3;
-const csXScale = 35;
-const csYScale = -35;
-const csXConstant = 3;
-const csYConstant = 3;
-const triggerScale = 40;
-*/
-
-
 function stickSquash (pos : Vec2D, center : Vec2D) : { scalingMatrix : [[number, number], [number, number]], newCenter : Vec2D } {
   const x = pos.x;
   const y = -pos.y;

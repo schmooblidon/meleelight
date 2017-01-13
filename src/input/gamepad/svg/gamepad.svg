@@ -11,7 +11,7 @@
             <text id="LText" style="font-style:normal;font-variant:normal;font-family:Impact;font-size:36;fill:#919191;fill-opacity:1;stroke:none;" x="113.21986" y="150.71756">L</text>
         </g>
         <g id="Z">
-            <path id="ZPressed" style="opacity:0;fill:#3b3280;fill-rule=evenodd;fill-opacity:1;stroke:#3b3280;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" d="m 524.67323,133.45493 4.354,-6.18763 c 55.81061,-5.247 91.32054,22.29986 117.70771,45.34506 l -11.84925,13.58268 z"/>
+            <path id="ZPressed" style="opacity:0;fill:#4e40b5;fill-rule=evenodd;fill-opacity:1;stroke:#3b3280;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" d="m 524.67323,133.45493 4.354,-6.18763 c 55.81061,-5.247 91.32054,22.29986 117.70771,45.34506 l -11.84925,13.58268 z"/>
             <path id="ZUnpressed" style="opacity:1;fill:#4e40b5;fill-rule=evenodd;fill-opacity:1;stroke:#3b3280;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" d="m 524.67323,133.45493 4.354,-6.18763 c 55.81061,-5.247 95.32054,15.29986 122.95771,37.34506 l -17.09925,21.58268 z"/>
         </g>
     </g>
