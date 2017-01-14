@@ -38,33 +38,36 @@ function stickExtremePoints(stickCardinals : StickCardinals | null) : any {
 // This function assumes that ALL coordinates have already been centered.
 // Return type: [xnew,ynew]
 function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x, y]) : [number, number] {
-  if ((x * ry - y * rx <= 0) && (x * uy - y * ux >= 0)) // quadrant 1
-  {
-    const invMat = inverseMatrix([
+  let invMat;
+  if ((x * ry - y * rx <= 0) && (x * uy - y * ux >= 0)) { // quadrant 1
+    invMat = inverseMatrix([
       [rx, ux],
       [ry, uy]
     ]);
-    return multMatVect(invMat, [x, y]);
-  } else if ((x * uy - y * ux <= 0) && (x * ly - y * lx >= 0)) // quadrant 2
-  {
-    const invMat = inverseMatrix([
+  } 
+  else if ((x * uy - y * ux <= 0) && (x * ly - y * lx >= 0)) { // quadrant 2
+    invMat = inverseMatrix([
       [-lx, ux],
       [-ly, uy]
     ]);
-    return multMatVect(invMat, [x, y]);
-  } else if ((x * ly - y * lx <= 0) && (x * dy - y * dx >= 0)) // quadrant 3
-  {
-    const invMat = inverseMatrix([
+  } 
+  else if ((x * ly - y * lx <= 0) && (x * dy - y * dx >= 0)) { // quadrant 3
+    invMat = inverseMatrix([
       [-lx, -dx],
       [-ly, -dy]
     ]);
-    return multMatVect(invMat, [x, y]);
-  } else // quadrant 4
-  {
-    const invMat = inverseMatrix([
+  } 
+  else { // quadrant 4
+    invMat = inverseMatrix([
       [rx, -dx],
       [ry, -dy]
     ]);
+  }
+
+  if (invMat === null || invMat === undefined) {
+    return [x,y];
+  }
+  else {
     return multMatVect(invMat, [x, y]);
   }
 };
@@ -214,8 +217,9 @@ export function scaleToMeleeAxes ( x: number, y: number
   return meleeAxesRescale ( [xnew,ynew], isDeadzoned );
 };
 
-// scales -1 -- 1 data to the data Melee uses for the simulation
-export function meleeRescale ( x: number, y: number, isDeadzoned : bool = false) : [number, number] {
-  const [xnew, ynew] = scaleUnitToGCAxes (x, y);
+// scales -1 -- 1 TAS data to the data Melee uses for the simulation
+export function tasRescale ( x: number, y: number, isDeadzoned : bool = false) : [number, number] {
+  const xnew = ( x+1)*255/2;
+  const ynew = ( y+1)*255/2;
   return meleeAxesRescale ( [xnew, ynew], isDeadzoned );
 };
