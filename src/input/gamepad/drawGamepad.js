@@ -7,15 +7,37 @@ import {nullInput} from "../input";
 import type {Input} from "../input";
 
 // controller colours
+const controllerColours = ["purple", "orange", "black", "white", "red", "blue", "green"];
 export type ControllerColour = "purple" | "orange" | "black" | "white" | "red" | "blue" | "green";
-type Swatch = { light : string, medium : string, dark : string, fade : [string, string, string, string] };
-const swatches = {  purple : { light: "#503e8a", medium: "#48387d", dark:"#362a5e", fade : ["#312656", "#5a50b1", "#665db7", "#7169bc"] }
-                 ,  orange : { light: "#d69a1f", medium: "#cd9005", dark:"#876114", fade : ["#cd9005", "#aa7704", "#b88104", "#c38905"] }
-                 ,  black  : { light: "#2b2b2b", medium: "#3f3f3f", dark:"#000000", fade : ["#717171", "#595959", "#6e6e6e", "#8d8d8d"] }
-                 ,  white  : { light: "#f4f4f4", medium: "#e1e1e1", dark:"#5e5e5e", fade : ["#717171", "#595959", "#6e6e6e", "#8d8d8d"] }
-                 ,  red    : { light: "#b41e1e", medium: "#a11212", dark:"#7e0e0e", fade : ["#650b0b", "#7d0e0e", "#8a0f0f", "#921010"] }
-                 ,  blue   : { light: "#293061", medium: "#374080", dark:"#293061", fade : ["#3f3f3f", "#4b64b7", "#5a6dbd", "#6577c3"] }
-                 ,  green  : { light: "#63b11a", medium: "#5c9e1f", dark:"#375815", fade : ["#416d14", "#4c7f17", "#548d1a", "#5d9b1c"] } };
+type Swatch = { light : string, base : string, medium : string, dark : string, fade : [string, string, string, string] };
+const swatches = {  purple : { light: "#5d4d96", base: "#503e8a", medium: "#48387d", dark:"#362a5e", fade : ["#312656", "#5a50b1", "#665db7", "#7169bc"] }
+                 ,  orange : { light: "#d9a63e", base: "#d69a1f", medium: "#cd930e", dark:"#876114", fade : ["#876114", "#aa7704", "#b88104", "#c38905"] }
+                 ,  black  : { light: "#373737", base: "#2b2b2b", medium: "#242424", dark:"#000000", fade : ["#717171", "#595959", "#6e6e6e", "#8d8d8d"] }
+                 ,  white  : { light: "#f5f5f5", base: "#eeeeee", medium: "#e1e1e1", dark:"#b3b3b3", fade : ["#717171", "#595959", "#6e6e6e", "#8d8d8d"] }
+                 ,  red    : { light: "#c92f2f", base: "#b41e1e", medium: "#ad0d0d", dark:"#7e0e0e", fade : ["#650b0b", "#7d0e0e", "#8a0f0f", "#921010"] }
+                 ,  blue   : { light: "#49549c", base: "#3c468c", medium: "#374080", dark:"#293061", fade : ["#2d346a", "#4b64b7", "#5a6dbd", "#6577c3"] }
+                 ,  green  : { light: "#68bb1b", base: "#63b11a", medium: "#5ea120", dark:"#375815", fade : ["#416d14", "#4c7f17", "#548d1a", "#5d9b1c"] } };
+
+
+function cycleColour( colour : ControllerColour, forward : bool) : ControllerColour {
+  const lg = controllerColours.length;
+  let newColour = "purple";
+  for (let i = 0; i < lg; i++) {
+    if (controllerColours[i] === colour) {
+      if (forward) {
+        newColour = i === (lg-1) ? controllerColours[0] : controllerColours[i+1];
+        break;
+      }
+      else {
+        newColour = i === 0 ? controllerColours[lg-1] : controllerColours[i-1];
+        break;
+      }
+    }
+  }
+  return newColour;
+};
+
+let gamepadColour = "purple";
 
 // fixed colours
 const grey = "#cdcdcd";
@@ -31,24 +53,29 @@ const cColour = "#e7c518";
 const darkCColour = "#b68e0b";
 const highlight = "#fafe90";
 
-export function updateGamepadSVGColour(i : number, colour : ControllerColour) {
+export function updateGamepadSVGColour(i : number, colour : ControllerColour) : void {
   const svg = document.getElementById("gamepadSVG"); // not yet using per-player gamepads
   const light  = swatches[colour].light;
+  const base   = swatches[colour].base;
   const medium = swatches[colour].medium;
   const dark   = swatches[colour].dark;
   const fade   = swatches[colour].fade;
 
+  gamepadColour = colour;
+
   const main  = svg.getElementById("main");
   const lobeL = svg.getElementById("lobeL");
   const lobeR = svg.getElementById("lobeR");
-  main.style.fill = light;
+  main.style.fill = base;
   main.style.stroke = dark;
-  lobeL.style.fill = light;
-  lobeL.stile.stroke = dark;
-  lobeR.style.fill = light;
+  lobeL.style.fill = base;
+  lobeL.style.stroke = dark;
+  lobeR.style.fill = base;
   lobeR.style.stroke = dark;
-  svg.getElementById("lsOctagon").style.stroke = dark;
-  svg.getElementById("csOctagon").style.stroke = dark;
+  svg.getElementById("lsHighlight").style.fill = light;
+  svg.getElementById("aHighlight").style.fill = light;
+  svg.getElementById("lsOctagon").style.stroke = colour === "white"? fade[2] : dark;
+  svg.getElementById("csOctagon").style.stroke = colour === "white"? fade[3] : dark;
   svg.getElementById("dPadInset").style.fill = medium;  
   svg.getElementById("marth" ).style.fill = fade[0];
   svg.getElementById("slash1").style.fill = fade[1];
@@ -56,7 +83,11 @@ export function updateGamepadSVGColour(i : number, colour : ControllerColour) {
   svg.getElementById("slash3").style.fill = fade[3];
 };
 
-export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
+export function cycleGamepadColour( i : number, forward : bool) : void {
+  updateGamepadSVGColour(i, cycleColour(gamepadColour, forward)); 
+}
+
+export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   let input = maybeInput;
   if (input === null || input === undefined) {
     input = nullInput();
