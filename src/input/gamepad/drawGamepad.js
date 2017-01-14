@@ -163,10 +163,14 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
   const cSM = cStickSquash.scalingMatrix;
   const lNC = lStickSquash.newCenter;
   const cNC = cStickSquash.newCenter;
+  const cStickAngle = 180/Math.PI*Math.atan2(-input.csY, input.csX);
+  const cRectScale = 20*Math.sqrt(Math.pow(input.csX,2)+Math.pow(input.csY,2));
 
   svg.getElementById("lStick").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(48*input.lsX))+","+(lNC.y+(-48*input.lsY))+")");
+  svg.getElementById("lStickShadow").setAttribute("transform", "translate("+ (-0.7*48*input.lsX)+","+(0.7*48*input.lsY)+")");
   svg.getElementById("cStick").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(43*input.csX))+","+(cNC.y+(-43*input.csY))+")");
-
+  svg.getElementById("cStickShadow").setAttribute("transform", "translate("+(-0.45*43*input.csX)+","+(0.45*43*input.csY)+")");
+  svg.getElementById("cStickShadowRect").setAttribute("transform", "rotate("+cStickAngle+","+(csCenterX) +","+(csCenterY)+") translate("+((1-cRectScale)*csCenterX)+",0) scale("+cRectScale+",1)"); // translate("+((1-cScale)*csCenterX)+",0)        "+(0.55*43*input.csX) +","+(-0.55*43*input.csY)+")");
 }
 
 function stickSquash (pos : Vec2D, center : Vec2D) : { scalingMatrix : [[number, number], [number, number]], newCenter : Vec2D } {
