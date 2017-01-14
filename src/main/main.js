@@ -40,7 +40,7 @@ import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCen
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
-import {updateGamepadSVGState} from "../input/gamepad/drawGamepad";
+import {updateGamepadSVGState, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 /*globals performance*/
 
 export const holiday = 1;
@@ -748,6 +748,13 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   }
 
   updateGamepadSVGState(i, tempBuffer[0]);
+
+  if (tempBuffer[0].x && !tempBuffer[1].x && tempBuffer[0].du ) {
+    cycleGamepadColour(i,true);
+  }
+  if (tempBuffer[0].y && !tempBuffer[1].y && tempBuffer[0].du ) {
+    cycleGamepadColour(i,false);
+  }
 
   return tempBuffer;
 
