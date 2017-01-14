@@ -1,13 +1,12 @@
-var express = require('express');
-var app = express();
-app.use(express.static('./dist'));
 
-app.get('/', function(req, res) {
-  res.redirect('/meleelight.html');
+const DeepstreamServer = require('deepstream.io')
+const C = DeepstreamServer.constants;
+
+const server = new DeepstreamServer({
+  host: 'localhost',
+  port: 6020,
+  logLevel:'DEBUG'
 });
+server.set('logLevel', 'ERROR');
 
-app.set('port', (process.env.PORT || 5000));
-
-const appServer = app.listen((process.env.PORT || 5000));
-
-
+server.start();

@@ -9,7 +9,8 @@
     "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
     "release": "node bin/release.js",
     "serve": "node app",
-    "postinstall": " npm run animations && npm run build "
+    "postinstall": " npm run animations && npm run build ",
+    "rebuild": "./node_modules/.bin/electron-rebuild  -w uws"
   },
   "engines": {
     "node": "7.2.0",
@@ -37,6 +38,10 @@
     "can": "^3.2.2",
     "deepstream.io": "^2.1.0",
     "deepstream.io-client-js": "^2.0.0",
+    "electron": "^1.4.13",
+    "electron-menu": "^1.0.0",
+    "electron-rebuild": "^1.5.6",
+    "electron-spawn": "^5.0.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-loader": "^1.6.1",
@@ -54,6 +59,7 @@
     "pako": "^1.0.4",
     "peer": "^0.2.8",
     "sw-precache-webpack-plugin": "^0.6.3",
+    "uws": "^0.12.0",
     "webpack": "^1.13.3",
     "webpack-notifier": "^1.4.1",
     "yargs": "^6.4.0"
