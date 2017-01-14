@@ -1,6 +1,6 @@
 
 import {Vec2D} from "../../main/util/Vec2D";
-import {multMatVect} from "../../main/linAlg";
+import {multMatVect, norm, scalarProd} from "../../main/linAlg";
 import {nullInput} from "../input";
 
 // eslint-disable-next-line no-duplicate-imports
@@ -247,9 +247,27 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   const lScale = 57;
   const cScale = 47;
   const dScale = 5;
+
+  let lStickSquashVector = new Vec2D(input.lsX, input.lsY);
+  const lStickSquashVectorNorm = norm(lStickSquashVector);
+  if (lStickSquashVectorNorm > 1) {
+    lStickSquashVector = scalarProd(1/(1.5*lStickSquashVectorNorm), lStickSquashVector);
+  }
+  else {
+    lStickSquashVector = scalarProd(1/1.5, lStickSquashVector);
+  }
+
+  let cStickSquashVector = new Vec2D(input.csX, input.csY);
+  const cStickSquashVectorNorm = norm(cStickSquashVector);
+  if (cStickSquashVectorNorm > 1) {
+    cStickSquashVector = scalarProd(1/(1.6*cStickSquashVectorNorm), cStickSquashVector);
+  }
+  else {
+    cStickSquashVector = scalarProd(1/1.6, cStickSquashVector);
+  }
  
-  const lStickSquash = stickSquash ( new Vec2D(input.lsX /1.5, input.lsY /1.5), new Vec2D (lsCenterX, lsCenterY) );
-  const cStickSquash = stickSquash ( new Vec2D(input.csX /1.6, input.csY /1.6), new Vec2D (csCenterX, csCenterY) );
+  const lStickSquash = stickSquash ( lStickSquashVector, new Vec2D (lsCenterX, lsCenterY) );
+  const cStickSquash = stickSquash ( cStickSquashVector, new Vec2D (csCenterX, csCenterY) );
   const dPadSquash   = stickSquash ( new Vec2D(dPadAxes.x/2.5, dPadAxes.y/2.5), new Vec2D ( dCenterX,  dCenterY));
 
   const lSM = lStickSquash.scalingMatrix;
@@ -260,7 +278,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   const dNC = dPadSquash.newCenter  ;
 
   const cStickAngle = 180/Math.PI*Math.atan2(-input.csY, input.csX);
-  const cRectScale = 20*Math.sqrt(Math.pow(input.csX,2)+Math.pow(input.csY,2));
+  const cRectScale = 20* norm (new Vec2D (input.csX, input.csY));
 
   const anyLSInput = Math.abs(input.lsX) > 0.01 || Math.abs(input.lsY) > 0.01;
 

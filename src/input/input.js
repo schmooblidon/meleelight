@@ -6,7 +6,7 @@ import {keyMap} from "../settings";
 import {playing} from "../main/main";
 import {buttonState, triggerValue, stickValue, dPadState } from "./gamepad/retrieveGamepadInputs";
 import {gamepadInfoList} from "./gamepad/gamepadInfoList";
-import {scaleToGCTrigger, scaleToMeleeAxes, scaleToUnitAxes} from "./meleeInputs";
+import {scaleToGCTrigger, scaleToMeleeAxes, scaleToUnitAxes, tasRescale} from "./meleeInputs";
 import {runCalibration} from "./gamepad/gamepadCalibration";
 import $ from 'jquery';
 
@@ -177,12 +177,14 @@ function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : {[key
   const cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[
     keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
 
-  input.lsX = lstickX;
-  input.lsY = lstickY;
+  const rescaledLStick = tasRescale(lstickX, lstickY, true);
+  input.lsX = rescaledLStick[0];
+  input.lsY = rescaledLStick[1];
   input.rawX = lstickX;
   input.rawY = lstickY;
-  input.csX = cstickX;
-  input.csY = cstickY;
+  const rescaledCStick = tasRescale(cstickX, cstickY, true);
+  input.csX = rescaledCStick[0];
+  input.csY = rescaledCStick[1];
   input.lA  = lAnalog;
   input.rA  = rAnalog;
   input.s   = keys[keyMap.s[0]] || keys[keyMap.s[1]];
