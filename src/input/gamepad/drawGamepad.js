@@ -220,9 +220,14 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
 function stickSquash (pos : Vec2D, center : Vec2D) : { scalingMatrix : [[number, number], [number, number]], newCenter : Vec2D } {
   const x = pos.x;
   const y = -pos.y;
-  const r = Math.sqrt(x*x+y*y);
-  const f = 1-r;
-  const scalingMatrix = [[1+(f-1)*x*x/r*r, (f-1)*x*y/r*r], [(f-1)*x*y/r*r, (1+(f-1)*y*y/r*r)]];
-  const mult = multMatVect(scalingMatrix, [center.x, center.y]);
-  return { scalingMatrix : scalingMatrix, newCenter : new Vec2D( center.x - mult[0], center.y - mult[1]) };
+  const r = Math.sqrt(x*x+y*y);  
+  if (r < 0.01) {
+    return { scalingMatrix : [[1,0],[0,1]], newCenter : new Vec2D(0,0) };
+  }
+  else {
+    const f = Math.max(0,1-r); // scaling factor
+    const scalingMatrix = [[1+(f-1)*x*x/r*r, (f-1)*x*y/r*r], [(f-1)*x*y/r*r, (1+(f-1)*y*y/r*r)]];
+    const mult = multMatVect(scalingMatrix, [center.x, center.y]);
+    return { scalingMatrix : scalingMatrix, newCenter : new Vec2D( center.x - mult[0], center.y - mult[1]) };
+  }
 }
