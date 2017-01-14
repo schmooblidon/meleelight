@@ -114,8 +114,10 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
   const dpadD = svg.getElementById("dd");
   const dpadL = svg.getElementById("dl");
   const dpadR = svg.getElementById("dr");
+  const dPadAxes = new Vec2D(0,0);
 
   if (input.du) {
+    dPadAxes.y = 1;
     dpadU.style.fill = highlight;
     dpadU.style.stroke = highlight;
   }
@@ -124,6 +126,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
     dpadU.style.stroke = midGrey;
   }
   if (input.dd) {
+    dPadAxes.y = -1;
     dpadD.style.fill = highlight;
     dpadD.style.stroke = highlight;
   }
@@ -132,6 +135,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
     dpadD.style.stroke = midGrey;
   }
   if (input.dl) {
+    dPadAxes.x = -1;
     dpadL.style.fill = highlight;
     dpadL.style.stroke = highlight;
   }
@@ -140,6 +144,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
     dpadL.style.stroke = midGrey;
   }
   if (input.dr) {
+    dPadAxes.x = 1;
     dpadR.style.fill = highlight;
     dpadR.style.stroke = highlight;
   }
@@ -147,30 +152,69 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) {
     dpadR.style.fill = midGrey;
     dpadR.style.stroke = midGrey;
   }
+
+  const dPadNorm = Math.sqrt(Math.pow(dPadAxes.x,2)+Math.pow(dPadAxes.y,2));
+  if (dPadNorm > 0.1) {
+    dPadAxes.x *= 1/dPadNorm;
+    dPadAxes.y *= 1/dPadNorm;
+  }
   
   svg.getElementById("R").setAttribute("transform", "translate(0,"+(40*Math.pow(input.rA,4))+")");
   svg.getElementById("L").setAttribute("transform", "translate(0,"+(40*Math.pow(input.lA,4))+")");
+
+  // now some 3D effects
 
   const lsCenterX = 141.93683;
   const lsCenterY = 297.63986;
   const csCenterX = 473.06235;
   const csCenterY = 448.25513;
+  const dCenterX = 246.83537;
+  const dCenterY = 448.25513;
+
+  const lScale = 57;
+  const cScale = 47;
+  const dScale = 5;
  
-  const lStickSquash = stickSquash ( new Vec2D(input.lsX/1.5, input.lsY/1.5), new Vec2D (lsCenterX, lsCenterY) );
-  const cStickSquash = stickSquash ( new Vec2D(input.csX/1.6, input.csY/1.6), new Vec2D (csCenterX, csCenterY) );
+  const lStickSquash = stickSquash ( new Vec2D(input.lsX /1.5, input.lsY /1.5), new Vec2D (lsCenterX, lsCenterY) );
+  const cStickSquash = stickSquash ( new Vec2D(input.csX /1.6, input.csY /1.6), new Vec2D (csCenterX, csCenterY) );
+  const dPadSquash   = stickSquash ( new Vec2D(dPadAxes.x/2.5, dPadAxes.y/2.5), new Vec2D ( dCenterX,  dCenterY));
 
   const lSM = lStickSquash.scalingMatrix;
   const cSM = cStickSquash.scalingMatrix;
+  const dSM = dPadSquash.scalingMatrix;
   const lNC = lStickSquash.newCenter;
   const cNC = cStickSquash.newCenter;
+  const dNC = dPadSquash.newCenter  ;
+
   const cStickAngle = 180/Math.PI*Math.atan2(-input.csY, input.csX);
   const cRectScale = 20*Math.sqrt(Math.pow(input.csX,2)+Math.pow(input.csY,2));
 
-  svg.getElementById("lStick").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(48*input.lsX))+","+(lNC.y+(-48*input.lsY))+")");
-  svg.getElementById("lStickShadow").setAttribute("transform", "translate("+ (-0.7*48*input.lsX)+","+(0.7*48*input.lsY)+")");
-  svg.getElementById("cStick").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(43*input.csX))+","+(cNC.y+(-43*input.csY))+")");
-  svg.getElementById("cStickShadow").setAttribute("transform", "translate("+(-0.45*43*input.csX)+","+(0.45*43*input.csY)+")");
-  svg.getElementById("cStickShadowRect").setAttribute("transform", "rotate("+cStickAngle+","+(csCenterX) +","+(csCenterY)+") translate("+((1-cRectScale)*csCenterX)+",0) scale("+cRectScale+",1)"); // translate("+((1-cScale)*csCenterX)+",0)        "+(0.55*43*input.csX) +","+(-0.55*43*input.csY)+")");
+  svg.getElementById("lStick").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(lScale*input.lsX))+","+(lNC.y+(-lScale*input.lsY))+")");
+  svg.getElementById("lStickShadow").setAttribute("transform", "translate("+ (-0.6*lScale*input.lsX)+","+(0.6*lScale*input.lsY)+")");
+  svg.getElementById("lStickDepth").setAttribute("transform", "translate("+ (-0.15*lScale*input.lsX)+","+(0.15*lScale*input.lsY)+")");
+  svg.getElementById("lStickCircle1").setAttribute("transform", "translate("+ (0.19*lScale*input.lsX)+","+(-0.19*lScale*input.lsY)+")");
+  svg.getElementById("lStickCircle2").setAttribute("transform", "translate("+ (0.13*lScale*input.lsX)+","+(-0.13*lScale*input.lsY)+")");
+  svg.getElementById("lStickCircle3").setAttribute("transform", "translate("+ (0.05*lScale*input.lsX)+","+(-0.05*lScale*input.lsY)+")");
+  svg.getElementById("cStick").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(cScale*input.csX))+","+(cNC.y+(-cScale*input.csY))+")");
+  svg.getElementById("cStickShadow").setAttribute("transform", "translate("+(-0.45*cScale*input.csX)+","+(0.45*cScale*input.csY)+")");
+  svg.getElementById("cStickShadowRect").setAttribute("transform", "rotate("+cStickAngle+","+(csCenterX) +","+(csCenterY)+") translate("+((1-cRectScale)*csCenterX)+",0) scale("+cRectScale+",1)");
+  svg.getElementById("dPad").setAttribute("transform", "matrix("+dSM[0][0]+","+dSM[0][1]+","+dSM[1][0]+","+dSM[1][1]+","+(dNC.x+(dScale*dPadAxes.x))+","+(dNC.y+(-dScale*dPadAxes.y))+")");
+  svg.getElementById("dPadShapeDepth1").setAttribute("transform", "translate("+ (-1.4*dScale*dPadAxes.x)+","+(1.4*dScale*dPadAxes.y)+")");
+  svg.getElementById("dPadShapeDepth2").setAttribute("transform", "translate("+ (-0.7*dScale*dPadAxes.x)+","+(0.7*dScale*dPadAxes.y)+")");
+  if (dPadAxes !== 0 || dPadAxes.y !== 0) {
+    svg.getElementById("dPadShapeDepth1").style.opacity = 1;
+  }
+  else {
+    svg.getElementById("dPadShapeDepth1").style.opacity = 0;
+  }
+  if (dPadAxes.x !== 0 && dPadAxes.y !== 0) {
+    svg.getElementById("dPadShapeDepth2").style.opacity = 1;
+  }
+  else {
+    svg.getElementById("dPadShapeDepth2").style.opacity = 0;
+  }
+
+
 }
 
 function stickSquash (pos : Vec2D, center : Vec2D) : { scalingMatrix : [[number, number], [number, number]], newCenter : Vec2D } {
