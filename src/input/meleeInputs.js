@@ -88,17 +88,17 @@ function toInterval (x : number)  : number{
 // Analog triggers.
 
 // t = trigger input
-export function scaleToGCTrigger ( t : number, offset : number, scale : number)  : number{
-    const tnew = scale*(t + offset);
-    if (tnew > 1){
-      return 1;
-    }
-    else if (tnew < 0.3){
-      return 0;
-    }
-    else {
-      return tnew;
-    }
+export function scaleToGCTrigger ( t : number, offset : number, scale : number) : number {
+  const tnew = Math.abs(scale) < 0.001 ? 0 : (t + offset)/scale;
+  if (tnew > 1){
+    return 1;
+  }
+  else if (tnew < 0.3){
+    return 0;
+  }
+  else {
+    return tnew;
+  }
 };
 
 
