@@ -12,6 +12,8 @@ import {
   , finishGame
   , ports
   , starting
+  , pause
+  , gameEnd
 } from "./main";
 import {deepCopyObject} from "./util/deepCopyObject";
 import pako from "pako";
@@ -55,7 +57,7 @@ function decompressObject(obj) {
 }
 export function saveGameState(input) {
   if (!playingReplay) {
-    if (playing && replaysOn && !starting) {
+    if (playing && replaysOn && !starting && !pause[0][0]) {
       const now = performance.now();
       const frameDelay = now - lastFrametime;
       lastFrametime = now;
@@ -84,7 +86,7 @@ export function saveGameState(input) {
       frameCount++;
 
     }
-    if (!playing && (frameCount > 0) && replaysOn) {
+    if (!playing && (frameCount > 0) && replaysOn && gameEnd) {
       frameCount = 0;
       const headerFrame = {};
       const replayname = 'replay-' + new Date() + '.json';

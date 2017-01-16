@@ -58,7 +58,7 @@ export let endTargetGame = false;
 
 export let creditsPlayer = 0;
 
-let gameEnd = false;
+export let gameEnd = false;
 let controllerResetCountdowns = [125,125,125,125];
 let keyboardOccupied = false;
 
