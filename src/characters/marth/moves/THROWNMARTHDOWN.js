@@ -12,6 +12,9 @@ export default  {
   init: function (p, input) {
     player[p].actionState = "THROWNMARTHDOWN";
     const grabbedBy = player[p].phys.grabbedBy;
+    if(grabbedBy === -1){
+      return;
+    }
     if (grabbedBy < p) {
       player[p].timer = -1;
     }

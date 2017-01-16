@@ -87,7 +87,7 @@ if (localStorage.getItem('pickedServer') === 'america' || localStorage.getItem('
   $("#europe").attr('checked', false);
   $("#localGame").attr('checked', false);
   localStorage.setItem('pickedServer', 'america');
-} else if (localStorage.getItem('pickedServer') === 'america') {
+} else if (localStorage.getItem('pickedServer') === 'europe') {
   $("#europe").attr('checked', true);
   $("#america").attr('checked', false);
   $("#localGame").attr('checked', false);
@@ -112,6 +112,11 @@ export function logIntoServer() {
 function getPlayerStatusRecord(playerID) {
   return playerStatusRecords[playerID];
 }
+
+const exclusions = ["charAttributes",
+  "charHitboxes",
+  "prevFrameHitboxes"];
+
 function startRoom() {
   GAME_ID = ds.getUid().replace("-", "");
   playerID = ds.getUid().replace("-", "");
@@ -145,16 +150,14 @@ function startRoom() {
     playerStatusRecords[playerID] = statusRecord.get();
     $('#mpcode').prop("value", GAME_ID);
 
-    let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1]);
-    delete playerPayload.charAttributes;
-    delete playerPayload.charHitboxes;
-    delete playerPayload.prevFrameHitboxes;
+    let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1],exclusions);
+
     statusRecord.set(GAME_ID + 'player/',
         {
           name: playerID,
           playerSlot: ports - 1,
           inputBuffer: nullInput(),
-          playerInfo: playerPayload
+          position: {}
         });
     //TODO iterate over ports to establish inital group
 
@@ -191,7 +194,7 @@ function startRoom() {
 
     ds.event.subscribe(GAME_ID + 'player/', answer => {
 
-      const data = JSON.parse(pako.inflate(answer.bstring, {to: 'string', level: 9}));
+      const data = JSON.parse(answer.bstring);
       if (data) {
         if (data.playerID !== playerID) {
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
@@ -203,7 +206,7 @@ function startRoom() {
             lastRecievedPacket = now;
             updateGameTickDelay(frameDelay);
             saveNetworkInputs(data.playerSlot, data.inputBuffer);
-            player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+             player[data.playerSlot].phys.pos =  data.position;
           }
         }
       }
@@ -281,19 +284,16 @@ export function setNetInputFlag(name, val) {
 
 function sendInputsOverNet(inputBuffer, playerSlot) {
 
-  //   console.log("sending inputs");
-  //dont be lazy like me;
-  let playerPayload = Object.assign({}, player[playerSlot]);
-  delete playerPayload.charAttributes;
-  delete playerPayload.charHitboxes;
-  delete playerPayload.prevFrameHitboxes;
+
+  // let playerPayload = deepCopyObject(true,{}, player[playerSlot],exclusions);
+
   let payload = {
     "playerID": playerID,
     "playerSlot": playerSlot,
     "inputBuffer": inputBuffer,
-    "playerInfo": playerPayload
+    "position": player[playerSlot].phys.pos
   };
-  ds.event.emit(HOST_GAME_ID + 'player/', {"bstring": pako.deflate(JSON.stringify(payload), {to: 'string', level: 9})});
+  ds.event.emit(HOST_GAME_ID + 'player/', {"bstring": JSON.stringify(payload)});
 
 }
 
@@ -414,17 +414,15 @@ function connect(record, name) {
             "currentPlayers": currentPlayers,
             "characterSelections": characterSelections
           });
-          let playerPayload = Object.assign({}, player[ports]);
-          delete playerPayload.charAttributes;
-          delete playerPayload.charHitboxes;
-          delete playerPayload.prevFrameHitboxes;
+          // let playerPayload = deepCopyObject(true,{}, player[ports],exclusions);
+
           let payload = {
             "playerID": playerID,
             "playerSlot": ports - 1,
             "inputBuffer": playerInputBuffer,
-            "playerInfo": playerPayload
+            "position": player[ports].phys.pos
           };
-          ds.event.emit(name + 'player/', {"bstring": pako.deflate(JSON.stringify(payload), {to: 'string', level: 9})});
+          ds.event.emit(name + 'player/', {"bstring": JSON.stringify(payload)});
           // ds.event.emit(name + 'charSelection/', {"playerSlot": ports -1, "charSelected": characterSelections[0]});
 
           ds.event.subscribe(name + 'playerStatus/', match => {
@@ -439,7 +437,7 @@ function connect(record, name) {
 
           ds.event.subscribe(name + 'player/', answer => {
 
-            const data = JSON.parse(pako.inflate(answer.bstring, {to: 'string', level: 9}));
+            const data = JSON.parse(answer.bstring);
             if (data) {
               if (data.playerID !== playerID) {
                 if (data.inputBuffer && (data.playerSlot !== undefined)) {
@@ -451,7 +449,7 @@ function connect(record, name) {
                   lastRecievedPacket = now;
                   updateGameTickDelay(frameDelay);
                   saveNetworkInputs(data.playerSlot, data.inputBuffer);
-                  player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+                   player[data.playerSlot].phys.pos =   data.position;
                 }
               }
             }

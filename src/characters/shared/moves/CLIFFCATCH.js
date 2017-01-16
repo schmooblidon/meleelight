@@ -36,8 +36,12 @@ export default {
     player[p].timer++;
     playSounds("CLIFFCATCH",p);
     if (!actionStates[characterSelections[p]].CLIFFCATCH.interrupt(p,input)){
-      const x = activeStage.ledge[player[p].phys.onLedge][1] ? activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x : activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
-      const y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
+      const onLedge = player[p].phys.onLedge;
+      if(onLedge === -1){
+        return;
+      }
+      const x = activeStage.ledge[onLedge][1] ? activeStage.box[activeStage.ledge[onLedge][0]].max.x : activeStage.box[activeStage.ledge[onLedge][0]].min.x;
+      const y = activeStage.box[activeStage.ledge[onLedge][0]].max.y;
       player[p].phys.pos = new Vec2D(x+(actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][1]);
     }
   },
