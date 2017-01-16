@@ -2,18 +2,8 @@ import {characterSelections, player, gameMode, versusMode, playerType} from "mai
 import FOXMOVES from "characters/fox/moves/index";
 import PUFFMOVES from "characters/puff/moves/index";
 import MARTHMOVES from "characters/marth/moves/index";
-import GRAB from "characters/fox/moves/GRAB";
-import KNEEBEND from "characters/shared/moves/KNEEBEND";
-import DASH from "characters/shared/moves/DASH";
-import SMASHTURN from "characters/shared/moves/SMASHTURN";
-import TILTTURN from "characters/shared/moves/TILTTURN";
-import WALK from "characters/shared/moves/WALK";
-import WAIT from "characters/shared/moves/WAIT";
-import LANDING from "characters/shared/moves/LANDING";
-import LANDINGATTACKAIRB from "characters/shared/moves/LANDINGATTACKAIRB";
 import JUMPAERIALB from "characters/shared/moves/JUMPAERIALB";
 import JUMPAERIALF from "characters/shared/moves/JUMPAERIALF";
-import FALL from "characters/shared/moves/FALL";
 import {sounds} from "main/sfx";
 import {intangibility, actionSounds} from "main/characters";
 import {drawVfx} from "main/vfx/drawVfx";
