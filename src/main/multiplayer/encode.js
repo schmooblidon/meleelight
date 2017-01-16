@@ -73,7 +73,7 @@ function bytesToInput( bytes ){
 }
 
 function boolsToByte( b0, b1, b2, b3, b4, b5, b6, b7) {
-  return b0?128:0 + b1?64:0 + b2?32:0 + b3?16:0 + b4?8:0 + b5?4:0 + b6?2:0 + b7?2:0;
+  return b0?128:0 + b1?64:0 + b2?32:0 + b3?16:0 + b4?8:0 + b5?4:0 + b6?2:0 + b7?1:0;
 }
 
 function byteToBools( byte ) {
@@ -105,10 +105,10 @@ function stringToBytes(string) {
                     , string.charCodeAt(1)
                     , string.charCodeAt(2)
                     , string.charCodeAt(3) ];
-  return bytePairs.map(bytePairToByte).reduce((b0, b1) => b0.concat(b1));
+  return bytePairs.map(bytePairToBytes).reduce((b0, b1) => b0.concat(b1));
 }
 
-function bytePairToByte(bytePair) {
+function bytePairToBytes(bytePair) {
   const byte0 = bytePair % 256;
   return [byte0, Math.round((bytePair-byte0) / 256)];
 }
