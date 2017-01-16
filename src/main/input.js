@@ -711,7 +711,7 @@ export function scaleToGCTrigger ( t, offset, scale ) {
       return 0;
     }
     else {
-      return tnew;
+      return meleeRound(tnew);
     }
 };
 
@@ -785,7 +785,7 @@ function unitRetract ( [x,y] ) {
   }
 };
 
-function meleeRound (x) {
+export function meleeRound (x) {
   return Math.round(steps*x)/steps;
 };
 

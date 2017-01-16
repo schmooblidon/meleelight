@@ -1,6 +1,7 @@
 /*eslint-disable*/
 import $ from 'jquery';
 import {nullInputs, nullInput} from "../input";
+import {encodeInput, decodeInput} from "./encode";
 import deepstream from 'deepstream.io-client-js';
 import {
   setPlayerType,
@@ -156,8 +157,9 @@ function startRoom() {
         {
           name: playerID,
           playerSlot: ports - 1,
-          inputBuffer: nullInput(),
-          position: {}
+          inputData: String.fromCharCode(0,0,32639,32639),
+          playerInfo: playerPayload
+ 
         });
     //TODO iterate over ports to establish inital group
 
@@ -197,6 +199,7 @@ function startRoom() {
       const data = JSON.parse(answer.bstring);
       if (data) {
         if (data.playerID !== playerID) {
+
           if (data.inputBuffer && (data.playerSlot !== undefined)) {
             const now = performance.now();
             let frameDelay = now - lastRecievedPacket;
@@ -205,8 +208,9 @@ function startRoom() {
             }
             lastRecievedPacket = now;
             updateGameTickDelay(frameDelay);
-            saveNetworkInputs(data.playerSlot, data.inputBuffer);
+            saveNetworkInputs(data.playerSlot, data.inputData);
              player[data.playerSlot].phys.pos =  data.position;
+
           }
         }
       }
@@ -262,7 +266,7 @@ function _onLoggedIn() {
   startRoom();
 
   $("#joinServer").on('click', (e) => {
-    var destId = prompt("Hosts's peer ID:");
+    var destId = prompt("Host's peer ID:");
     connectToUser(destId);
   });
 }
@@ -284,14 +288,12 @@ export function setNetInputFlag(name, val) {
 
 function sendInputsOverNet(inputBuffer, playerSlot) {
 
-
-  // let playerPayload = deepCopyObject(true,{}, player[playerSlot],exclusions);
-
   let payload = {
     "playerID": playerID,
     "playerSlot": playerSlot,
-    "inputBuffer": inputBuffer,
+    "inputBuffer": encodeInput(inputBuffer),
     "position": player[playerSlot].phys.pos
+
   };
   ds.event.emit(HOST_GAME_ID + 'player/', {"bstring": JSON.stringify(payload)});
 
@@ -305,9 +307,9 @@ export function updateNetworkInputs(inputBuffer, playerSlot) {
 
 }
 
-export function saveNetworkInputs(playerSlot, inputBuffer) {
-  playerInputBuffer[playerSlot][0] = inputBuffer;
+export function saveNetworkInputs(playerSlot, inputData) {
 
+  playerInputBuffer[playerSlot][0] = decodeInput(inputData);  
 }
 
 export function retrieveNetworkInputs(playerSlot) {
@@ -381,12 +383,13 @@ function connect(record, name) {
   ds.record.getRecord(name + 'totalPlayers').whenReady(totalPlayerRecord => {
 
 
+
     const hostStateRecord = totalPlayerRecord.get();
     if (hostStateRecord.totalPlayers > 3) {
-      alert("Host room is full");
+      alert("Host room is full.");
+ 
 
     } else {
-
 
       record.whenReady(data => {
 
@@ -419,7 +422,7 @@ function connect(record, name) {
           let payload = {
             "playerID": playerID,
             "playerSlot": ports - 1,
-            "inputBuffer": playerInputBuffer,
+            "inputBuffer": encodeInput(playerInputBuffer),
             "position": player[ports].phys.pos
           };
           ds.event.emit(name + 'player/', {"bstring": JSON.stringify(payload)});
@@ -480,6 +483,7 @@ function connect(record, name) {
             }
           });
           peerConnections[name] = record;
+
         }
       });
     }
