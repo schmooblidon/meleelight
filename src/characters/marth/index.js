@@ -5,6 +5,7 @@ import baseActionStates from "../shared/moves";
 import {CHARIDS} from "main/characters";
 import {actionStates} from "../../physics/actionStateShortcuts";
 import   moves from "./moves";
+import {Character} from "../Character";
 
 const Marth = {
   moves,
@@ -12,7 +13,13 @@ const Marth = {
   ecb: {},
 };
 
-export default Marth;
+const MarthCharacter = new Character(CHARIDS.Marth);
+MarthCharacter.setupActionStates({
+    ...baseActionStates,
+    ...Marth.moves
+});
+
+export {Marth, MarthCharacter};
 
 // Remove when actionStates are figured out.
 setupActionStates(CHARIDS.MARTH_ID, {
