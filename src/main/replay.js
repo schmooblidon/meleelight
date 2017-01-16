@@ -43,6 +43,9 @@ $("#replayson").on("click", () => {
 
 });
 
+
+$("#replayson").attr('checked', replaysOn);
+
 export function updateGameTickDelay(val) {
   gameTickDelay = val;
 }
@@ -169,9 +172,6 @@ export function loadReplay(file) {
     startGame();
   };
   reader.readAsBinaryString(file);
-
-//   // when the file is read it triggers the onload event above.
-//   reader.readAsDataURL(file);
 
 
 }
