@@ -137,12 +137,12 @@ function connect(record, name) {
     }
   });
   ds.event.subscribe(name + 'player/', answer => {
-    const data = JSON.parse(pako.inflate(answer.bstring,{to:'string',level:9}));
+    const data = JSON.parse(answer.bstring);
     if (data) {
       if (data.playerID !== playerID) {
         if (data.inputBuffer && (data.playerSlot !== undefined)) {
           saveNetworkInputs(data.playerSlot, data.inputBuffer);
-          player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot], data.playerInfo);
+          player[data.playerSlot].phys.pos = data.position;
         }
       }
     }

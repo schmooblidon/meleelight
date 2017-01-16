@@ -59,75 +59,21 @@ export function saveGameState(input) {
       const frameDelay = now - lastFrametime;
       lastFrametime = now;
       for (let i = 0; i < playerType.length; i++) {
-        //TODO compare to previous frame and only save diff
+
         if (playerType[i] === 1) {
           fullGameState.inputs[i] = deepCopyObject(true, {}, aiInputBank[i][0]);
-          // const playerSaveData = {};
-          // playerSaveData.phys = {};
-          // playerSaveData.phys.cVel = player[i].phys.cVel;
-          // playerSaveData.phys.kVel = player[i].phys.kVel;
-          // playerSaveData.phys.kDec = player[i].phys.kDec;
-          // playerSaveData.phys.pos = player[i].phys.pos;
-          // playerSaveData.phys.posPrev = player[i].phys.posPrev;
-          // playerSaveData.phys.posDelta = player[i].phys.posDelta;
-          // playerSaveData.phys.face = player[i].phys.face;
-          // playerSaveData.actionState = player[i].actionState;
-          // playerSaveData.prevactionState = player[i].prevactionState;
-          // playerSaveData.timer = player[i].timer;
-          // playerSaveData.currentAction = player[i].currentAction;
-          // playerSaveData.currentSubaction = player[i].currentSubaction;
 
-          // delete playerSaveData.charAttributes;
-          // delete playerSaveData.charHitboxes;
-          // delete playerSaveData.prevFrameHitboxes;
-          //fullGameState.playerData[i] = playerSaveData;
         } else if (playerType[i] === 0) {
           fullGameState.inputs[i] = deepCopyObject(true, {}, input[i][0]);
-          // const playerSaveData = {};
-          // playerSaveData.phys = {};
-          // playerSaveData.phys.cVel = player[i].phys.cVel;
-          // playerSaveData.phys.kVel = player[i].phys.kVel;
-          // playerSaveData.phys.kDec = player[i].phys.kDec;
-          // playerSaveData.phys.pos = player[i].phys.pos;
-          // playerSaveData.phys.posPrev = player[i].phys.posPrev;
-          // playerSaveData.phys.posDelta = player[i].phys.posDelta;
-          // playerSaveData.phys.face = player[i].phys.face;
-          // playerSaveData.actionState = player[i].actionState;
-          // playerSaveData.prevactionState = player[i].prevactionState;
-          // playerSaveData.timer = player[i].timer;
-          // playerSaveData.currentAction = player[i].currentAction;
-          // playerSaveData.currentSubaction = player[i].currentSubaction;
 
-          // delete playerSaveData.charAttributes;
-          // delete playerSaveData.charHitboxes;
-          // delete playerSaveData.prevFrameHitboxes;
-          // fullGameState.playerData[i] = playerSaveData;
         } else if (playerType[i] === 2) {
           fullGameState.inputs[i] = deepCopyObject(true, {}, input[i][0]);
-          // const playerSaveData = {};
-          // playerSaveData.phys = {};
-          // playerSaveData.phys.cVel = player[i].phys.cVel;
-          // playerSaveData.phys.kVel = player[i].phys.kVel;
-          // playerSaveData.phys.kDec = player[i].phys.kDec;
-          // playerSaveData.phys.pos = player[i].phys.pos;
-          // playerSaveData.phys.posPrev = player[i].phys.posPrev;
-          // playerSaveData.phys.posDelta = player[i].phys.posDelta;
-          // playerSaveData.phys.face = player[i].phys.face;
-          // playerSaveData.actionState = player[i].actionState;
-          // playerSaveData.prevactionState = player[i].prevactionState;
-          // playerSaveData.timer = player[i].timer;
-          // playerSaveData.currentAction = player[i].currentAction;
-          // playerSaveData.currentSubaction = player[i].currentSubaction;
-          //
-          // delete playerSaveData.charAttributes;
-          // delete playerSaveData.charHitboxes;
-          // delete playerSaveData.prevFrameHitboxes;
-          // fullGameState.playerData[i] = playerSaveData;
+
         }
         const exclusions = ["charAttributes",
           "charHitboxes",
           "prevFrameHitboxes"];
-        fullGameState.playerData[i] = diff(prevFramePlayer[i], player[i], exclusions);
+        fullGameState.playerData[i] = player[i].phys.pos;
 
         prevFramePlayer[i] = deepCopyObject(true, prevFramePlayer[i], player[i], exclusions);
 
@@ -233,7 +179,7 @@ export function retrieveReplayInputs(playerSlot) {
     return new nullInput();
   }
   const returnInput = replayInputs[playingFrame][playerSlot];
-  // player[playerSlot] = mergeDeep(player[playerSlot], replayPlayerData[playingFrame][playerSlot]);
+  player[playerSlot].phys.pos = replayPlayerData[playingFrame][playerSlot];
   if (playerSlot === (ports - 1)) {
     playingFrame++;
   }
