@@ -61,4 +61,4 @@ class Character
     }
 }
 
-module.exports = Character;
+export default Character;

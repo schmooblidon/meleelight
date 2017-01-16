@@ -26,9 +26,7 @@ PuffCharacter.actionStates.TECHF.setVelocities = [0, -0.39214, -0.86272, -0.8627
 PuffCharacter.actionStates.CLIFFCATCH.posOffset = [[-74.289, -8.13664], [-73.93011, -8.48632], [-73.54061, -8.90368], [-73.22807, -9.25336], [-73.1, -9.4], [-73.1, -9.4], [-73.1, -9.4]];
 PuffCharacter.actionStates.CLIFFWAIT.posOffset = [-73.1, -9.4];
 
-
-export default Puff;
-export default PuffCharacter;
+export {PuffCharacter, Puff};
 
 // Remove when actionStates are figured out.
 setupActionStates(CHARIDS.PUFF_ID, {

@@ -1,4 +1,5 @@
-import {CHARIDS, setEcbData, ecb} from "../../main/characters";«
+import {CHARIDS, setEcbData, ecb} from "../../main/characters";
+import {PuffCharacter} from "index";
 /* eslint-disable */
 
 // JIGGLYPUFF
