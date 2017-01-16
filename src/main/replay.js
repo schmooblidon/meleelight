@@ -76,15 +76,15 @@ export function saveGameState(input) {
           fullGameState.inputs[i] = deepCopyObject(true, {}, input[i][0]);
 
         }
-        const exclusions = ["charAttributes",
-          "charHitboxes",
-          "prevFrameHitboxes"];
+        // const exclusions = ["charAttributes",
+        //   "charHitboxes",
+        //   "prevFrameHitboxes"];
         fullGameState.playerData[i] = player[i].phys.pos;
 
-        prevFramePlayer[i] = deepCopyObject(true, prevFramePlayer[i], player[i], exclusions);
+        // prevFramePlayer[i] = deepCopyObject(true, prevFramePlayer[i], player[i], exclusions);
 
       }
-      fullGameState.frameDelay = frameDelay;
+      // fullGameState.frameDelay = frameDelay;
       snapShot.push(compressObject({frameCount, fullGameState}));
       frameCount++;
 
@@ -150,8 +150,8 @@ export function loadReplay(file) {
 
     //ASSUMING PLAYER 1 IS ALWAYS POPULATED
     for (let j = 1; j < deplayerTypes.length; j++) {
-      if (playerType.length === deplayerTypes.length) {
-        if (deplayerTypes[j] !== -1) {
+      if (deplayerTypes[j] !== -1) {
+        if (ports < (j + 1)) {
           addPlayer(j, 0);
         }
       }
@@ -178,6 +178,8 @@ export function loadReplay(file) {
 
 export function retrieveReplayInputs(playerSlot) {
   if (replayInputs[playingFrame] === undefined) {
+    playingReplay = false;
+    replayActive = false;
     finishGame();
     return new nullInput();
   }
@@ -225,11 +227,11 @@ export default function mergeDeep(target, source) {
     Object.keys(source).forEach((key) => {
       if (isObject(source[key])) {
         if (!(key in target))
-          Object.assign(output, { [key]: source[key] });
+          Object.assign(output, {[key]: source[key]});
         else
           output[key] = mergeDeep(target[key], source[key]);
       } else {
-        Object.assign(output, { [key]: source[key] });
+        Object.assign(output, {[key]: source[key]});
       }
     });
   }
