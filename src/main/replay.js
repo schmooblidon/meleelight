@@ -11,6 +11,7 @@ import {
   , endGame
   , finishGame
   , ports
+  , starting
 } from "./main";
 import {deepCopyObject} from "./util/deepCopyObject";
 import pako from "pako";
@@ -54,7 +55,7 @@ function decompressObject(obj) {
 }
 export function saveGameState(input) {
   if (!playingReplay) {
-    if (playing && replaysOn) {
+    if (playing && replaysOn && !starting) {
       const now = performance.now();
       const frameDelay = now - lastFrametime;
       lastFrametime = now;
