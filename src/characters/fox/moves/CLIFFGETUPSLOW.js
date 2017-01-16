@@ -18,8 +18,13 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      const x = activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
-      const y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
+      const onLedge = player[p].phys.onLedge;
+      if(onLedge === -1){
+        this.canGrabLedge = false;
+        return;
+      }
+      const x = activeStage.ledge[onLedge][1]?activeStage.box[activeStage.ledge[onLedge][0]].max.x:activeStage.box[activeStage.ledge[onLedge][0]].min.x;
+      const y = activeStage.box[activeStage.ledge[onLedge][0]].max.y;
       if (player[p].timer < 54){
         player[p].phys.pos = new Vec2D(x+(this.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+this.offset[player[p].timer-1][1]);
       }
@@ -28,7 +33,7 @@ export default {
       }
       if (player[p].timer === 54){
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0,activeStage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [0,activeStage.ledge[onLedge][0]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }

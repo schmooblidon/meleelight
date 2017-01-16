@@ -15,6 +15,9 @@ export default(j, draw) =>{
   const frame = vfxQueue[j][4].frame;
   const swingType = vfxQueue[j][4].swingType;
   const swordPrev = swordSwings[swingType][frame];
+  if(swordSwings[swingType][frame + 1] === undefined){
+    return;
+  }
   const swordNow = swordSwings[swingType][frame + 1];
   const scale = player[p].charAttributes.charScale;
   const pos = vfxQueue[j][4].posNow;
