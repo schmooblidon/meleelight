@@ -157,7 +157,7 @@ function startRoom() {
         {
           name: playerID,
           playerSlot: ports - 1,
-          inputData: String.fromCharCode(0,0,32639,32639),
+          inputBuffer: String.fromCharCode(0,0,32639,32639),
           playerInfo: playerPayload
  
         });
@@ -208,7 +208,7 @@ function startRoom() {
             }
             lastRecievedPacket = now;
             updateGameTickDelay(frameDelay);
-            saveNetworkInputs(data.playerSlot, data.inputData);
+            saveNetworkInputs(data.playerSlot, data.inputBuffer);
              player[data.playerSlot].phys.pos =  data.position;
 
           }
@@ -291,7 +291,8 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
   let payload = {
     "playerID": playerID,
     "playerSlot": playerSlot,
-    "inputBuffer": encodeInput(inputBuffer),
+    // "inputBuffer": encodeInput(inputBuffer),
+    "inputBuffer": inputBuffer,
     "position": player[playerSlot].phys.pos
 
   };
@@ -309,7 +310,8 @@ export function updateNetworkInputs(inputBuffer, playerSlot) {
 
 export function saveNetworkInputs(playerSlot, inputData) {
 
-  playerInputBuffer[playerSlot][0] = decodeInput(inputData);  
+  // playerInputBuffer[playerSlot][0] = decodeInput(inputData);
+  playerInputBuffer[playerSlot][0] = inputData;
 }
 
 export function retrieveNetworkInputs(playerSlot) {
@@ -422,7 +424,8 @@ function connect(record, name) {
           let payload = {
             "playerID": playerID,
             "playerSlot": ports - 1,
-            "inputBuffer": encodeInput(playerInputBuffer),
+            // "inputBuffer": encodeInput(playerInputBuffer[0]),
+            "inputBuffer": playerInputBuffer[0],
             "position": player[ports].phys.pos
           };
           ds.event.emit(name + 'player/', {"bstring": JSON.stringify(payload)});
