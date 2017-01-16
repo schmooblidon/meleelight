@@ -3,9 +3,8 @@ import LANDING from "characters/shared/moves/LANDING";
 import LANDINGATTACKAIRD from "characters/shared/moves/LANDINGATTACKAIRD";
 import FALL from "characters/shared/moves/FALL";
 import {player} from "main/main";
-import {turnOffHitboxes, fastfall, airDrift} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
-
+import {turnOffHitboxes, airDrift, fastfall, checkForAerials, checkForDoubleJump, checkForIASA} from "physics/actionStateShortcuts";
 export default {
   name : "ATTACKAIRD",
   canPassThrough : false,
@@ -19,6 +18,7 @@ export default {
     player[p].timer = 0;
     player[p].phys.autoCancel = true;
     player[p].inAerial = true;
+    player[p].IASATimer = 60;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.dair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.dair.id1;
@@ -59,8 +59,9 @@ export default {
     if (player[p].timer > 49){
       FALL.init(p,input);
       return true;
-    }
-    else {
+    } else if (checkForIASA(p,input,true)) { //yes I know this is pointless.
+      return true;
+    } else {
       return false;
     }
   },

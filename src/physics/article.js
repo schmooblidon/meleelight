@@ -438,13 +438,13 @@ export function executeArticleHits (input){
 export function wallDetection (i){
     for (var j = 0; j < activeStage.wallL.length; j++) {
         if (aArticles[i][2].ecb[1].y < activeStage.wallL[j][0].y && aArticles[i][2].ecb[1].y > activeStage.wallL[j][1].y && aArticles[
-                i][2].ecb[1].x >= activeStage.wallL[j][1].x && aArticles[i][2].ecb[1].x < activeStage.wallR[j][1].x) {
+                i][2].ecb[1].x >= activeStage.wallL[j][1].x && aArticles[i][2].ecb[1].x < activeStage.wallL[j][1].x) {
             return true;
         }
     }
     for (var j = 0; j < activeStage.wallR.length; j++) {
         if (aArticles[i][2].ecb[3].y < activeStage.wallR[j][0].y && aArticles[i][2].ecb[3].y > activeStage.wallR[j][1].y && aArticles[
-                i][2].ecb[3].x <= activeStage.wallR[j][1].x && aArticles[i][2].ecb[3].x > activeStage.wallL[j][1].x) {
+                i][2].ecb[3].x <= activeStage.wallR[j][1].x && aArticles[i][2].ecb[3].x > activeStage.wallR[j][1].x) {
             return true;
         }
     }

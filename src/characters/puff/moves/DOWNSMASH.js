@@ -8,6 +8,7 @@ import {turnOffHitboxes, randomShout, reduceByTraction, checkForSpecials, checkF
 import puff from "./index";
 import {sounds} from "../../../main/sfx";
 import WAIT from "../../shared/moves/WAIT";
+import WALK from "characters/shared/moves/WALK";
 import KNEEBEND from "../../shared/moves/KNEEBEND";
 import DASH from "../../shared/moves/DASH";
 import SMASHTURN from "../../shared/moves/SMASHTURN";
@@ -107,7 +108,7 @@ export default {
         return true;
       }
       else if (Math.abs(input[p][0].lsX) > 0.3) {
-        WAIT.init(p, true, input);
+        WALK.init(p, true, input);
         return true;
       }
       else {

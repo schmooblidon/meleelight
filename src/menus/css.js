@@ -252,7 +252,6 @@ export function cssControls (i, input){
         152 - 15) * 3 / 166) + 1;
       player[whichCpuGrabbed[i]].difficulty = cpuDifficulty[whichCpuGrabbed[i]];
       if (input[i][0].a && !input[i][1].a) {
-        console.log("This also got triggered.");
         cpuGrabbed[i] = false;
         occupiedCpu[whichCpuGrabbed[i]] = false;
         whichCpuGrabbed[i] = -1;
@@ -261,7 +260,6 @@ export function cssControls (i, input){
       }
     } else {
       handType[i] = 0;
-      //console.log("test");
       tokenPos[whichTokenGrabbed[i]] = new Vec2D(518 + (whichTokenGrabbed[i] % 2) * 40 + chosenChar[whichTokenGrabbed[
         i]] * 93, 268 + (whichTokenGrabbed[i] > 1 ? 40 : 0));
       //tokenPos[i] = new Vec2D(518+(i%2)*40,268+(i>1?40:0));

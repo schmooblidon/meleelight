@@ -108,7 +108,7 @@ export default {
     }
   },
   land: function (p, input) {
-    if (player[p].phys.cVel.y + player[p].phys.kVel.y <= 0) {
+    if (player[p].phys.cVel.y + player[p].phys.kVel.y <= 0 || player[p].phys.pos.y <= player[p].phys.posPrev.y) {
       LANDINGFALLSPECIAL.init(p, input);
     }
   }
