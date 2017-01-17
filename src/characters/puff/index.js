@@ -16,7 +16,7 @@ const Puff = {
 const PuffCharacter = new Character(CHARIDS.PUFF_ID);
 PuffCharacter.setupActionStates({
     ...baseActionStates,
-    ...Puff.moves
+    ...moves
   });
 
 PuffCharacter.actionStates.ESCAPEB.setVelocities = [0, 0, 0, 0, -0.18636, -0.53714, -0.85504, -1.14006, -1.39219, -1.61143, -1.79778, -1.90176, -1.87565, -1.74509, -1.51009, -1.17065, -0.72676, -0.60977, -0.87285, -1.11128, -1.32504, -1.51414, -1.67857, -1.81834, -1.79778, -1.61143, -1.39219, -1.14006, -0.85504, -0.53714, -0.18636, 0.00168, 0.0028, 0.00056];
