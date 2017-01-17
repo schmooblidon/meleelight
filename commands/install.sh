@@ -1,7 +1,7 @@
 #!/bin/bash
 cd -
 clear
-echo There are 2 installation methods. Installing packages with node package manager(npm) or with yarn. Since you have node.js you have npm, but you will only have yarn if you downloaded it seperatly.
+echo There are 2 installation methods. Installing packages with node package manager - npm - or with yarn. Since you have node.js you have npm, but you will only have yarn if you downloaded it seperatly.
 sleep 3s
 
 start () {
@@ -14,7 +14,8 @@ if ["B"=="$myParam"]; then
 	npm
 else
 	start
-cls
+clear
+fi
 }
 
 yarn () {
