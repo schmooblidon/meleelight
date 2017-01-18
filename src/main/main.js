@@ -706,26 +706,21 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
     interpretPause(pause[i][0], pause[i][1]);
 
-    showButton(i, 0,tempBuffer[0].a);
-    showButton(i, 1,tempBuffer[0].b);
-    showButton(i, 2,tempBuffer[0].x);
-    showButton(i, 3,tempBuffer[0].y);
-    showButton(i, 4,tempBuffer[0].z);
-    showButton(i, 5,tempBuffer[0].r);
-    showButton(i, 6,tempBuffer[0].l);
-    showButton(i, 7,tempBuffer[0].s);
-    showButton(i, 8,tempBuffer[0].du);
-    showButton(i, 9,tempBuffer[0].dr);
-    showButton(i,10,tempBuffer[0].dd);
-    showButton(i,11,tempBuffer[0].dl);
-
     if (showDebug) {
-    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
-    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
-    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
-    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
-    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
-    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
+      $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
+      $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
+      $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
+      $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
+      $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
+      $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
+      updateGamepadSVGState(i, tempBuffer[0]);
+
+      if (tempBuffer[0].x && !tempBuffer[1].x && tempBuffer[0].du ) {
+        cycleGamepadColour(i,true);
+      }
+      if (tempBuffer[0].y && !tempBuffer[1].y && tempBuffer[0].du ) {
+        cycleGamepadColour(i,false);
+      }
     }
 
   }

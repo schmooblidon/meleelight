@@ -62,7 +62,13 @@ const darkCColour = "#b68e0b";
 const highlight = "#fafe90";
 
 export function updateGamepadSVGColour(i : number, colour : ControllerColour) : void {
-  const svg = document.getElementById("gamepadSVG"); // not yet using per-player gamepads
+  const svgObject = document.getElementById("gamepadSVG"+i);
+  if (svgObject === null || svgObject === undefined) {
+    console.log("error in 'updateGamepadSVGColour': gamepad SVG not found.");
+    return void 0;
+  }
+  const svg = svgObject.contentDocument;
+
   const light  = swatches[colour].light;
   const base   = swatches[colour].base;
   const medium = swatches[colour].medium;
@@ -100,7 +106,13 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   if (input === null || input === undefined) {
     input = nullInput();
   }
-  const svg = document.getElementById("gamepadSVG"); // not yet using per-player gamepads
+
+  const svgObject = document.getElementById("gamepadSVG"+i);
+  if (svgObject === null || svgObject === undefined) {
+    console.log("error in 'updateGamepadSVGState': gamepad SVG not found.");
+    return void 0;
+  }
+  const svg = svgObject.contentDocument;
 
   if (gamepadStates[i].z === false && input.z) {
     gamepadStates[i].z = true;
@@ -311,7 +323,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
     }
   }
 
-  if (true || !gamepadStates[i].dPadCentered || anyDPadInput) {
+  if (!gamepadStates[i].dPadCentered || anyDPadInput) {
     svg.getElementById("dPad").setAttribute("transform", "matrix("+dSM[0][0]+","+dSM[0][1]+","+dSM[1][0]+","+dSM[1][1]+","+(dNC.x+(dScale*dPadAxes.x))+","+(dNC.y+(-dScale*dPadAxes.y))+")");
     svg.getElementById("dPadShapeDepth1").setAttribute("transform", "translate("+ (-1.4*dScale*dPadAxes.x)+","+(1.4*dScale*dPadAxes.y)+")");
     svg.getElementById("dPadShapeDepth2").setAttribute("transform", "translate("+ (-0.7*dScale*dPadAxes.x)+","+(0.7*dScale*dPadAxes.y)+")");
