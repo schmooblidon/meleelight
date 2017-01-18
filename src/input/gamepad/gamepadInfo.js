@@ -21,7 +21,9 @@ export type DPadInfo =  null
                      | { kind : "axis", index : number }
                      | { kind : "2axes", xIndex : number, yIndex : number, xFlip : bool, yFlip : bool }
 
-export type GamepadID = { name : string, id? : string, vendor? : string, product? : string }
+export type AllowedIDType = "Firefox" | "Chrome";
+
+export type GamepadID = { name : string, id? : string, vendor? : string, product? : string, allowedIDType? : AllowedIDType }
 
 export type GamepadInfo = { a  : ButtonInfo
                           , b  : ButtonInfo

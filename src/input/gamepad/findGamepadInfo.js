@@ -3,7 +3,7 @@
 
 import {gamepadInfoList} from "./gamepadInfoList";
 
-import type {GamepadID, GamepadInfo} from "./gamepadInfo";
+import type {GamepadID, GamepadInfo, AllowedIDType} from "./gamepadInfo";
 
 export function getGamepadNameAndInfo( identifier : string ) : null | [string, GamepadInfo] {
 
@@ -32,17 +32,17 @@ function checkAgainstGamepadID( identifier : string, gamepadID : GamepadID ) : b
   let matchedVP = false;
   if (gamepadID.vendor !== undefined && gamepadID.product !== undefined) {
     const [gpdVendor, gpdProduct] = [gamepadID.vendor, gamepadID.product];
-    const vendorAndProduct = getVendorAndProduct(identifier);
-    if (vendorAndProduct !== null ) {
+    const vendorAndProduct = getVendorAndProduct(identifier, gamepadID.allowedIDType);
+    if (vendorAndProduct !== null) {
       const [vendor, product] = vendorAndProduct;
       matchedVP = match(vendor, gpdVendor) && match(product, gpdProduct);
     }
   }
 
   let matchedID = false;
-  if (gamepadID.id !== undefined) {
+  if (gamepadID.id !== null && gamepadID.id !== undefined) {
     const gpdID = gamepadID.id;
-    const id = getID(identifier);
+    const id = getID(identifier, gamepadID.allowedIDType);
     const l = gpdID.length;
     matchedID = gpdID.toLowerCase() === id.toLowerCase().substring(0,l);
   }
@@ -72,13 +72,15 @@ function match( s1 : string, s2 : string ) : bool {
 
 // hacky functions to get name, vendor and product by munging strings
 
-function getVendorAndProduct( identifier : string ) : null | [string, string] {
+function getVendorAndProduct( identifier : string, allowedIDType : ?AllowedIDType ) : null | [string, string] {
   const l = identifier.length;
   let [vendor, product] = [null, null];
-  if (l > 9 && identifier[4] === "-" && identifier[9] === "-") {
+  const allowFirefox = allowedIDType === undefined || allowedIDType === null || allowedIDType === "Firefox";
+  const allowChrome  = allowedIDType === undefined || allowedIDType === null || allowedIDType === "Chrome" ;
+  if (allowFirefox && l > 9 && identifier[4] === "-" && identifier[9] === "-") {
     [vendor, product] = [identifier.substring(0,4), identifier.substring(5,9)];
   }
-  else if (l > 27 && identifier[l-1] === ")" && identifier[l-28] === "(") {
+  else if (allowChrome && l > 27 && identifier[l-1] === ")" && identifier[l-28] === "(") {
     [vendor, product] = [identifier.substring(l-19,l-15), identifier.substring(l-5,l-1)];
   }
 
@@ -90,13 +92,15 @@ function getVendorAndProduct( identifier : string ) : null | [string, string] {
   }
 }
 
-function getID( identifier : string ) : string {
+function getID( identifier : string, allowedIDType : ?AllowedIDType ) : string {
   const l = identifier.length;
   let id = identifier;
-  if (l > 9 && identifier[4] === "-" && identifier[9] === "-") {
+  const allowFirefox = allowedIDType === undefined || allowedIDType === null || allowedIDType === "Firefox";
+  const allowChrome  = allowedIDType === undefined || allowedIDType === null || allowedIDType === "Chrome" ;
+  if (allowFirefox && l > 9 && identifier[4] === "-" && identifier[9] === "-") {
     id = identifier.substring(10);
   }
-  else if (l > 28 && identifier[l-1] === ")" && identifier[l-28] === "(") {
+  else if (allowChrome && l > 28 && identifier[l-1] === ")" && identifier[l-28] === "(") {
     id = identifier.substring(0, l-29);
   }
   return id;
