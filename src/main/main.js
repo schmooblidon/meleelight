@@ -59,7 +59,7 @@ export let endTargetGame = false;
 export let creditsPlayer = 0;
 
 let gameEnd = false;
-let controllerResetCountdowns = [125,125,125,125];
+export let controllerResetCountdowns = [0,0,0,0];
 let keyboardOccupied = false;
 
 export let usingCustomControls = [false, false, false, false];
@@ -694,12 +694,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     if ((tempBuffer[0].z || tempBuffer[0].du) && tempBuffer[0].x && tempBuffer[0].y) {
       controllerResetCountdowns[i] -= 1;
       if (controllerResetCountdowns[i] === 0) {
-        setCustomCenters( i
-                        , new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY)
-                        , new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY)
-                        , tempBuffer[0].lA
-                        , tempBuffer[0].rA
-                        )
+        // triggers code in input.js
         console.log("Controller #"+(i+1)+" was reset!");
         $("#resetIndicator" + i).fadeIn(100);
         $("#resetIndicator" + i).fadeOut(500);

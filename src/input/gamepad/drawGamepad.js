@@ -248,7 +248,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   const cScale = 47;
   const dScale = 5;
 
-  let lStickSquashVector = new Vec2D(input.lsX, input.lsY);
+  let lStickSquashVector = new Vec2D(input.rawX, input.rawY);
   const lStickSquashVectorNorm = norm(lStickSquashVector);
   if (lStickSquashVectorNorm > 1) {
     lStickSquashVector = scalarProd(1/(1.5*lStickSquashVectorNorm), lStickSquashVector);
@@ -257,7 +257,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
     lStickSquashVector = scalarProd(1/1.5, lStickSquashVector);
   }
 
-  let cStickSquashVector = new Vec2D(input.csX, input.csY);
+  let cStickSquashVector = new Vec2D(input.rawcsX, input.rawcsY);
   const cStickSquashVectorNorm = norm(cStickSquashVector);
   if (cStickSquashVectorNorm > 1) {
     cStickSquashVector = scalarProd(1/(1.6*cStickSquashVectorNorm), cStickSquashVector);
@@ -277,18 +277,18 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   const cNC = cStickSquash.newCenter;
   const dNC = dPadSquash.newCenter  ;
 
-  const cStickAngle = 180/Math.PI*Math.atan2(-input.csY, input.csX);
-  const cRectScale = 20* norm (new Vec2D (input.csX, input.csY));
+  const cStickAngle = 180/Math.PI*Math.atan2(-input.rawcsY, input.rawcsX);
+  const cRectScale = 20* norm (new Vec2D (input.rawcsX, input.rawcsY));
 
-  const anyLSInput = Math.abs(input.lsX) > 0.01 || Math.abs(input.lsY) > 0.01;
+  const anyLSInput = Math.abs(input.rawX) > 0.01 || Math.abs(input.rawY) > 0.01;
 
   if (!gamepadStates[i].lsCentered || anyLSInput) {
-    svg.getElementById("lStick").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(lScale*input.lsX))+","+(lNC.y+(-lScale*input.lsY))+")");
-    svg.getElementById("lStickShadow").setAttribute("transform", "translate("+ (-0.6*lScale*input.lsX)+","+(0.6*lScale*input.lsY)+")");
-    svg.getElementById("lStickDepth").setAttribute("transform", "translate("+ (-0.15*lScale*input.lsX)+","+(0.15*lScale*input.lsY)+")");
-    svg.getElementById("lStickCircle1").setAttribute("transform", "translate("+ (0.19*lScale*input.lsX)+","+(-0.19*lScale*input.lsY)+")");
-    svg.getElementById("lStickCircle2").setAttribute("transform", "translate("+ (0.13*lScale*input.lsX)+","+(-0.13*lScale*input.lsY)+")");
-    svg.getElementById("lStickCircle3").setAttribute("transform", "translate("+ (0.05*lScale*input.lsX)+","+(-0.05*lScale*input.lsY)+")");
+    svg.getElementById("lStick").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(lScale*input.rawX))+","+(lNC.y+(-lScale*input.rawY))+")");
+    svg.getElementById("lStickShadow").setAttribute("transform", "translate("+ (-0.6*lScale*input.rawX)+","+(0.6*lScale*input.rawY)+")");
+    svg.getElementById("lStickDepth").setAttribute("transform", "translate("+ (-0.15*lScale*input.rawX)+","+(0.15*lScale*input.rawY)+")");
+    svg.getElementById("lStickCircle1").setAttribute("transform", "translate("+ (0.19*lScale*input.rawX)+","+(-0.19*lScale*input.rawY)+")");
+    svg.getElementById("lStickCircle2").setAttribute("transform", "translate("+ (0.13*lScale*input.rawX)+","+(-0.13*lScale*input.rawY)+")");
+    svg.getElementById("lStickCircle3").setAttribute("transform", "translate("+ (0.05*lScale*input.rawX)+","+(-0.05*lScale*input.rawY)+")");
     if (anyLSInput) {
       gamepadStates[i].lsCentered = false;
     }
@@ -297,11 +297,11 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
     }
   }
 
-  const anyCSInput = Math.abs(input.csX) > 0.01 || Math.abs(input.csY) > 0.01;
+  const anyCSInput = Math.abs(input.rawcsX) > 0.01 || Math.abs(input.rawcsY) > 0.01;
 
   if (!gamepadStates[i].csCentered || anyCSInput) {
-    svg.getElementById("cStick").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(cScale*input.csX))+","+(cNC.y+(-cScale*input.csY))+")");
-    svg.getElementById("cStickShadow").setAttribute("transform", "translate("+(-0.45*cScale*input.csX)+","+(0.45*cScale*input.csY)+")");
+    svg.getElementById("cStick").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(cScale*input.rawcsX))+","+(cNC.y+(-cScale*input.rawcsY))+")");
+    svg.getElementById("cStickShadow").setAttribute("transform", "translate("+(-0.45*cScale*input.rawcsX)+","+(0.45*cScale*input.rawcsY)+")");
     svg.getElementById("cStickShadowRect").setAttribute("transform", "rotate("+cStickAngle+","+(csCenterX) +","+(csCenterY)+") translate("+((1-cRectScale)*csCenterX)+",0) scale("+cRectScale+",1)");
     if (anyCSInput) {
       gamepadStates[i].csCentered = false;

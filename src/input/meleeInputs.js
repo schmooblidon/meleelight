@@ -160,7 +160,6 @@ function scaleToGCAxes ( x: number, y: number
 
 
 // basic mapping from 0 -- 255 back to -1 -- 1 done by Melee
-// boolean value: true = deadzones, false = no deadzones
 function axisRescale ( x : number, orig : number = meleeOrig) {
   return (x-orig) / steps;
 };
@@ -179,18 +178,10 @@ function meleeRound (x : number)  : number{
   return Math.round(steps*x)/steps;
 };
 
-function meleeAxesRescale ( [x: number,y: number], isDeadzoned : bool ) : [number, number] {
-  const xnew = axisRescale (x, meleeOrig, isDeadzoned);
-  const ynew = axisRescale (y, meleeOrig, isDeadzoned);
+function meleeAxesRescale ( [x: number,y: number] ) : [number, number] {
+  const xnew = axisRescale (x, meleeOrig);
+  const ynew = axisRescale (y, meleeOrig);
   let [xnew2, ynew2] = unitRetract( [xnew, ynew] );
-  if (isDeadzoned) {
-    if (Math.abs(xnew2) < deadzoneConst) {
-       xnew2 = 0;
-    }
-    if (Math.abs(ynew2) < deadzoneConst) {
-      ynew2 = 0;
-    }
-  }
   return ([xnew2, ynew2].map(meleeRound));
 }
 
@@ -201,20 +192,23 @@ function meleeAxesRescale ( [x: number,y: number], isDeadzoned : bool ) : [numbe
 export function scaleToMeleeAxes ( x: number, y: number
                                  , isGC : bool
                                  , stickCardinals : null | StickCardinals
-                                 , isDeadzoned : bool = false
                                  , customCenterX : number = 0, customCenterY : number = 0 ) : [number, number] {
   let xnew = x;
   let ynew = y;
   if (isGC) { // gamecube controllers, don't mess up the raw data
-       xnew = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
-       ynew = (-y+customCenterY+1)*255/2; // y incurs a sign flip
-       //console.log("You are using raw GC controller data.");
+    xnew = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
+    ynew = (-y+customCenterY+1)*255/2; // y incurs a sign flip
+    //console.log("You are using raw GC controller data.");
   }
   else { // convert raw input to 0 -- 255 by GC controller simulation
     [xnew, ynew] = scaleToGCAxes(x, y, stickCardinals, customCenterX, customCenterY);
     //console.log("You are using GC controller simulation.");
   }
-  return meleeAxesRescale ( [xnew,ynew], isDeadzoned );
+  return meleeAxesRescale ( [xnew,ynew] );
+};
+
+export function deaden ( x : number, dead : number = deadzoneConst ) : number {
+  return Math.abs(x) < dead ? 0 : x;
 };
 
 // scales -1 -- 1 TAS data to the data Melee uses for the simulation
