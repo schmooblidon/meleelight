@@ -217,8 +217,10 @@
     <div id="buttons"><div id="effectsButton" class="gameButton"><p>VFX <span id="effectsButtonEdit">ON</span></p></div><div id="debugButton" class="gameButton"><p>DEBUG <span id="debugButtonEdit">OFF</span></p></div><div id="fpsButton" class="gameButton"><p><span id="fpsButtonEdit">60</span>fps</p></div><div id="alphaButton" class="gameButton"><p>ALPHA <span id="alphaButtonEdit">ON</span></p></div><div id="layerButton" class="gameButton"><p>LAYERS<span id="layerButtonEdit"></span></p><div id="layerDropdown"><div id="layer1" class="layer layerOn"><p>BG1</p></div><div id="layer2" class="layer layerOn"><p>BG2</p></div><div id="layer3" class="layer layerOn"><p>FG1</p></div><div id="layer4" class="layer layerOn"><p>FG2</p></div><div id="layer5" class="layer layerOn"><p>UI</p></div></div></div></div>
   </div>
     <div id="players">
+    <script type="text/javascript" src="../src/input/gamepad/includeGamepadSVG.js"></script>
     <div class="playerDetails">
-      <object id="gamepadSVG0" data="assets/gamepad.svg"></object>
+      <iframe id="gamepadSVG0" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"></iframe>
+      <script> includeGamepadSVG("gamepadSVG0", 150, 150); </script>
       <div class="playerTitle"><p>Player 1</p></div>
       <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX0">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY0">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX0">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY0">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog0">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog0">0</span></p></div>
       <div class="actionstatetext"><p><span id="actState0">??</span> <span id="stateNum0">?</span> <span id="face0">1</span></p></div>
@@ -227,7 +229,8 @@
       <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX0">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY0">0</span></p></div>
     </div>
     <div class="playerDetails">
-      <object id="gamepadSVG1" data="assets/gamepad.svg"></object>
+      <iframe id="gamepadSVG1" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"></iframe>
+      <script> includeGamepadSVG("gamepadSVG1", 150, 150); </script>
       <div class="playerTitle"><p>Player 2</p></div>
       <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX1">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY1">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX1">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY1">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog1">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog1">0</span></p></div>
       <div class="actionstatetext"><p><span id="actState1">??</span> <span id="stateNum1">?</span> <span id="face1">1</span></p></div>
@@ -236,7 +239,8 @@
       <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX1">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY1">0</span></p></div>
     </div>
     <div class="playerDetails">
-      <object id="gamepadSVG2" data="assets/gamepad.svg"></object>
+      <iframe id="gamepadSVG2" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"></iframe>
+      <script> includeGamepadSVG("gamepadSVG2", 150, 150); </script>
       <div class="playerTitle"><p>Player 3</p></div>
       <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX2">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY2">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX2">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY2">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog2">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog2">0</span></p></div>
       <div class="actionstatetext"><p><span id="actState2">??</span> <span id="stateNum2">?</span> <span id="face2">1</span></p></div>
@@ -245,7 +249,8 @@
       <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX2">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY2">0</span></p></div>
     </div>
     <div class="playerDetails">
-      <object id="gamepadSVG3" data="assets/gamepad.svg"></object>
+      <iframe id="gamepadSVG3" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"></iframe>
+      <script> includeGamepadSVG("gamepadSVG3", 150, 150); </script>
       <div class="playerTitle"><p>Player 4</p></div>
       <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX3">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY3">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX3">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY3">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog3">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog3">0</span></p></div>
       <div class="actionstatetext"><p><span id="actState3">??</span> <span id="stateNum3">?</span> <span id="face3">1</span></p></div>

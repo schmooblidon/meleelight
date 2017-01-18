@@ -685,6 +685,11 @@ a {
   background-color:#1f1f1f;
   border-radius:5px;
   margin:2px 75px;
+  float:left;
+}
+
+.gamepadSVG {
+  float:right;
 }
 
 .playerTitle p {
