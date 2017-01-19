@@ -2,8 +2,10 @@ import {player, setCookie, changeGamemode, ports, bg1, layers, bg2, ui, fg2, fg1
     getCookie
     , addShine
     , setShine
+    , calibrationPlayer
 } from "main/main";
 import {twoPi} from "main/render";
+import {updateGamepadSVGColour} from "../input/gamepad/drawGamepad";
 /* eslint-disable */
 
 let controllerTimer    = 0;
@@ -43,7 +45,7 @@ export function updateControllerMenu(quit, text, interval){
 }
 
 export function drawControllerMenuInit (){
-  updateGamepadSVGColour(i, "gamepadSVGCalibration");
+  updateGamepadSVGColour(calibrationPlayer, "gamepadSVGCalibration");
   document.getElementById("gamepadSVGCalibration").style.display = "";
   const bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
