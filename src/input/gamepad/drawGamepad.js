@@ -183,7 +183,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
 
   if (!gamepadStates[i].dPadCentered || anyDPadInput ) {
     if (input.du) {
-      dPadAxes.y = 1;
+      dPadAxes.y++;
       dpadU.style.fill = highlight;
       dpadU.style.stroke = highlight;
     }
@@ -192,7 +192,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
       dpadU.style.stroke = midGrey;
     }
     if (input.dd) {
-      dPadAxes.y = -1;
+      dPadAxes.y--;
       dpadD.style.fill = highlight;
       dpadD.style.stroke = highlight;
     }
@@ -201,7 +201,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
       dpadD.style.stroke = midGrey;
     }
     if (input.dl) {
-      dPadAxes.x = -1;
+      dPadAxes.x--;
       dpadL.style.fill = highlight;
       dpadL.style.stroke = highlight;
     }
@@ -210,7 +210,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
       dpadL.style.stroke = midGrey;
     }
     if (input.dr) {
-      dPadAxes.x = 1;
+      dPadAxes.x++;
       dpadR.style.fill = highlight;
       dpadR.style.stroke = highlight;
     }
