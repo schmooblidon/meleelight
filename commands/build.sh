@@ -1,28 +1,16 @@
 #!/bin/bash
 cd -
 clear
-
-start () {
-
-read -p "would you like to install using yarn(a) or npm install(b):" Input
-
-myParam=`echo "$Input" | tr 'a-z' 'A-Z'`
-if [ "A"=="$myParam" ]; then
-	dev
-if [ "B"=="$myParam" ]; then
-	production
-else
-	start
+#!/bin/bash
+cd-
 clear
-fi
-}
+echo "There are 2 build types - developer and production. Developer build updates changes, while production is the optimized build."
+echo "Would you like to build dev (a) or production (b) version: "
+read input_variable
+echo "You entered: ${input_variable}"
 
-dev () {
-npm run dev
+    case ${input_variable} in
+        a ) npm run dev; break;;
+        b )  npm run build;;
+    esac
 exit
-}
-
-production () {
-npm run build
-exit
-}
