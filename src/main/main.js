@@ -720,22 +720,19 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(3));
     $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(3));
     updateGamepadSVGState(i, "gamepadSVG"+i, tempBuffer[0]);
-
-    if (tempBuffer[0].x && !tempBuffer[1].x && tempBuffer[0].du ) {
-      cycleGamepadColour(i, "gamepadSVG"+i,true);
-    }
-    if (tempBuffer[0].y && !tempBuffer[1].y && tempBuffer[0].du ) {
-      cycleGamepadColour(i, "gamepadSVG"+i,false);
-    }
   }
 
   if (gameMode === 14) { // controller calibration screen
     updateGamepadSVGState(i, "gamepadSVGCalibration", tempBuffer[0]);
+  }
+
+  if (showDebug || gameMode === 14) {
+    const which = (showDebug && gameMode === 14) ? "both" : showDebug ? "debug" : "calibration";
     if (tempBuffer[0].x && !tempBuffer[1].x && tempBuffer[0].du ) {
-      cycleGamepadColour(i, "gamepadSVGCalibration",true);
+      cycleGamepadColour(i, which, true);
     }
     if (tempBuffer[0].y && !tempBuffer[1].y && tempBuffer[0].du ) {
-      cycleGamepadColour(i, "gamepadSVGCalibration",false);
+      cycleGamepadColour(i, which, false);
     }
   }
 

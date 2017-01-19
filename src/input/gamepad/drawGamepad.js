@@ -61,7 +61,8 @@ const cColour = "#e7c518";
 const darkCColour = "#b68e0b";
 const highlight = "#fafe90";
 
-export function updateGamepadSVGColour(i : number, id : string, colour : ControllerColour) : void {
+export function updateGamepadSVGColour(i : number, id : string) : void {
+  const colour = gamepadStates[i].colour;
   const svgObject = document.getElementById(id);
   if (svgObject === null || svgObject === undefined) {
     console.log("error in 'updateGamepadSVGColour': gamepad SVG not found.");
@@ -74,8 +75,6 @@ export function updateGamepadSVGColour(i : number, id : string, colour : Control
   const medium = swatches[colour].medium;
   const dark   = swatches[colour].dark;
   const fade   = swatches[colour].fade;
-
-  gamepadStates[i].colour = colour;
 
   const main  = svg.getElementById("main");
   const lobeL = svg.getElementById("lobeL");
@@ -97,8 +96,18 @@ export function updateGamepadSVGColour(i : number, id : string, colour : Control
   svg.getElementById("slash3").style.fill = fade[3];
 };
 
-export function cycleGamepadColour( i : number, id : string, forward : bool) : void {
-  updateGamepadSVGColour(i, id, cycleColour(gamepadStates[i].colour, forward)); 
+export function cycleGamepadColour( i : number, which : string, forward : bool) : void {
+  gamepadStates[i].colour = cycleColour(gamepadStates[i].colour, forward);
+  if (which === "debug") {
+    updateGamepadSVGColour(i, "gamepadSVG"+i); 
+  }
+  else if (which === "calibration") {
+    updateGamepadSVGColour(i, "gamepadSVGCalibration"); 
+  }
+  else {
+    updateGamepadSVGColour(i, "gamepadSVG"+i);
+    updateGamepadSVGColour(i, "gamepadSVGCalibration"); 
+  }
 }
 
 export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Input) : void {
@@ -116,13 +125,13 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
 
   if (gamepadStates[i].z === false && input.z) {
     gamepadStates[i].z = true;
-    svg.getElementById("ZPressed").style.opacity = 1;
-    svg.getElementById("ZUnpressed").style.opacity = 0;
+    svg.getElementById("ZPressed").style.visibility = "visible";
+    svg.getElementById("ZUnpressed").style.visibility = "hidden";
   }
   else if (gamepadStates[i].z === true && !input.z ) {
     gamepadStates[i].z = false;
-    svg.getElementById("ZPressed").style.opacity = 0;
-    svg.getElementById("ZUnpressed").style.opacity = 1;
+    svg.getElementById("ZPressed").style.visibility = "hidden";
+    svg.getElementById("ZUnpressed").style.visibility = "visible";
   }
   if (gamepadStates[i].a === false &&input.a ) {
     gamepadStates[i].a = true;
@@ -132,7 +141,7 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
   else if (gamepadStates[i].a === true && !input.a ) {
     gamepadStates[i].a = false;
     svg.getElementById("ABase").style.fill = aColour;
-    svg.getElementById("AText").style.fill = darkAColour;
+    svg.getElementById("AText").style.fill = "";
   }
   if (gamepadStates[i].b === false && input.b ) {
     gamepadStates[i].b = true;
@@ -142,7 +151,7 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
   else if (gamepadStates[i].b === true && !input.b ) {
     gamepadStates[i].b = false;
     svg.getElementById("BBase").style.fill = bColour;
-    svg.getElementById("BText").style.fill = darkBColour;
+    svg.getElementById("BText").style.fill = "";
   }
   if (gamepadStates[i].x === false && input.x ) {
     gamepadStates[i].x = true;
@@ -151,8 +160,8 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
   }
   else if (gamepadStates[i].x === true && !input.x ){
     gamepadStates[i].x = false;
-    svg.getElementById("XBase").style.fill = grey;
-    svg.getElementById("XText").style.fill = darkGrey;
+    svg.getElementById("XBase").style.fill = "";
+    svg.getElementById("XText").style.fill = "";
   }
   if (gamepadStates[i].y === false && input.y ) {
     gamepadStates[i].y = true;
@@ -161,8 +170,8 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
   }
   else if (gamepadStates[i].y === true && !input.y ) {
     gamepadStates[i].y = false;
-    svg.getElementById("YBase").style.fill = grey;
-    svg.getElementById("YText").style.fill = darkGrey;
+    svg.getElementById("YBase").style.fill = "";
+    svg.getElementById("YText").style.fill = "";
   }
   if (gamepadStates[i].s === false && input.s) {
     gamepadStates[i].s = true;
@@ -170,7 +179,7 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
   }
   else if (gamepadStates[i].s === true && !input.s) {
     gamepadStates[i].s = false;
-    svg.getElementById("startBase").style.fill = grey;
+    svg.getElementById("startBase").style.fill = "";
   }
 
   const dpadU = svg.getElementById("du");
@@ -188,8 +197,8 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
       dpadU.style.stroke = highlight;
     }
     else {
-      dpadU.style.fill = midGrey;
-      dpadU.style.stroke = midGrey;
+      dpadU.style.fill = "";
+      dpadU.style.stroke = "";
     }
     if (input.dd) {
       dPadAxes.y--;
@@ -197,8 +206,8 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
       dpadD.style.stroke = highlight;
     }
     else {
-      dpadD.style.fill = midGrey;
-      dpadD.style.stroke = midGrey;
+      dpadD.style.fill = "";
+      dpadD.style.stroke = "";
     }
     if (input.dl) {
       dPadAxes.x--;
@@ -206,8 +215,8 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
       dpadL.style.stroke = highlight;
     }
     else {
-      dpadL.style.fill = midGrey;
-      dpadL.style.stroke = midGrey;
+      dpadL.style.fill = "";
+      dpadL.style.stroke = "";
     }
     if (input.dr) {
       dPadAxes.x++;
@@ -215,8 +224,8 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
       dpadR.style.stroke = highlight;
     }
     else {
-      dpadR.style.fill = midGrey;
-      dpadR.style.stroke = midGrey;
+      dpadR.style.fill = "";
+      dpadR.style.stroke = "";
     }
     // setting the value for dPadCentered later
   }
@@ -295,7 +304,7 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
   const anyLSInput = Math.abs(input.rawX) > 0.01 || Math.abs(input.rawY) > 0.01;
 
   if (!gamepadStates[i].lsCentered || anyLSInput) {
-    svg.getElementById("ls").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(lScale*input.rawX))+","+(lNC.y+(-lScale*input.rawY))+")");
+    svg.getElementById("lStick").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(lScale*input.rawX))+","+(lNC.y+(-lScale*input.rawY))+")");
     svg.getElementById("lStickShadow").setAttribute("transform", "translate("+ (-0.6*lScale*input.rawX)+","+(0.6*lScale*input.rawY)+")");
     svg.getElementById("lStickDepth").setAttribute("transform", "translate("+ (-0.15*lScale*input.rawX)+","+(0.15*lScale*input.rawY)+")");
     svg.getElementById("lStickCircle1").setAttribute("transform", "translate("+ (0.19*lScale*input.rawX)+","+(-0.19*lScale*input.rawY)+")");
@@ -312,7 +321,7 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
   const anyCSInput = Math.abs(input.rawcsX) > 0.01 || Math.abs(input.rawcsY) > 0.01;
 
   if (!gamepadStates[i].csCentered || anyCSInput) {
-    svg.getElementById("cs").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(cScale*input.rawcsX))+","+(cNC.y+(-cScale*input.rawcsY))+")");
+    svg.getElementById("cStick").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(cScale*input.rawcsX))+","+(cNC.y+(-cScale*input.rawcsY))+")");
     svg.getElementById("cStickShadow").setAttribute("transform", "translate("+(-0.45*cScale*input.rawcsX)+","+(0.45*cScale*input.rawcsY)+")");
     svg.getElementById("cStickShadowRect").setAttribute("transform", "rotate("+cStickAngle+","+(csCenterX) +","+(csCenterY)+") translate("+((1-cRectScale)*csCenterX)+",0) scale("+cRectScale+",1)");
     if (anyCSInput) {

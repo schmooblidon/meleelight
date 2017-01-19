@@ -19,8 +19,8 @@ const menuText = [
 ];
 const menuExplanation = [
   ["Multiplayer Battles!", "Smash ten targets!", "Build target test stages!", "Game setup."],
-  ["Select audio levels.", "Change gameplay settings.", "Customize & callibrate controls.", "Who did this?"],
-  ["Customize & callibrate controller.", "Customize keyboard controls."]
+  ["Select audio levels.", "Change gameplay settings.", "Customize & calibrate controls.", "Who did this?"],
+  ["Customize & calibrate controller.", "Customize keyboard controls."]
 ];
 const menuCount = [4, 4, 2];
 const menuTitle = ["Main Menu", "Options", "Controls"];

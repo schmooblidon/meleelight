@@ -48,7 +48,7 @@ const nullSnapshots : Snapshots = { b0 : [], bL : [], bR : [], bU : []
 type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" | "icon";
 let clickObject : ClickObject = null;
 
-const ids = ["a", "b", "x", "y", "ls", "cs", "s", "r", "l" , "z", "dpad", "icon"];
+const ids = ["a", "b", "x", "y", "s", "r", "l" , "z", "dpad", "icon", "ls", "cs"];
 
 function listen () : void {
   // $FlowFixMe ignore the following type error
@@ -151,10 +151,10 @@ function calibrateObject ( i : number, j : number
     }, interval);
   }
   else if (clickObject === "ls" || clickObject === "cs" || clickObject === "dpad") {    
-    if (clickObject = "ls") {
+    if (clickObject === "ls") {
       text = "Move left analog stick all the way ";
     }
-    else if (clickObject = "cs") {
+    else if (clickObject === "cs") {
       text = "Move c-stick all the way ";
     }
     else {

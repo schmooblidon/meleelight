@@ -35,7 +35,7 @@ export function updateControllerMenu(quit, text, interval){
     fg1.fillText(text, 600, 540);
   }
   if (quit) {
-    setTimeout(function(){ document.getElementById("gamepadSVGCalibration").style.opacity = 0; changeGamemode(1)}, 2000);
+    setTimeout(function(){ document.getElementById("gamepadSVGCalibration").style.visibility = "hidden"; changeGamemode(1)}, 2000);
   } else {
     controllerTimer    = interval/16.667;
     controllerTimerMax = interval/16.667;
@@ -43,7 +43,7 @@ export function updateControllerMenu(quit, text, interval){
 }
 
 export function drawControllerMenuInit (){
-  document.getElementById("gamepadSVGCalibration").style.opacity = 1;
+  document.getElementById("gamepadSVGCalibration").style.visibility = "visible";
   const bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
