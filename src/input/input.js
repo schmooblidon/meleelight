@@ -205,18 +205,20 @@ function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : {[key
   input.dr  = keys[keyMap.dr[0]];
   input.du  = keys[keyMap.du[0]];
 
+  if (!frameByFrame && gameMode !== 4 && gameMode !== 14) { // not in target builder, calibration screen, or frame by frame mode
+    if (input.z) {
+      if (input.lA < 0.35) {
+        input.lA = 0.35;
+      }
+      input.a = true;
+    }
+  }
+
   if (input.l) {
     input.lA = 1;
   }
   if (input.r) {
     input.rA = 1;
-  }
-
-  if (!frameByFrame && gameMode !== 4 && gameMode !== 14) { // not in target builder, calibration screen, or frame by frame mode
-    if (input.z) {
-      input.lA = 0.35;
-      input.a = true;
-    }
   }
 
   return input;
@@ -328,25 +330,29 @@ function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
 
 
 
-  if (!frameByFrame && gameMode !== 4) { // not in target builder
+  if (!frameByFrame && gameMode !== 4 && gameMode !== 14)  { // not in target builder or calibration screen
     if (input.z) {
-      input.lA = 0.35;
+      if (input.lA < 0.35) {
+        input.lA = 0.35;
+      }
       input.a = true;
     }
   }
 
-  if (input.l) {
-    input.lA = 1;
-  }
-  if (input.r) {
-    input.rA = 1;
-  }
-
-  if (input.lA > 0.95) {
-    input.l = true;
-  }
-  if (input.rA > 0.95) {
-    input.r = true;
+  if (gameMode !== 14) {
+    if (input.l) {
+      input.lA = 1;
+    }
+    if (input.r) {
+      input.rA = 1;
+    }
+  
+    if (input.lA > 0.95) {
+      input.l = true;
+    }
+    if (input.rA > 0.95) {
+      input.r = true;
+    }
   }
 
   // -------------------------------------------------------
