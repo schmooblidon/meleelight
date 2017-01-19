@@ -60,21 +60,27 @@ function listen () : void {
   }
 }
 
+const defaultText = "Click button, trigger or analog stick to rebind. Click Marth to exit.";
+
 export function runCalibration ( i : number ) : void {
   if (calibrationInProgress[i]) {
     return;
   }
   setCalibrationInProgress(i, true);
  
-  const interval = 1000; // 1 second
+  const interval = 3000;
 
   const j = currentPlayers[i];
 
   const gamepadInfo : GamepadInfo = mType[i] === null || mType[i] === "keyboard" ? nullGamepadInfo : mType[i];
   gamepadInfo.ids = [ { name : "custom controller" } ];
 
+  setCustomGamepadInfo(j, gamepadInfo);
+  setUsingCustomControls(j);
+
   clickObject = null;
   listen();
+  updateControllerMenu(false, "Click start button to begin calibration.", 0);
   preCalibrationLoop(i, j, gamepadInfo, interval);
 
 }
@@ -82,8 +88,9 @@ export function runCalibration ( i : number ) : void {
 function preCalibrationLoop( i : number, j : number
                            , gamepadInfo : GamepadInfo
                            , interval : number) : void {
-  if (clickObject === "icon") {
+  if (clickObject === "s") {
     clickObject = null;
+    updateControllerMenu(false, "Finding controller neutral point, do not press anything.", interval);
     // take null snapshot
     setTimeout( () => {
       const gamepad = getGamepad(j);
@@ -91,6 +98,7 @@ function preCalibrationLoop( i : number, j : number
       snapshots.b0 = deepCopyButtons(gamepad);
       snapshots.a0 = deepCopyAxes(gamepad);
       calibrationLoop(i, j, gamepadInfo, snapshots, interval);
+      updateControllerMenu(false, defaultText, 0);
     }, interval);
   }
   else {
@@ -126,9 +134,7 @@ function calibrateObject ( i : number, j : number
     text = "Quitting.";
     if (gamepadInfo.lA !== null && (gamepadInfo.lA.kind === "value" || gamepadInfo.lA.kind === "axis")) {
       gamepadInfo.isGC = Math.abs(gamepadInfo.lA.min + 0.866) < 0.01 ? true : false; // hacky but hey
-    }
-    setCustomGamepadInfo(i, gamepadInfo);
-    setUsingCustomControls(i);
+    }       
     setCalibrationInProgress(i, false);
     updateControllerMenu(true, "Quitting calibration menu.", interval);
   }
@@ -136,57 +142,75 @@ function calibrateObject ( i : number, j : number
     text = "Fully depress "+clickObject.toUpperCase()+" trigger.";
     const t = clickObject; // passed as-is in the closure
     const tA = clickObject+"a";
+    updateControllerMenu(false, text, interval);
     setTimeout( () => {
       gamepad = getGamepad(j);
       gamepadInfo[t]  = scanForButton (snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes, true);
       gamepadInfo[tA] = scanForTrigger(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
+      updateControllerMenu(false, defaultText, 0);
     }, interval);
   }
   else if (clickObject === "ls" || clickObject === "cs" || clickObject === "dpad") {    
-    text = clickObject; // better solution needed for the 4 steps in this procedure
-    totalInterval += 7*interval;
+    if (clickObject = "ls") {
+      text = "Move left analog stick all the way ";
+    }
+    else if (clickObject = "cs") {
+      text = "Move c-stick all the way ";
+    }
+    else {
+      text = "Press d-pad ";
+    }
+    totalInterval += 5*interval;
+    updateControllerMenu(false, text+"left.", 1.5*interval);
     setTimeout( () => {
       gamepad = getGamepad(j);
       snapshots.bL = deepCopyButtons(gamepad);
       snapshots.aL = deepCopyAxes(gamepad);
-    }, 2*interval);
+      updateControllerMenu(false, text+"right.", 1.5*interval);
+    }, 1.5*interval);
     setTimeout( () => {
       gamepad = getGamepad(j);
       snapshots.bR = deepCopyButtons(gamepad);
       snapshots.aR = deepCopyAxes(gamepad);
-    }, 4*interval);
+      updateControllerMenu(false, text+"up.", 1.5*interval);
+    }, 3*interval);
     setTimeout( () => {
       gamepad = getGamepad(j);
       snapshots.bU = deepCopyButtons(gamepad);
       snapshots.aU = deepCopyAxes(gamepad);
-    }, 6*interval);
+      updateControllerMenu(false, text+"down.", 1.5*interval);
+    }, 4.5*interval);
     if (clickObject === "dpad") {
       setTimeout( () => {
         gamepad = getGamepad(j);
         gamepadInfo.dpad = scanForDPad( snapshots.b0, snapshots.bL, snapshots.bR, snapshots.bU, gamepad.buttons
                                       , snapshots.a0, snapshots.aL, snapshots.aR, snapshots.aU, gamepad.axes);
-      }, 8*interval);
+        updateControllerMenu(false, defaultText, 0);
+      }, 6*interval);
     }
     else {
       const clickNow = clickObject; // passed as-is in the closure
       setTimeout( () => {
         gamepad = getGamepad(j);
         gamepadInfo[clickNow] = scanForStick( snapshots.b0, snapshots.bL, snapshots.bR, snapshots.bU, gamepad.buttons
-                                               , snapshots.a0, snapshots.aL, snapshots.aR, snapshots.aU, gamepad.axes);
-      }, 8*interval);
+                                            , snapshots.a0, snapshots.aL, snapshots.aR, snapshots.aU, gamepad.axes);
+        updateControllerMenu(false, defaultText, 0);
+      }, 6*interval);
     }
   }
   else { // only plain buttons left now
     const buttonName = clickObject === "s" ? "start" : clickObject.toUpperCase();
     text = "Press "+buttonName+".";
     const clickNow = clickObject;
+    updateControllerMenu(false, text, interval);
     setTimeout( () => {
       gamepad = getGamepad(j);
       gamepadInfo[clickNow] = scanForButton(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
+      updateControllerMenu(false, defaultText, 0);
     }, interval);
   }
 
-  updateControllerMenu(false, text, interval);
+  setCustomGamepadInfo(j, gamepadInfo);
   clickObject = null;
 
   setTimeout( () => {
