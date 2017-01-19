@@ -37,6 +37,7 @@ import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
+import {deaden} from "../input/meleeInputs";
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
@@ -610,6 +611,8 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     tempBuffer[7-k].rawY = inputBuffer[7-k-pastOffset].rawY;
     tempBuffer[7-k].csX  = inputBuffer[7-k-pastOffset].csX;
     tempBuffer[7-k].csY  = inputBuffer[7-k-pastOffset].csY;
+    tempBuffer[7-k].rawcsX  = inputBuffer[7-k-pastOffset].rawcsX;
+    tempBuffer[7-k].rawcsY  = inputBuffer[7-k-pastOffset].rawcsY;
     tempBuffer[7-k].lA   = inputBuffer[7-k-pastOffset].lA;
     tempBuffer[7-k].rA   = inputBuffer[7-k-pastOffset].rA;
     tempBuffer[7-k].a    = inputBuffer[7-k-pastOffset].a;
@@ -696,6 +699,16 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
 
     interpretPause(pause[i][0], pause[i][1]);
+  }
+  else { // AI
+    tempBuffer[0].rawX = tempBuffer[0].lsX;
+    tempBuffer[0].rawY = tempBuffer[0].lsY;
+    tempBuffer[0].rawcsX = tempBuffer[0].csX;
+    tempBuffer[0].rawcsY = tempBuffer[0].csY;
+    tempBuffer[0].lsX = deaden(tempBuffer[0].rawX);
+    tempBuffer[0].lsY = deaden(tempBuffer[0].rawY);
+    tempBuffer[0].csX = deaden(tempBuffer[0].rawcsX);
+    tempBuffer[0].csY = deaden(tempBuffer[0].rawcsY);
   }
 
   if (showDebug) {
