@@ -212,7 +212,7 @@ function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : {[key
     input.rA = 1;
   }
 
-  if (!frameByFrame && gameMode !== 4 && gamemode !== 14) { // not in target builder, calibration screen, or frame by frame mode
+  if (!frameByFrame && gameMode !== 4 && gameMode !== 14) { // not in target builder, calibration screen, or frame by frame mode
     if (input.z) {
       input.lA = 0.35;
       input.a = true;

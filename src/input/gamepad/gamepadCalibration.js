@@ -47,9 +47,12 @@ const nullSnapshots : Snapshots = { b0 : [], bL : [], bR : [], bU : []
 
 type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" | "icon";
 let clickObject : ClickObject = null;
+let listening = false;
 
 const ids = ["a", "b", "x", "y", "s", "r", "l" , "z", "dpad", "icon", "ls", "cs"];
 
+// add listeners for click
+// these turn off when the SVG is not displayed, so shouldn't impact performance
 function listen () : void {
   // $FlowFixMe ignore the following type error
   const svgDoc = document.getElementById("gamepadSVGCalibration").contentDocument;
@@ -58,6 +61,7 @@ function listen () : void {
     // eslint-disable-next-line no-loop-func
     svgDoc.getElementById(id).addEventListener('click', () => { clickObject = id; });
   }
+  listening = true;
 }
 
 const defaultText = "Click button, trigger or analog stick to rebind. Click Marth to exit.";
@@ -79,7 +83,9 @@ export function runCalibration ( i : number ) : void {
   setUsingCustomControls(j);
 
   clickObject = null;
-  listen();
+  if (listening === false) {
+    listen();
+  }
   updateControllerMenu(false, "Click start button to begin calibration.", 0);
   preCalibrationLoop(i, j, gamepadInfo, interval);
 

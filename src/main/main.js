@@ -41,7 +41,7 @@ import {deaden} from "../input/meleeInputs";
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
-import {updateGamepadSVGState, cycleGamepadColour} from "../input/gamepad/drawGamepad";
+import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 /*globals performance*/
 
 export const holiday = 1;
@@ -439,15 +439,27 @@ export function addPlayer (i, controllerInfo){
   currentPlayers[ports - 1] = i;
   playerType[ports - 1] = 0;
   mType[ports - 1] = controllerInfo;
+  if (showDebug) {
+    updateGamepadSVGColour(i, "gamepadSVG"+i);
+    document.getElementById("gamepadSVG"+i).style.display = "";
+  }
 }
 
 export function togglePort (i){
   playerType[i]++;
   if (playerType[i] == 2) {
     playerType[i] = -1;
+    if (showDebug) {
+      document.getElementById("gamepadSVG"+i).style.display = "none";
+    }
   }
   if (playerType[i] == 0 && ports <= i) {
     playerType[i] = 1;
+    setGamepadSVGColour(i, "black");
+    if (showDebug) {
+      updateGamepadSVGColour(i, "gamepadSVG"+i);      
+      document.getElementById("gamepadSVG"+i).style.display = "";
+    }
   }
 }
 
@@ -1519,6 +1531,9 @@ export function start (){
 
   $("#debugButton").click(function() {
     if (showDebug) {
+      for (let i = 0; i < 4; i++) {
+        document.getElementById("gamepadSVG"+i).style.display = "none";
+      }
       $("#debugButtonEdit").empty().append("OFF");
       $("#debug").hide();
       $("#players").hide();
@@ -1526,6 +1541,12 @@ export function start (){
       //var mY = Math.max(($(window).height()-750)/2,0);
       //$("#display").css("margin",mY+"px 0px 0px "+mX+"px");
     } else {
+      for (let i = 0; i < 4; i++) {
+        if (playerType[i] !== -1) {
+          updateGamepadSVGColour(i, "gamepadSVG"+i);
+          document.getElementById("gamepadSVG"+i).style.display = "";
+        }
+      }
       $("#debugButtonEdit").empty().append("ON");
       $("#debug").show();
       $("#players").show();

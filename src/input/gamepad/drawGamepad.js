@@ -38,14 +38,14 @@ function cycleColour( colour : ControllerColour, forward : bool) : ControllerCol
 };
 
 
-function nullGamepadState () {
-  return  { colour : "purple"
+function nullGamepadState (col) {
+  return  { colour : col
           , a : false, b : false, x : false, y : false, z : false, s : false
           , lsCentered : true, csCentered : true, dPadCentered : true
           , lCentered : true, rCentered : true };
 }
 
-const gamepadStates = [nullGamepadState(), nullGamepadState(), nullGamepadState(), nullGamepadState()];
+const gamepadStates = [nullGamepadState("red"), nullGamepadState("blue"), nullGamepadState("orange"), nullGamepadState("green")];
 
 // fixed colours
 const grey = "#cdcdcd";
@@ -108,6 +108,10 @@ export function cycleGamepadColour( i : number, which : string, forward : bool) 
     updateGamepadSVGColour(i, "gamepadSVG"+i);
     updateGamepadSVGColour(i, "gamepadSVGCalibration"); 
   }
+}
+
+export function setGamepadSVGColour(i : number, col : ControllerColour) {
+  gamepadStates[i].colour = col;
 }
 
 export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Input) : void {
