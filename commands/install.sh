@@ -1,5 +1,5 @@
 #!/bin/bash
-cd-
+cd -
 clear
 echo "There are 2 installation methods. Installing packages with node package manager(npm) or with yarn. Since you have node.js you have npm, but you will only have yarn if you downloaded it seperatly."
 
