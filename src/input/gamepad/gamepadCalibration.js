@@ -86,7 +86,7 @@ export function runCalibration ( i : number ) : void {
   if (listening === false) {
     listen();
   }
-  updateControllerMenu(false, "Click start button to begin calibration.", 0);
+  updateControllerMenu(false, "Mouse-click start button to begin calibration.", 0);
   preCalibrationLoop(i, j, gamepadInfo, interval);
 
 }
