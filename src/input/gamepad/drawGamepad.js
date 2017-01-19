@@ -61,8 +61,8 @@ const cColour = "#e7c518";
 const darkCColour = "#b68e0b";
 const highlight = "#fafe90";
 
-export function updateGamepadSVGColour(i : number, colour : ControllerColour) : void {
-  const svgObject = document.getElementById("gamepadSVG"+i);
+export function updateGamepadSVGColour(i : number, id : string, colour : ControllerColour) : void {
+  const svgObject = document.getElementById(id);
   if (svgObject === null || svgObject === undefined) {
     console.log("error in 'updateGamepadSVGColour': gamepad SVG not found.");
     return void 0;
@@ -97,17 +97,17 @@ export function updateGamepadSVGColour(i : number, colour : ControllerColour) : 
   svg.getElementById("slash3").style.fill = fade[3];
 };
 
-export function cycleGamepadColour( i : number, forward : bool) : void {
-  updateGamepadSVGColour(i, cycleColour(gamepadStates[i].colour, forward)); 
+export function cycleGamepadColour( i : number, id : string, forward : bool) : void {
+  updateGamepadSVGColour(i, id, cycleColour(gamepadStates[i].colour, forward)); 
 }
 
-export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
+export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Input) : void {
   let input = maybeInput;
   if (input === null || input === undefined) {
     input = nullInput();
   }
 
-  const svgObject = document.getElementById("gamepadSVG"+i);
+  const svgObject = document.getElementById(id);
   if (svgObject === null || svgObject === undefined) {
     console.log("error in 'updateGamepadSVGState': gamepad SVG not found.");
     return void 0;
@@ -229,7 +229,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
 
 
   if (!gamepadStates[i].rCentered || input.rA > 0.01) {
-    svg.getElementById("R").setAttribute("transform", "translate(0,"+(40*Math.pow(input.rA,2))+")");
+    svg.getElementById("r").setAttribute("transform", "translate(0,"+(40*Math.pow(input.rA,2))+")");
     if (input.rA > 0.01) {
       gamepadStates[i].rCentered = false;
     }
@@ -238,7 +238,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
     }
   }
   if (!gamepadStates[i].lCentered || input.lA > 0.01) {
-    svg.getElementById("L").setAttribute("transform", "translate(0,"+(40*Math.pow(input.lA,2))+")");
+    svg.getElementById("l").setAttribute("transform", "translate(0,"+(40*Math.pow(input.lA,2))+")");
     if (input.lA > 0.01) {
       gamepadStates[i].lCentered = false;
     }
@@ -295,7 +295,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   const anyLSInput = Math.abs(input.rawX) > 0.01 || Math.abs(input.rawY) > 0.01;
 
   if (!gamepadStates[i].lsCentered || anyLSInput) {
-    svg.getElementById("lStick").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(lScale*input.rawX))+","+(lNC.y+(-lScale*input.rawY))+")");
+    svg.getElementById("ls").setAttribute("transform", "matrix("+lSM[0][0]+","+lSM[0][1]+","+lSM[1][0]+","+lSM[1][1]+","+(lNC.x+(lScale*input.rawX))+","+(lNC.y+(-lScale*input.rawY))+")");
     svg.getElementById("lStickShadow").setAttribute("transform", "translate("+ (-0.6*lScale*input.rawX)+","+(0.6*lScale*input.rawY)+")");
     svg.getElementById("lStickDepth").setAttribute("transform", "translate("+ (-0.15*lScale*input.rawX)+","+(0.15*lScale*input.rawY)+")");
     svg.getElementById("lStickCircle1").setAttribute("transform", "translate("+ (0.19*lScale*input.rawX)+","+(-0.19*lScale*input.rawY)+")");
@@ -312,7 +312,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   const anyCSInput = Math.abs(input.rawcsX) > 0.01 || Math.abs(input.rawcsY) > 0.01;
 
   if (!gamepadStates[i].csCentered || anyCSInput) {
-    svg.getElementById("cStick").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(cScale*input.rawcsX))+","+(cNC.y+(-cScale*input.rawcsY))+")");
+    svg.getElementById("cs").setAttribute("transform", "matrix("+cSM[0][0]+","+cSM[0][1]+","+cSM[1][0]+","+cSM[1][1]+","+(cNC.x+(cScale*input.rawcsX))+","+(cNC.y+(-cScale*input.rawcsY))+")");
     svg.getElementById("cStickShadow").setAttribute("transform", "translate("+(-0.45*cScale*input.rawcsX)+","+(0.45*cScale*input.rawcsY)+")");
     svg.getElementById("cStickShadowRect").setAttribute("transform", "rotate("+cStickAngle+","+(csCenterX) +","+(csCenterY)+") translate("+((1-cRectScale)*csCenterX)+",0) scale("+cRectScale+",1)");
     if (anyCSInput) {
@@ -324,7 +324,7 @@ export function updateGamepadSVGState(i : number, maybeInput : ?Input) : void {
   }
 
   if (!gamepadStates[i].dPadCentered || anyDPadInput) {
-    svg.getElementById("dPad").setAttribute("transform", "matrix("+dSM[0][0]+","+dSM[0][1]+","+dSM[1][0]+","+dSM[1][1]+","+(dNC.x+(dScale*dPadAxes.x))+","+(dNC.y+(-dScale*dPadAxes.y))+")");
+    svg.getElementById("dpad").setAttribute("transform", "matrix("+dSM[0][0]+","+dSM[0][1]+","+dSM[1][0]+","+dSM[1][1]+","+(dNC.x+(dScale*dPadAxes.x))+","+(dNC.y+(-dScale*dPadAxes.y))+")");
     svg.getElementById("dPadShapeDepth1").setAttribute("transform", "translate("+ (-1.4*dScale*dPadAxes.x)+","+(1.4*dScale*dPadAxes.y)+")");
     svg.getElementById("dPadShapeDepth2").setAttribute("transform", "translate("+ (-0.7*dScale*dPadAxes.x)+","+(0.7*dScale*dPadAxes.y)+")");
     if (dPadAxes !== 0 || dPadAxes.y !== 0) {

@@ -8,28 +8,29 @@ import {twoPi} from "main/render";
 
 let controllerTimer = 3000/16.667;
 
-export function updateControllerMenu(passNumber, text, interval){
+export function updateControllerMenu(quit, text, interval){
   fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
   fg1.fillStyle = "rgba(255,255,255,0.8)";
-  fg1.font = "700 50px Arial";
+  fg1.font = "700 42px Arial";
   fg1.textAlign = "center";
   if (text.length > 20) {
-    let n = text.indexOf(" ", 20);
+    let n = text.indexOf(" ", 10);
     let text1 = text.substr(0,n);
     let text2 = text.substr(n+1, text.length);
-    fg1.fillText(text1, 600, 330);
-    fg1.fillText(text2, 600, 390);
+    fg1.fillText(text1, 600, 520);
+    fg1.fillText(text2, 600, 580);
   } else {
-    fg1.fillText(text, 600, 350);
+    fg1.fillText(text, 600, 540);
   }
-  if (passNumber === 21) {
-    setTimeout(function(){changeGamemode(1)}, 2000);
+  if (quit) {
+    setTimeout(function(){ document.getElementById("gamepadSVGCalibration").style.opacity = 0; changeGamemode(1)}, 2000);
   } else {
     controllerTimer = interval/16.667;
   }
 }
 
 export function drawControllerMenuInit (){
+  document.getElementById("gamepadSVGCalibration").style.opacity = 1;
   const bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
   bgGrad.addColorStop(0,"rgb(11, 65, 39)");
   bgGrad.addColorStop(1,"rgb(8, 20, 61)");
@@ -38,9 +39,9 @@ export function drawControllerMenuInit (){
   bg1.fillStyle = "rgba(0,0,0,0.5)";
   fg2.fillStyle = "rgba(255,255,255,0.2)";
   controllerTimer--;
-  fg2.fillRect(300,500,600,30);
+  fg2.fillRect(300,600,600,30);
   fg2.fillStyle = "rgba(255,255,255,0.8)";
-  fg2.fillRect(300,500,600*Math.max(0,(controllerTimer/(3000/16.667))),30);
+  fg2.fillRect(300,600,600*Math.max(0,(controllerTimer/(3000/16.667))),30);
 }
 
 export function drawControllerMenu (){

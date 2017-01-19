@@ -1,5 +1,5 @@
 import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen,
-    setCreditsPlayer, currentPlayers
+    setCreditsPlayer, setCalibrationPlayer, currentPlayers
 } from "main/main";
 import {sounds} from "main/sfx";
 import { setTargetPlayer} from "target/targetplay";
@@ -81,12 +81,13 @@ export function menuMove (i, input){
       }
       else if (menuSelected == 3){
         //credits
-          setCreditsPlayer(i);
+        setCreditsPlayer(i);
         changeGamemode(13);
       }
     } else {
       if (menuSelected === 0) {
         // map controller
+        setCalibrationPlayer(i);
         changeGamemode(14);
         runCalibration(i);
       } else {

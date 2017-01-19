@@ -5,6 +5,10 @@
     <link href="./meleelight.css" rel="stylesheet"/>
   </head>
   <body>
+
+  <!-- load the gamepad SVG loading script -->
+  <script type="text/javascript" src="../src/input/gamepad/includeGamepadSVG.js"></script>
+
     <div id="loadScreen">
       <canvas id="loadCanvas" width="300" height="200"></canvas>
       <div id="loadPercent"><p><span id="loadPercentEdit">0</span>%</p></div>
@@ -206,7 +210,8 @@
     <canvas id="foreground1Canvas" class="gameCanvas" width="1200" height="750"></canvas>
     <canvas id="foreground2Canvas" class="gameCanvas" width="1200" height="750"></canvas>
     <canvas id="uiCanvas" class="gameCanvas" width="1200" height="750"></canvas>
-
+    <iframe id="gamepadSVGCalibration" scrolling="no" width="1200" height="750" frameborder="0" style="opacity:0;"></iframe>
+    <script> includeGamepadSVG("gamepadSVGCalibration", 600, 600); </script>
     <div id="tagTextContainer"><textarea id="pTagEdit0" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit1" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit2" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit3" class="pTagEdit" maxlength="10"></textarea></div>
     <div id="customStageContainer"><div id="cStage1"><div id="cStageTitle"><p><span id="cStageTitleEdit">Share this code</span></p></div><textarea id="cStageEdit"></textarea></div><div id="cStage2"><div id="cStageInfo"><p><span id="cStageInfoEdit"></span></p></div><div id="cStagePrompt"><p>Finish</p><div id="aButton"><p>A</p></div></div></div></div>
     <div id="debug">
@@ -217,7 +222,6 @@
     <div id="buttons"><div id="effectsButton" class="gameButton"><p>VFX <span id="effectsButtonEdit">ON</span></p></div><div id="debugButton" class="gameButton"><p>DEBUG <span id="debugButtonEdit">OFF</span></p></div><div id="fpsButton" class="gameButton"><p><span id="fpsButtonEdit">60</span>fps</p></div><div id="alphaButton" class="gameButton"><p>ALPHA <span id="alphaButtonEdit">ON</span></p></div><div id="layerButton" class="gameButton"><p>LAYERS<span id="layerButtonEdit"></span></p><div id="layerDropdown"><div id="layer1" class="layer layerOn"><p>BG1</p></div><div id="layer2" class="layer layerOn"><p>BG2</p></div><div id="layer3" class="layer layerOn"><p>FG1</p></div><div id="layer4" class="layer layerOn"><p>FG2</p></div><div id="layer5" class="layer layerOn"><p>UI</p></div></div></div></div>
   </div>
     <div id="players">
-    <script type="text/javascript" src="../src/input/gamepad/includeGamepadSVG.js"></script>
     <div class="playerDetails">
       <iframe id="gamepadSVG0" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"></iframe>
       <script> includeGamepadSVG("gamepadSVG0", 150, 150); </script>

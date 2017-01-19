@@ -4,7 +4,7 @@
 import {Vec2D} from "../../main/util/Vec2D";
 import {deepCopyObject} from "../../main/util/deepCopyObject";
 import {setCustomGamepadInfo} from "./gamepads/custom";
-import {setUsingCustomControls, currentPlayers} from "../../main/main";
+import {setUsingCustomControls, currentPlayers, mType} from "../../main/main";
 import {updateControllerMenu} from "../../menus/controllermenu.js";
 import {nullGamepadInfo} from "./gamepadInfo";
 import {getGamepad} from "./gamepad";
@@ -45,215 +45,153 @@ type Snapshots = { b0 : Array<Button>, bL : Array<Button>, bR : Array<Button>, b
 const nullSnapshots : Snapshots = { b0 : [], bL : [], bR : [], bU : []
                                   , a0 : [], aL : [], aR : [], aU : [] };
 
+type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" | "icon";
+let clickObject : ClickObject = null;
+
+const ids = ["a", "b", "x", "y", "ls", "cs", "s", "r", "l" , "z", "dpad", "icon"];
+
+function listen () : void {
+  // $FlowFixMe ignore the following type error
+  const svgDoc = document.getElementById("gamepadSVGCalibration").contentDocument;
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i];
+    // eslint-disable-next-line no-loop-func
+    svgDoc.getElementById(id).addEventListener('click', () => { clickObject = id; });
+  }
+}
 
 export function runCalibration ( i : number ) : void {
   if (calibrationInProgress[i]) {
     return;
   }
   setCalibrationInProgress(i, true);
-  
-  const interval = 3000; // 3 seconds
+ 
+  const interval = 1000; // 1 second
 
   const j = currentPlayers[i];
 
-  const gamepadInfo : GamepadInfo = nullGamepadInfo;
+  const gamepadInfo : GamepadInfo = mType[i] === null || mType[i] === "keyboard" ? nullGamepadInfo : mType[i];
   gamepadInfo.ids = [ { name : "custom controller" } ];
-  calibrateGamepad( i, j, gamepadInfo
-                  , nullSnapshots
-                  , 0, interval
-                  );
+
+  clickObject = null;
+  listen();
+  preCalibrationLoop(i, j, gamepadInfo, interval);
 
 }
 
-function calibrateGamepad ( i : number, j : number
+function preCalibrationLoop( i : number, j : number
+                           , gamepadInfo : GamepadInfo
+                           , interval : number) : void {
+  if (clickObject === "icon") {
+    clickObject = null;
+    // take null snapshot
+    setTimeout( () => {
+      const gamepad = getGamepad(j);
+      const snapshots = nullSnapshots;
+      snapshots.b0 = deepCopyButtons(gamepad);
+      snapshots.a0 = deepCopyAxes(gamepad);
+      calibrationLoop(i, j, gamepadInfo, snapshots, interval);
+    }, interval);
+  }
+  else {
+    setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
+  }
+};
+
+function calibrationLoop ( i : number, j : number
+                         , gamepadInfo : GamepadInfo
+                         , snapshots : Snapshots
+                         , interval : number ) : void {
+  if (clickObject === null) {
+    setTimeout ( () => { calibrationLoop(i, j, gamepadInfo, snapshots, interval); }, 16);
+  }
+  else {
+    calibrateObject(i, j, gamepadInfo, snapshots, interval);
+  }
+};
+
+function calibrateObject ( i : number, j : number
                           , gamepadInfo : GamepadInfo
                           , snapshots : Snapshots
-                          , passNumber : number, interval : number ) : void {
+                          , interval : number ) : void {
   let text;
   let gamepad;
+  let totalInterval = interval+16;
 
-  switch(passNumber) { // fire events
-    case 0:
-      text = "Beginning calibration of controller "+(j+1)+" (player "+(i+1)+"). Do not press anything.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.b0 = deepCopyButtons(gamepad);
-        snapshots.a0 = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 1:
-      text = "Press A.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.a = scanForButton(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
-      }, interval);
-      break;
-    case 2:
-      text = "Press B.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.b = scanForButton(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
-      }, interval);
-      break;
-    case 3:
-      text = "Press X.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.x = scanForButton(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
-      }, interval);
-      break;
-    case 4:
-      text = "Press Y.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.y = scanForButton(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
-      }, interval);
-      break;
-    case 5:
-      text = "Press start.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.s = scanForButton(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
-      }, interval);
-      break;
-    case 6:
-      text = "Push L trigger all the way.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.l  = scanForButton (snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes, true);
-        gamepadInfo.lA = scanForTrigger(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
-      }, interval);
-      break;
-    case 7:
-      text = "Push R trigger all the way.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.r  = scanForButton (snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes, true);
-        gamepadInfo.rA = scanForTrigger(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
-      }, interval);
-      break;
-    case 8:
-      text = "Press Z.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.z = scanForButton(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
-      }, interval);
-      break;
-    case 9:
-      text = "Move the left analog stick all the way to the left.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bL = deepCopyButtons(gamepad);
-        snapshots.aL = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 10:
-      text = "Move the left analog stick all the way to the right.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bR = deepCopyButtons(gamepad);
-        snapshots.aR = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 11:
-      text = "Move the left analog stick all the way to the top.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bU = deepCopyButtons(gamepad);
-        snapshots.aU = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 12:
-      text = "Move the left analog stick all the way to the bottom.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.ls = scanForStick( snapshots.b0, snapshots.bL, snapshots.bR, snapshots.bU, gamepad.buttons
-                                     , snapshots.a0, snapshots.aL, snapshots.aR, snapshots.aU, gamepad.axes);
-      }, interval);
-      break;
-    case 13:
-      text = "Move the c-stick all the way to the left.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bL = deepCopyButtons(gamepad);
-        snapshots.aL = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 14:
-      text = "Move the c-stick all the way to the right.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bR = deepCopyButtons(gamepad);
-        snapshots.aR = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 15:
-      text = "Move the c-stick all the way to the top.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bU = deepCopyButtons(gamepad);
-        snapshots.aU = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 16:
-      text = "Move the c-stick all the way to the bottom.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        gamepadInfo.cs = scanForStick( snapshots.b0, snapshots.bL, snapshots.bR, snapshots.bU, gamepad.buttons
-                                     , snapshots.a0, snapshots.aL, snapshots.aR, snapshots.aU, gamepad.axes);
-      }, interval);
-      break;
-    case 17:
-      text = "Press d-pad left.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bL = deepCopyButtons(gamepad);
-        snapshots.aL = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 18:
-      text = "Press d-pad right.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bR = deepCopyButtons(gamepad);
-        snapshots.aR = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 19:
-      text = "Press d-pad up.";
-      setTimeout( () => {
-        gamepad = getGamepad(j);
-        snapshots.bU = deepCopyButtons(gamepad);
-        snapshots.aU = deepCopyAxes(gamepad);
-      }, interval);
-      break;
-    case 20:
-      text = "Press d-pad down.";
+  if (clickObject === null) {
+    text = "error";
+    console.log("error in function 'calibrateObject': calibration called on null object");
+  }
+  else if (clickObject === "icon") {
+    text = "Quitting.";
+    if (gamepadInfo.lA !== null && (gamepadInfo.lA.kind === "value" || gamepadInfo.lA.kind === "axis")) {
+      gamepadInfo.isGC = Math.abs(gamepadInfo.lA.min + 0.866) < 0.01 ? true : false; // hacky but hey
+    }
+    setCustomGamepadInfo(i, gamepadInfo);
+    setUsingCustomControls(i);
+    setCalibrationInProgress(i, false);
+    updateControllerMenu(true, "Quitting calibration menu.", interval);
+  }
+  else if (clickObject === "l" || clickObject === "r") {
+    text = "Fully depress "+clickObject.toUpperCase()+" trigger.";
+    const t = clickObject; // passed as-is in the closure
+    const tA = clickObject+"a";
+    setTimeout( () => {
+      gamepad = getGamepad(j);
+      gamepadInfo[t]  = scanForButton (snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes, true);
+      gamepadInfo[tA] = scanForTrigger(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
+    }, interval);
+  }
+  else if (clickObject === "ls" || clickObject === "cs" || clickObject === "dpad") {    
+    text = clickObject; // better solution needed for the 4 steps in this procedure
+    totalInterval += 7*interval;
+    setTimeout( () => {
+      gamepad = getGamepad(j);
+      snapshots.bL = deepCopyButtons(gamepad);
+      snapshots.aL = deepCopyAxes(gamepad);
+    }, 2*interval);
+    setTimeout( () => {
+      gamepad = getGamepad(j);
+      snapshots.bR = deepCopyButtons(gamepad);
+      snapshots.aR = deepCopyAxes(gamepad);
+    }, 4*interval);
+    setTimeout( () => {
+      gamepad = getGamepad(j);
+      snapshots.bU = deepCopyButtons(gamepad);
+      snapshots.aU = deepCopyAxes(gamepad);
+    }, 6*interval);
+    if (clickObject === "dpad") {
       setTimeout( () => {
         gamepad = getGamepad(j);
         gamepadInfo.dpad = scanForDPad( snapshots.b0, snapshots.bL, snapshots.bR, snapshots.bU, gamepad.buttons
                                       , snapshots.a0, snapshots.aL, snapshots.aR, snapshots.aU, gamepad.axes);
-      }, interval);
-      break;
-    case 21:
-      console.log("Controller "+(j+1)+" (player "+(i+1)+") calibration complete.");
-      if (gamepadInfo.lA !== null && (gamepadInfo.lA.kind === "value" || gamepadInfo.lA.kind === "axis")) {
-        gamepadInfo.isGC = Math.abs(gamepadInfo.lA.min + 0.866) < 0.01 ? true : false; // hacky but hey
-      }
-      setCustomGamepadInfo(i, gamepadInfo);
-      setUsingCustomControls(i);
-      setCalibrationInProgress(i, false);
-      updateControllerMenu(passNumber, "Calibration complete!", interval);
-      return;
-    default:
-      break;
+      }, 8*interval);
+    }
+    else {
+      const clickNow = clickObject; // passed as-is in the closure
+      setTimeout( () => {
+        gamepad = getGamepad(j);
+        gamepadInfo[clickNow] = scanForStick( snapshots.b0, snapshots.bL, snapshots.bR, snapshots.bU, gamepad.buttons
+                                               , snapshots.a0, snapshots.aL, snapshots.aR, snapshots.aU, gamepad.axes);
+      }, 8*interval);
+    }
+  }
+  else { // only plain buttons left now
+    const buttonName = clickObject === "s" ? "start" : clickObject.toUpperCase();
+    text = "Press "+buttonName+".";
+    const clickNow = clickObject;
+    setTimeout( () => {
+      gamepad = getGamepad(j);
+      gamepadInfo[clickNow] = scanForButton(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
+    }, interval);
   }
 
-  updateControllerMenu(passNumber, text, interval);
+  updateControllerMenu(false, text, interval);
+  clickObject = null;
 
   setTimeout( () => {
-    calibrateGamepad( i, j, gamepadInfo, snapshots, passNumber+1, interval);
-  }, interval);
+    calibrationLoop(i, j, gamepadInfo, snapshots, interval);
+  }, totalInterval);
 }
 
 

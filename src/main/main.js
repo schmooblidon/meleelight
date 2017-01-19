@@ -58,6 +58,7 @@ export var shine = 0.5;
 export let endTargetGame = false;
 
 export let creditsPlayer = 0;
+export let calibrationPlayer = 0;
 
 let gameEnd = false;
 export let controllerResetCountdowns = [0,0,0,0];
@@ -379,7 +380,7 @@ export function findPlayers (){
         const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
         if (maybeNameAndInfo === null) {
           console.log("Error in 'findPlayers': controller "+(i+1)+" detected but not supported.");
-          console.log("Try manual calibration of your controller."); // TODO: say how to do this
+          console.log("Try manual calibration of your controller.");
         } else {
           detected = true;
           [gpdName, gpdInfo] = maybeNameAndInfo;
@@ -718,13 +719,23 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(3));
     $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(3));
     $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(3));
-    updateGamepadSVGState(i, tempBuffer[0]);
+    updateGamepadSVGState(i, "gamepadSVG"+i, tempBuffer[0]);
 
     if (tempBuffer[0].x && !tempBuffer[1].x && tempBuffer[0].du ) {
-      cycleGamepadColour(i,true);
+      cycleGamepadColour(i, "gamepadSVG"+i,true);
     }
     if (tempBuffer[0].y && !tempBuffer[1].y && tempBuffer[0].du ) {
-      cycleGamepadColour(i,false);
+      cycleGamepadColour(i, "gamepadSVG"+i,false);
+    }
+  }
+
+  if (gameMode === 14) { // controller calibration screen
+    updateGamepadSVGState(i, "gamepadSVGCalibration", tempBuffer[0]);
+    if (tempBuffer[0].x && !tempBuffer[1].x && tempBuffer[0].du ) {
+      cycleGamepadColour(i, "gamepadSVGCalibration",true);
+    }
+    if (tempBuffer[0].y && !tempBuffer[1].y && tempBuffer[0].du ) {
+      cycleGamepadColour(i, "gamepadSVGCalibration",false);
     }
   }
 
@@ -844,7 +855,8 @@ export function gameTick (oldInputBuffers){
     input[creditsPlayer] = interpretInputs(creditsPlayer, true, playerType[creditsPlayer],oldInputBuffers[creditsPlayer]);
     credits(creditsPlayer, input);
   } else if (gameMode == 14) {
-    // controller callibration
+    // controller calibration
+    input[calibrationPlayer] = interpretInputs(calibrationPlayer, true, playerType[calibrationPlayer],oldInputBuffers[calibrationPlayer]);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
@@ -1625,7 +1637,9 @@ export function setEndTargetGame(val){
 export function setCreditsPlayer(val){
   creditsPlayer =val;
 }
-
+export function setCalibrationPlayer(val){
+  calibrationPlayer =val;
+}
 
 const dom = {};
 

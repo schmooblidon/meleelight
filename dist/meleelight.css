@@ -692,6 +692,12 @@ a {
   float:right;
 }
 
+#gamepadSVGCalibration {
+  position: relative;
+  margin-left: 300px;
+  margin-top: -40px;
+}
+
 .playerTitle p {
   margin:0;
   padding:2px;
@@ -744,3 +750,4 @@ a {
   z-index:5;
   vertical-align: top;
 }
+

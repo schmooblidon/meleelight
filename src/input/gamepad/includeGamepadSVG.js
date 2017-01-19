@@ -5,17 +5,17 @@ function includeGamepadSVG(id, x, y) {
     
     <g id="triggers">
 
-        <g id="R">
+        <g id="r">
             <path id="RBase" style="opacity:1;fill:#cdcdcd;fill-opacity:1;stroke:#919191;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" d="m 535.2874,131.09074 c 54.29466,-48.238722 122.19267,1.56672 121.26038,63.83333 z"/>
             <text id="RText" style="font-style:normal;font-variant:normal;font-family:Impact;font-size:36px;fill:#919191;fill-opacity:1;stroke:none;" x="597.04016" y="154.71756">R</text>
         </g>
 
-        <g id="L">
+        <g id="l">
             <path id="LBase" style="opacity:1;fill:#cdcdcd;fill-opacity:1;stroke:#919191;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" d="M 184.51437,131.09074 C 130.21971,82.852018 62.3217,132.65746 63.25399,194.92407 Z"/>
             <text id="LText" style="font-style:normal;font-variant:normal;font-family:Impact;font-size:36px;fill:#919191;fill-opacity:1;stroke:none;" x="113.21986" y="150.71756">L</text>
         </g>
 
-        <g id="Z">
+        <g id="z">
             <path id="ZPressed" style="opacity:0;fill:#4e40b5;fill-opacity:1;stroke:#3b3280;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" d="m 524.67323,133.45493 4.354,-6.18763 c 55.81061,-5.247 91.32054,22.29986 117.70771,45.34506 l -11.84925,13.58268 z"/>
             <path id="ZUnpressed" style="opacity:1;fill:#4e40b5;fill-opacity:1;stroke:#3b3280;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" d="m 524.67323,133.45493 4.354,-6.18763 c 55.81061,-5.247 95.32054,15.29986 122.95771,37.34506 l -17.09925,21.58268 z" />
         </g>
@@ -33,7 +33,7 @@ function includeGamepadSVG(id, x, y) {
         <circle id="dPadInset" style="opacity:1;fill:#48387d;fill-opacity:1;" cx="246.83537" cy="448.25513" r="56.422726"/>
     </g>
     
-    <g id="lStick">
+    <g id="ls">
         <circle id="lStickShadow" style="opacity:1;fill:#777777;fill-opacity:1;" cx="141.93683" cy="297.63986" r="33.543267"/>
         <circle id="lStickDepth" style="opacity:1;fill:#cdcdcd;fill-opacity:1;" cx="141.93683" cy="297.63986" r="43.773998"/>
         <circle id="lStickBase" style="opacity:1;fill:#cdcdcd;fill-opacity:1;" cx="141.93683" cy="297.63986" r="43.773998"/>
@@ -42,7 +42,7 @@ function includeGamepadSVG(id, x, y) {
         <circle id="lStickCircle3" style="opacity:1;fill:none;fill-opacity:1;stroke:#b0b0b0;stroke-width:3.75;stroke-linecap:round;stroke-linejoin:round;" cx="141.93683" cy="297.63986" r="33.70032"/>
     </g>
     
-    <g id="cStick">
+    <g id="cs">
         
         <g id="cStickShadow">
             <circle id="cStickShadowDisk" style="opacity:1;fill:#b68e0b;fill-opacity:1;" cx="473.06235" cy="448.25513" r="27.7679"/>
@@ -53,31 +53,31 @@ function includeGamepadSVG(id, x, y) {
         <text id="cStickText" style="font-style:normal;font-variant:normal;font-family:Impact;font-size:36px;fill:#b68e0b;fill-opacity:1;stroke:none;" x="463.08029" y="462.02243">C</text>
     </g>
     
-    <g id="A">
+    <g id="a">
         <circle id="ABase" style="opacity:1;fill:#29a9a1;fill-opacity:1;" cx="572.59851" cy="295.63635" r="41.556301"/>
         <text id="AText" style="font-style:normal;font-variant:normal;font-family:Impact;font-size:40px;fill:#1c736d;fill-opacity:1;stroke:none;" x="563.14226" y="311.4469">A</text>
     </g>
 
-    <g id="B">
+    <g id="b">
         <circle id="BBase" style="opacity:1;fill:#e73148;fill-opacity:1;" cx="491.51929" cy="336.27927" r="25.7679"/>
         <text id="BText" style="font-style:normal;font-variant:normal;font-family:Impact;font-size:36px;fill:#9a1223;fill-opacity:1;stroke:none;" x="481.86743" y="350.08981">B</text>
     </g>
 
-    <g id="X">
+    <g id="x">
         <path id="XBase" style="opacity:1;fill:#cdcdcd;fill-opacity:1;" d="m 632.6395,259.11017 c -0.92165,-4.68776 1.28721,-14.64996 16.42393,-16.97602 15.08404,-2.31779 24.21634,21.70988 26.6596,36.45621 2.44321,14.74674 1.54812,40.43557 -13.47738,43.1063     -15.07801,2.68006 -20.38184,-6.03735 -21.02142,-10.77189 -0.63945,-4.73462 2.49739,-10.65173 -0.1441,-26.59469 -2.64148,-15.94303 -7.51897,-20.53216 -8.44063,-25.21991 z"/>
         <text id="XText" style="font-style:normal;font-variant:normal;font-family:Impact;font-size:36px;fill:#919191;fill-opacity:1;stroke:none;" x="649.22736" y="296.8792">X</text>
     </g>
 
-    <g id="Y">
+    <g id="y">
         <path id="YBase" style="opacity:1;fill:#cdcdcd;fill-opacity:1;" d="m 526.01197,243.45415 c -4.46112,1.70967 -14.65431,1.23681 -19.53443,-13.2792 -4.86298,-14.46541 17.2492,-27.57193 31.36056,-32.5008 14.11176,-4.92886 39.57529,-8.43958 44.776,5.90791    5.21888,14.39766 -2.46321,21.11397 -7.01864,22.55366 -4.55554,1.43968 -10.9219,-0.63912 -26.17834,4.68964 -15.25655,5.32876 -18.94404,10.91915 -23.40515,12.62879 z"/>
         <text id="YText" style="font-style:normal;font-variant:normal;font-family:Impact;font-size:36px;fill:#919191;fill-opacity:1;stroke:none;" x="536.47089" y="229.37298">Y</text>
     </g>
 
-    <g id="start">
+    <g id="s">
         <circle id="startBase" style="opacity:1;fill:#cdcdcd;fill-opacity:1;" cx="359.90088" cy="294.66632" r="16.079573"/>
     </g>
     
-    <g id="dPad">
+    <g id="dpad">
         <path id="dPadShape" style="opacity:1;fill:#cdcdcd;fill-opacity:1;stroke:#cdcdcd;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" d="m 202.81348,436.56071 32.36779,0.0403 -0.0403,-32.36779 23.38883,0 -0.0403,32.3678 32.36778,-0.0403 0,23.38884    -32.36778,-0.0403 0.0403,32.36778 -23.38883,0 0.0403,-32.36778 -32.36778,0.0403 z"/>
 
         <g id = "dPadShapeDepth">

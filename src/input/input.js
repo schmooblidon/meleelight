@@ -7,7 +7,6 @@ import {playing, controllerResetCountdowns} from "../main/main";
 import {buttonState, triggerValue, stickValue, dPadState } from "./gamepad/retrieveGamepadInputs";
 import {gamepadInfoList} from "./gamepad/gamepadInfoList";
 import {scaleToGCTrigger, scaleToMeleeAxes, scaleToUnitAxes, tasRescale, deaden} from "./meleeInputs";
-import {runCalibration} from "./gamepad/gamepadCalibration";
 import $ from 'jquery';
 
 import type {GamepadInfo, StickCardinals} from "./gamepad/gamepadInfo";
