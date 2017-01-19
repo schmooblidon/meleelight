@@ -77,10 +77,6 @@
   stroke-linejoin:round;
 }
 
-#cStick {
-  pointer-events:none;
-}
-
 #csOctagon {
   fill:#e7c518;
 }

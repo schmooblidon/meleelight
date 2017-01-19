@@ -139,10 +139,6 @@
   stroke: #c2bc7b;
 }
 
-#cStick {
-  pointer-events:none;
-}
-
 #csOctagon {
   fill:#e7c518;
 }
