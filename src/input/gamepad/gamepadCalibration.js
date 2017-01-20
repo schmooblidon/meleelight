@@ -219,12 +219,15 @@ function calibrateObject ( i : number, j : number
     }, interval);
   }
 
-  setCustomGamepadInfo(j, gamepadInfo);
-  clickObject = null;
-
-  setTimeout( () => {
-    calibrationLoop(i, j, gamepadInfo, snapshots, interval);
-  }, totalInterval);
+  if (clickObject !== "icon") {
+    if (clickObject !== null) {
+      setCustomGamepadInfo(j, gamepadInfo);
+      clickObject = null;
+    }
+    setTimeout( () => {
+      calibrationLoop(i, j, gamepadInfo, snapshots, interval);
+    }, totalInterval);
+  }
 }
 
 
