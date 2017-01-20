@@ -13,7 +13,7 @@ type Swatch = { light : string, base : string, medium : string, dark : string, f
 const swatches = {  purple : { light: "#5d4d96", base: "#503e8a", medium: "#48387d", dark:"#362a5e", fade : ["#312656", "#5a50b1", "#665db7", "#7169bc"] }
                  ,  orange : { light: "#d9a63e", base: "#d69a1f", medium: "#cd930e", dark:"#876114", fade : ["#876114", "#aa7704", "#b88104", "#c38905"] }
                  ,  black  : { light: "#373737", base: "#2b2b2b", medium: "#242424", dark:"#000000", fade : ["#717171", "#595959", "#6e6e6e", "#8d8d8d"] }
-                 ,  white  : { light: "#f5f5f5", base: "#eeeeee", medium: "#e1e1e1", dark:"#b3b3b3", fade : ["#717171", "#595959", "#6e6e6e", "#8d8d8d"] }
+                 ,  white  : { light: "#f5f5f5", base: "#eeeeee", medium: "#e8e8e8", dark:"#b3b3b3", fade : ["#717171", "#595959", "#6e6e6e", "#8d8d8d"] }
                  ,  red    : { light: "#c92f2f", base: "#b41e1e", medium: "#ad0d0d", dark:"#7e0e0e", fade : ["#650b0b", "#7d0e0e", "#8a0f0f", "#921010"] }
                  ,  blue   : { light: "#49549c", base: "#3c468c", medium: "#374080", dark:"#293061", fade : ["#2d346a", "#4b64b7", "#5a6dbd", "#6577c3"] }
                  ,  green  : { light: "#68bb1b", base: "#63b11a", medium: "#5ea120", dark:"#375815", fade : ["#416d14", "#4c7f17", "#548d1a", "#5d9b1c"] } };

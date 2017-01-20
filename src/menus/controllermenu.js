@@ -11,30 +11,25 @@ import {updateGamepadSVGColour} from "../input/gamepad/drawGamepad";
 let controllerTimer    = 0;
 let controllerTimerMax = 3000/16.667;
 
-export function updateControllerMenu(quit, text, interval){
+export function updateControllerMenu(quit, texts, interval){
   fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
   fg1.fillStyle = "rgba(255,255,255,0.8)";
-  fg1.font = "700 42px Arial";
+  fg1.font = "700 36px Arial";
   fg1.textAlign = "center";
-  if (text.length > 60) {
-    let n1 = text.indexOf(" ", 15);
-    let n2 = text.indexOf(" ", 45);
-    let text1 = text.substr(0, n1);
-    let text2 = text.substr(n1+1, n2-n1);
-    let text3 = text.substr(n2+1, text.length);
-    fg1.fillText(text1, 600, 520);
-    fg1.fillText(text2, 600, 580);
-    fg1.fillText(text3, 600, 640);
-  }
-  else if (text.length > 30) {
-    let n = text.indexOf(" ", 13);
-    let text1 = text.substr(0,n);
-    let text2 = text.substr(n+1, text.length);
-    fg1.fillText(text1, 600, 520);
-    fg1.fillText(text2, 600, 580);
-  } 
-  else {
-    fg1.fillText(text, 600, 540);
+  const [text1, text2, text3] = texts;
+  if (text1 !== undefined) {
+    if (text2 === undefined) {
+      fg1.fillText(text1, 600, 580);
+    }
+    else {
+      fg1.fillText(text1, 600, 540);
+      if (text2 !== undefined) {
+        fg1.fillText(text2, 600, 580);
+        if (text3 !== undefined) {
+          fg1.fillText(text3, 600, 620);
+        }
+      }
+    }
   }
   if (quit) {
     setTimeout(function(){ document.getElementById("gamepadSVGCalibration").style.display = "none"; changeGamemode(1)}, 2000);
