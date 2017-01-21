@@ -6,9 +6,9 @@ import {
 } from "main/linAlg";
 import {Vec2D} from "./util/Vec2D";
 import {keyMap} from "../settings";
+import {playing} from "./main";
 import {retrieveNetworkInputs} from "./multiplayer/streamclient";
 import {retrieveReplayInputs,replayActive} from "./replay";
-
 export const button = {
   "a" : 0, 
   "b" : 1,
@@ -56,9 +56,9 @@ export function inputData ( list = [false, false, false, false, false, false, fa
         rawX : list[18],
         rawY : list[19]
   }
-}
+};
 
-export const  nullInput = ()=>{return new inputData ()};
+const nullInput = ()=>{return new inputData ()};
 
 export const nullInputs = ()=>{return [ new inputData ( )
                           , new inputData ( )
@@ -218,14 +218,7 @@ function pollGamepadInputs(gameMode, controllerType, playerSlot, controllerIndex
   let input = nullInput();
 
   let gamepad = navigator.getGamepads()[controllerIndex];
-if(gamepad === undefined || gamepad === null){
-  console.log("controllers");
-  console.log(navigator.getGamepads());
-  console.log("controller at playerSlot :"+playerSlot);
-  console.log("controller at controllerIndex :"+controllerIndex);
-  console.log("controller may be unplugged");
-  return nullInput();
-}
+
 
 
   function axisData (ax) {
@@ -379,11 +372,11 @@ if(gamepad === undefined || gamepad === null){
 };
 
 function pollNetworkInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
- return retrieveNetworkInputs(playerSlot,controllerIndex);
+  return retrieveNetworkInputs(playerSlot,controllerIndex);
 }
 
 function pollReplayInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
-return retrieveReplayInputs(playerSlot,controllerIndex);
+  return retrieveReplayInputs(playerSlot,controllerIndex);
 }
 
 export function showButton(i, but, bool) {
@@ -724,7 +717,7 @@ export function scaleToGCTrigger ( t, offset, scale ) {
       return 0;
     }
     else {
-      return meleeRound(tnew);
+      return tnew;
     }
 };
 
@@ -798,7 +791,7 @@ function unitRetract ( [x,y] ) {
   }
 };
 
-export function meleeRound (x) {
+function meleeRound (x) {
   return Math.round(steps*x)/steps;
 };
 

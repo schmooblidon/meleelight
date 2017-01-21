@@ -1,6 +1,5 @@
-import {
-  bg1, fg1, fg2, bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers, ui, clearScreen,
-  setCreditsPlayer
+import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen,
+    setCreditsPlayer, setCalibrationPlayer, currentPlayers
 } from "main/main";
 import {sounds} from "main/sfx";
 import {setTargetPlayer} from "target/targetplay";
@@ -10,6 +9,7 @@ import {twoPi} from "main/render";
 import {music} from "../main/sfx";
 import {connectToMPServer} from "../main/multiplayer/streamclient";
 import {connectAsSpectator} from "../main/multiplayer/spectatorclient";
+import {runCalibration} from "../input/gamepad/gamepadCalibration";
 /* eslint-disable */
 
 let menuSelected = 0;
@@ -17,14 +17,16 @@ let menuSelected = 0;
 const menuText = [
   ["VS. Melee", "Target Test", "Target Builder", "Options"],
   ["Audio", "Gameplay", "Keyboard Controls", "Credits"],
-  ["Local VS", "Spectate", "P2P", "Server"]
+  ["Local VS", "Spectate", "P2P", "Server"],
+  ["Controller", "Keyboard"]
 ];
 const menuExplanation = [
   ["Multiplayer Battles!", "Smash ten targets!", "Build target test stages!", "Game setup."],
-  ["Select audio levels.", "Change gameplay settings.", "Customize keyboard controls.", "Who did this?"],
-  ["One box this screen.", "Ranked Mode", "Hostless Muliplayer", "Hosted Multiplayer"]
+  ["Select audio levels.", "Change gameplay settings.", "Customize & calibrate controls.", "Who did this?"],
+  ["One box this screen.", "Ranked Mode", "Hostless Muliplayer", "Hosted Multiplayer"],
+  ["Customize & calibrate controller.", "Customize keyboard controls."]
 ];
-const menuTitle = ["Main Menu", "Options", "Battle Mode"];
+const menuTitle = ["Main Menu", "Options", "Battle Mode", "Controls"];
 let menuColourOffset = 0;
 const menuColours = [238, 358, 117, 55];
 let menuCurColour = 238;
@@ -129,9 +131,9 @@ export function menuMove(i, input) {
         } else {
 
           if (menuSelected == KEYBOARDOPTIONS) {
-            changeGamemode(12);
-            //keyboard menu
-            setKeyBinding(false);
+            menuMode = 3;
+            menuSelected = 0;
+            menuMove = true;
           } else {
 
             if (menuSelected == CREDITS) {
@@ -141,6 +143,17 @@ export function menuMove(i, input) {
             }
           }
         }
+      }
+    } else if (menuMode === 3) {
+      if (menuSelected === 0) {
+        // map controller
+        setCalibrationPlayer(i);
+        changeGamemode(14);
+        runCalibration(i);
+      } else {
+        changeGamemode(12);
+        //keyboard menu
+        setKeyBinding(false);
       }
     }
   } else if (input[i][0].b && !input[i][1].b) {
@@ -153,6 +166,11 @@ export function menuMove(i, input) {
     } else if (menuMode == MPMENU) {
       menuMode = TOPLEVEL;
       menuSelected = VSMODE;
+      menuMove = true;
+      sounds.menuBack.play();
+    } else if (menuMode === 2) {
+      menuMode = 1;
+      menuSelected = 2;
       menuMove = true;
       sounds.menuBack.play();
     }
@@ -201,10 +219,10 @@ export function menuMove(i, input) {
     menuCycle = 0;
     menuTimer = 0;
     sounds.menuSelect.play();
-    if (menuSelected == -1) { //loop to bottom
-      menuSelected = 3;
+    if (menuSelected == -1) {
+      menuSelected = menuCount[menuMode] - 1;
     }
-    if (menuSelected == 4) { //loop to top
+    if (menuSelected == menuCount[menuMode]) {
       menuSelected = 0;
     }
     if ((previousMenuS == TARGETTEST && menuSelected == TARGETBUILDER) || (previousMenuS == TARGETBUILDER && menuSelected == TARGETTEST)) {
@@ -409,7 +427,7 @@ export function drawMainMenu() {
   ui.fillStyle = "rgba(0, 0, 0, 0.76)";
   ui.lineWidth = 5;
   ui.strokeStyle = "rgba(255, 214, 0, 0.95)";
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < menuCount[menuMode]; i++) {
     ui.beginPath();
     ui.moveTo(420 - i * 65, 200 + i * 100);
     ui.lineTo(970 - i * 65, 200 + i * 100);
@@ -426,7 +444,7 @@ export function drawMainMenu() {
     ui.stroke();
   }
   ui.fillStyle = "rgb(254, 238, 27)";
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < menuCount[menuMode]; i++) {
     var x = 1000;
     if (menuSelected == i) {
       x = 0;

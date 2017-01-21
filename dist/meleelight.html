@@ -5,6 +5,10 @@
     <link href="./meleelight.css" rel="stylesheet"/>
   </head>
   <body>
+
+  <!-- load the gamepad SVG loading script -->
+  <script type="text/javascript" src="../src/input/gamepad/includeGamepadSVG.js"></script>
+
     <div id="loadScreen">
       <canvas id="loadCanvas" width="300" height="200"></canvas>
       <div id="loadPercent"><p><span id="loadPercentEdit">0</span>%</p></div>
@@ -216,6 +220,10 @@
     <canvas id="foreground1Canvas" class="gameCanvas" width="1200" height="750"></canvas>
     <canvas id="foreground2Canvas" class="gameCanvas" width="1200" height="750"></canvas>
     <canvas id="uiCanvas" class="gameCanvas" width="1200" height="750"></canvas>
+    <iframe id="gamepadSVGCalibration" scrolling="no" width="1200" height="750" frameborder="0" style="display:none;">
+      <html> <head> <link type="text/css" href="./gamepad.css" rel="stylesheet"/> </head> <body></body></html>
+    </iframe>
+    <script> includeGamepadSVG("gamepadSVGCalibration", 600, 600, true); </script>
     <div id="tagTextContainer"><textarea id="pTagEdit0" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit1" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit2" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit3" class="pTagEdit" maxlength="10"></textarea></div>
     <div id="customStageContainer"><div id="cStage1"><div id="cStageTitle"><p><span id="cStageTitleEdit">Share this code</span></p></div><textarea id="cStageEdit"></textarea></div><div id="cStage2"><div id="cStageInfo"><p><span id="cStageInfoEdit"></span></p></div><div id="cStagePrompt"><p>Finish</p><div id="aButton"><p>A</p></div></div></div></div>
     <div id="debug">
@@ -227,40 +235,44 @@
   </div>
     <div id="players">
     <div class="playerDetails">
+      <iframe id="gamepadSVG0" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5" style="display:none;"></iframe>
+      <script> includeGamepadSVG("gamepadSVG0", 150, 150, false); </script>
       <div class="playerTitle"><p>Player 1</p></div>
       <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX0">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY0">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX0">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY0">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog0">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog0">0</span></p></div>
       <div class="actionstatetext"><p><span id="actState0">??</span> <span id="stateNum0">?</span> <span id="face0">1</span></p></div>
       <div class="velocities"><p>CharVel</p></div><div class="velocities"><p>X: <span id="velocityX0">0</span></p></div><div class="velocities"><p>Y: <span id="velocityY0">0</span></p></div>
       <div class="velocities"><p>KBVel</p></div><div class="velocities"><p>X: <span id="kvelocityX0">0</span></p></div><div class="velocities"><p>Y: <span id="kvelocityY0">0</span></p></div>
       <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX0">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY0">0</span></p></div>
-      <div class="buttons"><div class="b"><div id="0button0"></div><p>0</p></div><div class="b"><div id="0button1"></div><p>1</p></div><div class="b"><div id="0button2"></div><p>2</p></div><div class="b"><div id="0button3"></div><p>3</p></div><div class="b"><div id="0button4"></div><p>4</p></div><div class="b"><div id="0button5"></div><p>5</p></div><div class="b"><div id="0button6"></div><p>7</p></div><div class="b"><div id="0button7"></div><p>9</p></div><div class="b"><div id="0button8"></div><p>12</p></div><div class="b"><div id="0button9"></div><p>13</p></div><div class="b"><div id="0button10"></div><p>14</p></div><div class="b"><div id="0button11"></div><p>15</p></div></div>
     </div>
     <div class="playerDetails">
+      <iframe id="gamepadSVG1" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5" style="display:none;"></iframe>
+      <script> includeGamepadSVG("gamepadSVG1", 150, 150, false); </script>
       <div class="playerTitle"><p>Player 2</p></div>
       <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX1">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY1">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX1">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY1">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog1">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog1">0</span></p></div>
       <div class="actionstatetext"><p><span id="actState1">??</span> <span id="stateNum1">?</span> <span id="face1">1</span></p></div>
       <div class="velocities"><p>CharVel</p></div><div class="velocities"><p>X: <span id="velocityX1">0</span></p></div><div class="velocities"><p>Y: <span id="velocityY1">0</span></p></div>
       <div class="velocities"><p>KBVel</p></div><div class="velocities"><p>X: <span id="kvelocityX1">0</span></p></div><div class="velocities"><p>Y: <span id="kvelocityY1">0</span></p></div>
       <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX1">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY1">0</span></p></div>
-      <div class="buttons"><div class="b"><div id="1button0"></div><p>0</p></div><div class="b"><div id="1button1"></div><p>1</p></div><div class="b"><div id="1button2"></div><p>2</p></div><div class="b"><div id="1button3"></div><p>3</p></div><div class="b"><div id="1button4"></div><p>4</p></div><div class="b"><div id="1button5"></div><p>5</p></div><div class="b"><div id="1button6"></div><p>7</p></div><div class="b"><div id="1button7"></div><p>9</p></div><div class="b"><div id="1button8"></div><p>12</p></div><div class="b"><div id="1button9"></div><p>13</p></div><div class="b"><div id="1button10"></div><p>14</p></div><div class="b"><div id="1button11"></div><p>15</p></div></div>
     </div>
     <div class="playerDetails">
+      <iframe id="gamepadSVG2" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5" style="display:none;"></iframe>
+      <script> includeGamepadSVG("gamepadSVG2", 150, 150, false); </script>
       <div class="playerTitle"><p>Player 3</p></div>
       <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX2">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY2">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX2">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY2">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog2">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog2">0</span></p></div>
       <div class="actionstatetext"><p><span id="actState2">??</span> <span id="stateNum2">?</span> <span id="face2">1</span></p></div>
       <div class="velocities"><p>CharVel</p></div><div class="velocities"><p>X: <span id="velocityX2">0</span></p></div><div class="velocities"><p>Y: <span id="velocityY2">0</span></p></div>
       <div class="velocities"><p>KBVel</p></div><div class="velocities"><p>X: <span id="kvelocityX2">0</span></p></div><div class="velocities"><p>Y: <span id="kvelocityY2">0</span></p></div>
       <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX2">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY2">0</span></p></div>
-      <div class="buttons"><div class="b"><div id="2button0"></div><p>0</p></div><div class="b"><div id="2button1"></div><p>1</p></div><div class="b"><div id="2button2"></div><p>2</p></div><div class="b"><div id="2button3"></div><p>3</p></div><div class="b"><div id="2button4"></div><p>4</p></div><div class="b"><div id="2button5"></div><p>5</p></div><div class="b"><div id="2button6"></div><p>7</p></div><div class="b"><div id="2button7"></div><p>9</p></div><div class="b"><div id="2button8"></div><p>12</p></div><div class="b"><div id="2button9"></div><p>13</p></div><div class="b"><div id="2button10"></div><p>14</p></div><div class="b"><div id="2button11"></div><p>15</p></div></div>
     </div>
     <div class="playerDetails">
+      <iframe id="gamepadSVG3" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5" style="display:none;"></iframe>
+      <script> includeGamepadSVG("gamepadSVG3", 150, 150, false); </script>
       <div class="playerTitle"><p>Player 4</p></div>
       <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX3">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY3">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX3">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY3">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog3">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog3">0</span></p></div>
       <div class="actionstatetext"><p><span id="actState3">??</span> <span id="stateNum3">?</span> <span id="face3">1</span></p></div>
       <div class="velocities"><p>CharVel</p></div><div class="velocities"><p>X: <span id="velocityX3">0</span></p></div><div class="velocities"><p>Y: <span id="velocityY3">0</span></p></div>
       <div class="velocities"><p>KBVel</p></div><div class="velocities"><p>X: <span id="kvelocityX3">0</span></p></div><div class="velocities"><p>Y: <span id="kvelocityY3">0</span></p></div>
       <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX3">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY3">0</span></p></div>
-      <div class="buttons"><div class="b"><div id="3button0"></div><p>0</p></div><div class="b"><div id="3button1"></div><p>1</p></div><div class="b"><div id="3button2"></div><p>2</p></div><div class="b"><div id="3button3"></div><p>3</p></div><div class="b"><div id="3button4"></div><p>4</p></div><div class="b"><div id="3button5"></div><p>5</p></div><div class="b"><div id="3button6"></div><p>7</p></div><div class="b"><div id="3button7"></div><p>9</p></div><div class="b"><div id="3button8"></div><p>12</p></div><div class="b"><div id="3button9"></div><p>13</p></div><div class="b"><div id="3button10"></div><p>14</p></div><div class="b"><div id="3button11"></div><p>15</p></div></div>
     </div>
   </div>
   <script>

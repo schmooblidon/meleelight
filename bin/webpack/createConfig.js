@@ -10,7 +10,7 @@ function createConfig(options) {
   const srcDir = path.join(process.cwd(), "src");
   const distDir = path.join(process.cwd(), "dist");
   const distJsDir = path.join(distDir, "js");
-  const min = isMinified ? ".min" : "";
+  const min = isMinified ? ".min": "";
 
   /// PLUGINS ///
 
@@ -58,9 +58,16 @@ function createConfig(options) {
     plugins.push(
         new HappyPack({
           // loaders is the only required parameter:
-          loaders: [ 'babel?presets[]=es2015,presets[]=stage-0' ],
-          threads:8
-
+          loaders: [
+            {
+              loader: 'babel-loader',
+              query: {
+                presets: ['babel?presets[]=es2015,presets[]=stage-0'],
+                plugins: ['transform-flow-strip-types']
+              }
+            }
+          ],
+          threads: 8
         })
     );
   }
@@ -90,7 +97,15 @@ function createConfig(options) {
     plugins.push(
         new HappyPack({
           // loaders is the only required parameter:
-          loaders: [ 'babel?presets[]=es2015,presets[]=stage-0' ],
+          loaders: [
+            {
+              loader: 'babel-loader',
+              query: {
+                presets: ['babel?presets[]=es2015,es2015,presets[]=stage-0'],
+                plugins: ['transform-flow-strip-types']
+              }
+            }
+          ],
           threads:8
 
         })
@@ -126,7 +141,7 @@ function createConfig(options) {
   return {
     cache: true,
     debug: !isMinified,
-    devtool: isMinified ? undefined : "eval",
+    devtool: isMinified ? undefined: "eval",
     entry: {
       index: path.join(srcDir, "index"),
       main: path.join(srcDir, "main"),

@@ -1,5 +1,5 @@
-import {aiInputBank} from "./input";
-import {player, characterSelections as cS, playerType} from "./main";
+import {aiInputBank} from "../input/input";
+import {player, characterSelections, playerType} from "./main";
 import {gameSettings} from "../settings";
 import {activeStage as aS} from "../stages/activeStage";
 /* eslint-disable */
