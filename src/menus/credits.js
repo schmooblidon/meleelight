@@ -24,7 +24,8 @@ let cYPos = cYSize / 2;
 let cPlayerXPos = cXSize / 2;
 let cPlayerYPos = cYSize / 2;
 let cScrollingPos = 0;
-let cScrollingMax = 2900;// max scrolling distance in y coords. Can change this when you want more names or w/e
+let cShootBuffer = false;
+let cScrollingMax = 5000;// max scrolling distance in y coords. Can change this when you want more names or w/e
 const cScrollingSpeed = -2; //y pos per frame?             SEE THIS: maybe mess around with this a little. make it faster / slower
 let lastHit = [0, 0, false]; //[timer,index of creditNames] timer is set whenever you hit a credit and counts down every frame. if it reaches 0, information is no longer displayed.
 //lasthit[2] is for whether or not bottom bar is cleared.
@@ -113,23 +114,25 @@ export function credits (p,input){ //called once every frame
     lastHit = [0, 0, false]; //see notes above
     creditNames = [
       new ScrollingText("Schmoo", 800, "Creator, Main Developer", "Made the game."),
-      new ScrollingText("Tatatat0", 950, "Programmer", "Created the AI and credits."),
-      new ScrollingText("bites", 1100, "Animation Assistant, Level Design",
+      new ScrollingText("Tatatat0", 1100, "Programmer", "Created the AI and credits."),
+      new ScrollingText("bites", 1400, "Animation Assistant, Level Design",
         "Helped develop animation process & designed target stages."),
-      new ScrollingText("shf", 1250, "Programmer, Mathematician", "Input conversion and environmental collision."),
+      new ScrollingText("shf", 1700, "Programmer, Mathematician", "Input conversion and environmental collision."),
 
-      new ScrollingText("Nehgromancer", 1400, "Programmer", "Refactoring and networking."),
-      new ScrollingText("BonesMalones", 1550, "Programmer", "Refactoring and optimization."),
-      new ScrollingText("TJohnW", 1700, "Programmer", "Refactoring and code quality."),
-      new ScrollingText("WwwWario", 1850, "Support", "Helping users troubleshoot and being a homie!"),
-      new ScrollingText("zircon", 2000, "Musician", "Smash Superstars (Menu Theme)"),
-      new ScrollingText("Buoy", 2150, "Musician",
+      new ScrollingText("Nehgromancer", 2000, "Programmer", "Refactoring and networking."),
+      new ScrollingText("BonesMalones", 2300, "Programmer", "Refactoring and optimization."),
+      new ScrollingText("TJohnW", 2400, "Programmer", "Refactoring and code quality."),
+      new ScrollingText("WwwWario", 2700, "Support", "Helping users troubleshoot and being a homie!"),
+      new ScrollingText("Mrjhrock2010",3000,"Support", "Helping people out and trash talking in netplay."),
+      new ScrollingText("zircon", 3300, "Musician", "Smash Superstars (Menu Theme)"),
+      new ScrollingText("Buoy", 3600, "Musician",
         "Rush of the Rainforest (YStory Theme) & Target Blitz (Target Theme)"),
-      new ScrollingText("Tom Mauritzon", 2300, "Musician", "Mega Helix (PStadium Theme)"),
-      new ScrollingText("Rozen", 2450, "Musician", "Kumite (Battlefield Theme)"),
-      new ScrollingText("Zack Parrish", 2600, "Musician", "Sunny Side Up (Dreamland Theme)")
+      new ScrollingText("Tom Mauritzon", 3900, "Musician", "Mega Helix (PStadium Theme)"),
+      new ScrollingText("Rozen", 4200, "Musician", "Kumite (Battlefield Theme)"),
+      new ScrollingText("Zack Parrish", 4500, "Musician", "Sunny Side Up (Dreamland Theme)")
     ];
     cScore = 0;
+    cShootBuffer = false;
 	cCursorAngle = 0;
     initc = false;
   }
@@ -184,14 +187,18 @@ export function credits (p,input){ //called once every frame
 
   if (shoot_cooldown == 0) {
 
-    if (input[p][0].a && !input[p][1].a) {
+    if ((input[p][0].a && !input[p][1].a) || cShootBuffer) {
       //is shooting
       sounds.foxlaserfire.play();
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(0, 0), 0));
       cShots.push(new cShot(new Vec2D(cPlayerXPos, cPlayerYPos), new Vec2D(1200, 0), 1));
       shoot_cooldown = 8;
+      cShootBuffer = false;
     }
   } else {
+    if (input[p][0].a && !input[p][1].a) {
+      cShootBuffer = true;
+    }
     shoot_cooldown -= 1;
   }
 
