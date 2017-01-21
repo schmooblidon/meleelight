@@ -66,7 +66,7 @@ $("#localGame").on("click", function () {
   localStorage.setItem('pickedServer', 'lan');
   $("#america").attr('checked', false);
   $("#europe").attr('checked', false);
-  ds = deepstream(localStorage.getItem('lastLANIP')).login(null, _onLoggedIn);
+  ds = deepstream(localStorage.getItem('lastLANIP')+":6020").login(null, _onLoggedIn);
   GAME_ID = ds.getUid().replace("-", "");
   playerID = ds.getUid().replace("-", "");
 
@@ -78,10 +78,10 @@ $("#lanIP").on("click", function () {
   $("#europe").attr('checked', false);
   $("#localGame").attr('checked', true);
   if (hostIP === null || hostIP === undefined || hostIP === "" || hostIP === "localhost") {
-    localStorage.setItem('lastLANIP', "localhost:6020");
+    localStorage.setItem('lastLANIP', "localhost");
   }
-  localStorage.setItem('lastLANIP', hostIP + ":6020");
-  console.log("server set to :" + localStorage.getItem('lastLANIP'));
+  localStorage.setItem('lastLANIP', hostIP);
+  console.log("server set to :" + localStorage.getItem('lastLANIP')+":6020");
 });
 if (localStorage.getItem('pickedServer') === 'america' || localStorage.getItem('pickedServer') === null) {
   $("#america").attr('checked', true);
@@ -99,13 +99,18 @@ if (localStorage.getItem('pickedServer') === 'america' || localStorage.getItem('
   $("#localGame").attr('checked', true);
   localStorage.setItem('pickedServer', 'lan');
 }
+$("#lanIP").attr('value',localStorage.getItem('lastLANIP'));
 export function logIntoServer() {
   if (localStorage.getItem('pickedServer') === 'america') {
     ds = deepstream(usServer).login(null, _onLoggedIn);
   } else if (localStorage.getItem('pickedServer') === 'europe') {
     ds = deepstream(eurServer).login(null, _onLoggedIn);
   } else {
-    ds = deepstream(localStorage.getItem('lastLANIP')).login(null, _onLoggedIn);
+    if(localStorage.getItem('lastLANIP') === null || localStorage.getItem('lastLANIP') === "" ){
+      localStorage.setItem('lastLANIP', "localhost");
+      $("#lanIP").attr('value',localStorage.getItem('lastLANIP'));
+    }
+    ds = deepstream(localStorage.getItem('lastLANIP')+":6020").login(null, _onLoggedIn);
   }
 
 }
