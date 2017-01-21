@@ -20,7 +20,7 @@ export const tigergame1 : GamepadInfo =
   , ls : { kind : "axes", xIndex : 0, yIndex : 1, cardinals : gamecubeCardinals }
   , cs : { kind : "axes", xIndex : 2, yIndex : 3, cardinals : gamecubeCardinals }
   , isGC : true
-  , ids : [ { name : "TigerGame 3-in-1 adapter", vendor : "0926", product : "2526", allowedIDType : "Firefox" } ]
+  , ids : [ { name : "TigerGame 3-in-1 adapter", id : "TigerGame XBOX+PS2+GC Game Controller Adapter", vendor : "0926", product : "2526", allowedIDType : "Firefox" } ]
   };
 
   export const tigergame2 : GamepadInfo = 
@@ -38,5 +38,5 @@ export const tigergame1 : GamepadInfo =
   , ls : { kind : "axes", xIndex : 0, yIndex : 1, cardinals : gamecubeCardinals }
   , cs : { kind : "axes", xIndex : 2, yIndex : 5, cardinals : gamecubeCardinals }
   , isGC : true
-  , ids : [ { name : "TigerGame 3-in-1 adapter", vendor : "0926", product : "2526", allowedIDType : "Chrome" } ]
+  , ids : [ { name : "TigerGame 3-in-1 adapter", id : "TigerGame XBOX+PS2+GC Game Controller Adapter", vendor : "0926", product : "2526", allowedIDType : "Chrome" } ]
   };

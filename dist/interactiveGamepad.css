@@ -214,11 +214,3 @@
   fill:#a9a97c;
   stroke:#a9a97c;
 }
-
-#icon > .slash {
-  visibility:hidden;
-}
-
-#icon:hover > .slash {
-  visibility:visible;
-}

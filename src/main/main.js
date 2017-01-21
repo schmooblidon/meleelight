@@ -66,8 +66,14 @@ let keyboardOccupied = false;
 
 export let usingCustomControls = [false, false, false, false];
 
-export function setUsingCustomControls( i: number) : void {
-  usingCustomControls[i] = true;
+export function setUsingCustomControls( i, bool, info ) {
+  usingCustomControls[i] = bool;
+  if (bool) {
+    mType[i] = customGamepadInfo[currentPlayers[i]];
+  }
+  else {
+    mType[i] = info;
+  }  
 }
 
 export let firstTimeDetected = [true, true, true, true];

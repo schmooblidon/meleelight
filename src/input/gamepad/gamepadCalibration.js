@@ -2,12 +2,13 @@
 /*eslint indent:0*/
 
 import {Vec2D} from "../../main/util/Vec2D";
-import {deepCopyObject} from "../../main/util/deepCopyObject";
+import {deepCopy} from "../../main/util/deepCopy";
 import {setCustomGamepadInfo} from "./gamepads/custom";
 import {setUsingCustomControls, currentPlayers, mType} from "../../main/main";
 import {updateControllerMenu} from "../../menus/controllermenu.js";
 import {nullGamepadInfo} from "./gamepadInfo";
 import {getGamepad} from "./gamepad";
+import {getGamepadNameAndInfo} from "./findGamepadInfo";
 
 // eslint-disable-next-line no-duplicate-imports
 import type {ButtonInfo, StickInfo, StickCardinals, TriggerInfo, DPadInfo, GamepadInfo} from "./gamepadInfo";
@@ -45,8 +46,15 @@ type Snapshots = { b0 : Array<Button>, bL : Array<Button>, bR : Array<Button>, b
 const nullSnapshots : Snapshots = { b0 : [], bL : [], bR : [], bU : []
                                   , a0 : [], aL : [], aR : [], aU : [] };
 
-type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" | "icon";
+type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" | "icon" | "reset" | "exit";
 let clickObject : ClickObject = null;
+
+export function setClickObject ( click : ClickObject) : void {
+  if (clickObject === null) {
+    clickObject = click;
+  }
+}
+
 let listening = false;
 
 const ids = ["a", "b", "x", "y", "s", "r", "l" , "z", "dpad", "icon", "ls", "cs"];
@@ -64,28 +72,39 @@ function listen () : void {
   listening = true;
 }
 
-const defaultTexts = ["Click button, trigger or analog stick to rebind.", "Click on Marth to exit."];
+const defaultTexts = ["Click button, trigger or analog stick to rebind."];
 
 export function runCalibration ( i : number ) : void {
-  if (calibrationInProgress[i]) {
-    return;
+  if (!calibrationInProgress[i]) {
+    setCalibrationInProgress(i, true);
+   
+    const interval = 3000;
+  
+    const j = currentPlayers[i];
+  
+    const prevGamepadInfo : GamepadInfo = mType[i] === null || mType[i] === "keyboard" ? nullGamepadInfo : mType[i];
+    const gamepadInfo = deepCopy(true, prevGamepadInfo);
+  
+    clickObject = null;
+    if (listening === false) {
+      listen();
+    }
+    updateControllerMenu(false, ["Mouse-click the start button to begin calibration."], 0);
+    preCalibrationLoop(i, j, gamepadInfo, interval);
   }
-  setCalibrationInProgress(i, true);
- 
-  const interval = 3000;
 
-  const j = currentPlayers[i];
+}
 
-  const gamepadInfo : GamepadInfo = mType[i] === null || mType[i] === "keyboard" ? nullGamepadInfo : mType[i];
-  gamepadInfo.ids = [ { name : "custom controller" } ];
-
-  clickObject = null;
-  if (listening === false) {
-    listen();
+function resetGamepadInfo ( j : number ) : GamepadInfo {
+  const gamepad = navigator.getGamepads ? navigator.getGamepads()[j] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[j] : null);
+  let baseGamepadInfo = nullGamepadInfo;
+  if (gamepad !== undefined && gamepad !== null && gamepad.id !== undefined && gamepad.id !== null) {
+    const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
+    if (maybeNameAndInfo !== null) {
+      baseGamepadInfo = deepCopy(true,maybeNameAndInfo[1]);
+    }
   }
-  updateControllerMenu(false, ["Mouse-click the start button to begin calibration.", "Click on Marth to exit."], 0);
-  preCalibrationLoop(i, j, gamepadInfo, interval);
-
+  return baseGamepadInfo;
 }
 
 function preCalibrationLoop( i : number, j : number
@@ -94,7 +113,7 @@ function preCalibrationLoop( i : number, j : number
   if (clickObject === "s") {
     clickObject = null;
     setCustomGamepadInfo(j, gamepadInfo);
-    setUsingCustomControls(j);
+    setUsingCustomControls(i, true);
     updateControllerMenu(false, ["Finding controller neutral point.", "Do not press anything."], interval);
     // take null snapshot
     setTimeout( () => {
@@ -106,9 +125,17 @@ function preCalibrationLoop( i : number, j : number
       updateControllerMenu(false, defaultTexts, 0);
     }, interval);
   }
-  else if (clickObject === "icon") {
+  else if (clickObject === "exit") {
+    clickObject = null;
     updateControllerMenu(true, ["Quitting calibration menu."], interval);
     setCalibrationInProgress(i, false);
+  }
+  else if (clickObject === "reset") {
+    clickObject = null;
+    const baseGamepadInfo = resetGamepadInfo(j);
+    setUsingCustomControls(i, false, baseGamepadInfo);
+    updateControllerMenu(false, ["Controller bindings have been reset.", "Click the start button to begin calibration."], 0);
+    setTimeout ( () => preCalibrationLoop(i, j, baseGamepadInfo, interval), 16 );
   }
   else {
     setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
@@ -139,11 +166,18 @@ function calibrateObject ( i : number, j : number
     console.log("error in function 'calibrateObject': calibration called on null object");
   }
   else if (clickObject === "icon") {
-    if (gamepadInfo.lA !== null && (gamepadInfo.lA.kind === "value" || gamepadInfo.lA.kind === "axis")) {
-      gamepadInfo.isGC = Math.abs(gamepadInfo.lA.min + 0.866) < 0.01 ? true : false; // hacky but hey
-    }       
+    // do nothing
+  }
+  else if (clickObject === "exit") {    
     setCalibrationInProgress(i, false);
     updateControllerMenu(true, ["Quitting calibration menu."], interval);
+  }
+  else if (clickObject === "reset") {
+    const baseGamepadInfo = resetGamepadInfo(j);
+    setCustomGamepadInfo(j, baseGamepadInfo);
+    setUsingCustomControls(i, false, baseGamepadInfo);
+    updateControllerMenu(false, ["Controller bindings have been reset.", "Click the start button to begin calibration."], 0);
+    setTimeout ( () => preCalibrationLoop(i, j, baseGamepadInfo, interval), 16 );
   }
   else if (clickObject === "l" || clickObject === "r") {
     texts = ["Fully depress "+clickObject.toUpperCase()+" trigger.", "Keep holding down the trigger."];
@@ -155,6 +189,9 @@ function calibrateObject ( i : number, j : number
       gamepadInfo[t]  = scanForButton (snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes, true);
       gamepadInfo[tA] = scanForTrigger(snapshots.b0, gamepad.buttons, snapshots.a0, gamepad.axes);
       updateControllerMenu(false, defaultTexts, 0);
+      if ( t==="l" && gamepadInfo.lA !== null && (gamepadInfo.lA.kind === "value" || gamepadInfo.lA.kind === "axis")) {
+        gamepadInfo.isGC = Math.abs(gamepadInfo.lA.min + 0.866) < 0.01 ? true : false; // hacky but hey
+      }   
     }, interval);
   }
   else if (clickObject === "ls" || clickObject === "cs" || clickObject === "dpad") {
@@ -219,14 +256,18 @@ function calibrateObject ( i : number, j : number
     }, interval);
   }
 
-  if (clickObject !== "icon") {
-    if (clickObject !== null) {
-      setCustomGamepadInfo(j, gamepadInfo);
-      clickObject = null;
+  if (clickObject !== "exit" && clickObject !== "reset") {
+    if (clickObject !== null) {   
+      setTimeout( () => { setCustomGamepadInfo(j, gamepadInfo);
+                          calibrationLoop(i, j, gamepadInfo, snapshots, interval); }, totalInterval);   
     }
-    setTimeout( () => {
-      calibrationLoop(i, j, gamepadInfo, snapshots, interval);
-    }, totalInterval);
+    else {
+      setTimeout( () => { calibrationLoop(i, j, gamepadInfo, snapshots, interval); }, totalInterval);   
+    }     
+  }
+
+  if (clickObject !== null) {
+    clickObject = null;
   }
 }
 

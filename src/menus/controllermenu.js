@@ -6,6 +6,7 @@ import {player, setCookie, changeGamemode, ports, bg1, layers, bg2, ui, fg2, fg1
 } from "main/main";
 import {twoPi} from "main/render";
 import {updateGamepadSVGColour} from "../input/gamepad/drawGamepad";
+import {setClickObject} from "../input/gamepad/gamepadCalibration";
 /* eslint-disable */
 
 let controllerTimer    = 0;
@@ -32,7 +33,14 @@ export function updateControllerMenu(quit, texts, interval){
     }
   }
   if (quit) {
-    setTimeout(function(){ document.getElementById("gamepadSVGCalibration").style.display = "none"; changeGamemode(1)}, 2000);
+    setTimeout(function(){ 
+      document.getElementById("gamepadSVGCalibration").style.display = "none"; 
+      const canvas = document.getElementById('uiCanvas');
+      const context = canvas.getContext('2d');
+      canvas.removeEventListener('mousemove', hoverFunction);
+      canvas.removeEventListener('mousedown', pressFunction);
+      canvas.removeEventListener('click'    , clickFunction);
+      changeGamemode(1)}, 1000);
   } else {
     controllerTimer    = interval/16.667;
     controllerTimerMax = interval/16.667;
@@ -57,6 +65,40 @@ export function drawControllerMenuInit (){
   }
 }
 
+const baseFill   = "rgba(255, 255, 255, 0.6)";
+const baseStroke = "rgba(255, 255, 255, 0.72)";
+const highlightFill   = "rgba(249, 255, 193, 0.6)";
+const highlightStroke = "rgba(249, 255, 193, 0.72)";
+const pressedFill   = "rgba(145, 145, 145, 0.6)";
+const pressedStroke = "rgba(249, 255, 193, 0.72)";
+
+export let exitState = "none";
+export let resetState = "none";
+
+function fillColour (state) {
+  if (state === "pressed") {
+    return pressedFill;
+  }
+  else if (state === "highlight") {
+    return highlightFill;
+  }
+  else { 
+    return baseFill;
+  }
+}
+
+function strokeColour (state) {
+  if (state === "pressed") {
+    return pressedStroke;
+  }
+  else if (state === "highlight") {
+    return highlightStroke;
+  }
+  else { 
+    return baseStroke;
+  }
+}
+
 export function drawControllerMenu (){
   clearScreen();
   drawControllerMenuInit();
@@ -66,7 +108,7 @@ export function drawControllerMenu (){
    setShine(-0.8);
   }
   const opacity = (shine < 0) ? (0.05 + (0.25 / 0.8) * (0.8 + shine)) : ((shine > 1) ? (0.3 - (0.25 / 0.8) * (shine - 1)) : 0.3);
-  var bgGrad =bg2.createLinearGradient(0,0,1200,750);
+  var bgGrad = bg2.createLinearGradient(0,0,1200,750);
   bgGrad.addColorStop(0,"rgba(255, 255, 255,0.05)");
   bgGrad.addColorStop(Math.min(Math.max(0,shine),1),"rgba(255,255,255,"+opacity+")");
   bgGrad.addColorStop(1,"rgba(255, 255, 255,0.05)");
@@ -80,4 +122,74 @@ export function drawControllerMenu (){
     bg2.lineTo(1200, 0 + (i * 30));
   }
   bg2.stroke();
+  ui.font = "700 36px Arial";
+  ui.textAlign = "center";
+  ui.fillStyle = "rgba(255,255,255,0.8)";
+  ui.fillText("Reset", 1035, 280);
+  ui.fillText("Quit", 1035, 370);
+
+
+  const canvas = document.getElementById('uiCanvas');
+  const context = canvas.getContext('2d');
+  canvas.addEventListener('mousemove', hoverFunction);
+  canvas.addEventListener('mousedown', pressFunction);
+  canvas.addEventListener('click'    , clickFunction);
+
+  ui.fillStyle = fillColour(resetState);
+  ui.strokeStyle = strokeColour(resetState);
+  ui.fillRect(960, 240, 150, 60);
+  ui.strokeRect(960, 240, 150, 60);
+  ui.fillStyle = fillColour(exitState);
+  ui.strokeStyle = strokeColour(exitState);
+  ui.fillRect(960,330, 150, 60);
+  ui.strokeRect(960,330, 150, 60);
+}
+
+function hoverFunction (e) {
+  const x = e.offsetX;
+  const y = e.offsetY;
+  if (x >= 960 && x <= 1110) {
+    if (y >= 240 && y <= 300) {
+      resetState = resetState === "pressed" ? "pressed" : "highlight";
+      exitState = "none";
+    }
+    else if (y >= 330 && y <= 390) {
+      resetState = "none";
+      exitState = exitState === "pressed" ? "pressed" : "highlight";
+    }
+    else {
+      exitState = "none";
+      resetState = "none";
+    }
+  }
+  else {
+    exitState = "none";
+    resetState = "none";
+  }
+}
+
+function pressFunction (e) {
+  const x = e.offsetX;
+  const y = e.offsetY;
+  if (x >= 960 && x <= 1110) {
+    if (y >= 240 && y <= 300) {
+      resetState = "pressed";
+    }
+    else if (y >= 330 && y <= 390) {
+      exitState = "pressed";
+    }
+  }
+}
+
+function clickFunction (e) {
+  const x = e.offsetX;
+  const y = e.offsetY;
+  if (x >= 960 && x <= 1110) {
+    if (y >= 240 && y <= 300) {
+      setClickObject("reset");
+    }
+    else if (y >= 330 && y <= 390) {
+      setClickObject("exit");
+    }
+  }
 }
