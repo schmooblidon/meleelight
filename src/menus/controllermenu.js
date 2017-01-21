@@ -7,6 +7,7 @@ import {player, setCookie, changeGamemode, ports, bg1, layers, bg2, ui, fg2, fg1
 import {twoPi} from "main/render";
 import {updateGamepadSVGColour} from "../input/gamepad/drawGamepad";
 import {setClickObject} from "../input/gamepad/gamepadCalibration";
+import {sounds} from "main/sfx";
 /* eslint-disable */
 
 let controllerTimer    = 0;
@@ -40,7 +41,7 @@ export function updateControllerMenu(quit, texts, interval){
       canvas.removeEventListener('mousemove', hoverFunction);
       canvas.removeEventListener('mousedown', pressFunction);
       canvas.removeEventListener('click'    , clickFunction);
-      changeGamemode(1)}, 1000);
+      changeGamemode(1)}, 16);
   } else {
     controllerTimer    = interval/16.667;
     controllerTimerMax = interval/16.667;
@@ -150,12 +151,18 @@ function hoverFunction (e) {
   const y = e.offsetY;
   if (x >= 960 && x <= 1110) {
     if (y >= 240 && y <= 300) {
-      resetState = resetState === "pressed" ? "pressed" : "highlight";
+      if (resetState === "none") {
+        sounds.menuSelect.play();
+        resetState = "highlight";
+      }
       exitState = "none";
     }
     else if (y >= 330 && y <= 390) {
       resetState = "none";
-      exitState = exitState === "pressed" ? "pressed" : "highlight";
+      if (exitState === "none") {
+        sounds.menuSelect.play();
+        exitState = "highlight";
+      }
     }
     else {
       exitState = "none";
@@ -186,9 +193,11 @@ function clickFunction (e) {
   const y = e.offsetY;
   if (x >= 960 && x <= 1110) {
     if (y >= 240 && y <= 300) {
+      
       setClickObject("reset");
     }
     else if (y >= 330 && y <= 390) {
+      sounds.menuSelect.play();
       setClickObject("exit");
     }
   }
