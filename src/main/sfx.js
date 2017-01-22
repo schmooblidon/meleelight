@@ -422,6 +422,10 @@ export const sounds = {
     src: ['sfx/electricfizz.wav'],
     volume: 0.2
   }),
+  loudelectricfizz: new Howl({
+    src: ['sfx/electricfizz.wav'],
+    volume: 1
+  }),
   foxshinereflect: new Howl({
     src: ['sfx/foxshinereflect.wav']
   })

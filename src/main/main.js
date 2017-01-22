@@ -37,9 +37,11 @@ import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
+import {deaden} from "../input/meleeInputs";
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
+import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 /*globals performance*/
 
 export const holiday = 1;
@@ -56,15 +58,26 @@ export var shine = 0.5;
 export let endTargetGame = false;
 
 export let creditsPlayer = 0;
+export let calibrationPlayer = 0;
 
 let gameEnd = false;
-let controllerResetCountdowns = [125,125,125,125];
+export let controllerResetCountdowns = [0,0,0,0];
+export function setControllerReset( i ) {
+  controllerResetCountdowns[i] = 0;
+}
+
 let keyboardOccupied = false;
 
 export let usingCustomControls = [false, false, false, false];
 
-export function setUsingCustomControls( i: number) : void {
-  usingCustomControls[i] = true;
+export function setUsingCustomControls( i, bool, info ) {
+  usingCustomControls[i] = bool;
+  if (bool) {
+    mType[i] = customGamepadInfo[currentPlayers[i]];
+  }
+  else {
+    mType[i] = info;
+  }  
 }
 
 export let firstTimeDetected = [true, true, true, true];
@@ -377,7 +390,7 @@ export function findPlayers (){
         const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
         if (maybeNameAndInfo === null) {
           console.log("Error in 'findPlayers': controller "+(i+1)+" detected but not supported.");
-          console.log("Try manual calibration of your controller."); // TODO: say how to do this
+          console.log("Try manual calibration of your controller.");
         } else {
           detected = true;
           [gpdName, gpdInfo] = maybeNameAndInfo;
@@ -436,15 +449,27 @@ export function addPlayer (i, controllerInfo){
   currentPlayers[ports - 1] = i;
   playerType[ports - 1] = 0;
   mType[ports - 1] = controllerInfo;
+  if (showDebug) {
+    updateGamepadSVGColour(i, "gamepadSVG"+i);
+    document.getElementById("gamepadSVG"+i).style.display = "";
+  }
 }
 
 export function togglePort (i){
   playerType[i]++;
   if (playerType[i] == 2) {
     playerType[i] = -1;
+    if (showDebug) {
+      document.getElementById("gamepadSVG"+i).style.display = "none";
+    }
   }
   if (playerType[i] == 0 && ports <= i) {
     playerType[i] = 1;
+    setGamepadSVGColour(i, "black");
+    if (showDebug) {
+      updateGamepadSVGColour(i, "gamepadSVG"+i);      
+      document.getElementById("gamepadSVG"+i).style.display = "";
+    }
   }
 }
 
@@ -580,6 +605,7 @@ export const removePlayer (i){
 }*/
 
 export function interpretInputs  (i, active,playertype, inputBuffer) {
+
   let tempBuffer = nullInputs();
 
   // keep updating Z and Start all the time, even when paused
@@ -608,6 +634,8 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     tempBuffer[7-k].rawY = inputBuffer[7-k-pastOffset].rawY;
     tempBuffer[7-k].csX  = inputBuffer[7-k-pastOffset].csX;
     tempBuffer[7-k].csY  = inputBuffer[7-k-pastOffset].csY;
+    tempBuffer[7-k].rawcsX  = inputBuffer[7-k-pastOffset].rawcsX;
+    tempBuffer[7-k].rawcsY  = inputBuffer[7-k-pastOffset].rawcsY;
     tempBuffer[7-k].lA   = inputBuffer[7-k-pastOffset].lA;
     tempBuffer[7-k].rA   = inputBuffer[7-k-pastOffset].rA;
     tempBuffer[7-k].a    = inputBuffer[7-k-pastOffset].a;
@@ -637,7 +665,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     frameByFrame = true;
   }
 
-  if (mType[i] == "keyboard") { // keyboard controls
+  if (mType[i] === "keyboard") { // keyboard controls
 
     if (tempBuffer[0].s || tempBuffer[1].s || (gameMode === 5 && (tempBuffer[0].du || tempBuffer[1].du) ) ) {
       pause[i][0] = true;
@@ -658,17 +686,8 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
 
     interpretPause(pause[i][0], pause[i][1]);
-
-    if (showDebug) {
-    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
-    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
-    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
-    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
-    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
-    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
-    }
   }
-  else if (mType !== null) {// gamepad controls
+  else if (mType[i] !== null) { // gamepad controls
 
     if ( (gameMode == 3 || gameMode == 5) &&
              ( tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s ) 
@@ -692,12 +711,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     if ((tempBuffer[0].z || tempBuffer[0].du) && tempBuffer[0].x && tempBuffer[0].y) {
       controllerResetCountdowns[i] -= 1;
       if (controllerResetCountdowns[i] === 0) {
-        setCustomCenters( i
-                        , new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY)
-                        , new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY)
-                        , tempBuffer[0].lA
-                        , tempBuffer[0].rA
-                        )
+        // triggers code in input.js
         console.log("Controller #"+(i+1)+" was reset!");
         $("#resetIndicator" + i).fadeIn(100);
         $("#resetIndicator" + i).fadeOut(500);
@@ -708,29 +722,40 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
 
     interpretPause(pause[i][0], pause[i][1]);
+  }
+  else { // AI
+    tempBuffer[0].rawX = tempBuffer[0].lsX;
+    tempBuffer[0].rawY = tempBuffer[0].lsY;
+    tempBuffer[0].rawcsX = tempBuffer[0].csX;
+    tempBuffer[0].rawcsY = tempBuffer[0].csY;
+    tempBuffer[0].lsX = deaden(tempBuffer[0].rawX);
+    tempBuffer[0].lsY = deaden(tempBuffer[0].rawY);
+    tempBuffer[0].csX = deaden(tempBuffer[0].rawcsX);
+    tempBuffer[0].csY = deaden(tempBuffer[0].rawcsY);
+  }
 
-    showButton(i, 0,tempBuffer[0].a);
-    showButton(i, 1,tempBuffer[0].b);
-    showButton(i, 2,tempBuffer[0].x);
-    showButton(i, 3,tempBuffer[0].y);
-    showButton(i, 4,tempBuffer[0].z);
-    showButton(i, 5,tempBuffer[0].r);
-    showButton(i, 6,tempBuffer[0].l);
-    showButton(i, 7,tempBuffer[0].s);
-    showButton(i, 8,tempBuffer[0].du);
-    showButton(i, 9,tempBuffer[0].dr);
-    showButton(i,10,tempBuffer[0].dd);
-    showButton(i,11,tempBuffer[0].dl);
+  if (showDebug) {
+    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(3));
+    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(3));
+    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(3));
+    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(3));
+    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(3));
+    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(3));
+    updateGamepadSVGState(i, "gamepadSVG"+i, tempBuffer[0]);
+  }
 
-    if (showDebug) {
-    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
-    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
-    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
-    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
-    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
-    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
+  if (gameMode === 14) { // controller calibration screen
+    updateGamepadSVGState(i, "gamepadSVGCalibration", tempBuffer[0]);
+  }
+
+  if (showDebug || gameMode === 14) {
+    const which = (showDebug && gameMode === 14) ? "both" : showDebug ? "debug" : "calibration";
+    if (tempBuffer[0].x && !tempBuffer[1].x && tempBuffer[0].du ) {
+      cycleGamepadColour(i, which, true);
     }
-
+    if (tempBuffer[0].y && !tempBuffer[1].y && tempBuffer[0].du ) {
+      cycleGamepadColour(i, which, false);
+    }
   }
 
   if (active) {
@@ -849,7 +874,8 @@ export function gameTick (oldInputBuffers){
     input[creditsPlayer] = interpretInputs(creditsPlayer, true, playerType[creditsPlayer],oldInputBuffers[creditsPlayer]);
     credits(creditsPlayer, input);
   } else if (gameMode == 14) {
-    // controller callibration
+    // controller calibration
+    input[calibrationPlayer] = interpretInputs(calibrationPlayer, true, playerType[calibrationPlayer],oldInputBuffers[calibrationPlayer]);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
@@ -1515,6 +1541,9 @@ export function start (){
 
   $("#debugButton").click(function() {
     if (showDebug) {
+      for (let i = 0; i < 4; i++) {
+        document.getElementById("gamepadSVG"+i).style.display = "none";
+      }
       $("#debugButtonEdit").empty().append("OFF");
       $("#debug").hide();
       $("#players").hide();
@@ -1522,6 +1551,12 @@ export function start (){
       //var mY = Math.max(($(window).height()-750)/2,0);
       //$("#display").css("margin",mY+"px 0px 0px "+mX+"px");
     } else {
+      for (let i = 0; i < 4; i++) {
+        if (playerType[i] !== -1) {
+          updateGamepadSVGColour(i, "gamepadSVG"+i);
+          document.getElementById("gamepadSVG"+i).style.display = "";
+        }
+      }
       $("#debugButtonEdit").empty().append("ON");
       $("#debug").show();
       $("#players").show();
@@ -1630,7 +1665,9 @@ export function setEndTargetGame(val){
 export function setCreditsPlayer(val){
   creditsPlayer =val;
 }
-
+export function setCalibrationPlayer(val){
+  calibrationPlayer =val;
+}
 
 const dom = {};
 

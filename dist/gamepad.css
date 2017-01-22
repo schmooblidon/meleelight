@@ -1,0 +1,118 @@
+.bbase {
+  fill:#dcdcdc;
+}
+
+.btext {
+  font-style:normal;
+  font-variant:normal;
+  font-family:Impact;
+  fill:#919191;
+  pointer-events: none;
+}
+
+.tbase {
+  fill:#dcdcdc;
+  stroke: #919191;
+  stroke-width: 4px;
+  stroke-opacity:1;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.ttext {
+  font-style:normal;
+  font-variant:normal;
+  font-family:Impact;
+  fill:#919191;
+  pointer-events: none;
+}
+
+#AText {
+  font-style:normal;
+  font-variant:normal;
+  font-family:Impact;
+  font-size:40px;
+  fill:#1c736d;
+}
+
+#BText {
+  font-style:normal;
+  font-variant:normal;
+  font-family:Impact;
+  font-size:36px;
+  fill:#9a1223;
+  pointer-events: none;
+}
+
+.zbase {
+  fill:#4e40b5;
+  stroke: #3b3280;
+  stroke-width: 4px;
+  stroke-opacity:1;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+#lsOctagon {
+  fill:#a0a0a0;
+}
+
+#lStickBase {
+  fill: #dcdcdc;
+}
+
+#lStickDepth {
+  fill: #cdcdcd;
+}
+
+#lStickShadow {
+  fill:#848484;
+}
+
+.lStickCircle {
+  fill:none;
+  stroke: #c0c0c0;
+  stroke-width:3.75px;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+#csOctagon {
+  fill:#e7c518;
+}
+
+.cStickShadow2 {
+  fill:#b68e0b;
+}
+
+#cStickbase {
+  fill:#e7c518;
+  stroke:#b68e0b;
+}
+
+#cStickText {
+  fill:#b68e0b;
+}
+
+#dPadShape {
+  fill:#dcdcdc;
+  stroke:#dcdcdc;
+}
+
+.dPadDepth {
+  fill:#cdcdcd;
+  stroke:#cdcdcd;
+  stroke-linecap:round;
+}
+
+#dPadDisk {
+  fill:#919191;
+}
+
+.dPadArrow {
+  fill:#b0b0b0;
+  stroke:#b0b0b0;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}

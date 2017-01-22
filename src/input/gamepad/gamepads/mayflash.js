@@ -9,7 +9,7 @@ const mayflashIDs = [ { name : "Mayflash Wii U 4-way adapter", id : "Mayflash", 
                     , { name : "Mayflash Wii U 4-way adapter", id : "Mayflash" }
                     , { name : "Nexilux adapter", id : "NEXILUX", vendor : "0079", product : "1845" }
                     , { name : "Mayflash Wii U 4-way adapter", id : "Wii U Gamecube Adapter" }
-                    , { name : "Mayflash 2-port adapter", id : "USD GamePad", vendor : "1a34", product : "f705" }
+                    , { name : "Mayflash 2-port adapter", id : "USB GamePad", vendor : "1a34", product : "f705" }
                     ];
 
 export const mayflash : GamepadInfo = 

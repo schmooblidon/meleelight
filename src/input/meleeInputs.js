@@ -38,33 +38,36 @@ function stickExtremePoints(stickCardinals : StickCardinals | null) : any {
 // This function assumes that ALL coordinates have already been centered.
 // Return type: [xnew,ynew]
 function renormaliseAxisInput([lx, ly], [rx, ry], [dx, dy], [ux, uy], [x, y]) : [number, number] {
-  if ((x * ry - y * rx <= 0) && (x * uy - y * ux >= 0)) // quadrant 1
-  {
-    const invMat = inverseMatrix([
+  let invMat;
+  if ((x * ry - y * rx <= 0) && (x * uy - y * ux >= 0)) { // quadrant 1
+    invMat = inverseMatrix([
       [rx, ux],
       [ry, uy]
     ]);
-    return multMatVect(invMat, [x, y]);
-  } else if ((x * uy - y * ux <= 0) && (x * ly - y * lx >= 0)) // quadrant 2
-  {
-    const invMat = inverseMatrix([
+  } 
+  else if ((x * uy - y * ux <= 0) && (x * ly - y * lx >= 0)) { // quadrant 2
+    invMat = inverseMatrix([
       [-lx, ux],
       [-ly, uy]
     ]);
-    return multMatVect(invMat, [x, y]);
-  } else if ((x * ly - y * lx <= 0) && (x * dy - y * dx >= 0)) // quadrant 3
-  {
-    const invMat = inverseMatrix([
+  } 
+  else if ((x * ly - y * lx <= 0) && (x * dy - y * dx >= 0)) { // quadrant 3
+    invMat = inverseMatrix([
       [-lx, -dx],
       [-ly, -dy]
     ]);
-    return multMatVect(invMat, [x, y]);
-  } else // quadrant 4
-  {
-    const invMat = inverseMatrix([
+  } 
+  else { // quadrant 4
+    invMat = inverseMatrix([
       [rx, -dx],
       [ry, -dy]
     ]);
+  }
+
+  if (invMat === null || invMat === undefined) {
+    return [x,y];
+  }
+  else {
     return multMatVect(invMat, [x, y]);
   }
 };
@@ -85,17 +88,17 @@ function toInterval (x : number)  : number{
 // Analog triggers.
 
 // t = trigger input
-export function scaleToGCTrigger ( t : number, offset : number, scale : number)  : number{
-    const tnew = scale*(t + offset);
-    if (tnew > 1){
-      return 1;
-    }
-    else if (tnew < 0.3){
-      return 0;
-    }
-    else {
-      return tnew;
-    }
+export function scaleToGCTrigger ( t : number, offset : number, scale : number) : number {
+  const tnew = Math.abs(scale) < 0.001 ? 0 : (t + offset)/scale;
+  if (tnew > 1){
+    return 1;
+  }
+  else if (tnew < 0.3){
+    return 0;
+  }
+  else {
+    return tnew;
+  }
 };
 
 
@@ -157,7 +160,6 @@ function scaleToGCAxes ( x: number, y: number
 
 
 // basic mapping from 0 -- 255 back to -1 -- 1 done by Melee
-// boolean value: true = deadzones, false = no deadzones
 function axisRescale ( x : number, orig : number = meleeOrig) {
   return (x-orig) / steps;
 };
@@ -176,18 +178,10 @@ function meleeRound (x : number)  : number{
   return Math.round(steps*x)/steps;
 };
 
-function meleeAxesRescale ( [x: number,y: number], isDeadzoned : bool ) : [number, number] {
-  const xnew = axisRescale (x, meleeOrig, isDeadzoned);
-  const ynew = axisRescale (y, meleeOrig, isDeadzoned);
+function meleeAxesRescale ( [x: number,y: number] ) : [number, number] {
+  const xnew = axisRescale (x, meleeOrig);
+  const ynew = axisRescale (y, meleeOrig);
   let [xnew2, ynew2] = unitRetract( [xnew, ynew] );
-  if (isDeadzoned) {
-    if (Math.abs(xnew2) < deadzoneConst) {
-       xnew2 = 0;
-    }
-    if (Math.abs(ynew2) < deadzoneConst) {
-      ynew2 = 0;
-    }
-  }
   return ([xnew2, ynew2].map(meleeRound));
 }
 
@@ -198,24 +192,28 @@ function meleeAxesRescale ( [x: number,y: number], isDeadzoned : bool ) : [numbe
 export function scaleToMeleeAxes ( x: number, y: number
                                  , isGC : bool
                                  , stickCardinals : null | StickCardinals
-                                 , isDeadzoned : bool = false
                                  , customCenterX : number = 0, customCenterY : number = 0 ) : [number, number] {
   let xnew = x;
   let ynew = y;
   if (isGC) { // gamecube controllers, don't mess up the raw data
-       xnew = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
-       ynew = (-y+customCenterY+1)*255/2; // y incurs a sign flip
-       //console.log("You are using raw GC controller data.");
+    xnew = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
+    ynew = (-y+customCenterY+1)*255/2; // y incurs a sign flip
+    //console.log("You are using raw GC controller data.");
   }
   else { // convert raw input to 0 -- 255 by GC controller simulation
     [xnew, ynew] = scaleToGCAxes(x, y, stickCardinals, customCenterX, customCenterY);
     //console.log("You are using GC controller simulation.");
   }
-  return meleeAxesRescale ( [xnew,ynew], isDeadzoned );
+  return meleeAxesRescale ( [xnew,ynew] );
 };
 
-// scales -1 -- 1 data to the data Melee uses for the simulation
-export function meleeRescale ( x: number, y: number, isDeadzoned : bool = false) : [number, number] {
-  const [xnew, ynew] = scaleUnitToGCAxes (x, y);
+export function deaden ( x : number, dead : number = deadzoneConst ) : number {
+  return Math.abs(x) < dead ? 0 : x;
+};
+
+// scales -1 -- 1 TAS data to the data Melee uses for the simulation
+export function tasRescale ( x: number, y: number, isDeadzoned : bool = false) : [number, number] {
+  const xnew = ( x+1)*255/2;
+  const ynew = ( y+1)*255/2;
   return meleeAxesRescale ( [xnew, ynew], isDeadzoned );
 };

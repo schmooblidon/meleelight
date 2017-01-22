@@ -1,5 +1,5 @@
 import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen,
-    setCreditsPlayer, currentPlayers
+    setCreditsPlayer, setCalibrationPlayer, currentPlayers
 } from "main/main";
 import {sounds} from "main/sfx";
 import { setTargetPlayer} from "target/targetplay";
@@ -19,8 +19,8 @@ const menuText = [
 ];
 const menuExplanation = [
   ["Multiplayer Battles!", "Smash ten targets!", "Build target test stages!", "Game setup."],
-  ["Select audio levels.", "Change gameplay settings.", "Customize & callibrate controls.", "Who did this?"],
-  ["Customize & callibrate controller.", "Customize keyboard controls."]
+  ["Select audio levels.", "Change gameplay settings.", "Customize & calibrate controls.", "Who did this?"],
+  ["Customize & calibrate controller.", "Customize keyboard controls."]
 ];
 const menuCount = [4, 4, 2];
 const menuTitle = ["Main Menu", "Options", "Controls"];
@@ -81,12 +81,13 @@ export function menuMove (i, input){
       }
       else if (menuSelected == 3){
         //credits
-          setCreditsPlayer(i);
+        setCreditsPlayer(i);
         changeGamemode(13);
       }
     } else {
       if (menuSelected === 0) {
         // map controller
+        setCalibrationPlayer(i);
         changeGamemode(14);
         runCalibration(i);
       } else {

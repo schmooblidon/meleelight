@@ -3,11 +3,10 @@
 
 import {Vec2D} from "../main/util/Vec2D";
 import {keyMap} from "../settings";
-import {playing} from "../main/main";
+import {playing, controllerResetCountdowns} from "../main/main";
 import {buttonState, triggerValue, stickValue, dPadState } from "./gamepad/retrieveGamepadInputs";
 import {gamepadInfoList} from "./gamepad/gamepadInfoList";
-import {scaleToGCTrigger, scaleToMeleeAxes, scaleToUnitAxes} from "./meleeInputs";
-import {runCalibration} from "./gamepad/gamepadCalibration";
+import {scaleToGCTrigger, scaleToMeleeAxes, scaleToUnitAxes, tasRescale, deaden} from "./meleeInputs";
 import $ from 'jquery';
 
 import type {GamepadInfo, StickCardinals} from "./gamepad/gamepadInfo";
@@ -31,12 +30,14 @@ export type Input = { a : bool
                     , csX : number
                     , csY : number
                     , rawX : number
-                    , rawY : number };
+                    , rawY : number
+                    , rawcsX : number
+                    , rawcsY : number };
 export type InputBuffer = Array<Input>;
 
-type InputList = [bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, number, number, number, number, number, number, number, number];
+type InputList = [bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, number, number, number, number, number, number];
 
-export function inputData ( list : InputList = [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0, 0, 0] ) : Input {
+export function inputData ( list : InputList = [false, false, false, false, false, false, false, false, false, false, false, false, 0, 0, 0, 0, 0, 0] ) : Input {
  return {
     a : list[0],
     b : list[1],
@@ -50,14 +51,16 @@ export function inputData ( list : InputList = [false, false, false, false, fals
     dr : list[9],
     dd : list[10],
     dl : list[11],
-    lsX : list[12],
-    lsY : list[13],
-    csX : list[14],
-    csY : list[15],
+    lsX : deaden(list[12]),
+    lsY : deaden(list[13]),
+    csX : deaden(list[14]),
+    csY : deaden(list[15]),
     lA : list[16],
     rA : list[17],
-    rawX : list[18],
-    rawY : list[19]
+    rawX : list[12],
+    rawY : list[13],
+    rawcsX : list[14],
+    rawcsY : list[15]
   };
 };
 
@@ -177,12 +180,16 @@ function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : {[key
   const cstickY = (keys[keyMap.cstick.up[0]] || keys[keyMap.cstick.up[1]]) ? ((keys[keyMap.cstick.down[0]] || keys[
     keyMap.cstick.down[1]]) ? 0 : 1) : ((keys[keyMap.cstick.down[0]] || keys[keyMap.cstick.down[1]]) ? -1 : 0);
 
-  input.lsX = lstickX;
-  input.lsY = lstickY;
-  input.rawX = lstickX;
-  input.rawY = lstickY;
-  input.csX = cstickX;
-  input.csY = cstickY;
+  const rescaledLStick = tasRescale(lstickX, lstickY, true);
+  input.lsX = deaden(rescaledLStick[0]);
+  input.lsY = deaden(rescaledLStick[1]);
+  input.rawX = rescaledLStick[0];
+  input.rawY = rescaledLStick[1];
+  const rescaledCStick = tasRescale(cstickX, cstickY, true);
+  input.csX = deaden(rescaledCStick[0]);
+  input.csY = deaden(rescaledCStick[1]);
+  input.rawcsX = rescaledCStick[0];
+  input.rawcsY = rescaledCStick[1];
   input.lA  = lAnalog;
   input.rA  = rAnalog;
   input.s   = keys[keyMap.s[0]] || keys[keyMap.s[1]];
@@ -198,18 +205,20 @@ function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : {[key
   input.dr  = keys[keyMap.dr[0]];
   input.du  = keys[keyMap.du[0]];
 
+  if (!frameByFrame && gameMode !== 4 && gameMode !== 14) { // not in target builder, calibration screen, or frame by frame mode
+    if (input.z) {
+      if (input.lA < 0.35) {
+        input.lA = 0.35;
+      }
+      input.a = true;
+    }
+  }
+
   if (input.l) {
     input.lA = 1;
   }
   if (input.r) {
     input.rA = 1;
-  }
-
-  if (!frameByFrame && gameMode !== 4) { // not in target builder or frame by frame mode
-    if (input.z) {
-      input.lA = 0.35;
-      input.a = true;
-    }
   }
 
   return input;
@@ -249,7 +258,6 @@ function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
                                    , lsVec.y // y-axis data
                                    , isGC
                                    , lsCardinals
-                                   , true // true: deadzones
                                    , custcent[playerSlot].ls.x // x-axis "custom center" offset
                                    , custcent[playerSlot].ls.y // y-axis "custom center" offset
                                    ); 
@@ -257,23 +265,17 @@ function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
                                    , csVec.y
                                    , isGC
                                    , csCardinals
-                                   , true
                                    , custcent[playerSlot].cs.x
                                    , custcent[playerSlot].cs.y 
                                    );
-  const rawlsticks = scaleToUnitAxes ( lsVec.x
-                                     , lsVec.y
-                                     , lsCardinals
-                                     , custcent[playerSlot].ls.x
-                                     , custcent[playerSlot].ls.y 
-                                     );
-
-  input.lsX  = lsticks[0];
-  input.lsY  = lsticks[1];
-  input.csX  = csticks[0];
-  input.csY  = csticks[1];
-  input.rawX = rawlsticks[0];
-  input.rawY = rawlsticks[1];
+  input.lsX  = deaden(lsticks[0]);
+  input.lsY  = deaden(lsticks[1]);
+  input.csX  = deaden(csticks[0]);
+  input.csY  = deaden(csticks[1]);
+  input.rawX = lsticks[0];
+  input.rawY = lsticks[1];
+  input.rawcsX = csticks[0];
+  input.rawcsY = csticks[1];
 
   // -------------------------------------------------------
   // buttons
@@ -288,8 +290,8 @@ function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
   // -------------------------------------------------------
   // triggers
 
-  input.l = buttonState(gamepad, gamepadInfo, "y");
-  input.r = buttonState(gamepad, gamepadInfo, "z");
+  input.l = buttonState(gamepad, gamepadInfo, "l");
+  input.r = buttonState(gamepad, gamepadInfo, "r");
 
   if (gamepadInfo.lA !== null) {
     const lA = gamepadInfo.lA;
@@ -317,25 +319,40 @@ function pollGamepadInputs( gameMode : number, gamepadInfo : GamepadInfo
     }
   }
 
-  if (!frameByFrame && gameMode !== 4) { // not in target builder
+  if (controllerResetCountdowns[playerSlot] === 0) {
+     setCustomCenters( playerSlot
+                     , lsVec
+                     , csVec
+                     , input.lA
+                     , input.rA
+                     );
+  }
+
+
+
+  if (!frameByFrame && gameMode !== 4 && gameMode !== 14)  { // not in target builder or calibration screen
     if (input.z) {
-      input.lA = 0.35;
+      if (input.lA < 0.35) {
+        input.lA = 0.35;
+      }
       input.a = true;
     }
   }
 
-  if (input.l) {
-    input.lA = 1;
-  }
-  if (input.r) {
-    input.rA = 1;
-  }
-
-  if (input.lA > 0.95) {
-    input.l = true;
-  }
-  if (input.rA > 0.95) {
-    input.r = true;
+  if (gameMode !== 14) {
+    if (input.l) {
+      input.lA = 1;
+    }
+    if (input.r) {
+      input.rA = 1;
+    }
+  
+    if (input.lA > 0.95) {
+      input.l = true;
+    }
+    if (input.rA > 0.95) {
+      input.r = true;
+    }
   }
 
   // -------------------------------------------------------
