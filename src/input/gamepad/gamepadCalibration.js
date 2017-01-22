@@ -3,11 +3,11 @@
 
 import {Vec2D} from "../../main/util/Vec2D";
 import {deepCopy} from "../../main/util/deepCopy";
-import {setCustomGamepadInfo} from "./gamepads/custom";
 import {setUsingCustomControls, currentPlayers, setControllerReset, mType} from "../../main/main";
-import {updateControllerMenu} from "../../menus/controllermenu.js";
+import {updateControllerMenu, setCustomInUse} from "../../menus/controllermenu.js";
 import {nullGamepadInfo} from "./gamepadInfo";
 import {getGamepad} from "./gamepad";
+import {setCustomGamepadInfo, getCustomGamepadInfo, storeCustomGamepadInfo} from "./gamepads/custom";
 import {getGamepadNameAndInfo} from "./findGamepadInfo";
 import {sounds} from "../../main/sfx";
 
@@ -47,13 +47,20 @@ type Snapshots = { b0 : Array<Button>, bL : Array<Button>, bR : Array<Button>, b
 const nullSnapshots : Snapshots = { b0 : [], bL : [], bR : [], bU : []
                                   , a0 : [], aL : [], aR : [], aU : [] };
 
-type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" | "icon" | "center" | "reset" | "exit";
+type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" 
+                        | "icon" | "center" | "reset" | "exit" | "loadCustom" | "saveCustom";
 let clickObject : ClickObject = null;
 
 export function setClickObject ( click : ClickObject) : void {
   if (clickObject === null) {
     clickObject = click;
   }
+}
+
+let clickObjectNumber = 0;
+
+export function setClickObjectNumber ( k : number ) : void {
+  clickObjectNumber = k;
 }
 
 let listening = false;
@@ -93,7 +100,6 @@ export function runCalibration ( i : number ) : void {
     updateControllerMenu(false, ["Mouse-click the start button to begin calibration."], 0);
     preCalibrationLoop(i, j, gamepadInfo, interval);
   }
-
 }
 
 function resetGamepadInfo ( j : number ) : GamepadInfo {
@@ -138,7 +144,8 @@ function preCalibrationLoop( i : number, j : number
     setCalibrationInProgress(i, false);
   }
   else if (clickObject === "reset") {
-    sounds.loudelectricfizz.play(); 
+    sounds.loudelectricfizz.play();
+    setCustomInUse(0);
     const baseGamepadInfo = resetGamepadInfo(j);
     setUsingCustomControls(i, false, baseGamepadInfo);
     updateControllerMenu(false, ["Controller bindings have been reset.", "Click the start button to begin calibration."], 0);
@@ -148,6 +155,40 @@ function preCalibrationLoop( i : number, j : number
     saveSound();
     setControllerReset(i);
     updateControllerMenu(false, ["Controller has been re-centered.", "Click the start button to begin calibration."], 0);
+    setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
+  }
+  else if (clickObject === "loadCustom") {
+    if (clickObjectNumber === 0) {
+      setCustomInUse(0);
+      const baseGamepadInfo = resetGamepadInfo(j);
+      setUsingCustomControls(i, false, baseGamepadInfo);
+      updateControllerMenu(false, ["Now using default controller bindings.", "Click the start button to begin calibration."], 0);
+      setTimeout ( () => preCalibrationLoop(i, j, baseGamepadInfo, interval), 16 );
+    }
+    else {
+      const newCustomGamepadInfo = getCustomGamepadInfo(clickObjectNumber);
+      if ( newCustomGamepadInfo === null || newCustomGamepadInfo.fullID !== getGamepad(j).id) {
+        sounds.deny.play();
+        setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
+      }
+      else {
+        const newGamepadInfo = newCustomGamepadInfo.gamepadInfo;
+        setCustomInUse(clickObjectNumber);
+        setCustomGamepadInfo(j, newGamepadInfo);
+        setUsingCustomControls(i, true);
+        updateControllerMenu(false, ["Now using custom bindings #"+clickObjectNumber+".", "Click the start button to begin calibration."], 0);
+        setTimeout ( () => preCalibrationLoop(i, j, newGamepadInfo, interval), 16 );
+      }
+    }
+  }
+  else if (clickObject === "saveCustom") {
+    if (clickObjectNumber < 1 ) {
+      sounds.deny.play();
+    }
+    else {
+      storeCustomGamepadInfo( gamepadInfo, getGamepad(j).id, ("custom"+clickObjectNumber), clickObjectNumber);
+      setCustomInUse(clickObjectNumber);
+    }
     setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
   }
   else {
@@ -194,6 +235,7 @@ function calibrateObject ( i : number, j : number
   }
   else if (clickObject === "reset") {
     sounds.loudelectricfizz.play();
+    setCustomInUse(0);
     const baseGamepadInfo = resetGamepadInfo(j);
     setCustomGamepadInfo(j, baseGamepadInfo);
     setUsingCustomControls(i, false, baseGamepadInfo);
@@ -206,6 +248,39 @@ function calibrateObject ( i : number, j : number
     updateControllerMenu(false, ["Controller has been re-centered.", "Click the start button to continue calibration."], 0);
     setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
     totalInterval = 16;
+  }
+  else if (clickObject === "loadCustom") {
+    if (clickObjectNumber === 0) {
+      setCustomInUse(0);
+      const baseGamepadInfo = resetGamepadInfo(j);
+      setUsingCustomControls(i, false, baseGamepadInfo);
+      updateControllerMenu(false, ["Now using default controller bindings.", "Click the start button to begin calibration."], 0);
+      setTimeout ( () => preCalibrationLoop(i, j, baseGamepadInfo, interval), 16 );
+    }
+    else {
+      const newCustomGamepadInfo = getCustomGamepadInfo(clickObjectNumber);
+      if ( newCustomGamepadInfo === null || newCustomGamepadInfo.fullID !== getGamepad(j).id) {
+        setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
+        sounds.deny.play();
+      }
+      else {
+        const newGamepadInfo = newCustomGamepadInfo.gamepadInfo;
+        setCustomInUse(clickObjectNumber);
+        setCustomGamepadInfo(j, newGamepadInfo);
+        setUsingCustomControls(i, true);
+        updateControllerMenu(false, ["Now using custom bindings #"+clickObjectNumber+".", "Click the start button to begin calibration."], 0);
+        setTimeout ( () => preCalibrationLoop(i, j, newGamepadInfo, interval), 16 );
+      }
+    }
+  }
+  else if (clickObject === "saveCustom") {
+    if (clickObjectNumber < 1 ) {
+      sounds.deny.play();
+    }
+    else {
+      storeCustomGamepadInfo( gamepadInfo, getGamepad(j).id, ("custom"+clickObjectNumber), clickObjectNumber);
+      setCustomInUse(clickObjectNumber);
+    }
   }
   else if (clickObject === "l" || clickObject === "r") {
     texts = ["Fully depress "+clickObject.toUpperCase()+" trigger.", "Keep holding down the trigger."];
@@ -291,15 +366,20 @@ function calibrateObject ( i : number, j : number
     }, interval);
   }
 
-  if (clickObject !== "exit" && clickObject !== "reset" && clickObject !== "center") {
+  if (clickObject !== "exit" && clickObject !== "reset" && clickObject !== "center" && clickObject !== "loadCustom") {
     if (clickObject !== null) {
       sounds.blunthit.play();
       setTimeout( () => { setCustomGamepadInfo(j, gamepadInfo);
-                          calibrationLoop(i, j, gamepadInfo, snapshots, interval); }, totalInterval);   
+                          calibrationLoop(i, j, gamepadInfo, snapshots, interval); }, totalInterval);
     }
     else {
-      setTimeout( () => { calibrationLoop(i, j, gamepadInfo, snapshots, interval); }, totalInterval);   
+      setTimeout( () => { calibrationLoop(i, j, gamepadInfo, snapshots, interval); }, totalInterval);
     }     
+  }
+
+  if (   clickObject !== null && clickObject !== "saveCustom" && clickObject !== "loadCustom"
+      && clickObject !== "center" && clickObject !== "icon" && clickObject !== "exit" && clickObject !== "reset") {
+    setCustomInUse(null);
   }
 
   if (clickObject !== null) {
