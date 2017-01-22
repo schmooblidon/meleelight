@@ -62,6 +62,10 @@ export let calibrationPlayer = 0;
 
 let gameEnd = false;
 export let controllerResetCountdowns = [0,0,0,0];
+export function setControllerReset( i ) {
+  controllerResetCountdowns[i] = 0;
+}
+
 let keyboardOccupied = false;
 
 export let usingCustomControls = [false, false, false, false];

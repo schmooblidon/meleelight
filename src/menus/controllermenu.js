@@ -11,7 +11,8 @@ import {sounds} from "main/sfx";
 /* eslint-disable */
 
 let controllerTimer    = 0;
-let controllerTimerMax = 3000/16.667;
+let controllerTimerMax = 3000;
+let prevTime = 0;
 
 export function updateControllerMenu(quit, texts, interval){
   fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
@@ -43,8 +44,9 @@ export function updateControllerMenu(quit, texts, interval){
       canvas.removeEventListener('click'    , clickFunction);
       changeGamemode(1)}, 16);
   } else {
-    controllerTimer    = interval/16.667;
-    controllerTimerMax = interval/16.667;
+    controllerTimer    = interval;
+    controllerTimerMax = interval;
+    prevTime = performance.now();
   }
 }
 
@@ -58,11 +60,14 @@ export function drawControllerMenuInit (){
   bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
   bg1.fillStyle = "rgba(0,0,0,0.5)";
   fg2.fillStyle = "rgba(255,255,255,0.2)";
-  controllerTimer--;
+  const newTime = performance.now();
+  controllerTimer -= newTime - prevTime;
+  prevTime = newTime;
   if (controllerTimer > 0) {
     fg2.fillRect(300,600,600,30);
     fg2.fillStyle = "rgba(255,255,255,0.8)";
     fg2.fillRect(300,600,600*Math.max(0,(controllerTimer/controllerTimerMax)),30);
+    fg2.fillRect(296,585,4,60);
   }
 }
 
@@ -73,8 +78,9 @@ const highlightStroke = "rgba(249, 255, 193, 0.72)";
 const pressedFill   = "rgba(145, 145, 145, 0.6)";
 const pressedStroke = "rgba(249, 255, 193, 0.72)";
 
-export let exitState = "none";
-export let resetState = "none";
+export let centerState = "none";
+export let exitState   = "none";
+export let resetState  = "none";
 
 function fillColour (state) {
   if (state === "pressed") {
@@ -126,8 +132,9 @@ export function drawControllerMenu (){
   ui.font = "700 36px Arial";
   ui.textAlign = "center";
   ui.fillStyle = "rgba(255,255,255,0.8)";
-  ui.fillText("Reset", 1035, 280);
-  ui.fillText("Quit", 1035, 370);
+  ui.fillText("Center", 1035, 190);
+  ui.fillText("Reset" , 1035, 280);
+  ui.fillText("Quit"  , 1035, 370);
 
 
   const canvas = document.getElementById('uiCanvas');
@@ -136,6 +143,10 @@ export function drawControllerMenu (){
   canvas.addEventListener('mousedown', pressFunction);
   canvas.addEventListener('click'    , clickFunction);
 
+  ui.fillStyle = fillColour(centerState);
+  ui.strokeStyle = strokeColour(centerState);
+  ui.fillRect(960, 150, 150, 60);
+  ui.strokeRect(960, 150, 150, 60);
   ui.fillStyle = fillColour(resetState);
   ui.strokeStyle = strokeColour(resetState);
   ui.fillRect(960, 240, 150, 60);
@@ -150,7 +161,16 @@ function hoverFunction (e) {
   const x = e.offsetX;
   const y = e.offsetY;
   if (x >= 960 && x <= 1110) {
-    if (y >= 240 && y <= 300) {
+    if (y >= 150 && y <= 210) {
+      if (centerState === "none") {
+        sounds.menuSelect.play();
+        centerState = "highlight";
+      }
+      resetState = "none";
+      exitState = "none";
+    }
+    else if (y >= 240 && y <= 300) {
+      centerState = "none";
       if (resetState === "none") {
         sounds.menuSelect.play();
         resetState = "highlight";
@@ -158,6 +178,7 @@ function hoverFunction (e) {
       exitState = "none";
     }
     else if (y >= 330 && y <= 390) {
+      centerState = "none";
       resetState = "none";
       if (exitState === "none") {
         sounds.menuSelect.play();
@@ -165,11 +186,13 @@ function hoverFunction (e) {
       }
     }
     else {
+      centerState = "none";
       exitState = "none";
       resetState = "none";
     }
   }
   else {
+    centerState = "none";
     exitState = "none";
     resetState = "none";
   }
@@ -179,7 +202,10 @@ function pressFunction (e) {
   const x = e.offsetX;
   const y = e.offsetY;
   if (x >= 960 && x <= 1110) {
-    if (y >= 240 && y <= 300) {
+    if (y >= 150 && y <= 210) {
+      centerState = "pressed";
+    }
+    else if (y >= 240 && y <= 300) {
       resetState = "pressed";
     }
     else if (y >= 330 && y <= 390) {
@@ -192,8 +218,10 @@ function clickFunction (e) {
   const x = e.offsetX;
   const y = e.offsetY;
   if (x >= 960 && x <= 1110) {
-    if (y >= 240 && y <= 300) {
-      
+    if (y >= 150 && y <= 210) {
+      setClickObject("center");
+    }
+    else if (y >= 240 && y <= 300) {      
       setClickObject("reset");
     }
     else if (y >= 330 && y <= 390) {

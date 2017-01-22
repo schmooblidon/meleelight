@@ -1,7 +1,5 @@
 // @flow
 
-import {mType} from "../../../main/main";
-
 import type {GamepadInfo} from "../gamepadInfo";
 
 export const customGamepadInfo : Array<null | GamepadInfo> = [null, null, null, null];

@@ -4,7 +4,7 @@
 import {Vec2D} from "../../main/util/Vec2D";
 import {deepCopy} from "../../main/util/deepCopy";
 import {setCustomGamepadInfo} from "./gamepads/custom";
-import {setUsingCustomControls, currentPlayers, mType} from "../../main/main";
+import {setUsingCustomControls, currentPlayers, setControllerReset, mType} from "../../main/main";
 import {updateControllerMenu} from "../../menus/controllermenu.js";
 import {nullGamepadInfo} from "./gamepadInfo";
 import {getGamepad} from "./gamepad";
@@ -47,7 +47,7 @@ type Snapshots = { b0 : Array<Button>, bL : Array<Button>, bR : Array<Button>, b
 const nullSnapshots : Snapshots = { b0 : [], bL : [], bR : [], bU : []
                                   , a0 : [], aL : [], aR : [], aU : [] };
 
-type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" | "icon" | "reset" | "exit";
+type ClickObject = null | "a" | "b" | "x" | "y" | "ls" | "cs" | "s" | "r" | "l" | "z" | "dpad" | "icon" | "center" | "reset" | "exit";
 let clickObject : ClickObject = null;
 
 export function setClickObject ( click : ClickObject) : void {
@@ -79,7 +79,7 @@ export function runCalibration ( i : number ) : void {
   if (!calibrationInProgress[i]) {
     setCalibrationInProgress(i, true);
    
-    const interval = 3000;
+    const interval = 2000;
   
     const j = currentPlayers[i];
   
@@ -122,6 +122,7 @@ function preCalibrationLoop( i : number, j : number
     updateControllerMenu(false, ["Finding controller neutral point.", "Do not press anything."], interval);
     // take null snapshot
     setTimeout( () => {
+      setControllerReset(i);
       saveSound();
       const gamepad = getGamepad(j);
       const snapshots = nullSnapshots;
@@ -142,6 +143,12 @@ function preCalibrationLoop( i : number, j : number
     setUsingCustomControls(i, false, baseGamepadInfo);
     updateControllerMenu(false, ["Controller bindings have been reset.", "Click the start button to begin calibration."], 0);
     setTimeout ( () => preCalibrationLoop(i, j, baseGamepadInfo, interval), 16 );
+  }
+  else if (clickObject === "center") {
+    saveSound();
+    setControllerReset(i);
+    updateControllerMenu(false, ["Controller has been re-centered.", "Click the start button to begin calibration."], 0);
+    setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
   }
   else {
     if (clickObject === "icon") {
@@ -193,10 +200,17 @@ function calibrateObject ( i : number, j : number
     updateControllerMenu(false, ["Controller bindings have been reset.", "Click the start button to begin calibration."], 0);
     setTimeout ( () => preCalibrationLoop(i, j, baseGamepadInfo, interval), 16 );
   }
+  else if (clickObject === "center") {
+    saveSound();
+    setControllerReset(i);
+    updateControllerMenu(false, ["Controller has been re-centered.", "Click the start button to continue calibration."], 0);
+    setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
+    totalInterval = 16;
+  }
   else if (clickObject === "l" || clickObject === "r") {
     texts = ["Fully depress "+clickObject.toUpperCase()+" trigger.", "Keep holding down the trigger."];
     const t = clickObject; // passed as-is in the closure
-    const tA = clickObject+"a";
+    const tA = clickObject+"A";
     updateControllerMenu(false, texts, interval);
     setTimeout( () => {
       saveSound();
@@ -253,10 +267,10 @@ function calibrateObject ( i : number, j : number
         updateControllerMenu(false, defaultTexts, 0);
       }, 6*interval);
     }
-    else {
-      saveSound();
+    else {      
       const clickNow = clickObject; // passed as-is in the closure
       setTimeout( () => {
+        saveSound();
         gamepad = getGamepad(j);
         gamepadInfo[clickNow] = scanForStick( snapshots.b0, snapshots.bL, snapshots.bR, snapshots.bU, gamepad.buttons
                                             , snapshots.a0, snapshots.aL, snapshots.aR, snapshots.aU, gamepad.axes);
@@ -277,7 +291,7 @@ function calibrateObject ( i : number, j : number
     }, interval);
   }
 
-  if (clickObject !== "exit" && clickObject !== "reset") {
+  if (clickObject !== "exit" && clickObject !== "reset" && clickObject !== "center") {
     if (clickObject !== null) {
       sounds.blunthit.play();
       setTimeout( () => { setCustomGamepadInfo(j, gamepadInfo);
