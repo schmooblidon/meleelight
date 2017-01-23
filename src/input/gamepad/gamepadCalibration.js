@@ -63,6 +63,8 @@ export function setClickObjectNumber ( k : number ) : void {
   clickObjectNumber = k;
 }
 
+export const customGamepadInfoIsUsable : Array<null | bool> = [true, null, null, null, null, null, null, null];
+
 let listening = false;
 
 const ids = ["a", "b", "x", "y", "s", "r", "l" , "z", "dpad", "icon", "ls", "cs"];
@@ -92,6 +94,21 @@ export function runCalibration ( i : number ) : void {
   
     const prevGamepadInfo : GamepadInfo = mType[i] === null || mType[i] === "keyboard" ? nullGamepadInfo : mType[i];
     const gamepadInfo = deepCopy(true, prevGamepadInfo);
+
+    for (let k = 1; k < 8; k++) {
+      const maybeCustomGamepadInfo = getCustomGamepadInfo(k);
+      if (maybeCustomGamepadInfo === null) {
+        customGamepadInfoIsUsable[k] = null;
+      }
+      else {
+        if (getGamepad(j).id === maybeCustomGamepadInfo.fullID) {
+          customGamepadInfoIsUsable[k] = true;
+        }
+        else {
+          customGamepadInfoIsUsable[k] = false;
+        }
+      }
+    }
   
     clickObject = null;
     if (listening === false) {
@@ -103,7 +120,7 @@ export function runCalibration ( i : number ) : void {
 }
 
 function resetGamepadInfo ( j : number ) : GamepadInfo {
-  const gamepad = navigator.getGamepads ? navigator.getGamepads()[j] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[j] : null);
+  const gamepad = getGamepad(j);
   let baseGamepadInfo = nullGamepadInfo;
   if (gamepad !== undefined && gamepad !== null && gamepad.id !== undefined && gamepad.id !== null) {
     const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
@@ -186,6 +203,7 @@ function preCalibrationLoop( i : number, j : number
       sounds.deny.play();
     }
     else {
+      customGamepadInfoIsUsable[clickObjectNumber] = true;
       storeCustomGamepadInfo( gamepadInfo, getGamepad(j).id, ("custom"+clickObjectNumber), clickObjectNumber);
       setCustomInUse(clickObjectNumber);
     }
@@ -278,6 +296,7 @@ function calibrateObject ( i : number, j : number
       sounds.deny.play();
     }
     else {
+      customGamepadInfoIsUsable[clickObjectNumber] = true;
       storeCustomGamepadInfo( gamepadInfo, getGamepad(j).id, ("custom"+clickObjectNumber), clickObjectNumber);
       setCustomInUse(clickObjectNumber);
     }

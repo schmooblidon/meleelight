@@ -6,7 +6,7 @@ import {player, setCookie, changeGamemode, ports, bg1, layers, bg2, ui, fg2, fg1
 } from "main/main";
 import {twoPi} from "main/render";
 import {updateGamepadSVGColour} from "../input/gamepad/drawGamepad";
-import {setClickObject, setClickObjectNumber} from "../input/gamepad/gamepadCalibration";
+import {setClickObject, setClickObjectNumber, customGamepadInfoIsUsable} from "../input/gamepad/gamepadCalibration";
 import {sounds} from "main/sfx";
 /* eslint-disable */
 
@@ -73,37 +73,49 @@ export function drawControllerMenuInit (){
 
 const baseFill   = "rgba(255, 255, 255, 0.6)";
 const baseStroke = "rgba(255, 255, 255, 0.72)";
+const redFill = "rgba(242, 120, 106, 0.6)";
+const redStroke = "rgba(242, 120, 106, 0.72)";
+const greenFill = "rgba(175, 232, 155, 0.6)";
+const greenStroke = "rgba(175, 232, 155, 0.72)";
 const highlightFill   = "rgba(249, 255, 193, 0.6)";
 const highlightStroke = "rgba(249, 255, 193, 0.72)";
 const inUseStroke = "rgba(249, 255, 193, 0.9)";
 const pressedFill   = "rgba(145, 145, 145, 0.6)";
 const pressedStroke = "rgba(249, 255, 193, 0.72)";
 
-export let centerState = "none";
-export let exitState   = "none";
-export let resetState  = "none";
-export let customState = "none";
-export let customInteract = null;
-export let customInUse = 0;
-export let saveOrLoad = "load";
+let centerState = "none";
+let exitState   = "none";
+let resetState  = "none";
+let customState = "none";
+let customInteract = null;
+let customInUse = 0;
+let saveOrLoad = "load";
 
 export function setCustomInUse (k) {
   customInUse = k;
 }
 
-function fillColour (state) {
-  if (state === "pressed") {
-    return pressedFill;
+function fillColour (state, k) {
+  if (k === undefined || customGamepadInfoIsUsable[k] === null) {
+    if (state === "pressed") {
+      return pressedFill;
+    }
+    else if (state === "highlight") {
+      return highlightFill;
+    }
+    else { 
+      return baseFill;
+    }
   }
-  else if (state === "highlight") {
-    return highlightFill;
+  else if (customGamepadInfoIsUsable[k] === false) {
+    return redFill;
   }
-  else { 
-    return baseFill;
-  }
+  else {
+    return greenFill;
+  } 
 }
 
-function strokeColour (state) {
+function strokeColour (state, k) {
   if (state === "pressed") {
     return pressedStroke;
   }
@@ -111,7 +123,15 @@ function strokeColour (state) {
     return highlightStroke;
   }
   else { 
-    return baseStroke;
+    if (k === undefined || customGamepadInfoIsUsable[k] === null) {
+      return baseStroke;
+    }
+    else if (customGamepadInfoIsUsable[k] === false) {
+      return redStroke;
+    }
+    else {
+      return greenStroke;
+    }
   }
 }
 
@@ -154,12 +174,12 @@ export function drawControllerMenu (){
   // draw custom controller binding boxes
   for (let i = 0; i < 4; i++) {
     if (customInteract !== 2*i ) {
-      ui.fillStyle = baseFill;
-      ui.strokeStyle = baseStroke;
+      ui.fillStyle = fillColour("none",2*i);
+      ui.strokeStyle = strokeColour("none",2*i);;
     }
     else {
-      ui.fillStyle = fillColour(customState);
-      ui.strokeStyle = strokeColour(customState);
+      ui.fillStyle = fillColour(customState, 2*i);
+      ui.strokeStyle = strokeColour(customState, 2*i);
     }
     ui.fillRect(30, 150+90*i, 120, 60);
     ui.strokeRect(30, 150+90*i, 120, 60);
@@ -168,12 +188,12 @@ export function drawControllerMenu (){
       ui.strokeRect(27,147+90*i,126,66);
     }
     if (customInteract !== 2*i+1 ) {
-      ui.fillStyle = baseFill;
-      ui.strokeStyle = baseStroke;
+      ui.fillStyle = fillColour("none",2*i+1);
+      ui.strokeStyle = strokeColour("none",2*i+1);;
     }
     else {
-      ui.fillStyle = fillColour(customState);
-      ui.strokeStyle = strokeColour(customState);
+      ui.fillStyle = fillColour(customState, 2*i+1);
+      ui.strokeStyle = strokeColour(customState, 2*i+1);
     }
     ui.fillRect(180, 150+90*i, 120, 60);
     ui.strokeRect(180, 150+90*i, 120, 60);
