@@ -84,6 +84,32 @@ function listen () : void {
 
 const defaultTexts = ["Click button, trigger or analog stick to rebind."];
 
+// figure out which custom gamepad infos are usable by the current controller
+// sets the value for customGamepadInfoIsUsable
+export function setCustomGamepadInfoIsUsable ( j : number ) : void {
+  const currentGamepadId = getGamepad(j).id;
+  if (getGamepadNameAndInfo(currentGamepadId) === null) {
+    customGamepadInfoIsUsable[0] = null;
+  }
+  else {
+    customGamepadInfoIsUsable[0] = true;
+  }
+  for (let k = 1; k < 8; k++) {
+    const maybeCustomGamepadInfo = getCustomGamepadInfo(k);
+    if (maybeCustomGamepadInfo === null) {
+      customGamepadInfoIsUsable[k] = null;
+    }
+    else {
+      if (currentGamepadId === maybeCustomGamepadInfo.fullID) {
+        customGamepadInfoIsUsable[k] = true;
+      }
+      else {
+        customGamepadInfoIsUsable[k] = false;
+      }
+    }
+  }
+}
+
 export function runCalibration ( i : number ) : void {
   if (!calibrationInProgress[i]) {
     setCalibrationInProgress(i, true);
@@ -95,20 +121,7 @@ export function runCalibration ( i : number ) : void {
     const prevGamepadInfo : GamepadInfo = mType[i] === null || mType[i] === "keyboard" ? nullGamepadInfo : mType[i];
     const gamepadInfo = deepCopy(true, prevGamepadInfo);
 
-    for (let k = 1; k < 8; k++) {
-      const maybeCustomGamepadInfo = getCustomGamepadInfo(k);
-      if (maybeCustomGamepadInfo === null) {
-        customGamepadInfoIsUsable[k] = null;
-      }
-      else {
-        if (getGamepad(j).id === maybeCustomGamepadInfo.fullID) {
-          customGamepadInfoIsUsable[k] = true;
-        }
-        else {
-          customGamepadInfoIsUsable[k] = false;
-        }
-      }
-    }
+    setCustomGamepadInfoIsUsable(j);
   
     clickObject = null;
     if (listening === false) {
@@ -184,7 +197,7 @@ function preCalibrationLoop( i : number, j : number
     }
     else {
       const newCustomGamepadInfo = getCustomGamepadInfo(clickObjectNumber);
-      if ( newCustomGamepadInfo === null || newCustomGamepadInfo.fullID !== getGamepad(j).id) {
+      if ( newCustomGamepadInfo === null || customGamepadInfoIsUsable[clickObjectNumber] !== true ) {
         sounds.deny.play();
         setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
       }
@@ -277,9 +290,9 @@ function calibrateObject ( i : number, j : number
     }
     else {
       const newCustomGamepadInfo = getCustomGamepadInfo(clickObjectNumber);
-      if ( newCustomGamepadInfo === null || newCustomGamepadInfo.fullID !== getGamepad(j).id) {
-        setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
+      if ( newCustomGamepadInfo === null || customGamepadInfoIsUsable[clickObjectNumber] !== true ) {
         sounds.deny.play();
+        setTimeout ( () => preCalibrationLoop(i, j, gamepadInfo, interval), 16 );
       }
       else {
         const newGamepadInfo = newCustomGamepadInfo.gamepadInfo;
