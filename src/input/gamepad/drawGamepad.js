@@ -242,7 +242,17 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
 
 
   if (!gamepadStates[i].rCentered || input.rA > 0.01) {
-    svg.getElementById("r").setAttribute("transform", "translate(0,"+(40*Math.pow(input.rA,2))+")");
+    const rTranslate = 40*Math.pow(input.rA,2);
+    svg.getElementById("r").setAttribute("transform", "translate(0,"+rTranslate+")");
+    const rText = svg.getElementById("RText");
+    if (input.r) {      
+      rText.setAttribute("transform", "translate(0,"+(-25-rTranslate)+")");
+      rText.style.fill = highlight;
+    }
+    else {
+      rText.setAttribute("transform", "translate(0,0)");
+      rText.style.fill = "";
+    }
     if (input.rA > 0.01) {
       gamepadStates[i].rCentered = false;
     }
@@ -251,7 +261,17 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
     }
   }
   if (!gamepadStates[i].lCentered || input.lA > 0.01) {
-    svg.getElementById("l").setAttribute("transform", "translate(0,"+(40*Math.pow(input.lA,2))+")");
+    const lTranslate = 40*Math.pow(input.lA,2);
+    svg.getElementById("l").setAttribute("transform", "translate(0,"+lTranslate+")");
+    const lText = svg.getElementById("LText");
+    if (input.l) {
+      lText.setAttribute("transform", "translate(0,"+(-25-lTranslate)+")");
+      lText.style.fill = highlight;
+    }
+    else {
+      lText.setAttribute("transform", "translate(0,0)");
+      lText.style.fill = "";
+    }
     if (input.lA > 0.01) {
       gamepadStates[i].lCentered = false;
     }
@@ -259,6 +279,7 @@ export function updateGamepadSVGState(i : number, id : string, maybeInput : ?Inp
       gamepadStates[i].lCentered = true;
     }
   }
+
 
   // now some 3D effects
 
