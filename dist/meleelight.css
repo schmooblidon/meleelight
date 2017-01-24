@@ -111,6 +111,7 @@ body {
   position:absolute;
   padding:0;
   vertical-align: top;
+  top:0px;
 }
 
 #topButtonContainer {
@@ -693,9 +694,10 @@ a {
 }
 
 #gamepadSVGCalibration {
-  position: relative;
+  position: absolute;
   margin-left: 300px;
   margin-top: -40px;
+  top:0px;
 }
 
 .playerTitle p {

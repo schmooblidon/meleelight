@@ -66,12 +66,22 @@ export let calibrationPlayer = 0;
 
 export let gameEnd = false;
 export let controllerResetCountdowns = [0,0,0,0];
+export function setControllerReset( i ) {
+  controllerResetCountdowns[i] = 0;
+}
+
 let keyboardOccupied = false;
 
 export let usingCustomControls = [false, false, false, false];
 
-export function setUsingCustomControls( i: number) : void {
-  usingCustomControls[i] = true;
+export function setUsingCustomControls( i, bool, info ) {
+  usingCustomControls[i] = bool;
+  if (bool) {
+    mType[i] = customGamepadInfo[currentPlayers[i]];
+  }
+  else {
+    mType[i] = info;
+  }  
 }
 
 export let firstTimeDetected = [true, true, true, true];

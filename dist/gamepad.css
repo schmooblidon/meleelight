@@ -1,5 +1,5 @@
 .bbase {
-  fill:#cdcdcd;
+  fill:#dcdcdc;
 }
 
 .btext {
@@ -11,7 +11,7 @@
 }
 
 .tbase {
-  fill:#cdcdcd;
+  fill:#dcdcdc;
   stroke: #919191;
   stroke-width: 4px;
   stroke-opacity:1;
@@ -54,11 +54,11 @@
 }
 
 #lsOctagon {
-  fill:#919191;
+  fill:#a0a0a0;
 }
 
 #lStickBase {
-  fill: #cdcdcd;
+  fill: #dcdcdc;
 }
 
 #lStickDepth {
@@ -66,12 +66,12 @@
 }
 
 #lStickShadow {
-  fill:#777777;
+  fill:#848484;
 }
 
 .lStickCircle {
   fill:none;
-  stroke: #b0b0b0;
+  stroke: #c0c0c0;
   stroke-width:3.75px;
   stroke-linecap:round;
   stroke-linejoin:round;
@@ -95,8 +95,8 @@
 }
 
 #dPadShape {
-  fill:#e7e7e7;
-  stroke:#e7e7e7;
+  fill:#dcdcdc;
+  stroke:#dcdcdc;
 }
 
 .dPadDepth {

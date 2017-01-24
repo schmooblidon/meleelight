@@ -1,4 +1,7 @@
 export function deepCopyObject(deep, target, object,exclusionList) {
+// warning: this function is currently buggy and does not properly deep copy objects...
+// use `deepCopy` instead wherever possible
+export function deepCopyObject(deep, target, ...object) {
   if (deep) {
     let result = target;
     result = result || {};
