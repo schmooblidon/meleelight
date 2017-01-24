@@ -6,7 +6,7 @@ export function deepCopyObject <T : { [_: any] : any } > (deep: bool, object: T,
     const result = {};
     for (const key in object) {
       if (object.hasOwnProperty(key)) {
-        if (exclusionList && exclusionList.indexOf(key) !== -1) {
+        if (object[key] === null || (exclusionList && exclusionList.indexOf(key) !== -1)) {
           result[key] = object[key];
         }
         else if (Array.isArray(object[key])) {
