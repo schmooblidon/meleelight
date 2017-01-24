@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import $ from 'jquery';
-import {nullInputs} from "../input";
+import {nullInputs} from "../../input/input";
 import deepstream from 'deepstream.io-client-js';
 import {
   setPlayerType,

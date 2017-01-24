@@ -10,6 +10,8 @@ import {scaleToGCTrigger, scaleToMeleeAxes, scaleToUnitAxes, tasRescale, deaden}
 import $ from 'jquery';
 
 import type {GamepadInfo, StickCardinals} from "./gamepad/gamepadInfo";
+import {replayActive, retrieveReplayInputs} from "../main/replay";
+import {retrieveNetworkInputs} from "../main/multiplayer/streamclient";
 
 export type Input = { a : bool
                     , b : bool
@@ -119,18 +121,28 @@ export const aiInputBank = [aiPlayer1,aiPlayer2,aiPlayer3,aiPlayer4];
 // it is only used to make z button mean "left trigger value = 0.35" + "A = true".
 export function pollInputs ( gameMode : number, frameByFrame : bool, controllerInfo : "keyboard" | GamepadInfo
                            , playerSlot : number, controllerIndex : number, keys : {[key: number] : bool}, playertype : number ) : Input {
-  // input is the input for player i in the current frame
-  let input = nullInput(); // initialise with default values
-  if(playertype !== 0 && gameMode === 3 ){
-    return aiInputBank[playerSlot][0];
+   // input is the input for player i in the current frame
+    let input = nullInput(); // initialise with default values
+    if(replayActive){
+      input = pollReplayInputs(gameMode, controllerInfo, playerSlot, controllerIndex, frameByFrame);
+    }else if(playertype === 1 && gameMode === 3 ){
+      return aiInputBank[playerSlot][0];
+    }else if (controllerInfo === "keyboard") { // keyboard controls
+      input = pollKeyboardInputs(gameMode, frameByFrame, keys);
+    } else if (playertype === 2 || controllerInfo === 99) {
+      input = pollNetworkInputs(gameMode, controllerInfo, playerSlot, controllerIndex, frameByFrame);
+    }else if (playertype === 0) {
+      input = pollGamepadInputs(gameMode, controllerInfo, playerSlot, controllerIndex, frameByFrame);
+    }
+    return input;
   }
-  else if (controllerInfo === "keyboard") {
-    input = pollKeyboardInputs(gameMode, frameByFrame, keys);
-  }
-  else if (playertype === 0) {
-    input = pollGamepadInputs(gameMode, controllerInfo, playerSlot, controllerIndex, frameByFrame);
-  }
-  return input;
+
+function pollNetworkInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
+  return retrieveNetworkInputs(playerSlot,controllerIndex);
+}
+
+function pollReplayInputs(gameMode, controllerType, playerSlot, controllerIndex, frameByFrame) {
+  return retrieveReplayInputs(playerSlot,controllerIndex);
 }
 
 function pollKeyboardInputs(gameMode : number, frameByFrame : bool, keys : {[key: number] : bool}) : Input {

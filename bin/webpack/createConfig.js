@@ -47,11 +47,11 @@ function createConfig(options) {
             {
               cacheId: 'meleelight',
               filename: 'service-worker.js',
-              maximumFileSizeToCacheInBytes: 4194304,
               runtimeCaching: [{
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
               }],
+              directoryIndex:"meleelight.html"
             }
         )
     );
@@ -62,7 +62,7 @@ function createConfig(options) {
             {
               loader: 'babel-loader',
               query: {
-                presets: ['babel?presets[]=es2015,presets[]=stage-0'],
+                presets: ['babel-preset-es2015','babel-preset-stage-0'],
                 plugins: ['transform-flow-strip-types']
               }
             }
@@ -86,11 +86,11 @@ function createConfig(options) {
             {
               cacheId: 'meleelight',
               filename: 'service-worker.js',
-              maximumFileSizeToCacheInBytes: 4194304,
               runtimeCaching: [{
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
-              }]
+              }],
+              directoryIndex:"meleelight.html"
             }
         )
     );
@@ -101,7 +101,7 @@ function createConfig(options) {
             {
               loader: 'babel-loader',
               query: {
-                presets: ['babel?presets[]=es2015,es2015,presets[]=stage-0'],
+                presets: ['babel-preset-es2015','babel-preset-stage-0'],
                 plugins: ['transform-flow-strip-types']
               }
             }

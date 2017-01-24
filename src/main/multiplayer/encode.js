@@ -1,4 +1,4 @@
-import {inputData, meleeRound} from "../input";
+import {inputData, meleeRound} from "../../input/input";
 
 
 function axisToByte( value ) {

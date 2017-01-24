@@ -1,7 +1,7 @@
 /*eslint-disable*/
 import * as pdep from 'main/multiplayer/peer';
 import $ from 'jquery';
-import {nullInputs} from "../input";
+import {nullInputs} from "../../input/input";
 import {
   setPlayerType,
   ports,

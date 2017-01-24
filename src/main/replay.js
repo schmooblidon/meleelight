@@ -19,7 +19,7 @@ import {deepCopyObject} from "./util/deepCopyObject";
 import pako from "pako";
 import $ from 'jquery';
 import localforage from 'localforage';
-import {aiInputBank, nullInput} from "./input";
+import {aiInputBank, nullInput} from "../input/input";
 const fullGameState = {};
 fullGameState.inputs = [];
 fullGameState.playerData = [];

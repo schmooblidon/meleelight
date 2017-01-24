@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import $ from 'jquery';
-import {nullInputs, nullInput} from "../input";
+import {nullInputs, nullInput} from "../../input/input";
 import {encodeInput, decodeInput} from "./encode";
 import deepstream from 'deepstream.io-client-js';
 import {
