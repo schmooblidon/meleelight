@@ -2,7 +2,7 @@
 /*eslint indent:0*/
 
 import {Vec2D} from "../../main/util/Vec2D";
-import {deepCopy} from "../../main/util/deepCopy";
+import {deepCopyObject, deepCopyArray} from "../../main/util/deepCopy";
 import {setUsingCustomControls, currentPlayers, setControllerReset, mType} from "../../main/main";
 import {updateControllerMenu, setCustomInUse} from "../../menus/controllermenu.js";
 import {nullGamepadInfo} from "./gamepadInfo";
@@ -20,25 +20,6 @@ import type {Gamepad, Button} from "./gamepad";
 const calibrationInProgress = [false, false, false, false];
 function setCalibrationInProgress (i : number, bool : bool) : void {
   calibrationInProgress[i] = bool;
-}
-
-function deepCopyButtons( gpd : Gamepad ) : Array<Button> {
-  const lgB = gpd.buttons.length;
-  const buttons = [];
-  for (let i = 0; i < lgB; i++) {
-    const button = gpd.buttons[i];
-    buttons.push({value : button.value, pressed : button.pressed});
-  } 
-  return buttons;
-}
-
-function deepCopyAxes( gpd : Gamepad ) : Array<number> {
-  const lgA = gpd.axes.length;
-  const axes = [];
-  for (let j = 0; j < lgA; j++) {
-    axes.push(gpd.axes[j]);
-  }
-  return axes;
 }
 
 type Snapshots = { b0 : Array<Button>, bL : Array<Button>, bR : Array<Button>, bU : Array<Button>
@@ -119,7 +100,7 @@ export function runCalibration ( i : number ) : void {
     const j = currentPlayers[i];
   
     const prevGamepadInfo : GamepadInfo = mType[i] === null || mType[i] === "keyboard" ? nullGamepadInfo : mType[i];
-    const gamepadInfo = deepCopy(true, prevGamepadInfo);
+    const gamepadInfo = deepCopyObject(true, prevGamepadInfo);
 
     setCustomGamepadInfoIsUsable(j);
   
@@ -138,7 +119,7 @@ function resetGamepadInfo ( j : number ) : GamepadInfo {
   if (gamepad !== undefined && gamepad !== null && gamepad.id !== undefined && gamepad.id !== null) {
     const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
     if (maybeNameAndInfo !== null) {
-      baseGamepadInfo = deepCopy(true,maybeNameAndInfo[1]);
+      baseGamepadInfo = deepCopyObject(true,maybeNameAndInfo[1]);
     }
   }
   return baseGamepadInfo;
@@ -162,8 +143,8 @@ function preCalibrationLoop( i : number, j : number
       saveSound();
       const gamepad = getGamepad(j);
       const snapshots = nullSnapshots;
-      snapshots.b0 = deepCopyButtons(gamepad);
-      snapshots.a0 = deepCopyAxes(gamepad);
+      snapshots.b0 = deepCopyArray(true,gamepad.buttons);
+      snapshots.a0 = deepCopyArray(true,gamepad.axes);
       calibrationLoop(i, j, gamepadInfo, snapshots, interval);
       updateControllerMenu(false, defaultTexts, 0);
     }, interval);
@@ -347,22 +328,22 @@ function calibrateObject ( i : number, j : number
     setTimeout( () => {
       saveSound();
       gamepad = getGamepad(j);
-      snapshots.bL = deepCopyButtons(gamepad);
-      snapshots.aL = deepCopyAxes(gamepad);
+      snapshots.bL = deepCopyArray(true,gamepad.buttons);
+      snapshots.aL = deepCopyArray(true,gamepad.axes);
       updateControllerMenu(false, [texts[0]+"right"+sep, texts[1]], 1.5*interval);
     }, 1.5*interval);
     setTimeout( () => {
       saveSound();
       gamepad = getGamepad(j);
-      snapshots.bR = deepCopyButtons(gamepad);
-      snapshots.aR = deepCopyAxes(gamepad);
+      snapshots.bR = deepCopyArray(true,gamepad.buttons);
+      snapshots.aR = deepCopyArray(true,gamepad.axes);
       updateControllerMenu(false, [texts[0]+"up"+sep, texts[1]], 1.5*interval);
     }, 3*interval);
     setTimeout( () => {
       saveSound();
       gamepad = getGamepad(j);
-      snapshots.bU = deepCopyButtons(gamepad);
-      snapshots.aU = deepCopyAxes(gamepad);
+      snapshots.bU = deepCopyArray(true,gamepad.buttons);
+      snapshots.aU = deepCopyArray(true,gamepad.axes);
       updateControllerMenu(false, [texts[0]+"down"+sep, texts[1]], 1.5*interval);
     }, 4.5*interval);
     if (clickObject === "dpad") {
