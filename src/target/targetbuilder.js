@@ -9,6 +9,7 @@ import {deepCopyObject} from "main/util/deepCopyObject";
 import {Vec2D} from "../main/util/Vec2D";
 import {Box2D} from "../main/util/Box2D";
 import {setCustomTargetStages, customTargetStages} from "../stages/activeStage";
+import {deepCopy} from "../main/util/deepCopy";
 /* eslint-disable */
 
 export let crossHairPos = new Vec2D(0,0);
@@ -590,14 +591,14 @@ export function targetBuilderControls (p, input){
             if (editingStage > -1){
               setCookie("custom"+editingStage,code,36500);
                 setCustomTargetStages(customTargetStages[editingStage],{});
-                setCustomTargetStages(customTargetStages[editingStage],deepCopyObject(true,customTargetStages[editingStage],stageTemp));
+                setCustomTargetStages(customTargetStages[editingStage],deepCopy(true,customTargetStages[editingStage],stageTemp));
               $("#cStageInfoEdit").empty().append("Custom stage "+(editingStage+1)+" updated!");
             }
             else {
               if (customTargetStages.length < 10){
                 setCookie("custom"+customTargetStages.length,code,36500);
                 customTargetStages.push({});
-                setCustomTargetStages(customTargetStages.length - 1,deepCopyObject(true,customTargetStages[customTargetStages.length - 1],stageTemp));
+                setCustomTargetStages(customTargetStages.length - 1,deepCopy(true,customTargetStages[customTargetStages.length - 1],stageTemp));
                 $("#cStageInfoEdit").empty().append("Saved as Custom stage "+customTargetStages.length);
               }
               else {

@@ -26,6 +26,7 @@ import {setTokenPos, setChosenChar, setChoosingTag} from "../../menus/css";
 import pako from 'pako';
 import {gameSettings, updateGameSettings} from "../../settings";
 import {updateGameTickDelay} from "../replay";
+import {deepCopy} from "../util/deepCopy";
 
 
 let ds = null;
@@ -156,7 +157,7 @@ function startRoom() {
     playerStatusRecords[playerID] = statusRecord.get();
     $('#mpcode').prop("value", GAME_ID);
 
-    let playerPayload = deepCopyObject(true, {}, player[getPlayerStatusRecord(playerID).ports - 1],exclusions);
+    let playerPayload = deepCopy(true, {}, player[getPlayerStatusRecord(playerID).ports - 1],exclusions);
 
     statusRecord.set(GAME_ID + 'player/',
         {
@@ -342,10 +343,10 @@ function syncClient(data) {
   let portSnapshot = ports;
   if (joinedGame === false) {
     joinedGame = true;
-    let tempCurrentPlayers = deepCopyObject(true, {}, currentPlayers);
+    let tempCurrentPlayers = deepCopy(true, {}, currentPlayers);
     let playersToBeReassigned = tempCurrentPlayers.length;
-    let mTypeSnapshot = deepCopyObject(true, {}, mType);
-    let charSelectedSnapshot = deepCopyObject(true, {}, characterSelections);
+    let mTypeSnapshot = deepCopy(true, {}, mType);
+    let charSelectedSnapshot = deepCopy(true, {}, characterSelections);
     //add host players
     for (let v = ports; v <= exactportnumber - 1; v++) {
 

@@ -119,7 +119,7 @@ export function runCalibration ( i : number ) : void {
     const j = currentPlayers[i];
   
     const prevGamepadInfo : GamepadInfo = mType[i] === null || mType[i] === "keyboard" ? nullGamepadInfo : mType[i];
-    const gamepadInfo = deepCopy(true, prevGamepadInfo);
+    const gamepadInfo = deepCopy(true,{}, prevGamepadInfo);
 
     setCustomGamepadInfoIsUsable(j);
   
@@ -138,7 +138,7 @@ function resetGamepadInfo ( j : number ) : GamepadInfo {
   if (gamepad !== undefined && gamepad !== null && gamepad.id !== undefined && gamepad.id !== null) {
     const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
     if (maybeNameAndInfo !== null) {
-      baseGamepadInfo = deepCopy(true,maybeNameAndInfo[1]);
+      baseGamepadInfo = deepCopy(true,{},maybeNameAndInfo[1]);
     }
   }
   return baseGamepadInfo;

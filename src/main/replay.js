@@ -20,6 +20,7 @@ import pako from "pako";
 import $ from 'jquery';
 import localforage from 'localforage';
 import {aiInputBank, nullInput} from "../input/input";
+import {deepCopy} from "./util/deepCopy";
 const fullGameState = {};
 fullGameState.inputs = [];
 fullGameState.playerData = [];
@@ -67,13 +68,13 @@ export function saveGameState(input) {
       for (let i = 0; i < playerType.length; i++) {
 
         if (playerType[i] === 1) {
-          fullGameState.inputs[i] = deepCopyObject(true, {}, aiInputBank[i][0]);
+          fullGameState.inputs[i] = deepCopy(true, {}, aiInputBank[i][0]);
 
         } else if (playerType[i] === 0) {
-          fullGameState.inputs[i] = deepCopyObject(true, {}, input[i][0]);
+          fullGameState.inputs[i] = deepCopy(true, {}, input[i][0]);
 
         } else if (playerType[i] === 2) {
-          fullGameState.inputs[i] = deepCopyObject(true, {}, input[i][0]);
+          fullGameState.inputs[i] = deepCopy(true, {}, input[i][0]);
 
         }
         // const exclusions = ["charAttributes",

@@ -40,12 +40,13 @@ import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,
 import {deepCopyObject} from "./util/deepCopyObject";
 import {setChosenChar} from "../menus/css";
 import {saveGameState, loadReplay, gameTickDelay} from "./replay";
-import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
+import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters, nullInput} from "../input/input";
 import {deaden} from "../input/meleeInputs";
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
+import {deepCopy} from "./util/deepCopy";
 /*globals performance*/
 
 export const holiday = 0;
@@ -813,7 +814,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
   if(giveInputs[i] === true){
     //turns out keyboards leave gaps in the input buffer
-    deepCopyObject(true,nullInput(),tempBuffer[0]);
+    deepCopy(true,nullInput(),tempBuffer[0]);
     updateNetworkInputs(tempBuffer[0],i);
   }
   if (active) {

@@ -14,6 +14,7 @@ import {
   setCurrentPlayer, player
 } from "../main";
 import {deepCopyObject} from "../util/deepCopyObject";
+import {deepCopy} from "../util/deepCopy";
 
 let peer = null;
 let peerId = null;
@@ -65,7 +66,7 @@ function startRoom() {
       }
       if (data.inputBuffer && (data.playerSlot !== undefined)) {
         saveNetworkInputs(data.playerSlot,data.inputBuffer);
-        player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot],data.playerInfo);
+        player[data.playerSlot] = deepCopy(true, player[data.playerSlot],data.playerInfo);
       }
     });
     //oops?
@@ -105,7 +106,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
         if (key) {
        //   console.log("sending inputs");
           //dont be lazy like me;
-        let playerPayload =  deepCopyObject(true,{},player[playerSlot]);
+        let playerPayload =  deepCopy(true,{},player[playerSlot]);
         delete playerPayload.charAttributes;
         delete playerPayload.charHitboxes;
         let payload = {"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":playerPayload};
@@ -154,9 +155,9 @@ function getHostRoom() {
 
 function syncClient(exactportnumber) {
   let portSnapshot = ports;
-  let tempCurrentPlayers = deepCopyObject(true, {}, currentPlayers);
+  let tempCurrentPlayers = deepCopy(true, {}, currentPlayers);
   let playersToBeReassigned = tempCurrentPlayers.length;
-  let mTypeSnapshot = deepCopyObject(true, {}, mType);
+  let mTypeSnapshot = deepCopy(true, {}, mType);
   //add host players
   for (let i = 0; i < exactportnumber; i++) {
     setPlayerType(i, 2);
@@ -198,7 +199,7 @@ function connect(c) {
 
       if (data.inputBuffer && (data.playerSlot !== undefined)) {
         saveNetworkInputs(data.playerSlot, data.inputBuffer);
-        player[data.playerSlot] = deepCopyObject(true, player[data.playerSlot],data.playerInfo);
+        player[data.playerSlot] = deepCopy(true, player[data.playerSlot],data.playerInfo);
       }
     });
     c.on('close', () => {

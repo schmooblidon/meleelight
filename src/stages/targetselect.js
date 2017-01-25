@@ -18,6 +18,7 @@ import {deepCopyObject} from "../main/util/deepCopyObject";
 import {Box2D} from "../main/util/Box2D";
 import {Vec2D} from "../main/util/Vec2D";
 import {setActiveStageCustomTarget} from "./activeStage";
+import {deepCopy} from "../main/util/deepCopy";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;
@@ -93,7 +94,7 @@ export function tssControls (i, input){
           if (customTargetStages.length < 10){
             setCookie("custom"+customTargetStages.length,getCookie("custom"+(targetSelected-10)),36500);
               customTargetStages.push({});
-              setCustomTargetStages(customTargetStages.length - 1,deepCopyObject(true,customTargetStages[customTargetStages.length - 1],customTargetStages[targetSelected-10]));
+              setCustomTargetStages(customTargetStages.length - 1,deepCopy(true,customTargetStages[customTargetStages.length - 1],customTargetStages[targetSelected-10]));
           }
           else {
             promptTimer = 60;
@@ -104,7 +105,7 @@ export function tssControls (i, input){
         } else if (input[i][0].y && !input[i][1].y) {
           //edit
             resetStageTemp();
-            setStageTemp(deepCopyObject(true,stageTemp,customTargetStages[targetSelected-10]));
+            setStageTemp(deepCopy(true,stageTemp,customTargetStages[targetSelected-10]));
             setTargetBuilder(i);
             setEditingStage(targetSelected-10);
           //input[i][i].a[1] = true;
@@ -150,7 +151,7 @@ export function tssControls (i, input){
       else {
         setCookie("custom"+customTargetStages.length,code,36500);
           //setCustomTargetStages(customTargetStages.length, {});
-          setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
+          setCustomTargetStages(customTargetStages.length,deepCopy(true,customTargetStages[customTargetStages.length-1],newStage));
         redrawCustomStageBoxes();
       }
       $("#customStageContainer").hide();
@@ -614,7 +615,7 @@ export function getTargetStageCookies (){
       }
       else {
           setCustomTargetStages(customTargetStages.length,  {});
-          setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
+          setCustomTargetStages(customTargetStages.length,deepCopy(true,customTargetStages[customTargetStages.length-1],newStage));
       }
     }
   }
