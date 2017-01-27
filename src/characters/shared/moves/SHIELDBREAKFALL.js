@@ -30,8 +30,8 @@ export default {
       return false;
     }
   },
-  land : function(p,input){
-    actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.init(p,input);
+  land : function(p,normal,input){
+    actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.init(p,normal,input);
   }
 };
 

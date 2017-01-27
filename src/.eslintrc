@@ -8,7 +8,6 @@
   },
   "rules": {
     // Style / cleanliness
-    "indent": ["error", 2, { "SwitchCase": 1 }],
     "no-var": ["error"],
     "arrow-parens": ["error"],
     "no-duplicate-imports": ["error"],

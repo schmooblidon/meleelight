@@ -14,10 +14,13 @@ import {sounds,music} from "../main/sfx";
 import {twoPi} from "../main/render";
 import {foxPic, puffPic, marthPic} from "../menus/css";
 import {customTargetStages, setCustomTargetStages,setActiveStageTarget} from "stages/activeStage";
-import {deepCopyObject} from "../main/util/deepCopyObject";
+import {deepCopyObject} from "../main/util/deepCopy";
 import {Box2D} from "../main/util/Box2D";
 import {Vec2D} from "../main/util/Vec2D";
+import {getConnected} from "../target/util/getConnected";
+import {getSurfaceFromStage} from "./stage";
 import {setActiveStageCustomTarget} from "./activeStage";
+import {parseStageCode} from "./encode";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;
@@ -30,6 +33,11 @@ export function setTargetPointerPos(val){
 }
 const cXSize = 1200;
 const cYSize = 750;
+
+let stopShowingCode = false;
+function clickFunction() {
+  stopShowingCode = true;
+}
 
 export function tssControls (i, input){
   if (!showingCode){
@@ -92,8 +100,9 @@ export function tssControls (i, input){
           //dupe
           if (customTargetStages.length < 10){
             setCookie("custom"+customTargetStages.length,getCookie("custom"+(targetSelected-10)),36500);
-              customTargetStages.push({});
-              setCustomTargetStages(customTargetStages.length - 1,deepCopyObject(true,customTargetStages[customTargetStages.length - 1],customTargetStages[targetSelected-10]));
+            customTargetStages.push({});
+            customTargetStages[customTargetStages.length-1] = deepCopyObject(true,customTargetStages[targetSelected-10]);
+            setCustomTargetStages(customTargetStages.length - 1,customTargetStages[customTargetStages.length-1]);
           }
           else {
             promptTimer = 60;
@@ -104,7 +113,7 @@ export function tssControls (i, input){
         } else if (input[i][0].y && !input[i][1].y) {
           //edit
             resetStageTemp();
-            setStageTemp(deepCopyObject(true,stageTemp,customTargetStages[targetSelected-10]));
+            setStageTemp(deepCopyObject(true, customTargetStages[targetSelected-10]));
             setTargetBuilder(i);
             setEditingStage(targetSelected-10);
           //input[i][i].a[1] = true;
@@ -118,7 +127,8 @@ export function tssControls (i, input){
         sounds.menuForward.play();
         if (targetSelected == 10 + customTargetStages.length) {
           // ADD CODE
-            setShowingCode( true);
+            setShowingCode(true);
+            document.getElementById('aButton').addEventListener('click', clickFunction);
           $("#customStageContainer").show();
           $("#cStageEdit").select().val("");
           $("#cStageTitleEdit").empty().append("Paste in your code");
@@ -138,114 +148,26 @@ export function tssControls (i, input){
     }
   }
   else {
-    if (input[i][0].a && !input[i][1].a){
-        setShowingCode(false);
+    if (stopShowingCode || (input[i][0].a && !input[i][1].a)){
+      stopShowingCode = false;
+      document.getElementById('aButton').removeEventListener('click', clickFunction);
+      setShowingCode(false);
       let code = $("#cStageEdit").val();
-      let newStage = parseStage(code);
-      if (newStage == 0){
+      let newStage = parseStageCode(code);
+      if (newStage === null){
         // invalid code
         promptTimer = 60;
         promptType = 0;
       }
       else {
         setCookie("custom"+customTargetStages.length,code,36500);
-          //setCustomTargetStages(customTargetStages.length, {});
-          setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
+        customTargetStages[customTargetStages.length-1] = deepCopyObject(true,newStage);
+        setCustomTargetStages(customTargetStages.length,customTargetStages[customTargetStages.length-1]);
         redrawCustomStageBoxes();
       }
       $("#customStageContainer").hide();
       sounds.menuForward.play();
     }
-  }
-}
-
-export function parseStage (code){
-  if (code[0] != "s"){
-    return 0;
-  }
-  else {
-    let newStage = {startingPoint:0,box:[],ground:[],ceiling:[],wallL:[],wallR:[],platform:[],ledge:[],target:[],scale:3,blastzone:new Box2D([-250,-250],[250,250]),offset:[600,375],draw:{startingPoint:0,box:[],ground:[],ceiling:[],wallL:[],wallR:[],platform:[],target:[]}};
-    let sEnd = code.indexOf("&",0);
-    if (sEnd == -1){
-      return 0;
-    }
-    let sArray = code.substr(1,sEnd-1).split(",");
-    if (sArray.length != 2){
-      return 0;
-    }
-    newStage.startingPoint = new Vec2D(parseFloat(sArray[0]),parseFloat(sArray[1]));
-    newStage.draw.startingPoint = new Vec2D(parseFloat(sArray[0])*3+600,parseFloat(sArray[1])*-3+375);
-    let bEnd = code.indexOf("&",sEnd+1);
-    if (bEnd == -1){
-      return 0;
-    }
-    let bString = code.substr(sEnd+2,(bEnd-1)-(sEnd+1));
-    if (bString != ""){
-      let bArray = bString.split(",");
-      if (bArray.length % 4 != 0){
-        return 0;
-      }
-      for (let i=0;i<bArray.length;i+=4){
-        let bT = [parseFloat(bArray[i]),parseFloat(bArray[i+1]),parseFloat(bArray[i+2]),parseFloat(bArray[i+3])];
-        newStage.box.push(new Box2D([bT[0],bT[1]],[bT[2],bT[3]]));
-        newStage.draw.box.push(new Box2D([bT[0]*3+600,bT[1]*-3+375],[bT[2]*3+600,bT[3]*-3+375]));
-        newStage.ground.push([new Vec2D(bT[0],bT[3]),new Vec2D(bT[2],bT[3])]);
-        newStage.draw.ground.push([new Vec2D(bT[0]*3+600,bT[3]*-3+375),new Vec2D(bT[2]*3+600,bT[3]*-3+375)]);
-        newStage.ceiling.push([new Vec2D(bT[0],bT[1]),new Vec2D(bT[2],bT[1])]);
-        newStage.draw.ceiling.push([new Vec2D(bT[0]*3+600,bT[1]*-3+375),new Vec2D(bT[2]*3+600,bT[1]*-3+375)]);
-        newStage.wallL.push([new Vec2D(bT[0],bT[3]),new Vec2D(bT[0],bT[1])]);
-        newStage.draw.wallL.push([new Vec2D(bT[0]*3+600,bT[3]*-3+375),new Vec2D(bT[0]*3+600,bT[1]*-3+375)]);
-        newStage.wallR.push([new Vec2D(bT[2],bT[3]),new Vec2D(bT[2],bT[1])]);
-        newStage.draw.wallR.push([new Vec2D(bT[2]*3+600,bT[3]*-3+375),new Vec2D(bT[2]*3+600,bT[1]*-3+375)]);
-      }
-    }
-    let pEnd = code.indexOf("&",bEnd+1);
-    if (pEnd == -1){
-      return 0;
-    }
-    let pString = code.substr(bEnd+2,(pEnd-1)-(bEnd+1));
-    if (pString != ""){
-      let pArray = pString.split(",");
-      if (pArray.length % 4 != 0){
-        return 0;
-      }
-      for (let i=0;i<pArray.length;i+=4){
-        newStage.platform.push([new Vec2D(parseFloat(pArray[i]),parseFloat(pArray[i+1])),new Vec2D(parseFloat(pArray[i+2]),parseFloat(pArray[i+3]))]);
-        newStage.draw.platform.push([new Vec2D(parseFloat(pArray[i])*3+600,parseFloat(pArray[i+1])*-3+375),new Vec2D(parseFloat(pArray[i+2])*3+600,parseFloat(pArray[i+3])*-3+375)]);
-      }
-    }
-    let lEnd = code.indexOf("&",pEnd+1);
-    if (lEnd == -1){
-      return 0;
-    }
-    let lString = code.substr(pEnd+2,(lEnd-1)-(pEnd+1));
-    if (lString != ""){
-      let lArray = lString.split(",");
-      if (lArray.length % 2 != 0){
-        return 0;
-      }
-      for (let i=0;i<lArray.length;i+=2){
-        newStage.ledge.push([parseInt(lArray[i]),parseInt(lArray[i+1])]);
-      }
-    }
-    let tEnd = code.indexOf("&",lEnd+1);
-    if (tEnd != -1){
-      return 0;
-    } else {
-      tEnd = code.length;
-    }
-    let tString = code.substr(lEnd+2,(tEnd-1)-(lEnd+1));
-    if (tString != ""){
-      let tArray = tString.split(",");
-      if (tArray.length % 2 != 0){
-        return 0;
-      }
-      for (let i=0;i<tArray.length;i+=2){
-        newStage.target.push(new Vec2D(parseFloat(tArray[i]),parseFloat(tArray[i+1])));
-        newStage.draw.target.push(new Vec2D(parseFloat(tArray[i])*3+600,parseFloat(tArray[i+1])*-3+375));
-      }
-    }
-    return newStage;
   }
 }
 
@@ -608,13 +530,13 @@ export function getTargetStageCookies (){
   for (let i=0;i<10;i++){
     let s = getCookie("custom"+i);
     if (s != null && s != undefined && s != "null"){
-      let newStage = parseStage(s);
-      if (newStage == 0){
+      let newStage = parseStageCode(s);
+      if (newStage == null){
         console.log(i+" invalid code");
       }
       else {
-          setCustomTargetStages(customTargetStages.length,  {});
-          setCustomTargetStages(customTargetStages.length,deepCopyObject(true,customTargetStages[customTargetStages.length-1],newStage));
+          customTargetStages[customTargetStages.length-1] = deepCopyObject(true,newStage);
+          setCustomTargetStages(customTargetStages.length,customTargetStages[customTargetStages.length-1]);
       }
     }
   }

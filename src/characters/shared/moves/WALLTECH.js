@@ -15,6 +15,7 @@ export default {
     player[p].actionState = "WALLTECH";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
+    player[p].hit.knockback = 0;
     player[p].hit.hitstun = 0;
     player[p].phys.kVel.y = 0;
     player[p].phys.kVel.x = 0;

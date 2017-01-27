@@ -7,12 +7,12 @@ export default {
   name : "SHIELDBREAKDOWNBOUND",
   canEdgeCancel : true,
   canBeGrabbed : true,
-  init : function(p,input){
+  init : function(p, normal, input){
     player[p].actionState = "SHIELDBREAKDOWNBOUND";
     player[p].timer = 0;
     player[p].phys.cVel.y = 0;
     player[p].phys.kVel.y = 0;
-    drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
+    drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face,normal);
     sounds.bounce.play();
     actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.main(p,input);
   },

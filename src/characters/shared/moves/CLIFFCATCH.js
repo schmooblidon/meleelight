@@ -29,15 +29,17 @@ export default {
     player[p].phys.chargeFrames = 0;
     player[p].phys.charging = false;
     turnOffHitboxes(p);
-    drawVfx("cliffcatchspark",new Vec2D(activeStage.ledge[player[p].phys.onLedge][1]?activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x:activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x,activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y),player[p].phys.face);
+    const l = activeStage.ledge[player[p].phys.onLedge];
+    drawVfx("cliffcatchspark",new Vec2D(activeStage[l[0]][l[1]][l[2]].x,activeStage[l[0]][l[1]][l[2]].y),player[p].phys.face);
     actionStates[characterSelections[p]].CLIFFCATCH.main(p,input);
   },
   main : function(p,input){
     player[p].timer++;
     playSounds("CLIFFCATCH",p);
     if (!actionStates[characterSelections[p]].CLIFFCATCH.interrupt(p,input)){
-      const x = activeStage.ledge[player[p].phys.onLedge][1] ? activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x : activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
-      const y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
+      const l = activeStage.ledge[player[p].phys.onLedge];
+      const x = activeStage[l[0]][l[1]][l[2]].x;
+      const y = activeStage[l[0]][l[1]][l[2]].y;
       player[p].phys.pos = new Vec2D(x+(actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][1]);
     }
   },

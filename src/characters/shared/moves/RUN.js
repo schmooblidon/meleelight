@@ -25,9 +25,9 @@ export default {
       }
       const tempMax = input[p][0].lsX * player[p].charAttributes.dMaxV;
 
-      //Current Run Acceleration = ((MaxRunVel * Xinput) - PreviousFrameVelocity) * (1/(MaxRunVel * 2.5)) * (DRAA + (DRAB/Math.sign(Xinput)))
+      //Current Run Acceleration = ((MaxRunVel * Xinput) - PreviousFrameVelocity) * (1/(MaxRunVel * 2.5)) * (DRAA + (DRAB/Math.abs(Xinput)))
 
-      player[p].phys.cVel.x += ((player[p].charAttributes.dMaxV * input[p][0].lsX) - player[p].phys.cVel.x) * (1 / (player[p].charAttributes.dMaxV * 2.5)) * (player[p].charAttributes.dAccA + (player[p].charAttributes.dAccB / Math.sign(input[p][0].lsX)));
+      player[p].phys.cVel.x += ((player[p].charAttributes.dMaxV * input[p][0].lsX) - player[p].phys.cVel.x) * (1 / (player[p].charAttributes.dMaxV * 2.5)) * (player[p].charAttributes.dAccA + (player[p].charAttributes.dAccB / Math.abs(input[p][0].lsX)));
       if (player[p].phys.cVel.x * player[p].phys.face > tempMax * player[p].phys.face){
         player[p].phys.cVel.x = tempMax;
       }

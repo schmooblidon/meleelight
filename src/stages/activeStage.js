@@ -1,13 +1,28 @@
-
 import vsstages from 'stages/vs-stages/vs-stages';
 import tstages from 'stages/targetstages/tstages';
 import {Box2D} from "../main/util/Box2D";
 import {Vec2D} from "../main/util/Vec2D";
+
+
+
+// for stages to have connected grounds/platforms, they need to provide a 'connectednessFunction'
+// input of a connectedness function: [ [type, index ], side ]
+// type is either "g" (ground) or "p" (platform),
+// index is the index of that surface in the stage's list of surfaces (grounds or platforms depending on type)
+// side is either "l" (left) or "r" (right)
+// given such an input, the function should return which ground/platform is connected to that side of the given ground/platform,
+// in the format [ newType, newIndex ],
+// or return 'false' if the ground/platform is not connected on that side to any other ground/platform
+// if 'connectednessFunction' is not supplied, it is assumed that no grounds/platforms are connected to any other grounds/platforms
+
+
 const stageMapping = {
   0: "battlefield",
   1: "ystory",
   2: "pstadium",
-  3: "dreamland"
+  3: "dreamland",
+  4: "fdest",
+  5: "fountain"
 };
 
 export function setVsStage(val) {
@@ -44,11 +59,12 @@ export let activeStage = {
   respawnPoints: [new Vec2D(-50, 50), new Vec2D(50, 50), new Vec2D(-25, 35), new Vec2D(25, 35)],
   respawnFace: [1, -1, 1, -1],
   blastzone: new Box2D([-224, -108.8], [224, 200]),
-  ledge: [[0, 0], [0, 1]],
+  ledge: [["ground", 0, 0], ["ground", 0, 1]],
   ledgePos: [new Vec2D(-68.4, 0), new Vec2D(68.4, 0)],
   scale: 4.5,
   offset: [600, 480],
 };
+
 
 export function setActiveStageBuilderTestStage( stageTemp ) {
   activeStage = stageTemp;

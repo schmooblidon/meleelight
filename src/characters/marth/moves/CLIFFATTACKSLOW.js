@@ -23,8 +23,9 @@ export default {
   main: function (p, input) {
     player[p].timer++;
     if (!marth.CLIFFATTACKSLOW.interrupt(p, input)) {
-      const x = activeStage.ledge[player[p].phys.onLedge][1] ? activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.x : activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].min.x;
-      const y = activeStage.box[activeStage.ledge[player[p].phys.onLedge][0]].max.y;
+      const l = activeStage.ledge[player[p].phys.onLedge];
+      const x = activeStage[l[0]][l[1]][l[2]].x;
+      const y = activeStage[l[0]][l[1]][l[2]].y;
       if (player[p].timer < 33) {
         if (player[p].timer > 9) {
           player[p].phys.pos = new Vec2D(x + (marth.CLIFFATTACKSLOW.offset[player[p].timer - 10][0] + 68.4) * player[p].phys.face, y + marth.CLIFFATTACKSLOW.offset[player[p].timer - 10][1]);
@@ -38,7 +39,7 @@ export default {
       }
       if (player[p].timer === 32) {
         player[p].phys.grounded = true;
-        player[p].phys.onSurface = [0, activeStage.ledge[player[p].phys.onLedge][0]];
+        player[p].phys.onSurface = [l[0] === "ground" ? 0 : 1, l[1]];
         player[p].phys.airborneTimer = 0;
         player[p].phys.pos.y = y;
       }

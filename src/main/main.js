@@ -39,7 +39,7 @@ import {Vec2D} from "./util/Vec2D";
 import {showButton, nullInputs, pollInputs, inputData} from "./input";
 /*globals performance*/
 
-export const holiday = 1;
+export const holiday = 0;
 export var snowCount = 150;
 
 export const player = [0,0,0,0];
@@ -860,12 +860,14 @@ export function gameTick (oldInputBuffers){
       var now = performance.now();
       var dt = now - lastUpdate;
       lastUpdate = now;
+      resetHitQueue();
       destroyArticles();
       executeArticles();
       if (!starting){
         input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
       }
       update(targetBuilder,input);
+      executeHits(input);
       targetHitDetection(targetBuilder);
       if (!starting) {
         targetTimerTick();
@@ -1158,7 +1160,7 @@ export function buildPlayerObject (i){
 export function initializePlayers (i,target){
   buildPlayerObject(i);
   if (target) {
-    drawVfx("entrance", new Vec2D(activeStage.startingPoint.x, activeStage.startingPoint.y));
+    drawVfx("entrance", new Vec2D(activeStage.startingPoint[0].x, activeStage.startingPoint[0].y));
   } else {
     drawVfx("entrance", new Vec2D(startingPoint[i][0], startingPoint[i][1]));
   }

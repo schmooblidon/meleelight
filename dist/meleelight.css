@@ -562,6 +562,10 @@ a {
   padding:4px 13px;
 }
 
+#aButton :hover {
+  color:rgb(249, 255, 193);
+}
+
 #cStageEdit {
   width:500px;
   height:300px;
