@@ -1,0 +1,216 @@
+.bbase {
+  fill:#dcdcdc;
+}
+
+.button:hover > .bbase {
+  stroke: #fafe90;
+  stroke-width: 4px;
+  fill:#e1ddad;
+}
+
+.btext {
+  font-style:normal;
+  font-variant:normal;
+  font-family:Impact;
+  fill:#919191;
+  pointer-events: none;
+}
+
+.button:hover > .btext {
+  fill:#f9ffc1;
+}
+
+.tbase {
+  fill:#dcdcdc;
+  stroke: #919191;
+  stroke-width: 4px;
+  stroke-opacity:1;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.trigger:hover > .tbase {
+  stroke: #fafe90;
+  fill:#e1ddad;
+}
+
+.ttext {
+  font-style:normal;
+  font-variant:normal;
+  font-family:Impact;
+  fill:#919191;
+  pointer-events: none;
+}
+
+.trigger:hover > .ttext {
+  fill:#f9ffc1;
+}
+
+#AText {
+  font-style:normal;
+  font-variant:normal;
+  font-family:Impact;
+  font-size:40px;
+  fill:#1c736d;
+}
+
+#a:hover > #AText {
+  fill:#fafe90;
+}
+
+#a:hover > #ABase {
+  stroke: #fafe90;
+  stroke-width: 4px;
+}
+
+#BText {
+  font-style:normal;
+  font-variant:normal;
+  font-family:Impact;
+  font-size:36px;
+  fill:#9a1223;
+  pointer-events: none;
+}
+
+#b:hover > #BText {
+  fill:#fafe90;
+}
+
+#b:hover > #BBase {
+  stroke: #fafe90;
+  stroke-width: 4px;
+}
+
+.zbase {
+  fill:#4e40b5;
+  stroke: #3b3280;
+  stroke-width: 4px;
+  stroke-opacity:1;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.zbase:hover {
+  stroke: #fafe90;
+  fill:#857da9;
+}
+
+#lsOctagon {
+  fill:#a0a0a0;
+}
+
+#ls:hover > #lsOctagon {
+  fill: #a9a97c;
+}
+
+#lStickBase {
+  fill: #dcdcdc;
+}
+
+#ls:hover > #lStick > #lStickBase {
+  fill: #e1ddad;
+}
+
+#lStickDepth {
+  fill: #cdcdcd;
+}
+
+#ls:hover > #lStick > #lStickDepth {
+  fill: #e1ddad;
+}
+
+#lStickShadow {
+  fill:#848484;
+}
+
+#ls:hover > #lStick > #lStickShadow {
+  fill: #8e8e6a;
+}
+
+.lStickCircle {
+  fill:none;
+  stroke: #c0c0c0;
+  stroke-width:3.75px;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+#ls:hover > #lStick > .lStickCircle {
+  stroke: #c2bc7b;
+}
+
+#csOctagon {
+  fill:#e7c518;
+}
+
+#cs:hover > #csOctagon {
+  fill: #f1d751;
+}
+
+.cStickShadow2 {
+  fill:#b68e0b;
+}
+
+#cs:hover > #cStick > #cStickShadow > .cStickShadow2 {
+  fill:#e5c10c;
+}
+
+#cStickbase {
+  fill:#e7c518;
+  stroke:#b68e0b;
+}
+
+#cs:hover > #cStick > #cStickBase {
+  fill:#f1d751;
+  stroke:#e5c10c;
+}
+
+#cStickText {
+  fill:#b68e0b;
+}
+
+#cs:hover > #cStick > #cStickText {
+  fill:#e5c10c;
+}
+
+#dPadShape {
+  fill:#dcdcdc;
+  stroke:#dcdcdc;
+}
+
+#dpad:hover > #dPadShape {
+  fill:#e1ddad;
+  stroke:#e1ddad;
+}
+
+.dPadDepth {
+  fill:#cdcdcd;
+  stroke:#cdcdcd;
+  stroke-linecap:round;
+}
+
+#dpad:hover > #dPadShapeDepth > .dPadDepth {
+  fill:#a9a97c;
+  stroke:#a9a97c;
+}
+
+#dPadDisk {
+  fill:#919191;
+}
+
+#dpad:hover > #dPadDisk {
+  fill:#8e8e6a;
+}
+
+.dPadArrow {
+  fill:#b0b0b0;
+  stroke:#b0b0b0;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+#dpad:hover > .dPadArrow {
+  fill:#a9a97c;
+  stroke:#a9a97c;
+}

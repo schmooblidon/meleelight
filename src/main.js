@@ -45,7 +45,7 @@ import 'main/vfx/transparency.js';
 import 'main/vfx/vfxQueue.js';
 import 'main/ai.js';
 import 'main/characters.js';
-import 'main/input.js';
+import 'input/input.js';
 import 'main/linAlg.js';
 import 'main/loadscreen.js';
 import 'main/main.js';

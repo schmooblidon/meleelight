@@ -111,6 +111,7 @@ body {
   position:absolute;
   padding:0;
   vertical-align: top;
+  top:0px;
 }
 
 #topButtonContainer {
@@ -678,7 +679,6 @@ a {
   width:300px;
   height:150px;
   display:inline-block;
-  background-color: #363636;
   color:white;
 }
 
@@ -690,6 +690,18 @@ a {
   background-color:#1f1f1f;
   border-radius:5px;
   margin:2px 75px;
+  float:left;
+}
+
+.gamepadSVG {
+  float:right;
+}
+
+#gamepadSVGCalibration {
+  position: absolute;
+  margin-left: 300px;
+  margin-top: -40px;
+  top:0px;
 }
 
 .playerTitle p {
@@ -744,3 +756,4 @@ a {
   z-index:5;
   vertical-align: top;
 }
+

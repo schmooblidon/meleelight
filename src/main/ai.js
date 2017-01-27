@@ -1,4 +1,4 @@
-import {aiInputBank} from "./input";
+import {aiInputBank} from "../input/input";
 import {player, characterSelections as cS, playerType} from "./main";
 import {gameSettings} from "../settings";
 import {activeStage as aS} from "../stages/activeStage";

@@ -11,6 +11,7 @@ import {drawSSSInit, sssControls, drawSSS} from "menus/stageselect";
 import {drawAudioMenuInit, masterVolume, drawAudioMenu, audioMenuControls, getAudioCookies} from "menus/audiomenu";
 import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGameplayCookies} from "menus/gameplaymenu";
 import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
+import {drawControllerMenuInit, drawControllerMenu} from "menus/controllermenu";
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
 import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
 
@@ -26,7 +27,6 @@ import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHi
 import {runAI} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
-import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
 import {toggleTransparency,getTransparency} from "main/vfx/transparency";
 import {drawVfx} from "main/vfx/drawVfx";
 import {resetVfxQueue} from "main/vfx/vfxQueue";
@@ -36,7 +36,12 @@ import {getShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
-import {showButton, nullInputs, pollInputs, inputData} from "./input";
+import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
+import {deaden} from "../input/meleeInputs";
+import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
+import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
+import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
+import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 /*globals performance*/
 
 export const holiday = 0;
@@ -53,17 +58,34 @@ export var shine = 0.5;
 export let endTargetGame = false;
 
 export let creditsPlayer = 0;
+export let calibrationPlayer = 0;
 
 let gameEnd = false;
-let controllerResetCountdowns = [125,125,125,125];
+export let controllerResetCountdowns = [0,0,0,0];
+export function setControllerReset( i ) {
+  controllerResetCountdowns[i] = 0;
+}
+
 let keyboardOccupied = false;
 
+export let usingCustomControls = [false, false, false, false];
+
+export function setUsingCustomControls( i, bool, info ) {
+  usingCustomControls[i] = bool;
+  if (bool) {
+    mType[i] = customGamepadInfo[currentPlayers[i]];
+  }
+  else {
+    mType[i] = info;
+  }  
+}
+
+export let firstTimeDetected = [true, true, true, true];
+
+window.mType = [null, null, null, null];
 
 
-window.mType = [0, 0, 0, 0];
-
-
-export const mType = [0,0,0,0];
+export const mType = [null,null,null,null];
 
 export const currentPlayers = [];
 
@@ -341,35 +363,46 @@ export function findPlayers (){
           if (ports == 0) {
             music.menu.play("menuStart");
           }
-          addPlayer(ports, 10);
+          addPlayer(ports, "keyboard");
         }
       }
     } else {
       if (keys[keyMap.a[0]] || keys[keyMap.a[1]]) {
         if (ports < 4) {
           keyboardOccupied = true;
-          addPlayer(ports, 10);
+          addPlayer(ports, "keyboard");
         }
       }
     }
   }
   for (var i = 0; i < gps.length; i++) {
-    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() :
-      null);
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[i] : null);
     if (typeof gamepad != "undefined" && gamepad != null) {
       var detected = false;
-      var gType = 0;
-      let gamepadIDnumber = controllerIDNumberFromGamepadID(gamepad.id);
-      if (gamepadIDnumber == -1) {
-        console.log("error: controller detected but not supported");
-      } else {
-        detected ^= true;
-        gType = gamepadIDnumber;
-        console.log("You are using ".concat(controllerNameFromIDnumber(gamepadIDnumber)));
+      var gpdName;
+      var gpdInfo;
+      if (usingCustomControls[i] && customGamepadInfo[i] !== null) {
+        gpdName = "custom controls";
+        gpdInfo = customGamepadInfo[i];
+        detected = true;
+      }
+      else {
+        const maybeNameAndInfo = getGamepadNameAndInfo(gamepad.id);
+        if (maybeNameAndInfo === null) {
+          console.log("Error in 'findPlayers': controller "+(i+1)+" detected but not supported.");
+          console.log("Try manual calibration of your controller.");
+        } else {
+          detected = true;
+          [gpdName, gpdInfo] = maybeNameAndInfo;
+        }
       }
       if (detected) {
+        if (firstTimeDetected[i]) {
+          console.log("Controller "+(i+1)+" is: "+gpdName+".");
+          firstTimeDetected[i] = false;
+        }
         if (gameMode < 2 || gameMode == 20) {
-          if (gamepad.buttons[controllerMaps[gType][button.s]].pressed) {
+          if (buttonState(gamepad, gpdInfo, "s")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
               if (currentPlayers[k] == i) {
@@ -384,12 +417,12 @@ export function findPlayers (){
                 if (ports == 0) {
                   music.menu.play("menuStart");
                 }
-                addPlayer(i, gType);
+                addPlayer(i, gpdInfo);
               }
             }
           }
         } else {
-          if (gamepad.buttons[controllerMaps[gType][button.a]].pressed) {
+          if (buttonState(gamepad, gpdInfo, "a")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
               if (currentPlayers[k] == i) {
@@ -398,7 +431,7 @@ export function findPlayers (){
             }
             if (!alreadyIn) {
               if (ports < 4) {
-                addPlayer(i, gType);
+                addPlayer(i, gpdInfo);
               }
             }
           }
@@ -411,20 +444,32 @@ export function findPlayers (){
 }
 
 
-export function addPlayer (gamepad,gType){
+export function addPlayer (i, controllerInfo){
   ports++;
-  currentPlayers[ports - 1] = gamepad;
+  currentPlayers[ports - 1] = i;
   playerType[ports - 1] = 0;
-  mType[ports - 1] = gType;
+  mType[ports - 1] = controllerInfo;
+  if (showDebug) {
+    updateGamepadSVGColour(i, "gamepadSVG"+i);
+    document.getElementById("gamepadSVG"+i).style.display = "";
+  }
 }
 
 export function togglePort (i){
   playerType[i]++;
   if (playerType[i] == 2) {
     playerType[i] = -1;
+    if (showDebug) {
+      document.getElementById("gamepadSVG"+i).style.display = "none";
+    }
   }
   if (playerType[i] == 0 && ports <= i) {
     playerType[i] = 1;
+    setGamepadSVGColour(i, "black");
+    if (showDebug) {
+      updateGamepadSVGColour(i, "gamepadSVG"+i);      
+      document.getElementById("gamepadSVG"+i).style.display = "";
+    }
   }
 }
 
@@ -438,6 +483,7 @@ export function positionPlayersInCSS (){
 }
 
 // 20:Startup
+// 14:Controller Menu
 // 13:Data Menu
 // 12:Keyboard Controls
 // 11:Gameplay Menu
@@ -509,6 +555,10 @@ export function changeGamemode (newGamemode){
     case 13:
       drawCreditsInit();
       break;
+      // controller menu
+    case 14:
+      drawControllerMenuInit();
+      break;
       // startup
     case 20:
       break;
@@ -555,6 +605,7 @@ export const removePlayer (i){
 }*/
 
 export function interpretInputs  (i, active,playertype, inputBuffer) {
+
   let tempBuffer = nullInputs();
 
   // keep updating Z and Start all the time, even when paused
@@ -583,6 +634,8 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     tempBuffer[7-k].rawY = inputBuffer[7-k-pastOffset].rawY;
     tempBuffer[7-k].csX  = inputBuffer[7-k-pastOffset].csX;
     tempBuffer[7-k].csY  = inputBuffer[7-k-pastOffset].csY;
+    tempBuffer[7-k].rawcsX  = inputBuffer[7-k-pastOffset].rawcsX;
+    tempBuffer[7-k].rawcsY  = inputBuffer[7-k-pastOffset].rawcsY;
     tempBuffer[7-k].lA   = inputBuffer[7-k-pastOffset].lA;
     tempBuffer[7-k].rA   = inputBuffer[7-k-pastOffset].rA;
     tempBuffer[7-k].a    = inputBuffer[7-k-pastOffset].a;
@@ -597,20 +650,22 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     tempBuffer[7-k].du   = inputBuffer[7-k-pastOffset].du;
   }
 
-  if (    (mType[i] === 10 && (tempBuffer[0].z ||  tempBuffer[1].z)) 
-       || (mType[i] !== 10 && (tempBuffer[0].z && !tempBuffer[1].z))
-     )  { 
-    frameAdvance[i][0] = true;
-  }
-  else {
-    frameAdvance[i][0] = false;
+  if (mType !== null) {
+    if (    (mType[i] === "keyboard" && (tempBuffer[0].z ||  tempBuffer[1].z)) 
+         || (mType[i] !== "keyboard" && (tempBuffer[0].z && !tempBuffer[1].z))
+       )  { 
+      frameAdvance[i][0] = true;
+    }
+    else {
+      frameAdvance[i][0] = false;
+    }
   }
 
   if (frameAdvance[i][0] && !frameAdvance[i][1] && !playing && gameMode !== 4) {
     frameByFrame = true;
   }
 
-  if (mType[i] == 10) { // keyboard controls
+  if (mType[i] === "keyboard") { // keyboard controls
 
     if (tempBuffer[0].s || tempBuffer[1].s || (gameMode === 5 && (tempBuffer[0].du || tempBuffer[1].du) ) ) {
       pause[i][0] = true;
@@ -631,17 +686,8 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
 
     interpretPause(pause[i][0], pause[i][1]);
-
-    if (showDebug) {
-    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
-    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
-    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
-    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
-    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
-    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
-    }
   }
-  else { // gamepad controls
+  else if (mType[i] !== null) { // gamepad controls
 
     if ( (gameMode == 3 || gameMode == 5) &&
              ( tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s ) 
@@ -665,10 +711,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     if ((tempBuffer[0].z || tempBuffer[0].du) && tempBuffer[0].x && tempBuffer[0].y) {
       controllerResetCountdowns[i] -= 1;
       if (controllerResetCountdowns[i] === 0) {
-        custcent[i].ls = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
-        custcent[i].cs = new Vec2D(tempBuffer[0].lsX, tempBuffer[0].lsY);
-        custcent[i].l = tempBuffer[0].lA;
-        custcent[i].r = tempBuffer[0].rA;
+        // triggers code in input.js
         console.log("Controller #"+(i+1)+" was reset!");
         $("#resetIndicator" + i).fadeIn(100);
         $("#resetIndicator" + i).fadeOut(500);
@@ -679,29 +722,40 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
 
     interpretPause(pause[i][0], pause[i][1]);
+  }
+  else { // AI
+    tempBuffer[0].rawX = tempBuffer[0].lsX;
+    tempBuffer[0].rawY = tempBuffer[0].lsY;
+    tempBuffer[0].rawcsX = tempBuffer[0].csX;
+    tempBuffer[0].rawcsY = tempBuffer[0].csY;
+    tempBuffer[0].lsX = deaden(tempBuffer[0].rawX);
+    tempBuffer[0].lsY = deaden(tempBuffer[0].rawY);
+    tempBuffer[0].csX = deaden(tempBuffer[0].rawcsX);
+    tempBuffer[0].csY = deaden(tempBuffer[0].rawcsY);
+  }
 
-    showButton(i, 0,tempBuffer[0].a);
-    showButton(i, 1,tempBuffer[0].b);
-    showButton(i, 2,tempBuffer[0].x);
-    showButton(i, 3,tempBuffer[0].y);
-    showButton(i, 4,tempBuffer[0].z);
-    showButton(i, 5,tempBuffer[0].r);
-    showButton(i, 6,tempBuffer[0].l);
-    showButton(i, 7,tempBuffer[0].s);
-    showButton(i, 8,tempBuffer[0].du);
-    showButton(i, 9,tempBuffer[0].dr);
-    showButton(i,10,tempBuffer[0].dd);
-    showButton(i,11,tempBuffer[0].dl);
+  if (showDebug) {
+    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(3));
+    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(3));
+    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(3));
+    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(3));
+    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(3));
+    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(3));
+    updateGamepadSVGState(i, "gamepadSVG"+i, tempBuffer[0]);
+  }
 
-    if (showDebug) {
-    $("#lsAxisX" + i).empty().append(tempBuffer[0].lsX.toFixed(4));
-    $("#lsAxisY" + i).empty().append(tempBuffer[0].lsY.toFixed(4));
-    $("#csAxisX" + i).empty().append(tempBuffer[0].csX.toFixed(4));
-    $("#csAxisY" + i).empty().append(tempBuffer[0].csY.toFixed(4));
-    $("#lAnalog" + i).empty().append(tempBuffer[0].lA.toFixed(4));
-    $("#rAnalog" + i).empty().append(tempBuffer[0].rA.toFixed(4));
+  if (gameMode === 14) { // controller calibration screen
+    updateGamepadSVGState(i, "gamepadSVGCalibration", tempBuffer[0]);
+  }
+
+  if (showDebug || gameMode === 14) {
+    const which = (showDebug && gameMode === 14) ? "both" : showDebug ? "debug" : "calibration";
+    if (tempBuffer[0].x && !tempBuffer[1].x && tempBuffer[0].du ) {
+      cycleGamepadColour(i, which, true);
     }
-
+    if (tempBuffer[0].y && !tempBuffer[1].y && tempBuffer[0].du ) {
+      cycleGamepadColour(i, which, false);
+    }
   }
 
   if (active) {
@@ -819,6 +873,9 @@ export function gameTick (oldInputBuffers){
   } else if (gameMode == 13) {
     input[creditsPlayer] = interpretInputs(creditsPlayer, true, playerType[creditsPlayer],oldInputBuffers[creditsPlayer]);
     credits(creditsPlayer, input);
+  } else if (gameMode == 14) {
+    // controller calibration
+    input[calibrationPlayer] = interpretInputs(calibrationPlayer, true, playerType[calibrationPlayer],oldInputBuffers[calibrationPlayer]);
   } else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
@@ -1035,6 +1092,8 @@ export function renderTick (){
       drawKeyboardMenu();
     } else if (gameMode == 13) {
       drawCredits();
+    } else if (gameMode == 14) {
+      drawControllerMenu();
     } else if (gameMode == 0) {
       drawStartScreen();
     } else if (gameMode == 1) {
@@ -1484,6 +1543,9 @@ export function start (){
 
   $("#debugButton").click(function() {
     if (showDebug) {
+      for (let i = 0; i < 4; i++) {
+        document.getElementById("gamepadSVG"+i).style.display = "none";
+      }
       $("#debugButtonEdit").empty().append("OFF");
       $("#debug").hide();
       $("#players").hide();
@@ -1491,6 +1553,12 @@ export function start (){
       //var mY = Math.max(($(window).height()-750)/2,0);
       //$("#display").css("margin",mY+"px 0px 0px "+mX+"px");
     } else {
+      for (let i = 0; i < 4; i++) {
+        if (playerType[i] !== -1) {
+          updateGamepadSVGColour(i, "gamepadSVG"+i);
+          document.getElementById("gamepadSVG"+i).style.display = "";
+        }
+      }
       $("#debugButtonEdit").empty().append("ON");
       $("#debug").show();
       $("#players").show();
@@ -1599,7 +1667,9 @@ export function setEndTargetGame(val){
 export function setCreditsPlayer(val){
   creditsPlayer =val;
 }
-
+export function setCalibrationPlayer(val){
+  calibrationPlayer =val;
+}
 
 const dom = {};
 
