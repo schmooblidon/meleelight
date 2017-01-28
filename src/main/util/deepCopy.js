@@ -1,23 +1,22 @@
 // @flow
 /*eslint-disable */
 
-export function deepCopyObject <T : { [_: any] : any } > (deep: bool, object: T, exclusionList: ?Array<*>): $ObjMap<T,<V>(_: V) => V> {
+export function deepCopyObject <T : { [_: *] : * } > (deep: bool, object: T, exclusionList: ?Array<*>): $ObjMap<T,<V>(_: V) => V> {
   if (deep) {
     const result = {};
     for (const key in object) {
-      if (object.hasOwnProperty(key)) {
-        if (object[key] === null || (exclusionList && exclusionList.indexOf(key) !== -1)) {
-          result[key] = object[key];
-        }
-        else if (Array.isArray(object[key])) {
-          result[key] = deepCopyArray(deep, object[key], exclusionList);
-        }
-        else if (typeof(object[key]) === "object") {
-          result[key] = deepCopyObject(deep, object[key], exclusionList);
-        }
-        else {
-          result[key] = object[key];
-        }
+      // if (object.hasOwnProperty(key)) {
+      if (object[key] === null || (exclusionList && exclusionList.indexOf(key) !== -1)) {
+        result[key] = object[key];
+      }
+      else if (Array.isArray(object[key])) {
+        result[key] = deepCopyArray(deep, object[key], exclusionList);
+      }
+      else if (typeof(object[key]) === "object") {
+        result[key] = deepCopyObject(deep, object[key], exclusionList);
+      }
+      else {
+        result[key] = object[key];
       }
     }
     return result;
