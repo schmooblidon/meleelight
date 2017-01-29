@@ -17,7 +17,7 @@ import {Vec2D} from "../main/util/Vec2D";
 
 
 import {syncStage} from "../main/multiplayer/streamclient";
-import {deepCopyObject} from "../main/util/deepCopyObject";
+import {deepObjectMerge} from "../main/util/deepCopyObject";
 const stageMapping = {
   0: "battlefield",
   1: "ystory",

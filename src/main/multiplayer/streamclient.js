@@ -21,12 +21,11 @@ import {
   , matchTimer
   , characterSelections
 } from "../main";
-import {deepCopyObject} from "../util/deepCopyObject";
+import {deepObjectMerge} from "../util/deepCopyObject";
 import {setTokenPos, setChosenChar, setChoosingTag} from "../../menus/css";
 import pako from 'pako';
 import {gameSettings, updateGameSettings} from "../../settings";
 import {updateGameTickDelay} from "../replay";
-import {deepCopy} from "../util/deepCopy";
 
 
 let ds = null;
@@ -157,7 +156,7 @@ function startRoom() {
     playerStatusRecords[playerID] = statusRecord.get();
     $('#mpcode').prop("value", GAME_ID);
 
-    let playerPayload = deepCopy(true, {}, player[getPlayerStatusRecord(playerID).ports - 1],exclusions);
+    let playerPayload = deepObjectMerge(true, {}, player[getPlayerStatusRecord(playerID).ports - 1],exclusions);
 
     statusRecord.set(GAME_ID + 'player/',
         {
@@ -343,10 +342,10 @@ function syncClient(data) {
   let portSnapshot = ports;
   if (joinedGame === false) {
     joinedGame = true;
-    let tempCurrentPlayers = deepCopy(true, {}, currentPlayers);
+    let tempCurrentPlayers = deepObjectMerge(true, {}, currentPlayers);
     let playersToBeReassigned = tempCurrentPlayers.length;
-    let mTypeSnapshot = deepCopy(true, {}, mType);
-    let charSelectedSnapshot = deepCopy(true, {}, characterSelections);
+    let mTypeSnapshot = deepObjectMerge(true, {}, mType);
+    let charSelectedSnapshot = deepObjectMerge(true, {}, characterSelections);
     //add host players
     for (let v = ports; v <= exactportnumber - 1; v++) {
 
@@ -425,7 +424,7 @@ function connect(record, name) {
             "currentPlayers": currentPlayers,
             "characterSelections": characterSelections
           });
-          // let playerPayload = deepCopyObject(true,{}, player[ports],exclusions);
+          // let playerPayload = deepObjectMerge(true,{}, player[ports],exclusions);
 
           let payload = {
             "playerID": playerID,

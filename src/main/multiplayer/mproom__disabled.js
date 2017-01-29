@@ -13,7 +13,7 @@ import {
   setMtype,
   setCurrentPlayer, player
 } from "../main";
-import {deepCopyObject} from "../util/deepCopyObject";
+import {deepObjectMerge} from "../util/deepCopyObject";
 import {deepCopy} from "../util/deepCopy";
 
 let peer = null;
@@ -66,7 +66,7 @@ function startRoom() {
       }
       if (data.inputBuffer && (data.playerSlot !== undefined)) {
         saveNetworkInputs(data.playerSlot,data.inputBuffer);
-        player[data.playerSlot] = deepCopy(true, player[data.playerSlot],data.playerInfo);
+        player[data.playerSlot] = deepObjectMerge(true, player[data.playerSlot],data.playerInfo);
       }
     });
     //oops?
@@ -106,7 +106,7 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
         if (key) {
        //   console.log("sending inputs");
           //dont be lazy like me;
-        let playerPayload =  deepCopy(true,{},player[playerSlot]);
+        let playerPayload =  deepObjectMerge(true,{},player[playerSlot]);
         delete playerPayload.charAttributes;
         delete playerPayload.charHitboxes;
         let payload = {"playerSlot": playerSlot, "inputBuffer": inputBuffer,"playerInfo":playerPayload};
@@ -155,9 +155,9 @@ function getHostRoom() {
 
 function syncClient(exactportnumber) {
   let portSnapshot = ports;
-  let tempCurrentPlayers = deepCopy(true, {}, currentPlayers);
+  let tempCurrentPlayers = deepObjectMerge(true, {}, currentPlayers);
   let playersToBeReassigned = tempCurrentPlayers.length;
-  let mTypeSnapshot = deepCopy(true, {}, mType);
+  let mTypeSnapshot = deepObjectMerge(true, {}, mType);
   //add host players
   for (let i = 0; i < exactportnumber; i++) {
     setPlayerType(i, 2);
@@ -199,7 +199,7 @@ function connect(c) {
 
       if (data.inputBuffer && (data.playerSlot !== undefined)) {
         saveNetworkInputs(data.playerSlot, data.inputBuffer);
-        player[data.playerSlot] = deepCopy(true, player[data.playerSlot],data.playerInfo);
+        player[data.playerSlot] = deepObjectMerge(true, player[data.playerSlot],data.playerInfo);
       }
     });
     c.on('close', () => {

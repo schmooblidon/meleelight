@@ -15,7 +15,7 @@ import {
   , pause
   , gameEnd
 } from "./main";
-import {deepCopyObject} from "./util/deepCopyObject";
+import {deepObjectMerge} from "./util/deepCopyObject";
 import pako from "pako";
 import $ from 'jquery';
 import localforage from 'localforage';
@@ -68,13 +68,13 @@ export function saveGameState(input) {
       for (let i = 0; i < playerType.length; i++) {
 
         if (playerType[i] === 1) {
-          fullGameState.inputs[i] = deepCopy(true, {}, aiInputBank[i][0]);
+          fullGameState.inputs[i] = deepObjectMerge(true, {}, aiInputBank[i][0]);
 
         } else if (playerType[i] === 0) {
-          fullGameState.inputs[i] = deepCopy(true, {}, input[i][0]);
+          fullGameState.inputs[i] = deepObjectMerge(true, {}, input[i][0]);
 
         } else if (playerType[i] === 2) {
-          fullGameState.inputs[i] = deepCopy(true, {}, input[i][0]);
+          fullGameState.inputs[i] = deepObjectMerge(true, {}, input[i][0]);
 
         }
         // const exclusions = ["charAttributes",
@@ -82,7 +82,7 @@ export function saveGameState(input) {
         //   "prevFrameHitboxes"];
         fullGameState.playerData[i] = player[i].phys.pos;
 
-        // prevFramePlayer[i] = deepCopyObject(true, prevFramePlayer[i], player[i], exclusions);
+        // prevFramePlayer[i] = deepObjectMerge(true, prevFramePlayer[i], player[i], exclusions);
 
       }
       // fullGameState.frameDelay = frameDelay;

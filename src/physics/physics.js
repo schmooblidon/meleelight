@@ -27,7 +27,7 @@ import {
   runCollisionRoutine, coordinateIntercept, additionalOffset, smallestECBWidth, smallestECBHeight
   , groundedECBSquashFactor, outwardsWallNormal, moveAlongGround, getSameAndOther
 } from "./environmentalCollision";
-import {deepCopyObject} from "../main/util/deepCopyObject";
+import {deepObjectMerge} from "../main/util/deepCopyObject";
 import {drawVfx} from "../main/vfx/drawVfx";
 import {getSurfaceFromStage} from "../stages/stage";
 import {activeStage} from "../stages/activeStage";
@@ -445,11 +445,9 @@ export function land(i: number, newPosition: Vec2D
   player[i].hit.hitstun = 0;
 };
 
-export function physics(i: number, input: any) {
-  player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x, player[i].phys.pos.y);
-  player[i].phys.facePrev = player[i].phys.face;
-  deepCopyObject(true, player[i].phys.prevFrameHitboxes, player[i].hitboxes);
-  if (player[i].hit.hitlag > 0) {
+
+function hitlagSwitchUpdate(i : number, input : any) : void {
+  if (player[i].hit.hitlag > 0){
     player[i].hit.hitlag--;
     if (player[i].hit.hitlag === 0 && player[i].hit.knockback > 0) {
       if (player[i].phys.grabbedBy === -1 || player[i].hit.knockback > 50) {
@@ -1047,7 +1045,11 @@ function updateHitboxes(i: number): void {
 };
 
 
-function hitlagSwitchUpdate(i: number, input: any): void {
+export function physics (i : number, input : any) : void {
+  player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y);
+  player[i].phys.facePrev = player[i].phys.face;
+  deepObjectMerge(true,player[i].phys.prevFrameHitboxes,player[i].hitboxes);
+
   hitlagSwitchUpdate(i, input);
   hurtBoxStateUpdate(i);
   outOfCameraUpdate(i);

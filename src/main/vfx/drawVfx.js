@@ -1,5 +1,5 @@
 
-import {deepCopyObject} from "main/util/deepCopyObject";
+import {deepObjectMerge} from "main/util/deepCopyObject";
 import {vfx} from "main/vfx";
 import {activeStage} from "stages/activeStage";
 import {addToVfxQueue} from "main/vfx/vfxQueue";
@@ -10,7 +10,7 @@ export function drawVfx(name, pos, face, f) {
   let facing = f;
   if (typeof(f) === 'undefined') facing = -1;
   const instance = {};
-  deepCopy(true, instance, vfx[name]);
+  deepObjectMerge(true, instance, vfx[name]);
   if (instance.name === "circleDust") {
     instance.circles[0] = Math.random() * -2;
     instance.circles[1] = (Math.random() * -activeStage.scale) - 2;

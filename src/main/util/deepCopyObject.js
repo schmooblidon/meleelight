@@ -1,6 +1,6 @@
 // warning: this function is currently buggy and does not properly deep copy objects...
 // use `deepCopy` instead wherever possible
-export function deepCopyObject(deep, target, object,exclusionList) {
+export function deepObjectMerge(deep, target, object, exclusionList) {
 // warning: this function is currently buggy and does not properly deep copy objects...
 // use `deepCopy` instead wherever possible
 
@@ -21,7 +21,7 @@ export function deepCopyObject(deep, target, object,exclusionList) {
       for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
           if (typeof obj[key] === 'object' && exclusionList && exclusionList.indexOf(key) === -1)
-            result[key] = deepCopyObject(deep, result[key], obj[key]);
+            result[key] = deepObjectMerge(deep, result[key], obj[key]);
           else
             result[key] = obj[key];
         }

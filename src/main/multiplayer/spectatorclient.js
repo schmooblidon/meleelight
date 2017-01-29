@@ -13,7 +13,7 @@ import {
 
 
 } from "../main";
-import {deepCopyObject} from "../util/deepCopyObject";
+import {deepObjectMerge} from "../util/deepCopyObject";
 import { setChosenChar} from "../../menus/css";
 import pako from 'pako';
 let ds = null;

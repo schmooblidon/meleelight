@@ -45,6 +45,7 @@ import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import {deepCopy} from "./util/deepCopy";
+import {deepObjectMerge} from "./util/deepCopyObject";
 /*globals performance*/
 
 export const holiday = 0;
@@ -813,7 +814,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
 
   if(giveInputs[i] === true){
     //turns out keyboards leave gaps in the input buffer
-    deepCopy(true,nullInput(),tempBuffer[0]);
+    deepObjectMerge(true,nullInput(),tempBuffer[0]);
     updateNetworkInputs(tempBuffer[0],i);
   }
   if (active) {
