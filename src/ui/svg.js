@@ -1,4 +1,6 @@
 type Style = { fillColour : void | string, strokeWidth : void | number, strokeColour : void | string, opacity: void | number };
+type Rect = { width : number, height : number, topLeft : void | Vec2D, rounded : Vec2D };
+type Circle = { center : Vec2D, radius : number };
 
 function getSVGStyle ( style : Style ) : string {
   let svgFillStyle = "";
@@ -33,14 +35,22 @@ function makeIntoSVGPath ( id : string, path : string, style : Style, offset : v
   return "<path id=\x22"+id+"\x22 style=\x22"+style+"\x22 d=\x22"+path+"\x22"+transform+"/>";
 }
 
-function makeIntoSVGCircle ( id : string, center : Vec2D, radius : number, style : Style ) : string {
+function makeIntoSVGCircle ( id : string, circle : Circle, style : Style ) : string {
   const style = getSVGStyle(style);
-  return "<circle id=\x22"+id+"\x22 style=\x22"+style+"\x22 cx=\x22"+center.x+"\x22 cy=\x22"+center.y+"\x22 r=\x22"+radius+"\x22 />";
+  return "<circle id=\x22"+id+"\x22 style=\x22"+style+"\x22 cx=\x22"+circle.center.x+"\x22 cy=\x22"+circle.center.y+"\x22 r=\x22"+circle.radius+"\x22 />";
 }
 
-function makeIntoSVGRect ( id : string, topLeft : Vec2D, width : number, height : number, style : Style ) : string {
+function makeIntoSVGRect ( id : string, rect : Rect, style : Style ) : string {
   const style = getSVGStyle(style);
-  return "<rect id=\x22"+id+"\x22 style=\x22"+style+"\x22 width=\x22"+width+"\x22 height=\x22"+height+"\x22 x=\x22"+topLeft.x+"\x22 y=\x22"+topLeft.y+"\x22 />";
+  let topLeft = "";
+  if (rect.topLeft !== undefined) {
+    topLeft = "x=\x22"+rect.topLeft.x+"\x22 y=\x22"+rect.topLeft.y+"\x22";
+  }
+  let rounded = "";
+  if (rect.rounded !== undefined) {
+    rounded = "rx=\x22"+rect.rounded.x+"\x22 ry=\x22"+rect.rounded.y+"\x22";
+  }
+  return "<rect id=\x22"+id+"\x22 style=\x22"+style+"\x22 width=\x22"+rect.width+"\x22 height=\x22"+rect.height+""+topLeft+""+rounded+" />";
 }
 
 
