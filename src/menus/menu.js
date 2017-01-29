@@ -1,6 +1,5 @@
-import {
-  bg1, fg1, fg2, bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers, ui, clearScreen,
-  setCreditsPlayer, setCalibrationPlayer, currentPlayers
+import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBinding, ports, layers,ui, clearScreen,
+    setCreditsPlayer, setCalibrationPlayer, currentPlayers
 } from "main/main";
 import {sounds} from "main/sfx";
 import {setTargetPlayer} from "target/targetplay";
@@ -173,6 +172,11 @@ export function menuMove(i, input) {
     } else if (menuMode == MPMENU) {
       menuMode = TOPLEVEL;
       menuSelected = VSMODE;
+      menuMove = true;
+      sounds.menuBack.play();
+    } else if (menuMode === 2) {
+      menuMode = 1;
+      menuSelected = 2;
       menuMove = true;
       sounds.menuBack.play();
     } else if (menuMode === 2) {

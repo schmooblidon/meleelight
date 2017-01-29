@@ -47,6 +47,12 @@ import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import {deepCopy} from "./util/deepCopy";
+import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
+import {deaden} from "../input/meleeInputs";
+import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
+import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
+import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
+import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 /*globals performance*/
 
 export const holiday = 0;
@@ -82,7 +88,7 @@ export function setUsingCustomControls( i, bool, info ) {
   }
   else {
     mType[i] = info;
-  }  
+  }
 }
 
 export let firstTimeDetected = [true, true, true, true];
@@ -396,6 +402,7 @@ export function findPlayers (){
     }
   }
   for (var i = 0; i < gps.length; i++) {
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[i] : null);
     if(playerType[i] === 2){
       var alreadyIn = false;
       for (var k = 0; k < ports; k++) {
@@ -611,7 +618,7 @@ export function changeGamemode (newGamemode){
       connectToMPServer();
 
       break;
-      // controller menu
+
 
       // startup
     case 20:
@@ -982,12 +989,14 @@ export function gameTick (oldInputBuffers){
       var now = performance.now();
       var dt = now - lastUpdate;
       lastUpdate = now;
+      resetHitQueue();
       destroyArticles();
       executeArticles();
       if (!starting){
         input[targetBuilder] = interpretInputs(targetBuilder, true,playerType[targetBuilder],oldInputBuffers[targetBuilder]);
       }
       update(targetBuilder,input);
+      executeHits(input);
       targetHitDetection(targetBuilder);
       if (!starting) {
         targetTimerTick();
@@ -1285,7 +1294,7 @@ export function buildPlayerObject (i){
 export function initializePlayers (i,target){
   buildPlayerObject(i);
   if (target) {
-    drawVfx("entrance", new Vec2D(activeStage.startingPoint.x, activeStage.startingPoint.y));
+    drawVfx("entrance", new Vec2D(activeStage.startingPoint[0].x, activeStage.startingPoint[0].y));
   } else {
     drawVfx("entrance", new Vec2D(startingPoint[i][0], startingPoint[i][1]));
   }

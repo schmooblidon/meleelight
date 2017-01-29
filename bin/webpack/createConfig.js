@@ -51,7 +51,6 @@ function createConfig(options) {
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
               }],
-              directoryIndex:"meleelight.html"
             }
         )
     );
@@ -89,8 +88,7 @@ function createConfig(options) {
               runtimeCaching: [{
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
-              }],
-              directoryIndex:"meleelight.html"
+              }]
             }
         )
     );

@@ -108,7 +108,9 @@ export default {
     }
   },
   land: function (p, input) {
-    if (player[p].phys.cVel.y + player[p].phys.kVel.y <= 0 || player[p].phys.pos.y <= player[p].phys.posPrev.y) {
+    if (   player[p].phys.cVel.y + player[p].phys.kVel.y <= 0 
+        || player[p].phys.ECBp[0].y <= player[p].phys.ECB1[0].y 
+        || player[p].phys.pos.y <= player[p].phys.posPrev.y ) {
       LANDINGFALLSPECIAL.init(p, input);
     }
   }

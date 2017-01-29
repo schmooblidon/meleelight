@@ -6,6 +6,7 @@ import {turnOffHitboxes, actionStates} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../main/util/Vec2D";
 import {Segment2D} from "../main/util/Segment2D";
+import {getSameAndOther} from "./environmentalCollision";
 /* eslint-disable */
 
 export let hitQueue = [];
@@ -328,9 +329,7 @@ export function hitHurtCollision (i,p,j,previous,phantom){
         2)));
 }
 
-export function executeHits (input){
-  var grabQueue = [];
-  var ignoreGrabs = [false, false, false, false];
+export function cssHits(input) {
   for (var i = 0; i < hitQueue.length; i++) {
     var v = hitQueue[i][0];
     if(v === -1){
@@ -342,266 +341,364 @@ export function executeHits (input){
     var isThrow = hitQueue[i][4];
     var drawBounce = hitQueue[i][5];
     var phantom = hitQueue[i][6] || false;
+    let frame = player[i].hitboxes.frame;
+    if(frame > 1){
+      frame = 1;
+    }
+    if (shieldHit) {
+      sounds.blunthit.play();
+      player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
+      if (player[v].phys.powerShieldActive) {
+        player[v].phys.powerShielded = true;
+        player[v].hit.powershield = true;
+        drawVfx("impactLand", player[v].phys.pos, player[v].phys.face);
+        drawVfx("powershield", player[v].phys.shieldPositionReal, player[v].phys.face);
+        sounds.powershield.play();
+      }
+      player[v].hit.shieldstun = ((Math.floor(damage) * ((0.65 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) +
+            0.3)) * 1.5) + 2;
+    } else {
+      player[a].rpsPoints++;
+      player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
+      player[v].hit.knockback = getKnockback(player[a].hitboxes.id[h], damage, damage, 0, player[v].charAttributes.weight,
+            false, false);
+      player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y);
+      if (player[a].phys.pos.x < player[v].phys.pos.x) {
+        player[v].hit.reverse = false;
+        player[v].phys.face = -1;
+      } else {
+        player[v].hit.reverse = true;
+        player[v].phys.face = 1;
+      }
+      actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
+      screenShake(player[v].hit.knockback);
+      sounds.swordreallystronghit.play();
+    }
+  }
+}
 
+export function executeShieldHit(input, v, a, h, damage) {
+  if (!player[v].phys.powerShieldActive) {
+    player[v].phys.shieldHP -= damage;
+    if (player[v].phys.shieldHP < 0) {
+      player[v].phys.shielding = false;
+      player[v].phys.cVel.y = 2.5;
+      player[v].phys.grounded = false;
+      player[v].phys.shieldHP = 0;
+      drawVfx("breakShield", player[v].phys.pos, player[v].phys.face);
+      actionStates[characterSelections[v]].SHIELDBREAKFALL.init(v,input);
+      sounds.shieldbreak.play();
+      return;
+    }
+  }
+  player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
+
+  let vPushMultiplier = 0.6;
+  if (player[v].phys.powerShieldActive) {
+    vPushMultiplier = 1;
+    player[v].phys.powerShielded = true;
+    player[v].hit.powershield = true;
+    drawVfx("impactLand", player[v].phys.pos, player[v].phys.face);
+    drawVfx("powershield", player[v].phys.shieldPositionReal, player[v].phys.face);
+    sounds.powershield.play();
+  } else {
+    let frame = player[v].hitboxes.frame;
+    if(frame > 1){
+      frame = 1;
+    }
+    drawVfx("clank", new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y));
+  }
+  player[v].hit.shieldstun = ((Math.floor(damage) * ((0.65 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.3)) * 1.5) + 2;
+  let victimPush = ((Math.floor(damage) * ((0.195 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.09)) +
+          0.4) * vPushMultiplier;
+  if (victimPush > 2) {
+    victimPush = 2;
+  }
+  let attackerPush = (Math.floor(damage) * ((player[v].phys.shieldAnalog - 0.3) * 0.1)) + 0.02;
+
+  if (player[a].phys.pos.x < player[v].phys.pos.x) {
+    player[v].phys.cVel.x = victimPush
+    player[a].phys.cVel.x -= attackerPush
+  } else {
+    player[v].phys.cVel.x = -victimPush
+    player[a].phys.cVel.x += attackerPush
+  }
+
+  actionStates[characterSelections[v]].GUARD.init(v,input);
+}
+
+export function bluntHit(a,h){
+  sounds.blunthit.play();
+  let frame = player[a].hitboxes.frame;
+  if(frame > 1){
+    frame = 1;
+  }
+  drawVfx("clank", new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y));
+}
+
+export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounce, phantom, stageDamage, hitbox) {
+  let damage = hitbox.dmg;
+  player[v].phys.grabTech = false;
+  if (!stageDamage){
+    if (player[a].phys.chargeFrames > 0) {
+      damage *= 1 + (player[a].phys.chargeFrames * (0.3671 / 60));
+    }
+    if (phantom) {
+      phantomQueue.push([a, v]);
+      player[v].phys.phantomDamage = 0.5 * damage;
+    } else {
+      player[a].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
+    }
+    if (actionStates[characterSelections[a]][player[a].actionState].specialOnHit) {
+      actionStates[characterSelections[a]][player[a].actionState].onPlayerHit(a);
+    }
+  }
+  // TODO: STALING + KNOCKBACK STACKING
+
+  if (shieldHit) {
+    executeShieldHit(input, v, a, h, damage);
+    return;
+  }
+  // if invincible
+  if (player[v].phys.hurtboxState > 0 && !isThrow) {
+    if (!stageDamage){
+      bluntHit(a, h);
+    }
+    return;
+  }
+  if (phantom) {
+    player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
+    player[v].hit.knockback = 0;
     let frame = player[a].hitboxes.frame;
     if(frame > 1){
       frame = 1;
     }
-    if (gameMode == 2) {
-      if (shieldHit) {
-        sounds.blunthit.play();
-        player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
-        if (player[v].phys.powerShieldActive) {
-          player[v].phys.powerShielded = true;
-          player[v].hit.powershield = true;
-          drawVfx("impactLand", player[v].phys.pos, player[v].phys.face);
-          drawVfx("powershield", player[v].phys.shieldPositionReal, player[v].phys.face);
-          sounds.powershield.play();
+    player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (hitbox.offset[frame].x * player[a].phys.face), player[a].phys.pos.y + hitbox.offset[frame].y);
+    hitEffectsAndSound(a,v,h,isThrow);
+    return;
+  }
+
+  let crouching = actionStates[characterSelections[v]][player[v].actionState].crouch;
+  let vCancel = false;
+  if (player[v].phys.vCancelTimer > 0) {
+    if (actionStates[characterSelections[v]][player[v].actionState].vCancel) {
+      vCancel = true;
+      sounds.vcancel.play();
+    }
+  }
+  let jabReset = false;
+  if (actionStates[characterSelections[v]][player[v].actionState].downed && damage < 7) {
+    jabReset = true;
+  }
+  player[v].hit.knockback = getKnockback(hitbox, damage, damage, player[v].percent, player[v].charAttributes.weight, crouching, vCancel);
+  player[v].hit.angle = hitbox.angle;
+  if (player[v].hit.angle == 361) {
+    if (player[v].hit.knockback < 32.1) {
+      player[v].hit.angle = 0;
+    } else if (player[v].hit.knockback >= 32.1) {
+      player[v].hit.angle = 44;
+    }
+  }
+
+  player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
+
+  if (!isThrow) {
+    if (stageDamage) {
+      const angularParameter = a.angular;
+      let collisionPoint;
+      if (a.corner) {
+        const [same, other] = getSameAndOther(angularParameter);
+        const t = angularParameter - Math.floor(angularParameter);
+        if ((same === 1 && other === 2) || (same === 3 && other === 0)) {
+          collisionPoint = new Vec2D( (1-t)*player[v].phys.ECBp[same].x+t*player[v].phys.ECBp[other].x
+                                    , (1-t)*player[v].phys.ECBp[same].y+t*player[v].phys.ECBp[other].y );
         }
-        player[v].hit.shieldstun = ((Math.floor(damage) * ((0.65 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) +
-          0.3)) * 1.5) + 2;
-      } else {
-        player[a].rpsPoints++;
-        player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
-        player[v].hit.knockback = getKnockback(player[a].hitboxes.id[h], damage, damage, 0, player[v].charAttributes.weight,
-          false, false);
-        player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y);
-        if (player[a].phys.pos.x < player[v].phys.pos.x) {
-          player[v].hit.reverse = false;
-          player[v].phys.face = -1;
-        } else {
-          player[v].hit.reverse = true;
-          player[v].phys.face = 1;
+        else {
+          collisionPoint = new Vec2D( (1-t)*player[v].phys.ECBp[other].x+t*player[v].phys.ECBp[same].x
+                                    , (1-t)*player[v].phys.ECBp[other].y+t*player[v].phys.ECBp[same].y );
         }
-        actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
-        screenShake(player[v].hit.knockback);
-        sounds.swordreallystronghit.play();
       }
+      else {
+        collisionPoint = player[v].phys.ECBp[angularParameter];
+      }
+      player[v].hit.hitPoint = collisionPoint;
+      player[v].hit.reverse = false;
+      player[v].phys.stageDamageImmunity = 20;
     } else {
-      if (player[v].actionState == "FURAFURA") {
-        sounds.furaloop.stop(player[v].furaLoopID);
+      let frame = player[a].hitboxes.frame;
+      if(frame > 1){
+        frame = 1;
       }
-      if (player[a].hitboxes.id[h].type == 2) {
+      player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (hitbox.offset[frame].x * player[a].phys.face), player[a].phys.pos.y + hitbox.offset[frame].y);
+      if (player[a].phys.pos.x < player[v].phys.pos.x) {
+        player[v].hit.reverse = false;
+      } else {
+        player[v].hit.reverse = true;
+      }
+    }
+    if (!jabReset && player[v].phys.grabbedBy == -1) {
+      player[v].phys.face = player[v].hit.reverse ? 1 : -1;
+    }
+  } else {
+    player[a].hasHit = true;
+    player[a].phys.grabbing = -1;
+    player[v].phys.thrownHitbox = true;
+    player[v].phys.thrownHitboxOwner = a;
+    player[v].phys.pos = new Vec2D(player[a].phys.pos.x + (hitbox.offset.x * player[a].phys.face), player[a].phys.pos.y + hitbox.offset.y);
+    player[v].phys.grabbedBy = -1;
+    player[v].hit.hitlag = 1;
+    player[a].hit.hitlag = 1;
+    if (player[a].phys.face == 1) {
+      player[v].hit.reverse = false;
+    } else {
+      player[v].hit.reverse = true;
+    }
+    if (drawBounce) {
+      sounds.bounce.play();
+      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face);
+    }
+  }
+
+  player[v].percent += damage;
+
+  // if victim is grabbing someone, put the victim's grab victim into a grab release
+  if (player[v].phys.grabbing > -1) {
+    player[player[v].phys.grabbing].phys.grabbedBy = -1;
+    actionStates[characterSelections[player[v].phys.grabbing]].CAPTURECUT.init(player[v].phys.grabbing,input);
+  }
+
+  if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)) {
+    if (player[v].phys.grabbedBy > -1) {
+      player[player[v].phys.grabbedBy].phys.grabbing = -1;
+      actionStates[characterSelections[player[v].phys.grabbedBy]].WAIT.init(player[v].phys.grabbedBy,input);
+    }
+    player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
+
+    if (jabReset) {
+      actionStates[characterSelections[v]].DOWNDAMAGE.init(v,input);
+    } else if (player[v].hit.knockback >= 80 || isThrow) {
+      actionStates[characterSelections[v]].DAMAGEFLYN.init(v,input, !isThrow);
+    } else {
+      actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
+    }
+  } else {
+    if (player[v].actionState != "THROWNPUFFDOWN") {
+      actionStates[characterSelections[v]].CAPTUREDAMAGE.init(v,input);
+    }
+  }
+
+  if (player[v].phys.grounded && player[v].hit.angle > 180) {
+    if (player[v].hit.knockback >= 80) {
+      sounds.bounce.play();
+      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face);
+      player[v].hit.angle = 360 - player[v].hit.angle;
+      player[v].hit.knockback *= 0.8;
+    }
+  }
+  screenShake(player[v].hit.knockback);
+  percentShake(player[v].hit.knockback, v);
+  hitEffectsAndSound(v,h,isThrow, hitbox.type);
+}
+
+export function hitEffectsAndSound(v,h, isThrow, type){
+  if (!isThrow) {
+    hitEffect(type,v);
+    knockbackSounds(type, player[v].hit.knockback, v);
+  } else {
+    sounds.stronghit.play();
+  }
+}
+
+export function hitEffect(type,v){
+  switch (type) {
+    case 0:
+      // normal
+      drawVfx("normalhit", player[v].hit.hitPoint, player[v].phys.face);
+      break;
+    case 1:
+      // slash
+      drawVfx("hitSparks", player[v].hit.hitPoint, player[v].phys.face);
+      drawVfx("hitFlair", player[v].hit.hitPoint, player[v].phys.face);
+      drawVfx("hitCurve", player[v].hit.hitPoint, player[v].phys.face, player[v].hit.angle);
+      break;
+    case 3:
+      // fire
+      player[v].burning = 20;
+      drawVfx("firehit", player[v].hit.hitPoint, player[v].phys.face);
+      break;
+    case 4:
+      // electric
+      player[v].shocked = 20;
+      drawVfx("electrichit", player[v].hit.hitPoint, player[v].phys.face);
+      break;
+    default:
+      break;
+  }
+}
+
+export function executeHits (input){
+  if (gameMode === 2) {
+    cssHits(input);
+    return;
+  }
+  let grabQueue = [];
+  let ignoreGrabs = [false, false, false, false];
+  for (var i = 0; i < hitQueue.length; i++) {
+    // start defining constants for hit
+    const v = hitQueue[i][0];
+    const a = hitQueue[i][1];
+    // h will contain hitbox type for stage damage
+    const h = hitQueue[i][2];
+    const shieldHit = hitQueue[i][3];
+    const isThrow = hitQueue[i][4];
+    const drawBounce = hitQueue[i][5];
+    const phantom = hitQueue[i][6] || false;
+    // if a is a string, then it is stage damage
+    const stageDamage = (a >= 0) ? false : true;
+    let hitbox;
+    if (stageDamage) {
+      let normalAngle = Math.atan2(a.normal.y, a.normal.x);
+      if (normalAngle < 0) {
+        normalAngle += 2*Math.PI;
+      }
+      hitbox = { offset : new Vec2D(0,0),
+                 dmg : 10,
+                 angle : normalAngle * 180 / Math.PI, // why are we using degrees again?
+                 kg : 100,
+                 bk : 0,
+                 sk : 150,
+                 type : h
+                }
+    }
+    else {
+      hitbox = player[a].hitboxes.id[h];
+    }
+
+    // if in furafura, make sure sfx stops
+    if (player[v].actionState == "FURAFURA") {
+      sounds.furaloop.stop(player[v].furaLoopID);
+    }
+    switch (hitbox.type){
+      // if grab
+      case 2:
         if (actionStates[characterSelections[v]][player[v].actionState].canBeGrabbed) {
           grabQueue.push([a, v, false]);
         }
-      } else if (player[a].hitboxes.id[h].type == 5) {
+        break;
+      // if sleep
+      case 5:
         actionStates[characterSelections[v]].FURASLEEPSTART.init(v,input);
-      } else {
+        break;
+      default:
         ignoreGrabs[v] = true;
-        var damage = player[a].hitboxes.id[h].dmg;
-        if (phantom) {
-          phantomQueue.push([a, v]);
-          player[v].phys.phantomDamage = 0.5 * damage;
-        }
-        player[v].phys.grabTech = false;
-        if (player[a].phys.chargeFrames > 0) {
-          damage *= 1 + (player[a].phys.chargeFrames * (0.3671 / 60));
-        }
-        if (!phantom) {
-          player[a].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
-        }
-        // do staling
-        if (shieldHit) {
-          //console.log("test");
-          if (!player[v].phys.powerShieldActive) {
-            player[v].phys.shieldHP -= damage;
-            if (player[v].phys.shieldHP < 0) {
-              player[v].phys.shielding = false;
-              player[v].phys.cVel.y = 2.5;
-              player[v].phys.grounded = false;
-              player[v].phys.shieldHP = 0;
-              drawVfx("breakShield", player[v].phys.pos, player[v].phys.face);
-              actionStates[characterSelections[v]].SHIELDBREAKFALL.init(v,input);
-              sounds.shieldbreak.play();
-              break;
-            }
-          }
-
-          player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
-
-          var vPushMultiplier = 0.6;
-          if (player[v].phys.powerShieldActive) {
-            vPushMultiplier = 1;
-            player[v].phys.powerShielded = true;
-            player[v].hit.powershield = true;
-            drawVfx("impactLand", player[v].phys.pos, player[v].phys.face);
-            drawVfx("powershield", player[v].phys.shieldPositionReal, player[v].phys.face);
-            sounds.powershield.play();
-          } else {
-            drawVfx("clank", new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame]
-              .x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y));
-          }
-          player[v].hit.shieldstun = ((Math.floor(damage) * ((0.65 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) +
-            0.3)) * 1.5) + 2;
-          var victimPush = ((Math.floor(damage) * ((0.195 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.09)) +
-            0.4) * vPushMultiplier;
-          if (victimPush > 2) {
-            victimPush = 2;
-          }
-          var attackerPush = (Math.floor(damage) * ((player[v].phys.shieldAnalog - 0.3) * 0.1)) + 0.02;
-
-          if (player[a].phys.pos.x < player[v].phys.pos.x) {
-            player[v].phys.cVel.x = victimPush
-            player[a].phys.cVel.x -= attackerPush
-          } else {
-            player[v].phys.cVel.x = -victimPush
-            player[a].phys.cVel.x += attackerPush
-          }
-
-          actionStates[characterSelections[v]].GUARD.init(v,input);
-
-        } else {
-          if (player[v].phys.hurtBoxState == 0 || isThrow) {
-            if (!phantom) {
-              var crouching = actionStates[characterSelections[v]][player[v].actionState].crouch;
-              var vCancel = false;
-              if (player[v].phys.vCancelTimer > 0) {
-                if (actionStates[characterSelections[v]][player[v].actionState].vCancel) {
-                  vCancel = true;
-                  sounds.vcancel.play();
-                }
-              }
-              var jabReset = false;
-              if (actionStates[characterSelections[v]][player[v].actionState].downed && damage < 7) {
-                jabReset = true;
-              }
-              player[v].hit.knockback = getKnockback(player[a].hitboxes.id[h], damage, damage, player[v].percent,
-                player[v].charAttributes.weight, crouching, vCancel);
-              player[v].hit.angle = player[a].hitboxes.id[h].angle;
-              if (player[v].hit.angle == 361) {
-                if (player[v].hit.knockback < 32.1) {
-                  player[v].hit.angle = 0;
-                } else if (player[v].hit.knockback >= 32.1) {
-                  player[v].hit.angle = 44;
-                }
-              }
-
-              player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
-
-              if (actionStates[characterSelections[a]][player[a].actionState].specialOnHit) {
-                actionStates[characterSelections[a]][player[a].actionState].onPlayerHit(a);
-              }
-
-              if (!isThrow) {
-                player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y);
-                if (player[a].phys.pos.x < player[v].phys.pos.x) {
-                  player[v].hit.reverse = false;
-                } else {
-                  player[v].hit.reverse = true;
-                }
-                if (!jabReset && player[v].phys.grabbedBy == -1) {
-                  player[v].phys.face = player[v].hit.reverse ? 1 : -1;
-                }
-              } else {
-                player[a].hasHit = true;
-                player[a].phys.grabbing = -1;
-                player[v].phys.thrownHitbox = true;
-                player[v].phys.thrownHitboxOwner = a;
-                player[v].phys.pos = new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset.x * player[a].phys
-                  .face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset.y);
-                player[v].phys.grabbedBy = -1;
-                player[v].hit.hitlag = 1;
-                player[a].hit.hitlag = 1;
-                if (player[a].phys.face == 1) {
-                  player[v].hit.reverse = false;
-                } else {
-                  player[v].hit.reverse = true;
-                }
-                if (drawBounce) {
-                  sounds.bounce.play();
-                  drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face);
-                }
-              }
-
-              player[v].percent += damage;
-
-              // if victim is grabbing someone, put the victim's grab victim into a grab release
-              if (player[v].phys.grabbing > -1) {
-                player[player[v].phys.grabbing].phys.grabbedBy = -1;
-                actionStates[characterSelections[player[v].phys.grabbing]].CAPTURECUT.init(player[v].phys.grabbing,input);
-              }
-
-              if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)) {
-                if (player[v].phys.grabbedBy > -1) {
-                  player[player[v].phys.grabbedBy].phys.grabbing = -1;
-                  actionStates[characterSelections[player[v].phys.grabbedBy]].WAIT.init(player[v].phys.grabbedBy,input);
-                }
-                player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
-                //console.log(player[v].hit.reverse);
-                if (jabReset) {
-                  actionStates[characterSelections[v]].DOWNDAMAGE.init(v,input);
-                } else if (player[v].hit.knockback >= 80 || isThrow) {
-                  actionStates[characterSelections[v]].DAMAGEFLYN.init(v,input, !isThrow);
-                } else {
-                  actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
-                }
-              } else {
-                if (player[v].actionState != "THROWNPUFFDOWN") {
-                  actionStates[characterSelections[v]].CAPTUREDAMAGE.init(v,input);
-                }
-              }
-
-              if (player[v].phys.grounded && player[v].hit.angle > 180) {
-                if (player[v].hit.knockback >= 80) {
-                  sounds.bounce.play();
-                  drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face);
-                  player[v].hit.angle = 360 - player[v].hit.angle;
-                  player[v].hit.knockback *= 0.8;
-                }
-              }
-              screenShake(player[v].hit.knockback);
-              percentShake(player[v].hit.knockback, v);
-            }
-            // else if phantomed
-            else {
-              player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
-              player[v].hit.knockback = 0;
-              player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y);
-            }
-            //console.log(player[v].hit.knockback);
-            if (!isThrow) {
-              switch (player[a].hitboxes.id[h].type) {
-                case 0:
-                  // normal
-                  drawVfx("normalhit", player[v].hit.hitPoint, player[v].phys.face);
-                  break;
-                case 1:
-                  // slash
-                  drawVfx("hitSparks", player[v].hit.hitPoint, player[v].phys.face);
-                  drawVfx("hitFlair", player[v].hit.hitPoint, player[v].phys.face);
-                  drawVfx("hitCurve", player[v].hit.hitPoint, player[v].phys.face, player[v].hit.angle);
-                  break;
-                case 3:
-                  // fire
-                  player[v].burning = 20;
-                  drawVfx("firehit", player[v].hit.hitPoint, player[v].phys.face);
-                  break;
-                case 4:
-                  // electric
-                  player[v].shocked = 20;
-                  drawVfx("electrichit", player[v].hit.hitPoint, player[v].phys.face);
-                  break;
-                default:
-                  break;
-              }
-
-              knockbackSounds(player[a].hitboxes.id[h].type, player[v].hit.knockback, v);
-
-            } else {
-              sounds.stronghit.play();
-            }
-          } else {
-            sounds.blunthit.play();
-            if (!isThrow) {
-              drawVfx("clank", new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame]
-                .x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y));
-            }
-          }
-        }
-      }
+        executeRegularHit(input, v, a, h, shieldHit, isThrow, drawBounce, phantom, stageDamage, hitbox);
+        break;
     }
   }
+  executeGrabHits(input, grabQueue, ignoreGrabs);
+}
+
+export function executeGrabHits(input, grabQueue, ignoreGrabs){
   for (var j = 0; j < grabQueue.length; j++) {
     if (!ignoreGrabs[grabQueue[j][0]]) {
       if (!grabQueue[j][2]) {

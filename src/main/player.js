@@ -98,6 +98,7 @@ export function physicsObject(pos, face) {
   this.rollOutDistance = 0;
   this.bTurnaroundTimer = 0;
   this.bTurnaroundDirection = 1;
+  this.groundAngle = Math.PI/2;
 }
 export function inputObject() {
 

@@ -53,47 +53,26 @@ export default {
       }
 
       if (player[p].timer === 42){
-        let ang = Math.PI/2;
-        if (input[p][0].lsX === 0 && input[p][0].lsY === 0){
-          if (player[p].phys.grounded){
-            ang = Math.PI / 2;
-          }
-        }
-        else {
-          if (player[p].phys.grounded) {
-            if (Math.abs(input[p][0].lsX) < 0.66 && input[p][0].lsY < 0.66) {
-              ang = 0; 
-            } else if (!(Math.abs(input[p][0].lsX) < 0.66) && input[p][0].lsY < 0.66) {
-              if (input[p][0].lsX < -0.66) {
-                ang = Math.PI;
-              } else {
-                ang = 0;
-              }
-            } else if (input[p][0].lsY > 0) {
-              ang = Math.atan(input[p][0].lsY/input[p][0].lsX);              
-            }
-          } else {
-            ang = Math.atan(input[p][0].lsY/input[p][0].lsX);
-          }
-        }
+        let firefoxAngle = (input[p][0].lsX === 0 && input[p][0].lsY === 0) ? Math.PI/2 : Math.atan2(input[p][0].lsY, input[p][0].lsX);
 
-        if (input[p][0].lsX < 0){
-          if (input[p][0].lsY < 0){
-            ang += Math.PI;
+        if (player[p].phys.grounded && player[p].phys.onSurface[0] === 0) {
+          if (firefoxAngle < -Math.PI/2) {
+            // need the angle to go from -pi/2 to 3pi/2, important for the upcoming comparisons 
+            firefoxAngle += 2*Math.PI;
           }
-          else {
-            ang += Math.PI;
+          const groundedAngle = player[p].phys.groundAngle || Math.PI/2;
+          if (firefoxAngle > groundedAngle + Math.PI/2) {
+            firefoxAngle = groundedAngle + Math.PI/2;
           }
-        }
-        if (player[p].phys.grounded){
-          if (ang < 0){
-            ang = 0;
-          }
-          else if (ang > Math.PI){
-            ang = Math.PI;
+          else if (firefoxAngle < groundedAngle - Math.PI/2) {
+            firefoxAngle = groundedAngle - Math.PI/2;
           }
         }
-        player[p].phys.upbAngleMultiplier = ang;
+        if (firefoxAngle > Math.PI) {
+          // return an angle between -pi and pi
+          firefoxAngle -= 2*Math.PI;
+        }
+        player[p].phys.upbAngleMultiplier = firefoxAngle;
       }
       else if (player[p].timer >= 16 && !player[p].phys.grounded){
         player[p].phys.cVel.y -= 0.015;

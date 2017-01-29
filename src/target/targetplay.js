@@ -147,7 +147,7 @@ export function startTargetGame (p,test){
   initializePlayers(p,true);
   renderPlayer(p);
 
-  player[p].phys.pos = new Vec2D(activeStage.startingPoint.x,activeStage.startingPoint.y);
+  player[p].phys.pos = new Vec2D(activeStage.startingPoint[0].x,activeStage.startingPoint[0].y);
   setMatchTimer(0);
     setStartTimer(1.5);
     setStarting(true);
