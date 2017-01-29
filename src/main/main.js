@@ -37,8 +37,6 @@ import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
 import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,connectToMPServer, syncGameMode} from "./multiplayer/streamclient";
-import {deepCopyObject} from "./util/deepCopyObject";
-import {setChosenChar} from "../menus/css";
 import {saveGameState, loadReplay, gameTickDelay} from "./replay";
 import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters, nullInput} from "../input/input";
 import {deaden} from "../input/meleeInputs";
@@ -47,12 +45,6 @@ import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import {deepCopy} from "./util/deepCopy";
-import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
-import {deaden} from "../input/meleeInputs";
-import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
-import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
-import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
-import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 /*globals performance*/
 
 export const holiday = 0;
