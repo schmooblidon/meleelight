@@ -288,6 +288,10 @@ export function cssControls (i, input){
   } else if (choosingTag == -1 && input[i][0].du && !input[i][1].du) {
     sounds.menuForward.play();
     changeGamemode(6);
+  } else if (choosingTag == -1 && input[i][0].dr && !input[i][1].dr) {
+    chosenChar[whichTokenGrabbed[i]] = 3;
+    changeCharacter(whichTokenGrabbed[i], 3);
+    sounds.menuSelect.play();
   }
 }
 

@@ -42,7 +42,7 @@ export default {
         sounds.foxlaserfire.play();
         // laser instance
         drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+7),player[p].phys.face,0);
-        articles.LASER.init(p,8,7,0);
+        articles.LASER.init(p,8,7,0,false);
       }
       if (player[p].timer === 37){
         sounds.foxlaserholster.play();

@@ -33,7 +33,7 @@ export default {
     if (!this.interrupt(p,input)){
       if (player[p].phys.grounded){
         if (player[p].timer === 21){
-          articles.ILLUSION.init(p,1);
+          articles.ILLUSION.init(p,1,false);
           player[p].phys.cVel.x = 18.72*player[p].phys.face;
           if ((input[p][0].b || input[p][1].b) && !input[p][2].b){
             player[p].timer = 24;

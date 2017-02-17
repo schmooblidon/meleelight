@@ -53,7 +53,7 @@ export default {
           player[p].phys.cVel.y -= 0.08;
         }
         if (player[p].timer === 21){
-          articles.ILLUSION.init(p,0);
+          articles.ILLUSION.init(p,0,false);
           player[p].phys.cVel.x = 18.72*player[p].phys.face;
           player[p].phys.cVel.y = 0;
           if ((input[p][0].b || input[p][1].b) && !input[p][2].b){

@@ -33,19 +33,19 @@ export default {
         player[p].phys.face *= -1;
       }
       if (prevFrame < 14 && player[p].timer >= 14){
-        articles.LASER.init(p,5.2,10,Math.PI*0.22);
+        articles.LASER.init(p,5.2,10,Math.PI*0.22,false);
         sounds.foxlaserfire.play();
         // 135
         drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.2*player[p].phys.face),player[p].phys.pos.y+10),player[p].phys.face,Math.PI*0.22);
       }
       else if (prevFrame < 16 && player[p].timer >= 16){
-        articles.LASER.init(p,5.4,9.7,Math.PI*0.20);
+        articles.LASER.init(p,5.4,9.7,Math.PI*0.20,false);
         sounds.foxlaserfire.play();
         // 135
         drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.4*player[p].phys.face),player[p].phys.pos.y+9.7),player[p].phys.face,Math.PI*0.20);
       }
       else if (prevFrame < 19 && player[p].timer >= 19){
-        articles.LASER.init(p,5.3,9.8,Math.PI*0.22);
+        articles.LASER.init(p,5.3,9.8,Math.PI*0.22,false);
         sounds.foxlaserfire.play();
         // 135
         drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.3*player[p].phys.face),player[p].phys.pos.y+9.8),player[p].phys.face,Math.PI*0.22);
