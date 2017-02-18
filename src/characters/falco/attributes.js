@@ -49,7 +49,7 @@ setCharAttributes(CHARIDS.FALCO_ID, {
   hurtboxOffset : [6,13],
   ledgeSnapBoxOffset : [14,8,18],
   shieldOffset : [5,34],
-  charScale : 0.35,
+  charScale : 0.47,
   miniScale : 0.3,
   runTurnBreakPoint : 9,
   airdodgeIntangible : 26,
@@ -57,7 +57,7 @@ setCharAttributes(CHARIDS.FALCO_ID, {
   wallJumpVelY : 3.6,
   shieldBreakVel : 3.3,
   multiJump : false,
-  ecbScale : 2.5,
+  ecbScale : 3.5
 });
 
 // start, length
@@ -542,7 +542,7 @@ new Vec2D(-9.25,10.81)],
     new Vec2D(1.96,6.81),
     new Vec2D(2.31,7.01),
     new Vec2D(2.14,6.92)],
-    id2 : [new Vec2D(3.11,4.52),
+    id1 : [new Vec2D(3.11,4.52),
     new Vec2D(3.35,4.64),
     new Vec2D(3.17,4.53),
     new Vec2D(2.72,4.27),

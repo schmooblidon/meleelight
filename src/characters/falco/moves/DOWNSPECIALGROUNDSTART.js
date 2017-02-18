@@ -1,28 +1,26 @@
 /* eslint-disable */
-import DOWNSPECIALAIRLOOP from "characters/falco/moves/DOWNSPECIALAIRLOOP";
+import DOWNSPECIALGROUNDLOOP from "characters/falco/moves/DOWNSPECIALGROUNDLOOP";
 import {player} from "main/main";
 import {sounds} from "main/sfx";
-import {turnOffHitboxes} from "physics/actionStateShortcuts";
+import {turnOffHitboxes, reduceByTraction} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../../../main/util/Vec2D";
 
 export default {
-  name : "DOWNSPECIALAIRSTART",
+  name : "DOWNSPECIALGROUNDSTART",
   canPassThrough : false,
-  canEdgeCancel : false,
   canGrabLedge : [false,false],
   wallJumpAble : false,
   headBonk : false,
   canBeGrabbed : true,
-  landType : 1,
+  canEdgeCancel : true,
+  disableTeeter : true,
+  airborneState : "DOWNSPECIALAIRSTART",
   init : function(p,input){
-    player[p].actionState = "DOWNSPECIALAIRSTART";
+    player[p].actionState = "DOWNSPECIALGROUNDSTART";
     player[p].timer = 0;
-    player[p].phys.fastfalled = false;
     player[p].phys.inShine = 0;
     player[p].shineLoop = 6;
-    player[p].phys.cVel.y = 0;
-    player[p].phys.cVel.x *= 0.5;
     sounds.foxshine.play();
     drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
     drawVfx("shine",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+6));
@@ -34,28 +32,14 @@ export default {
     player[p].timer++;
     player[p].phys.inShine++;
     if (!this.interrupt(p,input)){
-      if (player[p].phys.cVel.x > 0){
-        if (player[p].phys.cVel.x > 0.85){
-          player[p].phys.cVel.x -= 0.03;
-        }
-        else {
-          player[p].phys.cVel.x -= 0.02;
-        }
-        if (player[p].phys.cVel.x < 0){
-          player[p].phys.cVel.x = 0;
+      if (player[p].phys.onSurface[0] === 1 && player[p].timer > 1){
+        if (input[p][0].lsY < -0.66 && input[p][6].lsY >= 0){
+          player[p].phys.grounded = false;
+          player[p].phys.abovePlatforms[player[p].phys.onSurface[1]] = false;
+          player[p].phys.cVel.y = -0.5;
         }
       }
-      else if (player[p].phys.cVel.x < 0){
-        if (player[p].phys.cVel.x < -0.85){
-          player[p].phys.cVel.x += 0.03;
-        }
-        else {
-          player[p].phys.cVel.x += 0.02;
-        }
-        if (player[p].phys.cVel.x > 0){
-          player[p].phys.cVel.x = 0;
-        }
-      }
+      reduceByTraction(p);
 
       if (player[p].timer === 1){
         player[p].hitboxes.active = [true,false,false,false];
@@ -69,14 +53,11 @@ export default {
   },
   interrupt : function(p,input) {
     if (player[p].timer > 3) {
-      DOWNSPECIALAIRLOOP.init(p,input);
+      DOWNSPECIALGROUNDLOOP.init(p,input);
       return true;
     }
     else {
       return false;
     }
-  },
-  land : function(p,input) {
-    player[p].actionState = "DOWNSPECIALGROUNDSTART";
   }
 };

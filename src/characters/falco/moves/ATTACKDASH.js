@@ -25,7 +25,6 @@ export default {
     player[p].timer = 0;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.dashattack1.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.dashattack1.id1;
     this.main(p,input);
   },
   main : function(p,input){
@@ -34,7 +33,7 @@ export default {
       player[p].phys.cVel.x = this.setVelocities[player[p].timer-1]*player[p].phys.face;
 
       if (player[p].timer === 4){
-        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.active = [true,false,false,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
         // needs 3
@@ -44,7 +43,6 @@ export default {
       }
       if (player[p].timer === 8){
         player[p].hitboxes.id[0] = player[p].charHitboxes.dashattack2.id0;
-        player[p].hitboxes.id[1] = player[p].charHitboxes.dashattack2.id1;
         player[p].hitboxes.frame = 0;
       }
       if (player[p].timer === 18){

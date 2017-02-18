@@ -24,8 +24,6 @@ export default {
     player[p].phys.fastfalled = false;
     player[p].phys.landingMultiplier = 10;
     sounds.foxupbburn.play();
-    turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.upb1.id0;
     this.main(p,input);
   },
   main : function(p,input){
@@ -76,18 +74,6 @@ export default {
       }
       else if (player[p].timer >= 16 && !player[p].phys.grounded){
         player[p].phys.cVel.y -= 0.015;
-      }
-
-      if (player[p].timer > 19 && player[p].timer < 34) {
-        switch (player[p].timer % 2) {
-          case 0:
-            player[p].hitboxes.active = [true,false,false,false];
-            player[p].hitboxes.frame = 0;
-            break;
-          case 1:
-            turnOffHitboxes(p);
-            break;
-        }
       }
     }
   },

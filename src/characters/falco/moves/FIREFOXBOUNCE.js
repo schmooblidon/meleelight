@@ -11,7 +11,7 @@ export default {
   wallJumpAble : false,
   headBonk : false,
   canBeGrabbed : true,
-  setVelocities : [0.00062,0.00062,0.00062,5.27148,5.4568,2.56,0.0638,0.02712,-0.00286,-0.02613,-0.0427,-0.05257,-0.05573,-1.83217],
+  setVelocities : [0.00072,0.00072,0.00072,6.04024,6.25258,2.93342,0.07311,0.03107,-0.00327,-0.02994,-0.04893,-0.06023,-0.06386,-2.09936],
   landType : 1,
   init : function(p,input){
     player[p].actionState = "FIREFOXBOUNCE";

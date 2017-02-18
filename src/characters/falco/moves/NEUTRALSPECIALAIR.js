@@ -26,12 +26,12 @@ export default {
     if (!this.interrupt(p,input)){
       fastfall(p,input);
       airDrift(p,input);
-      if (player[p].timer >= 4 && player[p].timer <= 14){
+      if (player[p].timer >= 4 && player[p].timer <= 16){
         if (input[p][0].b && !input[p][1].b){
           player[p].phys.laserCombo = true;
         }
       }
-      if (player[p].timer === 15){
+      if (player[p].timer === 21){
         if (player[p].phys.laserCombo){
           player[p].timer = 5;
           player[p].phys.laserCombo = false;
@@ -40,19 +40,16 @@ export default {
       if (player[p].timer === 7){
         sounds.foxlasercock.play();
       }
-      if (player[p].timer === 10){
+      if (player[p].timer === 13){
         sounds.foxlaserfire.play();
         // laser instance
         drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face,0);
         articles.LASER.init(p,8,9,0,false);
       }
-      if (player[p].timer === 30){
-        sounds.foxlaserholster.play();
-      }
     }
   },
   interrupt : function(p,input){
-    if (player[p].timer > 36){
+    if (player[p].timer > 42){
       FALL.init(p,input);
       return true;
     }

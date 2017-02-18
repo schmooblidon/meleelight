@@ -20,8 +20,8 @@ export default {
     player[p].inAerial = true;
     player[p].IASATimer = 60;
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.dair.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.dair.id1;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dair1.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dair1.id1;
     this.main(p,input);
   },
   main : function(p,input){
@@ -33,24 +33,24 @@ export default {
         player[p].phys.autoCancel = false;
       }
 
-      if (player[p].timer > 4 && player[p].timer < 26){
-        switch (player[p].timer % 3){
-          case 2:
-            player[p].hitboxes.active = [true,true,false,false];
-            player[p].hitboxes.frame = 0;
-            sounds.normalswing2.play();
-            break;
-          case 0:
-            player[p].hitboxes.frame++;
-            break;
-          case 1:
-            turnOffHitboxes(p);
-            break;
-
-        }
+      if (player[p].timer === 5){
+        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.frame = 0;
+        sounds.normalswing2.play();
+      } 
+      else if ((player[p].timer > 5 && player[p].timer < 15) || (player[p].timer > 15 && player[p].timer < 25)){
+        player[p].hitboxes.frame++;
+      }
+      else if (player[p].timer === 15) {
+        player[p].hitboxes.id[0] = player[p].charHitboxes.dair2.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.dair2.id1;
+        player[p].hitboxes.frame = 0;
+      }
+      else if (player[p].timer === 25) {
+        turnOffHitboxes(p);
       }
 
-      if (player[p].timer === 32){
+      if (player[p].timer === 31){
         player[p].phys.autoCancel = true;
       }
     }

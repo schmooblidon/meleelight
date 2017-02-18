@@ -1,7 +1,6 @@
 
 import SIDESPECIALAIR from "characters/falco/moves/SIDESPECIALAIR";
 import WAIT from "characters/shared/moves/WAIT";
-import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import {articles} from "physics/article";
 import {sounds} from "main/sfx";
 import {turnOffHitboxes} from "physics/actionStateShortcuts";
@@ -31,60 +30,48 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      if (player[p].phys.grounded){
-        if (player[p].timer === 21){
-          articles.ILLUSION.init(p,1,false);
-          player[p].phys.cVel.x = 18.72*player[p].phys.face;
-          if ((input[p][0].b || input[p][1].b) && !input[p][2].b){
-            player[p].timer = 24;
-          }
-        }
-        else if (player[p].timer === 22 || player[p].timer === 23){
-          if (input[p][0].b && !input[p][1].b){
-            player[p].timer = 24;
-          }
-        }
-        if (player[p].timer === 24){
-          player[p].phys.cVel.x = 2.1*player[p].phys.face;
-        }
-        if (player[p].timer > 24){
-          player[p].phys.cVel.x -= 0.1*player[p].phys.face;
-          if (player[p].phys.cVel.x*player[p].phys.face < 0){
-            player[p].phys.cVel.x = 0;
-          }
-        }
-
-        if (player[p].timer === 20){
-          sounds.foxillusion1.play();
-          sounds.foxillusion2.play();
-        }
-      }
-      else {
-        player[p].actionState = "SIDESPECIALAIR";
-        player[p].timer--;
-        SIDESPECIALAIR.main(p,input);
+      if (player[p].timer === 16){
+        sounds.foxillusion1.play();
+        sounds.foxillusion2.play();
       }
 
-      if (player[p].timer >= 21 && player[p].timer <= 24){
+      if (player[p].timer === 17) {
+        player[p].phys.cVel.x = 16.50*player[p].phys.face;
+      }
+
+      if (player[p].timer === 18){
+        articles.ILLUSION.init(p,0,false);
+        if ((input[p][0].b || input[p][1].b) && !input[p][2].b){
+          player[p].timer = 20;
+        }
+      }
+      else if (player[p].timer >= 16 && player[p].timer < 20){
+        if (input[p][0].b && !input[p][1].b){
+          player[p].timer = 20;
+        }
+      }
+      if (player[p].timer === 20){
+        player[p].phys.cVel.x = 1.5*player[p].phys.face;
+      }
+      if (player[p].timer > 20){
+        player[p].phys.cVel.x -= 0.1*player[p].phys.face;
+        if (player[p].phys.cVel.x*player[p].phys.face < 0) {
+          player[p].phys.cVel.x = 0;
+        }
+      }
+
+      if (player[p].timer >= 18 && player[p].timer <= 21){
         drawVfx("illusion",player[p].phys.posPrev,player[p].phys.face);
       }
     }
   },
   interrupt : function(p,input){
-    if (player[p].timer > 63){
-      if (player[p].phys.grounded){
-        WAIT.init(p,input);
-      }
-      else {
-        FALLSPECIAL.init(p,input);
-      }
+    if (player[p].timer > 59){
+      WAIT.init(p,input);
       return true;
     }
     else {
       return false;
     }
-  },
-  land : function(p,input){
-
   }
 };

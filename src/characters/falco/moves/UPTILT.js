@@ -24,8 +24,6 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.uptilt.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.uptilt.id1;
-    player[p].hitboxes.id[2] = player[p].charHitboxes.uptilt.id2;
-    player[p].hitboxes.id[3] = player[p].charHitboxes.uptilt.id3;
     this.main(p,input);
   },
   main : function(p,input){
@@ -34,7 +32,7 @@ export default {
       reduceByTraction(p,true);
 
       if (player[p].timer === 5){
-        player[p].hitboxes.active = [true,true,true,true];
+        player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
         // needs 3

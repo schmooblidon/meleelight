@@ -24,7 +24,7 @@ export default {
     player[p].timer = 0;
     sounds.foxupbshout.play();
     sounds.foxupblaunch.play();
-    player[p].hitboxes.id[0] = player[p].charHitboxes.upb2.id0;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.upspecial.id0;
     player[p].hitboxes.active = [true,false,false,false];
     player[p].hitboxes.frame = 0;
     player[p].rotation = Math.PI / 2 - player[p].phys.upbAngleMultiplier;
@@ -41,7 +41,7 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      if (player[p].timer < 31){
+      if (player[p].timer < 23){
         if (player[p].timer%2){
           drawVfx("firefoxtail",player[p].phys.posPrev,player[p].phys.face);
         }
@@ -64,7 +64,7 @@ export default {
           }
         }
       }
-      if (player[p].timer >= 31){
+      if (player[p].timer >= 23){
         if (player[p].phys.grounded){
           reduceByTraction(p);
         }
@@ -73,19 +73,19 @@ export default {
           airDrift(p,input);
         }
       }
-      else if (player[p].timer >= 6){
-        player[p].phys.cVel.y -= 0.1*Math.sin(player[p].phys.upbAngleMultiplier);
-        player[p].phys.cVel.x -= 0.1*Math.cos(player[p].phys.upbAngleMultiplier);
+      else if (player[p].timer >= 4){
+        player[p].phys.cVel.y -= 0.17*Math.sin(player[p].phys.upbAngleMultiplier);
+        player[p].phys.cVel.x -= 0.17*Math.cos(player[p].phys.upbAngleMultiplier);
       }
       else if (player[p].timer >= 1){
         player[p].phys.grounded = false;
-        player[p].phys.cVel.y = 3.8*Math.sin(player[p].phys.upbAngleMultiplier);
-        player[p].phys.cVel.x = 3.8*Math.cos(player[p].phys.upbAngleMultiplier);
+        player[p].phys.cVel.y = 4.2*Math.sin(player[p].phys.upbAngleMultiplier);
+        player[p].phys.cVel.x = 4.2*Math.cos(player[p].phys.upbAngleMultiplier);
       }
-      if (player[p].timer > 1 && player[p].timer < 31){
+      if (player[p].timer > 1 && player[p].timer < 23){
         player[p].hitboxes.frame++;
       }
-      else if (player[p].timer === 31){
+      else if (player[p].timer === 23){
         turnOffHitboxes(p);
         player[p].rotation = 0;
         player[p].rotationPoint = new Vec2D(0,0);
@@ -93,7 +93,7 @@ export default {
     }
   },
   interrupt : function(p,input){
-    if (player[p].timer > 50){
+    if (player[p].timer > 42){
       if (player[p].phys.grounded){
         WAIT.init(p,input);
       }
@@ -107,7 +107,7 @@ export default {
     }
   },
   land : function(p,input){
-    if (player[p].timer < 31){
+    if (player[p].timer < 23){
       // BOUNCE
       drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
       FIREFOXBOUNCE.init(p,input);

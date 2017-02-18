@@ -57,7 +57,7 @@ export default {
       if (player[p].timer === 20){
         turnOffHitboxes(p);
       }
-      if (player[p].timer === 25){
+      if (player[p].timer === 24){
         player[p].phys.autoCancel = true;
       }
     }
