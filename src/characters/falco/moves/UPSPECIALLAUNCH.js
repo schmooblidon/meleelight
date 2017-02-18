@@ -1,7 +1,7 @@
 
 import WAIT from "characters/shared/moves/WAIT";
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
-import FIREFOXBOUNCE from "characters/fox/moves/FIREFOXBOUNCE";
+import FIREFOXBOUNCE from "characters/falco/moves/FIREFOXBOUNCE";
 import {turnOffHitboxes, airDrift, fastfall, reduceByTraction} from "physics/actionStateShortcuts";
 import { player} from "main/main";
 import {sounds} from "main/sfx";

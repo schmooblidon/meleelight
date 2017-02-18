@@ -1,6 +1,6 @@
 
-import MOVES from "characters/fox/moves/index";
-import GRAB from "characters/fox/moves/GRAB";
+import MOVES from "characters/falco/moves/index";
+import GRAB from "characters/falco/moves/GRAB";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
 import DASH from "characters/shared/moves/DASH";
 import SMASHTURN from "characters/shared/moves/SMASHTURN";

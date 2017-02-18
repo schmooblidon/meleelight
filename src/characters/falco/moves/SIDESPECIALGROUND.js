@@ -1,5 +1,5 @@
 
-import SIDESPECIALAIR from "characters/fox/moves/SIDESPECIALAIR";
+import SIDESPECIALAIR from "characters/falco/moves/SIDESPECIALAIR";
 import WAIT from "characters/shared/moves/WAIT";
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import {articles} from "physics/article";

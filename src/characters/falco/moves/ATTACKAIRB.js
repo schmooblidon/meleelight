@@ -1,5 +1,5 @@
 
-import MOVES from "characters/fox/moves/index";
+import MOVES from "characters/falco/moves/index";
 import LANDING from "characters/shared/moves/LANDING";
 import LANDINGATTACKAIRB from "characters/shared/moves/LANDINGATTACKAIRB";
 import JUMPAERIALB from "characters/shared/moves/JUMPAERIALB";

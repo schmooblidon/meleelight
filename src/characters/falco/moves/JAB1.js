@@ -1,6 +1,6 @@
 
-import MOVES from "characters/fox/moves/index";
-import JAB2 from "characters/fox/moves/JAB2";
+import MOVES from "characters/falco/moves/index";
+import JAB2 from "characters/falco/moves/JAB2";
 import WAIT from "characters/shared/moves/WAIT";
 import WALK from "characters/shared/moves/WALK";
 import DASH from "characters/shared/moves/DASH";

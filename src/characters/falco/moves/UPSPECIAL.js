@@ -1,4 +1,4 @@
-import UPSPECIALCHARGE from "characters/fox/moves/UPSPECIALCHARGE";
+import UPSPECIALCHARGE from "characters/falco/moves/UPSPECIALCHARGE";
 
 export default {
   name : "UPSPECIAL",

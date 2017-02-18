@@ -1,5 +1,5 @@
 
-import MOVES from "characters/fox/moves/index";
+import MOVES from "characters/falco/moves/index";
 import WAIT from "characters/shared/moves/WAIT";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
 import DASH from "characters/shared/moves/DASH";

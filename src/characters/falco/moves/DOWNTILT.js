@@ -1,5 +1,5 @@
 
-import MOVES from "characters/fox/moves/index";
+import MOVES from "characters/falco/moves/index";
 import DASH from "characters/shared/moves/DASH";
 import SMASHTURN from "characters/shared/moves/SMASHTURN";
 import TILTTURN from "characters/shared/moves/TILTTURN";

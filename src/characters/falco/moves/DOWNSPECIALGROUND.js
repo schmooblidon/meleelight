@@ -1,5 +1,5 @@
 
-import DOWNSPECIALAIR from "characters/fox/moves/DOWNSPECIALAIR";
+import DOWNSPECIALAIR from "characters/falco/moves/DOWNSPECIALAIR";
 import KNEEBEND from "characters/shared/moves/KNEEBEND";
 import WAIT from "characters/shared/moves/WAIT";
 import FALL from "characters/shared/moves/FALL";

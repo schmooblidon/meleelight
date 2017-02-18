@@ -1,5 +1,5 @@
 
-import UPSPECIALLAUNCH from "characters/fox/moves/UPSPECIALLAUNCH";
+import UPSPECIALLAUNCH from "characters/falco/moves/UPSPECIALLAUNCH";
 import {reduceByTraction, turnOffHitboxes} from "physics/actionStateShortcuts";
 import { player} from "main/main";
 import {sounds} from "main/sfx";
