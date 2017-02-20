@@ -17,8 +17,8 @@ export default {
   init : function(p,input){
     player[p].actionState = "THROWBACK";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXBACK.init(player[p].phys.grabbing);
-    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXBACK;
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFALCOBACK.init(player[p].phys.grabbing);
+    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFALCOBACK;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;

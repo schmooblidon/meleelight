@@ -13,8 +13,8 @@ export default {
   init : function(p,input){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD.init(player[p].phys.grabbing,input);
-    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD;
+    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFALCOFORWARD.init(player[p].phys.grabbing,input);
+    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFALCOFORWARD;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;

@@ -238,7 +238,6 @@ function dealWithGround( i : number, ground : Surface, groundTypeAndIndex : [str
     player[i].phys.pos.x = maybeNextPosX;
     player[i].phys.ECBp = moveECB(player[i].phys.ECBp, new Vec2D (maybeNextPosX - player[i].phys.ECBp[0].x, 0));
   }
-
   if ( player[i].phys.ECBp[0].x < leftmostGroundPoint.x) {
     if (connected !== null && connected !== undefined) {
       maybeLeftGroundTypeAndIndex = groundTypeAndIndex[0] === "g" 

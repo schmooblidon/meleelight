@@ -98,7 +98,7 @@ export function renderPlayer(i) {
         }
     }
     // FOX BTHROW
-    else if (player[i].actionState == "THROWBACK" && characterSelections[i] == 2) {
+    else if (player[i].actionState == "THROWBACK" && (characterSelections[i] == 2 || characterSelections[i] == 3)) {
         if (frame >= 10) {
             face *= -1;
         }
