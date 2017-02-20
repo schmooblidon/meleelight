@@ -192,7 +192,7 @@ function fallOffGround( i : number, side : string
     }
     else {
       player[i].phys.cVel.x = 0;
-      player[i].phys.pos.x = groundEdgePosition.x;
+      player[i].phys.pos.x = groundEdgePosition.x + sign * additionalOffset;
       actionStates[characterSelections[i]].OTTOTTO.init(i,input);
     }
   }
@@ -204,7 +204,7 @@ function fallOffGround( i : number, side : string
   }
   else {
     player[i].phys.cVel.x = 0;
-    player[i].phys.pos.x = groundEdgePosition.x;
+    player[i].phys.pos.x = groundEdgePosition.x + sign * additionalOffset;
   }
   return [stillGrounded, backward];
 };
