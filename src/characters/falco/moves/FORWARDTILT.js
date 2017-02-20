@@ -22,15 +22,15 @@ export default {
     if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
       if (player[p].timer === 5){
-        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
         // needs 3
       }
-      if (player[p].timer > 5 && player[p].timer < 9){
+      if (player[p].timer > 5 && player[p].timer < 10){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 9){
+      if (player[p].timer === 10){
         turnOffHitboxes(p);
       }
     }

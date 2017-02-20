@@ -47,10 +47,10 @@ export default {
         player[p].phys.cVel.x = 0;
       }
       else if (player[p].timer < 15){
-        player[p].phys.cVel.x = 1.34*player[p].phys.face;
+        player[p].phys.cVel.x = 1.54*player[p].phys.face;
       }
       else if (player[p].timer < 31){
-        player[p].phys.cVel.x = 1.00*player[p].phys.face;
+        player[p].phys.cVel.x = 1.14*player[p].phys.face;
       }
       else {
         player[p].phys.cVel.x = 0;
@@ -63,7 +63,7 @@ export default {
         randomShout(characterSelections[p]);
         sounds.normalswing1.play();
       }
-      if (player[p].timer > 12 && player[p].timer < 23){
+      if (player[p].timer > 12 && player[p].timer < 22){
         player[p].hitboxes.frame++;
       }
       if (player[p].timer === 17){
@@ -72,7 +72,7 @@ export default {
         player[p].hitboxes.id[2] = player[p].charHitboxes.fsmash2.id2;
         player[p].hitboxes.frame = 0;
       }
-      if (player[p].timer === 23){
+      if (player[p].timer === 22){
         turnOffHitboxes(p);
       }
     }

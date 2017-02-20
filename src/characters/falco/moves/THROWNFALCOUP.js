@@ -1,15 +1,14 @@
 import {Vec2D} from "main/util/Vec2D";
 import {player} from "main/main";
 export default {
-  name : "THROWNMARTHDOWN",
+  name : "THROWNFALCOUP",
   canEdgeCancel : false,
-  reverseModel : true,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-9.80,4.72],[-11.74,5.40],[-13.05,5.87],[-13.10,5.88],[-13.10,5.88],[-13.17,5.77],[-13.61,4.69],[-13.71,3.06],[-13.11,1.25],[-11.91,-1.00],[-9.02,-4.61],[-9.02,-4.61]],
+  offset : [[-7.53,-0.30],[-6.79,0.33],[-6.23,0.46],[-5.96,0.16],[-3.54,17.01],[-3.54,17.01]],
   init : function(p,input){
-    player[p].actionState = "THROWNMARTHDOWN";
+    player[p].actionState = "THROWNFALCOUP";
     if (player[p].phys.grabbedBy < p){
       player[p].timer = -1;
     }
@@ -17,7 +16,6 @@ export default {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    player[p].phys.face *= -1;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
     this.main(p,input);
   },
@@ -25,7 +23,7 @@ export default {
     player[p].timer++;
     if (!this.interrupt(p,input)){
       if (player[p].timer > 0){
-        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+this.offset[player[p].timer-1][0]*player[p].phys.face*-1,player[player[p].phys.grabbedBy].phys.pos.y+this.offset[player[p].timer-1][1]);
+        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+this.offset[player[p].timer-1][0]*player[p].phys.face,player[player[p].phys.grabbedBy].phys.pos.y+this.offset[player[p].timer-1][1]);
       }
     }
   },

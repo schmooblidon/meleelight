@@ -34,7 +34,9 @@ export default {
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
-
+      if (prevFrame < 22 && player[p].timer >= 22){
+        sounds.foxlasercock.play();
+      }
       if (prevFrame < 23 && player[p].timer >= 23){
         articles.LASER.init(p,1,12,Math.PI*275/180,false);
         sounds.foxlaserfire.play();

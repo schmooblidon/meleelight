@@ -35,7 +35,7 @@ export default {
         player[p].phys.cVel.x = 0;
       }
       else if (player[p].timer === 2){
-        player[p].phys.cVel.x = 3.36*player[p].phys.face;
+        player[p].phys.cVel.x = 3.85*player[p].phys.face;
       }
       else if (player[p].timer === 4){
         player[p].phys.cVel.x = 0;
@@ -57,7 +57,7 @@ export default {
     }
   },
   interrupt : function(p,input){
-    if (player[p].timer > 5 && player[p].phys.jabCombo){
+    if (player[p].timer > 6 && player[p].phys.jabCombo){
       JAB3.init(p,input);
       return true;
     }
@@ -65,7 +65,7 @@ export default {
       WAIT.init(p,input);
       return true;
     }
-    else if (player[p].timer > 16){
+    else if (player[p].timer > 18){
       const b = checkForSpecials(p,input);
       const t = checkForTilts(p,input);
       const s = checkForSmashes(p,input);

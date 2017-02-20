@@ -7,7 +7,7 @@ export default {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-10.52,-3.27],[-9.84,-3.27],[-9.13,-3.27],[-8.70,-3.27],[-8.60,-3.27],[-8.61,-3.27],[-8.67,-3.27],[-8.70,-3.27],[-9.78,-3.27],[-9.78,0.01]],
+  offset : [[-10.94,-1.72],[-10.27,-1.72],[-9.55,-1.72],[-9.13,-1.72],[-9.03,-1.72],[-9.04,-1.72],[-9.09,-1.72],[-9.13,-1.72],[-10.20,-1.72],[-10.20,-1.72]],
   init : function(p,input){
     player[p].actionState = "THROWNPUFFFORWARD";
     if (player[p].phys.grabbedBy < p){

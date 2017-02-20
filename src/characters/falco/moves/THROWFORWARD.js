@@ -9,7 +9,7 @@ export default {
   name : "THROWFORWARD",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  setVelocities : [-0.08,-0.14,-0.03,0.24,0.68,0.99,1.02,0.78,0.57,0.57,0.57,0.57,0.56,0.56,0.55,0.54,0.53,0.52,0.50,0.49,0.47,0.45,0.43,0.41,0.39,0.36,0,0,0,0,0,0,0],
+  setVelocities : [-0.09,-0.16,-0.03,0.28,0.78,1.13,1.17,0.89,0.65,0.65,0.65,0.65,0.64,0.64,0.63,0.62,0.61,0.59,0.58,0.56,0.54,0.52,0.49,0.47,0.44,0.41,0,0,0,0,0,0,0],
   init : function(p,input){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;

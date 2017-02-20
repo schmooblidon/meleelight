@@ -7,7 +7,7 @@ export default {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-10.07,4.25],[-10.75,3.96],[-11.43,3.40],[-11.27,3.38],[-10.92,3.48],[-10.61,3.59],[-10.51,3.63],[-13.02,6.00],[-5.68,16.09],[-5.68,16.09]],
+  offset : [[-9.97,4.26],[-10.65,4.03],[-11.39,3.44],[-11.33,3.37],[-11.04,3.44],[-10.71,3.55],[-10.52,3.63],[-10.51,3.63],[-11.89,10.10],[-11.89,10.10]],
   init : function(p,input){
     player[p].actionState = "THROWNMARTHUP";
     if (player[p].phys.grabbedBy < p){

@@ -7,7 +7,7 @@ export default {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-6.96,4.12],[-3.7,3.89],[-0.79,3.40],[0.35,0.47],[0.80,-0.44],[0.80,-0.44]],
+  offset : [[-7.14,4.15],[-4.22,3.89],[-0.94,3.62],[-0.02,1.26],[0.78,-0.40],[0.78,-0.40]],
   init : function(p,input){
     player[p].actionState = "THROWNMARTHBACK";
     if (player[p].phys.grabbedBy < p){

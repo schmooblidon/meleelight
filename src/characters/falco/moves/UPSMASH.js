@@ -52,12 +52,12 @@ export default {
       if (player[p].timer > 7 && player[p].timer < 18){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 10){
+      if (player[p].timer === 11){
         player[p].hitboxes.id[0] = player[p].charHitboxes.upsmash2.id0;
         player[p].hitboxes.id[1] = player[p].charHitboxes.upsmash2.id1;
         player[p].hitboxes.frame = 0;
       }
-      if (player[p].timer === 18){
+      if (player[p].timer === 16){
         turnOffHitboxes(p);
       }
     }

@@ -6,7 +6,7 @@ export default {
   canGrabLedge : [false,false],
   canBeGrabbed : false,
   ignoreCollision : true,
-  offset : [[-6.51,-1.28],[-5.85,-0.71],[-5.36,-0.70],[-5.17,1.05],[-3.03,9.59],[-3.03,9.59]],
+  offset : [[-6.57,-1.31],[-5.92,-0.77],[-5.43,-0.66],[-5.19,-0.92],[-4.25,7.40],[-0.57,13.12],[-0.57,13.12]],
   init : function(p,input){
     player[p].actionState = "THROWNFOXUP";
     if (player[p].phys.grabbedBy < p){

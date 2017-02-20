@@ -28,26 +28,24 @@ export default {
     const prevFrame = player[p].timer;
     player[p].timer+=7/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
-      if (prevFrame < 13 && player[p].timer >= 13){
+      if (prevFrame < 14 && player[p].timer >= 14){
         sounds.foxlasercock.play();
       }
-      else if (prevFrame < 16 && player[p].timer >= 16){
-        articles.LASER.init(p,1.6,18,Math.PI*85/180,false);
-        // rotate 85
+      if (prevFrame < 18 && player[p].timer >= 18){
+        articles.LASER.init(p,0,18,Math.PI/2,false);
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(1.6*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI*85/180);
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI/2);
       }
-      else if (prevFrame < 18 && player[p].timer >= 18){
-        articles.LASER.init(p,0.5,18,Math.PI/2,false);
+      else if (prevFrame < 20 && player[p].timer >= 20){
+        articles.LASER.init(p,0,18,Math.PI/2,false);
         // rotate 90
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0.5*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI/2);
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI/2);
       }
-      else if (prevFrame < 21 && player[p].timer >= 21){
-        articles.LASER.init(p,0,18,Math.PI*87/180,false);
-        // rotate 87
+      else if (prevFrame < 24 && player[p].timer >= 24){
+        articles.LASER.init(p,0,18,Math.PI/2,false);
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI*87/180);
+        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI/2);
       }
       else if (prevFrame < 33 && player[p].timer >= 33){
         sounds.foxlaserholster.play();
@@ -60,7 +58,7 @@ export default {
     }
   },
   interrupt : function(p,input){
-    if (player[p].timer > 33){
+    if (player[p].timer > 38){
       player[p].phys.grabbing = -1;
       WAIT.init(p,input);
       return true;
