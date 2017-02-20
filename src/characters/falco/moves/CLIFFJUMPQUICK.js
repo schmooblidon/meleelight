@@ -7,7 +7,7 @@ import {activeStage} from "stages/activeStage";
 
 export default {
   name : "CLIFFJUMPQUICK",
-  offset : [[-70.8428,-14.38776],[-71.49446,-14.32052],[-72.19153,-14.1652],[-72.85054,-13.88868],[-73.38803,-13.45787],[-73.72054,-12.83965],[-73.76461,-12.00094],[-73.50131,-10.89611],[-73.00593,-9.5458],[-72.33633,-8.01628],[-71.55035,-6.37383],[-70.70587,-4.6847],[-69.86075,-3.01518],[-69.07284,-1.43152]],
+  offset : [[-71.20,-16.23],[-71.95,-16.05],[-72.74,-15.89],[-72.50,-15.66],[-74.12,-15.28],[-74.50,-14.67],[-74.55,-13.75],[-74.25,-12.49],[-73.68,-10.94],[-72.91,-9.19],[-72.01,-7.30],[-71.04,-5.37],[-70.07,-3.45],[-69.17,-1.64]],
   canBeGrabbed : true,
   init : function(p,input){
     player[p].actionState = "CLIFFJUMPQUICK";
@@ -25,7 +25,7 @@ export default {
         player[p].phys.pos = new Vec2D(x+(this.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+this.offset[player[p].timer-1][1]);
       }
       if (player[p].timer === 15){
-        player[p].phys.cVel = new Vec2D(1.1*player[p].phys.face,4);
+        player[p].phys.cVel = new Vec2D(1*player[p].phys.face,3.9);
       }
       if (player[p].timer > 15){
         airDrift(p,input);
