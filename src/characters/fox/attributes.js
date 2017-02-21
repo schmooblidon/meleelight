@@ -58,6 +58,8 @@ setCharAttributes(CHARIDS.FOX_ID, {
   shieldBreakVel : 2.5,
   multiJump : false,
   ecbScale : 2.5,
+  walkAnimSpeed : 1,
+  runAnimSpeed : 1
 });
 
 // start, length

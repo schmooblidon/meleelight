@@ -32,7 +32,7 @@ export default {
         player[p].phys.cVel.x = tempMax;
       }
 
-      const time = (player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.dMaxV;
+      const time = ((player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.dMaxV) * player[p].charAttributes.runAnimSpeed;
       if (time > 0){
         player[p].timer += time;
       }

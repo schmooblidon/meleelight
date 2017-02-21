@@ -62,7 +62,9 @@ import {createHitbox} from "../../main/util/createHitBox";
   wallJumpVelY : 2.4,
   shieldBreakVel : 2.5,
   multiJump : false,
-  ecbScale : 1.8
+  ecbScale : 1.8,
+  walkAnimSpeed : 1,
+  runAnimSpeed : 1
 });
 
 // start, length
