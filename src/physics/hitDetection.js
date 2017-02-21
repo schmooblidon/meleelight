@@ -175,13 +175,13 @@ export function interpolatedHitHitCollision(i,p,j,k) {
   const r = player[p].hitboxes.id[j].size;
   const s = player[i].hitboxes.id[k].size;
 
-  const collision = sweepCircleVsSweepCircle ( h1p, r, h2p, r, hi1, s, h2i, s );
+  const collision = sweepCircleVsSweepCircle ( h1p, r, h2p, r, h1i, s, h2i, s );
 
   if (collision === null) {
-    return false;
+    return [false, null];
   }
   else {
-    return true;
+    return [true, collision];
   }
 
 }
