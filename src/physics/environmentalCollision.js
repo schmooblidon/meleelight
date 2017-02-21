@@ -371,7 +371,7 @@ type CollisionDatum = null | PointSweepResult | EdgeSweepResult
 // the sweeping parameter s corresponds to the location of this first collision
 // terminology in the comments: a wall is a segment with an inside and an outside (could be a ground or ceiling )
 // which is contained in an infinite line, extending both ways, which also has an inside and an outside
-function findCollision ( ecb1 : ECB, ecbp : ECB, labelledSurface : LabelledSurface ) : CollisionDatum {
+export function findCollision ( ecb1 : ECB, ecbp : ECB, labelledSurface : LabelledSurface ) : CollisionDatum {
 
 // STANDING ASSUMPTIONS
 // the ECB can only collide a ground/platform surface on its bottom point (or a bottom edge)

@@ -3,6 +3,10 @@ import {player, fg2, playerType, characterSelections, screenShake, percentShake}
 import {rotateVector} from "main/render";
 import {sounds} from "main/sfx";
 import {knockbackSounds, segmentSegmentCollision, getKnockback, getHitstun} from "physics/hitDetection";
+import {findCollision} from "./environmentalCollision";
+import {moveECB} from "../main/util/ecbTransform";
+import {pickSmallestSweep} from "../main/util/findSmallestWithin";
+import {subtract} from "../main/linAlg";
 import {actionStates} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
@@ -33,14 +37,14 @@ export const articles = {
                 timer: 0,
                 vel: new Vec2D((isFox ? 7 : 5) * Math.cos(rotate) * player[p].phys.face, (isFox ? 7 : 5) * Math.sin(rotate)),
                 pos: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
-                posPrev1: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
-                posPrev2: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
-                posPrev3: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
-                posPrev: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
+                posPrev1: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
+                posPrev2: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
+                posPrev3: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
+                posPrev: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
                 hb: new createHitbox(new Vec2D(0, 0), 1.172, 3, 361, isFox ? 0 : partOfThrow ? 0 : 100, 0, isFox ? 0 : partOfThrow ? 0 : 5, 0, 0, 1, 1),
-                ecb: [new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y - 10), new Vec2D(
+                ecb: [new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y - 0.01), new Vec2D(
                     player[p].phys.pos.x + (x * player[p].phys.face) + 10, player[p].phys.pos.y + y), new Vec2D(player[
-                        p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y + 10), new Vec2D(player[p].phys
+                        p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y + 0.01), new Vec2D(player[p].phys
                         .pos.x + (x * player[p].phys.face) - 10, player[p].phys.pos.y + y)]
             };
             aArticles.push(["LASER", p, obj]);
@@ -444,19 +448,61 @@ export function executeArticleHits (input){
 }
 
 export function wallDetection (i){
-    for (var j = 0; j < activeStage.wallL.length; j++) {
-        if (aArticles[i][2].ecb[1].y < activeStage.wallL[j][0].y && aArticles[i][2].ecb[1].y > activeStage.wallL[j][1].y && aArticles[
-                i][2].ecb[1].x >= activeStage.wallL[j][1].x && aArticles[i][2].ecb[1].x < activeStage.wallL[j][1].x) {
-            return true;
-        }
+  const article = aArticles[i][2];
+  const ecbp = article.ecb;
+  let ecb1;
+  if (article.timer < 2) {
+    const focus = article.posPrev;
+    const offset = 0.0001;
+    ecb1 = [ new Vec2D ( focus.x         , focus.y - offset ) 
+           , new Vec2D ( focus.x + offset, focus.y          )
+           , new Vec2D ( focus.x         , focus.y + offset )
+           , new Vec2D ( focus.x - offset, focus.y          )
+           ];
+  }
+  else {
+    ecb1 = moveECB(ecbp, subtract(article.posPrev,article.pos));
+  }
+  let collisions = [];
+  let thisCollision = null;
+  for (var j = 0; j < activeStage.wallL.length; j++) {
+    thisCollision = findCollision (ecb1, ecbp, [activeStage.wallL[j], ["l", j]] );
+    if (thisCollision !== null ) {
+      collisions.push(thisCollision);
     }
-    for (var j = 0; j < activeStage.wallR.length; j++) {
-        if (aArticles[i][2].ecb[3].y < activeStage.wallR[j][0].y && aArticles[i][2].ecb[3].y > activeStage.wallR[j][1].y && aArticles[
-                i][2].ecb[3].x <= activeStage.wallR[j][1].x && aArticles[i][2].ecb[3].x > activeStage.wallR[j][1].x) {
-            return true;
-        }
+  }
+  for (var j = 0; j < activeStage.wallR.length; j++) {
+    thisCollision = findCollision (ecb1, ecbp, [activeStage.wallR[j], ["r", j]] );
+    if (thisCollision !== null ) {
+      collisions.push(thisCollision);
     }
-    return false;
+  }
+  for (var j = 0; j < activeStage.ceiling.length; j++) {
+    thisCollision = findCollision (ecb1, ecbp, [activeStage.ceiling[j], ["c", j]] );
+    if (thisCollision !== null ) {
+      collisions.push(thisCollision);
+    }
+  }
+  for (var j = 0; j < activeStage.ground.length; j++) {
+    thisCollision = findCollision (ecb1, ecbp, [activeStage.ground[j], ["g", j]] );
+    if (thisCollision !== null ) {
+      collisions.push(thisCollision);;
+    }
+  }
+  for (var j = 0; j < activeStage.platform.length; j++) {
+    thisCollision = findCollision (ecb1, ecbp, [activeStage.platform[j], ["p", j]] );
+    if (thisCollision !== null ) {
+      collisions.push(thisCollision);
+    }
+  }
+  let firstCollision = pickSmallestSweep(collisions);
+  if (firstCollision !== null) {
+    return firstCollision.sweep;
+  }
+  else {
+    return null;
+  }
+
 }
 
 export function articleHitCollision (a,v,k){
