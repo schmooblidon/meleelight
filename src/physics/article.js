@@ -3,6 +3,9 @@ import {player, fg2, playerType, characterSelections, screenShake, percentShake}
 import {rotateVector} from "main/render";
 import {sounds} from "main/sfx";
 import {knockbackSounds, segmentSegmentCollision, getKnockback, getHitstun} from "physics/hitDetection";
+import {findCollision} from "./environmentalCollision";
+import {moveECB} from "../main/util/ecbTransform";
+import {subtract} from "../main/linAlg";
 import {actionStates} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {activeStage} from "stages/activeStage";
@@ -443,19 +446,35 @@ export function executeArticleHits (input){
 }
 
 export function wallDetection (i){
-    for (var j = 0; j < activeStage.wallL.length; j++) {
-        if (aArticles[i][2].ecb[1].y < activeStage.wallL[j][0].y && aArticles[i][2].ecb[1].y > activeStage.wallL[j][1].y && aArticles[
-                i][2].ecb[1].x >= activeStage.wallL[j][1].x && aArticles[i][2].ecb[1].x < activeStage.wallL[j][1].x) {
-            return true;
-        }
+  const article = aArticles[i][2];
+  const ecbp = article.ecb;
+  const ecb1 = moveECB(ecbp, subtract(article.posPrev,article.pos));
+  for (var j = 0; j < activeStage.wallL.length; j++) {
+    if (findCollision (ecb1, ecbp, [activeStage.wallL[j], ["l", j]] )) {
+      return true;
     }
-    for (var j = 0; j < activeStage.wallR.length; j++) {
-        if (aArticles[i][2].ecb[3].y < activeStage.wallR[j][0].y && aArticles[i][2].ecb[3].y > activeStage.wallR[j][1].y && aArticles[
-                i][2].ecb[3].x <= activeStage.wallR[j][1].x && aArticles[i][2].ecb[3].x > activeStage.wallR[j][1].x) {
-            return true;
-        }
+  }
+  for (var j = 0; j < activeStage.wallR.length; j++) {
+    if (findCollision (ecb1, ecbp, [activeStage.wallR[j], ["r", j]] )) {
+      return true;
     }
-    return false;
+  }
+  for (var j = 0; j < activeStage.ceiling.length; j++) {
+    if (findCollision (ecb1, ecbp, [activeStage.ceiling[j], ["c", j]] )) {
+      return true;
+    }
+  }
+  for (var j = 0; j < activeStage.ground.length; j++) {
+    if (findCollision (ecb1, ecbp, [activeStage.ground[j], ["g", j]] )) {
+      return true;
+    }
+  }
+  for (var j = 0; j < activeStage.platform.length; j++) {
+    if (findCollision (ecb1, ecbp, [activeStage.platform[j], ["p", j]] )) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export function articleHitCollision (a,v,k){
