@@ -130,7 +130,7 @@ function dealWithPlatformCollision( i : number, alreadyGrounded : boolean
   const platRight = extremePoint(platform,"r");
   const platNormal = outwardsWallNormal(platLeft, platRight, "g");
 
-  if (player[i].hit.hitlag > 0 || alreadyGrounded) {
+  if (player[i].hit.hitlag > 0 || alreadyGrounded || player[i].phys.grabbedBy !== -1) {
     updatePosition(i, newPosition);
   }
   else {
@@ -154,7 +154,7 @@ function dealWithGroundCollision( i : number, alreadyGrounded : boolean
     // apply damage
     dealWithDamagingStageCollision(i, groundNormal, false, 0, damageType);
   } else {
-    if (player[i].hit.hitlag > 0 || alreadyGrounded) {
+    if (player[i].hit.hitlag > 0 || alreadyGrounded || player[i].phys.grabbedBy !== -1) {
       updatePosition(i, newPosition);
     }
     else {
@@ -1075,7 +1075,8 @@ export function physics (i : number, input : any) : void {
   }
 
 
-  if (!actionStates[characterSelections[i]][player[i].actionState].ignoreCollision) {
+  if (!actionStates[characterSelections[i]][player[i].actionState].ignoreCollision || player[i].phys.grabbedBy !== -1) { 
+  // second disjunct temporary, until throws no longer set "ignoreCollision" to true
 
     let notTouchingWalls = [true, true];
     let stillGrounded = true;
@@ -1083,50 +1084,52 @@ export function physics (i : number, input : any) : void {
 
     [stillGrounded, backward, notTouchingWalls] = findAndResolveCollisions(i, input, backward, notTouchingWalls, ecbOffset);
 
+    if (player[i].phys.grabbedBy === -1) {
 
-    if (notTouchingWalls[0] && notTouchingWalls[1] && player[i].phys.canWallJump) {
-      player[i].phys.wallJumpTimer = 254;
-    }
-    if (!notTouchingWalls[0] || !notTouchingWalls[1]) {
-      if (player[i].phys.grounded) {
-        const s = player[i].phys.onSurface[1];
-        const surface = player[i].phys.onSurface[0] ? activeStage.platform[s] : activeStage.ground[s];
-        if (player[i].phys.pos.x < surface[0].x - 0.1 || player[i].phys.pos.x > surface[1].x + 0.1) {
-          stillGrounded = false;
+      if (notTouchingWalls[0] && notTouchingWalls[1] && player[i].phys.canWallJump) {
+        player[i].phys.wallJumpTimer = 254;
+      }
+      if (!notTouchingWalls[0] || !notTouchingWalls[1]) {
+        if (player[i].phys.grounded) {
+          const s = player[i].phys.onSurface[1];
+          const surface = player[i].phys.onSurface[0] ? activeStage.platform[s] : activeStage.ground[s];
+          if (player[i].phys.pos.x < surface[0].x - 0.1 || player[i].phys.pos.x > surface[1].x + 0.1) {
+            stillGrounded = false;
+          }
         }
       }
-    }
-    if (!stillGrounded) {
-      player[i].phys.grounded = false;
-      if (typeof actionStates[characterSelections[i]][player[i].actionState].airborneState !== 'undefined') {
-        player[i].actionState = actionStates[characterSelections[i]][player[i].actionState].airborneState;
-      } else {
-        if (actionStates[characterSelections[i]][player[i].actionState].missfoot && backward) {
-          actionStates[characterSelections[i]].MISSFOOT.init(i,input);
+      if (!stillGrounded) {
+        player[i].phys.grounded = false;
+        if (typeof actionStates[characterSelections[i]][player[i].actionState].airborneState !== 'undefined') {
+          player[i].actionState = actionStates[characterSelections[i]][player[i].actionState].airborneState;
         } else {
-          actionStates[characterSelections[i]].FALL.init(i,input);
+          if (actionStates[characterSelections[i]][player[i].actionState].missfoot && backward) {
+            actionStates[characterSelections[i]].MISSFOOT.init(i,input);
+          } else {
+            actionStates[characterSelections[i]].FALL.init(i,input);
+          }
+          if (Math.abs(player[i].phys.cVel.x) > player[i].charAttributes.aerialHmaxV) {
+            player[i].phys.cVel.x = Math.sign(player[i].phys.cVel.x) * player[i].charAttributes.aerialHmaxV;
+          }
         }
-        if (Math.abs(player[i].phys.cVel.x) > player[i].charAttributes.aerialHmaxV) {
-          player[i].phys.cVel.x = Math.sign(player[i].phys.cVel.x) * player[i].charAttributes.aerialHmaxV;
-        }
+        player[i].phys.shielding = false;
       }
-      player[i].phys.shielding = false;
-    }
-    if (player[i].phys.grounded) {
-      for (let j = 0; j < 4; j++) {
-        if (playerType[j] > -1) {
-          if (i !== j) {
-            if (player[j].phys.grounded &&
-                player[j].phys.onSurface[0] === player[i].phys.onSurface[0] &&
-                player[j].phys.onSurface[1] === player[i].phys.onSurface[1]) {
-
-              if (player[i].phys.grabbing !== j && player[i].phys.grabbedBy !== j) {
-                // TODO: this pushing code needs to account for players on slanted surfaces
-                const diff = Math.abs(player[i].phys.pos.x - player[j].phys.pos.x);
-                if (diff < 6.5 && diff > 0) {
-                  player[j].phys.pos.x += Math.sign(player[i].phys.pos.x - player[j].phys.pos.x) * -0.3;
-                } else if (diff === 0 && Math.abs(player[i].phys.cVel.x) > Math.abs(player[j].phys.cVel.x)) {
-                  player[j].phys.pos.x += Math.sign(player[i].phys.cVel.x) * -0.3;
+      if (player[i].phys.grounded) {
+        for (let j = 0; j < 4; j++) {
+          if (playerType[j] > -1) {
+            if (i !== j) {
+              if (player[j].phys.grounded &&
+                  player[j].phys.onSurface[0] === player[i].phys.onSurface[0] &&
+                  player[j].phys.onSurface[1] === player[i].phys.onSurface[1]) {
+  
+                if (player[i].phys.grabbing !== j && player[i].phys.grabbedBy !== j) {
+                  // TODO: this pushing code needs to account for players on slanted surfaces
+                  const diff = Math.abs(player[i].phys.pos.x - player[j].phys.pos.x);
+                  if (diff < 6.5 && diff > 0) {
+                    player[j].phys.pos.x += Math.sign(player[i].phys.pos.x - player[j].phys.pos.x) * -0.3;
+                  } else if (diff === 0 && Math.abs(player[i].phys.cVel.x) > Math.abs(player[j].phys.cVel.x)) {
+                    player[j].phys.pos.x += Math.sign(player[i].phys.cVel.x) * -0.3;
+                  }
                 }
               }
             }
@@ -1134,7 +1137,6 @@ export function physics (i : number, input : any) : void {
         }
       }
     }
-
     
   }
 
