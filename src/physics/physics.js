@@ -1050,18 +1050,13 @@ export function physics (i : number, input : any) : void {
   /* global ecb */
   declare var ecb : any;
   const ecbOffset = actionStates[characterSelections[i]][player[i].actionState].dead ? [0, 0, 0, 0] : ecb[characterSelections[i]][player[i].actionState][frame - 1];
-  if (player[i].phys.grounded || player[i].phys.airborneTimer < 10) {
-    ecbOffset[0] = 0;
-  }
-  ecbOffset[1] = Math.max(1, ecbOffset[1]);
 
   player[i].phys.ECBp = [
-    new Vec2D(player[i].phys.pos.x               , player[i].phys.pos.y + ecbOffset[0] ),
-    new Vec2D(player[i].phys.pos.x + ecbOffset[1], player[i].phys.pos.y + ecbOffset[2] ),
+    new Vec2D(player[i].phys.pos.x               , player[i].phys.pos.y + ((player[i].phys.grounded || player[i].phys.airborneTimer < 10) ? 0 : ecbOffset[0]) ),
+    new Vec2D(player[i].phys.pos.x + Math.max(1, ecbOffset[1]), player[i].phys.pos.y + ecbOffset[2] ),
     new Vec2D(player[i].phys.pos.x               , player[i].phys.pos.y + ecbOffset[3] ),
     new Vec2D(player[i].phys.pos.x - ecbOffset[1], player[i].phys.pos.y + ecbOffset[2] )
   ];
-
   
   if (ecbSquashData[i] !== null && ecbSquashData[i].factor < 1) {
     if (ecbSquashData[i].factor * 2*ecbOffset[1] < smallestECBWidth) {
@@ -1147,15 +1142,11 @@ export function physics (i : number, input : any) : void {
 
   else { // player ignoring collisions
     player[i].phys.ECB1 = [
-      new Vec2D( player[i].phys.pos.x               , player[i].phys.pos.y + ecbOffset[0] ),
+      new Vec2D( player[i].phys.pos.x               , player[i].phys.pos.y + ((player[i].phys.grounded || player[i].phys.airborneTimer < 10) ? 0 : ecbOffset[0]) ),
       new Vec2D( player[i].phys.pos.x + ecbOffset[1], player[i].phys.pos.y + ecbOffset[2] ),
       new Vec2D( player[i].phys.pos.x               , player[i].phys.pos.y + ecbOffset[3] ),
       new Vec2D( player[i].phys.pos.x - ecbOffset[1], player[i].phys.pos.y + ecbOffset[2] )
     ];
-  }
-
-  if (player[i].phys.grounded || player[i].phys.airborneTimer < 10) {
-    player[i].phys.ECB1[0].y = player[i].phys.pos.y;
   }
 
   if (player[i].phys.shielding === false) {
