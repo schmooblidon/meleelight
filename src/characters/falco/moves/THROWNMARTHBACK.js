@@ -6,7 +6,6 @@ export default {
   reverseModel : true,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  ignoreCollision : true,
   offset : [[-7.14,4.15],[-4.22,3.89],[-0.94,3.62],[-0.02,1.26],[0.78,-0.40],[0.78,-0.40]],
   init : function(p,input){
     player[p].actionState = "THROWNMARTHBACK";

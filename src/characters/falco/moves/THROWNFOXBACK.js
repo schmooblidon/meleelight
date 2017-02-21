@@ -6,7 +6,6 @@ export default {
   reverseModel : true,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  ignoreCollision : true,
   offset : [[-8.13,-1.56],[-7.21,-1.75],[-4.44,-2.50],[-1.22,-3.63],[1.54,-4.39],[5.23,-0.37],[7.18,3.13],[7.18,3.13]],
   init : function(p,input){
     player[p].actionState = "THROWNFOXBACK";

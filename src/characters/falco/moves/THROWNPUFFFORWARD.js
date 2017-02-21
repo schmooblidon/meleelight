@@ -6,7 +6,6 @@ export default {
   canEdgeCancel : false,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  ignoreCollision : true,
   offset : [[-10.94,-1.72],[-10.27,-1.72],[-9.55,-1.72],[-9.13,-1.72],[-9.03,-1.72],[-9.04,-1.72],[-9.09,-1.72],[-9.13,-1.72],[-10.20,-1.72],[-10.20,-1.72]],
   init : function(p,input){
     player[p].actionState = "THROWNPUFFFORWARD";

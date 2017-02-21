@@ -5,7 +5,6 @@ export default {
   canEdgeCancel : false,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  ignoreCollision : true,
   offset : [[-11.08,3.81],[-10.84,5.65],[-10.05,6.53],[-9.79,6.65],[-9.70,6.58],[-9.90,6.41],[-11.24,6.09],[-13.48,4.96],[-11.16,1.54],[-8.89,-3.65],[-8.89,-3.65]],
   init : function(p,input){
     player[p].actionState = "THROWNMARTHFORWARD";
