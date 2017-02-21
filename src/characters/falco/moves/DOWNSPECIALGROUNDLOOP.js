@@ -33,8 +33,9 @@ export default {
       if (player[p].phys.onSurface[0] === 1){
         if (input[p][0].lsY < -0.66 && input[p][6].lsY >= 0){
           player[p].phys.grounded = false;
-          player[p].phys.abovePlatforms[player[p].phys.onSurface[1]] = false;
+          player[p].phys.passing = true;
           player[p].phys.cVel.y = -0.5;
+          player[p].actionState = "DOWNSPECIALAIRLOOP";
         }
       }
       reduceByTraction(p);

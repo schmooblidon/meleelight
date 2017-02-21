@@ -37,6 +37,7 @@ export default {
           player[p].phys.grounded = false;
           player[p].phys.passing = true;
           player[p].phys.cVel.y = -0.5;
+          player[p].actionState = "DOWNSPECIALAIRSTART";
         }
       }
       reduceByTraction(p);

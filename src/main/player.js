@@ -36,7 +36,6 @@ export function physicsObject(pos, face) {
   this.ECBp = [new Vec2D(0, 0), new Vec2D(3, 7), new Vec2D(0, 14), new Vec2D(-3, 7)];
   this.ECB1 = [new Vec2D(0, 0), new Vec2D(3, 7), new Vec2D(0, 14), new Vec2D(-3, 7)];
   this.ECB2 = [new Vec2D(0, 0), new Vec2D(3, 7), new Vec2D(0, 14), new Vec2D(-3, 7)];
-  this.abovePlatforms = [false, false, false];
   this.onSurface = [0, 0];
   this.doubleJumped = false;
   this.shieldHP = 60;
