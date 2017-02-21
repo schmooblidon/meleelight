@@ -69,6 +69,12 @@ export function sweepCircleVsAABB ( p1 : Vec2D, r1 : number, p2 : Vec2D, r2 : nu
   if (distanceToPolygon(p1,[bl,br,tr,tl]) <= r1) {
     return p1;
   }
+  else if (   (p1.x + r1 < bl.x && p2.x + r2 < bl.x)
+           || (p1.x - r1 > tr.x && p2.x - r2 > tr.x)
+           || (p1.y + r1 < bl.y && p2.y + r2 < bl.y)
+           || (p1.y - r1 > tr.y && p2.y - r2 > tr.y) ) {
+    return null;
+  }
   else {
     let checks;
     if (p1.x <= bl.x) {
