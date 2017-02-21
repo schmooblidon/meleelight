@@ -40,12 +40,12 @@ export const articles = {
                 posPrev1: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
                 posPrev2: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
                 posPrev3: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
-                posPrev: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
+                posPrev : new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + y),
                 hb: new createHitbox(new Vec2D(0, 0), 1.172, 3, 361, isFox ? 0 : partOfThrow ? 0 : 100, 0, isFox ? 0 : partOfThrow ? 0 : 5, 0, 0, 1, 1),
-                ecb: [new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y - 0.01), new Vec2D(
-                    player[p].phys.pos.x + (x * player[p].phys.face) + 10, player[p].phys.pos.y + y), new Vec2D(player[
-                        p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y + 0.01), new Vec2D(player[p].phys
-                        .pos.x + (x * player[p].phys.face) - 10, player[p].phys.pos.y + y)]
+                ecb: [ new Vec2D( player[p].phys.pos.x + (x * player[p].phys.face)     , player[p].phys.pos.y + y - 0.01 )
+                     , new Vec2D( player[p].phys.pos.x + (x * player[p].phys.face) + 10, player[p].phys.pos.y + y        )
+                     , new Vec2D( player[p].phys.pos.x + (x * player[p].phys.face)     , player[p].phys.pos.y + y + 0.01 )
+                     , new Vec2D( player[p].phys.pos.x + (x * player[p].phys.face) - 10, player[p].phys.pos.y + y        )]
             };
             aArticles.push(["LASER", p, obj]);
             articles.LASER.main(aArticles.length - 1);
