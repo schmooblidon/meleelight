@@ -1075,7 +1075,7 @@ export function physics (i : number, input : any) : void {
   }
 
 
-  if (!actionStates[characterSelections[i]][player[i].actionState].ignoreCollision || player[i].phys.grabbedBy !== -1) { 
+  if (!actionStates[characterSelections[i]][player[i].actionState].ignoreCollision) { 
   // second disjunct temporary, until throws no longer set "ignoreCollision" to true
 
     let notTouchingWalls = [true, true];
@@ -1106,6 +1106,11 @@ export function physics (i : number, input : any) : void {
           if (actionStates[characterSelections[i]][player[i].actionState].missfoot && backward) {
             actionStates[characterSelections[i]].MISSFOOT.init(i,input);
           } else {
+            if (player[i].phys.grabbing !== -1) {
+              actionStates[characterSelections[player[i].phys.grabbing]].FALL.init(player[i].phys.grabbing,input,true);
+              player[player[i].phys.grabbing].phys.grabbedBy = -1;
+              player[i].phys.grabbing = -1;
+            }
             actionStates[characterSelections[i]].FALL.init(i,input);
           }
           if (Math.abs(player[i].phys.cVel.x) > player[i].charAttributes.aerialHmaxV) {
