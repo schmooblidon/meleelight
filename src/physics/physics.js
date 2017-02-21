@@ -747,7 +747,7 @@ function findAndResolveCollisions ( i : number, input : any
   // ------------------------------------------------------------------------------------------------------
   // main collision detection routine
 
-  const notIgnoringPlatforms = ( !actionStates[characterSelections[i]][player[i].actionState].canPassThrough || (input[i][0].lsY > -0.56) );
+  const notIgnoringPlatforms = ( (!actionStates[characterSelections[i]][player[i].actionState].canPassThrough || (input[i][0].lsY > -0.56)) && !player[i].phys.passing );
   const isImmune = player[i].phys.hurtBoxState !== 0;
 
   const playerStatusInfo = { ignoringPlatforms : !notIgnoringPlatforms
@@ -1024,6 +1024,7 @@ function updateHitboxes ( i : number ) : void {
 
 
 export function physics (i : number, input : any) : void {
+  player[i].phys.passing = false;
   player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y);
   player[i].phys.facePrev = player[i].phys.face;
   deepCopyObject(true,player[i].phys.prevFrameHitboxes,player[i].hitboxes);

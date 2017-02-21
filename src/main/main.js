@@ -770,6 +770,10 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
   }
 
+  if (frameByFrame) {
+    tempBuffer[0].z = false;
+  }
+
   return tempBuffer;
 
 }

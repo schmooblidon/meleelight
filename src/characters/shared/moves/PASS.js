@@ -14,8 +14,8 @@ export default {
     player[p].timer = 0;
     player[p].phys.grounded = false;
     player[p].phys.passFastfall = false;
-    player[p].phys.abovePlatforms[player[p].phys.onSurface[1]] = false;
     player[p].phys.cVel.y = -0.5;
+    player[p].phys.passing = true;
     actionStates[characterSelections[p]].PASS.main(p,input);
   },
   main : function(p,input){
