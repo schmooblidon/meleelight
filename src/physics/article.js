@@ -9,6 +9,7 @@ import {activeStage} from "stages/activeStage";
 import {createHitbox} from "../main/util/createHitBox";
 import {Vec2D} from "../main/util/Vec2D";
 import {Segment2D} from "../main/util/Segment2D";
+import {sweepCircleVsSweepCircle, sweepCircleVsAABB} from "./interpolatedCollision";
 /* eslint-disable */
 
 export let aArticles = [];
@@ -483,50 +484,34 @@ export function articleShieldCollision (a,v,previous){
 }
 
 export function interpolatedArticleCircleCollision (a,circlePos,r){
-  var collision = false;
-  var h1 = aArticles[a][2].posPrev;
-  var h2 = aArticles[a][2].pos;
-  var segment = new Segment2D(h1.x, h1.y, h2.x - h1.x, h2.y - h1.y);
-  var segment2 = new Segment2D(h1.x, h1.y, circlePos.x - h1.x, circlePos.y - h1.y);
-  var point3 = segment2.project(segment);
-  var segment3 = new Segment2D(h1.x, h1.y, point3.x, point3.y);
-  var segment4 = new Segment2D(circlePos.x, circlePos.y, (segment3.x + segment3.vecx) - circlePos.x, (segment3.y +
-    segment3.vecy) - circlePos.y);
-  if (segment4.segLength() <= r + aArticles[a][2].hb.size) {
-    if (segment.segLength() >= segment3.segLength()) {
-      var a = new Vec2D(segment.vecx, segment.vecy);
-      var b = new Vec2D(segment3.vecx, segment3.vecy);
-      if (0 <= b.dot(a)) {
-        collision = true;
-      }
-    }
+  const h1 = aArticles[a][2].posPrev;
+  const h2 = aArticles[a][2].pos;
+  const s  = aArticles[a][2].hb.size
+
+  const collision = sweepCircleVsSweepCircle ( h1, s, h2, s, circlePos, r, circlePos, r );
+
+  if (collision === null) {
+    return false;
   }
-  return collision;
+  else {
+    return true;
+  }
 }
 
 export function interpolatedArticleHurtCollision (a,v){
-    // a1 is line1 start, a2 is line1 end, b1 is line2 start, b2 is line2 end
-    var hurt = player[v].phys.hurtbox;
-    var hb = [aArticles[a][2].posPrev, aArticles[a][2].pos, aArticles[a][2].posPrev, aArticles[a][2].pos];
+  const hurt = player[v].phys.hurtbox;
+  const h1 = aArticles[a][2].posPrev;
+  const h2 = aArticles[a][2].pos;
+  const r  = aArticles[a][2].hb.size
 
-    if (segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.min.y), new Vec2D(hurt.max.x, hurt.min.y), hb[0], hb[1]) ||
-        segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.min.y), new Vec2D(hurt.max.x, hurt.min.y), hb[2], hb[3])) {
-        return true;
-    } else if (segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.min.y), new Vec2D(hurt.min.x, hurt.max.y), hb[0], hb[
-            1]) || segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.min.y), new Vec2D(hurt.min.x, hurt.max.y), hb[2], hb[
-            3])) {
-        return true;
-    } else if (segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.max.y), new Vec2D(hurt.max.x, hurt.max.y), hb[0], hb[
-            1]) || segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.max.y), new Vec2D(hurt.max.x, hurt.max.y), hb[2], hb[
-            3])) {
-        return true;
-    } else if (segmentSegmentCollision(new Vec2D(hurt.max.x, hurt.max.y), new Vec2D(hurt.max.x, hurt.min.y), hb[0], hb[
-            1]) || segmentSegmentCollision(new Vec2D(hurt.max.x, hurt.max.y), new Vec2D(hurt.max.x, hurt.min.y), hb[2], hb[
-            3])) {
-        return true;
-    } else {
-        return false;
-    }
+  const collision = sweepCircleVsAABB ( h1, r, h2, r, hurt.min, hurt.max );
+
+  if (collision === null) {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 export function articleHurtCollision (a,v,previous){
