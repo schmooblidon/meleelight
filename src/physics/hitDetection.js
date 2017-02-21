@@ -6,8 +6,9 @@ import {turnOffHitboxes, actionStates} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../main/util/Vec2D";
 import {Segment2D} from "../main/util/Segment2D";
+import {euclideanDist} from "../main/linAlg";
 import {getSameAndOther} from "./environmentalCollision";
-import {sweepCircleVsSweepCircle} from "./interpolatedCollision";
+import {sweepCircleVsSweepCircle, sweepCircleVsAABB} from "./interpolatedCollision";
 /* eslint-disable */
 
 export let hitQueue = [];
@@ -214,32 +215,27 @@ export function segmentSegmentCollision (a1,a2,b1,b2){
 }
 
 export function interpolatedHitHurtCollision (i,p,j,phantom){
-    phantom = phantom || false;
-    var hurt = player[i].phys.hurtbox;
-    if (phantom) {
-        var hb = player[p].phys.interPolatedHitbox[j];
-    } else {
-        var hb = player[p].phys.interPolatedHitboxPhantom[j];
-    }
+  phantom = phantom || false;
+  const hurt = player[i].phys.hurtbox;
+  let hb;
+  if (phantom) {
+    hb = player[p].phys.interPolatedHitbox[j];
+  } else {
+    hb = player[p].phys.interPolatedHitboxPhantom[j];
+  }
 
-    if (segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.min.y), new Vec2D(hurt.max.x, hurt.min.y), hb[0], hb[1]) ||
-        segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.min.y), new Vec2D(hurt.max.x, hurt.min.y), hb[2], hb[3])) {
-        return true;
-    } else if (segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.min.y), new Vec2D(hurt.min.x, hurt.max.y), hb[0], hb[
-            1]) || segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.min.y), new Vec2D(hurt.min.x, hurt.max.y), hb[2], hb[
-            3])) {
-        return true;
-    } else if (segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.max.y), new Vec2D(hurt.max.x, hurt.max.y), hb[0], hb[
-            1]) || segmentSegmentCollision(new Vec2D(hurt.min.x, hurt.max.y), new Vec2D(hurt.max.x, hurt.max.y), hb[2], hb[
-            3])) {
-        return true;
-    } else if (segmentSegmentCollision(new Vec2D(hurt.max.x, hurt.max.y), new Vec2D(hurt.max.x, hurt.min.y), hb[0], hb[
-            1]) || segmentSegmentCollision(new Vec2D(hurt.max.x, hurt.max.y), new Vec2D(hurt.max.x, hurt.min.y), hb[2], hb[
-            3])) {
-        return true;
-    } else {
-        return false;
-    }
+  const h1 = new Vec2D (0.5*hb[0].x + 0.5*hb[3].x, 0.5*hb[0].y + 0.5*hb[3].y);
+  const h2 = new Vec2D (0.5*hb[1].x + 0.5*hb[2].x, 0.5*hb[1].y + 0.5*hb[2].y);
+  const r = 0.5 * euclideanDist(hb[0], hb[3]);
+
+  const collision = sweepCircleVsAABB ( h1, r, h2, r, hurt.min, hurt.max );
+
+  if (collision === null) {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 export function hitHurtCollision (i,p,j,previous,phantom){

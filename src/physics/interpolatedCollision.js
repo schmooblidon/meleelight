@@ -164,8 +164,8 @@ function aabbChecker ( check : AABBCheck ) : null | { sweep : number, point : Ve
     }
     else {
       const a0 = Math.pow(p1.x - c.x, 2) + Math.pow(p1.y - c.y, 2) - Math.pow(r1, 2);
-      const a1 = -2 * ((p1.x - c.x) * (p1.x + p2.x) + (p1.y - c.y) * (p1.y + p2.y) - r1 * (r1 - r2));
-      const a2 = Math.pow(p1.x + p2.x, 2) + Math.pow(p1.y + p2.y, 2) + Math.pow(r1 - r2, 2);
+      const a1 = -2 * ((p1.x - c.x) * (p1.x - p2.x) + (p1.y - c.y) * (p1.y - p2.y) - r1 * (r1 - r2));
+      const a2 = Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) - Math.pow(r1 - r2, 2);
       const t1 = solveQuadraticEquation(a0, a1, a2);
 
       let t = null;
@@ -206,7 +206,14 @@ function aabbChecker ( check : AABBCheck ) : null | { sweep : number, point : Ve
       return null;
     }
     else {
-      return { sweep : s, point : new Vec2D ( (1-s) * p.x + s * q.x, (1-s) * p.y + s * q.y ) };
+      const pt = new Vec2D ( (1-s) * p.x + s * q.x, (1-s) * p.y + s * q.y );
+      if (  pt.x < Math.min(check.line2[0].x, check.line2[1].x) || pt.x > Math.max(check.line2[0].x, check.line2[1].x)
+         || pt.y < Math.min(check.line2[0].y, check.line2[1].y) || pt.y > Math.max(check.line2[0].y, check.line2[1].y)) {
+        return null;
+      }
+      else {
+        return { sweep : s, point : pt };
+      }
     }
   }
 }
