@@ -62,7 +62,7 @@ function sweepCircleVsSweepCircle ( p1 : Vec2D, r1 : number, p2 : Vec2D, r2 : nu
 // computes the first point of collision between:
 //  - sweeping circle, going from p1 with radius r1 to p2 with radius r2
 //  - fixed AABB with bottom left point bl and top right point tr
-function sweepCircleVsAABB ( p1 : Vec2D, p2 : Vec2D, r1 : number, r2 : number, bl : Vec2D, tr : Vec2D ) : null | Vec2D {
+function sweepCircleVsAABB ( p1 : Vec2D, r1 : number, p2 : Vec2D, r2 : number, bl : Vec2D, tr : Vec2D ) : null | Vec2D {
   let br = new Vec2D( tr.x, bl.y );
   let tl = new Vec2D( bl.x, tr.y );
   if (distanceToPolygon(p1,[bl,br,tr,tl]) <= r1) {
@@ -72,63 +72,63 @@ function sweepCircleVsAABB ( p1 : Vec2D, p2 : Vec2D, r1 : number, r2 : number, b
     let checks;
     if (p1.x <= bl.x) {
       if (p1.y <= bl.y) { // bottom left corner
-        checks = [ { kind : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "line"  , line1 : vLineThrough(bl), line2 : [add(p1, new Vec2D(r1,0)), add(p2, new Vec2D(r2,0))] }
-                 , { kind : "line"  , line1 : hLineThrough(bl), line2 : [add(p1, new Vec2D(0,r1)), add(p2, new Vec2D(0,r2))] }
+        checks = [ { case : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "line"  , line1 : vLineThrough(bl), line2 : [add(p1, new Vec2D(r1,0)), add(p2, new Vec2D(r2,0))] }
+                 , { case : "line"  , line1 : hLineThrough(bl), line2 : [add(p1, new Vec2D(0,r1)), add(p2, new Vec2D(0,r2))] }
                  ]
       }
       else if (p1.y >= tr.y) { // top left corner
-        checks = [ { kind : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "line"  , line1 : vLineThrough(bl), line2 : [add(p1, new Vec2D(r1,0)), add(p2, new Vec2D(r2,0))] }
-                 , { kind : "line"  , line1 : hLineThrough(tr), line2 : [add(p1, new Vec2D(0,-r1)), add(p2, new Vec2D(0,-r2))] }
+        checks = [ { case : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "line"  , line1 : vLineThrough(bl), line2 : [add(p1, new Vec2D(r1,0)), add(p2, new Vec2D(r2,0))] }
+                 , { case : "line"  , line1 : hLineThrough(tr), line2 : [add(p1, new Vec2D(0,-r1)), add(p2, new Vec2D(0,-r2))] }
                  ]
       }
       else { // left side
-        checks = [ { kind : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "line"  , line1 : vLineThrough(bl), line2 : [add(p1, new Vec2D(r1,0)), add(p2, new Vec2D(r2,0))] }
+        checks = [ { case : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "line"  , line1 : vLineThrough(bl), line2 : [add(p1, new Vec2D(r1,0)), add(p2, new Vec2D(r2,0))] }
                  ]
       }
     }
     else if (p1.x >= tr.x) {
       if (p1.y <= bl.y) { // bottom right corner
-        checks = [ { kind : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "line"  , line1 : vLineThrough(tr), line2 : [add(p1, new Vec2D(-r1,0)), add(p2, new Vec2D(-r2,0))] }
-                 , { kind : "line"  , line1 : hLineThrough(bl), line2 : [add(p1, new Vec2D(0,r1)), add(p2, new Vec2D(0,r2))] }
+        checks = [ { case : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "line"  , line1 : vLineThrough(tr), line2 : [add(p1, new Vec2D(-r1,0)), add(p2, new Vec2D(-r2,0))] }
+                 , { case : "line"  , line1 : hLineThrough(bl), line2 : [add(p1, new Vec2D(0,r1)), add(p2, new Vec2D(0,r2))] }
                  ]
       }
       else if (p1.y >= tr.y) { // top right corner
-        checks = [ { kind : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "line"  , line1 : vLineThrough(tr), line2 : [add(p1, new Vec2D(-r1,0)), add(p2, new Vec2D(-r2,0))] }
-                 , { kind : "line"  , line1 : hLineThrough(tr), line2 : [add(p1, new Vec2D(0,-r1)), add(p2, new Vec2D(0,-r2))] }
+        checks = [ { case : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "line"  , line1 : vLineThrough(tr), line2 : [add(p1, new Vec2D(-r1,0)), add(p2, new Vec2D(-r2,0))] }
+                 , { case : "line"  , line1 : hLineThrough(tr), line2 : [add(p1, new Vec2D(0,-r1)), add(p2, new Vec2D(0,-r2))] }
                  ]
       }
       else { // right side
-        checks = [ { kind : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "line"  , line1 : vLineThrough(tr), line2 : [add(p1, new Vec2D(-r1,0)), add(p2, new Vec2D(-r2,0))] }
+        checks = [ { case : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "line"  , line1 : vLineThrough(tr), line2 : [add(p1, new Vec2D(-r1,0)), add(p2, new Vec2D(-r2,0))] }
                  ]
       }
     }
     else { 
       if (p1.y <= bl.y) { // bottom side
-        checks = [ { kind : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "line"  , line1 : hLineThrough(bl), line2 : [add(p1, new Vec2D(0,r1)), add(p2, new Vec2D(0,r2))] }
+        checks = [ { case : "corner", corner : bl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : br, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "line"  , line1 : hLineThrough(bl), line2 : [add(p1, new Vec2D(0,r1)), add(p2, new Vec2D(0,r2))] }
                  ]
       }
       else { // top side, all other cases have been ruled out
-        checks = [ { kind : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
-                 , { kind : "line"  , line1 : hLineThrough(tr), line2 : [add(p1, new Vec2D(0,-r1)), add(p2, new Vec2D(0,-r2))] }
+        checks = [ { case : "corner", corner : tl, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "corner", corner : tr, p1 : p1, p2 : p2, r1 : r1, r2 : r2 }
+                 , { case : "line"  , line1 : hLineThrough(tr), line2 : [add(p1, new Vec2D(0,-r1)), add(p2, new Vec2D(0,-r2))] }
                  ]
       }
     }
@@ -145,15 +145,19 @@ function sweepCircleVsAABB ( p1 : Vec2D, p2 : Vec2D, r1 : number, r2 : number, b
   
 }
 
-type AABBDatum = { kind : "corner", corner : Vec2D, p1 : Vec2D, p2 : Vec2D, r1 : number, r2 : number }
-               | { kind : "line"  , line1 : [Vec2D, Vec2D], line2 : [Vec2D, Vec2D] }
-function aabbChecker ( aabbDatum : AABBDatum ) : null | { sweep : number, point : Vec2D } {
-  if (aabbDatum.kind === "corner") {
-    const c = aabbDatum.corner;
-    const p1 = aabbDatum.p1;
-    const p2 = aabbDatum.p2;
-    const r1 = aabbDatum.r1;
-    const r2 = aabbDatum.r2;
+type AABBCheck = { case : "corner", corner : Vec2D, p1 : Vec2D, p2 : Vec2D, r1 : number, r2 : number }
+               | { case : "line"  , line1 : [Vec2D, Vec2D], line2 : [Vec2D, Vec2D] }
+// this function computes the sweeping parameter and collision location between a sweeping circle and an AABB
+// there are two cases:
+//   - corner case: sweeping circle against corner of AABB
+//   - line case: sweeping circle against edge of AABB, in which case it is a simple line-line intersection test
+function aabbChecker ( check : AABBCheck ) : null | { sweep : number, point : Vec2D } {
+  if (check.case === "corner") {
+    const c  = check.corner;
+    const p1 = check.p1;
+    const p2 = check.p2;
+    const r1 = check.r1;
+    const r2 = check.r2;
     if (euclideanDist(c, p1) < r1) {
       return { sweep : 0, point : c };
     }
@@ -194,9 +198,9 @@ function aabbChecker ( aabbDatum : AABBDatum ) : null | { sweep : number, point 
     }
   }
   else {
-    const p = aabbDatum.line1[0];
-    const q = aabbDatum.line1[1];
-    const s = coordinateInterceptParameter(aabbDatum.line2, aabbDatum.line1);
+    const p = check.line1[0];
+    const q = check.line1[1];
+    const s = coordinateInterceptParameter(check.line2, check.line1);
     if (s < 0 || s > 1 || isNaN(s) || s === Infinity) {
       return null;
     }
