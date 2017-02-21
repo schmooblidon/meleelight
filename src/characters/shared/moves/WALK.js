@@ -48,7 +48,7 @@ export default {
         }
       }
 
-      const time = (player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.walkMaxV;
+      const time = ((player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.walkMaxV) * player[p].charAttributes.walkAnimSpeed;
       if (time > 0){
         player[p].timer += time;
       }
