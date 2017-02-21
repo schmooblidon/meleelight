@@ -53,7 +53,9 @@ export function hitDetect (p,input){
                                             k].clank == 2 && player[i].phys.grounded) || (player[p].hitboxes.id[j].clank == 6 && player[i]
                                             .hitboxes.id[k].clank != 6))) {
 
-                                        var clankHit = hitHitCollision(i, p, j, k);
+                                        var clankHit = interpolate && player[i].phys.prevFrameHitboxes.active[k]
+                                                     ? interpolatedHitHitCollision(i,p,j,k)
+                                                     : hitHitCollision(i, p, j, k); // also need to do interpolated vs non-interpolated hitboxes
                                         if (clankHit[0]) {
 
                                             var diff = player[p].hitboxes.id[j].dmg - player[i].hitboxes.id[k].dmg;
@@ -150,14 +152,38 @@ export function setHasHit (p,j){
 }
 
 export function hitHitCollision (i,p,j,k){
-    var hbpos = new Vec2D(player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x * player[
-            p].phys.face), player[p].phys.pos.y + player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
-    var hbpos2 = new Vec2D(player[i].phys.pos.x + (player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].x * player[
-            i].phys.face), player[i].phys.pos.y + player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].y);
+    var hbpos  = new Vec2D ( player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x * player[p].phys.face)
+                           , player[p].phys.pos.y +  player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y );
+    var hbpos2 = new Vec2D ( player[i].phys.pos.x + (player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].x * player[i].phys.face)
+                           , player[i].phys.pos.y +  player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].y );
     var hitPoint = new Vec2D((hbpos.x + hbpos2.x) / 2, (hbpos.y + hbpos2.y) / 2);
 
-    return [(Math.pow(hbpos2.x - hbpos.x, 2) + Math.pow(hbpos.y - hbpos2.y, 2) <= Math.pow(player[p].hitboxes.id[j].size +
-        player[i].hitboxes.id[k].size, 2)), hitPoint];
+    return [    Math.pow(hbpos2.x - hbpos.x, 2) + Math.pow(hbpos.y - hbpos2.y, 2)
+             <= Math.pow(player[p].hitboxes.id[j].size + player[i].hitboxes.id[k].size, 2)
+           , hitPoint];
+}
+
+export function interpolatedHitHitCollision(i,p,j,k) {
+  const h1p = new Vec2D ( player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x * player[p].phys.facePrev)
+                        , player[p].phys.posPrev.y +  player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y );
+  const h2p = new Vec2D ( player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x * player[p].phys.face)
+                        , player[p].phys.pos.y +  player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y );
+  const h1i = new Vec2D ( player[i].phys.posPrev.x + (player[i].phys.prevFrameHitboxes.id[k].offset[player[i].phys.prevFrameHitboxes.frame].x * player[i].phys.facePrev)
+                        , player[i].phys.posPrev.y +  player[i].phys.prevFrameHitboxes.id[k].offset[player[i].phys.prevFrameHitboxes.frame].y );
+  const h2i = new Vec2D ( player[i].phys.pos.x + (player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].x * player[p].phys.face)
+                        , player[i].phys.pos.y +  player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].y );
+  const r = player[p].hitboxes.id[j].size;
+  const s = player[i].hitboxes.id[k].size;
+
+  const collision = sweepCircleVsSweepCircle ( h1p, r, h2p, r, hi1, s, h2i, s );
+
+  if (collision === null) {
+    return false;
+  }
+  else {
+    return true;
+  }
+
 }
 
 export function hitShieldCollision (i,p,j,previous){
