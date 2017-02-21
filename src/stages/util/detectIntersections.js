@@ -1,5 +1,5 @@
 // @flow
-/*eslint indent:1*/
+/*eslint indent:0*/
 
 import {Vec2D} from "../../main/util/Vec2D";
 import {coordinateInterceptParameter} from "../../physics/environmentalCollision";

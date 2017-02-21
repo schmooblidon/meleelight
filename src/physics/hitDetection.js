@@ -7,6 +7,7 @@ import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../main/util/Vec2D";
 import {Segment2D} from "../main/util/Segment2D";
 import {getSameAndOther} from "./environmentalCollision";
+import {sweepCircleVsSweepCircle} from "./interpolatedCollision";
 /* eslint-disable */
 
 export let hitQueue = [];
@@ -174,28 +175,20 @@ export function hitShieldCollision (i,p,j,previous){
 }
 
 export function interpolatedHitCircleCollision (circlePos,r,p,j){
-    var collision = false;
-    var h1 = new Vec2D(player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes
-            .frame].x * player[p].phys.facePrev), player[p].phys.posPrev.y + player[p].phys.prevFrameHitboxes.id[j].offset[
-            player[p].phys.prevFrameHitboxes.frame].y);
-    var h2 = new Vec2D(player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x * player[p].phys
-            .face), player[p].phys.pos.y + player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
-    var segment = new Segment2D(h1.x, h1.y, h2.x - h1.x, h2.y - h1.y);
-    var segment2 = new Segment2D(h1.x, h1.y, circlePos.x - h1.x, circlePos.y - h1.y);
-    var point3 = segment2.project(segment);
-    var segment3 = new Segment2D(h1.x, h1.y, point3.x, point3.y);
-    var segment4 = new Segment2D(circlePos.x, circlePos.y, (segment3.x + segment3.vecx) - circlePos.x, (segment3.y +
-        segment3.vecy) - circlePos.y);
-    if (segment4.segLength() <= r + player[p].hitboxes.id[j].size) {
-        if (segment.segLength() >= segment3.segLength()) {
-            var a = new Vec2D(segment.vecx, segment.vecy);
-            var b = new Vec2D(segment3.vecx, segment3.vecy);
-            if (0 <= b.dot(a)) {
-                collision = true;
-            }
-        }
-    }
-    return collision;
+  const h1 = new Vec2D ( player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x * player[p].phys.facePrev)
+                       , player[p].phys.posPrev.y +  player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y );
+  const h2 = new Vec2D ( player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x * player[p].phys.face)
+                       , player[p].phys.pos.y +  player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y );
+  const s = player[p].hitboxes.id[j].size;
+
+  const collision = sweepCircleVsSweepCircle ( h1, s, h2, s, circlePos, r, circlePos, r );
+
+  if (collision === null) {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 export function segmentSegmentCollision (a1,a2,b1,b2){

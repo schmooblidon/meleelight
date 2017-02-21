@@ -1,5 +1,5 @@
 // @flow
-/*eslint indent:1*/ // get stuffed
+/*eslint indent:0*/ // get stuffed
 
 import {Vec2D, getXOrYCoord, putXOrYCoord, flipXOrY} from "../main/util/Vec2D";
 import {dotProd, scalarProd, add, subtract, norm, orthogonalProjection} from "../main/linAlg";
