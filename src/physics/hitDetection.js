@@ -490,7 +490,7 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
     }
     if (drawBounce) {
       sounds.bounce.play();
-      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face);
+      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face, Math.PI/2);
     }
   }
 
