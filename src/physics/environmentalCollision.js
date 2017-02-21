@@ -28,25 +28,25 @@ const maxRecursion = 6;
 // various utility functions
 
 // horizontal line through a point
-function hLineThrough ( point : Vec2D ) : [Vec2D, Vec2D] {
+export function hLineThrough ( point : Vec2D ) : [Vec2D, Vec2D] {
   return [ point, new Vec2D ( point.x+1, point.y)];
 };
 
-function hLineAt( y : number) : [Vec2D, Vec2D] {
+export function hLineAt( y : number) : [Vec2D, Vec2D] {
   return hLineThrough (new Vec2D (0, y));
 }
 
 // vertical line through a point
-function vLineThrough ( point : Vec2D ) : [Vec2D, Vec2D] {
+export function vLineThrough ( point : Vec2D ) : [Vec2D, Vec2D] {
   return [ point, new Vec2D ( point.x, point.y+1)];
 };
 
-function vLineAt ( x : number ) : [Vec2D, Vec2D] {
+export function vLineAt ( x : number ) : [Vec2D, Vec2D] {
   return vLineThrough (new Vec2D (x, 0));
 } 
 
 // either horizontal or vertical line through a point
-function lineThrough ( point : Vec2D, xOrY : XOrY ) : [Vec2D, Vec2D] {
+export function lineThrough ( point : Vec2D, xOrY : XOrY ) : [Vec2D, Vec2D] {
   if (xOrY === "x") {
     return hLineThrough(point);
   }

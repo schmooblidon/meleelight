@@ -30,7 +30,7 @@ function intersects( line1 : Line, line2 : Line) : bool {
   }
 }
 
-function isInside( point : Vec2D, lines : Array<Line>) {
+function isInside( point : Vec2D, lines : Array<Line>) : bool {
   const pt = new Vec2D( point.x+0.001, point.y);
   const atInfinity = new Vec2D( point.x+0.001, point.y + 100000);
   return !evenNumberOfTrue( lines.map((line) => intersects(line, [pt, atInfinity])));
