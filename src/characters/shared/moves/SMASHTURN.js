@@ -51,6 +51,10 @@ export default {
     else if (t[0]){
       actionStates[characterSelections[p]][t[1]].init(p,input);
     }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
+      return true;
+    }
     else if (player[p].timer === 2 && input[p][0].lsX * player[p].phys.face > 0.79){
       actionStates[characterSelections[p]].DASH.init(p,input);
       return true;

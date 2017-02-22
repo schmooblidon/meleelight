@@ -50,6 +50,11 @@ import CLIFFATTACKQUICK from "characters/fox/moves/CLIFFATTACKQUICK";
 import DOWNATTACK from "characters/fox/moves/DOWNATTACK";
 import GRAB from "characters/fox/moves/GRAB";
 import CATCHATTACK from "characters/fox/moves/CATCHATTACK";
+import THROWNFALCOUP from "characters/fox/moves/THROWNFALCOUP";
+import THROWNFALCODOWN from "characters/fox/moves/THROWNFALCODOWN";
+import THROWNFALCOBACK from "characters/fox/moves/THROWNFALCOBACK";
+import THROWNFALCOFORWARD from "characters/fox/moves/THROWNFALCOFORWARD";
+import APPEAL from "characters/fox/moves/APPEAL";
 
 export default {
   JAB1,
@@ -104,4 +109,9 @@ export default {
   DOWNATTACK,
   GRAB,
   CATCHATTACK,
+  THROWNFALCOUP,
+  THROWNFALCODOWN,
+  THROWNFALCOBACK,
+  THROWNFALCOFORWARD,
+  APPEAL
 };

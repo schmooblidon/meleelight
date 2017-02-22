@@ -51,6 +51,10 @@ export default {
       actionStates[characterSelections[p]].SQUATWAIT.init(p,input);
       return true;
     }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
+      return true;
+    }
     else if (j[0]){
       actionStates[characterSelections[p]].KNEEBEND.init(p,j[1],input);
       return true;

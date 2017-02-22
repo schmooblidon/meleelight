@@ -81,6 +81,10 @@ export default {
       actionStates[characterSelections[p]].GUARDON.init(p,input);
       return true;
     }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
+      return true;
+    }
     else if (Math.abs(input[p][0].lsX) < 0.62){
       actionStates[characterSelections[p]].RUNBRAKE.init(p,input);
       return true;
