@@ -51,7 +51,7 @@ export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
 export const framerate = [0,0,0];
-export var characterSelections = [3,0,0,0];
+export var characterSelections = [0,0,0,0];
 
 export var shine = 0.5;
 

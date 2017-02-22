@@ -428,6 +428,9 @@ export const sounds = {
   }),
   foxshinereflect: new Howl({
     src: ['sfx/foxshinereflect.wav']
+  }),
+  falco: new Howl({
+    src: ['sfx/falco.wav']
   })
 }
 
