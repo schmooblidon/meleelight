@@ -5,7 +5,7 @@ export default {
   canEdgeCancel : false,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  offset : [[-7.53,-0.30],[-6.79,0.33],[-6.23,0.46],[-5.96,0.16],[-3.54,17.01],[-3.54,17.01]],
+  offset : [[-7.19,-1.89],[-6.46,-1.32],[-5.91,-1.03],[-5.73,-2.33],[-3.98,9.54],[-2.44,19.42],[-2.44,19.42]],
   init : function(p,input){
     player[p].actionState = "THROWNFALCOUP";
     if (player[p].phys.grabbedBy < p){

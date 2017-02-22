@@ -6,7 +6,7 @@ export default {
   reverseModel : true,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  offset : [[-9.32,-0.58],[-8.27,-0.79],[-5.10,-1.66],[-1.40,-2.95],[-1.76,-3.82],[-5.99,0.79],[-8.22,4.80],[-8.22,4.80]],
+  offset : [[-9.27,-0.58],[-8.01,-0.86],[-4.27,-1.92],[-0.76,-3.28],[-3.82,-3.82],[-8.71,4.52],[-8.71,4.52]],
   init : function(p,input){
     player[p].actionState = "THROWNFALCOBACK";
     if (player[p].phys.grabbedBy < p){
@@ -16,7 +16,6 @@ export default {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    player[p].phys.face *= -1;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
     this.main(p,input);
   },

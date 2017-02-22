@@ -6,7 +6,7 @@ export default {
   reverseModel : true,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  offset : [[-9.32,-0.58],[-8.27,-0.79],[-5.10,-1.66],[-1.40,-2.95],[-1.76,-3.82],[-5.99,0.79],[-8.22,4.80],[-8.22,4.80]],
+  offset : [[-8.96,-2.13],[-8.10,-2.28],[-5.65,-2.92],[-2.00,-4.11],[0.47,-5.18],[5.14,-4.92],[9.34,3.13],[9.34,3.13]],
   init : function(p,input){
     player[p].actionState = "THROWNFALCOBACK";
     if (player[p].phys.grabbedBy < p){

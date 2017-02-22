@@ -152,6 +152,7 @@ setFrames(CHARIDS.FALCO_ID, {
   "FURASLEEPEND" : 60,
   "STOPCEIL" : 9,
   "TECHU" : 26,
+  "REBOUND" : 15
 });
 
 setActionSounds(CHARIDS.FALCO_ID, {
