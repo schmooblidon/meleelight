@@ -431,6 +431,18 @@ export const sounds = {
   }),
   falco: new Howl({
     src: ['sfx/falco.wav']
+  }),
+  falcotaunt: new Howl({
+    src: ['sfx/falcotaunt.wav']
+  }),
+  foxtaunt: new Howl({
+    src: ['sfx/foxtaunt.wav']
+  }),
+  marthtaunt: new Howl({
+    src: ['sfx/marthtaunt.wav']
+  }),
+  pufftaunt: new Howl({
+    src: ['sfx/pufftaunt.wav']
   })
 }
 

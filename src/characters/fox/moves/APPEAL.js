@@ -1,5 +1,6 @@
 import WAIT from "characters/shared/moves/WAIT";
 import {player} from "main/main";
+import {sounds} from "main/sfx";
 export default {
   name : "APPEAL",
   canEdgeCancel : false,
@@ -20,6 +21,9 @@ export default {
       }
       else if (player[p].timer > 88) {
         player[p].phys.cVel.x = this.setVelocities2[player[p].timer-89] * player[p].phys.face;
+      }
+      if (player[p].timer === 31) {
+        sounds.foxtaunt.play();
       }
     }
   },

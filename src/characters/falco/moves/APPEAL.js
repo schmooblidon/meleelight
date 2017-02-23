@@ -1,5 +1,6 @@
 import WAIT from "characters/shared/moves/WAIT";
 import {player} from "main/main";
+import {sounds} from "main/sfx";
 export default {
   name : "APPEAL",
   canEdgeCancel : false,
@@ -13,6 +14,9 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
+      if (player[p].timer === 3) {
+        sounds.falcotaunt.play();
+      }
     }
   },
   interrupt : function(p,input){
