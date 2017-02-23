@@ -915,6 +915,9 @@ export function knockbackSounds (type,knockback,v){
         case 2:
           sounds.foxweakhurt.play();
           break;
+        case 3:
+            sounds.falcohurt1.play();
+            break;
         default:
           break;
       }
@@ -930,6 +933,9 @@ export function knockbackSounds (type,knockback,v){
         case 2:
           sounds.foxstronghurt.play();
           break;
+        case 3:
+            sounds.falcohurt2.play();
+            break;
         default:
           break;
       }

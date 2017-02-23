@@ -1,4 +1,4 @@
-import {executeIntangibility, reduceByTraction, actionStates} from "physics/actionStateShortcuts";
+import {executeIntangibility, reduceByTraction, actionStates, playSounds} from "physics/actionStateShortcuts";
 import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
@@ -16,6 +16,7 @@ export default {
   },
   main : function(p,input){
     player[p].timer++;
+    playSounds("TECH",p);
     if (!actionStates[characterSelections[p]].TECHN.interrupt(p,input)){
       reduceByTraction(p,true);
       executeIntangibility("TECHN",p);

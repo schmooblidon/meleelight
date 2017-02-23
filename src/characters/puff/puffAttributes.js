@@ -170,7 +170,8 @@ setActionSounds(CHARIDS.PUFF_ID, {
   "ESCAPEB": [],
   "ESCAPEF": [],
   "ESCAPEN": [],
-  "OTTOTTOWAIT": []
+  "OTTOTTOWAIT": [],
+  "TECH" : []
 });
 
 // HITBOX OFFSETS

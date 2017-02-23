@@ -43,8 +43,8 @@ export default {
       }
 
       if (player[p].timer === 16){
-        sounds.foxillusion1.play();
-        sounds.foxillusion2.play();
+        sounds.phantasm.play();
+        sounds.phantasmshout.play();
       }
 
       if (player[p].timer === 17) {

@@ -172,7 +172,8 @@ setActionSounds(CHARIDS.MARTH_ID, {
   "ESCAPEB" : [[33,"sworddraw"]],
   "ESCAPEF" : [[33,"sworddraw"]],
   "ESCAPEN" : [[2,"airdodge"],[18,"sworddraw"]],
-  "OTTOTTOWAIT" : [[0,"airdodge"]]
+  "OTTOTTOWAIT" : [[0,"airdodge"]],
+  "TECH" : []
 });
 
 // HITBOX OFFSETS

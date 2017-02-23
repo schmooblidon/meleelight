@@ -31,8 +31,8 @@ export default {
     player[p].timer++;
     if (!this.interrupt(p,input)){
       if (player[p].timer === 16){
-        sounds.foxillusion1.play();
-        sounds.foxillusion2.play();
+        sounds.phantasm.play();
+        sounds.phantasmshout.play();
       }
 
       if (player[p].timer === 17) {

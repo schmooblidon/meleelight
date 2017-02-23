@@ -93,6 +93,28 @@ export function randomShout (char){
           break;
       }
       break;
+    case 3:
+      var shout = Math.round(0.5 + Math.random() * 4.99);
+      switch (shout) {
+        case 1:
+          sounds.falcoshout1.play();
+          break;
+        case 2:
+          sounds.falcoshout2.play();
+          break;
+        case 3:
+          sounds.falcoshout3.play();
+          break;
+        case 4:
+          sounds.falcoshout4.play();
+          break;
+        case 5:
+          sounds.falcoshout5.play();
+          break;
+        default:
+          break;
+      }
+      break;
     default:
       break;
   }

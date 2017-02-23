@@ -40,7 +40,7 @@ export default {
       else if (player[p].timer === 8){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
-        sounds.normalswing2.play();
+        sounds.sword1.play();
       }
       else if (player[p].timer === 9){
         player[p].hitboxes.frame++;

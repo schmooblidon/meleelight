@@ -159,8 +159,8 @@ setActionSounds(CHARIDS.FOX_ID, {
   "JUMP" : [],
   "ESCAPEAIR" : [[4,"foxairdodge"]],
   "JUMPAERIAL" : [[1,"foxjump"]],
-  "GUARDON" : [[1,"swordsheath"]],
-  "GUARDOFF" : [[6,"sworddraw"]],
+  "GUARDON" : [],
+  "GUARDOFF" : [],
   "CLIFFCATCH" : [[1,"foxcliffcatch"],[1,"puffledgegrab"]],
   "DEAD" : [[1,"foxdeath"]],
   "FURAFURA" : [[0,"foxfura"]],
@@ -168,6 +168,7 @@ setActionSounds(CHARIDS.FOX_ID, {
   "ESCAPEF" : [],
   "ESCAPEN" : [],
   "OTTOTTOWAIT" : [[0,"foxairdodge"]],
+  "TECH" : []
 });
 
 // HITBOX OFFSETS
