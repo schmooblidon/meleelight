@@ -73,7 +73,7 @@ export default {
       }
 
       if (player[p].timer >= 18 && player[p].timer <= 21){
-        drawVfx("illusion",player[p].phys.posPrev,player[p].phys.face);
+        drawVfx("phantasm",player[p].phys.posPrev,player[p].phys.face);
       }
     }
   },

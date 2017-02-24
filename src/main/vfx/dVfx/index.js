@@ -42,6 +42,7 @@ import swing from "main/vfx/dVfx/swing";
 import targetDestroy from "main/vfx/dVfx/targetDestroy";
 import tech from "main/vfx/dVfx/tech";
 import wallBounce from "main/vfx/dVfx/wallBounce";
+import phantasm from "main/vfx/dVfx/phantasm";
 
 
 export default {
@@ -88,5 +89,6 @@ export default {
   swing,
   targetDestroy,
   tech,
-  wallBounce
+  wallBounce,
+  phantasm
 };

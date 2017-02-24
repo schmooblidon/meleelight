@@ -40,6 +40,7 @@ import swing from  'main/vfx/vfxData/swing';
 import targetDestroy from  'main/vfx/vfxData/targetDestroy';
 import tech from  'main/vfx/vfxData/tech';
 import wallBounce from  'main/vfx/vfxData/wallBounce';
+import phantasm from 'main/vfx/vfxData/phantasm';
 
 export default {
   blastzoneExplosion,
@@ -83,5 +84,6 @@ export default {
   swing,
   targetDestroy,
   tech,
-  wallBounce
+  wallBounce,
+  phantasm
 };
