@@ -64,6 +64,11 @@ import THROWUP from 'characters/marth/moves/THROWUP';
 import UPSMASH from 'characters/marth/moves/UPSMASH';
 import UPSPECIAL from 'characters/marth/moves/UPSPECIAL';
 import UPTILT from 'characters/marth/moves/UPTILT';
+import THROWNFALCOUP from "characters/marth/moves/THROWNFALCOUP";
+import THROWNFALCODOWN from "characters/marth/moves/THROWNFALCODOWN";
+import THROWNFALCOBACK from "characters/marth/moves/THROWNFALCOBACK";
+import THROWNFALCOFORWARD from "characters/marth/moves/THROWNFALCOFORWARD";
+import APPEAL from "characters/marth/moves/APPEAL";
 
 
 export default {
@@ -132,5 +137,10 @@ export default {
   THROWUP,
   UPSMASH,
   UPSPECIAL,
-  UPTILT
+  UPTILT,
+  THROWNFALCOUP,
+  THROWNFALCODOWN,
+  THROWNFALCOBACK,
+  THROWNFALCOFORWARD,
+  APPEAL
 };

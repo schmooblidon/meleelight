@@ -60,7 +60,9 @@ setCharAttributes(CHARIDS.PUFF_ID, {
   wallJumpVelY: 2.4,
   shieldBreakVel: 10,
   multiJump: true,
-  ecbscale: 2.6
+  ecbscale: 2.6,
+  walkAnimSpeed : 1,
+  runAnimSpeed : 1
 });
 
 // start, length
@@ -144,11 +146,16 @@ setFrames(CHARIDS.PUFF_ID, {
   "THROWNFOXBACK": 5,
   "THROWNFOXFORWARD": 10,
   "THROWNFOXDOWN": 32,
+  "THROWNFALCOUP" : 4,
+  "THROWNFALCOBACK" : 5,
+  "THROWNFALCOFORWARD" : 6,
+  "THROWNFALCODOWN" : 19,
   "FURASLEEPSTART": 33,
   "FURASLEEPLOOP": 76,
   "FURASLEEPEND": 76,
   "STOPCEIL": 8,
-  "TECHU": 25
+  "TECHU": 25,
+  "REBOUND" : 16
 });
 
 setActionSounds(CHARIDS.PUFF_ID, {
@@ -163,7 +170,8 @@ setActionSounds(CHARIDS.PUFF_ID, {
   "ESCAPEB": [],
   "ESCAPEF": [],
   "ESCAPEN": [],
-  "OTTOTTOWAIT": []
+  "OTTOTTOWAIT": [],
+  "TECH" : []
 });
 
 // HITBOX OFFSETS

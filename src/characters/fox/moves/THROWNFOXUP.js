@@ -5,7 +5,6 @@ export default {
   canEdgeCancel : false,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  ignoreCollision : true,
   offset : [[-6.51,-1.28],[-5.85,-0.71],[-5.36,-0.70],[-5.17,1.05],[-3.03,9.59],[-3.03,9.59]],
   init : function(p,input){
     player[p].actionState = "THROWNFOXUP";

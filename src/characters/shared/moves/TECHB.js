@@ -1,4 +1,4 @@
-import {executeIntangibility, actionStates} from "physics/actionStateShortcuts";
+import {executeIntangibility, actionStates, playSounds} from "physics/actionStateShortcuts";
 import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
@@ -17,6 +17,7 @@ export default {
   },
   main : function(p,input){
     player[p].timer++;
+    playSounds("TECH",p);
     if (!actionStates[characterSelections[p]].TECHB.interrupt(p,input)){
       executeIntangibility("TECHB",p);
       player[p].phys.cVel.x = actionStates[characterSelections[p]].TECHB.setVelocities[player[p].timer-1]*player[p].phys.face;

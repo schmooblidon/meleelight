@@ -23,20 +23,20 @@ export const articles = {
     "LASER": {
         name: "LASER",
         canTurboCancel: false,
-        init: function(p, x, y, rotate) {
+        init: function(p, x, y, rotate, isFox = true, partOfThrow = false) {
             var obj = {
                 hitList: [],
                 rotate: rotate,
                 destroyOnHit: true,
                 clank: false,
                 timer: 0,
-                vel: new Vec2D(5 * Math.cos(rotate) * player[p].phys.face, 5 * Math.sin(rotate)),
+                vel: new Vec2D((isFox ? 7 : 5) * Math.cos(rotate) * player[p].phys.face, (isFox ? 7 : 5) * Math.sin(rotate)),
                 pos: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
                 posPrev1: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
                 posPrev2: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
                 posPrev3: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
                 posPrev: new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y),
-                hb: new createHitbox(new Vec2D(0, 0), 1.172, 3, 361, 0, 0, 0, 0, 0, 1, 1),
+                hb: new createHitbox(new Vec2D(0, 0), 1.172, 3, 361, isFox ? 0 : partOfThrow ? 0 : 100, 0, isFox ? 0 : partOfThrow ? 0 : 5, 0, 0, 1, 1),
                 ecb: [new Vec2D(player[p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y - 10), new Vec2D(
                     player[p].phys.pos.x + (x * player[p].phys.face) + 10, player[p].phys.pos.y + y), new Vec2D(player[
                         p].phys.pos.x + (x * player[p].phys.face), player[p].phys.pos.y + y + 10), new Vec2D(player[p].phys
@@ -110,7 +110,7 @@ export const articles = {
         name: "ILLUSION",
         noDraw: true,
         canTurboCancel: true,
-        init: function(p, type) {
+        init: function(p, type, isFox = true) {
             var obj = {
                 hitList: [],
                 destroyOnHit: false,
@@ -118,14 +118,21 @@ export const articles = {
                 timer: 0,
                 pos: new Vec2D(player[p].phys.posPrev.x, player[p].phys.posPrev.y + 5),
                 posPrev: new Vec2D(player[p].phys.posPrev.x, player[p].phys.posPrev.y + 5),
-                hb: new createHitbox(new Vec2D(0, 0), 4.160, 7, 80, 60, 68, 0, 1, 1, 1, 1),
+                hb: new createHitbox(new Vec2D(0, 0), 4.160, 7, isFox ? 80 : 270, isFox ? 60 : 70, isFox ? 68 : 70, 0, 1, 1, 1, 1),
                 ecb: [new Vec2D(player[p].phys.posPrev.x, player[p].phys.posPrev.y - 10), new Vec2D(player[p].phys.posPrev
                         .x + 10, player[p].phys.posPrev.y), new Vec2D(player[p].phys.posPrev.x, player[p].phys.posPrev.y +
                     10), new Vec2D(player[p].phys.posPrev.x - 10, player[p].phys.posPrev.y)]
             };
             // if ground
             if (type) {
-                obj.hb.kg = 40;
+                if (isFox) {
+                   obj.hb.kg = 40; 
+                }
+                else {
+                    obj.hb.angle = 65;
+                    obj.hb.kg = 60;
+                    obj.hb.bk = 74;
+                }
             }
             aArticles.push(["ILLUSION", p, obj]);
             articles.ILLUSION.main(aArticles.length - 1);

@@ -93,6 +93,10 @@ export default {
       }
       return true;
     }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
+      return true;
+    }
     else if (player[p].timer > 4 && checkForSmashTurn(p,input)){
       player[p].phys.cVel.x *= 0.25;
       actionStates[characterSelections[p]].SMASHTURN.init(p,input);

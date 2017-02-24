@@ -60,6 +60,11 @@ import THROWUP from './THROWUP';
 import UPSMASH from './UPSMASH';
 import UPSPECIAL from './UPSPECIAL';
 import UPTILT from './UPTILT';
+import THROWNFALCOUP from "characters/puff/moves/THROWNFALCOUP";
+import THROWNFALCODOWN from "characters/puff/moves/THROWNFALCODOWN";
+import THROWNFALCOBACK from "characters/puff/moves/THROWNFALCOBACK";
+import THROWNFALCOFORWARD from "characters/puff/moves/THROWNFALCOFORWARD";
+import APPEAL from "characters/puff/moves/APPEAL";
 
 
 export default {
@@ -125,4 +130,9 @@ export default {
   UPSMASH,
   UPSPECIAL,
   UPTILT,
+  THROWNFALCOUP,
+  THROWNFALCODOWN,
+  THROWNFALCOBACK,
+  THROWNFALCOFORWARD,
+  APPEAL
 };

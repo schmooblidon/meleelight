@@ -728,7 +728,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       pause[i][0] = false;
     }
 
-    if ( (gameMode == 3 || gameMode == 5)
+    if ( !playing && (gameMode == 3 || gameMode == 5)
          && (tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) 
          && (tempBuffer[0].r || tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
       if (tempBuffer[0].b || tempBuffer[1].b) {
@@ -743,7 +743,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   }
   else if (mType[i] !== null) { // gamepad controls
 
-    if ( (gameMode == 3 || gameMode == 5) &&
+    if ( !playing && (gameMode == 3 || gameMode == 5) &&
              ( tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s ) 
        && (! ( tempBuffer[1].a && tempBuffer[1].l && tempBuffer[1].r && tempBuffer[1].s ))) {
       if (tempBuffer[0].b) {
@@ -827,6 +827,10 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     if (tempBuffer[0].dr && !tempBuffer[1].dr) {
       player[i].showHitbox ^= true;
     }
+  }
+
+  if (frameByFrame) {
+    tempBuffer[0].z = false;
   }
 
   return tempBuffer;

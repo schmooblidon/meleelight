@@ -6,7 +6,6 @@ export default {
   canEdgeCancel: false,
   canGrabLedge: [false, false],
   canBeGrabbed: false,
-  ignoreCollision: true,
   reverseModel: true,
   //[1.05,7.14],[3.78,7.55],[10.37,1.56],[13.72,-6.85],[13.66,-9.95],[13.67,-10.28],[13.85,-9.92],[14.04,-9.34],[14.04,-9.34]],
   offset: [[-7.91, 1.71], [-5.60, 1.14], [-1.22, -0.33], [3.34, -1.09], [8.23, 6.71], [8.23, 6.71]],

@@ -445,7 +445,7 @@ export function generalAI(i) {
     //console.log(player[i].currentAction);
   }
   //run character specific stuff
-  const ais = [marthAI, jiggsAI, foxAI];
+  const ais = [marthAI, jiggsAI, foxAI, falcoAI];
   ais[cS[i]](i); //calls that character's AI.
 }
 export function marthAI(i) {
@@ -864,6 +864,9 @@ function foxAI(i) {
   }
 }
 
+function falcoAI(i) {
+
+}
 
 export function runAI (i){
   generalAI(i); //calls general AI

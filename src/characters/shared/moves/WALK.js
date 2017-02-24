@@ -48,7 +48,7 @@ export default {
         }
       }
 
-      const time = (player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.walkMaxV;
+      const time = ((player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.walkMaxV) * player[p].charAttributes.walkAnimSpeed;
       if (time > 0){
         player[p].timer += time;
       }
@@ -92,6 +92,10 @@ export default {
     }
     else if (t[0]){
       actionStates[characterSelections[p]][t[1]].init(p,input);
+      return true;
+    }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
       return true;
     }
     else if (checkForSquat(p,input)){

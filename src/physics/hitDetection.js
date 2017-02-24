@@ -555,7 +555,7 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
     }
     if (drawBounce) {
       sounds.bounce.play();
-      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face);
+      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face, Math.PI/2);
     }
   }
 
@@ -590,7 +590,7 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
   if (player[v].phys.grounded && player[v].hit.angle > 180) {
     if (player[v].hit.knockback >= 80) {
       sounds.bounce.play();
-      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face);
+      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face, Math.PI/2);
       player[v].hit.angle = 360 - player[v].hit.angle;
       player[v].hit.knockback *= 0.8;
     }
@@ -980,6 +980,9 @@ export function knockbackSounds (type,knockback,v){
         case 2:
           sounds.foxweakhurt.play();
           break;
+        case 3:
+            sounds.falcohurt1.play();
+            break;
         default:
           break;
       }
@@ -995,6 +998,9 @@ export function knockbackSounds (type,knockback,v){
         case 2:
           sounds.foxstronghurt.play();
           break;
+        case 3:
+            sounds.falcohurt2.play();
+            break;
         default:
           break;
       }

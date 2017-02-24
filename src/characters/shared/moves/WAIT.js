@@ -64,6 +64,10 @@ export default {
       actionStates[characterSelections[p]][t[1]].init(p,input);
       return true;
     }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
+      return true;
+    }
     else if (checkForSquat(p,input) && !player[p].inCSS){
       actionStates[characterSelections[p]].SQUAT.init(p,input);
       return true;

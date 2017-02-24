@@ -1,4 +1,4 @@
-import {airDrift, fastfall, actionStates, turnOffHitboxes} from "physics/actionStateShortcuts";
+import {airDrift, fastfall, actionStates, turnOffHitboxes, playSounds} from "physics/actionStateShortcuts";
 import {characterSelections,  player} from "main/main";
 import {sounds} from "main/sfx";
 import {framesData} from 'main/characters';
@@ -29,6 +29,7 @@ export default {
   },
   main : function(p,input){
     player[p].timer++;
+    playSounds("TECH",p);
     if (!actionStates[characterSelections[p]].TECHU.interrupt(p,input)){
       fastfall(p,input);
       airDrift(p,input);

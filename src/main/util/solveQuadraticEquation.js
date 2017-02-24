@@ -18,8 +18,12 @@ export function solveQuadraticEquation (a0 : number, a1 : number, a2 : number, s
     if (disc < 0) {
       return false; // non-real solutions
     }
+    else if (Math.sign(a1) === sign) {
+      // avoid catastrophic cancellation
+      return 2 * a0 / (-a1 - sign * Math.sqrt(disc)); 
+    }
     else {
-      return ((-a1 + sign* Math.sqrt(disc)) / (2 * a2) );
+      return ((-a1 + sign * Math.sqrt(disc)) / (2 * a2) );
     }
   }
 }

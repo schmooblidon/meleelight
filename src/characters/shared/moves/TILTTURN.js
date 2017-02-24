@@ -60,6 +60,10 @@ export default {
       actionStates[characterSelections[p]].WAIT.init(p,input);
       return true;
     }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
+      return true;
+    }
     else if (player[p].timer === 6 && input[p][0].lsX * player[p].phys.face > 0.79 && player[p].phys.dashbuffer){
       actionStates[characterSelections[p]].DASH.init(p,input);
       return true;

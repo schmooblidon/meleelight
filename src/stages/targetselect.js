@@ -12,7 +12,7 @@ import {showingCode, stageTemp,  setShowingCode, resetStageTemp, setTargetBuilde
 } from "../target/targetbuilder";
 import {sounds,music} from "../main/sfx";
 import {twoPi} from "../main/render";
-import {foxPic, puffPic, marthPic} from "../menus/css";
+import {foxPic, puffPic, marthPic, falcoPic} from "../menus/css";
 import {customTargetStages, setCustomTargetStages,setActiveStageTarget} from "stages/activeStage";
 import {deepCopyObject} from "../main/util/deepCopy";
 import {Box2D} from "../main/util/Box2D";
@@ -58,13 +58,13 @@ export function tssControls (i, input){
       let cSelected = characterSelections[i];
       setCS(i,cSelected- 1);
       if (characterSelections[i] < 0) {
-        setCS(i, 2);
+        setCS(i, 3);
       }
       sounds.menuSelect.play();
     } else if ((input[i][0].dd && !input[i][1].dd) || (input[i][0].r && !input[i][1].r)) {
       let elseSelected = characterSelections[i];
       setCS(i,elseSelected + 1);
-      if (characterSelections[i] > 2) {
+      if (characterSelections[i] > 3) {
         setCS(i, 0);
       }
       sounds.menuSelect.play();
@@ -84,7 +84,7 @@ export function tssControls (i, input){
           }
           setCookie("custom" + (customTargetStages.length), null, 36500);
 
-          for (var j = 0; j < 3; j++) {
+          for (var j = 0; j < 4; j++) {
             targetRecords[j].splice(targetSelected, 1);
             targetRecords[j].push(-1);
             for (var k = targetSelected; k < 10 + customTargetStages.length; k++) {
@@ -466,6 +466,9 @@ export function drawTSS (){
     case 2:
        add = 0;
       break;
+    case 3:
+       add = 0;
+      break;
     default:
        add = 0;
       break;
@@ -496,6 +499,10 @@ export function drawTSS (){
     case 2:
       ui.fillText("  F O X ", 110, 588);
       ui.drawImage(foxPic, 102, 512, 81, 58);
+      break;
+    case 3:
+      ui.fillText("FALCO", 113, 588);
+      ui.drawImage(falcoPic, 102, 512, 81, 58);
       break;
     default:
       break;

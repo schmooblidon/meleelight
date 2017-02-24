@@ -32,7 +32,7 @@ export default {
         player[p].phys.cVel.x = tempMax;
       }
 
-      const time = (player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.dMaxV;
+      const time = ((player[p].phys.cVel.x * player[p].phys.face) / player[p].charAttributes.dMaxV) * player[p].charAttributes.runAnimSpeed;
       if (time > 0){
         player[p].timer += time;
       }
@@ -79,6 +79,10 @@ export default {
     }
     else if (input[p][0].lA > 0 || input[p][0].rA > 0){
       actionStates[characterSelections[p]].GUARDON.init(p,input);
+      return true;
+    }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
       return true;
     }
     else if (Math.abs(input[p][0].lsX) < 0.62){
