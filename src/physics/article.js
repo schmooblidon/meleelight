@@ -23,8 +23,6 @@ export const articles = {
     "LASER": {
         name: "LASER",
         canTurboCancel: false,
-      strokeStyle: "rgb(255, 59, 59)" ,
-      fillStyle: "rgb(255, 193, 193)",
         init: function(options) {
           const p = options.p;
           const x = options.x;
@@ -32,7 +30,7 @@ export const articles = {
           const rotate = options.rotate;
           const isFox = (options.isFox !== undefined) ? options.isFox : true;
           const partOfThrow = options.partOfThrow || false;
-          this.strokeStyle = isFox ? "rgb(255, 59, 59)" : "rgb(137,255,255)";
+          this.strokeStyle = isFox ? "rgba(255, 59, 59,0.6)" : "rgba(73,130,234,0.6)";
           this.fillStyle   = isFox ? "rgb(255, 193, 193)" : "rgb(225, 255, 255)";
             var obj = {
                 hitList: [],
