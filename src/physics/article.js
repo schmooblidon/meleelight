@@ -9,6 +9,9 @@ import {activeStage} from "stages/activeStage";
 import {createHitbox} from "../main/util/createHitBox";
 import {Vec2D} from "../main/util/Vec2D";
 import {Segment2D} from "../main/util/Segment2D";
+import {drawLaserLine} from "../main/vfx/dVfx/laser";
+import {chromaticAberration} from "../main/vfx/chromaticAberration";
+import {unmakeColour} from "../main/vfx/makeColour";
 /* eslint-disable */
 
 export let aArticles = [];
@@ -91,9 +94,6 @@ export const articles = {
         },
         draw: function(i) {
             fg2.save();
-            fg2.strokeStyle = this.strokeStyle;
-            fg2.fillStyle = this.fillStyle;
-            fg2.lineWidth = 2;
             var h = new Vec2D((aArticles[i].instance.pos.x * activeStage.scale) + activeStage.offset[0], (aArticles[i].instance.pos.y * -activeStage.scale) +
                 activeStage.offset[1]);
             var t = new Vec2D((aArticles[i].instance.posPrev.x * activeStage.scale) + activeStage.offset[0], (aArticles[i].instance.posPrev.y * -
@@ -104,17 +104,10 @@ export const articles = {
             var v2 = rotateVector(4, 2, -r);
             var v3 = rotateVector(4, -2, -r);
             var v4 = rotateVector(-4, -2, -r);
-            fg2.beginPath();
-            fg2.moveTo(h.x, h.y);
-            fg2.lineTo(h.x + v1.x * d, h.y + v1.y);
-            fg2.lineTo(t.x + v2.x * d, t.y + v2.y);
-            fg2.lineTo(t.x, t.y);
-            fg2.lineTo(t.x + v3.x * d, t.y + v3.y);
-            fg2.lineTo(h.x + v4.x * d, h.y + v4.y);
-            fg2.closePath();
-            fg2.fill();
-            fg2.stroke();
+            chromaticAberration( fg2, (c1, c2) => drawLaserLine(h,t,v1,v2,v3,v4,d,c1,c2), unmakeColour(this.strokeStyle), unmakeColour(this.fillStyle), 0.8
+                               , new Vec2D ( -0.3 * Math.sin(r) * activeStage.scale, - 0.3 * Math.cos(r) * activeStage.scale) );
             fg2.restore();
+
         }
     },
 
@@ -170,7 +163,6 @@ export const articles = {
         }
     }
 };
-
 
 export function executeArticles (){
   destroyArticleQueue = [];

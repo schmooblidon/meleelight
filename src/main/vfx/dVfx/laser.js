@@ -36,3 +36,19 @@ export default (posInQueue)=> {
   fg2.fill();
   fg2.restore();
 };
+
+export function drawLaserLine ( h, t, v1, v2, v3, v4, d, col1, col2 ) {
+  fg2.lineWidth = 2;
+  fg2.strokeStyle = col1;
+  fg2.fillStyle = col2;
+  fg2.beginPath();
+  fg2.moveTo(h.x, h.y);
+  fg2.lineTo(h.x + v1.x * d, h.y + v1.y);
+  fg2.lineTo(t.x + v2.x * d, t.y + v2.y);
+  fg2.lineTo(t.x, t.y);
+  fg2.lineTo(t.x + v3.x * d, t.y + v3.y);
+  fg2.lineTo(h.x + v4.x * d, h.y + v4.y);
+  fg2.closePath();
+  fg2.fill();
+  fg2.stroke();
+}
