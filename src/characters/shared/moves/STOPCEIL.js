@@ -36,7 +36,10 @@ export default {
     if (!actionStates[characterSelections[p]].STOPCEIL.interrupt(p,input)){
       if (player[p].hit.hitstun > 0){
         if (player[p].hit.hitstun % 10 === 0){
-          drawVfx("flyingDust",player[p].phys.pos);
+          drawVfx({
+            name: "flyingDust",
+            pos: player[p].phys.pos
+          });
         }
         player[p].hit.hitstun--;
         player[p].phys.cVel.y -= player[p].charAttributes.gravity;

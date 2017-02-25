@@ -43,9 +43,18 @@ export default {
     if (!this.interrupt(p,input)){
       if (player[p].timer < 23){
         if (player[p].timer%2){
-          drawVfx("firefoxtail",player[p].phys.posPrev,player[p].phys.face);
+          drawVfx({
+            name:"firefoxtail",
+            pos:player[p].phys.posPrev,
+            face:player[p].phys.face
+          });
         }
-        drawVfx("firefoxlaunch",player[p].phys.pos,player[p].phys.face,p);
+        drawVfx({
+          name:"firefoxlaunch",
+          pos:player[p].phys.pos,
+          face:player[p].phys.face,
+          f:p
+        });
       }
       if (player[p].phys.grounded){
         reduceByTraction(p);
@@ -109,11 +118,19 @@ export default {
   land : function(p,input){
     if (player[p].timer < 23){
       // BOUNCE
-      drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face);
+      drawVfx({
+        name:"groundBounce",
+        pos:player[p].phys.pos,
+        face:player[p].phys.face
+      });
       FIREFOXBOUNCE.init(p,input);
     }
     else {
-      drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
+      drawVfx({
+        name:"impactLand",
+        pos:player[p].phys.pos,
+        face:player[p].phys.face
+      });
     }
   }
 };

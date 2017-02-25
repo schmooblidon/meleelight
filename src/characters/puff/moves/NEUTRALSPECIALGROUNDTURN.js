@@ -27,7 +27,11 @@ export default {
     if (!puff.NEUTRALSPECIALGROUNDTURN.interrupt(p, input)) {
       player[p].phys.cVel.x = (player[p].phys.rollOutVel * player[p].phys.face * -1) - (player[p].phys.rollOutVel * 0.045 * player[p].phys.rollOutTurnTimer * player[p].phys.face * -1);
       if (player[p].phys.rollOutDistance % 5 === 0) {
-        drawVfx("dashDust", player[p].phys.pos, player[p].phys.face);
+        drawVfx({
+          name: "dashDust",
+          pos: player[p].phys.pos,
+          face: player[p].phys.face
+        });
       }
     }
   },

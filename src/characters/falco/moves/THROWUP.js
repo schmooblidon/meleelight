@@ -32,20 +32,59 @@ export default {
         sounds.foxlasercock.play();
       }
       if (prevFrame < 18 && player[p].timer >= 18){
-        articles.LASER.init(p,0,18,Math.PI/2,false);
+        articles.LASER.init({
+          p: p,
+          x: 0,
+          y: 18,
+          rotate: Math.PI / 2,
+          isFox: false
+        });
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI/2);
+        drawVfx({
+          name:"laser",
+          pos:new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),
+          face:player[p].phys.face,
+          f:Math.PI/2,
+          color1:{r:137, g:255, b:255},
+          color2:{r:157, g:255, b:255}
+        });
       }
       else if (prevFrame < 20 && player[p].timer >= 20){
-        articles.LASER.init(p,0,18,Math.PI/2,false);
+        articles.LASER.init({
+          p: p,
+          x: 0,
+          y: 18,
+          rotate: Math.PI / 2,
+          isFox: false
+        });
         // rotate 90
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI/2);
+        drawVfx({
+          name:"laser",
+          pos:new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),
+          face:player[p].phys.face,
+          f:Math.PI/2,
+          color1:{r:137, g:255, b:255},
+          color2:{r:157, g:255, b:255}
+        });
       }
       else if (prevFrame < 24 && player[p].timer >= 24){
-        articles.LASER.init(p,0,18,Math.PI/2,false);
+        articles.LASER.init({
+          p: p,
+          x: 0,
+          y: 18,
+          rotate: Math.PI / 2,
+          isFox: false
+        });
         sounds.foxlaserfire.play();
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),player[p].phys.face,Math.PI/2);
+        drawVfx({
+          name:"laser",
+          pos:new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),
+          face:player[p].phys.face,
+          f:Math.PI/2,
+          color1:{r:137, g:255, b:255},
+          color2:{r:157, g:255, b:255}
+        });
       }
       else if (prevFrame < 33 && player[p].timer >= 33){
         sounds.foxlaserholster.play();

@@ -5,11 +5,11 @@ import {fg2} from "main/main";
 import {twoPi} from "main/render";
 import {drawArrayPath} from "main/vfx/drawArrayPath";
 import vfx from "main/vfx/vfxData/index";
-export default(j) =>{
+export default (posInQueue) =>{
   fg2.save();
-  fg2.translate((vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0], (vfxQueue[j][2].y * -activeStage.scale) + activeStage.offset[
+  fg2.translate((vfxQueue[posInQueue].newPos.x * activeStage.scale) + activeStage.offset[0], (vfxQueue[posInQueue].newPos.y * -activeStage.scale) + activeStage.offset[
           1]);
-  switch (vfxQueue[j][1]) {
+  switch (vfxQueue[posInQueue].timer) {
     case 1:
       fg2.fillStyle = makeColour(255, 188, 14, 0.62);
       fg2.beginPath();
@@ -29,11 +29,11 @@ export default(j) =>{
       fg2.fill();
       break;
     case 2:
-      drawArrayPath(fg2, "rgb(255,61,61)", vfxQueue[j][3], 0, 0, vfx.normalhit.path1, 0.2 * (activeStage.scale / 4.5),
+      drawArrayPath(fg2, "rgb(255,61,61)", vfxQueue[posInQueue].face, 0, 0, vfx.normalhit.path1, 0.2 * (activeStage.scale / 4.5),
           0.2 * (activeStage.scale / 4.5));
       break;
     case 3:
-      drawArrayPath(fg2, "rgb(150, 208, 255)", vfxQueue[j][3], 0, 0, vfx.normalhit.path2, 0.2 * (activeStage.scale /
+      drawArrayPath(fg2, "rgb(150, 208, 255)", vfxQueue[posInQueue].face, 0, 0, vfx.normalhit.path2, 0.2 * (activeStage.scale /
           4.5), 0.2 * (activeStage.scale / 4.5));
       break;
     case 4:
@@ -41,8 +41,8 @@ export default(j) =>{
     case 6:
     case 7:
       for (let n = 0; n < vfx.normalhit.path3.length; n++) {
-        drawArrayPath(fg2, makeColour(120, 255, 99, 4 / vfxQueue[j][1]), vfxQueue[j][3], 0, 0, vfx.normalhit.path3[
-            n], 0.2 * (vfxQueue[j][1] / 7) * (activeStage.scale / 4.5), 0.2 * (vfxQueue[j][1] / 7) * (activeStage.scale /
+        drawArrayPath(fg2, makeColour(120, 255, 99, 4 / vfxQueue[posInQueue].timer), vfxQueue[posInQueue].face, 0, 0, vfx.normalhit.path3[
+            n], 0.2 * (vfxQueue[posInQueue].timer / 7) * (activeStage.scale / 4.5), 0.2 * (vfxQueue[posInQueue].timer / 7) * (activeStage.scale /
             4.5));
       }
       break;

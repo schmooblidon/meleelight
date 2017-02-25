@@ -35,10 +35,15 @@ export default {
     dancingBladeCombo(p, 17, 33, input);
     if (!marth.SIDESPECIALAIR2FORWARD.interrupt(p, input)) {
       if (player[p].timer > 11 && player[p].timer < 25) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "SIDESPECIALAIR2FORWARD",
-          frame: player[p].timer - 12
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "SIDESPECIALAIR2FORWARD",
+            frame: player[p].timer - 12
+          }
         });
       }
       dancingBladeAirMobility(p, input);

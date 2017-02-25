@@ -57,7 +57,10 @@ export function hitDetect (p,input){
                                             var diff = player[p].hitboxes.id[j].dmg - player[i].hitboxes.id[k].dmg;
                                             if (player[p].hitboxes.id[j].clank == 6) {
                                                 attackerClank = true;
-                                                drawVfx("clank", clankHit[1]);
+                                                drawVfx({
+                                                  name: "clank",
+                                                  pos: clankHit[1]
+                                                });
                                                 player[p].phys.hurtBoxState = 1;
                                                 player[p].phys.intangibleTimer = 1;
                                                 // double check still in action state for some weird case
@@ -89,7 +92,10 @@ export function hitDetect (p,input){
                                                     actionStates[characterSelections[p]].CATCHCUT.init(p,input);
                                                 }
                                                 sounds.clank.play();
-                                                drawVfx("clank", clankHit[1]);
+                                                drawVfx({
+                                                  name: "clank",
+                                                  pos: clankHit[1]
+                                                });
                                                 player[p].hitboxes.hitList.push(i);
                                                 player[p].hasHit = true;
                                             }
@@ -351,8 +357,16 @@ export function cssHits(input) {
       if (player[v].phys.powerShieldActive) {
         player[v].phys.powerShielded = true;
         player[v].hit.powershield = true;
-        drawVfx("impactLand", player[v].phys.pos, player[v].phys.face);
-        drawVfx("powershield", player[v].phys.shieldPositionReal, player[v].phys.face);
+        drawVfx({
+          name: "impactLand",
+          pos: player[v].phys.pos,
+          face: player[v].phys.face
+        });
+        drawVfx({
+          name: "powershield",
+          pos: player[v].phys.shieldPositionReal,
+          face: player[v].phys.face
+        });
         sounds.powershield.play();
       }
       player[v].hit.shieldstun = ((Math.floor(damage) * ((0.65 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) +
@@ -385,7 +399,11 @@ export function executeShieldHit(input, v, a, h, damage) {
       player[v].phys.cVel.y = 2.5;
       player[v].phys.grounded = false;
       player[v].phys.shieldHP = 0;
-      drawVfx("breakShield", player[v].phys.pos, player[v].phys.face);
+      drawVfx({
+        name: "breakShield",
+        pos: player[v].phys.pos,
+        face: player[v].phys.face
+      });
       actionStates[characterSelections[v]].SHIELDBREAKFALL.init(v,input);
       sounds.shieldbreak.play();
       return;
@@ -398,15 +416,26 @@ export function executeShieldHit(input, v, a, h, damage) {
     vPushMultiplier = 1;
     player[v].phys.powerShielded = true;
     player[v].hit.powershield = true;
-    drawVfx("impactLand", player[v].phys.pos, player[v].phys.face);
-    drawVfx("powershield", player[v].phys.shieldPositionReal, player[v].phys.face);
+    drawVfx({
+      name: "impactLand",
+      pos: player[v].phys.pos,
+      face: player[v].phys.face
+    });
+    drawVfx({
+      name: "powershield",
+      pos: player[v].phys.shieldPositionReal,
+      face: player[v].phys.face
+    });
     sounds.powershield.play();
   } else {
     let frame = player[v].hitboxes.frame;
     if(frame > 1){
       frame = 1;
     }
-    drawVfx("clank", new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y));
+    drawVfx({
+      name: "clank",
+      pos: new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y)
+    });
   }
   player[v].hit.shieldstun = ((Math.floor(damage) * ((0.65 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.3)) * 1.5) + 2;
   let victimPush = ((Math.floor(damage) * ((0.195 * (1 - ((player[v].phys.shieldAnalog - 0.3) / 0.7))) + 0.09)) +
@@ -555,7 +584,12 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
     }
     if (drawBounce) {
       sounds.bounce.play();
-      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face, Math.PI/2);
+      drawVfx({
+        name: "groundBounce",
+        pos: player[v].phys.pos,
+        face: player[v].phys.face,
+        f: Math.PI / 2
+      });
     }
   }
 
@@ -590,7 +624,12 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
   if (player[v].phys.grounded && player[v].hit.angle > 180) {
     if (player[v].hit.knockback >= 80) {
       sounds.bounce.play();
-      drawVfx("groundBounce", player[v].phys.pos, player[v].phys.face, Math.PI/2);
+      drawVfx({
+        name: "groundBounce",
+        pos: player[v].phys.pos,
+        face: player[v].phys.face,
+        f: Math.PI / 2
+      });
       player[v].hit.angle = 360 - player[v].hit.angle;
       player[v].hit.knockback *= 0.8;
     }
@@ -613,23 +652,48 @@ export function hitEffect(type,v){
   switch (type) {
     case 0:
       // normal
-      drawVfx("normalhit", player[v].hit.hitPoint, player[v].phys.face);
+      drawVfx({
+        name: "normalhit",
+        pos: player[v].hit.hitPoint,
+        face: player[v].phys.face
+      });
       break;
     case 1:
       // slash
-      drawVfx("hitSparks", player[v].hit.hitPoint, player[v].phys.face);
-      drawVfx("hitFlair", player[v].hit.hitPoint, player[v].phys.face);
-      drawVfx("hitCurve", player[v].hit.hitPoint, player[v].phys.face, player[v].hit.angle);
+      drawVfx({
+        name: "hitSparks",
+        pos: player[v].hit.hitPoint,
+        face: player[v].phys.face
+      });
+      drawVfx({
+        name: "hitFlair",
+        pos: player[v].hit.hitPoint,
+        face: player[v].phys.face
+      });
+      drawVfx({
+        name: "hitCurve",
+        pos: player[v].hit.hitPoint,
+        face: player[v].phys.face,
+        f: player[v].hit.angle
+      });
       break;
     case 3:
       // fire
       player[v].burning = 20;
-      drawVfx("firehit", player[v].hit.hitPoint, player[v].phys.face);
+      drawVfx({
+        name: "firehit",
+        pos: player[v].hit.hitPoint,
+        face: player[v].phys.face
+      });
       break;
     case 4:
       // electric
       player[v].shocked = 20;
-      drawVfx("electrichit", player[v].hit.hitPoint, player[v].phys.face);
+      drawVfx({
+        name: "electrichit",
+        pos: player[v].hit.hitPoint,
+        face: player[v].phys.face
+      });
       break;
     default:
       break;
@@ -756,8 +820,12 @@ export function executeGrabTech (a,v,input){
     actionStates[characterSelections[a]].CAPTURECUT.init(a,input);
     actionStates[characterSelections[v]].CAPTURECUT.init(v,input);
     sounds.parry.play();
-    drawVfx("shieldup", new Vec2D((player[a].phys.pos.x + player[v].phys.pos.x) / 2, player[a].phys.pos.y + 12), player[
-        v].phys.face, 3);
+    drawVfx({
+      name: "shieldup",
+      pos: new Vec2D((player[a].phys.pos.x + player[v].phys.pos.x) / 2, player[a].phys.pos.y + 12),
+      face: player[v].phys.face,
+      f: 3
+    });
 }
 
 export function getKnockback (hb,damagestaled,damageunstaled,percent,weight,crouching,vCancel) {

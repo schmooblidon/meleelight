@@ -30,7 +30,11 @@ export default {
     player[p].phys.charging = false;
     turnOffHitboxes(p);
     const l = activeStage.ledge[player[p].phys.onLedge];
-    drawVfx("cliffcatchspark",new Vec2D(activeStage[l[0]][l[1]][l[2]].x,activeStage[l[0]][l[1]][l[2]].y),player[p].phys.face);
+    drawVfx({
+      name: "cliffcatchspark",
+      pos: new Vec2D(activeStage[l[0]][l[1]][l[2]].x, activeStage[l[0]][l[1]][l[2]].y),
+      face: player[p].phys.face
+    });
     actionStates[characterSelections[p]].CLIFFCATCH.main(p,input);
   },
   main : function(p,input){
