@@ -42,7 +42,10 @@ export default {
         return;
       }
       actionStates[characterSelections[p]].CATCHWAIT.init(grabbedBy,input);
-      drawVfx("tech",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+10));
+      drawVfx({
+        name: "tech",
+        pos: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + 10)
+      });
       return true;
     }
     else {

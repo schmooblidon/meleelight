@@ -2,10 +2,10 @@ import {vfxQueue} from "main/vfx/vfxQueue";
 import {activeStage} from "stages/activeStage";
 import {fg2} from "main/main";
 import {twoPi} from "main/render";
-export default (j) =>{
-  const frame = vfxQueue[j][1];
+export default (posInQueue) =>{
+  const frame = vfxQueue[posInQueue].timer;
   fg2.save();
-  fg2.translate((vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0], (vfxQueue[j][2].y * -activeStage.scale) + activeStage.offset[
+  fg2.translate((vfxQueue[posInQueue].newPos.x * activeStage.scale) + activeStage.offset[0], (vfxQueue[posInQueue].newPos.y * -activeStage.scale) + activeStage.offset[
           1]);
   fg2.lineWidth = 4;
   fg2.strokeStyle = "rgba(255, 127, 112," + (0.8 - 0.15 * frame) + ")";

@@ -31,10 +31,15 @@ export default {
     if (!marth.SIDESPECIALGROUND4UP.interrupt(p, input)) {
       player[p].phys.cVel.x = marth.SIDESPECIALGROUND4UP.setVelocities[player[p].timer - 1] * player[p].phys.face;
       if (player[p].timer > 18 && player[p].timer < 27) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "SIDESPECIALGROUND4UP",
-          frame: player[p].timer - 19
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "SIDESPECIALGROUND4UP",
+            frame: player[p].timer - 19
+          }
         });
       }
       if (player[p].timer === 20) {

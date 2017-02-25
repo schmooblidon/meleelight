@@ -1,5 +1,5 @@
 // @flow
-/*eslint indent:1*/ // get stuffed
+/*eslint indent:0*/ // get stuffed
 
 import {Vec2D, getXOrYCoord, putXOrYCoord, flipXOrY} from "../main/util/Vec2D";
 import {dotProd, scalarProd, add, subtract, norm, orthogonalProjection} from "../main/linAlg";
@@ -28,25 +28,25 @@ const maxRecursion = 6;
 // various utility functions
 
 // horizontal line through a point
-function hLineThrough(point: Vec2D): [Vec2D, Vec2D] {
-  return [point, new Vec2D(point.x + 1, point.y)];
+export function hLineThrough ( point : Vec2D ) : [Vec2D, Vec2D] {
+  return [ point, new Vec2D ( point.x+1, point.y)];
 };
 
-function hLineAt(y: number): [Vec2D, Vec2D] {
-  return hLineThrough(new Vec2D(0, y));
+export function hLineAt( y : number) : [Vec2D, Vec2D] {
+  return hLineThrough (new Vec2D (0, y));
 }
 
 // vertical line through a point
-function vLineThrough(point: Vec2D): [Vec2D, Vec2D] {
-  return [point, new Vec2D(point.x, point.y + 1)];
+export function vLineThrough ( point : Vec2D ) : [Vec2D, Vec2D] {
+  return [ point, new Vec2D ( point.x, point.y+1)];
 };
 
-function vLineAt(x: number): [Vec2D, Vec2D] {
-  return vLineThrough(new Vec2D(x, 0));
-}
+export function vLineAt ( x : number ) : [Vec2D, Vec2D] {
+  return vLineThrough (new Vec2D (x, 0));
+} 
 
 // either horizontal or vertical line through a point
-function lineThrough(point: Vec2D, xOrY: XOrY): [Vec2D, Vec2D] {
+export function lineThrough ( point : Vec2D, xOrY : XOrY ) : [Vec2D, Vec2D] {
   if (xOrY === "x") {
     return hLineThrough(point);
   }
@@ -371,7 +371,7 @@ type CollisionDatum = null | PointSweepResult | EdgeSweepResult
 // the sweeping parameter s corresponds to the location of this first collision
 // terminology in the comments: a wall is a segment with an inside and an outside (could be a ground or ceiling )
 // which is contained in an infinite line, extending both ways, which also has an inside and an outside
-function findCollision(ecb1: ECB, ecbp: ECB, labelledSurface: LabelledSurface): CollisionDatum {
+export function findCollision ( ecb1 : ECB, ecbp : ECB, labelledSurface : LabelledSurface ) : CollisionDatum {
 
 // STANDING ASSUMPTIONS
 // the ECB can only collide a ground/platform surface on its bottom point (or a bottom edge)

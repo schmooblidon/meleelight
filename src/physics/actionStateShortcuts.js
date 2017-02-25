@@ -264,7 +264,11 @@ export function shieldDepletion (p,input){
     player[p].phys.kDec.x = 0;
     player[p].phys.grounded = false;
     player[p].phys.shieldHP = 0;
-    drawVfx("breakShield", player[p].phys.pos, player[p].phys.face);
+    drawVfx({
+      name: "breakShield",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face
+    });
     sounds.shieldbreak.play();
     actionStates[characterSelections[p]].SHIELDBREAKFALL.init(p,input);
   }

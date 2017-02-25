@@ -42,13 +42,25 @@ export default {
     player[p].timer++;
     if (!puff.UPSPECIAL.interrupt(p, input)) {
       if (player[p].timer === 23) {
-        drawVfx("sing", new Vec2D(0, 0), p);
+        drawVfx({
+          name: "sing",
+          pos: new Vec2D(0, 0),
+          face: p
+        });
       }
       else if (player[p].timer === 71) {
-        drawVfx("sing2", new Vec2D(0, 0), p);
+        drawVfx({
+          name: "sing2",
+          pos: new Vec2D(0, 0),
+          face: p
+        });
       }
       else if (player[p].timer === 122) {
-        drawVfx("sing3", new Vec2D(0, 0), p);
+        drawVfx({
+          name: "sing3",
+          pos: new Vec2D(0, 0),
+          face: p
+        });
       }
       if (player[p].phys.grounded) {
         reduceByTraction(p);

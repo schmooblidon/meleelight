@@ -1,5 +1,5 @@
 // @flow
-/*eslint indent:1*/
+/*eslint indent:0*/
 
 import {Vec2D} from "./Vec2D";
 import {add} from "../linAlg";

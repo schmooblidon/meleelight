@@ -1,5 +1,5 @@
 // @flow
-/*eslint indent:1*/
+/*eslint indent:0*/
 
 import {Vec2D} from "../../main/util/Vec2D";
 import {coordinateInterceptParameter} from "../../physics/environmentalCollision";
@@ -30,10 +30,10 @@ function intersects(line1: Line, line2: Line): bool {
   }
 }
 
-function isInside(point: Vec2D, lines: Array<Line>) {
-  const pt = new Vec2D(point.x + 0.001, point.y);
-  const atInfinity = new Vec2D(point.x + 0.001, point.y + 100000);
-  return !evenNumberOfTrue(lines.map((line) => intersects(line, [pt, atInfinity])));
+function isInside( point : Vec2D, lines : Array<Line>) : bool {
+  const pt = new Vec2D( point.x+0.001, point.y);
+  const atInfinity = new Vec2D( point.x+0.001, point.y + 100000);
+  return !evenNumberOfTrue( lines.map((line) => intersects(line, [pt, atInfinity])));
 }
 
 function evenNumberOfTrue(list: Array<bool>): bool {

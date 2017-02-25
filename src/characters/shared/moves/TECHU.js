@@ -22,7 +22,10 @@ export default {
     player[p].hit.knockback = 0;
     player[p].hit.hitstun = 0;
     player[p].phys.intangibleTimer = Math.max(player[p].phys.intangibleTimer,14);
-    drawVfx("tech",player[p].phys.ECBp[2]);
+    drawVfx({
+      name: "tech",
+      pos: player[p].phys.ECBp[2]
+    });
     sounds.tech.play();
     turnOffHitboxes(p);
     actionStates[characterSelections[p]].TECHU.main(p,input);

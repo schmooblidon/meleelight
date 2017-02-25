@@ -23,7 +23,11 @@ export default {
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
     player[p].phys.landingMultiplier = 1.5;
-    drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+    drawVfx({
+      name: "dashDust",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face
+    });
     turnOffHitboxes(p);
     sounds.star.play();
     this.main(p,input);
@@ -33,7 +37,10 @@ export default {
     if (!this.interrupt(p,input)){
       if (player[p].phys.grounded){
         if (player[p].timer === 21){
-          articles.ILLUSION.init(p,1);
+          articles.ILLUSION.init({
+            p: p,
+            type: 1
+          });
           player[p].phys.cVel.x = 18.72*player[p].phys.face;
           if ((input[p][0].b || input[p][1].b) && !input[p][2].b){
             player[p].timer = 24;
@@ -66,7 +73,11 @@ export default {
       }
 
       if (player[p].timer >= 21 && player[p].timer <= 24){
-        drawVfx("illusion",player[p].phys.posPrev,player[p].phys.face);
+        drawVfx({
+          name: "illusion",
+          pos: player[p].phys.posPrev,
+          face: player[p].phys.face
+        });
       }
     }
   },
