@@ -48,8 +48,8 @@ export default {
           pos:new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),
           face:player[p].phys.face,
           f:0,
-          color1:{r:15, g:60, b:220},
-          color2:{r:15, g:60, b:200}
+          color1:{r:137, g:255, b:255},
+          color2:{r:157, g:255, b:255}
         });
 
         articles.LASER.init({

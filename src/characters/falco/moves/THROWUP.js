@@ -45,8 +45,8 @@ export default {
           pos:new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),
           face:player[p].phys.face,
           f:Math.PI/2,
-          color1:{r:15, g:60, b:220},
-          color2:{r:15, g:60, b:200}
+          color1:{r:137, g:255, b:255},
+          color2:{r:157, g:255, b:255}
         });
       }
       else if (prevFrame < 20 && player[p].timer >= 20){
@@ -64,8 +64,8 @@ export default {
           pos:new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),
           face:player[p].phys.face,
           f:Math.PI/2,
-          color1:{r:15, g:60, b:220},
-          color2:{r:15, g:60, b:200}
+          color1:{r:137, g:255, b:255},
+          color2:{r:157, g:255, b:255}
         });
       }
       else if (prevFrame < 24 && player[p].timer >= 24){
@@ -82,8 +82,8 @@ export default {
           pos:new Vec2D(player[p].phys.pos.x+(0*player[p].phys.face),player[p].phys.pos.y+18),
           face:player[p].phys.face,
           f:Math.PI/2,
-          color1:{r:15, g:60, b:220},
-          color2:{r:15, g:60, b:200}
+          color1:{r:137, g:255, b:255},
+          color2:{r:157, g:255, b:255}
         });
       }
       else if (prevFrame < 33 && player[p].timer >= 33){

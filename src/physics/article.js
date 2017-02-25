@@ -30,9 +30,10 @@ export const articles = {
           const x = options.x;
           const y = options.y;
           const rotate = options.rotate;
-          const isFox = (options.isFox !== undefined)? options.isFox : true;
+          const isFox = (options.isFox !== undefined) ? options.isFox : true;
           const partOfThrow = options.partOfThrow || false;
-          this.strokeStyle = isFox ? "rgb(255, 59, 59)":  "rgb(15,80,200)";
+          this.strokeStyle = isFox ? "rgb(255, 59, 59)" : "rgb(137,255,255)";
+          this.fillStyle   = isFox ? "rgb(255, 193, 193)" : "rgb(225, 255, 255)";
             var obj = {
                 hitList: [],
                 rotate: rotate,
