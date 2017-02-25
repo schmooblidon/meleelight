@@ -3,10 +3,10 @@ import {vfxQueue} from "main/vfx/vfxQueue";
 import {fg2} from "main/main";
 import {twoPi} from "main/render";
 import {Vec2D} from "../../util/Vec2D";
-export default(j) =>{
+export default (posInQueue) =>{
   const s = activeStage.scale / 4.5;
   fg2.save();
-  fg2.translate((vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0], (vfxQueue[j][2].y * -activeStage.scale) + activeStage.offset[
+  fg2.translate((vfxQueue[posInQueue].newPos.x * activeStage.scale) + activeStage.offset[0], (vfxQueue[posInQueue].newPos.y * -activeStage.scale) + activeStage.offset[
           1]);
   fg2.fillStyle = "rgb(209, 181, 255)";
   for (let i = 0; i < 1; i++) {

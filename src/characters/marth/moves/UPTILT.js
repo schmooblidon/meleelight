@@ -34,10 +34,15 @@ export default {
     if (!marth.UPTILT.interrupt(p, input)) {
       reduceByTraction(p, true);
       if (player[p].timer > 4 && player[p].timer < 15) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "UPTILT",
-          frame: player[p].timer - 5
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "UPTILT",
+            frame: player[p].timer - 5
+          }
         });
       }
       if (player[p].timer === 6) {

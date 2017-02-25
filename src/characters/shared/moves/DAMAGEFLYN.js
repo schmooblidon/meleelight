@@ -48,7 +48,10 @@ export default {
       player[p].timer++;
     }
     if (player[p].hit.hitstun % 10 === 0){
-      drawVfx("flyingDust",player[p].phys.pos);
+      drawVfx({
+        name: "flyingDust",
+        pos: player[p].phys.pos
+      });
     }
     if (!actionStates[characterSelections[p]].DAMAGEFLYN.interrupt(p,input)){
       if (player[p].timer > 1){

@@ -15,7 +15,12 @@ export default {
     player[p].timer = 0;
     player[p].phys.kVel.y = 0;
     player[p].phys.jabReset = false;
-    drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face,player[p].phys.groundAngle);
+    drawVfx({
+      name: "groundBounce",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face,
+      f: player[p].phys.groundAngle
+    });
     sounds.bounce.play();
     actionStates[characterSelections[p]].DOWNBOUND.main(p,input);
   },

@@ -37,7 +37,10 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (player[p].hit.hitstun % 10 === 0){
-      drawVfx("flyingDust",player[p].phys.pos);
+      drawVfx({
+        name: "flyingDust",
+        pos: player[p].phys.pos
+      });
     }
     if (!actionStates[characterSelections[p]].WALLDAMAGE.interrupt(p,input)){
       player[p].hit.hitstun--;

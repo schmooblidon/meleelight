@@ -32,7 +32,12 @@ export default {
     player[p].timer++;
     if (!this.interrupt(p,input)){
       const frame = (player[p].timer-1) % 10;
-      drawVfx("firefoxcharge",player[p].phys.pos,player[p].phys.face,frame);
+      drawVfx({
+        name: "firefoxcharge",
+        pos: player[p].phys.pos,
+        face: player[p].phys.face,
+        f: frame
+      });
 
       if (player[p].phys.grounded){
         reduceByTraction(p);

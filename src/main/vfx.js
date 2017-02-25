@@ -4,7 +4,7 @@ const twoPi = Math.PI * 2;
 
 export let showVfx = true;
 
-export function getShowSFX() {
+export function isShowSFX() {
   return showVfx;
 }
 export function toggleShowSFX() {

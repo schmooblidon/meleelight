@@ -25,10 +25,16 @@ export default {
     player[p].hit.hitlag = 5;
     player[p].hit.knockback = 0;
     if (player[p].phys.face === 1){
-      drawVfx("tech",player[p].phys.ECBp[3]);
+      drawVfx({
+        name: "tech",
+        pos: player[p].phys.ECBp[3]
+      });
     }
     else {
-      drawVfx("tech",player[p].phys.ECBp[1]);
+      drawVfx({
+        name: "tech",
+        pos: player[p].phys.ECBp[1]
+      });
     }
     // draw tech rotated
     actionStates[characterSelections[p]].WALLJUMP.main(p,input);
