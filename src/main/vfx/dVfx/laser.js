@@ -1,8 +1,10 @@
 import {vfxQueue} from "main/vfx/vfxQueue";
 import {fg2} from "main/main";
+import {Vec2D} from "main/util/Vec2D";
 import {makeColour} from "main/vfx/makeColour";
 import {activeStage} from "stages/activeStage";
 import {lines} from "main/vfx/lines";
+import {chromaticAberration} from "main/vfx/chromaticAberration";
 
 import {twoPi} from "main/render";
 export default (posInQueue)=> {
@@ -19,14 +21,27 @@ export default (posInQueue)=> {
   fg2.lineWidth = 3;
   if (vfxQueue[posInQueue].timer > 3) {
     const color1 = vfxQueue[posInQueue].color1;
-    fg2.strokeStyle = makeColour(color1.r, color1.g, color1.b, (1 - (vfxQueue[posInQueue].timer - 4) / 6));
-    fg2.beginPath();
-    fg2.arc(0, 0, (-0.1 + vfxQueue[posInQueue].timer * 0.6) * activeStage.scale, 0, twoPi);
-    fg2.closePath();
-    fg2.stroke();
+    fg2.globalCompositeOperation = "screen";
+    const t = vfxQueue[posInQueue].timer;
+    drawCircle(makeColour(0, 0, color1.b, (1 - (t - 4) / 6)), t, -0.25);
+    drawCircle(makeColour(0, color1.g, 0, (1 - (t - 4) / 6)), t, -0.1);
+    drawCircle(makeColour(color1.r, 0, 0, (1 - (t - 4) / 6)), t, 0.05);
   }
   const color2 = vfxQueue[posInQueue].color2;
-  fg2.fillStyle = makeColour(color2.r, color2.g, color2.b, Math.min(1, (1 - (vfxQueue[posInQueue].timer - 4) / 6)));
+  chromaticAberration(fg2, (c1, c2) => drawEnergyLine(c1, posInQueue), color2, color2, Math.min(1, (1 - (vfxQueue[posInQueue].timer - 4) / 6)), new Vec2D ( 0.3*activeStage.scale, 0) );
+  fg2.restore();
+};
+
+function drawCircle(col, t, offset) {
+  fg2.strokeStyle = col;
+  fg2.beginPath();
+  fg2.arc(0, 0, (offset + t * 0.6) * activeStage.scale, 0, twoPi);
+  fg2.closePath();
+  fg2.stroke();
+}
+
+function drawEnergyLine(col, posInQueue) {
+  fg2.fillStyle = col;
   fg2.beginPath();
   fg2.moveTo((-vfxQueue[posInQueue].timer * 1) * vfxQueue[posInQueue].face * activeStage.scale, (-1.6 - vfxQueue[posInQueue].timer * 1.6) * activeStage.scale);
   fg2.lineTo((-2.3 - vfxQueue[posInQueue].timer * 1) * vfxQueue[posInQueue].face * activeStage.scale, (-2.4 - vfxQueue[posInQueue].timer * 1.6) * activeStage.scale);
@@ -34,8 +49,7 @@ export default (posInQueue)=> {
   fg2.lineTo((-vfxQueue[posInQueue].timer * 1) * vfxQueue[posInQueue].face * activeStage.scale, (1.6 + vfxQueue[posInQueue].timer * 1.6) * activeStage.scale);
   fg2.closePath();
   fg2.fill();
-  fg2.restore();
-};
+}
 
 export function drawLaserLine ( h, t, v1, v2, v3, v4, d, col1, col2 ) {
   fg2.lineWidth = 2;
