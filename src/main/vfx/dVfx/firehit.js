@@ -57,7 +57,7 @@ export default (posInQueue) =>{
   drawVfx({
     name: "fireburst",
     pos: new Vec2D(-10 + 20 * Math.random() + vfxQueue[posInQueue].newPos.x, -10 + 20 * Math.random() + vfxQueue[
-            posInQueue][2].y),
+            posInQueue].y),
     face: 8
   });
   fg2.restore();
