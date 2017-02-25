@@ -103,7 +103,7 @@ export default {
           x: 2,
           y: 17,
           rotate: Math.PI * 275 / 180,
-          isFox: alse,
+          isFox: false,
           partOfThrow: true
         });
         sounds.foxlaserfire.play();
