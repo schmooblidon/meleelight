@@ -8,7 +8,7 @@ export function stars(tX, tY, n, minSpread, maxSpread) {
   
   for (let i = 0; i < n; i++) {
     const [deltaX, deltaY] = randomAnnulusPoint(0, 0, minSpread, maxSpread);
-    addToVfxQueue([vfx["star"], 0, new Vec2D(tX, tY), [deltaX, deltaY], 0.4 + 0.8*Math.random()]);
+    addToVfxQueue({ name : "star", timer : 0, pos : new Vec2D(tX,tY), face : [deltaX, deltaY], facing : 0.4 + 0.8*Math.random()});
   }
  
 }
