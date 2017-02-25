@@ -31,10 +31,15 @@ export default {
     player[p].timer++;
     if (!marth.SIDESPECIALAIR4FORWARD.interrupt(p, input)) {
       if (player[p].timer > 21 && player[p].timer < 30) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "SIDESPECIALAIR4FORWARD",
-          frame: player[p].timer - 22
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "SIDESPECIALAIR4FORWARD",
+            frame: player[p].timer - 22
+          }
         });
       }
       dancingBladeAirMobility(p, input);

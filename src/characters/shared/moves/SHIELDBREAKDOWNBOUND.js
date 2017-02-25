@@ -12,7 +12,12 @@ export default {
     player[p].timer = 0;
     player[p].phys.cVel.y = 0;
     player[p].phys.kVel.y = 0;
-    drawVfx("groundBounce",player[p].phys.pos,player[p].phys.face,normal);
+    drawVfx({
+      name: "groundBounce",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face,
+      f:normal
+    });
     sounds.bounce.play();
     actionStates[characterSelections[p]].SHIELDBREAKDOWNBOUND.main(p,input);
   },

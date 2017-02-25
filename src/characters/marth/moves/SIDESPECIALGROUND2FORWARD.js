@@ -34,10 +34,15 @@ export default  {
     if (!marth.SIDESPECIALGROUND2FORWARD.interrupt(p, input)) {
       reduceByTraction(p, true);
       if (player[p].timer > 12 && player[p].timer < 17) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "SIDESPECIALGROUND2FORWARD",
-          frame: player[p].timer - 13
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "SIDESPECIALGROUND2FORWARD",
+            frame: player[p].timer - 13
+          }
         });
       }
       if (player[p].timer === 14) {
