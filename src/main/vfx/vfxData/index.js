@@ -24,6 +24,7 @@ import hitSparks from 'main/vfx/vfxData/hitSparks';
 import illusion from 'main/vfx/vfxData/illusion';
 import impactLand from 'main/vfx/vfxData/impactLand';
 import laser from  'main/vfx/vfxData/laser';
+import laserSpark from 'main/vfx/vfxData/laserSpark';
 import normalhit from  'main/vfx/vfxData/normalhit';
 import powershield from  'main/vfx/vfxData/powershield';
 import powershieldreflect from  'main/vfx/vfxData/powershieldreflect';
@@ -69,6 +70,7 @@ export default {
   illusion,
   impactLand,
   laser,
+  laserSpark,
   normalhit,
   powershield,
   powershieldreflect,

@@ -26,6 +26,7 @@ import illusion from "main/vfx/dVfx/illusion";
 import impactLand from "main/vfx/dVfx/impactLand";
 import index from "main/vfx/dVfx/index";
 import laser from "main/vfx/dVfx/laser";
+import laserSpark from "main/vfx/dVfx/laserSpark";
 import normalhit from "main/vfx/dVfx/normalhit";
 import powershield from "main/vfx/dVfx/powershield";
 import powershieldreflect from "main/vfx/dVfx/powershieldreflect";
@@ -74,6 +75,7 @@ export default {
   impactLand,
   index,
   laser,
+  laserSpark,
   normalhit,
   powershield,
   powershieldreflect,

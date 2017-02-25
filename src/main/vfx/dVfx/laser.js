@@ -2,8 +2,15 @@ import {vfxQueue} from "main/vfx/vfxQueue";
 import {fg2} from "main/main";
 import {makeColour} from "main/vfx/makeColour";
 import {activeStage} from "stages/activeStage";
+import {lines} from "main/vfx/lines";
+
 import {twoPi} from "main/render";
 export default (posInQueue)=> {
+  if (vfxQueue[posInQueue].timer === 1) {
+    const n = 8 + Math.floor(6*Math.random());
+    const midAngle = vfxQueue[posInQueue].f;
+    lines({ name : "laserSpark", color : vfxQueue[posInQueue].color1 }, vfxQueue[posInQueue].pos, n, midAngle-Math.PI/2, midAngle+Math.PI/2, 2);
+  }
   fg2.save();
   fg2.translate((vfxQueue[posInQueue].newPos.x * activeStage.scale) + activeStage.offset[0], (vfxQueue[posInQueue].newPos.y * -activeStage.scale) + activeStage.offset[
           1]);
