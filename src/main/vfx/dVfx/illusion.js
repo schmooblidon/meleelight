@@ -7,7 +7,6 @@ import vfx from "main/vfx/vfxData/index";
 export default (posInQueue) =>{
   if (!(vfxQueue[posInQueue].timer % 2)) {
     fg2.save();
-    fg2.globalCompositeOperation = "screen";
     drawArrayPathNew( fg2
                     , makeColour(68, 0, 0, 0.75)
                     , vfxQueue[posInQueue].face
