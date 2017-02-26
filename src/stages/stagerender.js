@@ -5,6 +5,7 @@ import {rotateVector, twoPi} from "main/render";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "../main/util/Vec2D";
 import {euclideanDist} from "../main/linAlg";
+import {drawSynthWave} from "./synthwave.js";
 
 const bgPos = [[-30, 500, 300, 500, 900, 500, 1230, 450, 358], [-30, 400, 300, 400, 900, 400, 1230, 350, 179]];
 const direction = [[1, -1, 1, -1, 1, -1, 1, -1, 1], [-1, 1, -1, 1, -1, 1, -1, 1, -1]];
@@ -430,10 +431,12 @@ export function drawBackground() {
   }
   else {
     if (backgroundType === 0) {
-      drawStars();
+      //drawStars();
+      drawSynthWave();
     }
     else {
-      drawTunnel();
+      //drawTunnel();
+      drawSynthWave();
     }
   }
 };
