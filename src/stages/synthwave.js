@@ -10,6 +10,9 @@ const height = 400;
 const heightOffset = 100;
 const speed = -0.03;
 const focal = 1;
+
+const offset = - height + height * lineCount * hScale / (focal + lineCount * hScale);
+
 // add z position
 for (let i=0;i<lineCount;i++) {
   lines.push(i*hScale);
@@ -21,10 +24,10 @@ export function drawSynthWave() {
   chromaticAberration( bg2, (c1,c2) => drawVertLines(c1), col, col, 1, new Vec2D(1.3,0) );
   // draw horizontal lines
   chromaticAberration( bg2, (c1,c2) => drawHorizLines(c1), col, col, 1, new Vec2D(0,1.3) );
-  // thick line on the horizon
+  // thick line on the horizon, at y-coordinate height + heightOffset;
   bg2.lineWidth = 5;
   bg2.strokeStyle = "#c238d4";
-  const y = projectedYCoord( lineCount * hScale );
+  const y = height + heightOffset;
   bg2.beginPath();
   bg2.moveTo(0,y);
   bg2.lineTo(1200,y);
@@ -45,7 +48,7 @@ export function drawSynthWave() {
 }
 
 function drawVertLines(col) {
-  const y = projectedYCoord( lineCount * hScale);
+  const y = height + heightOffset;
   bg2.lineWidth = 3;
   bg2.strokeStyle = col;
   bg2.beginPath();
@@ -68,5 +71,5 @@ function drawHorizLines(col) {
 }
 
 function projectedYCoord ( y ) {
-  return heightOffset + 2 * height - height * y / (focal + y);
+  return heightOffset + offset + 2 * height - height * y / (focal + y);
 }
