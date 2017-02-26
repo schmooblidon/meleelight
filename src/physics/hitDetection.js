@@ -295,13 +295,14 @@ export function hitHurtCollision (i,p,j,previous,phantom){
 
 export function cssHits(input) {
   for (var i = 0; i < hitQueue.length; i++) {
-    var v = hitQueue[i][0];
-    var a = hitQueue[i][1];
-    var h = hitQueue[i][2];
-    var shieldHit = hitQueue[i][3];
-    var isThrow = hitQueue[i][4];
-    var drawBounce = hitQueue[i][5];
-    var phantom = hitQueue[i][6] || false;
+    const v = hitQueue[i][0];
+    const a = hitQueue[i][1];
+    const h = hitQueue[i][2];
+    const shieldHit = hitQueue[i][3];
+    const isThrow = hitQueue[i][4];
+    const drawBounce = hitQueue[i][5];
+    const phantom = hitQueue[i][6] || false;
+    const damage = player[a].hitboxes.id[h].dmg;
     if (shieldHit) {
       sounds.blunthit.play();
       player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
