@@ -1,6 +1,6 @@
 import {bg1,bg2,fg1,fg2} from "main/main";
 import {Vec2D} from "main/util/Vec2D";
-import {Vec3D, splatCoordinates} from "./3D";
+import {Vec3D, splatCoordinates, add} from "./3D";
 import {chromaticAberration} from "main/vfx/chromaticAberration";
 import {makeColour} from "main/vfx/makeColour";
 
@@ -18,14 +18,21 @@ const direction = new Vec3D(0,0,1);
 const right = new Vec3D(1,0,0);
 const up = new Vec3D(0,1,0);
 
-const wireframeEdges = [[0,1], [0,2], [1,2],[0,3],[1,3],[2,3]];
-const wireframeVertices = [ new Vec3D(-3,0,10), new Vec3D(-4.5, 0, 10.866), new Vec3D(-4.5,0,9.134), new Vec3D(-4,0.866,10) ];
-let wireframeZMin = 9.134;
-let wireframeZMax = 10.866;
-
 const offset = - height + height * lineCount * hScale / (focal + lineCount * hScale);
 
-// add z position
+function tetrahedronAt(v) {
+  return { edges    : [[0,1], [0,2], [1,2],[0,3],[1,3],[2,3]]
+         , vertices : [ new Vec3D(1,0,0), new Vec3D(-0.5, 0, 0.866), new Vec3D(-0.5,0,-0.866), new Vec3D(0,0.866,0) ]
+         , offset   : v
+         , zmin : -0.866
+         , zmax :  0.866 };
+};
+
+const objects = [ tetrahedronAt( new Vec3D(-4,0,15))
+                , tetrahedronAt( new Vec3D(-3,10,24))
+                , tetrahedronAt( new Vec3D(4,5,26))
+                , tetrahedronAt( new Vec3D(2,-3,37)) ];
+
 for (let i=0;i<lineCount;i++) {
   lines.push(i*hScale);
 }
@@ -101,16 +108,20 @@ export function drawSynthWave() {
   fg2.lineWidth = 3;
   fg2.strokeStyle = makeColour(230, 120, 20, 1);
   fg2.beginPath();
-  for (let k=0; k<wireframeEdges.length; k++) {
-    const v1 = wireframeVertices[wireframeEdges[k][0]];
-    const v2 = wireframeVertices[wireframeEdges[k][1]];
-    const p1 = splatCoordinates(origin, direction, right, up, v1);
-    const p2 = splatCoordinates(origin, direction, right, up, v2);
-    if (p1 !== null && p2 !== null) {
-      fg2.moveTo(600 + 166*p1.x, 300 - 166*p1.y);
-      fg2.lineTo(600 + 166*p2.x, 300 - 166*p2.y);
+  for (let o=0; o<objects.length; o++) {
+    const obj = objects[o];
+    for (let e=0; e<obj.edges.length; e++) {
+      const edge = obj.edges[e];
+      const v1 = add(obj.vertices[edge[0]], obj.offset);
+      const v2 = add(obj.vertices[edge[1]], obj.offset);
+      const p1 = splatCoordinates(origin, direction, right, up, v1);
+      const p2 = splatCoordinates(origin, direction, right, up, v2);
+      if (p1 !== null && p2 !== null) {
+        fg2.moveTo(600 + 166*p1.x, 300 - 166*p1.y);
+        fg2.lineTo(600 + 166*p2.x, 300 - 166*p2.y);
+      }
+      fg2.stroke();
     }
-    fg2.stroke();
   }
   // move lines for the next frame
   for (let i=0;i<lineCount;i++) {
@@ -122,29 +133,19 @@ export function drawSynthWave() {
       lines[i] = 0;
     }
   }
-  // move wireframe
-  if (wireframeZMax < -6) {
-    wireframeZMin += 20;
-    wireframeZMax += 20;
-    for (let i=0; i<wireframeVertices.length; i++) { 
-      wireframeVertices[i].z += 20;
+  // move objects
+  for (let o=0; o<objects.length; o++) {
+    const obj = objects[o];
+    if (obj.offset.z + obj.zmax < -6) {
+      obj.offset.z += 20;
+    }
+    else if (obj.offset.z + obj.zmin > 60) {
+      obj.offset.z -= 60;
+    }
+    else {
+      obj.offset.z += speed;
     }
   }
-  else if (wireframeZMin > 80) {
-    wireframeZMin -= 86;
-    wireframeZMax -= 86;
-    for (let i=0; i<wireframeVertices.length; i++) { 
-      wireframeVertices[i].z -= 86;
-    }
-  }
-  else {
-    wireframeZMin += speed;
-    wireframeZMax += speed;
-    for (let i=0; i<wireframeVertices.length; i++) { 
-      wireframeVertices[i].z += speed;
-    }
-  }
-
 
 }
 

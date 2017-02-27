@@ -9,8 +9,12 @@ export class Vec3D { x : number; y : number; z : number;
   };
 };
 
-function dot (v1, v2) {
+export function dot (v1, v2) {
   return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+
+export function add (v1, v2) {
+  return new Vec3D (v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
 }
 
 // this function computes the projected coordinates on a 2D-screen of a point in 3D,
