@@ -161,24 +161,24 @@ function drawObject(ctx, col, obj) {
 function drawVertLines(col) {
   bg2.lineWidth = 3;
   bg2.strokeStyle = col;
+  bg2.beginPath();
   for (let i=-12;i<13;i++) {
-    bg2.beginPath();
     bg2.moveTo(600+(1200/25)*i,height + heightOffset);
     bg2.lineTo(600+(1200/7)*i,750);
-    bg2.stroke();
   }
+  bg2.stroke();
 }
 
 function drawHorizLines(col) {
   bg2.lineWidth = 3;
   bg2.strokeStyle = col;
+  bg2.beginPath();
   for (let i=0;i<lineCount;i++) {
-    bg2.beginPath();
     const y = projectedYCoord(lines[i]) ;
     bg2.moveTo(0   , y);
     bg2.lineTo(1200, y);
-    bg2.stroke();
   }
+  bg2.stroke();
 }
 
 function projectedYCoord ( y ) {
