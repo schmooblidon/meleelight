@@ -1,4 +1,4 @@
-import {bg1,bg2,fg1,fg2} from "main/main";
+import {bg1,bg2,fg1,fg2, ui} from "main/main";
 import {Vec2D} from "main/util/Vec2D";
 import {Vec3D, splatCoordinates, add} from "./3D";
 import {chromaticAberration} from "main/vfx/chromaticAberration";
@@ -105,24 +105,8 @@ export function drawSynthWave() {
   bg2.strokeStyle = "#dc6eec";
   bg2.stroke();
 
-  fg2.lineWidth = 3;
-  fg2.strokeStyle = makeColour(230, 120, 20, 1);  
-  for (let o=0; o<objects.length; o++) {
-    fg2.beginPath();
-    const obj = objects[o];
-    for (let e=0; e<obj.edges.length; e++) {
-      const edge = obj.edges[e];
-      const v1 = add(obj.vertices[edge[0]], obj.offset);
-      const v2 = add(obj.vertices[edge[1]], obj.offset);
-      const p1 = splatCoordinates(origin, direction, right, up, v1);
-      const p2 = splatCoordinates(origin, direction, right, up, v2);
-      if (p1 !== null && p2 !== null) {
-        fg2.moveTo(600 + 166*p1.x, 300 - 166*p1.y);
-        fg2.lineTo(600 + 166*p2.x, 300 - 166*p2.y);
-      }
-    }
-    fg2.stroke();
-  }
+  drawObjects(bg2, col);
+
   // move lines for the next frame
   for (let i=0;i<lineCount;i++) {
     lines[i] += speed;
@@ -149,27 +133,52 @@ export function drawSynthWave() {
 
 }
 
+function drawObjects(ctx, col) {  
+  for (let o=0; o<objects.length; o++) {
+    const obj = objects[o];
+    chromaticAberration( bg2, (c1,c2) => drawObject(ctx, c1, obj), col, col, 1, new Vec2D(Math.max(0.1, 2-0.2*obj.offset.z),0) );
+  }
+}
+
+function drawObject(ctx, col, obj) {
+  ctx.lineWidth = Math.max(0.5,3-0.2*obj.offset.z);
+  ctx.strokeStyle = col;
+  ctx.beginPath();
+  for (let e=0; e<obj.edges.length; e++) {
+    const edge = obj.edges[e];
+    const v1 = add(obj.vertices[edge[0]], obj.offset);
+    const v2 = add(obj.vertices[edge[1]], obj.offset);
+    const p1 = splatCoordinates(origin, direction, right, up, v1);
+    const p2 = splatCoordinates(origin, direction, right, up, v2);
+    if (p1 !== null && p2 !== null) {
+      ctx.moveTo(600 + 166*p1.x, 300 - 166*p1.y);
+      ctx.lineTo(600 + 166*p2.x, 300 - 166*p2.y);
+    }
+  }
+  ctx.stroke();
+}
+
 function drawVertLines(col) {
   bg2.lineWidth = 3;
   bg2.strokeStyle = col;
-  bg2.beginPath();
   for (let i=-12;i<13;i++) {
+    bg2.beginPath();
     bg2.moveTo(600+(1200/25)*i,height + heightOffset);
     bg2.lineTo(600+(1200/7)*i,750);
+    bg2.stroke();
   }
-  bg2.stroke();
 }
 
 function drawHorizLines(col) {
   bg2.lineWidth = 3;
   bg2.strokeStyle = col;
-  bg2.beginPath();
   for (let i=0;i<lineCount;i++) {
+    bg2.beginPath();
     const y = projectedYCoord(lines[i]) ;
     bg2.moveTo(0   , y);
     bg2.lineTo(1200, y);
+    bg2.stroke();
   }
-  bg2.stroke();
 }
 
 function projectedYCoord ( y ) {
