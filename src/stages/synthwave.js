@@ -106,9 +106,9 @@ export function drawSynthWave() {
   bg2.stroke();
 
   fg2.lineWidth = 3;
-  fg2.strokeStyle = makeColour(230, 120, 20, 1);
-  fg2.beginPath();
+  fg2.strokeStyle = makeColour(230, 120, 20, 1);  
   for (let o=0; o<objects.length; o++) {
+    fg2.beginPath();
     const obj = objects[o];
     for (let e=0; e<obj.edges.length; e++) {
       const edge = obj.edges[e];
@@ -120,8 +120,8 @@ export function drawSynthWave() {
         fg2.moveTo(600 + 166*p1.x, 300 - 166*p1.y);
         fg2.lineTo(600 + 166*p2.x, 300 - 166*p2.y);
       }
-      fg2.stroke();
     }
+    fg2.stroke();
   }
   // move lines for the next frame
   for (let i=0;i<lineCount;i++) {
@@ -150,12 +150,11 @@ export function drawSynthWave() {
 }
 
 function drawVertLines(col) {
-  const y = height + heightOffset;
   bg2.lineWidth = 3;
   bg2.strokeStyle = col;
   bg2.beginPath();
   for (let i=-12;i<13;i++) {
-    bg2.moveTo(600+(1200/25)*i,y);
+    bg2.moveTo(600+(1200/25)*i,height + heightOffset);
     bg2.lineTo(600+(1200/7)*i,750);
   }
   bg2.stroke();
@@ -164,6 +163,7 @@ function drawVertLines(col) {
 function drawHorizLines(col) {
   bg2.lineWidth = 3;
   bg2.strokeStyle = col;
+  bg2.beginPath();
   for (let i=0;i<lineCount;i++) {
     const y = projectedYCoord(lines[i]) ;
     bg2.moveTo(0   , y);
