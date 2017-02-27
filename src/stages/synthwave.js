@@ -1,4 +1,4 @@
-import {bg2} from "main/main";
+import {bg1,bg2} from "main/main";
 import {Vec2D} from "main/util/Vec2D";
 import {chromaticAberration} from "main/vfx/chromaticAberration";
 import {makeColour} from "main/vfx/makeColour";
@@ -16,6 +16,53 @@ const offset = - height + height * lineCount * hScale / (focal + lineCount * hSc
 // add z position
 for (let i=0;i<lineCount;i++) {
   lines.push(i*hScale);
+}
+
+export function drawSynthWaveInit() {
+  const bgGrad = bg1.createLinearGradient(0, 0, 1200, 0);
+  bgGrad.addColorStop(0, "#482842");
+  bgGrad.addColorStop(0.5, "#000000");
+  bgGrad.addColorStop(1, "#261452");
+  bg1.fillStyle = bgGrad;
+  bg1.fillRect(0,0,1200,750);
+  // sun
+  // create gradient
+  const top = 150;
+  const topLine = top+60;
+  const radius = 200;
+  const bottom = 500;
+  const sunGlow = bg1.createRadialGradient(600,top+radius,radius,600,top+radius,radius+60);
+  sunGlow.addColorStop(0, "rgba(200, 62, 229, 0.3)");
+  //sunGlow.addColorStop(0.2, "rgba(200, 62, 229, 0.3)");
+  sunGlow.addColorStop(1, "rgba(200, 62, 229, 0)");
+  bg1.fillStyle = sunGlow;
+  bg1.fillRect(0,0,1200,750);
+  const sunGrad = bg1.createLinearGradient(0, top, 0, top+radius*2);
+  sunGrad.addColorStop(0, "#efe03a");
+  sunGrad.addColorStop(1, "#ee6add");
+  bg1.fillStyle = sunGrad;
+  // creating clipping path
+  const lineSeperation = 40;
+  const thickness = 3;
+  bg1.save();
+  bg1.beginPath();
+  bg1.moveTo(0,0);
+  bg1.lineTo(1200,0);
+  bg1.lineTo(1200,topLine);
+  bg1.lineTo(0,topLine);
+  for (let i=0;i<7;i++) {  
+    bg1.moveTo(0,topLine+i*lineSeperation+i*thickness);
+    bg1.lineTo(1200,topLine+i*lineSeperation+i*thickness);
+    bg1.lineTo(1200,topLine+(i+1)*lineSeperation);
+    bg1.lineTo(0,topLine+(i+1)*lineSeperation);
+  }
+  bg1.clip();
+  // draw sun
+  bg1.beginPath();
+  bg1.arc(600,top+radius,radius,0,Math.PI*2);
+  bg1.closePath();
+  bg1.fill();
+  bg1.restore();
 }
 
 export function drawSynthWave() {

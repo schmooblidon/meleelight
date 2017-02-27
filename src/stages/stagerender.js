@@ -5,7 +5,7 @@ import {rotateVector, twoPi} from "main/render";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "../main/util/Vec2D";
 import {euclideanDist} from "../main/linAlg";
-import {drawSynthWave} from "./synthwave.js";
+import {drawSynthWave, drawSynthWaveInit} from "./synthwave.js";
 
 const bgPos = [[-30, 500, 300, 500, 900, 500, 1230, 450, 358], [-30, 400, 300, 400, 900, 400, 1230, 350, 179]];
 const direction = [[1, -1, 1, -1, 1, -1, 1, -1, 1], [-1, 1, -1, 1, -1, 1, -1, 1, -1]];
@@ -407,13 +407,15 @@ export function bgStar() {
   this.life = 0;
 };
 export function drawBackgroundInit() {
+  drawSynthWaveInit();
+  /*
   const bgGrad = bg1.createLinearGradient(0, 0, 0, 500);
   bgGrad.addColorStop(0, (holiday === 1) ? "rgb(46, 100, 147)" : "rgb(24, 17, 66)");
   bgGrad.addColorStop(1, "black");
   bg1.fillStyle = bgGrad;
   bg1.fillRect(-100, -100, layers.BG1.width + 200, layers.BG1.height + 200);
-  ;
-  if (backgroundType === 1 || holiday === 1) {
+  ;*/
+  if (backgroundType === 1 || holiday === 1 || true) {
     const gridGrad = bg2.createRadialGradient(600, 375, 1, 600, 375, 800);
     gridGrad.addColorStop(0, "rgba(94, 173, 255, 0)");
     gridGrad.addColorStop(1, "rgba(94, 173, 255, 0.2)");
