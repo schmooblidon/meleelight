@@ -1,0 +1,81 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "requestanimationframe@>= 0.0.22",
+        "scope": null,
+        "escapedName": "requestanimationframe",
+        "name": "requestanimationframe",
+        "rawSpec": ">= 0.0.22",
+        "spec": ">=0.0.22",
+        "type": "range"
+      },
+      "/Users/marlonmckinnie/dev/meleelight/node_modules/two.js"
+    ]
+  ],
+  "_from": "requestanimationframe@>=0.0.22",
+  "_id": "requestanimationframe@0.0.23",
+  "_inCache": true,
+  "_location": "/requestanimationframe",
+  "_nodeVersion": "0.12.7",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/requestanimationframe-0.0.23.tgz_1459718641453_0.7085733092390001"
+  },
+  "_npmUser": {
+    "name": "cagosta",
+    "email": "cyril.agosta@gmail.com"
+  },
+  "_npmVersion": "2.12.1",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "requestanimationframe@>= 0.0.22",
+    "scope": null,
+    "escapedName": "requestanimationframe",
+    "name": "requestanimationframe",
+    "rawSpec": ">= 0.0.22",
+    "spec": ">=0.0.22",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/two.js"
+  ],
+  "_resolved": "https://registry.npmjs.org/requestanimationframe/-/requestanimationframe-0.0.23.tgz",
+  "_shasum": "ed79972ec0a052df8acc6b91c5750cb19e7f0908",
+  "_shrinkwrap": null,
+  "_spec": "requestanimationframe@>= 0.0.22",
+  "_where": "/Users/marlonmckinnie/dev/meleelight/node_modules/two.js",
+  "author": {
+    "name": "Cyril Agosta"
+  },
+  "bugs": {
+    "url": "https://github.com/cagosta/requestAnimationFrame/issues"
+  },
+  "dependencies": {},
+  "description": "requestAnimationFrame AMD-ready, bower-ready polyfill fork. ",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "ed79972ec0a052df8acc6b91c5750cb19e7f0908",
+    "tarball": "https://registry.npmjs.org/requestanimationframe/-/requestanimationframe-0.0.23.tgz"
+  },
+  "gitHead": "a6d44e4e1c83837410f15211174270dc79f8113a",
+  "homepage": "https://github.com/cagosta/requestAnimationFrame#readme",
+  "license": "MIT",
+  "main": "app/requestAnimationFrame.js",
+  "maintainers": [
+    {
+      "name": "cagosta",
+      "email": "cyril.agosta@gmail.com"
+    }
+  ],
+  "name": "requestanimationframe",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cagosta/requestAnimationFrame.git"
+  },
+  "scripts": {},
+  "version": "0.0.23"
+}

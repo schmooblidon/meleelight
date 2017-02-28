@@ -1,0 +1,5 @@
+node_modules
+app/bower_components
+*.log
+log/*
+.credentials.json

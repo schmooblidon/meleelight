@@ -35,7 +35,7 @@ export function rotateVector(vecx, vecy, ang) {
 }
 
 export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
-    can.save();
+
     can.translate(tX - rpX, tY - rpY);
     can.rotate(rotate);
 

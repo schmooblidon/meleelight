@@ -1,5 +1,6 @@
 import {changeGamemode,ui, layers, bg1, fg1, holiday} from "main/main";
 import {drawArrayPathCompress} from "main/render";
+import {clearScene, fillBackground, addTexttoScene} from "../main/util/renderUtils";
 /* eslint-disable */
 
 export let startUpTimer = 0;
@@ -12,23 +13,23 @@ christmasbackdrop.src = "assets/christmas/christmasbackdrop.png";
 
 export function drawStartUp (){
   startUpTimer++;
-  if (startUpTimer == 1 && holiday == 1){
-    fg1.globalAlpha = 0.3;
-    fg1.drawImage(christmasbackdrop,0,0,1200,750);
-    fg1.globalAlpha = 1;
-  }
-  ui.clearRect(0, 0, layers.UI.width, layers.UI.height);
-  bg1.fillStyle = "rgb(0,0,0)";
-  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
-  ui.font = "900 25px Arial";
-  ui.textAlign = "center";
+  //TODO
+  // if (startUpTimer == 1 && holiday == 1){
+  //   fg1.globalAlpha = 0.3;
+  //   fg1.drawImage(christmasbackdrop,0,0,1200,750);
+  //   fg1.globalAlpha = 1;
+  // }
+  clearScene(ui);
+  fillBackground(bg1 , "0x000000");
+  clearScene(bg1);
+
   if (startUpTimer <= 200) {
-    ui.save();
+
     drawArrayPathCompress(ui, "rgb(255,255,255)", 1, 300, 650, LOGO, 0.5, 0.5, 0, 0, 0);
-    ui.clip();
+
     ui.drawImage(schmoologo, 100, Math.round(200 - startUpTimer / 3));
     drawArrayPathCompress(ui, (holiday == 1) ? "rgb(76,76,76)" : "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
-    ui.restore();
+
     if (startUpTimer > 180) {
       ui.fillStyle = "rgba(0,0,0," + Math.min(1, (startUpTimer - 180) / 20) + ")";
     } else {
@@ -36,8 +37,7 @@ export function drawStartUp (){
     }
     ui.fillRect(0, 0, layers.UI.width, layers.UI.height);
   } else if (startUpTimer > 200) {
-    ui.fillStyle = "white";
-    ui.fillText("WITH MUSIC FROM", 600, 290);
+    addTexttoScene(ui,"WITH MUSIC FROM",600,290,layers.UI);
     ui.drawImage(hohlogo, 375, 305);
     if (startUpTimer > 350) {
       ui.fillStyle = "rgba(0,0,0," + Math.min(1, (startUpTimer - 350) / 20) + ")";

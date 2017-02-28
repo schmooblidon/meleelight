@@ -42,8 +42,12 @@ import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
+import * as THREE from '../../node_modules/three';
 /*globals performance*/
-
+window._ = require('../third-party/underscore');
+window.requestAnimationFrame = require('../third-party/requestAnimationFrame.js');
+window.Backbone = {};
+window.Backbone.Events = require('../third-party/events.js');
 export const holiday = 0;
 export var snowCount = 150;
 
@@ -800,13 +804,14 @@ export let fg1 = 0;
 export let fg2 = 0;
 export let ui = 0;
 export const c = 0;
+export let scene = 0;
 export const canvasMain = 0;
 export const layers = {
   BG1 : 0,
-  BG2 : 0,
-  FG1 : 0,
-  FG2 : 0,
-  UI : 0
+  BG2 : 1,
+  FG1 : 2,
+  FG2 : 3,
+  UI : 4
 };
 export const layerSwitches = {
   BG1 : true,
@@ -1446,6 +1451,29 @@ function onFullScreenChange() {
   }
 }
 
+export const camera = new THREE.PerspectiveCamera(75, 1200 / 750, 1, 10000);
+camera.position.z = 1000;
+export const renderer = new THREE.WebGLRenderer();
+const displayPort = document.getElementById("display");
+renderer.setSize(1200, 750);
+renderer.setClearColor(0x000000);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+function initScenes() {
+  bg1 = new THREE.Scene();
+
+  bg2 = new THREE.Scene();
+
+  fg1 = new THREE.Scene();
+
+  fg2 = new THREE.Scene();
+
+  ui = new THREE.Scene();
+
+
+  displayPort.append(renderer.domElement);
+}
+
 export function start (){
   if (holiday === 1){
     $("#layerButton").after('<div id="snowButton" class="gameButton" style="width:90px"><img src="assets/christmas/snowflake.png" height=17 width=17 style="display:inline-block"/><p style="width:30px;display:inline-block"><span id="snowButtonEdit">150</span></p><div id="snowMinus" class="snowControl" style="display:inline-block;padding:3px"><p style="padding:0;font-size:20px">-</p></div><div id="snowPlus" style="display:inline-block;padding:3px"><p style="padding:0;font-size:17px">+</p></div></div>');
@@ -1469,18 +1497,7 @@ export function start (){
   $("#controllerButton").click(function() {
     $("#controllerSupportContainer").toggle();
   });
-  layers.BG1 = document.getElementById("background1Canvas");
-  bg1 = layers.BG1.getContext("2d");
-  layers.BG2 = document.getElementById("background2Canvas");
-  bg2 = layers.BG2.getContext("2d");
-  layers.FG1 = document.getElementById("foreground1Canvas");
-  fg1 = layers.FG1.getContext("2d");
-  layers.FG2 = document.getElementById("foreground2Canvas");
-  fg2 = layers.FG2.getContext("2d");
-  layers.UI = document.getElementById("uiCanvas");
-  ui = layers.UI.getContext("2d");
-  bg1.fillStyle = "rgb(0, 0, 0)";
-  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
+  initScenes();
   let nullInputBuffers =  [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
   gameTick(nullInputBuffers);
   renderTick();

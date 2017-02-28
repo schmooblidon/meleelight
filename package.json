@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --progress --colors --config=bin/webpack/build.config.js",
     "flow": "flow status src; test $? -eq 0 -o $? -eq 2",
-    "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js",
+    "dev": "webpack --progress --colors --watch --config=bin/webpack/dev.config.js --display-error-details",
     "animations": "webpack --progress --colors --config=bin/webpack/animations.config.js",
     "release": "node bin/release.js",
     "serve": "node app",
@@ -31,10 +31,12 @@
   },
   "homepage": "https://github.com/schmooblidon/meleelight#readme",
   "dependencies": {
-
     "howler": "^2.0.1",
-    "jquery": "1.11.3"
-
+    "jquery": "1.11.3",
+    "svg-mesh-3d": "^1.1.0",
+    "three": "^0.84.0",
+    "three-text2d": "^0.3.2",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
@@ -50,7 +52,6 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "flow-bin": "^0.37.0",
-    "eslint-loader": "^1.6.1",
     "express": "^4.14.0",
     "fs-extra": "^1.0.0",
     "electron": "^1.4.1",
@@ -61,7 +62,6 @@
     "webpack-notifier": "^1.4.1",
     "yargs": "^6.4.0"
   },
- 
   "babel": {
     "presets": [
       "es2015",
