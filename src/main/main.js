@@ -524,7 +524,7 @@ export function changeGamemode (newGamemode){
       // Playing (VS)
     case 3:
     //  drawBackgroundInit();
-      //drawStageInit();
+      drawStageInit();
       break;
       // Target Builder
     case 4:
@@ -1075,11 +1075,11 @@ export function gameTick (oldInputBuffers){
 }
 
 export function clearScreen (){
-  clearScene(bg1);
+  //clearScene(bg1);
   clearScene(bg2);
-  clearScene(fg1);
+  //clearScene(fg1);
   clearScene(fg2);
-  clearScene(ui);
+  //clearScene(ui);
 }
 
 let otherFrame = true;
@@ -1155,7 +1155,7 @@ export function renderTick (){
         if (getShowSFX()) {
        //   drawBackground();
         }
-     //   drawStage();
+        drawStage();
         renderPlayer(targetBuilder);
       //  renderArticles();
       //  renderVfx();
@@ -1173,7 +1173,7 @@ export function renderTick (){
     //  if (getShowSFX()) {
       //  drawBackground();
     //  }
-    //  drawStage();
+      drawStage();
       for (var i = 0; i < 4; i++) {
         if (playerType[i] > -1) {
           renderPlayer(i);

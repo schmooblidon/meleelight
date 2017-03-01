@@ -113,6 +113,6 @@ export function drawLine(scene, mat, x1, y1, x2, y2) {
   line.lineTo(x2,y2);
   const geometry = line.createPointsGeometry();
   const object = new THREE.Line(geometry, mat);
-  scene.add(line);
+  scene.add(object);
 }
 

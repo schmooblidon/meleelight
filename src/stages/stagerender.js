@@ -51,29 +51,29 @@ let randallTimer = 0;
 export function drawStageInit() {
 
   const scene = fg1;
-  const group = new THREE.group();
+  const group = new THREE.Group();
 
   for (let j = 0; j < activeStage.ground.length; j++) {
     const surf = activeStage.ground[j];
-    drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#db80cc" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#db80cc" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
   for (let j = 0; j < activeStage.ceiling.length; j++) {
     const surf = activeStage.ceiling[j];
-    drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#ed6767" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#ed6767" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
   for (let j = 0; j < activeStage.platform.length; j++) {
     if (activeStage.movingPlats === null || activeStage.movingPlats === undefined || activeStage.movingPlats.indexOf(j) === -1){ // not a moving platform
       const surf = activeStage.platform[j];
-      drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+      drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
     }
   }  
   for (let j = 0; j < activeStage.wallL.length; j++) {
     const surf = activeStage.wallL[j];
-    drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#47c648" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#47c648" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
   for (let j = 0; j < activeStage.wallR.length; j++) {
     const surf = activeStage.wallR[j];
-    drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#9867de" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#9867de" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
 
   /* TODO: add polygon materials
@@ -102,7 +102,7 @@ export function drawStageInit() {
     const magnitude = euclideanDist(pA, pB);
     const length = Math.min(0.4 * magnitude, 20 / activeStage.scale);
     const pC = new Vec2D(pA.x + length * Math.cos(ang), pA.y + length * Math.sin(ang));
-    drawLine(group, THREE.LineBasicMaterial( { linewidth : 2, color : "#e7a44c" }), pA.x, pA.y, pC.x, pC.y);
+    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 2, color : "#e7a44c" }), pA.x, pA.y, pC.x, pC.y);
   }
 
   group.scale.set(activeStage.scale, -activeStage.scale, 1);
@@ -162,7 +162,7 @@ export function drawDamageLines(type, scene, stage){
     const surfaceProperties = stage[type][i][2];
     if (surfaceProperties !== undefined && surfaceProperties.damageType !== null) {
       drawLine( scene
-              , THREE.LineBasicMaterial( { linewidth : 4, color : wallColourFromDamageType(surfaceProperties.damageType) })
+              , new THREE.LineBasicMaterial( { linewidth : 4, color : wallColourFromDamageType(surfaceProperties.damageType) })
               , stage[type][i][0].x, stage[type][i][0].y, stage[type][i][1].x, stage[type][i][1].y );
     }
   }
@@ -170,7 +170,7 @@ export function drawDamageLines(type, scene, stage){
 
 export function drawStageBackground() {
   const scene = bg2;
-  const group = new THREE.group();
+  const group = new THREE.Group();
   if (activeStage.background !== null && activeStage.background !== undefined) {
     /* TODO: add polygon materials
     if (activeStage.background.polygon !== null && activeStage.background.polygon !== undefined) {
@@ -185,7 +185,7 @@ export function drawStageBackground() {
     if (activeStage.background.line !== null && activeStage.background.line !== undefined) {
       for (let j=0;j<activeStage.background.line.length;j++){
         const surf = activeStage.background.line[j];
-        drawLine(group, THREE.LineBasicMaterial( { linewidth : 3, color : boxFillBG }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+        drawLine(group, new THREE.LineBasicMaterial( { linewidth : 3, color : boxFillBG }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
       }
     }    
     group.scale.set(activeStage.scale, -activeStage.scale, 1);
@@ -200,7 +200,7 @@ export function drawStage() {
   drawStageBackground();
 
   const scene = fg2;
-  const group = new THREE.group();
+  const group = new THREE.Group();
   calculateDamageWallColours();
 
   // draw moving platforms
@@ -217,7 +217,7 @@ export function drawStage() {
     for (let i = 0; i < activeStage.movingPlats.length; i++) {
       if (activeStage.name !== "fountain" || activeStage.platform[activeStage.movingPlats[i]][0].y > 0) {
         const surf = activeStage.platform[activeStage.movingPlats[i]];
-        drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+        drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
       }
     }
   }
