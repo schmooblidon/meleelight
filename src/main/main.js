@@ -1481,7 +1481,7 @@ camera.position.z = 600;
 camera.position.x = 600;
 camera.position.y = 200;
 camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), degInRad(180));
-export const renderer = new THREE.WebGLRenderer();
+export const renderer = new THREE.WebGLRenderer( { antialias : true });
 const displayPort = document.getElementById("display");
 renderer.setSize(1200, 750);
 renderer.setClearColor(0x000000);

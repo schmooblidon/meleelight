@@ -10,7 +10,7 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
     }
     curve.closePath();
     const material = new THREE.MeshBasicMaterial( { color : col } );
-    const geometry = new THREE.ShapeGeometry(curve);
+    const geometry = new THREE.ShapeBufferGeometry(curve, 3);
     const curveObject = new THREE.Mesh( geometry, material );
     curveObject.scale.set( scaleX * face, scaleY, 1);
     curveObject.translateX(tX-rpX);
