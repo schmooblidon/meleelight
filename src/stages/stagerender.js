@@ -55,25 +55,25 @@ export function drawStageInit() {
 
   for (let j = 0; j < activeStage.ground.length; j++) {
     const surf = activeStage.ground[j];
-    drawLine(scene, THREE.LineBasicMaterial( { linewidth : 1, color : "#db80cc" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#db80cc" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
   for (let j = 0; j < activeStage.ceiling.length; j++) {
     const surf = activeStage.ceiling[j];
-    drawLine(scene, THREE.LineBasicMaterial( { linewidth : 1, color : "#ed6767" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#ed6767" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
   for (let j = 0; j < activeStage.platform.length; j++) {
     if (activeStage.movingPlats === null || activeStage.movingPlats === undefined || activeStage.movingPlats.indexOf(j) === -1){ // not a moving platform
       const surf = activeStage.platform[j];
-      drawLine(scene, THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+      drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
     }
   }  
   for (let j = 0; j < activeStage.wallL.length; j++) {
     const surf = activeStage.wallL[j];
-    drawLine(scene, THREE.LineBasicMaterial( { linewidth : 1, color : "#47c648" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#47c648" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
   for (let j = 0; j < activeStage.wallR.length; j++) {
     const surf = activeStage.wallR[j];
-    drawLine(scene, THREE.LineBasicMaterial( { linewidth : 1, color : "#9867de" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#9867de" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
 
   for (let i=0;i<activeStage.ledge.length;i++){
@@ -84,7 +84,7 @@ export function drawStageInit() {
     const magnitude = euclideanDist(pA, pB);
     const length = Math.min(0.4 * magnitude, 20 / activeStage.scale);
     const pC = new Vec2D(pA.x + length * Math.cos(ang), pA.y + length * Math.sin(ang));
-    drawLine(scene, THREE.LineBasicMaterial( { linewidth : 2, color : "#e7a44c" }), pA.x, pA.y, pC.x, pC.y);
+    drawLine(group, THREE.LineBasicMaterial( { linewidth : 2, color : "#e7a44c" }), pA.x, pA.y, pC.x, pC.y);
   }
 
   group.scale.set(activeStage.scale, -activeStage.scale, 1);
