@@ -1471,8 +1471,10 @@ function degInRad(deg) {
   return deg * Math.PI / 180;
 }
 export const camera = new THREE.PerspectiveCamera(75, 1200 / 750, 1, 5000);
-camera.position.z = 800;
+camera.position.z = 600;
 camera.position.x = 600;
+camera.position.y = 200;
+camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), degInRad(180));
 export const renderer = new THREE.WebGLRenderer();
 const displayPort = document.getElementById("display");
 renderer.setSize(1200, 750);
