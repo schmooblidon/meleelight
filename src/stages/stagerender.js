@@ -48,34 +48,28 @@ randall[2].src = "assets/stage/randall3.png";
 let randallTimer = 0;
 
 
-export function drawStageInit() {
+const types = ["wallL", "wallR", "ground", "ceiling"];
+const surfaceColors = ["#47c648", "#9867de", "#db80cc", "#ed6767"];
 
+export function drawStageInit() {
 
   const scene = fg1;
   const group = new THREE.Group();
 
-  for (let j = 0; j < activeStage.ground.length; j++) {
-    const surf = activeStage.ground[j];
-    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#db80cc" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+  for (let i =0 ; i < types.length; i++) {
+    const type = types[i];
+    for (let j = 0; j < activeStage[type].length; j++) {
+      const surf = activeStage[type][j];
+      drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : surfaceColors[i] }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+    }
   }
-  for (let j = 0; j < activeStage.ceiling.length; j++) {
-    const surf = activeStage.ceiling[j];
-    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#ed6767" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
-  }
+
   for (let j = 0; j < activeStage.platform.length; j++) {
     if (activeStage.movingPlats === null || activeStage.movingPlats === undefined || activeStage.movingPlats.indexOf(j) === -1){ // not a moving platform
       const surf = activeStage.platform[j];
       drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
     }
   }  
-  for (let j = 0; j < activeStage.wallL.length; j++) {
-    const surf = activeStage.wallL[j];
-    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#47c648" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
-  }
-  for (let j = 0; j < activeStage.wallR.length; j++) {
-    const surf = activeStage.wallR[j];
-    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#9867de" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
-  }
 
   const polyLineMat = null;
   const polyMeshMat = new THREE.MeshBasicMaterial( { color : "rgba(94, 173, 255, 0.3)" } );
@@ -220,7 +214,6 @@ export function drawStage() {
   }
   
   // draw damaging stage surfaces
-  const types = ["wallL", "wallR", "ground", "ceiling"];
   for (let i=0;i<types.length;i++) {
     drawDamageLines(types[i], group, activeStage);
   }
