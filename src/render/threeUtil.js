@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 // drawArrayPathCompress
-export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY, rotate) {  
+export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {  
   for (let j = 0; j < path.length; j++) {
     const curve = new THREE.Shape();
     curve.moveTo(path[j][0], path[j][1]);
@@ -10,12 +10,14 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
     }
     curve.closePath();
     const material = new THREE.MeshBasicMaterial( { color : col } );
-    const geometry = new THREE.ShapeGeometry( curve, 5 * (path[j].length - 1)  );
+    const geometry = new THREE.ShapeGeometry(curve);
     const curveObject = new THREE.Mesh( geometry, material );
     curveObject.scale.set( scaleX * face, scaleY, 1);
+    curveObject.translateX(tX-rpX);
+    curveObject.translateY(tY-rpY);
     curveObject.rotateZ(rotate);
-    curveObject.translateX(tX);
-    curveObject.translateY(tY);
+    curveObject.translateX(rpX);
+    curveObject.translateY(rpY);
     scene.add(curveObject);
   }
 }
@@ -31,7 +33,7 @@ export function drawLinearCurve(scene, col, face, tX, tY, path, scaleX, scaleY) 
     }
     curve.closePath();
     const material = new THREE.MeshBasicMaterial( { color : col } );
-    const geometry = new THREE.ShapeGeometry( curve, lg - 1  );
+    const geometry = new THREE.ShapeGeometry(curve);
     const curveObject = new THREE.Mesh (geometry, material);
     curveObject.scale.set( scaleX * face, scaleY, 1);
     curveObject.translateX(tX);
@@ -56,7 +58,7 @@ export function drawBezierCurve(scene, col, face, tX, tY, path, scaleX, scaleY, 
   }
   curve.closePath();
   const material = new THREE.MeshBasicMaterial( { color : col } );
-  const geometry = new THREE.ShapeGeometry( curve, 5*n );
+  const geometry = new THREE.ShapeGeometry(curve);
   const curveObject = new THREE.Mesh (geometry, material);
   curveObject.scale.set( scaleX * face, scaleY, 1);
   curveObject.rotateZ(rotate);
