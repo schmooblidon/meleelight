@@ -188,14 +188,14 @@ export function renderPlayer(i) {
             player[i].phys.outOfCameraTimer = 0;
         }
         if (player[i].miniView && player[i].actionState != "SLEEP") {
-            fg2.fillStyle = "black";
-            fg2.strokeStyle = palettes[pPal[i]][0];
-            fg2.beginPath();
-            fg2.arc(player[i].miniViewPoint.x, player[i].miniViewPoint.y, 35, twoPi, 0);
-            fg2.fill();
-            fg2.lineWidth = 6;
-            fg2.stroke();
-            fg2.lineWidth = 1;
+            // fg2.fillStyle = "black";
+            // fg2.strokeStyle = palettes[pPal[i]][0];
+            // fg2.beginPath();
+            // fg2.arc(player[i].miniViewPoint.x, player[i].miniViewPoint.y, 35, twoPi, 0);
+            // fg2.fill();
+            // fg2.lineWidth = 6;
+            // fg2.stroke();
+            // fg2.lineWidth = 1;
 
             curveFromArray(fg2, col, face, player[i].miniViewPoint.x, player[i].miniViewPoint.y + 30, model, player[
                 i].charAttributes.miniScale, player[i].charAttributes.miniScale, player[i].rotation, player[i].rotationPoint
@@ -221,10 +221,10 @@ export function renderPlayer(i) {
             if (Math.floor(player[i].hit.shieldstun) > 0) {
                 sCol = palettes[pPal[i]][4];
             }
-            fg2.fillStyle = sCol + (0.6 * player[i].phys.shieldAnalog) + ")";
-            fg2.beginPath();
-            fg2.arc(sX, sY, player[i].phys.shieldSize * activeStage.scale, twoPi, 0);
-            fg2.fill();
+            // fg2.fillStyle = sCol + (0.6 * player[i].phys.shieldAnalog) + ")";
+            // fg2.beginPath();
+            // fg2.arc(sX, sY, player[i].phys.shieldSize * activeStage.scale, twoPi, 0);
+            // fg2.fill();
         }
     }
     if (hasTag[i]) {

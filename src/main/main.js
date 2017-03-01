@@ -335,12 +335,12 @@ export function matchTimerTick (input){
 }
 
 export function screenShake (kb){
-  var seed = [Math.random(),Math.random(),Math.random(),Math.random()];
-  fg1.translate(kb*0.1*seed[0],kb*0.1*seed[1]);
-  setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1])},20);
-  setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1]);fg1.translate(-kb*0.1*seed[2],-kb*0.1*seed[3])},40);
-  setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},60);
-  setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},80);
+  // var seed = [Math.random(),Math.random(),Math.random(),Math.random()];
+  // fg1.translate(kb*0.1*seed[0],kb*0.1*seed[1]);
+  // setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1])},20);
+  // setTimeout(function(){fg1.translate(-kb*0.05*seed[0],-kb*0.05*seed[1]);fg1.translate(-kb*0.1*seed[2],-kb*0.1*seed[3])},40);
+  // setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},60);
+  // setTimeout(function(){fg1.translate(kb*0.05*seed[2],kb*0.05*seed[3])},80);
 }
 
 export function percentShake (kb,i){
@@ -1213,6 +1213,16 @@ export function renderTick (){
    //   renderVfx(true);
     }
   }
+  renderer.clear();
+  renderer.render(bg1,camera);
+  renderer.clearDepth();
+  renderer.render( bg2 , camera );
+  renderer.clearDepth();
+  renderer.render( fg1 , camera );
+  renderer.clearDepth();
+  renderer.render(  fg2 , camera );
+  renderer.clearDepth();
+  renderer.render( ui   , camera );
 }
 
 export function buildPlayerObject (i){
@@ -1457,15 +1467,18 @@ function onFullScreenChange() {
     cont.style.opacity = 1;
   }
 }
-
-export const camera = new THREE.PerspectiveCamera(75, 1200 / 750, 1, 10000);
-camera.position.z = 1000;
+function degInRad(deg) {
+  return deg * Math.PI / 180;
+}
+export const camera = new THREE.PerspectiveCamera(75, 1200 / 750, 1, 5000);
+camera.position.z = 800;
+camera.position.x = 600;
 export const renderer = new THREE.WebGLRenderer();
 const displayPort = document.getElementById("display");
 renderer.setSize(1200, 750);
 renderer.setClearColor(0x000000);
-renderer.setPixelRatio(window.devicePixelRatio);
-
+// renderer.setPixelRatio(window.devicePixelRatio);
+renderer.autoClear = false;
 function initScenes() {
   bg1 = new THREE.Scene();
 
