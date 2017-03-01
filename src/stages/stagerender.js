@@ -50,6 +50,7 @@ let randallTimer = 0;
 
 export function drawStageInit() {
 
+
   const scene = fg1;
   const group = new THREE.Group();
 
@@ -76,9 +77,8 @@ export function drawStageInit() {
     drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#9867de" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
 
-  /* TODO: add polygon materials
-  const polyLineMat = null; // ???
-  const polyMeshMat = null; // ???
+  const polyLineMat = null;
+  const polyMeshMat = new THREE.MeshBasicMaterial( { color : "rgba(94, 173, 255, 0.3)" } );
   if (activeStage.box !== null && activeStage.box !== undefined) {
     for (let j = 0; j < activeStage.box.length; j++) {
       const b = activeStage.box[j];
@@ -92,7 +92,6 @@ export function drawStageInit() {
       drawShape(group, poly, polyMeshMat, polyLineMat);
     }
   }
-  */
 
   for (let i=0;i<activeStage.ledge.length;i++){
     const e = activeStage.ledge[i];
@@ -172,16 +171,14 @@ export function drawStageBackground() {
   const scene = bg2;
   const group = new THREE.Group();
   if (activeStage.background !== null && activeStage.background !== undefined) {
-    /* TODO: add polygon materials
     if (activeStage.background.polygon !== null && activeStage.background.polygon !== undefined) {
-      const polyLineMat = null; // ???
-      const polyMeshMat = null; // ??? bg2.fillStyle = boxFillBG;
+      const polyLineMat = null;
+      const polyMeshMat = new THREE.MeshDepthMaterial( { color : boxFillBG } );
       for (let j=0;j<activeStage.background.polygon.length;j++){
         const poly = makePolygonShape(activeStage.background.polygon[j]);
         drawShape(group, poly, polyMeshMat, polyLineMat);
       }
     }
-    */
     if (activeStage.background.line !== null && activeStage.background.line !== undefined) {
       for (let j=0;j<activeStage.background.line.length;j++){
         const surf = activeStage.background.line[j];

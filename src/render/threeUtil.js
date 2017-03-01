@@ -79,19 +79,19 @@ export function makeRectShape (xmin, xmax, ymin, ymax) {
 
 export function drawShape (scene, shape, meshMat, lineMat, transform = null) {
   const meshGeometry = new THREE.ShapeGeometry(shape);
-  const lineGeometry = new shape.createPointsGeometry();
-  const mesh = new THREE.Mesh(meshGeometry, meshMat);
-  const line = new THREE.Line(lineGeometry, lineMat);
+  const lineGeometry = shape.createPointsGeometry();
+  const mesh = meshMat === null ? null : new THREE.Mesh(meshGeometry, meshMat);
+  const line = meshMat === null ? null : new THREE.Line(lineGeometry, lineMat);
   if (transform !== null && transform !== undefined) {
     const group = new THREE.group();
-    group.add(mesh);
-    group.add(line);
+    meshMat === null ? void 0 : group.add(mesh);
+    lineMat === null ? void 0 : group.add(line);
     transform(group);
     scene.add(group);
   }
   else {
-    scene.add(mesh);
-    scene.add(line);
+    meshMat === null ? void 0 : scene.add(mesh);
+    lineMat === null ? void 0 : scene.add(line);
   }
 }
 
