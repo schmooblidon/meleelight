@@ -5,7 +5,7 @@ import {rotateVector, twoPi} from "main/render";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "../main/util/Vec2D";
 import {euclideanDist} from "../main/linAlg";
-import {drawLine} from "../render/threeUtil";
+import {drawLine, drawShape, makeRectShape, makePolygonShape} from "../render/threeUtil";
 import * as THREE from "three";
 
 const bgPos = [[-30, 500, 300, 500, 900, 500, 1230, 450, 358], [-30, 400, 300, 400, 900, 400, 1230, 350, 179]];
@@ -76,6 +76,24 @@ export function drawStageInit() {
     drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#9867de" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
   }
 
+  /* TODO: add polygon materials
+  const polyLineMat = null; // ???
+  const polyMeshMat = null; // ???
+  if (activeStage.box !== null && activeStage.box !== undefined) {
+    for (let j = 0; j < activeStage.box.length; j++) {
+      const b = activeStage.box[j];
+      const rect = makeRectShape (b.min.x, b.min.y, b.max.x, b.max.y);
+      drawShape(group, rect, polyMeshMat, polyLineMat);
+    }
+  }
+  if (activeStage.polygon !== null && activeStage.polygon !== undefined) {
+    for (let j=0;j<activeStage.polygon.length;j++){
+      const poly = makePolygonShape(activeStage.polygon[j]);
+      drawShape(group, poly, polyMeshMat, polyLineMat);
+    }
+  }
+  */
+
   for (let i=0;i<activeStage.ledge.length;i++){
     const e = activeStage.ledge[i];
     const pA = activeStage[e[0]][e[1]][e[2]];
@@ -90,8 +108,8 @@ export function drawStageInit() {
   group.scale.set(activeStage.scale, -activeStage.scale, 1);
   group.translateX(activeStage.offset[0]);
   group.translateY(activeStage.offset[1]);
-
   scene.add(group);
+
 };
 
 const swirlTimer = 0;
@@ -139,122 +157,79 @@ export function calculateDamageWallColours(){
   wallColour[3] = "rgb("+Math.round(125-n/3)+",50,"+Math.round(255-n/3)+")";
 }
 
-export function drawDamageLine(type,can,stage){
+export function drawDamageLines(type, scene, stage){
   for (let i=0;i<stage[type].length;i++) {
     const surfaceProperties = stage[type][i][2];
     if (surfaceProperties !== undefined && surfaceProperties.damageType !== null) {
-      can.strokeStyle = wallColourFromDamageType(surfaceProperties.damageType);
-      can.beginPath();
-      can.moveTo((stage[type][i][0].x * stage.scale) + stage.offset[0], (stage[type][i][0].y * -stage.scale) + stage.offset[1]);
-      can.lineTo((stage[type][i][1].x * stage.scale) + stage.offset[0], (stage[type][i][1].y * -stage.scale) + stage.offset[1]);
-      can.stroke();
+      drawLine( scene
+              , THREE.LineBasicMaterial( { linewidth : 4, color : wallColourFromDamageType(surfaceProperties.damageType) })
+              , stage[type][i][0].x, stage[type][i][0].y, stage[type][i][1].x, stage[type][i][1].y );
     }
   }
 }
 
+export function drawStageBackground() {
+  const scene = bg2;
+  const group = new THREE.group();
+  if (activeStage.background !== null && activeStage.background !== undefined) {
+    /* TODO: add polygon materials
+    if (activeStage.background.polygon !== null && activeStage.background.polygon !== undefined) {
+      const polyLineMat = null; // ???
+      const polyMeshMat = null; // ??? bg2.fillStyle = boxFillBG;
+      for (let j=0;j<activeStage.background.polygon.length;j++){
+        const poly = makePolygonShape(activeStage.background.polygon[j]);
+        drawShape(group, poly, polyMeshMat, polyLineMat);
+      }
+    }
+    */
+    if (activeStage.background.line !== null && activeStage.background.line !== undefined) {
+      for (let j=0;j<activeStage.background.line.length;j++){
+        const surf = activeStage.background.line[j];
+        drawLine(group, THREE.LineBasicMaterial( { linewidth : 3, color : boxFillBG }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+      }
+    }    
+    group.scale.set(activeStage.scale, -activeStage.scale, 1);
+    group.translateX(activeStage.offset[0]);
+    group.translateY(activeStage.offset[1]);
+    scene.add(group);
+  }
+}
+
 export function drawStage() {
+
+  drawStageBackground();
+
+  const scene = fg2;
+  const group = new THREE.group();
   calculateDamageWallColours();
-  if (activeStage.name === "ystory") {
+
+  // draw moving platforms
+  // bypassed for now, sorry Randall
+  if (false && activeStage.name === "ystory") {
     // Randall
     randallTimer++;
     if (randallTimer === 30){
       randallTimer = 0;
     }
-    bg2.drawImage(randall[Math.floor(randallTimer/10)],(activeStage.platform[0][0].x * activeStage.scale) + activeStage.offset[0]-20, (activeStage.platform[0][0].y * -activeStage.scale) + activeStage.offset[1]-20,100,100);
+    //bg2.drawImage(randall[Math.floor(randallTimer/10)],(activeStage.platform[0][0].x * activeStage.scale) + activeStage.offset[0]-20, (activeStage.platform[0][0].y * -activeStage.scale) + activeStage.offset[1]-20,100,100);
   }
   else if (activeStage.movingPlats !== null && activeStage.movingPlats !== undefined && activeStage.movingPlats.length !== 0) {
-    fg2.strokeStyle = "#4794c6";
     for (let i = 0; i < activeStage.movingPlats.length; i++) {
       if (activeStage.name !== "fountain" || activeStage.platform[activeStage.movingPlats[i]][0].y > 0) {
-        fg2.beginPath();
-        fg2.moveTo((activeStage.platform[activeStage.movingPlats[i]][0].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[activeStage.movingPlats[i]][0].y * -activeStage.scale) + activeStage.offset[1]);
-        fg2.lineTo((activeStage.platform[activeStage.movingPlats[i]][1].x * activeStage.scale) + activeStage.offset[0], (activeStage.platform[activeStage.movingPlats[i]][1].y * -activeStage.scale) + activeStage.offset[1]);
-        fg2.closePath();
-        fg2.stroke();
+        const surf = activeStage.platform[activeStage.movingPlats[i]];
+        drawLine(group, THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
       }
     }
   }
-  fg2.fillStyle = boxFill;
-
-  if (holiday !== 1){
-    if (activeStage.box !== null && activeStage.box !== undefined) {
-      for (let j = 0; j < activeStage.box.length; j++) {
-        fg2.fillRect((activeStage.box[j].min.x * activeStage.scale) + activeStage.offset[0], (activeStage.box[j].max.y * -activeStage.scale) + activeStage.offset[1], (activeStage.box[j].max.x - activeStage.box[j].min.x) * activeStage.scale, (activeStage.box[j].max.y - activeStage.box[j].min.y) * activeStage.scale);
-      }
-    }
-    if (activeStage.polygon !== null && activeStage.polygon !== undefined) {
-      for (let j=0;j<activeStage.polygon.length;j++){
-        const p = activeStage.polygon[j];
-        fg2.beginPath();
-        fg2.moveTo(p[0].x* activeStage.scale + activeStage.offset[0], p[0].y* -activeStage.scale + activeStage.offset[1]);
-        for (let n=1;n<p.length;n++) {
-          fg2.lineTo(p[n].x * activeStage.scale + activeStage.offset[0], p[n].y* -activeStage.scale + activeStage.offset[1]);
-        }
-        fg2.closePath();
-        fg2.fill();
-      }
-    }
-    if (activeStage.background !== null && activeStage.background !== undefined) {
-      if (activeStage.background.polygon !== null && activeStage.background.polygon !== undefined) {
-        bg2.save();
-        bg2.fillStyle = boxFillBG;
-        for (let i=0;i<activeStage.background.polygon.length;i++) {   
-          const p = activeStage.background.polygon[i];
-          bg2.beginPath();
-          bg2.moveTo(p[0].x * activeStage.scale + activeStage.offset[0],p[0].y * -activeStage.scale + activeStage.offset[1]);
-          for (let n=1;n<p.length;n++) {
-            bg2.lineTo(p[n].x * activeStage.scale + activeStage.offset[0],p[n].y * -activeStage.scale + activeStage.offset[1]);
-          }
-          bg2.closePath();
-          bg2.fill();
-        }
-      }
-      if (activeStage.background.line !== null && activeStage.background.line !== undefined) {
-        bg2.lineWidth = 3;
-        bg2.strokeStyle = boxFillBG;
-        for (let i=0;i<activeStage.background.line.length;i++){
-          const lL = activeStage.background.line[i][0];
-          const lR = activeStage.background.line[i][1];
-          bg2.beginPath();
-          bg2.moveTo(lL.x * activeStage.scale + activeStage.offset[0], lL.y * -activeStage.scale + activeStage.offset[1]);
-          bg2.lineTo(lR.x * activeStage.scale + activeStage.offset[0], lR.y * -activeStage.scale + activeStage.offset[1]);
-          bg2.closePath();
-          bg2.stroke();
-        }
-        bg2.restore();
-      }
-    }
-  }
-  fg2.lineWidth = 4;
+  
+  // draw damaging stage surfaces
   const types = ["wallL", "wallR", "ground", "ceiling"];
   for (let i=0;i<types.length;i++) {
-    drawDamageLine(types[i],fg2,activeStage);
+    drawDamageLines(types[i], group, activeStage);
   }
 
-  fg2.strokeStyle = "#e7a44c";
-  
-  const ex = 0;
-  /*if (holiday !== 1){
-    for (let j = 0; j < activeStage.ledge.length; j++) {
-      const e = activeStage.ledge[j];   
-      fg2.beginPath();
-      if (e[1]) {
-        fg2.moveTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0] -ex, (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1] +ex);
-        fg2.lineTo(activeStage.box[e[0]].max.x * activeStage.scale + activeStage.offset[0] -ex, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex);
-        fg2.lineTo((activeStage.box[e[0]].max.x - Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0] -ex, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex);
-      }
-      else {
-        fg2.moveTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0] +ex, (activeStage.box[e[0]].max.y - Math.min(10, (activeStage.box[e[0]].max.y - activeStage.box[e[0]].min.y) / 2)) * -activeStage.scale + activeStage.offset[1] +ex);
-        fg2.lineTo(activeStage.box[e[0]].min.x * activeStage.scale + activeStage.offset[0] +ex, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex);
-        fg2.lineTo((activeStage.box[e[0]].min.x + Math.min(10, (activeStage.box[e[0]].max.x - activeStage.box[e[0]].min.x) / 2)) * activeStage.scale + activeStage.offset[0] +ex, activeStage.box[e[0]].max.y * -activeStage.scale + activeStage.offset[1] +ex);
-      }
-      fg2.closePath();
-      fg2.stroke();
-      fg2.fill();
-      fg2.fill();
-    }
-  }*/
-    
+  // draw targets, bypassed for now
+  /*
   if (typeof activeStage.target !== "undefined") {
     fg2.strokeStyle = "rgba(255,255,255,0.4)";
     fg2.lineWidth = 1;
@@ -281,6 +256,13 @@ export function drawStage() {
       }
     }
   }
+  */
+
+  group.scale.set(activeStage.scale, -activeStage.scale, 1);
+  group.translateX(activeStage.offset[0]);
+  group.translateY(activeStage.offset[1]);
+  scene.add(group);
+
 };
 
 export function setBackgroundType(val) {

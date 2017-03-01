@@ -65,16 +65,14 @@ export function drawBezierCurve(scene, col, face, tX, tY, path, scaleX, scaleY, 
   scene.add(curveObject);
 }
 
-export function createRect (scene, mat, xmin, xmax, ymin, ymax) {
+export function makeRectShape (xmin, xmax, ymin, ymax) {
   const rect = new THREE.Shape();
   rect.moveTo(xmin, ymin);
   rect.lineTo(xmax, ymin);
   rect.lineTo(xmax, ymax);
   rect.lineTo(xmin, ymax);
   rect.closePath();
-  const geometry = new THREE.ShapeGeometry( rect, 4 );
-  const rectObject = new THREE.Mesh (geometry, mat);
-  scene.add(rectObject);
+  return rect;
 }
 
 export function drawShape (scene, shape, meshMat, lineMat, transform = null) {
@@ -97,9 +95,9 @@ export function drawShape (scene, shape, meshMat, lineMat, transform = null) {
 
 export function makePolygonShape (path, closed = true) {
   const polygon = new THREE.Shape();
-  polygon.moveTo(path[0], path[1]);
-  for (let i = 2; i < path.length-1; i += 2 ) {
-    polygon.lineTo(path[i], path[i+1]);
+  polygon.moveTo(path[0].x, path[0].y);
+  for (let i = 1; i < path.length; i++ ) {
+    polygon.lineTo(path[i].x, path[i].y);
   }
   if (closed) {
     polygon.closePath();
