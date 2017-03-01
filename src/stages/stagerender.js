@@ -72,7 +72,7 @@ export function drawStageInit() {
   }  
 
   const polyLineMat = null;
-  const polyMeshMat = new THREE.MeshBasicMaterial( { color : "rgba(94, 173, 255, 0.3)" } );
+  const polyMeshMat = new THREE.MeshBasicMaterial( { color : "rgba(94, 173, 255)", opacity : 0.3 } );
   if (activeStage.box !== null && activeStage.box !== undefined) {
     for (let j = 0; j < activeStage.box.length; j++) {
       const b = activeStage.box[j];
