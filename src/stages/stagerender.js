@@ -298,6 +298,8 @@ export function drawBackgroundInit() {
 };
 
 export function drawBackground() {
+  // bypass for now
+  /*
   if (holiday === 1){
     if (gameMode !== 4){
       drawSnow();
@@ -311,6 +313,7 @@ export function drawBackground() {
       drawTunnel();
     }
   }
+  */
 };
 
 export function drawTunnel() {
