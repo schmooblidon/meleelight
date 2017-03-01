@@ -1,6 +1,6 @@
 import {changeGamemode,ui, layers, bg1, fg1, holiday} from "main/main";
 import {drawArrayPathCompress} from "main/render";
-import {clearScene, fillBackground, addTexttoScene} from "../main/util/renderUtils";
+import {clearScene, fillBackground, addTexttoScene, addImageToScene} from "../main/util/renderUtils";
 /* eslint-disable */
 
 export let startUpTimer = 0;
@@ -27,7 +27,7 @@ export function drawStartUp (){
 
     drawArrayPathCompress(ui, "rgb(255,255,255)", 1, 300, 650, LOGO, 0.5, 0.5, 0, 0, 0);
 
-    ui.drawImage(schmoologo, 100, Math.round(200 - startUpTimer / 3));
+    addImageToScene(ui,schmoologo, 100, Math.round(200 - startUpTimer / 3));
     drawArrayPathCompress(ui, (holiday == 1) ? "rgb(76,76,76)" : "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
 
     if (startUpTimer > 180) {
