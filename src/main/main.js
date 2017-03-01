@@ -43,7 +43,7 @@ import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import * as THREE from '../../node_modules/three';
-import {fillBackground} from "./util/renderUtils";
+import {fillBackground, clearScene} from "./util/renderUtils";
 /*globals performance*/
 window._ = require('../third-party/underscore');
 window.requestAnimationFrame = require('../third-party/requestAnimationFrame.js');
@@ -1075,12 +1075,11 @@ export function gameTick (oldInputBuffers){
 }
 
 export function clearScreen (){
-  //bg1.fillStyle = "rgb(0, 0, 0)";
-  //bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
-  // bg2.clearRect(0, 0, layers.BG2.width, layers.BG2.height);
-  //fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
-  // fg2.clearRect(0, 0, layers.FG2.width, layers.FG2.height);
-  // ui.clearRect(0, 0, layers.UI.width, layers.UI.height);
+  clearScene(bg1);
+  clearScene(bg2);
+  clearScene(fg1);
+  clearScene(fg2);
+  clearScene(ui);
 }
 
 let otherFrame = true;
@@ -1118,7 +1117,7 @@ export function renderTick (){
     } else if (gameMode == 5) {
       if (playing || frameByFrameRender) {
         var rStart = performance.now();
-     //   clearScreen();
+        clearScreen();
        // if (getShowSFX()) {
          // drawBackground();
        // }
@@ -1148,7 +1147,8 @@ export function renderTick (){
         }
       }
       else if (!gameEnd) {
-      //  clearScreen();
+        clearScreen();
+
         if (!starting) {
           targetTimerTick();    
         }
@@ -1168,7 +1168,8 @@ export function renderTick (){
       console.log(delta);*/
       //console.log("test2");
       var rStart = performance.now();
-    //  clearScreen();
+      clearScreen();
+
     //  if (getShowSFX()) {
       //  drawBackground();
     //  }
@@ -1214,14 +1215,19 @@ export function renderTick (){
     }
   }
   renderer.clear();
+
   renderer.render(bg1,camera);
   renderer.clearDepth();
+
   renderer.render( bg2 , camera );
   renderer.clearDepth();
+
   renderer.render( fg1 , camera );
   renderer.clearDepth();
+
   renderer.render(  fg2 , camera );
   renderer.clearDepth();
+
   renderer.render( ui   , camera );
 }
 
