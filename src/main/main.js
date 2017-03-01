@@ -43,6 +43,7 @@ import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import * as THREE from '../../node_modules/three';
+import {fillBackground} from "./util/renderUtils";
 /*globals performance*/
 window._ = require('../third-party/underscore');
 window.requestAnimationFrame = require('../third-party/requestAnimationFrame.js');
@@ -504,9 +505,7 @@ export function positionPlayersInCSS (){
 // 0:Title Screen
 
 export function changeGamemode (newGamemode){
-  bg1.fillStyle = "black";
-  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
-  fg1.clearRect(0, 0, layers.FG1.width, layers.FG1.height);
+  fillBackground(bg1, "#000000");
   gameMode = newGamemode;
   switch (newGamemode) {
     // TITLESCREEN

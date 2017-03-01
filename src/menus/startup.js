@@ -1,5 +1,5 @@
 import {changeGamemode,ui, layers, bg1, fg1, holiday} from "main/main";
-import {drawArrayPathCompress} from "main/render";
+import {curveFromArray} from "main/render";
 import {clearScene, fillBackground, addTexttoScene, addImageToScene} from "../main/util/renderUtils";
 /* eslint-disable */
 
@@ -20,31 +20,31 @@ export function drawStartUp (){
   //   fg1.globalAlpha = 1;
   // }
   clearScene(ui);
-  fillBackground(bg1 , "0x000000");
+  fillBackground(bg1 , "#000000");
   clearScene(bg1);
 
   if (startUpTimer <= 200) {
 
-    drawArrayPathCompress(ui, "rgb(255,255,255)", 1, 300, 650, LOGO, 0.5, 0.5, 0, 0, 0);
+    curveFromArray(ui, "#FFFFFF", 1, 300, 650, LOGO, 0.5, 0.5, 0, 0, 0);
 
     addImageToScene(ui,schmoologo, 100, Math.round(200 - startUpTimer / 3));
-    drawArrayPathCompress(ui, (holiday == 1) ? "rgb(76,76,76)" : "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
+    curveFromArray(ui, (holiday == 1) ? "rgb(76,76,76)" : "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
 
     if (startUpTimer > 180) {
-      ui.fillStyle = "rgba(0,0,0," + Math.min(1, (startUpTimer - 180) / 20) + ")";
+      fillBackground(ui,"rgba(0,0,0," + Math.min(1, (startUpTimer - 180) / 20) + ")");
     } else {
-      ui.fillStyle = "rgba(0,0,0," + Math.max(0, 1 - (startUpTimer) / 20) + ")";
+      fillBackground(ui,"rgba(0,0,0," + Math.max(0, 1 - (startUpTimer) / 20) + ")");
     }
-    ui.fillRect(0, 0, layers.UI.width, layers.UI.height);
+
   } else if (startUpTimer > 200) {
     addTexttoScene(ui,"WITH MUSIC FROM",600,290,layers.UI);
-    ui.drawImage(hohlogo, 375, 305);
+    addImageToScene(ui,hohlogo, 375, 305);
     if (startUpTimer > 350) {
-      ui.fillStyle = "rgba(0,0,0," + Math.min(1, (startUpTimer - 350) / 20) + ")";
+      fillBackground(ui,"rgba(0,0,0," + Math.min(1, (startUpTimer - 350) / 20) + ")");
     } else {
-      ui.fillStyle = "rgba(0,0,0," + Math.max(0, 1 - (startUpTimer - 200) / 20) + ")";
+      fillBackground(ui,"rgba(0,0,0," + Math.max(0, 1 - (startUpTimer - 200) / 20) + ")");
     }
-    ui.fillRect(0, 0, layers.UI.width, layers.UI.height);
+
   }
   if (startUpTimer == 370) {
     changeGamemode(0);

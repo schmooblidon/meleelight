@@ -2,7 +2,7 @@
 import {player,ui, changeGamemode, setCookie, layers, clearScreen, characterSelections} from "main/main";
 import {sounds} from "main/sfx";
 import {handGrab, handOpen} from "menus/css";
-import {twoPi, drawArrayPathCompress} from "main/render";
+import {twoPi, curveFromArray} from "main/render";
 import {startTargetGame} from "target/targetplay";
 import {boxFill, boxFillBG, drawBackground, calculateDamageWallColours, drawDamageLine} from "stages/stagerender";
 import {deepCopyObject} from "main/util/deepCopy";
@@ -1294,7 +1294,7 @@ export function renderTargetBuilder (){
   if (targetTool === 8) {
     let temX = (0 * stageTemp.scale) + stageTemp.offset[0];
     let temY = (0 * -stageTemp.scale) + stageTemp.offset[1];
-    drawArrayPathCompress(ui, "rgb(250, 89, 89)", 1, temX, temY, animations[characterSelections[targetBuilder]].WAIT[0], player[targetBuilder].charAttributes.charScale * (stageTemp.scale / 4.5), player[targetBuilder].charAttributes.charScale * (stageTemp.scale / 4.5), 0, 0, 0);
+    curveFromArray(ui, "rgb(250, 89, 89)", 1, temX, temY, animations[characterSelections[targetBuilder]].WAIT[0], player[targetBuilder].charAttributes.charScale * (stageTemp.scale / 4.5), player[targetBuilder].charAttributes.charScale * (stageTemp.scale / 4.5), 0, 0, 0);
   }
   ui.save();
   ui.globalAlpha = 1 * hoverToolbar;

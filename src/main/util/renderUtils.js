@@ -28,13 +28,31 @@ export function addTexttoScene(scene,text,x,y,layer,config){
   }
 }
 export function addImageToScene(scene,image,x,y) {
-  var img = new THREE.MeshBasicMaterial({
-    map:THREE.ImageUtils.loadTexture(image.src)
-  });
-  img.map.needsUpdate = true;
+  var loader = new THREE.TextureLoader();
 
+// load a resource
+  loader.load(
+      // resource URL
+      image.src,
+      // Function when resource is loaded
+      function ( texture ) {
+        // do something with the texture
+        var material = new THREE.MeshBasicMaterial( {
+          map: texture
+        } );
+        const plane = new THREE.Mesh(new THREE.PlaneGeometry(x, y),material);
+        plane.overdraw = true;
+        scene.add(plane);
+      },
+      // Function called when download progresses
+      function ( xhr ) {
+        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+      },
+      // Function called when download errors
+      function ( xhr ) {
+        console.log( 'An error happened' );
+      }
+  );
   // plane
-  const plane = new THREE.Mesh(new THREE.PlaneGeometry(x, y),img);
-  plane.overdraw = true;
-  scene.add(plane);
+
 }

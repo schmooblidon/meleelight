@@ -22,6 +22,7 @@ import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
+import * as THREE from "three";
 /* eslint-disable */
 
 export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
@@ -34,29 +35,23 @@ export function rotateVector(vecx, vecy, ang) {
         vecx * Math.sin(ang) + vecy * Math.cos(ang));
 }
 
-export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
-
-    can.translate(tX - rpX, tY - rpY);
-    can.rotate(rotate);
-
-    can.fillStyle = col;
-    can.beginPath();
-    // for each shape
-    for (var j = 0; j < path.length; j++) {
-        // first 2 numbers are starting vector points
-        var x = (path[j][0] * scaleX * face) + rpX;
-        var y = (path[j][1] * scaleY) + rpY;
-        can.moveTo(x, y);
-        // starting from index 2, each set of 6 numbers are bezier curve coords
-        for (var k = 2; k < path[j].length; k += 6) {
-            can.bezierCurveTo((path[j][k] * scaleX * face) + rpX, (path[j][k + 1] * scaleY) + rpY, (path[j][k + 2] * scaleX *
-                face) + rpX, (path[j][k + 3] * scaleY) + rpY, (path[j][k + 4] * scaleX * face) + rpX, (path[j][k + 5] *
-                scaleY) + rpY);
-        }
+export function curveFromArray(scene, col, face, tX, tY, path, scaleX, scaleY, rotate,rpX,rpY) {
+  for (let j = 0; j < path.length; j++) {
+      const curve = new THREE.Shape();
+      curve.moveTo(path[j][0], path[j][1]);
+      for (let k = 2; k < path[j].length-5; k += 6) {
+    curve.bezierCurveTo(path[j][k], path[j][k+1], path[j][k+2], path[j][k+3], path[j][k+4], path[j][k+5]);
     }
-    can.closePath();
-    can.fill();
-    can.restore();
+    curve.closePath();
+    const geometry = curve.createPointsGeometry ( 5 * (path[j].length - 1) );
+    const material = new THREE.LineBasicMaterial( { color : col } );
+    const curveObject = new THREE.Line( geometry, material );
+    curveObject.scale.set( scaleX * face, scaleY, 1);
+    curveObject.rotateZ(rotate);
+    curveObject.translateX(tX);
+    curveObject.translateY(tY);
+    scene.add(curveObject);
+  }
 }
 
 
@@ -202,17 +197,17 @@ export function renderPlayer(i) {
             fg2.stroke();
             fg2.lineWidth = 1;
 
-            drawArrayPathCompress(fg2, col, face, player[i].miniViewPoint.x, player[i].miniViewPoint.y + 30, model, player[
+            curveFromArray(fg2, col, face, player[i].miniViewPoint.x, player[i].miniViewPoint.y + 30, model, player[
                 i].charAttributes.miniScale, player[i].charAttributes.miniScale, player[i].rotation, player[i].rotationPoint
                 .x, player[i].rotationPoint.y);
         } else {
             if (player[i].actionState == "ENTRANCE") {
-                drawArrayPathCompress(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
+                curveFromArray(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
                     4.5), Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 -
                         startTimer)) * (activeStage.scale / 4.5), player[i].rotation, player[i].rotationPoint.x, player[i].rotationPoint
                     .y);
             } else {
-                drawArrayPathCompress(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
+                curveFromArray(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
                     4.5), player[i].charAttributes.charScale * (activeStage.scale / 4.5), player[i].rotation, player[i].rotationPoint
                     .x, player[i].rotationPoint.y);
             }

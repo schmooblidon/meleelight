@@ -8,7 +8,7 @@ import {cpuDifficulty, characterSelections, player, changeGamemode, playerType,b
     , ports
     , setVersusMode
 } from "main/main";
-import {drawArrayPathCompress, twoPi} from "main/render";
+import {curveFromArray, twoPi} from "main/render";
 import {sounds} from "main/sfx";
 import {actionStates} from "physics/actionStateShortcuts";
 import {setCS} from "../main/main";
@@ -766,7 +766,7 @@ export function drawCSS (){
       } else {
         ui.globalAlpha = 1;
       }
-      drawArrayPathCompress(ui, col, face, (player[i].phys.pos.x * 4.5 * 1.5) + 600, (player[i].phys.pos.y * -4.5) +
+      curveFromArray(ui, col, face, (player[i].phys.pos.x * 4.5 * 1.5) + 600, (player[i].phys.pos.y * -4.5) +
         480, model, player[i].charAttributes.charScale * 1.5, player[i].charAttributes.charScale * 1.5, 0, 0, 0);
       if (player[i].phys.shielding) {
         var sCol = palettes[pPal[i]][2];
