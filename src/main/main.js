@@ -523,8 +523,8 @@ export function changeGamemode (newGamemode){
       break;
       // Playing (VS)
     case 3:
-      drawBackgroundInit();
-      drawStageInit();
+    //  drawBackgroundInit();
+      //drawStageInit();
       break;
       // Target Builder
     case 4:
@@ -1077,10 +1077,10 @@ export function gameTick (oldInputBuffers){
 export function clearScreen (){
   //bg1.fillStyle = "rgb(0, 0, 0)";
   //bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
-  bg2.clearRect(0, 0, layers.BG2.width, layers.BG2.height);
+  // bg2.clearRect(0, 0, layers.BG2.width, layers.BG2.height);
   //fg1.clearRect(0,0,layers.FG1.width,layers.FG1.height);
-  fg2.clearRect(0, 0, layers.FG2.width, layers.FG2.height);
-  ui.clearRect(0, 0, layers.UI.width, layers.UI.height);
+  // fg2.clearRect(0, 0, layers.FG2.width, layers.FG2.height);
+  // ui.clearRect(0, 0, layers.UI.width, layers.UI.height);
 }
 
 let otherFrame = true;
@@ -1118,15 +1118,15 @@ export function renderTick (){
     } else if (gameMode == 5) {
       if (playing || frameByFrameRender) {
         var rStart = performance.now();
-        clearScreen();
-        if (getShowSFX()) {
-          drawBackground();
-        }
-        drawStage();
+     //   clearScreen();
+       // if (getShowSFX()) {
+         // drawBackground();
+       // }
+        //drawStage();
         renderPlayer(targetBuilder);
-        renderArticles();
-        renderVfx();
-        renderOverlay(false);
+       // renderArticles();
+       // renderVfx();
+       // renderOverlay(false);
 
         if (showDebug) {
           var diff = performance.now() - rStart;
@@ -1148,19 +1148,19 @@ export function renderTick (){
         }
       }
       else if (!gameEnd) {
-        clearScreen();
+      //  clearScreen();
         if (!starting) {
           targetTimerTick();    
         }
         if (getShowSFX()) {
-          drawBackground();
+       //   drawBackground();
         }
-        drawStage();
+     //   drawStage();
         renderPlayer(targetBuilder);
-        renderArticles();
-        renderVfx();
-        renderOverlay(false);
-        renderForeground();
+      //  renderArticles();
+      //  renderVfx();
+      //  renderOverlay(false);
+       // renderForeground();
       }
     } else if (playing || frameByFrameRender) {
       /*delta = timestamp - lastFrameTimeMs; // get the delta time since last frame
@@ -1168,19 +1168,19 @@ export function renderTick (){
       console.log(delta);*/
       //console.log("test2");
       var rStart = performance.now();
-      clearScreen();
-      if (getShowSFX()) {
-        drawBackground();
-      }
-      drawStage();
+    //  clearScreen();
+    //  if (getShowSFX()) {
+      //  drawBackground();
+    //  }
+    //  drawStage();
       for (var i = 0; i < 4; i++) {
         if (playerType[i] > -1) {
           renderPlayer(i);
         }
       }
-      renderArticles();
-      renderVfx();
-      renderOverlay(true);
+    //  renderArticles();
+     // renderVfx();
+     // renderOverlay(true);
 
       if (showDebug) {
         var diff = performance.now() - rStart;
@@ -1202,15 +1202,15 @@ export function renderTick (){
         dom.renderPeak.innerHTML = renderTime[3];
       }
     }
-    if (frameByFrameRender) {
-      renderForeground();
-    }
+    // if (frameByFrameRender) {
+    //   renderForeground();
+    // }
     frameByFrameRender = false;
     //renderToMain();
     //console.log(performance.now());
   } else {
     if (playing) {
-      renderVfx(true);
+   //   renderVfx(true);
     }
   }
 }
@@ -1241,6 +1241,14 @@ export function startGame (){
   }
   changeGamemode(3);
   resetVfxQueue();
+  addPlayer(0,"keyboard");
+  togglePort(0);
+  addPlayer(1,"keyboard");
+  togglePort(1);
+  addPlayer(2,"keyboard");
+  togglePort(2);
+  addPlayer(3,"keyboard");
+  togglePort(3);
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
@@ -1500,7 +1508,7 @@ export function start (){
   let nullInputBuffers =  [nullInputs(), nullInputs(), nullInputs(), nullInputs()];
   gameTick(nullInputBuffers);
   renderTick();
-
+startGame();
   $("#effectsButton").click(function() {
     if (getShowSFX()) {
       $("#effectsButtonEdit").empty().append("OFF");

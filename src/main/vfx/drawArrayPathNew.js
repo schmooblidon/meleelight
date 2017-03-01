@@ -14,12 +14,12 @@ export function drawArrayPathNew(scene, col, face, tX, tY, path, scaleX, scaleY,
     }
   }
   curve.closePath();
-  const geometry = curve.createPointsGeometry ( 5 * n );
+  const geometry = curve.createPointsGeometry ( 12 );
   const material = new THREE.LineBasicMaterial( { color : col } );
   const curveObject = new THREE.Line( geometry, material );
   curveObject.scale.set( scaleX * face, scaleY, 1);
   curveObject.rotateZ(rotate);
-  curveObject.translateX(tX);
-  curveObject.translateY(tY);
+  curveObject.translateOnAxis( new THREE.Vector3(1,0,0),  tX);
+  curveObject.translateOnAxis( new THREE.Vector3(0,1,0),  tY);
   scene.add(curveObject);
 }

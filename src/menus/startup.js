@@ -19,33 +19,33 @@ export function drawStartUp (){
   //   fg1.drawImage(christmasbackdrop,0,0,1200,750);
   //   fg1.globalAlpha = 1;
   // }
-  clearScene(ui);
-  fillBackground(bg1 , "#000000");
-  clearScene(bg1);
-
-  if (startUpTimer <= 200) {
-
-    curveFromArray(ui, "#FFFFFF", 1, 300, 650, LOGO, 0.5, 0.5, 0, 0, 0);
-
-    addImageToScene(ui,schmoologo, 100, Math.round(200 - startUpTimer / 3));
-    curveFromArray(ui, (holiday == 1) ? "rgb(76,76,76)" : "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
-
-    if (startUpTimer > 180) {
-      fillBackground(ui,"rgba(0,0,0," + Math.min(1, (startUpTimer - 180) / 20) + ")");
-    } else {
-      fillBackground(ui,"rgba(0,0,0," + Math.max(0, 1 - (startUpTimer) / 20) + ")");
-    }
-
-  } else if (startUpTimer > 200) {
-    addTexttoScene(ui,"WITH MUSIC FROM",600,290,layers.UI);
-    addImageToScene(ui,hohlogo, 375, 305);
-    if (startUpTimer > 350) {
-      fillBackground(ui,"rgba(0,0,0," + Math.min(1, (startUpTimer - 350) / 20) + ")");
-    } else {
-      fillBackground(ui,"rgba(0,0,0," + Math.max(0, 1 - (startUpTimer - 200) / 20) + ")");
-    }
-
-  }
+  // clearScene(ui);
+  // fillBackground(bg1 , "#000000");
+  // clearScene(bg1);
+  //
+  // if (startUpTimer <= 200) {
+  //
+  //   curveFromArray(ui, "#FFFFFF", 1, 300, 650, LOGO, 0.5, 0.5, 0, 0, 0);
+  //
+  //   addImageToScene(ui,schmoologo, 100, Math.round(200 - startUpTimer / 3));
+  //   curveFromArray(ui, (holiday == 1) ? "rgb(76,76,76)" : "rgb(0,0,0)", 1, 300, 650, LOGO2, 0.5, 0.5, 0, 0, 0);
+  //
+  //   if (startUpTimer > 180) {
+  //     fillBackground(ui,"rgba(0,0,0," + Math.min(1, (startUpTimer - 180) / 20) + ")");
+  //   } else {
+  //     fillBackground(ui,"rgba(0,0,0," + Math.max(0, 1 - (startUpTimer) / 20) + ")");
+  //   }
+  //
+  // } else if (startUpTimer > 200) {
+  //   addTexttoScene(ui,"WITH MUSIC FROM",600,290,layers.UI);
+  //   addImageToScene(ui,hohlogo, 375, 305);
+  //   if (startUpTimer > 350) {
+  //     fillBackground(ui,"rgba(0,0,0," + Math.min(1, (startUpTimer - 350) / 20) + ")");
+  //   } else {
+  //     fillBackground(ui,"rgba(0,0,0," + Math.max(0, 1 - (startUpTimer - 200) / 20) + ")");
+  //   }
+  //
+  // }
   if (startUpTimer == 370) {
     changeGamemode(0);
   }

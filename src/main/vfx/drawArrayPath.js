@@ -9,12 +9,12 @@ export function drawArrayPath(scene, col, face, tx, tY, path, scaleX, scaleY) {
       curve.lineTo(path[k], path[k+1]);
     }
     curve.closePath();
-    const geometry = curve.createPointsGeometry ( lg - 1 );
+    const geometry = curve.createPointsGeometry ( 12 );
     const material = new THREE.LineBasicMaterial( { color : col } );
     const curveObject = new THREE.Line( geometry, material );
     curveObject.scale.set( scaleX * face, scaleY, 1);
-    curveObject.translateX(tx);
-    curveObject.translateY(tY);
+    curveObject.translateOnAxis( new THREE.Vector3(1,0,0),  tx);
+    curveObject.translateOnAxis( new THREE.Vector3(0,1,0),  tY);
     scene.add(curveObject);
   }
 }
