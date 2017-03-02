@@ -3,7 +3,11 @@ import { MeshText2D, textAlign } from 'three-text2d';
 
 export function clearScene(scene){
   scene.children.forEach((object)=>{
+
     scene.remove(object);
+    if (object.geometry) {
+      object.geometry.dispose ();
+    }
   });
 }
 
