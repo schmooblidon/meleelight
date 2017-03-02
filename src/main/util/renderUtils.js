@@ -3,11 +3,18 @@ import { MeshText2D, textAlign } from 'three-text2d';
 
 export function clearScene(scene){
   scene.children.forEach((object)=>{
-
-    scene.remove(object);
     if (object.geometry) {
-      object.geometry.dispose ();
+      object.geometry.dispose();
     }
+    if (object.material) {
+      object.material.dispose();
+    }
+    if (object.texture) {
+      object.texture.dispose();
+    }
+    scene.remove(object);
+    // eslint-disable-next-line no-param-reassign
+    object = undefined;
   });
 }
 
