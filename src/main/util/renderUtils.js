@@ -2,20 +2,21 @@ import * as THREE from 'three';
 import { MeshText2D, textAlign } from 'three-text2d';
 
 export function clearScene(scene){
-  scene.children.forEach((object)=>{
-    if (object.geometry) {
-      object.geometry.dispose();
+  while (scene.children.length > 0) {
+    let child = scene.children[0];
+    scene.remove(child);
+    if (child.geometry) {
+      child.geometry.dispose();
     }
-    if (object.material) {
-      object.material.dispose();
+    /*
+    if (child.material) {
+      child.material.dispose();
     }
-    if (object.texture) {
-      object.texture.dispose();
-    }
-    scene.remove(object);
-    // eslint-disable-next-line no-param-reassign
-    object = undefined;
-  });
+    if (child.texture) {
+      child.texture.dispose();
+    } */
+    child = undefined;
+  }
 }
 
 export function fillBackground(scene,color){
@@ -38,6 +39,7 @@ export function addTexttoScene(scene,text,x,y,layer,config){
     scene.add(text);
   }
 }
+
 export function addImageToScene(scene,image,x,y) {
   const loader = new THREE.TextureLoader();
   // load a resource
