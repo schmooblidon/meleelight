@@ -1258,13 +1258,7 @@ export function startGame (){
   changeGamemode(3);
   resetVfxQueue();
   addPlayer(0,"keyboard");
-  togglePort(0);
-  addPlayer(1,"keyboard");
-  togglePort(1);
-  addPlayer(2,"keyboard");
-  togglePort(2);
-  addPlayer(3,"keyboard");
-  togglePort(3);
+
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
