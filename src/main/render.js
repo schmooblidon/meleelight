@@ -42,6 +42,7 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
   const animationsGroup = new THREE.Group();
   animationsGroup.name = "animationFrames";
   animationsGroup.visible = false;
+  animationsGroup.matrixAutoUpdate = false;
   for (let i =0; i < characters.length; i++) {
     const character = characters[i];
     const characterGroup = new THREE.Group();
@@ -54,11 +55,12 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
       actionStateGroup.name = actionState;
       characterGroup.add(actionStateGroup);
       for (let f = 0; f < animations[character][actionState].length; f++) {
-        drawBezierCurvesSimple (actionStateGroup, animations[character][actionState][f], toString(f));
+        drawBezierCurvesSimple(actionStateGroup, animations[character][actionState][f]);
       }
     }
   }
   scene.add(animationsGroup);
+  animationsGroup.updateMatrixWorld = function() {};
 }
 
 export function renderPlayer(i, addToScene = false) {
@@ -226,6 +228,9 @@ export function renderPlayer(i, addToScene = false) {
                 cloned.translateX(rpX);
                 cloned.translateY(rpY);
                 cloned.name = "player"+i;
+                cloned.matrixAutoUpdate = false;
+                cloned.updateMatrix();
+                cloned.updateMatrixWorld();
                 fg2.add(cloned);
             }
         }

@@ -87,7 +87,7 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
   }
 }
 
-export function drawBezierCurvesSimple (scene, path, label) {  
+export function drawBezierCurvesSimple (scene, path) {  
   for (let j = 0; j < path.length; j++) {
     const curve = new THREE.Shape();
     curve.moveTo(path[j][0], path[j][1]);
@@ -100,7 +100,6 @@ export function drawBezierCurvesSimple (scene, path, label) {
     const material = new THREE.MeshBasicMaterial( { color : new THREE.Color("rgb(255,0,255)") } );
     material.side = THREE.DoubleSide;
     const curveObject = new THREE.Mesh( geometry, material );
-    curveObject.name = label;
     scene.add(curveObject);
   }
 }

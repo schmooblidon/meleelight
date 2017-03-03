@@ -1265,6 +1265,8 @@ export function startGame (){
   togglePort(2);
   addPlayer(3,"keyboard");
   togglePort(3);
+  characterSelections = [0,1,2,3];
+  loadCharacterAnimationFrames(fg1, [0,1,2,3]);
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
@@ -1276,7 +1278,7 @@ export function startGame (){
       player[n].stocks = 1;
     }
   }
-  loadCharacterAnimationFrames(fg1, [0]);
+
   matchTimer = 480;
   startTimer = 1.5;
   starting = true;

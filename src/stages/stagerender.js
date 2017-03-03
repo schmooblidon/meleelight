@@ -59,6 +59,7 @@ export function drawStageInit() {
   const scene = fg1;
   const group = new THREE.Group();
   group.name = "stageStatic";
+  group.matrixAutoUpdate = false;
 
   for (let i =0 ; i < types.length; i++) {
     const type = types[i];
@@ -105,6 +106,7 @@ export function drawStageInit() {
   group.scale.set(activeStage.scale, -activeStage.scale, 1);
   group.translateX(activeStage.offset[0]);
   group.translateY(activeStage.offset[1]);
+  group.updateMatrix();
   scene.add(group);
 
 };
