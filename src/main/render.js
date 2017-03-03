@@ -22,7 +22,7 @@ import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
 import * as THREE from "three";
-import {drawBezierCurves, makeDiskShape, makePolygonShape, drawShape, drawLine} from "../render/threeUtil";
+import {drawBezierCurves, makeRectShape, makeDiskShape, makePolygonShape, drawShape, drawLine} from "../render/threeUtil";
 import {drawECB} from "../render/drawECB";
 import {getObjectByNameNonRecursive} from "./util/renderUtils";
 
@@ -311,52 +311,27 @@ export function renderPlayer(scene, i) {
       drawShape(scene, rebirthPlatform, meshMat, lineMat);
     }
     if (player[i].showLedgeGrabBox) {
-      // fg2.strokeStyle = "#4478ff";
-      // fg2.strokeRect(player[i].phys.ledgeSnapBoxF.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.ledgeSnapBoxF.min
-      //         .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
-      // fg2.strokeStyle = "#ff4444";
-      // fg2.strokeRect(player[i].phys.ledgeSnapBoxB.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.ledgeSnapBoxB.min
-      //         .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
+      const ledgeGrabBoxGroup = new THREE.Group();
+      const ledgeGrabBoxF = makeRectShape( player[i].phys.ledgeSnapBoxF.min.x
+                                         , player[i].phys.ledgeSnapBoxF.min.x + 14
+                                         , player[i].phys.ledgeSnapBoxF.min.y
+                                         , player[i].phys.ledgeSnapBoxF.min.y - 10 );
+      const ledgeGrabBoxB = makeRectShape( player[i].phys.ledgeSnapBoxB.min.x
+                                         , player[i].phys.ledgeSnapBoxB.min.x + 14
+                                         , player[i].phys.ledgeSnapBoxB.min.y
+                                         , player[i].phys.ledgeSnapBoxB.min.y - 10 );
+      drawShape(ledgeGrabBoxGroup, ledgeGrabBoxF, null, new THREE.LineBasicMaterial({ color : "#4478ff", linewidth : 3 }));
+      drawShape(ledgeGrabBoxGroup, ledgeGrabBoxB, null, new THREE.LineBasicMaterial({ color : "#ff4444", linewidth : 3 }));
+      ledgeGrabBoxGroup.scale.set(activeStage.scale,-activeStage.scale,1);
+      ledgeGrabBoxGroup.translateX(activeStage.offset[0]);
+      ledgeGrabBoxGroup.translateY(activeStage.offset[1]);
+      scene.add(ledgeGrabBoxGroup);
     }
     if (player[i].showECB) {
       drawECB(scene, player[i].phys.ECB1, { fill : "#ff8d2f" } );
       drawECB(scene, player[i].phys.ECB1, { stroke : "white" } );
       drawLine(scene, new THREE.LineBasicMaterial({ color : "white", linewidth : 3 }), temX, temY-6, temX, temY+6 );
       drawLine(scene, new THREE.LineBasicMaterial({ color : "white", linewidth : 3 }), temX+6, temY, temX-6, temY );
-      // fg2.fillStyle = "#ff8d2f";
-      // fg2.beginPath();
-      // fg2.moveTo((player[i].phys.ECB1[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[0].y * -activeStage.scale) +
-      //     activeStage.offset[1]);
-      // fg2.lineTo((player[i].phys.ECB1[1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[1].y * -activeStage.scale) +
-      //     activeStage.offset[1]);
-      // fg2.lineTo((player[i].phys.ECB1[2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[2].y * -activeStage.scale) +
-      //     activeStage.offset[1]);
-      // fg2.lineTo((player[i].phys.ECB1[3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[3].y * -activeStage.scale) +
-      //     activeStage.offset[1]);
-      // fg2.closePath();
-      // fg2.fill();
-      // fg2.strokeStyle = "white";
-      // fg2.beginPath();
-      // fg2.moveTo((player[i].phys.ECBp[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[0].y * -activeStage.scale) +
-      //     activeStage.offset[1]);
-      // fg2.lineTo((player[i].phys.ECBp[1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[1].y * -activeStage.scale) +
-      //     activeStage.offset[1]);
-      // fg2.lineTo((player[i].phys.ECBp[2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[2].y * -activeStage.scale) +
-      //     activeStage.offset[1]);
-      // fg2.lineTo((player[i].phys.ECBp[3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[3].y * -activeStage.scale) +
-      //     activeStage.offset[1]);
-      // fg2.closePath();
-      // fg2.stroke();
-      // fg2.beginPath();
-      // fg2.moveTo(temX, temY - 6);
-      // fg2.lineTo(temX, temY + 6);
-      // fg2.closePath();
-      // fg2.stroke();
-      // fg2.beginPath();
-      // fg2.moveTo(temX + 6, temY);
-      // fg2.lineTo(temX - 6, temY);
-      // fg2.closePath();
-      // fg2.stroke();
     }
     if (player[i].showHitbox) {
       /*
