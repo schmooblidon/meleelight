@@ -1086,6 +1086,7 @@ let otherFrame = true;
 let fps30 = false;
 export function renderTick (){
   const dynamicGroup = new THREE.Group();
+  dynamicGroup.name = "generalDynamic";
   bg2.add(dynamicGroup);
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
