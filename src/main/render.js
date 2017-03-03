@@ -41,7 +41,7 @@ export function rotateVector(vecx, vecy, ang) {
 export function loadCharacterAnimationFrames ( scene, characters ) {
   const animationsGroup = new THREE.Group();
   animationsGroup.name = "animationFrames";
-  animationsGroup.visible = false;
+  //animationsGroup.visible = false;
   animationsGroup.matrixAutoUpdate = false;
   for (let i =0; i < characters.length; i++) {
     const character = characters[i];
@@ -219,6 +219,7 @@ export function renderPlayer(i, addToScene = false) {
                 const rpX = player[i].rotationPoint.x;
                 const rpY = player[i].rotationPoint.y;
                 cloned.material.color.set (new THREE.Color(col));
+                cloned.material.transparent = false;
                 const sX = player[i].charAttributes.charScale * (activeStage.scale /4.5) * face;
                 const sY = Math.max(0.01, Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 -startTimer)) * (activeStage.scale / 4.5));
                 cloned.scale.set( sX, sY , 1);

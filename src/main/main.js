@@ -43,7 +43,7 @@ import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import * as THREE from '../../node_modules/three';
-import {fillBackground, clearScene, addToClearEveryFrame} from "./util/renderUtils";
+import {fillBackground, clearScene, addToClearEveryFrame, getObjectByNameNonRecursive} from "./util/renderUtils";
 /*globals performance*/
 window._ = require('../third-party/underscore');
 window.requestAnimationFrame = require('../third-party/requestAnimationFrame.js');
@@ -1229,6 +1229,13 @@ export function renderTick (){
   // renderer.clearDepth();
 
   renderer.render( ui   , camera );
+  if (animationsNotCleared) {
+    const frames = getObjectByNameNonRecursive(ui, "animationFrames");
+    if (frames !== undefined) {
+      frames.visible = false;
+      animationsNotCleared = false;
+    }
+  }
 }
 
 export function buildPlayerObject (i){
@@ -1492,6 +1499,8 @@ renderer.setSize(1200, 750);
 renderer.setClearColor(0x000000);
 // renderer.setPixelRatio(window.devicePixelRatio);
 renderer.autoClear = false;
+let animationsNotCleared = true;
+
 function initScenes() {
   bg1 = new THREE.Scene();
 

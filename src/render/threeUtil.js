@@ -95,15 +95,18 @@ export function drawBezierCurvesSimple (scene, path) {
       curve.bezierCurveTo(path[j][k], path[j][k+1], path[j][k+2], path[j][k+3], path[j][k+4], path[j][k+5]);
     }
     curve.closePath();
-    const geometry = new THREE.ShapeBufferGeometry(curve, 5);
+    // create the geometry by passing through a non-buffered geometry to create a non-indexed buffered geometry
+    // this incurs a significant slowdown on load, but saves some memory
+    //const geometry = new THREE.BufferGeometry().fromGeometry(new THREE.ShapeGeometry(curve, 3));
+    const geometry = new THREE.ShapeBufferGeometry(curve, 3);
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
-    geometry.attributes.position.onUploadCallback = function (name) { this.array = undefined; } ;
-    geometry.attributes.normal.onUploadCallback = function (name) { this.array = undefined; } ;
-    geometry.attributes.uv.onUploadCallback = function (name) { this.array = undefined; } ;
-    //geometry.index.onUploadCallback = function (name) { this.array = undefined; } ;
-    // can't remove indices unless the buffer geometry is in special "non-indexed" format
-    const material = new THREE.MeshBasicMaterial( { color : new THREE.Color("rgb(255,0,255)") } );
+    geometry.attributes.position.onUploadCallback = function (name) { this.array = null; } ;
+    geometry.attributes.normal.onUploadCallback = function (name) { this.array = null; } ;
+    geometry.attributes.uv.onUploadCallback = function (name) { this.array = null; } ;
+    geometry.parameters = null; 
+    const material = new THREE.MeshBasicMaterial( { color : new THREE.Color("rgb(255,0,255)"), opacity : 0 } );
+    material.transparent = true;
     material.side = THREE.DoubleSide;
     const curveObject = new THREE.Mesh( geometry, material );
     scene.add(curveObject);
