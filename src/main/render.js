@@ -63,7 +63,27 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
   animationsGroup.updateMatrixWorld = function() {};
 }
 
-export function renderPlayer(i, addToScene = false) {
+export function renderFrameTransformed(scene, animFrame, col, transform ) {
+  const cloned = animFrame.clone();
+  const rpX = transform.rpX;
+  const rpY = transform.rpY;
+  cloned.material.color.set (new THREE.Color(col));
+  cloned.material.transparent = false;
+  const sX = transform.sX;
+  const sY = transform.sY;
+  cloned.scale.set( sX, sY , 1);
+  cloned.translateX(transform.tX-rpX);
+  cloned.translateY(transform.tY-rpY);
+  cloned.rotateZ( transform.rotation );
+  cloned.translateX(rpX);
+  cloned.translateY(rpY);
+  cloned.matrixAutoUpdate = false;
+  cloned.updateMatrix();
+  cloned.updateMatrixWorld();
+  scene.add(cloned);
+}
+
+export function renderPlayer(scene, i) {
     var temX = (player[i].phys.pos.x * activeStage.scale) + activeStage.offset[0];
     var temY = (player[i].phys.pos.y * -activeStage.scale) + activeStage.offset[1];
     var face = player[i].phys.face;
@@ -75,7 +95,7 @@ export function renderPlayer(i, addToScene = false) {
         frame = framesData[characterSelections[i]][player[i].actionState];
     }
 
-    var model = animations[characterSelections[i]][player[i].actionState][frame - 1];
+    const animFrame = getObjectByNameNonRecursive(getObjectByNameNonRecursive(getObjectByNameNonRecursive(fg2,"animationFrames"),"character" + characterSelections[i]),player[i].actionState).children[frame-1];
 
     if (actionStates[characterSelections[i]][player[i].actionState].reverseModel) {
         face *= -1;
@@ -203,36 +223,30 @@ export function renderPlayer(i, addToScene = false) {
             // fg2.lineWidth = 6;
             // fg2.stroke();
             // fg2.lineWidth = 1;
-            /*
-            drawBezierCurves(fg2, col, face, player[i].miniViewPoint.x, player[i].miniViewPoint.y + 30, model, player[
-                i].charAttributes.miniScale, player[i].charAttributes.miniScale, player[i].rotation, player[i].rotationPoint
-                .x, player[i].rotationPoint.y, "player"+i, addToScene);*/
+            renderFrameTransformed(scene, animFrame, col, { tX : player[i].miniViewPoint.x
+                                                          , tY : player[i].miniViewPoint.y + 30  
+                                                          , sX : player[i].charAttributes.miniScale * face 
+                                                          , sY : player[i].charAttributes.miniScale
+                                                          , rotation : player[i].rotation
+                                                          , rpX : player[i].rotationPoint.x
+                                                          , rpY : player[i].rotationPoint.y } )
         } else {
             if (player[i].actionState == "ENTRANCE") {
-                /*drawBezierCurves(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
-                    4.5), Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 -
-                        startTimer)) * (activeStage.scale / 4.5), player[i].rotation, player[i].rotationPoint.x, player[i].rotationPoint
-                    .y, "player"+i, addToScene);*/
+               renderFrameTransformed(scene, animFrame, col, { tX : temX
+                                                             , tY : temY
+                                                             , sX : player[i].charAttributes.charScale * face * (activeStage.scale / 4.5) 
+                                                             , sY : Math.max(0.01, Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 - startTimer)) * (activeStage.scale / 4.5))
+                                                             , rotation : player[i].rotation
+                                                             , rpX : player[i].rotationPoint.x
+                                                             , rpY : player[i].rotationPoint.y } )
             } else {
-                const animFrame = getObjectByNameNonRecursive(getObjectByNameNonRecursive(getObjectByNameNonRecursive(fg2,"animationFrames"),"character" + characterSelections[i]),player[i].actionState).children[frame-1];
-                const cloned = animFrame.clone();
-                const rpX = player[i].rotationPoint.x;
-                const rpY = player[i].rotationPoint.y;
-                cloned.material.color.set (new THREE.Color(col));
-                cloned.material.transparent = false;
-                const sX = player[i].charAttributes.charScale * (activeStage.scale /4.5) * face;
-                const sY = Math.max(0.01, Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 -startTimer)) * (activeStage.scale / 4.5));
-                cloned.scale.set( sX, sY , 1);
-                cloned.translateX(temX-rpX);
-                cloned.translateY(temY-rpY);
-                cloned.rotateZ( player[i].rotation );
-                cloned.translateX(rpX);
-                cloned.translateY(rpY);
-                cloned.name = "player"+i;
-                cloned.matrixAutoUpdate = false;
-                cloned.updateMatrix();
-                cloned.updateMatrixWorld();
-                fg2.add(cloned);
+               renderFrameTransformed(scene, animFrame, col, { tX : temX
+                                                             , tY : temY
+                                                             , sX : player[i].charAttributes.charScale * face * (activeStage.scale / 4.5) 
+                                                             , sY : player[i].charAttributes.charScale * (activeStage.scale / 4.5)
+                                                             , rotation : player[i].rotation
+                                                             , rpX : player[i].rotationPoint.x
+                                                             , rpY : player[i].rotationPoint.y } )
             }
         }
     }

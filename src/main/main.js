@@ -43,7 +43,7 @@ import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import * as THREE from '../../node_modules/three';
-import {fillBackground, clearScene, addToClearEveryFrame, getObjectByNameNonRecursive} from "./util/renderUtils";
+import {fillBackground, clearScene, getObjectByNameNonRecursive} from "./util/renderUtils";
 /*globals performance*/
 window._ = require('../third-party/underscore');
 window.requestAnimationFrame = require('../third-party/requestAnimationFrame.js');
@@ -1085,6 +1085,8 @@ export function clearScreen (){
 let otherFrame = true;
 let fps30 = false;
 export function renderTick (){
+  const dynamicGroup = new THREE.Group();
+  bg2.add(dynamicGroup);
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
   if ((fps30 && otherFrame) || !fps30) {
@@ -1122,7 +1124,7 @@ export function renderTick (){
          // drawBackground();
        // }
         //drawStage();
-        renderPlayer(targetBuilder);
+        renderPlayer(dynamicGroup, targetBuilder);
        // renderArticles();
        // renderVfx();
        // renderOverlay(false);
@@ -1156,7 +1158,7 @@ export function renderTick (){
        //   drawBackground();
         }
         drawStage();
-        renderPlayer(targetBuilder);
+        renderPlayer(dynamicGroup, targetBuilder);
       //  renderArticles();
       //  renderVfx();
       //  renderOverlay(false);
@@ -1176,7 +1178,7 @@ export function renderTick (){
       drawStage();
       for (var i = 0; i < 4; i++) {
         if (playerType[i] > -1) {
-          renderPlayer(i);
+          renderPlayer(dynamicGroup, i);
         }
       }
     //  renderArticles();
@@ -1236,6 +1238,7 @@ export function renderTick (){
       animationsNotCleared = false;
     }
   }
+  bg2.remove(dynamicGroup);
 }
 
 export function buildPlayerObject (i){
@@ -1257,6 +1260,8 @@ export function initializePlayers (i,target){
 }
 
 export function startGame (){
+  const dynamicGroup = new THREE.Group();
+  bg2.add(dynamicGroup);
   setVsStage(stageSelect);
   setBackgroundType(Math.round(Math.random()));
   if (holiday == 1){
@@ -1277,8 +1282,7 @@ export function startGame (){
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
-      addToClearEveryFrame({ label : "player"+n, remove : true });
-      renderPlayer(n, true);
+      renderPlayer(dynamicGroup, n);
       player[n].inCSS = false;
     }
     if (versusMode) {
@@ -1312,6 +1316,7 @@ export function startGame (){
   drawVfx("start", new Vec2D(0, 0));
   findingPlayers = false;
   playing = true;
+  bg2.remove(dynamicGroup);
 }
 
 export function endGame (input){
