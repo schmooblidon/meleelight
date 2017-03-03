@@ -44,7 +44,7 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
     curve.closePath();
     const material = new THREE.MeshBasicMaterial( { color : col } );
     material.side = THREE.DoubleSide;
-    const geometry = new THREE.ShapeBufferGeometry(curve, 5);
+    const geometry = new THREE.ShapeGeometry(curve, 5);
 
     let object;
     if (addToScene) {
@@ -58,6 +58,9 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
       if (object !== null && object !== undefined) {
         object.material = material;
         object.geometry = geometry;
+        object.geometry.verticesNeedUpdate = true;
+        object.position.set(0,0,0);
+        object.matrix.makeRotationFromQuaternion( new THREE.Quaternion(1,0,0,0) );
       }
       else {
         const curveObject = new THREE.Mesh( geometry, material );
@@ -67,11 +70,18 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
       }
     }
     object.scale.set( Math.max(0.01,scaleX) * face, Math.max(0.01,scaleY) , 1);
-    object.translateX(tX-rpX);
-    object.translateY(tY-rpY);
-    object.rotateZ(rotate);
-    object.translateX(rpX);
-    object.translateY(rpY);
+    if (rotate !== 0) {
+      object.translateX(tX-rpX);
+      object.translateY(tY-rpY);
+      object.matrix.makeRotationFromQuaternion( new THREE.Quaternion(Math.cos(rotate),0,0,Math.sin(rotate)) );
+      object.translateX(rpX);
+      object.translateY(rpY);
+    }
+    else {
+      object.translateX(tX);
+      object.translateY(tY);
+    }
+
   }
 }
 
