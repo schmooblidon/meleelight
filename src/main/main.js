@@ -13,7 +13,7 @@ import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGamepla
 import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
 import {drawControllerMenuInit, drawControllerMenu} from "menus/controllermenu";
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
-import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
+import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue, loadCharacterAnimationFrames} from "main/render";
 
 import {actionStates} from "physics/actionStateShortcuts";
 import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
@@ -1276,6 +1276,7 @@ export function startGame (){
       player[n].stocks = 1;
     }
   }
+  loadCharacterAnimationFrames(fg1, [0]);
   matchTimer = 480;
   startTimer = 1.5;
   starting = true;

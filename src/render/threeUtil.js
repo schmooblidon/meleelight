@@ -43,6 +43,7 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
     }
     curve.closePath();
     const geometry = new THREE.ShapeBufferGeometry(curve, 5);
+    geometry.computeBoundingBox();
     let object;
     if (addToScene) {
       const material = new THREE.MeshBasicMaterial( { color : col } );
@@ -83,6 +84,24 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
       object.translateY(tY);
     }
 
+  }
+}
+
+export function drawBezierCurvesSimple (scene, path, label) {  
+  for (let j = 0; j < path.length; j++) {
+    const curve = new THREE.Shape();
+    curve.moveTo(path[j][0], path[j][1]);
+    for (let k = 2; k < path[j].length-5; k += 6) {      
+      curve.bezierCurveTo(path[j][k], path[j][k+1], path[j][k+2], path[j][k+3], path[j][k+4], path[j][k+5]);
+    }
+    curve.closePath();
+    const geometry = new THREE.ShapeBufferGeometry(curve, 5);
+    geometry.computeBoundingBox();
+    const material = new THREE.MeshBasicMaterial( { color : new THREE.Color("rgb(255,0,255)") } );
+    material.side = THREE.DoubleSide;
+    const curveObject = new THREE.Mesh( geometry, material );
+    curveObject.name = label;
+    scene.add(curveObject);
   }
 }
 

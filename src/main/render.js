@@ -23,7 +23,7 @@ import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
 import * as THREE from "three";
-import {drawBezierCurves} from "../render/threeUtil";
+import {drawBezierCurves, drawBezierCurvesSimple} from "../render/threeUtil";
 /* eslint-disable */
 
 export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
@@ -34,6 +34,31 @@ export function rotateVector(vecx, vecy, ang) {
     return new Vec2D(
         vecx * Math.cos(ang) - vecy * Math.sin(ang),
         vecx * Math.sin(ang) + vecy * Math.cos(ang));
+}
+
+
+export function loadCharacterAnimationFrames ( scene, characters ) {
+  const animationsGroup = new THREE.Group();
+  animationsGroup.name = "animationFrames";
+  animationsGroup.visible = false;
+  for (let i =0; i < characters.length; i++) {
+    const character = characters[i];
+    const characterGroup = new THREE.Group();
+    characterGroup.name = "character"+characters[i];
+    animationsGroup.add(characterGroup);
+    const actionStates = Object.keys(animations[character]);
+    for (let j = 0; j < actionStates.length; j++) {
+      const actionState = actionStates[j];
+      const actionStateGroup = new THREE.Group();
+      actionStateGroup.name = actionState;
+      characterGroup.add(actionStateGroup);
+      for (let f = 0; f < animations[character][actionState].length; f++) {
+        const model = animations[character][actionState][f];
+        drawBezierCurvesSimple (actionStateGroup, model, toString(f));
+      }
+    }
+  }
+  scene.add(animationsGroup);
 }
 
 export function renderPlayer(i, addToScene = false) {
