@@ -34,7 +34,7 @@ THREE.ShapeUtils.triangulateShape = function ( contour, holes ) {
 };
 
 // drawArrayPathCompress
-export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {  
+export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY, label, addToScene) {  
   for (let j = 0; j < path.length; j++) {
     const curve = new THREE.Shape();
     curve.moveTo(path[j][0], path[j][1]);
@@ -45,15 +45,33 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
     const material = new THREE.MeshBasicMaterial( { color : col } );
     material.side = THREE.DoubleSide;
     const geometry = new THREE.ShapeBufferGeometry(curve, 5);
-    const curveObject = new THREE.Mesh( geometry, material );
 
-    curveObject.scale.set( Math.max(0.01,scaleX) * face, Math.max(0.01,scaleY) , 1);
-    curveObject.translateX(tX-rpX);
-    curveObject.translateY(tY-rpY);
-    curveObject.rotateZ(rotate);
-    curveObject.translateX(rpX);
-    curveObject.translateY(rpY);
-    scene.add(curveObject);
+    let object;
+    if (addToScene) {
+      const curveObject = new THREE.Mesh( geometry, material );
+      curveObject.name = label;
+      object = curveObject;
+      scene.add(object);
+    } 
+    else {
+      object = scene.getObjectByName(label, true);
+      if (object !== null && object !== undefined) {
+        object.material = material;
+        object.geometry = geometry;
+      }
+      else {
+        const curveObject = new THREE.Mesh( geometry, material );
+        curveObject.name = label;
+        object = curveObject;
+        scene.add(object);
+      }
+    }
+    object.scale.set( Math.max(0.01,scaleX) * face, Math.max(0.01,scaleY) , 1);
+    object.translateX(tX-rpX);
+    object.translateY(tY-rpY);
+    object.rotateZ(rotate);
+    object.translateX(rpX);
+    object.translateY(rpY);
   }
 }
 

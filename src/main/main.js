@@ -43,7 +43,7 @@ import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import * as THREE from '../../node_modules/three';
-import {fillBackground, clearScene} from "./util/renderUtils";
+import {fillBackground, clearScene, addToClearEveryFrame} from "./util/renderUtils";
 /*globals performance*/
 window._ = require('../third-party/underscore');
 window.requestAnimationFrame = require('../third-party/requestAnimationFrame.js');
@@ -1078,7 +1078,7 @@ export function clearScreen (){
   //clearScene(bg1);
   clearScene(bg2);
   //clearScene(fg1);
-  clearScene(fg2);
+  //clearScene(fg2);
   //clearScene(ui);
 }
 
@@ -1249,6 +1249,10 @@ export function initializePlayers (i,target){
   }
 }
 
+export const clearEveryFrame = [];
+export const clearThisFrame = [];
+
+
 export function startGame (){
   setVsStage(stageSelect);
   setBackgroundType(Math.round(Math.random()));
@@ -1268,7 +1272,8 @@ export function startGame (){
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
-      renderPlayer(n);
+      addToClearEveryFrame({ label : "player"+n, mesh : true });
+      renderPlayer(n, true);
       player[n].inCSS = false;
     }
     if (versusMode) {
