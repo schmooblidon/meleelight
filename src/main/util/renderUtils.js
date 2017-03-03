@@ -10,12 +10,21 @@ export function addToClearEveryFrame(v) {
 
 export function clearScene(scene){
   for (let i=0; i < clearThisFrame.length; i++) {
-    clearObject(scene, clearThisFrame[i], scene.getObjectByName(clearThisFrame[i].label));
+    clearObject(scene, clearThisFrame[i], getObjectByNameNonRecursive(scene, clearThisFrame[i].label));
   }
   for (let i=0; i < clearEveryFrame.length; i++) {
-    clearObject(scene, clearEveryFrame[i], scene.getObjectByName(clearEveryFrame[i].label));
+    clearObject(scene, clearEveryFrame[i], getObjectByNameNonRecursive(scene, clearEveryFrame[i].label));
   }
   clearThisFrame = [];
+}
+
+export function getObjectByNameNonRecursive(scene, name) {
+  for (let i=0; i < scene.children.length; i++) {
+    const child = scene.children[i];
+    if (child.name === name) {
+      return child;
+    }
+  }
 }
 
 function clearObject(scene, clear, obj) {

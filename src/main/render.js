@@ -24,6 +24,7 @@ import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
 import * as THREE from "three";
 import {drawBezierCurves, drawBezierCurvesSimple} from "../render/threeUtil";
+import {getObjectByNameNonRecursive} from "./util/renderUtils";
 /* eslint-disable */
 
 export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
@@ -211,10 +212,7 @@ export function renderPlayer(i, addToScene = false) {
                         startTimer)) * (activeStage.scale / 4.5), player[i].rotation, player[i].rotationPoint.x, player[i].rotationPoint
                     .y, "player"+i, addToScene);*/
             } else {
-                const animFrame = fg2.getObjectByName("animationFrames")
-                                     .getObjectByName("character" + characterSelections[i])
-                                     .getObjectByName(player[i].actionState)
-                                     .children[frame-1];
+                const animFrame = getObjectByNameNonRecursive(getObjectByNameNonRecursive(getObjectByNameNonRecursive(fg2,"animationFrames"),"character" + characterSelections[i]),player[i].actionState).children[frame-1];
                 const cloned = animFrame.clone();
                 const rpX = player[i].rotationPoint.x;
                 const rpY = player[i].rotationPoint.y;
