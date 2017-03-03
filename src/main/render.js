@@ -23,7 +23,7 @@ import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
 import * as THREE from "three";
-import {drawBezierCurves, drawBezierCurvesSimple} from "../render/threeUtil";
+import {drawBezierCurves, makeDiskShape, makePolygonShape, drawShape} from "../render/threeUtil";
 import {getObjectByNameNonRecursive} from "./util/renderUtils";
 
 export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
@@ -55,7 +55,7 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
       actionStateGroup.name = actionState;
       characterGroup.add(actionStateGroup);
       for (let f = 0; f < animations[character][actionState].length; f++) {
-        drawBezierCurvesSimple(actionStateGroup, animations[character][actionState][f]);
+        drawBezierCurves(actionStateGroup, animations[character][actionState][f]);
       }
     }
   }
@@ -229,15 +229,12 @@ export function renderPlayer(scene, i) {
       player[i].phys.outOfCameraTimer = 0;
     }
 
-    if (player[i].miniView && player[i].actionState !== "SLEEP") {
-      // fg2.fillStyle = "black";
-      // fg2.strokeStyle = palettes[pPal[i]][0];
-      // fg2.beginPath();
-      // fg2.arc(player[i].miniViewPoint.x, player[i].miniViewPoint.y, 35, twoPi, 0);
-      // fg2.fill();
-      // fg2.lineWidth = 6;
-      // fg2.stroke();
-      // fg2.lineWidth = 1;
+    if (player[i].miniView && player[i].actionState !== "SLEEP" && player[i].actionState !== "REBIRTH" && player[i].actionState !== "REBIRTHWAIT") {
+      const miniViewBubble = makeDiskShape(player[i].miniViewPoint.x,  player[i].miniViewPoint.y, 35 );
+      const lineMat = new THREE.LineBasicMaterial({ color : palettes[pPal[i]][0], linewidth : 8 });
+      const meshMat = new THREE.MeshBasicMaterial({ color : 0x000000 });
+      meshMat.side = THREE.DoubleSide;
+      drawShape(scene, miniViewBubble, meshMat, lineMat);
       renderFrameTransformed(scene, animFrame, col, { tX : player[i].miniViewPoint.x
                                                     , tY : player[i].miniViewPoint.y + 30  
                                                     , sX : player[i].charAttributes.miniScale * face 
@@ -272,13 +269,16 @@ export function renderPlayer(scene, i) {
         if (Math.floor(player[i].hit.shieldstun) > 0) {
           sCol = palettes[pPal[i]][4];
         }
-        // fg2.fillStyle = sCol + (0.6 * player[i].phys.shieldAnalog) + ")";
-        // fg2.beginPath();
-        // fg2.arc(sX, sY, player[i].phys.shieldSize * activeStage.scale, twoPi, 0);
-        // fg2.fill();
+        sCol = "rgb" + sCol.slice(4, -2) + ")";
+        const shieldBubble = makeDiskShape(sX, sY, player[i].phys.shieldSize * activeStage.scale);
+        const meshMat = new THREE.MeshBasicMaterial({ color : sCol, opacity : (0.6 * player[i].phys.shieldAnalog) });
+        meshMat.transparent = true;
+        meshMat.side = THREE.DoubleSide;
+        drawShape(scene, shieldBubble, meshMat, null);
       }
     }
     if (hasTag[i]) {
+      /*
       fg2.fillStyle = makeColour(0, 0, 0, 0.5);
       fg2.strokeStyle = palettes[pPal[i]][0];
       const size = 10 * tagText[i].length;
@@ -296,18 +296,18 @@ export function renderPlayer(scene, i) {
       fg2.closePath();
       fg2.fill();
       fg2.textAlign = "start";
+      */
     }
     if (player[i].actionState === "REBIRTH" || player[i].actionState === "REBIRTHWAIT") {
-      // fg2.fillStyle = palettes[pPal[i]][1];
-      // fg2.strokeStyle = palettes[pPal[i]][0];
-      // fg2.beginPath();
-      // fg2.moveTo(temX + 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5));
-      // fg2.lineTo(temX + 31.5 * (activeStage.scale / 4.5), temY);
-      // fg2.lineTo(temX - 31.5 * (activeStage.scale / 4.5), temY);
-      // fg2.lineTo(temX - 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5));
-      // fg2.closePath();
-      // fg2.fill();
-      // fg2.stroke();
+      const rebirthPlatform = makePolygonShape( [ new Vec2D( temX + 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5))
+                                                , new Vec2D(temX + 31.5 * (activeStage.scale / 4.5), temY)
+                                                , new Vec2D(temX - 31.5 * (activeStage.scale / 4.5), temY)
+                                                , new Vec2D(temX - 18 * (activeStage.scale / 4.5) , temY + 13.5 * (activeStage.scale / 4.5)) ]
+                                              , true );
+      const lineMat = new THREE.LineBasicMaterial({ color : palettes[pPal[i]][0], linewidth : 2 });
+      const meshMat = new THREE.MeshBasicMaterial({ color : palettes[pPal[i]][1] });
+      meshMat.side = THREE.DoubleSide;
+      drawShape(scene, rebirthPlatform, meshMat, lineMat);
     }
     if (player[i].showLedgeGrabBox) {
       // fg2.strokeStyle = "#4478ff";
@@ -354,6 +354,7 @@ export function renderPlayer(scene, i) {
       // fg2.stroke();
     }
     if (player[i].showHitbox) {
+      /*
       fg2.fillStyle = hurtboxColours[player[i].phys.hurtBoxState];
       fg2.fillRect(player[i].phys.hurtbox.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.hurtbox.min.y * -activeStage.scale +
           activeStage.offset[1], player[i].charAttributes.hurtboxOffset[0] * 2 * activeStage.scale, player[i].charAttributes.hurtboxOffset[
@@ -417,6 +418,7 @@ export function renderPlayer(scene, i) {
           }
         }
       }
+      */
     }
   }
 } 

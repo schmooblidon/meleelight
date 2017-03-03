@@ -33,61 +33,7 @@ THREE.ShapeUtils.triangulateShape = function ( contour, holes ) {
   return grouped;
 };
 
-// drawArrayPathCompress
-export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY, label, addToScene) {  
-  for (let j = 0; j < path.length; j++) {
-    const curve = new THREE.Shape();
-    curve.moveTo(path[j][0], path[j][1]);
-    for (let k = 2; k < path[j].length-5; k += 6) {      
-      curve.bezierCurveTo(path[j][k], path[j][k+1], path[j][k+2], path[j][k+3], path[j][k+4], path[j][k+5]);
-    }
-    curve.closePath();
-    const geometry = new THREE.ShapeBufferGeometry(curve, 5);
-    geometry.computeBoundingBox();
-    let object;
-    if (addToScene) {
-      const material = new THREE.MeshBasicMaterial( { color : col } );
-      material.side = THREE.DoubleSide;
-      const curveObject = new THREE.Mesh( geometry, material );
-      curveObject.name = label;
-      object = curveObject;
-      scene.add(object);
-    } 
-    else {
-      object = scene.getObjectByName(label);
-      if (object !== null && object !== undefined) {
-        object.material.color.set (new THREE.Color(col));
-        object.geometry = geometry;
-        object.geometry.verticesNeedUpdate = true;
-        object.position.set(0,0,0);
-        object.matrix.makeRotationFromQuaternion( new THREE.Quaternion(1,0,0,0) );
-      }
-      else {
-        const material = new THREE.MeshBasicMaterial( { color : col } );
-        material.side = THREE.DoubleSide;
-        const curveObject = new THREE.Mesh( geometry, material );
-        curveObject.name = label;
-        object = curveObject;
-        scene.add(object);
-      }
-    }
-    object.scale.set( Math.max(0.01,scaleX) * face, Math.max(0.01,scaleY) , 1);
-    if (rotate !== 0) {
-      object.translateX(tX-rpX);
-      object.translateY(tY-rpY);
-      object.matrix.makeRotationFromQuaternion( new THREE.Quaternion(Math.cos(rotate),0,0,Math.sin(rotate)) );
-      object.translateX(rpX);
-      object.translateY(rpY);
-    }
-    else {
-      object.translateX(tX);
-      object.translateY(tY);
-    }
-
-  }
-}
-
-export function drawBezierCurvesSimple (scene, path) {  
+export function drawBezierCurves (scene, path) {  
   for (let j = 0; j < path.length; j++) {
     const curve = new THREE.Shape();
     curve.moveTo(path[j][0], path[j][1]);
@@ -113,51 +59,6 @@ export function drawBezierCurvesSimple (scene, path) {
   }
 }
 
-// drawArrayPath
-export function drawLinearCurve(scene, col, face, tX, tY, path, scaleX, scaleY) {
-  const lg = path.length;
-  if (lg > 1) {
-    const curve = new THREE.Shape();
-    curve.moveTo(path[0], path[1]);
-    for (let k = 2; k < lg - 1; k += 2) {
-      curve.lineTo(path[k], path[k+1]);
-    }
-    curve.closePath();
-    const material = new THREE.MeshBasicMaterial( { color : col } );
-    const geometry = new THREE.ShapeGeometry(curve);
-    const curveObject = new THREE.Mesh (geometry, material);
-    curveObject.scale.set( scaleX * face, scaleY, 1);
-    curveObject.translateX(tX);
-    curveObject.translateY(tY);
-    scene.add(curveObject);
-  }
-}
-
-// drawArrayPathNew
-export function drawBezierCurve(scene, col, face, tX, tY, path, scaleX, scaleY, rotate) {
-  const curve = new THREE.Shape();
-  curve.moveTo(path[0][0], path[0][1]);
-  let n = 0;
-  for (let j = 1; j < path.length; j++) {
-    if (path[j].length === 2) {
-      curve.moveTo(path[j][0], path[j][1]);
-    }
-    else if (path[j].length === 6) {
-      n++;
-      curve.bezierCurveTo(path[j][0], path[j][1], path[j][2], path[j][3], path[j][4], path[j][5]);
-    }
-  }
-  curve.closePath();
-  const material = new THREE.MeshBasicMaterial( { color : col } );
-  const geometry = new THREE.ShapeGeometry(curve);
-  const curveObject = new THREE.Mesh (geometry, material);
-  curveObject.scale.set( scaleX * face, scaleY, 1);
-  curveObject.rotateZ(rotate);
-  curveObject.translateX(tX);
-  curveObject.translateY(tY);
-  scene.add(curveObject);
-}
-
 export function makeRectShape (xmin, xmax, ymin, ymax) {
   const rect = new THREE.Shape();
   rect.moveTo(xmin, ymin);
@@ -168,22 +69,10 @@ export function makeRectShape (xmin, xmax, ymin, ymax) {
   return rect;
 }
 
-export function drawShape (scene, shape, meshMat, lineMat, transform = null) {
-  const meshGeometry = new THREE.ShapeGeometry(shape);
-  const lineGeometry = shape.createPointsGeometry();
-  const mesh = meshMat === null ? null : new THREE.Mesh(meshGeometry, meshMat);
-  const line = meshMat === null ? null : new THREE.Line(lineGeometry, lineMat);
-  if (transform !== null && transform !== undefined) {
-    const group = new THREE.group();
-    meshMat === null ? void 0 : group.add(mesh);
-    lineMat === null ? void 0 : group.add(line);
-    transform(group);
-    scene.add(group);
-  }
-  else {
-    meshMat === null ? void 0 : scene.add(mesh);
-    lineMat === null ? void 0 : scene.add(line);
-  }
+export function makeDiskShape(cx, cy, r) {
+  const disk = new THREE.Shape();
+  disk.absarc(cx, cy, r, 0, 2*Math.PI, false);
+  return disk;
 }
 
 export function makePolygonShape (path, closed = true) {
@@ -196,6 +85,24 @@ export function makePolygonShape (path, closed = true) {
     polygon.closePath();
   }
   return polygon;
+}
+
+export function drawShape (scene, shape, meshMat, lineMat, transform = null) {
+  const group = new THREE.Group();
+  if (meshMat !== null && meshMat !== undefined) {
+    const meshGeometry = new THREE.ShapeGeometry(shape);
+    const mesh = new THREE.Mesh(meshGeometry, meshMat);
+    group.add(mesh);
+  }
+  if (lineMat !== null && lineMat !== undefined) {
+    const lineGeometry = shape.createPointsGeometry();
+    const line = new THREE.Line(lineGeometry, lineMat);
+    group.add(line);
+  }
+  if (transform !== null && transform !== undefined) {
+    transform(group);
+  }
+  scene.add(group);
 }
 
 export function drawLine(scene, mat, x1, y1, x2, y2) {

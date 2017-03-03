@@ -1271,7 +1271,7 @@ export function startGame (){
   changeGamemode(3);
   resetVfxQueue();
   addPlayer(0,"keyboard");
-  togglePort(0);
+  //togglePort(0);
   addPlayer(1,"keyboard");
   togglePort(1);
   addPlayer(2,"keyboard");
