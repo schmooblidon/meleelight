@@ -41,7 +41,8 @@ window.animations;
 export function loadCharacterAnimationFrames ( scene, characters ) {
   const animationsGroup = new THREE.Group();
   animationsGroup.name = "animationFrames";
-  //animationsGroup.visible = false;
+  // make animations frames visible on screen at first to force them to render & upload to GPU
+  //animationsGroup.visible = false; 
   animationsGroup.matrixAutoUpdate = false;
   for (let i =0; i < characters.length; i++) {
     const character = characters[i];

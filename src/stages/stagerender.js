@@ -5,7 +5,7 @@ import {rotateVector, twoPi} from "main/render";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "../main/util/Vec2D";
 import {euclideanDist} from "../main/linAlg";
-import {drawLine, drawShape, makeRectShape, makePolygonShape} from "../render/threeUtil";
+import {drawLine, drawShape, makeRectShape, makePolygonShape, makeDiskShape} from "../render/threeUtil";
 import {addToClearEveryFrame} from "../main/util/renderUtils";
 import * as THREE from "three";
 
@@ -78,6 +78,8 @@ export function drawStageInit() {
 
   const polyLineMat = null;
   const polyMeshMat = new THREE.MeshBasicMaterial( { color : "rgba(94, 173, 255)", opacity : 0.3 } );
+  polyMeshMat.transparent = true;
+  polyMeshMat.side = THREE.DoubleSide;
   if (activeStage.box !== null && activeStage.box !== undefined) {
     for (let j = 0; j < activeStage.box.length; j++) {
       const b = activeStage.box[j];
@@ -173,7 +175,9 @@ export function drawStageBackground() {
   if (activeStage.background !== null && activeStage.background !== undefined) {
     if (activeStage.background.polygon !== null && activeStage.background.polygon !== undefined) {
       const polyLineMat = null;
-      const polyMeshMat = new THREE.MeshDepthMaterial( { color : boxFillBG } );
+      const polyMeshMat = new THREE.MeshDepthMaterial( { color : boxFillBG, opacity : 0.5 } );
+      polyMeshMat.side = THREE.DoubleSide;
+      polyMeshMat.transparent = true;
       for (let j=0;j<activeStage.background.polygon.length;j++){
         const poly = makePolygonShape(activeStage.background.polygon[j]);
         drawShape(group, poly, polyMeshMat, polyLineMat);
@@ -202,14 +206,15 @@ export function drawStage() {
   calculateDamageWallColours();
 
   // draw moving platforms
-  // bypassed for now, sorry Randall
-  if (false && activeStage.name === "ystory") {
+  if (activeStage.name === "ystory") {
     // Randall
     randallTimer++;
     if (randallTimer === 30){
       randallTimer = 0;
     }
+    // sorry Randall
     //bg2.drawImage(randall[Math.floor(randallTimer/10)],(activeStage.platform[0][0].x * activeStage.scale) + activeStage.offset[0]-20, (activeStage.platform[0][0].y * -activeStage.scale) + activeStage.offset[1]-20,100,100);
+    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), activeStage.platform[0][0].x, activeStage.platform[0][0].y, activeStage.platform[0][1].x, activeStage.platform[0][1].y);
   }
   else if (activeStage.movingPlats !== null && activeStage.movingPlats !== undefined && activeStage.movingPlats.length !== 0) {
     for (let i = 0; i < activeStage.movingPlats.length; i++) {
@@ -225,35 +230,19 @@ export function drawStage() {
     drawDamageLines(types[i], group, activeStage);
   }
 
-  // draw targets, bypassed for now
-  /*
-  if (typeof activeStage.target !== "undefined") {
-    fg2.strokeStyle = "rgba(255,255,255,0.4)";
-    fg2.lineWidth = 1;
+  // draw targets
+  if (activeStage.target !== null && activeStage.target !== undefined) {
     for (let k = 0; k < activeStage.target.length; k++) {
       if (!targetDestroyed[k]) {
-        const x = activeStage.target[k].x * activeStage.scale + activeStage.offset[0];
-        const y = activeStage.target[k].y * -activeStage.scale + activeStage.offset[1];
-        if (holiday === 1){
-          fg2.drawImage(targetbauble,x-17,y-25,35,43);
-          fg2.beginPath();
-          fg2.moveTo(x,y-23);
-          fg2.lineTo(x,0);
-          fg2.closePath();
-          fg2.stroke();
-        } else {
-          for (let j = 0; j < 5; j++) {
-            fg2.fillStyle = (j % 2) ? "white" : "red";
-            fg2.beginPath();
-            fg2.arc(x, y, (25 - j * 5) * (activeStage.scale / 4.5), 0, twoPi);
-            fg2.closePath();
-            fg2.fill();
-          }
+        for (let j = 0; j < 5; j++) {
+          const disk = makeDiskShape(activeStage.target[k].x, activeStage.target[k].y, (25 - j * 5) / 4.5 );
+          const meshMat = new THREE.MeshBasicMaterial({ color : (j % 2) ? "white" : "red" });
+          meshMat.side = THREE.DoubleSide;
+          drawShape(group, disk, meshMat, null);
         }
       }
     }
   }
-  */
 
   group.scale.set(activeStage.scale, -activeStage.scale, 1);
   group.translateX(activeStage.offset[0]);
