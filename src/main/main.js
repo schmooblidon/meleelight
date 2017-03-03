@@ -1249,10 +1249,6 @@ export function initializePlayers (i,target){
   }
 }
 
-export const clearEveryFrame = [];
-export const clearThisFrame = [];
-
-
 export function startGame (){
   setVsStage(stageSelect);
   setBackgroundType(Math.round(Math.random()));

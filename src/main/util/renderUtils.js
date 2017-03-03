@@ -2,28 +2,31 @@ import * as THREE from 'three';
 import { MeshText2D, textAlign } from 'three-text2d';
 
 let clearThisFrame = [];
-const clearEveryFrame = [];
+let clearEveryFrame = [];
 
 export function addToClearEveryFrame(v) {
   clearEveryFrame.push(v);
 }
 
 export function clearScene(scene){
-  for (const clear in (clearThisFrame.concat(clearEveryFrame))) {
-    clearObject(scene, clear, scene.getObjectByName(clear.label));
+  for (let i=0; i < clearThisFrame.length; i++) {
+    clearObject(scene, clearThisFrame[i], scene.getObjectByName(clearThisFrame[i].label));
+  }
+  for (let i=0; i < clearEveryFrame.length; i++) {
+    clearObject(scene, clearEveryFrame[i], scene.getObjectByName(clearEveryFrame[i].label));
   }
   clearThisFrame = [];
 }
 
 function clearObject(scene, clear, obj) {
   if (obj !== undefined) {
-    if (clear.mesh) {
+    if (clear.mesh && obj.mesh) {
       obj.mesh.dispose();
     }
-    if (clear.material) {
+    if (clear.material && obj.material) {
       obj.material.dispose();
     }
-    if (clear.texture) {
+    if (clear.texture && obj.texture) {
       obj.texture.dispose();
     }
     if (clear.remove) {

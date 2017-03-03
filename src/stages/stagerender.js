@@ -6,7 +6,9 @@ import {activeStage} from "stages/activeStage";
 import {Vec2D} from "../main/util/Vec2D";
 import {euclideanDist} from "../main/linAlg";
 import {drawLine, drawShape, makeRectShape, makePolygonShape} from "../render/threeUtil";
+import {addToClearEveryFrame} from "../main/util/renderUtils";
 import * as THREE from "three";
+
 
 const bgPos = [[-30, 500, 300, 500, 900, 500, 1230, 450, 358], [-30, 400, 300, 400, 900, 400, 1230, 350, 179]];
 const direction = [[1, -1, 1, -1, 1, -1, 1, -1, 1], [-1, 1, -1, 1, -1, 1, -1, 1, -1]];
@@ -52,9 +54,11 @@ const types = ["wallL", "wallR", "ground", "ceiling"];
 const surfaceColors = ["#47c648", "#9867de", "#db80cc", "#ed6767"];
 
 export function drawStageInit() {
+  addToClearEveryFrame({ label : "stageDynamic", remove : true});
 
   const scene = fg1;
   const group = new THREE.Group();
+  group.name = "stageStatic";
 
   for (let i =0 ; i < types.length; i++) {
     const type = types[i];
@@ -192,6 +196,7 @@ export function drawStage() {
 
   const scene = fg2;
   const group = new THREE.Group();
+  group.name = "stageDynamic";
   calculateDamageWallColours();
 
   // draw moving platforms
