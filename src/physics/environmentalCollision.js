@@ -9,7 +9,7 @@ import {lineAngle} from "../main/util/lineAngle";
 import {extremePoint} from "../stages/util/extremePoint";
 import {moveECB, squashECBAt, ecbFocusFromAngularParameter, interpolateECB, makeECB} from "../main/util/ecbTransform";
 import {zipLabels} from "../main/util/zipLabels";
-import {drawECB} from "../main/util/drawECB";
+import {drawECB} from "../render/drawECB";
 import {mainScene} from "../main/main";
 
 // eslint-disable-next-line no-duplicate-imports
