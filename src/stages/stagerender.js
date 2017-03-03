@@ -1,5 +1,5 @@
 import {getTransparency} from "main/vfx/transparency";
-import {bg1, bg2, fg1, fg2, layers, gameMode, holiday, snowCount} from "main/main";
+import {mainScene, layers, gameMode, holiday, snowCount} from "main/main";
 import {targetDestroyed} from "target/targetplay";
 import {rotateVector, twoPi} from "main/render";
 import {activeStage} from "stages/activeStage";
@@ -56,7 +56,7 @@ const surfaceColors = ["#47c648", "#9867de", "#db80cc", "#ed6767"];
 export function drawStageInit() {
   addToClearEveryFrame({ label : "stageDynamic", remove : true});
 
-  const scene = fg1;
+  const scene = mainScene;
   const group = new THREE.Group();
   group.name = "stageStatic";
   group.matrixAutoUpdate = false;
@@ -170,7 +170,7 @@ export function drawDamageLines(type, scene, stage){
 }
 
 export function drawStageBackground() {
-  const scene = bg2;
+  const scene = mainScene;
   const group = new THREE.Group();
   if (activeStage.background !== null && activeStage.background !== undefined) {
     if (activeStage.background.polygon !== null && activeStage.background.polygon !== undefined) {
@@ -200,7 +200,7 @@ export function drawStage() {
 
   drawStageBackground();
 
-  const scene = fg2;
+  const scene = mainScene;
   const group = new THREE.Group();
   group.name = "stageDynamic";
   calculateDamageWallColours();
@@ -267,6 +267,7 @@ export function bgStar() {
   this.life = 0;
 };
 export function drawBackgroundInit() {
+  /*
   const bgGrad = bg1.createLinearGradient(0, 0, 0, 500);
   bgGrad.addColorStop(0, (holiday === 1) ? "rgb(46, 100, 147)" : "rgb(24, 17, 66)");
   bgGrad.addColorStop(1, "black");
@@ -281,6 +282,7 @@ export function drawBackgroundInit() {
     boxFill = "rgba(94, 173, 255, 0.3)";
     boxFillBG = "rgba(94, 173, 255, 0.25)";
   }
+  */
 };
 
 export function drawBackground() {
@@ -302,6 +304,7 @@ export function drawBackground() {
   */
 };
 
+/*
 export function drawTunnel() {
   bg2.lineWidth = 2;
   ang += 0.005;
@@ -541,3 +544,4 @@ export function drawSnow(){
     bg2.fill();
   }
 }
+*/

@@ -87,15 +87,15 @@ export function makePolygonShape (path, closed = true) {
   return polygon;
 }
 
-export function drawShape (scene, shape, meshMat, lineMat, transform = null) {
+export function drawShape (scene, shape, meshMat, lineMat, transform = null, pts = 12) {
   const group = new THREE.Group();
   if (meshMat !== null && meshMat !== undefined) {
-    const meshGeometry = new THREE.ShapeGeometry(shape);
+    const meshGeometry = new THREE.ShapeBufferGeometry(shape, pts);
     const mesh = new THREE.Mesh(meshGeometry, meshMat);
     group.add(mesh);
   }
   if (lineMat !== null && lineMat !== undefined) {
-    const lineGeometry = shape.createPointsGeometry();
+    const lineGeometry = shape.createPointsGeometry(pts);
     const line = new THREE.Line(lineGeometry, lineMat);
     group.add(line);
   }

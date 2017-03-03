@@ -1,19 +1,18 @@
 
 import {
-    player,
-    characterSelections,
-    fg2,
-    versusMode,
-    fg2 as ui,
-    matchTimer,
-    playerType,
-    palettes,
-    pPal,
-    hasTag,
-    tagText, 
+  player,
+  characterSelections,
+  mainScene,
+  versusMode,
+  matchTimer,
+  playerType,
+  palettes,
+  pPal,
+  hasTag,
+  tagText, 
 	gameMode,
-    startTimer,
-     holiday
+  startTimer,
+  holiday
 } from "main/main";
 import {gameSettings} from "settings";
 import {makeColour} from "main/vfx/makeColour";
@@ -23,7 +22,8 @@ import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
 import * as THREE from "three";
-import {drawBezierCurves, makeDiskShape, makePolygonShape, drawShape} from "../render/threeUtil";
+import {drawBezierCurves, makeDiskShape, makePolygonShape, drawShape, drawLine} from "../render/threeUtil";
+import {drawECB} from "../render/drawECB";
 import {getObjectByNameNonRecursive} from "./util/renderUtils";
 
 export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
@@ -174,7 +174,7 @@ export function renderPlayer(scene, i) {
     const temY = (player[i].phys.pos.y * -activeStage.scale) + activeStage.offset[1];
     const face = getFace(i, frame);
 
-    const animFrame = getObjectByNameNonRecursive(getObjectByNameNonRecursive(getObjectByNameNonRecursive(fg2,"animationFrames"),"character" + characterSelections[i]),player[i].actionState).children[frame-1];
+    const animFrame = getObjectByNameNonRecursive(getObjectByNameNonRecursive(getObjectByNameNonRecursive(mainScene,"animationFrames"),"character" + characterSelections[i]),player[i].actionState).children[frame-1];
     const col = getPlayerColour(i);
 
     if (player[i].phys.chargeFrames % 4 === 3) {
@@ -319,6 +319,10 @@ export function renderPlayer(scene, i) {
       //         .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
     }
     if (player[i].showECB) {
+      drawECB(scene, player[i].phys.ECB1, { fill : "#ff8d2f" } );
+      drawECB(scene, player[i].phys.ECB1, { stroke : "white" } );
+      drawLine(scene, new THREE.LineBasicMaterial({ color : "white", linewidth : 3 }), temX, temY-6, temX, temY+6 );
+      drawLine(scene, new THREE.LineBasicMaterial({ color : "white", linewidth : 3 }), temX+6, temY, temX-6, temY );
       // fg2.fillStyle = "#ff8d2f";
       // fg2.beginPath();
       // fg2.moveTo((player[i].phys.ECB1[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[0].y * -activeStage.scale) +
@@ -424,6 +428,7 @@ export function renderPlayer(scene, i) {
   }
 } 
 
+/*
 export function renderOverlay(showStock) {
   // stocks, percent, timer
   ui.strokeStyle = "black";
@@ -588,3 +593,4 @@ export function renderForeground() {
 export function resetLostStockQueue(){
   lostStockQueue = [];
 }
+*/

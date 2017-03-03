@@ -505,7 +505,7 @@ export function positionPlayersInCSS (){
 // 0:Title Screen
 
 export function changeGamemode (newGamemode){
-  fillBackground(bg1, "#000000");
+  fillBackground(mainScene, "#000000");
   gameMode = newGamemode;
   switch (newGamemode) {
     // TITLESCREEN
@@ -796,27 +796,17 @@ function interpretPause(pause0, pause1) {
   }
 }
 
-
-export let bg1 = 0;
-export let bg2 = 0;
-export let fg1 = 0;
-export let fg2 = 0;
+export let mainScene = 0;
 export let ui = 0;
 export const c = 0;
 export let scene = 0;
 export const canvasMain = 0;
 export const layers = {
-  BG1 : 0,
-  BG2 : 1,
-  FG1 : 2,
-  FG2 : 3,
-  UI : 4
+  SCENE : 0,
+  UI : 1
 };
 export const layerSwitches = {
-  BG1 : true,
-  BG2 : true,
-  FG1 : true,
-  FG2 : true,
+  SCENE : true,
   UI : true
 };
 
@@ -1075,11 +1065,7 @@ export function gameTick (oldInputBuffers){
 }
 
 export function clearScreen (){
-  //clearScene(bg1);
-  clearScene(bg2);
-  //clearScene(fg1);
-  //clearScene(fg2);
-  //clearScene(ui);
+  clearScene(mainScene);
 }
 
 let otherFrame = true;
@@ -1087,7 +1073,7 @@ let fps30 = false;
 export function renderTick (){
   const dynamicGroup = new THREE.Group();
   dynamicGroup.name = "generalDynamic";
-  bg2.add(dynamicGroup);
+  mainScene.add(dynamicGroup);
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
   if ((fps30 && otherFrame) || !fps30) {
@@ -1219,27 +1205,15 @@ export function renderTick (){
   }
   renderer.clear();
 
-  // renderer.render(bg1,camera);
-  // renderer.clearDepth();
-  //
-  // renderer.render( bg2 , camera );
-  // renderer.clearDepth();
-  //
-  // renderer.render( fg1 , camera );
-  // renderer.clearDepth();
-  //
-  // renderer.render(  fg2 , camera );
-  // renderer.clearDepth();
-
-  renderer.render( ui   , camera );
+  renderer.render( mainScene , camera );
   if (animationsNotCleared) {
-    const frames = getObjectByNameNonRecursive(ui, "animationFrames");
+    const frames = getObjectByNameNonRecursive(mainScene, "animationFrames");
     if (frames !== undefined) {
       frames.visible = false;
       animationsNotCleared = false;
     }
   }
-  bg2.remove(dynamicGroup);
+  mainScene.remove(dynamicGroup);
 }
 
 export function buildPlayerObject (i){
@@ -1262,7 +1236,7 @@ export function initializePlayers (i,target){
 
 export function startGame (){
   const dynamicGroup = new THREE.Group();
-  bg2.add(dynamicGroup);
+  mainScene.add(dynamicGroup);
   setVsStage(stageSelect);
   setBackgroundType(Math.round(Math.random()));
   if (holiday == 1){
@@ -1279,7 +1253,7 @@ export function startGame (){
   addPlayer(3,"keyboard");
   togglePort(3);
   characterSelections = [0,1,2,3];
-  loadCharacterAnimationFrames(fg1, [0,1,2,3]);
+  loadCharacterAnimationFrames(mainScene, [0,1,2,3]);
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
@@ -1317,7 +1291,7 @@ export function startGame (){
   drawVfx("start", new Vec2D(0, 0));
   findingPlayers = false;
   playing = true;
-  bg2.remove(dynamicGroup);
+  mainScene.remove(dynamicGroup);
 }
 
 export function endGame (input){
@@ -1508,16 +1482,7 @@ renderer.autoClear = false;
 let animationsNotCleared = true;
 
 function initScenes() {
-  bg1 = new THREE.Scene();
-
-  bg2 = bg1;
-
-  fg1 = bg2;
-
-  fg2 = bg1;
-
-  ui = fg2;
-
+  mainScene = new THREE.Scene();
 
   displayPort.append(renderer.domElement);
 }

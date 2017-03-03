@@ -1,5 +1,5 @@
 // @flow
-/*eslint indent:1*/ // get stuffed
+/*eslint indent:0*/
 
 import {Vec2D, getXOrYCoord, putXOrYCoord, flipXOrY} from "../main/util/Vec2D";
 import {dotProd, scalarProd, add, subtract, norm, orthogonalProjection} from "../main/linAlg";
@@ -10,6 +10,7 @@ import {extremePoint} from "../stages/util/extremePoint";
 import {moveECB, squashECBAt, ecbFocusFromAngularParameter, interpolateECB, makeECB} from "../main/util/ecbTransform";
 import {zipLabels} from "../main/util/zipLabels";
 import {drawECB} from "../main/util/drawECB";
+import {mainScene} from "../main/main";
 
 // eslint-disable-next-line no-duplicate-imports
 import type {ECB, SquashDatum} from "../main/util/ecbTransform";
@@ -538,9 +539,9 @@ function runSlideRoutine( srcECB : ECB, tgtECB : ECB, ecbp : ECB
   let output; 
   if (recursionCounter > maxRecursion) {
     console.log("'runSlideRoutine': excessive recursion, aborting.");
-    drawECB(srcECB, "#286ee0");
-    drawECB(tgtECB, "#f49930");
-    drawECB(ecbp, "#fff9ad");
+    drawECB(mainScene, srcECB, "#286ee0");
+    drawECB(mainScene, tgtECB, "#f49930");
+    drawECB(mainScene, ecbp, "#fff9ad");
     output = { ecb : srcECB, touching : null, squashed : squashed };
   }
   else {
@@ -860,8 +861,8 @@ function findNextTargetFromSurface ( srcECB : ECB, ecbp : ECB, wall : [Vec2D, Ve
 
   tgtECB = moveECB(tgtECB, putXOrYCoord(pushout + additionalPushout, xOrY));
 
-  drawECB(ecbp  , "#8f54ff");
-  drawECB(tgtECB, "#35f4ab");
+  drawECB(mainScene, ecbp  , "#8f54ff");
+  drawECB(mainScene, tgtECB, "#35f4ab");
 
   return [tgtECB, final];
 };
@@ -900,8 +901,8 @@ function findNextTargetFromCorner ( srcECB : ECB, ecbp : ECB, corner : Vec2D, an
 
   tgtECB = moveECB(tgtECB, putXOrYCoord(pushout + additionalPushout, "x"));
 
-  drawECB(ecbp  , "#1098c9");
-  drawECB(tgtECB, "#5cbc12");
+  drawECB(mainScene, ecbp  , "#1098c9");
+  drawECB(mainScene, tgtECB, "#5cbc12");
 
   return [tgtECB, final];
 
@@ -1037,7 +1038,7 @@ function agreeOnTargetECB( srcECB : ECB, fstTgtECB : ECB, sndTgtECB : ECB, ecbp 
       }
     }
   }
-  drawECB(tgtECB, "#f9482c");
+  drawECB(mainScene, tgtECB, "#f9482c");
   return output;
 }
 
@@ -1206,7 +1207,7 @@ function reinflateECB ( ecb : ECB, position : Vec2D
     const newPosition = new Vec2D( position.x + squashedecb[0].x - ecb[0].x
                                  , grounded ? position.y : position.y + squashedecb[0].y - ecb[0].y);
     const newAngular = ecbSquashDatum.location;
-    drawECB(squashedecb, "#ffff00");
+    drawECB(mainScene, squashedecb, "#ffff00");
     return [newPosition, ecbSquashDatum, squashedecb];
   }
   else {
