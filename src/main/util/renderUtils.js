@@ -4,7 +4,7 @@ import { MeshText2D, textAlign } from 'three-text2d';
 let clearThisFrame = [];
 const clearEveryFrame = [];
 
-export function addtoClearEveryFrame(v) {
+export function addToClearEveryFrame(v) {
   clearEveryFrame.push(v);
 }
 

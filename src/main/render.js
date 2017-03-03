@@ -227,60 +227,60 @@ export function renderPlayer(i, addToScene = false) {
         fg2.textAlign = "start";
     }
     if (player[i].actionState == "REBIRTH" || player[i].actionState == "REBIRTHWAIT") {
-        fg2.fillStyle = palettes[pPal[i]][1];
-        fg2.strokeStyle = palettes[pPal[i]][0];
-        fg2.beginPath();
-        fg2.moveTo(temX + 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5));
-        fg2.lineTo(temX + 31.5 * (activeStage.scale / 4.5), temY);
-        fg2.lineTo(temX - 31.5 * (activeStage.scale / 4.5), temY);
-        fg2.lineTo(temX - 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5));
-        fg2.closePath();
-        fg2.fill();
-        fg2.stroke();
+        // fg2.fillStyle = palettes[pPal[i]][1];
+        // fg2.strokeStyle = palettes[pPal[i]][0];
+        // fg2.beginPath();
+        // fg2.moveTo(temX + 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5));
+        // fg2.lineTo(temX + 31.5 * (activeStage.scale / 4.5), temY);
+        // fg2.lineTo(temX - 31.5 * (activeStage.scale / 4.5), temY);
+        // fg2.lineTo(temX - 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5));
+        // fg2.closePath();
+        // fg2.fill();
+        // fg2.stroke();
     }
     if (player[i].showLedgeGrabBox) {
-        fg2.strokeStyle = "#4478ff";
-        fg2.strokeRect(player[i].phys.ledgeSnapBoxF.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.ledgeSnapBoxF.min
-                .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
-        fg2.strokeStyle = "#ff4444";
-        fg2.strokeRect(player[i].phys.ledgeSnapBoxB.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.ledgeSnapBoxB.min
-                .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
+        // fg2.strokeStyle = "#4478ff";
+        // fg2.strokeRect(player[i].phys.ledgeSnapBoxF.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.ledgeSnapBoxF.min
+        //         .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
+        // fg2.strokeStyle = "#ff4444";
+        // fg2.strokeRect(player[i].phys.ledgeSnapBoxB.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.ledgeSnapBoxB.min
+        //         .y * -activeStage.scale + activeStage.offset[1], 14 * activeStage.scale, 10 * activeStage.scale);
     }
     if (player[i].showECB) {
-        fg2.fillStyle = "#ff8d2f";
-        fg2.beginPath();
-        fg2.moveTo((player[i].phys.ECB1[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[0].y * -activeStage.scale) +
-            activeStage.offset[1]);
-        fg2.lineTo((player[i].phys.ECB1[1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[1].y * -activeStage.scale) +
-            activeStage.offset[1]);
-        fg2.lineTo((player[i].phys.ECB1[2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[2].y * -activeStage.scale) +
-            activeStage.offset[1]);
-        fg2.lineTo((player[i].phys.ECB1[3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[3].y * -activeStage.scale) +
-            activeStage.offset[1]);
-        fg2.closePath();
-        fg2.fill();
-        fg2.strokeStyle = "white";
-        fg2.beginPath();
-        fg2.moveTo((player[i].phys.ECBp[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[0].y * -activeStage.scale) +
-            activeStage.offset[1]);
-        fg2.lineTo((player[i].phys.ECBp[1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[1].y * -activeStage.scale) +
-            activeStage.offset[1]);
-        fg2.lineTo((player[i].phys.ECBp[2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[2].y * -activeStage.scale) +
-            activeStage.offset[1]);
-        fg2.lineTo((player[i].phys.ECBp[3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[3].y * -activeStage.scale) +
-            activeStage.offset[1]);
-        fg2.closePath();
-        fg2.stroke();
-        fg2.beginPath();
-        fg2.moveTo(temX, temY - 6);
-        fg2.lineTo(temX, temY + 6);
-        fg2.closePath();
-        fg2.stroke();
-        fg2.beginPath();
-        fg2.moveTo(temX + 6, temY);
-        fg2.lineTo(temX - 6, temY);
-        fg2.closePath();
-        fg2.stroke();
+        // fg2.fillStyle = "#ff8d2f";
+        // fg2.beginPath();
+        // fg2.moveTo((player[i].phys.ECB1[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[0].y * -activeStage.scale) +
+        //     activeStage.offset[1]);
+        // fg2.lineTo((player[i].phys.ECB1[1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[1].y * -activeStage.scale) +
+        //     activeStage.offset[1]);
+        // fg2.lineTo((player[i].phys.ECB1[2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[2].y * -activeStage.scale) +
+        //     activeStage.offset[1]);
+        // fg2.lineTo((player[i].phys.ECB1[3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECB1[3].y * -activeStage.scale) +
+        //     activeStage.offset[1]);
+        // fg2.closePath();
+        // fg2.fill();
+        // fg2.strokeStyle = "white";
+        // fg2.beginPath();
+        // fg2.moveTo((player[i].phys.ECBp[0].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[0].y * -activeStage.scale) +
+        //     activeStage.offset[1]);
+        // fg2.lineTo((player[i].phys.ECBp[1].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[1].y * -activeStage.scale) +
+        //     activeStage.offset[1]);
+        // fg2.lineTo((player[i].phys.ECBp[2].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[2].y * -activeStage.scale) +
+        //     activeStage.offset[1]);
+        // fg2.lineTo((player[i].phys.ECBp[3].x * activeStage.scale) + activeStage.offset[0], (player[i].phys.ECBp[3].y * -activeStage.scale) +
+        //     activeStage.offset[1]);
+        // fg2.closePath();
+        // fg2.stroke();
+        // fg2.beginPath();
+        // fg2.moveTo(temX, temY - 6);
+        // fg2.lineTo(temX, temY + 6);
+        // fg2.closePath();
+        // fg2.stroke();
+        // fg2.beginPath();
+        // fg2.moveTo(temX + 6, temY);
+        // fg2.lineTo(temX - 6, temY);
+        // fg2.closePath();
+        // fg2.stroke();
     }
     if (player[i].showHitbox) {
         fg2.fillStyle = hurtboxColours[player[i].phys.hurtBoxState];
