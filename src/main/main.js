@@ -1268,7 +1268,7 @@ export function startGame (){
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
-      addToClearEveryFrame({ label : "player"+n, mesh : true });
+      addToClearEveryFrame({ label : "player"+n, remove : true });
       renderPlayer(n, true);
       player[n].inCSS = false;
     }

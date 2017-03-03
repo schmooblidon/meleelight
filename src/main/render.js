@@ -53,8 +53,7 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
       actionStateGroup.name = actionState;
       characterGroup.add(actionStateGroup);
       for (let f = 0; f < animations[character][actionState].length; f++) {
-        const model = animations[character][actionState][f];
-        drawBezierCurvesSimple (actionStateGroup, model, toString(f));
+        drawBezierCurvesSimple (actionStateGroup, animations[character][actionState][f], toString(f));
       }
     }
   }
@@ -201,20 +200,35 @@ export function renderPlayer(i, addToScene = false) {
             // fg2.lineWidth = 6;
             // fg2.stroke();
             // fg2.lineWidth = 1;
-
+            /*
             drawBezierCurves(fg2, col, face, player[i].miniViewPoint.x, player[i].miniViewPoint.y + 30, model, player[
                 i].charAttributes.miniScale, player[i].charAttributes.miniScale, player[i].rotation, player[i].rotationPoint
-                .x, player[i].rotationPoint.y, "player"+i, addToScene);
+                .x, player[i].rotationPoint.y, "player"+i, addToScene);*/
         } else {
             if (player[i].actionState == "ENTRANCE") {
-                drawBezierCurves(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
+                /*drawBezierCurves(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
                     4.5), Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 -
                         startTimer)) * (activeStage.scale / 4.5), player[i].rotation, player[i].rotationPoint.x, player[i].rotationPoint
-                    .y, "player"+i, addToScene);
+                    .y, "player"+i, addToScene);*/
             } else {
-                drawBezierCurves(fg2, col, face, temX, temY, model, player[i].charAttributes.charScale * (activeStage.scale /
-                    4.5), player[i].charAttributes.charScale * (activeStage.scale / 4.5), player[i].rotation, player[i].rotationPoint
-                    .x, player[i].rotationPoint.y, "player"+i, addToScene);
+                const animFrame = fg2.getObjectByName("animationFrames")
+                                     .getObjectByName("character" + characterSelections[i])
+                                     .getObjectByName(player[i].actionState)
+                                     .children[frame-1];
+                const cloned = animFrame.clone();
+                const rpX = player[i].rotationPoint.x;
+                const rpY = player[i].rotationPoint.y;
+                cloned.material.color.set (new THREE.Color(col));
+                const sX = player[i].charAttributes.charScale * (activeStage.scale /4.5) * face;
+                const sY = Math.max(0.01, Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 -startTimer)) * (activeStage.scale / 4.5));
+                cloned.scale.set( sX, sY , 1);
+                cloned.translateX(temX-rpX);
+                cloned.translateY(temY-rpY);
+                cloned.rotateZ( player[i].rotation );
+                cloned.translateX(rpX);
+                cloned.translateY(rpY);
+                cloned.name = "player"+i;
+                fg2.add(cloned);
             }
         }
     }

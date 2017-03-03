@@ -54,7 +54,7 @@ export function drawBezierCurves (scene, col, face, tX, tY, path, scaleX, scaleY
       scene.add(object);
     } 
     else {
-      object = scene.getObjectByName(label, true);
+      object = scene.getObjectByName(label);
       if (object !== null && object !== undefined) {
         object.material.color.set (new THREE.Color(col));
         object.geometry = geometry;
