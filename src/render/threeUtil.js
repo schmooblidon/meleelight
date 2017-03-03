@@ -97,6 +97,12 @@ export function drawBezierCurvesSimple (scene, path) {
     curve.closePath();
     const geometry = new THREE.ShapeBufferGeometry(curve, 5);
     geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+    geometry.attributes.position.onUploadCallback = function (name) { this.array = undefined; } ;
+    geometry.attributes.normal.onUploadCallback = function (name) { this.array = undefined; } ;
+    geometry.attributes.uv.onUploadCallback = function (name) { this.array = undefined; } ;
+    //geometry.index.onUploadCallback = function (name) { this.array = undefined; } ;
+    // can't remove indices unless the buffer geometry is in special "non-indexed" format
     const material = new THREE.MeshBasicMaterial( { color : new THREE.Color("rgb(255,0,255)") } );
     material.side = THREE.DoubleSide;
     const curveObject = new THREE.Mesh( geometry, material );

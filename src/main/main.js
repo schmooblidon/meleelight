@@ -1278,7 +1278,6 @@ export function startGame (){
       player[n].stocks = 1;
     }
   }
-
   matchTimer = 480;
   startTimer = 1.5;
   starting = true;
