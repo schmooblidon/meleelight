@@ -1071,9 +1071,7 @@ export function clearScreen (){
 let otherFrame = true;
 let fps30 = false;
 export function renderTick (){
-  const dynamicGroup = new THREE.Group();
-  dynamicGroup.name = "generalDynamic";
-  mainScene.add(dynamicGroup);
+  const dynamicGroup = getObjectByNameNonRecursive(mainScene, "generalDynamic");
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
   if ((fps30 && otherFrame) || !fps30) {
@@ -1213,7 +1211,6 @@ export function renderTick (){
       animationsNotCleared = false;
     }
   }
-  mainScene.remove(dynamicGroup);
 }
 
 export function buildPlayerObject (i){
@@ -1235,8 +1232,7 @@ export function initializePlayers (i,target){
 }
 
 export function startGame (){
-  const dynamicGroup = new THREE.Group();
-  mainScene.add(dynamicGroup);
+  const dynamicGroup = getObjectByNameNonRecursive(mainScene, "generalDynamic");
   setVsStage(stageSelect);
   setBackgroundType(Math.round(Math.random()));
   if (holiday == 1){
@@ -1291,7 +1287,6 @@ export function startGame (){
   drawVfx("start", new Vec2D(0, 0));
   findingPlayers = false;
   playing = true;
-  mainScene.remove(dynamicGroup);
 }
 
 export function endGame (input){
@@ -1483,6 +1478,9 @@ let animationsNotCleared = true;
 
 function initScenes() {
   mainScene = new THREE.Scene();
+  const dynamicGroup = new THREE.Group();
+  dynamicGroup.name = "generalDynamic";
+  mainScene.add(dynamicGroup);
 
   displayPort.append(renderer.domElement);
 }

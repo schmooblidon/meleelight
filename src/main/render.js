@@ -23,10 +23,12 @@ import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
 import * as THREE from "three";
 import {drawBezierCurves, makeRectShape, makeDiskShape, makePolygonShape, drawShape, drawLine} from "../render/threeUtil";
+import {createOrUpdateShapeBufferGeometry} from "../render/createOrUpdateShapeBufferGeometry";
 import {drawECB} from "../render/drawECB";
+import {stageTransform} from "../render/stageTransform";
 import {getObjectByNameNonRecursive} from "./util/renderUtils";
 
-export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
+export const hurtboxColours = ["#ffed46", "#2a39ff", "#36ff25"];
 export const twoPi = Math.PI * 2;
 
 export let lostStockQueue = [];
@@ -81,6 +83,7 @@ export function renderFrameTransformed(scene, animFrame, col, transform ) {
   cloned.matrixAutoUpdate = false;
   cloned.updateMatrix();
   cloned.updateMatrixWorld();
+  cloned.name = "animFrame";
   scene.add(cloned);
 }
 
@@ -231,11 +234,11 @@ export function renderPlayer(scene, i) {
     }
 
     if (player[i].miniView && player[i].actionState !== "SLEEP" && player[i].actionState !== "REBIRTH" && player[i].actionState !== "REBIRTHWAIT") {
-      const miniViewBubble = makeDiskShape(player[i].miniViewPoint.x,  player[i].miniViewPoint.y, 35 );
-      const lineMat = new THREE.LineBasicMaterial({ color : palettes[pPal[i]][0], linewidth : 8 });
-      const meshMat = new THREE.MeshBasicMaterial({ color : 0x000000 });
-      meshMat.side = THREE.DoubleSide;
-      drawShape(scene, miniViewBubble, meshMat, lineMat);
+      const miniViewBubble = makeDiskShape(0, 0, 35 );
+      const bubblePosition = new THREE.Vector3(  player[i].miniViewPoint.x
+                                              ,  player[i].miniViewPoint.y
+                                              , -0.1);
+      createOrUpdateShapeBufferGeometry(scene, "miniViewBubble"+i, { shape : miniViewBubble, position : bubblePosition, linewidth : 5, fill : 0x000000, stroke : palettes[pPal[i]][0] });
       renderFrameTransformed(scene, animFrame, col, { tX : player[i].miniViewPoint.x
                                                     , tY : player[i].miniViewPoint.y + 30  
                                                     , sX : player[i].charAttributes.miniScale * face 
@@ -264,18 +267,14 @@ export function renderPlayer(scene, i) {
     }
     if (player[i].phys.shielding) {
       if (!(player[i].phys.powerShielded && player[i].hit.hitlag > 0)) {
-        const sX = ((player[i].phys.shieldPositionReal.x) * activeStage.scale) + activeStage.offset[0];
-        const sY = ((player[i].phys.shieldPositionReal.y) * -activeStage.scale) + activeStage.offset[1];
         let sCol = palettes[pPal[i]][2];
         if (Math.floor(player[i].hit.shieldstun) > 0) {
           sCol = palettes[pPal[i]][4];
         }
         sCol = "rgb" + sCol.slice(4, -2) + ")";
-        const shieldBubble = makeDiskShape(sX, sY, player[i].phys.shieldSize * activeStage.scale);
-        const meshMat = new THREE.MeshBasicMaterial({ color : sCol, opacity : (0.6 * player[i].phys.shieldAnalog) });
-        meshMat.transparent = true;
-        meshMat.side = THREE.DoubleSide;
-        drawShape(scene, shieldBubble, meshMat, null);
+        const shieldBubble = makeDiskShape(0, 0, activeStage.scale);
+        const shieldPos = new THREE.Vector3(player[i].phys.shieldPositionReal.x * activeStage.scale + activeStage.offset[0], - player[i].phys.shieldPositionReal.y * activeStage.scale + activeStage.offset[1], 0.05);
+        createOrUpdateShapeBufferGeometry(scene, "shieldBubble"+i, { scale : player[i].phys.shieldSize, position: shieldPos, shape : shieldBubble, fill : sCol, opacity : 0.6 * player[i].phys.shieldAnalog});
       }
     }
     if (hasTag[i]) {
@@ -300,40 +299,47 @@ export function renderPlayer(scene, i) {
       */
     }
     if (player[i].actionState === "REBIRTH" || player[i].actionState === "REBIRTHWAIT") {
-      const rebirthPlatform = makePolygonShape( [ new Vec2D( temX + 18 * (activeStage.scale / 4.5), temY + 13.5 * (activeStage.scale / 4.5))
-                                                , new Vec2D(temX + 31.5 * (activeStage.scale / 4.5), temY)
-                                                , new Vec2D(temX - 31.5 * (activeStage.scale / 4.5), temY)
-                                                , new Vec2D(temX - 18 * (activeStage.scale / 4.5) , temY + 13.5 * (activeStage.scale / 4.5)) ]
+      const rebirthPlatform = makePolygonShape( [ new Vec2D(  18   * (activeStage.scale / 4.5), 13.5 * (activeStage.scale / 4.5) )
+                                                , new Vec2D(  31.5 * (activeStage.scale / 4.5), 0                                )
+                                                , new Vec2D(- 31.5 * (activeStage.scale / 4.5), 0                                )
+                                                , new Vec2D(- 18   * (activeStage.scale / 4.5), 13.5 * (activeStage.scale / 4.5) ) ]
                                               , true );
-      const lineMat = new THREE.LineBasicMaterial({ color : palettes[pPal[i]][0], linewidth : 2 });
-      const meshMat = new THREE.MeshBasicMaterial({ color : palettes[pPal[i]][1] });
-      meshMat.side = THREE.DoubleSide;
-      drawShape(scene, rebirthPlatform, meshMat, lineMat);
+      const platPosition = new THREE.Vector3( temX, temY, 0.01);
+      createOrUpdateShapeBufferGeometry(scene, "rebirthPlatform"+i, { position: platPosition, shape : rebirthPlatform, fill : palettes[pPal[i]][1], stroke : palettes[pPal[i]][0], linewidth : 2 });
     }
     if (player[i].showLedgeGrabBox) {
-      const ledgeGrabBoxGroup = new THREE.Group();
-      const ledgeGrabBoxF = makeRectShape( player[i].phys.ledgeSnapBoxF.min.x
-                                         , player[i].phys.ledgeSnapBoxF.min.x + 14
-                                         , player[i].phys.ledgeSnapBoxF.min.y
-                                         , player[i].phys.ledgeSnapBoxF.min.y - 10 );
-      const ledgeGrabBoxB = makeRectShape( player[i].phys.ledgeSnapBoxB.min.x
-                                         , player[i].phys.ledgeSnapBoxB.min.x + 14
-                                         , player[i].phys.ledgeSnapBoxB.min.y
-                                         , player[i].phys.ledgeSnapBoxB.min.y - 10 );
-      drawShape(ledgeGrabBoxGroup, ledgeGrabBoxF, null, new THREE.LineBasicMaterial({ color : "#4478ff", linewidth : 3 }));
-      drawShape(ledgeGrabBoxGroup, ledgeGrabBoxB, null, new THREE.LineBasicMaterial({ color : "#ff4444", linewidth : 3 }));
-      ledgeGrabBoxGroup.scale.set(activeStage.scale,-activeStage.scale,1);
-      ledgeGrabBoxGroup.translateX(activeStage.offset[0]);
-      ledgeGrabBoxGroup.translateY(activeStage.offset[1]);
-      scene.add(ledgeGrabBoxGroup);
+      const ledgeGrabBox = makeRectShape( 0, 14 * activeStage.scale, 0, - 10 * activeStage.scale );
+      const grabBoxFPos = new THREE.Vector3(  player[i].phys.ledgeSnapBoxF.min.x * activeStage.scale + activeStage.offset[0]
+                                           , -player[i].phys.ledgeSnapBoxF.min.y * activeStage.scale + activeStage.offset[1]);
+      const grabBoxBPos = new THREE.Vector3(  player[i].phys.ledgeSnapBoxB.min.x * activeStage.scale + activeStage.offset[0]
+                                           , -player[i].phys.ledgeSnapBoxB.min.y * activeStage.scale + activeStage.offset[1]);
+      createOrUpdateShapeBufferGeometry(scene, "ledgeGrabBoxF"+i, { position : grabBoxFPos, shape : ledgeGrabBox, stroke : "#4478ff", linewidth : 3 });
+      createOrUpdateShapeBufferGeometry(scene, "ledgeGrabBoxB"+i, { position : grabBoxBPos, shape : ledgeGrabBox, stroke : "#ff4444", linewidth : 3 });
     }
     if (player[i].showECB) {
-      drawECB(scene, player[i].phys.ECB1, { fill : "#ff8d2f" } );
-      drawECB(scene, player[i].phys.ECB1, { stroke : "white" } );
+      /* TODO: redo
+      drawECB(scene, player[i].phys.ECB1, { fill : "#ff8d2f" }, "ECB1"+i );
+      drawECB(scene, player[i].phys.ECBp, { stroke : "white" }, "ECBp"+i );
       drawLine(scene, new THREE.LineBasicMaterial({ color : "white", linewidth : 3 }), temX, temY-6, temX, temY+6 );
       drawLine(scene, new THREE.LineBasicMaterial({ color : "white", linewidth : 3 }), temX+6, temY, temX-6, temY );
+      */
     }
     if (player[i].showHitbox) {
+      /* TODO: redo
+      const hitboxGroup = new THREE.Group();
+      const hurtboxMat = new THREE.MeshBasicMaterial({ color : hurtboxColours[player[i].phys.hurtBoxState], opacity : 0.6 });
+      hurtboxMat.side = THREE.DoubleSide;
+      hurtboxMat.transparent = true;
+      const hurtboxShape = makeRectShape( player[i].phys.hurtbox.min.x
+                                        , player[i].phys.hurtbox.min.x + player[i].charAttributes.hurtboxOffset[0] * 2
+                                        , player[i].phys.hurtbox.min.y
+                                        , player[i].phys.hurtbox.min.y - player[i].charAttributes.hurtboxOffset[1]  );
+      drawShape(hitboxGroup, hurtboxShape, hurtboxMat, null, null, 1);
+      hitboxGroup.scale.set(activeStage.scale,-activeStage.scale,1);
+      hitboxGroup.translateX(activeStage.offset[0]);
+      hitboxGroup.translateY(activeStage.offset[1]);
+      */
+
       /*
       fg2.fillStyle = hurtboxColours[player[i].phys.hurtBoxState];
       fg2.fillRect(player[i].phys.hurtbox.min.x * activeStage.scale + activeStage.offset[0], player[i].phys.hurtbox.min.y * -activeStage.scale +

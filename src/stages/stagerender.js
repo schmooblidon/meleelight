@@ -6,7 +6,6 @@ import {activeStage} from "stages/activeStage";
 import {Vec2D} from "../main/util/Vec2D";
 import {euclideanDist} from "../main/linAlg";
 import {drawLine, drawShape, makeRectShape, makePolygonShape, makeDiskShape} from "../render/threeUtil";
-import {addToClearEveryFrame} from "../main/util/renderUtils";
 import * as THREE from "three";
 
 
@@ -54,8 +53,6 @@ const types = ["wallL", "wallR", "ground", "ceiling"];
 const surfaceColors = ["#47c648", "#9867de", "#db80cc", "#ed6767"];
 
 export function drawStageInit() {
-  addToClearEveryFrame({ label : "stageDynamic", remove : true});
-
   const scene = mainScene;
   const group = new THREE.Group();
   group.name = "stageStatic";

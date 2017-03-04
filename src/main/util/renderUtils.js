@@ -1,21 +1,27 @@
 import * as THREE from 'three';
 import { MeshText2D, textAlign } from 'three-text2d';
 
-let clearThisFrame = [];
-let clearEveryFrame = [];
-
-export function addToClearEveryFrame(v) {
-  clearEveryFrame.push(v);
+export function clearScene(scene){
+  const generalDynamic = getObjectByNameNonRecursive(scene, "generalDynamic");
+  for (let animFrame = getObjectByNameNonRecursive(generalDynamic, "animFrame"); 
+       animFrame !== undefined;
+       animFrame = getObjectByNameNonRecursive(generalDynamic, "animFrame")) {
+    clearAllChildren(generalDynamic, animFrame);
+    generalDynamic.remove(animFrame);
+  }
+  for (let stageDynamic = getObjectByNameNonRecursive(scene, "stageDynamic"); 
+       stageDynamic !== undefined;
+       stageDynamic = getObjectByNameNonRecursive(scene, "stageDynamic")) {
+    clearAllChildren(scene, stageDynamic);
+    scene.remove(stageDynamic);
+  }
 }
 
-export function clearScene(scene){
-  for (let i=0; i < clearThisFrame.length; i++) {
-    clearObject(scene, clearThisFrame[i], getObjectByNameNonRecursive(scene, clearThisFrame[i].label));
+export function clearAllChildren(scene, node) {
+  for (let i=0; i < node.children.length; i++) {
+    const child = node.children[i];
+    clearObject(scene, {mesh : true, material : true, remove : true}, child);
   }
-  for (let i=0; i < clearEveryFrame.length; i++) {
-    clearObject(scene, clearEveryFrame[i], getObjectByNameNonRecursive(scene, clearEveryFrame[i].label));
-  }
-  clearThisFrame = [];
 }
 
 export function getObjectByNameNonRecursive(scene, name) {

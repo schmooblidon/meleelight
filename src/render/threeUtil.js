@@ -97,6 +97,9 @@ export function drawShape (scene, shape, meshMat, lineMat, transform = null, pts
   if (lineMat !== null && lineMat !== undefined) {
     const lineGeometry = shape.createPointsGeometry(pts);
     const line = new THREE.Line(lineGeometry, lineMat);
+    if (meshMat !== null && meshMat !== undefined) {
+      line.translateZ(0.5);
+    }
     group.add(line);
   }
   if (transform !== null && transform !== undefined) {

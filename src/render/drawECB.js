@@ -1,15 +1,10 @@
-import {activeStage} from "../stages/activeStage";
-import {makePolygonShape, drawShape} from "./threeUtil.js";
+import {makePolygonShape} from "./threeUtil.js";
+import {createOrUpdateShapeBufferGeometry} from "./createOrUpdateShapeBufferGeometry";
+import {stageTransform} from "./stageTransform";
 import * as THREE from "three";
 
-export function drawECB(scene, ecb, attributes) : void {
+export function drawECB(scene, ecb, attributes, name = "ECB") : void {
   const ecbGroup = new THREE.Group();
   const ecbShape = makePolygonShape( ecb, true );
-  const strokeMat = (attributes.stroke === null || attributes.stroke === undefined) ? null : new THREE.LineBasicMaterial({ color : attributes.stroke, linewidth : 5 });
-  const meshMat = (attributes.fill === null || attributes.fill === undefined) ? null : new THREE.MeshBasicMaterial({ color : attributes.fill });
-  drawShape(ecbGroup, ecbShape, meshMat, strokeMat, null, 1);
-  ecbGroup.scale.set(activeStage.scale,-activeStage.scale,1);
-  ecbGroup.translateX(activeStage.offset[0]);
-  ecbGroup.translateY(activeStage.offset[1]);
-  scene.add(ecbGroup);
+  createOrUpdateShapeBufferGeometry(scene, name, { shape : ecbShape, fill : attributes.fill, stroke : attributes.stroke, transform : stageTransform, pts : 1 });
 };
