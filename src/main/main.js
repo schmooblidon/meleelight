@@ -1514,6 +1514,7 @@ export function start (){
   gameTick(nullInputBuffers);
   renderTick();
 startGame();
+$("#start").attr("checked",true);
   $("#effectsButton").click(function() {
     if (getShowSFX()) {
       $("#effectsButtonEdit").empty().append("OFF");

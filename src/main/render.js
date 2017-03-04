@@ -411,10 +411,10 @@ export function renderPlayer(scene, i) {
   }
 } 
 
-/*
+
 export function renderOverlay(showStock) {
   // stocks, percent, timer
-  ui.strokeStyle = "black";
+
   if (!versusMode || gameMode === 5) {
     ui.fillStyle = "white";
     ui.lineWidth = 2;
@@ -492,7 +492,7 @@ export function renderOverlay(showStock) {
   }
 }
 
-export function setLostStockQueue(index,val){
+/*export function setLostStockQueue(index,val){
   lostStockQueue[index]=val;
 }
 

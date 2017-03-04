@@ -1,298 +1,501 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8"/>
     <link href="./meleelight.css" rel="stylesheet"/>
-  </head>
-  <body>
+</head>
+<body>
 
-  <!-- load the gamepad SVG loading script -->
-  <script type="text/javascript" src="../src/input/gamepad/includeGamepadSVG.js"></script>
+<!-- load the gamepad SVG loading script -->
+<script type="text/javascript" src="../src/input/gamepad/includeGamepadSVG.js"></script>
 
-    <div id="loadScreen">
-      <canvas id="loadCanvas" width="300" height="200"></canvas>
-      <div id="loadPercent"><p><span id="loadPercentEdit">0</span>%</p></div>
-      <div id="loadText"><p id="loadTextEdit">Loading...</p></div>
+<div id="loadScreen">
+    <canvas id="loadCanvas" width="300" height="200"></canvas>
+    <div id="loadPercent"><p><span id="loadPercentEdit">0</span>%</p></div>
+    <div id="loadText"><p id="loadTextEdit">Loading...</p></div>
+</div>
+<div id="topButtonContainer">
+    <a href="">
+        <div id="downloadButton" class="topButton">
+            <div class="buttonDetails"><p>Download Melee Light</p></div>
+        </div>
+    </a>
+    <div id="keyboardButton" class="topButton"><img id="keyboardControlsImg" width="860" height="616"
+                                                    src="http://i.imgur.com/vdfvaII.png"/>
+        <div class="buttonDetails"><p>Default Keyboard Controls</p></div>
+        <div id="keyboardPrompt"><p id="kPBigText">^ Keyboard Controls</p>
+            <p id="kPSmallText">Remappable from the ingame menu<br>Options > Keyboard Controls</p></div>
     </div>
-    <div id="topButtonContainer">
-      <a href=""><div id="downloadButton" class="topButton"><div class="buttonDetails"><p>Download Melee Light</p></div></div></a>
-        <div id="keyboardButton" class="topButton"><img id="keyboardControlsImg" width="860" height="616" src="http://i.imgur.com/vdfvaII.png"/><div class="buttonDetails"><p>Default Keyboard Controls</p></div><div id="keyboardPrompt"><p id="kPBigText">^ Keyboard Controls</p><p id="kPSmallText">Remappable from the ingame menu<br>Options > Keyboard Controls</p></div></div><div id="controllerButton" class="topButton"><div id="controllerSupportContainer">
-          <div class="controllerBox">
-            <div class="controllerName"><p>MayFlash 2-Port</p></div>
-            <div class="controllerDriver"><p><span class="native">Native</span></p></div>
-            <div class="controllerBrowser">
-              <div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div>
+    <div id="controllerButton" class="topButton">
+        <div id="controllerSupportContainer">
+            <div class="controllerBox">
+                <div class="controllerName"><p>MayFlash 2-Port</p></div>
+                <div class="controllerDriver"><p><span class="native">Native</span></p></div>
+                <div class="controllerBrowser">
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
+                <div class="controllerOS">
+                    <div class="osBox osBoxWide">
+                        <div class="osName osNameWide"><p>Windows</p></div>
+                        <div Class="osSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Mac</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Linux</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
             </div>
-            <div class="controllerOS">
-              <div class="osBox osBoxWide">
-                <div class="osName osNameWide"><p>Windows</p></div>
-                <div Class="osSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Mac</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Linux</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div>
+            <div class="controllerBox">
+                <div class="controllerName"><p>MayFlash 4-Port</p></div>
+                <div class="controllerDriver"><p><span class="native">Native</span> (PC Mode)</p></div>
+                <div class="controllerBrowser">
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
+                <div class="controllerOS">
+                    <div class="osBox osBoxWide">
+                        <div class="osName osNameWide"><p>Windows</p></div>
+                        <div Class="osSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Mac</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Linux</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="controllerBox">
-            <div class="controllerName"><p>MayFlash 4-Port</p></div>
-            <div class="controllerDriver"><p><span class="native">Native</span> (PC Mode)</p></div>
-            <div class="controllerBrowser">
-              <div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div>
+            <div class="controllerBox">
+                <div class="controllerName"><p>Official Nintendo Wii U</p></div>
+                <div class="controllerDriver"><p><span class="driver"><a
+                        href="http://m4sv.com/page/wii-u-gcn-usb-driver" target="_blank">vJoy Driver</a></span></p>
+                </div>
+                <div class="controllerBrowser">
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="cross">X</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
+                <div class="controllerOS">
+                    <div class="osBox osBoxWide">
+                        <div class="osName osNameWide"><p>Windows</p></div>
+                        <div Class="osSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Mac</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Linux</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
             </div>
-            <div class="controllerOS">
-              <div class="osBox osBoxWide">
-                <div class="osName osNameWide"><p>Windows</p></div>
-                <div Class="osSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Mac</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Linux</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div>
+            <div class="controllerBox">
+                <div class="controllerName"><p>Raphnet</p></div>
+                <div class="controllerDriver"><p><span class="native">Native</span></p></div>
+                <div class="controllerBrowser">
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
+                <div class="controllerOS">
+                    <div class="osBox osBoxWide">
+                        <div class="osName osNameWide"><p>Windows</p></div>
+                        <div Class="osSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Mac</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Linux</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="controllerBox">
-            <div class="controllerName"><p>Official Nintendo Wii U</p></div>
-            <div class="controllerDriver"><p><span class="driver"><a href="http://m4sv.com/page/wii-u-gcn-usb-driver" target="_blank">vJoy Driver</a></span></p></div>
-            <div class="controllerBrowser">
-              <div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/></div>
-                <div class="browserSupport"><p><span class="cross">X</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div>
+            <div class="controllerBox">
+                <div class="controllerName"><p>Xbox 360 Controller</p></div>
+                <div class="controllerDriver"><p><span class="native">Native</span></p></div>
+                <div class="controllerBrowser">
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/>
+                        </div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="browserBox">
+                        <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
+                        <div class="browserSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
+                <div class="controllerOS">
+                    <div class="osBox osBoxWide">
+                        <div class="osName osNameWide"><p>Windows</p></div>
+                        <div Class="osSupport"><p><span class="tick">✔</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Mac</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div><!--
+              -->
+                    <div class="osBox osBoxShort">
+                        <div class="osName osNameShort"><p>Linux</p></div>
+                        <div Class="osSupport"><p><span class="unknown">?</span></p></div>
+                    </div>
+                </div>
             </div>
-            <div class="controllerOS">
-              <div class="osBox osBoxWide">
-                <div class="osName osNameWide"><p>Windows</p></div>
-                <div Class="osSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Mac</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Linux</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div>
-            </div>
-          </div>
-          <div class="controllerBox">
-            <div class="controllerName"><p>Raphnet</p></div>
-            <div class="controllerDriver"><p><span class="native">Native</span></p></div>
-            <div class="controllerBrowser">
-              <div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div>
-            </div>
-            <div class="controllerOS">
-              <div class="osBox osBoxWide">
-                <div class="osName osNameWide"><p>Windows</p></div>
-                <div Class="osSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Mac</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Linux</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div>
-            </div>
-          </div>
-          <div class="controllerBox">
-            <div class="controllerName"><p>Xbox 360 Controller</p></div>
-            <div class="controllerDriver"><p><span class="native">Native</span></p></div>
-            <div class="controllerBrowser">
-              <div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/chrome.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/firefox.png"/></div>
-                <div class="browserSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/safari.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="browserBox">
-                <div class="browserImg"><img class="browserImgFile" src="assets/browser-icons/edge.png"/></div>
-                <div class="browserSupport"><p><span class="unknown">?</span></p></div>
-              </div>
-            </div>
-            <div class="controllerOS">
-              <div class="osBox osBoxWide">
-                <div class="osName osNameWide"><p>Windows</p></div>
-                <div Class="osSupport"><p><span class="tick">✔</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Mac</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div><!--
-              --><div class="osBox osBoxShort">
-                <div class="osName osNameShort"><p>Linux</p></div>
-                <div Class="osSupport"><p><span class="unknown">?</span></p></div>
-              </div>
-            </div>
-          </div>
-          <div id="controllerMessage"><p>You may need to refresh the page or restart your browser. Close the browser from the system tray to be thorough</p></div>
-        </div><div class="buttonDetails"><p>Supported Controllers</p></div></div>
-        <a href="https://github.com/schmooblidon/meleelight" target="_blank"><div id="githubButton" class="topButton"><div class="buttonDetails"><p>Fork me on github</p></div></div></a>
-        <a href="https://discord.gg/qagFayt" target="_blank"><div id="discordButton" class="topButton"><div class="buttonDetails"><p>Join Discord</p></div></div></a>
-        <div id="hideButton" class="topButton"><div class="buttonDetails"><p>Toggle Header</p></div></div>
-        <div id="fullscreenButton" class="topButton"><div class="buttonDetails"><p>Toggle Fullscreen</p></div></div>
-      </div>
-    <div id="display" width="1200" height="750">
+            <div id="controllerMessage"><p>You may need to refresh the page or restart your browser. Close the browser
+                from the system tray to be thorough</p></div>
+        </div>
+        <div class="buttonDetails"><p>Supported Controllers</p></div>
+    </div>
+    <a href="https://github.com/schmooblidon/meleelight" target="_blank">
+        <div id="githubButton" class="topButton">
+            <div class="buttonDetails"><p>Fork me on github</p></div>
+        </div>
+    </a>
+    <a href="https://discord.gg/qagFayt" target="_blank">
+        <div id="discordButton" class="topButton">
+            <div class="buttonDetails"><p>Join Discord</p></div>
+        </div>
+    </a>
+    <div id="hideButton" class="topButton">
+        <div class="buttonDetails"><p>Toggle Header</p></div>
+    </div>
+    <div id="fullscreenButton" class="topButton">
+        <div class="buttonDetails"><p>Toggle Fullscreen</p></div>
+    </div>
+</div>
+<div id="display" width="1200" height="750">
+
     <!--<canvas id="background1Canvas" class="gameCanvas" width="1200" height="750"></canvas>-->
     <!--<canvas id="background2Canvas" class="gameCanvas" width="1200" height="750"></canvas>-->
     <!--<canvas id="foreground1Canvas" class="gameCanvas" width="1200" height="750"></canvas>-->
     <!--<canvas id="foreground2Canvas" class="gameCanvas" width="1200" height="750"></canvas>-->
     <!--<canvas id="uiCanvas" class="gameCanvas" width="1200" height="750"></canvas>-->
     <!--<iframe id="gamepadSVGCalibration" scrolling="no" width="610" height="560" frameborder="0" style="display:none;">-->
-      <!--<html> <head> <link type="text/css" href="./gamepad.css" rel="stylesheet"/> </head> <body></body></html>-->
+    <!--<html> <head> <link type="text/css" href="./gamepad.css" rel="stylesheet"/> </head> <body></body></html>-->
     <!--</iframe>-->
     <!--<script> includeGamepadSVG("gamepadSVGCalibration", 600, 600, true); </script>-->
     <!--<div id="tagTextContainer"><textarea id="pTagEdit0" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit1" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit2" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit3" class="pTagEdit" maxlength="10"></textarea></div>-->
     <!--<div id="customStageContainer"><div id="cStage1"><div id="cStageTitle"><p><span id="cStageTitleEdit">Share this code</span></p></div><textarea id="cStageEdit"></textarea></div><div id="cStage2"><div id="cStageInfo"><p><span id="cStageInfoEdit"></span></p></div><div id="cStagePrompt"><p>Finish</p><div id="aButton"><p>A</p></div></div></div></div>-->
+
     <div id="debug">
-      <div id="renderingTime"><p>Rendering: avg: <span id="renderAvg">0</span>ms | high: <span id="renderHigh">0</span>ms | low :<span id="renderLow">0</span>ms | PeakCount: <span id="renderPeak">0</span></p></div>
-      <div id="gamelogicTime"><p>GameLogic: avg: <span id="gamelogicAvg">0</span>ms | high: <span id="gamelogicHigh">0</span>ms | low :<span id="gamelogicLow">0</span>ms | PeakCount: <span id="gamelogicPeak">0</span></p></div>
-      <div id="framerate"><p>Framerate: cur: <span id="framerateCurrent">0</span>fps | high : <span id="framerateHigh">0</span>fps | low : <span id="framerateLow">0</span>fps</p></div>
+        <div id="renderingTime"><p>Rendering: avg: <span id="renderAvg">0</span>ms | high: <span
+                id="renderHigh">0</span>ms | low :<span id="renderLow">0</span>ms | PeakCount: <span
+                id="renderPeak">0</span></p></div>
+        <div id="gamelogicTime"><p>GameLogic: avg: <span id="gamelogicAvg">0</span>ms | high: <span
+                id="gamelogicHigh">0</span>ms | low :<span id="gamelogicLow">0</span>ms | PeakCount: <span
+                id="gamelogicPeak">0</span></p></div>
+        <div id="framerate"><p>Framerate: cur: <span id="framerateCurrent">0</span>fps | high : <span
+                id="framerateHigh">0</span>fps | low : <span id="framerateLow">0</span>fps</p></div>
     </div>
-    <div id="buttons"><div id="effectsButton" class="gameButton"><p>VFX <span id="effectsButtonEdit">ON</span></p></div><div id="debugButton" class="gameButton"><p>DEBUG <span id="debugButtonEdit">OFF</span></p></div><div id="fpsButton" class="gameButton"><p><span id="fpsButtonEdit">60</span>fps</p></div><div id="alphaButton" class="gameButton"><p>ALPHA <span id="alphaButtonEdit">ON</span></p></div><div id="layerButton" class="gameButton"><p>LAYERS<span id="layerButtonEdit"></span></p><div id="layerDropdown"><div id="layer1" class="layer layerOn"><p>BG1</p></div><div id="layer2" class="layer layerOn"><p>BG2</p></div><div id="layer3" class="layer layerOn"><p>FG1</p></div><div id="layer4" class="layer layerOn"><p>FG2</p></div><div id="layer5" class="layer layerOn"><p>UI</p></div></div></div></div>
-  </div>
-    <div id="players">
-    <div class="playerDetails">
-      <iframe id="gamepadSVG0" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5" style="display:none;"></iframe>
-      <script> includeGamepadSVG("gamepadSVG0", 150, 150, false); </script>
-      <div class="playerTitle"><p>Player 1</p></div>
-      <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX0">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY0">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX0">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY0">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog0">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog0">0</span></p></div>
-      <div class="actionstatetext"><p><span id="actState0">??</span> <span id="stateNum0">?</span> <span id="face0">1</span></p></div>
-      <div class="velocities"><p>CharVel</p></div><div class="velocities"><p>X: <span id="velocityX0">0</span></p></div><div class="velocities"><p>Y: <span id="velocityY0">0</span></p></div>
-      <div class="velocities"><p>KBVel</p></div><div class="velocities"><p>X: <span id="kvelocityX0">0</span></p></div><div class="velocities"><p>Y: <span id="kvelocityY0">0</span></p></div>
-      <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX0">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY0">0</span></p></div>
-    </div>
-    <div class="playerDetails">
-      <iframe id="gamepadSVG1" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5" style="display:none;"></iframe>
-      <script> includeGamepadSVG("gamepadSVG1", 150, 150, false); </script>
-      <div class="playerTitle"><p>Player 2</p></div>
-      <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX1">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY1">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX1">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY1">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog1">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog1">0</span></p></div>
-      <div class="actionstatetext"><p><span id="actState1">??</span> <span id="stateNum1">?</span> <span id="face1">1</span></p></div>
-      <div class="velocities"><p>CharVel</p></div><div class="velocities"><p>X: <span id="velocityX1">0</span></p></div><div class="velocities"><p>Y: <span id="velocityY1">0</span></p></div>
-      <div class="velocities"><p>KBVel</p></div><div class="velocities"><p>X: <span id="kvelocityX1">0</span></p></div><div class="velocities"><p>Y: <span id="kvelocityY1">0</span></p></div>
-      <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX1">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY1">0</span></p></div>
-    </div>
-    <div class="playerDetails">
-      <iframe id="gamepadSVG2" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5" style="display:none;"></iframe>
-      <script> includeGamepadSVG("gamepadSVG2", 150, 150, false); </script>
-      <div class="playerTitle"><p>Player 3</p></div>
-      <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX2">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY2">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX2">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY2">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog2">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog2">0</span></p></div>
-      <div class="actionstatetext"><p><span id="actState2">??</span> <span id="stateNum2">?</span> <span id="face2">1</span></p></div>
-      <div class="velocities"><p>CharVel</p></div><div class="velocities"><p>X: <span id="velocityX2">0</span></p></div><div class="velocities"><p>Y: <span id="velocityY2">0</span></p></div>
-      <div class="velocities"><p>KBVel</p></div><div class="velocities"><p>X: <span id="kvelocityX2">0</span></p></div><div class="velocities"><p>Y: <span id="kvelocityY2">0</span></p></div>
-      <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX2">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY2">0</span></p></div>
-    </div>
-    <div class="playerDetails">
-      <iframe id="gamepadSVG3" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5" style="display:none;"></iframe>
-      <script> includeGamepadSVG("gamepadSVG3", 150, 150, false); </script>
-      <div class="playerTitle"><p>Player 4</p></div>
-      <div class="inputs"><p>Lstick</p></div><div class="inputs"><p>X: <span id="lsAxisX3">0</span></p></div><div class="inputs"><p>Y: <span id="lsAxisY3">0</span></p></div><div class="inputs"><p>Cstick</p></div><div class="inputs"><p>X: <span id="csAxisX3">0</span></p></div><div class="inputs"><p>Y: <span id="csAxisY3">0</span></p></div><div class="inputs"><p>Shoulders</p></div><div class="inputs"><p>L: <span id="lAnalog3">0</span></p></div><div class="inputs"><p>R: <span id="rAnalog3">0</span></p></div>
-      <div class="actionstatetext"><p><span id="actState3">??</span> <span id="stateNum3">?</span> <span id="face3">1</span></p></div>
-      <div class="velocities"><p>CharVel</p></div><div class="velocities"><p>X: <span id="velocityX3">0</span></p></div><div class="velocities"><p>Y: <span id="velocityY3">0</span></p></div>
-      <div class="velocities"><p>KBVel</p></div><div class="velocities"><p>X: <span id="kvelocityX3">0</span></p></div><div class="velocities"><p>Y: <span id="kvelocityY3">0</span></p></div>
-      <div class="velocities"><p>Position</p></div><div class="velocities"><p>X: <span id="pvelocityX3">0</span></p></div><div class="velocities"><p>Y: <span id="pvelocityY3">0</span></p></div>
-    </div>
-  </div>
-  <script>
-    window.offlineMode = true;
-    (function() {
-      if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('js/service-worker.js');
-      }
-    })();
-    var scripts = [
-      "./js/main.js",
-      "./js/animations.js",
-    ];
-    var loadCount = 0;
 
-    function handleScriptLoad() {
-      loadCount++;
-      if (loadCount >= scripts.length) {
-        document.getElementById("loadScreen").remove();
-        start();
-      }
+    <div id="buttons">
+        <div id="effectsButton" class="gameButton"><p>VFX <span id="effectsButtonEdit">ON</span></p></div>
+        <div id="debugButton" class="gameButton"><p>DEBUG <span id="debugButtonEdit">OFF</span></p></div>
+        <div id="fpsButton" class="gameButton"><p><span id="fpsButtonEdit">60</span>fps</p></div>
+        <div id="alphaButton" class="gameButton"><p>ALPHA <span id="alphaButtonEdit">ON</span></p></div>
+        <div id="layerButton" class="gameButton"><p>LAYERS<span id="layerButtonEdit"></span></p>
+            <div id="layerDropdown">
+                <div id="layer1" class="layer layerOn"><p>BG1</p></div>
+                <div id="layer2" class="layer layerOn"><p>BG2</p></div>
+                <div id="layer3" class="layer layerOn"><p>FG1</p></div>
+                <div id="layer4" class="layer layerOn"><p>FG2</p></div>
+                <div id="layer5" class="layer layerOn"><p>UI</p></div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- time to add the controls -->
+        <input id="start" name="controls" type="radio" />
+        <input id="stop" name="controls" type="radio" />
+        <input id="reset" name="controls" type="radio" />
+        <div class="timer">
+            <div class="cell">
+                <div class="numbers tenhour moveten" hidden>0 1 2 3 4 5 6 7 8 9</div>
+            </div>
+            <div class="cell">
+                <div class="numbers hour moveten" hidden>0 1 2 3 4 5 6 7 8 9</div>
+            </div>
+
+            <div class="cell">
+                <div class="numbers tenminute movesix">6 5 4 3 2 1 0</div>
+            </div>
+            <div class="cell">
+                <div class="numbers minute moveten">9 8 7 6 5 4 3 2 1 0</div>
+            </div>
+            <div class="cell divider"><div class="numbers">:</div></div>
+            <div class="cell">
+                <div class="numbers tensecond movesix">6 5 4 3 2 1 0</div>
+            </div>
+            <div class="cell">
+                <div class="numbers second moveten">9 8 7 6 5 4 3 2 1 0</div>
+            </div>
+
+            <div class="cell smallerTime">
+                <div class="numbers milisecond moveten">9 8 7 6 5 4 3 2 1 0</div>
+            </div>
+            <div class="cell smallerTime">
+                <div class="numbers tenmilisecond moveten">9 8 7 6 5 4 3 2 1 0</div>
+            </div>
+            <div class="cell smallerTime">
+                <div class="numbers hundredmilisecond moveten">9 8 7 6 5 4 3 2 1 0</div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="stockWrapper">
+        <div id="p1Percent" class="gameButton">99%</div>
+        <div id="p2Percent" class="gameButton">99%</div>
+        <div id="p3Percent" class="gameButton">99%</div>
+        <div id="p4Percent" class="gameButton">99%</div>
+    </div>
+</div>
+
+<div id="players">
+    <div class="playerDetails">
+        <iframe id="gamepadSVG0" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"
+                style="display:none;"></iframe>
+        <script> includeGamepadSVG("gamepadSVG0", 150, 150, false); </script>
+        <div class="playerTitle"><p>Player 1</p></div>
+        <div class="inputs"><p>Lstick</p></div>
+        <div class="inputs"><p>X: <span id="lsAxisX0">0</span></p></div>
+        <div class="inputs"><p>Y: <span id="lsAxisY0">0</span></p></div>
+        <div class="inputs"><p>Cstick</p></div>
+        <div class="inputs"><p>X: <span id="csAxisX0">0</span></p></div>
+        <div class="inputs"><p>Y: <span id="csAxisY0">0</span></p></div>
+        <div class="inputs"><p>Shoulders</p></div>
+        <div class="inputs"><p>L: <span id="lAnalog0">0</span></p></div>
+        <div class="inputs"><p>R: <span id="rAnalog0">0</span></p></div>
+        <div class="actionstatetext"><p><span id="actState0">??</span> <span id="stateNum0">?</span> <span
+                id="face0">1</span></p></div>
+        <div class="velocities"><p>CharVel</p></div>
+        <div class="velocities"><p>X: <span id="velocityX0">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="velocityY0">0</span></p></div>
+        <div class="velocities"><p>KBVel</p></div>
+        <div class="velocities"><p>X: <span id="kvelocityX0">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="kvelocityY0">0</span></p></div>
+        <div class="velocities"><p>Position</p></div>
+        <div class="velocities"><p>X: <span id="pvelocityX0">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="pvelocityY0">0</span></p></div>
+    </div>
+    <div class="playerDetails">
+        <iframe id="gamepadSVG1" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"
+                style="display:none;"></iframe>
+        <script> includeGamepadSVG("gamepadSVG1", 150, 150, false); </script>
+        <div class="playerTitle"><p>Player 2</p></div>
+        <div class="inputs"><p>Lstick</p></div>
+        <div class="inputs"><p>X: <span id="lsAxisX1">0</span></p></div>
+        <div class="inputs"><p>Y: <span id="lsAxisY1">0</span></p></div>
+        <div class="inputs"><p>Cstick</p></div>
+        <div class="inputs"><p>X: <span id="csAxisX1">0</span></p></div>
+        <div class="inputs"><p>Y: <span id="csAxisY1">0</span></p></div>
+        <div class="inputs"><p>Shoulders</p></div>
+        <div class="inputs"><p>L: <span id="lAnalog1">0</span></p></div>
+        <div class="inputs"><p>R: <span id="rAnalog1">0</span></p></div>
+        <div class="actionstatetext"><p><span id="actState1">??</span> <span id="stateNum1">?</span> <span
+                id="face1">1</span></p></div>
+        <div class="velocities"><p>CharVel</p></div>
+        <div class="velocities"><p>X: <span id="velocityX1">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="velocityY1">0</span></p></div>
+        <div class="velocities"><p>KBVel</p></div>
+        <div class="velocities"><p>X: <span id="kvelocityX1">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="kvelocityY1">0</span></p></div>
+        <div class="velocities"><p>Position</p></div>
+        <div class="velocities"><p>X: <span id="pvelocityX1">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="pvelocityY1">0</span></p></div>
+    </div>
+    <div class="playerDetails">
+        <iframe id="gamepadSVG2" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"
+                style="display:none;"></iframe>
+        <script> includeGamepadSVG("gamepadSVG2", 150, 150, false); </script>
+        <div class="playerTitle"><p>Player 3</p></div>
+        <div class="inputs"><p>Lstick</p></div>
+        <div class="inputs"><p>X: <span id="lsAxisX2">0</span></p></div>
+        <div class="inputs"><p>Y: <span id="lsAxisY2">0</span></p></div>
+        <div class="inputs"><p>Cstick</p></div>
+        <div class="inputs"><p>X: <span id="csAxisX2">0</span></p></div>
+        <div class="inputs"><p>Y: <span id="csAxisY2">0</span></p></div>
+        <div class="inputs"><p>Shoulders</p></div>
+        <div class="inputs"><p>L: <span id="lAnalog2">0</span></p></div>
+        <div class="inputs"><p>R: <span id="rAnalog2">0</span></p></div>
+        <div class="actionstatetext"><p><span id="actState2">??</span> <span id="stateNum2">?</span> <span
+                id="face2">1</span></p></div>
+        <div class="velocities"><p>CharVel</p></div>
+        <div class="velocities"><p>X: <span id="velocityX2">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="velocityY2">0</span></p></div>
+        <div class="velocities"><p>KBVel</p></div>
+        <div class="velocities"><p>X: <span id="kvelocityX2">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="kvelocityY2">0</span></p></div>
+        <div class="velocities"><p>Position</p></div>
+        <div class="velocities"><p>X: <span id="pvelocityX2">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="pvelocityY2">0</span></p></div>
+    </div>
+    <div class="playerDetails">
+        <iframe id="gamepadSVG3" class="gamepadSVG" scrolling="no" height="150" frameborder="0" width="232.5"
+                style="display:none;"></iframe>
+        <script> includeGamepadSVG("gamepadSVG3", 150, 150, false); </script>
+        <div class="playerTitle"><p>Player 4</p></div>
+        <div class="inputs"><p>Lstick</p></div>
+        <div class="inputs"><p>X: <span id="lsAxisX3">0</span></p></div>
+        <div class="inputs"><p>Y: <span id="lsAxisY3">0</span></p></div>
+        <div class="inputs"><p>Cstick</p></div>
+        <div class="inputs"><p>X: <span id="csAxisX3">0</span></p></div>
+        <div class="inputs"><p>Y: <span id="csAxisY3">0</span></p></div>
+        <div class="inputs"><p>Shoulders</p></div>
+        <div class="inputs"><p>L: <span id="lAnalog3">0</span></p></div>
+        <div class="inputs"><p>R: <span id="rAnalog3">0</span></p></div>
+        <div class="actionstatetext"><p><span id="actState3">??</span> <span id="stateNum3">?</span> <span
+                id="face3">1</span></p></div>
+        <div class="velocities"><p>CharVel</p></div>
+        <div class="velocities"><p>X: <span id="velocityX3">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="velocityY3">0</span></p></div>
+        <div class="velocities"><p>KBVel</p></div>
+        <div class="velocities"><p>X: <span id="kvelocityX3">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="kvelocityY3">0</span></p></div>
+        <div class="velocities"><p>Position</p></div>
+        <div class="velocities"><p>X: <span id="pvelocityX3">0</span></p></div>
+        <div class="velocities"><p>Y: <span id="pvelocityY3">0</span></p></div>
+    </div>
+</div>
+<script>
+  window.offlineMode = true;
+  (function () {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('js/service-worker.js');
     }
+  })();
+  var scripts = [
+    "./js/main.js",
+    "./js/animations.js",
+  ];
+  var loadCount = 0;
 
-    scripts.forEach(function(src) {
-      var script = document.createElement("script");
-      script.type = "text/javascript";
-      script.onload = handleScriptLoad;
-      document.body.appendChild(script);
-      script.src = src;
-    });
-  </script>
-  </body>
+  function handleScriptLoad() {
+    loadCount++;
+    if (loadCount >= scripts.length) {
+      document.getElementById("loadScreen").remove();
+      start();
+    }
+  }
+
+  scripts.forEach(function (src) {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.onload = handleScriptLoad;
+    document.body.appendChild(script);
+    script.src = src;
+  });
+
+</script>
+</body>
 </html>
