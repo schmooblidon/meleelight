@@ -10,7 +10,8 @@ import {extremePoint} from "../stages/util/extremePoint";
 import {moveECB, squashECBAt, ecbFocusFromAngularParameter, interpolateECB, makeECB} from "../main/util/ecbTransform";
 import {zipLabels} from "../main/util/zipLabels";
 import {drawECB} from "../render/drawECB";
-import {mainScene} from "../main/main";
+import {generalDynamic} from "../main/main";
+import {getObjectByNameNonRecursive} from "../main/util/renderUtils";
 
 // eslint-disable-next-line no-duplicate-imports
 import type {ECB, SquashDatum} from "../main/util/ecbTransform";
@@ -24,6 +25,7 @@ export const additionalOffset : number = 0.00001;
 export const smallestECBWidth  = 1.95;
 export const smallestECBHeight = 1.95;
 const maxRecursion = 6;
+
 
 // -----------------------------------------------------
 // various utility functions
@@ -539,9 +541,9 @@ function runSlideRoutine( srcECB : ECB, tgtECB : ECB, ecbp : ECB
   let output; 
   if (recursionCounter > maxRecursion) {
     console.log("'runSlideRoutine': excessive recursion, aborting.");
-    drawECB(mainScene, srcECB, "#286ee0");
-    drawECB(mainScene, tgtECB, "#f49930");
-    drawECB(mainScene, ecbp, "#fff9ad");
+    drawECB(generalDynamic, srcECB, { stroke : "#286ee0" }, "maxRecursionSrc");
+    drawECB(generalDynamic, tgtECB, { stroke : "#f49930" }, "maxRecursionTgt");
+    drawECB(generalDynamic, ecbp, { stroke : "#fff9ad" }  , "maxRecursionECBp");
     output = { ecb : srcECB, touching : null, squashed : squashed };
   }
   else {
@@ -861,8 +863,8 @@ function findNextTargetFromSurface ( srcECB : ECB, ecbp : ECB, wall : [Vec2D, Ve
 
   tgtECB = moveECB(tgtECB, putXOrYCoord(pushout + additionalPushout, xOrY));
 
-  drawECB(mainScene, ecbp  , "#8f54ff");
-  drawECB(mainScene, tgtECB, "#35f4ab");
+  drawECB(generalDynamic, ecbp  , { stroke : "#8f54ff"}, "surfTgtecbp");
+  drawECB(generalDynamic, tgtECB, { stroke : "#35f4ab"}, "surfTgtecb");
 
   return [tgtECB, final];
 };
@@ -901,8 +903,8 @@ function findNextTargetFromCorner ( srcECB : ECB, ecbp : ECB, corner : Vec2D, an
 
   tgtECB = moveECB(tgtECB, putXOrYCoord(pushout + additionalPushout, "x"));
 
-  drawECB(mainScene, ecbp  , "#1098c9");
-  drawECB(mainScene, tgtECB, "#5cbc12");
+  drawECB(generalDynamic, ecbp  , { stroke : "#1098c9"}, "cornerTgtecbp");
+  drawECB(generalDynamic, tgtECB, { stroke : "#5cbc12"}, "cornerTgtecb");
 
   return [tgtECB, final];
 
@@ -1038,7 +1040,7 @@ function agreeOnTargetECB( srcECB : ECB, fstTgtECB : ECB, sndTgtECB : ECB, ecbp 
       }
     }
   }
-  drawECB(mainScene, tgtECB, "#f9482c");
+  drawECB(generalDynamic, tgtECB, { stroke : "#f9482c"}, "agreedTgt");
   return output;
 }
 
@@ -1207,7 +1209,7 @@ function reinflateECB ( ecb : ECB, position : Vec2D
     const newPosition = new Vec2D( position.x + squashedecb[0].x - ecb[0].x
                                  , grounded ? position.y : position.y + squashedecb[0].y - ecb[0].y);
     const newAngular = ecbSquashDatum.location;
-    drawECB(mainScene, squashedecb, "#ffff00");
+    drawECB(generalDynamic, squashedecb, { stroke : "#ffff00"}, "reinflatedECB");
     return [newPosition, ecbSquashDatum, squashedecb];
   }
   else {

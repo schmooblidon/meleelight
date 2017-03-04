@@ -29,10 +29,12 @@ export function clearAllChildren(scene, node) {
 }
 
 export function getObjectByNameNonRecursive(scene, name) {
-  for (let i=0; i < scene.children.length; i++) {
-    const child = scene.children[i];
-    if (child.name === name) {
-      return child;
+  if (scene && scene.children) {
+    for (let i=0; i < scene.children.length; i++) {
+      const child = scene.children[i];
+      if (child.name === name) {
+        return child;
+      }
     }
   }
 }

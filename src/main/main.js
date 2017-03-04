@@ -1071,7 +1071,7 @@ export function clearScreen (){
 let otherFrame = true;
 let fps30 = false;
 export function renderTick (){
-  const dynamicGroup = getObjectByNameNonRecursive(mainScene, "generalDynamic");
+  const dynamicGroup = generalDynamic;
   window.requestAnimationFrame(renderTick);
   otherFrame ^= true
   if ((fps30 && otherFrame) || !fps30) {
@@ -1232,7 +1232,7 @@ export function initializePlayers (i,target){
 }
 
 export function startGame (){
-  const dynamicGroup = getObjectByNameNonRecursive(mainScene, "generalDynamic");
+  const dynamicGroup = generalDynamic;
   setVsStage(stageSelect);
   setBackgroundType(Math.round(Math.random()));
   if (holiday == 1){
@@ -1475,12 +1475,13 @@ renderer.setClearColor(0x000000);
 // renderer.setPixelRatio(window.devicePixelRatio);
 renderer.autoClear = false;
 let animationsNotCleared = true;
+export const generalDynamic = new THREE.Group();
+generalDynamic.name = "generalDynamic";
+
 
 function initScenes() {
   mainScene = new THREE.Scene();
-  const dynamicGroup = new THREE.Group();
-  dynamicGroup.name = "generalDynamic";
-  mainScene.add(dynamicGroup);
+  mainScene.add(generalDynamic);
 
   displayPort.append(renderer.domElement);
 }
