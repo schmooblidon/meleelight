@@ -9,6 +9,10 @@ export function clearScene(scene){
     clearAllChildren(generalDynamic, animFrame);
     generalDynamic.remove(animFrame);
   }
+  for (let i = 0; i < generalDynamic.children.length; i++) {
+    const child = generalDynamic.children[i];
+    child.visible = false;
+  }
   for (let stageDynamic = getObjectByNameNonRecursive(scene, "stageDynamic"); 
        stageDynamic !== undefined;
        stageDynamic = getObjectByNameNonRecursive(scene, "stageDynamic")) {
