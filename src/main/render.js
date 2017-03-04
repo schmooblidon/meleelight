@@ -27,6 +27,7 @@ import {createOrUpdateBufferGeometry} from "../render/createOrUpdateBufferGeomet
 import {drawECB} from "../render/drawECB";
 import {stageTransform} from "../render/stageTransform";
 import {getObjectByNameNonRecursive} from "./util/renderUtils";
+import {polygonGeometry, lineMaterial} from "../render/lineGeometry";
 
 export const hurtboxColours = ["#ffed46", "#2a39ff", "#36ff25"];
 export const twoPi = Math.PI * 2;
@@ -274,7 +275,8 @@ export function renderPlayer(scene, i) {
         sCol = "rgb" + sCol.slice(4, -2) + ")";
         const shieldBubble = makeDiskShape(0, 0, activeStage.scale);
         const shieldPos = new THREE.Vector3(player[i].phys.shieldPositionReal.x * activeStage.scale + activeStage.offset[0], - player[i].phys.shieldPositionReal.y * activeStage.scale + activeStage.offset[1], 0.05);
-        createOrUpdateBufferGeometry(scene, "shieldBubble"+i, { scale : player[i].phys.shieldSize, position: shieldPos, shape : shieldBubble, fill : sCol, opacity : 0.6 * player[i].phys.shieldAnalog});
+        createOrUpdateBufferGeometry(scene, "shieldBubble"+i, { scale : new THREE.Vector3(player[i].phys.shieldSize,player[i].phys.shieldSize,1)
+                                                              , position: shieldPos, shape : shieldBubble, fill : sCol, opacity : 0.6 * player[i].phys.shieldAnalog});
       }
     }
     if (hasTag[i]) {
