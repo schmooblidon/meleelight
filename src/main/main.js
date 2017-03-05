@@ -1471,10 +1471,10 @@ export const renderer = new THREE.WebGLRenderer( { antialias : true });
 const displayPort = document.getElementById("render");
 renderer.setSize(1200, 750);
 renderer.autoClear = false;
+//renderer.sortObjects = false;
 let animationsNotCleared = true;
 export const generalDynamic = new THREE.Group();
 generalDynamic.name = "generalDynamic";
-
 
 function initScenes() {
   mainScene = new THREE.Scene();

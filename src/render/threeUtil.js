@@ -113,8 +113,8 @@ export function drawShape (scene, shape, meshMat, lineMat, transform = null, pts
   scene.add(group);
 }
 
-export function drawLine(scene, style, x1, y1, x2, y2) {
-  const pts = [{ x : x1, y: y1, z: 0}, { x:x2, y:y2, z:0}];
+export function drawLine(scene, style, x1, y1, x2, y2, z = 0.1, order = 1) {
+  const pts = [{ x : x1, y: y1, z: z}, { x:x2, y:y2, z:z }];
   const v = new Vec2D (y1-y2,x2-x1);
   const nv = normalise(v);
   const offsets = [nv,nv];
@@ -125,5 +125,6 @@ export function drawLine(scene, style, x1, y1, x2, y2) {
   const mat = lineMaterial(new THREE.Color(col), opacity, linewidth);
   const object = new THREE.Mesh(line, mat);
   scene.add(object);
+  object.renderOrder = order;
 }
 
