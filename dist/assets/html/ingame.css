@@ -1,6 +1,5 @@
 #stockWrapper {
   position: fixed;
-  padding: 2em;
   left: 50%;
   top: 85%;
   transform: translate(-50%, -50%);
@@ -22,13 +21,19 @@
   color : white;
 }
 
-.percent {
+.stockContainer {
+  width: 100px;
+  height: 80px;
+  padding: 20px;
   float: left;
-  padding: 30px;
+}
+
+.percent {
   font-family: "Arial Black";
   font-size: 28px;
-  color : white;
   -webkit-text-stroke : 1px #000000;
+  color : white;
+  position : relative;
 }
 
 .bigTime {

@@ -430,14 +430,12 @@ export function renderOverlay(showStock) {
     const stockContainer = document.getElementById("stockWrapper");
     for (let i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        stockContainer.children["p"+(i+1)+"Percent"].style.color = "rgb(255," + Math.max(255 - player[i].percent, 0) + ", " + Math.max(255 - player[i].percent, 0) +")";
-        stockContainer.children["p"+(i+1)+"Percent"].innerHTML = Math.floor(player[i].percent) + "%";
-        /*
-        ui.fillText(Math.floor(player[i].percent) + "%", (450 + i * 145 + player[i].percentShake.x) * 1.25, 670 +
-              player[i].percentShake.y);
-        ui.strokeText(Math.floor(player[i].percent) + "%", (450 + i * 145 + player[i].percentShake.x) * 1.25, 670 +
-              player[i].percentShake.y);
-        */
+        const playerContainer = stockContainer.children["p"+(i+1)];
+        const playerPercentContainer = playerContainer.children["p"+(i+1)+"Percent"];
+        playerPercentContainer.style.color = "rgb(255," + Math.max(255 - player[i].percent, 0) + ", " + Math.max(255 - player[i].percent, 0) +")";
+        playerPercentContainer.innerHTML = Math.floor(player[i].percent) + "%";
+        playerPercentContainer.style.left = (50+player[i].percentShake.x)+"px";
+        playerPercentContainer.style.top = (30+player[i].percentShake.y)+"px";
       }
     }
     /*
