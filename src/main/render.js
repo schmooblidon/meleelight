@@ -442,8 +442,8 @@ export function renderOverlay(showStock) {
         const playerPercentContainer = playerContainer.children["p"+(i+1)+"Percent"];
         playerPercentContainer.style.color = "rgb(255," + Math.max(255 - player[i].percent, 0) + ", " + Math.max(255 - player[i].percent, 0) +")";
         playerPercentContainer.innerHTML = Math.floor(player[i].percent) + `<font size="4"> %</font>`;
-        playerPercentContainer.style.left = (50+player[i].percentShake.x)+"px";
-        playerPercentContainer.style.top = (30+player[i].percentShake.y)+"px";
+        playerPercentContainer.style.right = (22+player[i].percentShake.x)+"px";
+        playerPercentContainer.style.top = (18+player[i].percentShake.y)+"px";
       }
     }
     /*

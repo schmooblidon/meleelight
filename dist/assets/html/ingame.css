@@ -33,7 +33,8 @@
   font-size: 28px;
   -webkit-text-stroke : 1px #000000;
   color : white;
-  position : relative;
+  position: relative;
+  float: right;
 }
 
 .bigTime {
