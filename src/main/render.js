@@ -12,7 +12,8 @@ import {
   tagText, 
 	gameMode,
   startTimer,
-  holiday
+  holiday,
+  dom
 } from "main/main";
 import {gameSettings} from "settings";
 import {makeColour} from "main/vfx/makeColour";
@@ -418,11 +419,11 @@ export function renderPlayer(scene, i) {
 } 
 
 
-export function renderOverlay(showStock) {
+export function renderOverlay(scene,showStock) {
   // stocks, percent, timer
 
   if (!versusMode || gameMode === 5) {    
-    const timerContainer = document.getElementById("matchTimer");
+    const timerContainer = dom.matchTimer;
     const mins = (Math.floor(matchTimer / 60)).toString();
     const minutes = (mins.length < 2) ? "0" + mins : mins;
     const rest = (matchTimer % 60).toFixed(2);
@@ -433,7 +434,7 @@ export function renderOverlay(showStock) {
     timerContainer.children.hundreths.innerHTML = hundreths;
   }
   if (showStock) {
-    const stockContainer = document.getElementById("stockWrapper");
+    const stockContainer = dom.stockWrapper;
     for (let i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
         const playerContainer = stockContainer.children["p"+(i+1)];

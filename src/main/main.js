@@ -1701,7 +1701,7 @@ export function setCalibrationPlayer(val){
   calibrationPlayer =val;
 }
 
-const dom = {};
+export const dom = {};
 
 export function cacheDom() {
   const elementIds = [
@@ -1715,6 +1715,8 @@ export function cacheDom() {
     "renderHigh",
     "renderLow",
     "renderPeak",
+    "matchTimer",
+    "stockWrapper"
   ];
 
   elementIds.forEach((id) => {
