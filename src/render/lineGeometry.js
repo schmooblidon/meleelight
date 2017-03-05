@@ -20,7 +20,7 @@ export function lineMaterial(col, opacity, linewidth) {
       "void main(){",
         "vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);",
         "vOffset = normalize(offset);",
-        "gl_Position = projectionMatrix * vec4(mvPosition.xy + 0.5*(uWidth+2.0)*offset, mvPosition.zw);",
+        "gl_Position = projectionMatrix * vec4(mvPosition.xy + 0.5*(uWidth+8.0)*offset, mvPosition.zw);",
       "}"
     ].join("\n"),
   
@@ -30,8 +30,8 @@ export function lineMaterial(col, opacity, linewidth) {
       "uniform float uAlpha;",
       "varying vec2 vOffset;",
       "void main() {",
-        "float mag = dot(vOffset, vOffset);",
-        "gl_FragColor = vec4(uCol, uAlpha*(1.0-smoothstep(uWidth/(uWidth+1.0),1.0,mag)));",
+        "float mag = length(vOffset);",
+        "gl_FragColor = vec4(uCol, uAlpha*(1.0-smoothstep((uWidth-1.0)/(uWidth+4.0),(uWidth+1.0)/(uWidth+4.0),mag)));",
       "}"
     ].join("\n")
 
