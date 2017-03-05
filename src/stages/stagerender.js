@@ -69,7 +69,7 @@ export function drawStageInit() {
   for (let j = 0; j < activeStage.platform.length; j++) {
     if (activeStage.movingPlats === null || activeStage.movingPlats === undefined || activeStage.movingPlats.indexOf(j) === -1){ // not a moving platform
       const surf = activeStage.platform[j];
-      drawLine(group, { linewidth : 1.5, color : "#4794c6" }, surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+      drawLine(group, { linewidth : 1.5, color : "#4794c6" }, surf[0].x, surf[0].y, surf[1].x, surf[1].y, -0.2);
     }
   }  
 
@@ -217,7 +217,7 @@ export function drawStage() {
     for (let i = 0; i < activeStage.movingPlats.length; i++) {
       if (activeStage.name !== "fountain" || activeStage.platform[activeStage.movingPlats[i]][0].y > 0) {
         const surf = activeStage.platform[activeStage.movingPlats[i]];
-        drawLine(group, { linewidth : 1.5, color : "#4794c6" }, surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+        drawLine(group, { linewidth : 1.5, color : "#4794c6" }, surf[0].x, surf[0].y, surf[1].x, surf[1].y, -0.2);
       }
     }
   }

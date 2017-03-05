@@ -189,7 +189,9 @@ function createBufferGeometry(scene, name, instructions) {
       }
   
       // mesh material
+
       if (instructions.fill !== undefined) {
+        let meshMat;
         if (instructions.opacity !== undefined) {
           meshMat = meshBasicMaterialT.clone();
           meshMat.opacity = instructions.opacity;
