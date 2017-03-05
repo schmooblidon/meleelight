@@ -2,13 +2,12 @@
 
 import * as THREE from "three";
 
-export function lineMaterial(col, opacity, linewidth) {
-  const material = new THREE.ShaderMaterial ({
+const lineShader = new THREE.ShaderMaterial ({
 
     uniforms: {
-      "uCol" : { type: "c", value: col },
-      "uAlpha" : { type : "f", value : opacity },
-      "uWidth" : { type : "f", value : linewidth }
+      "uCol" : { type: "c", value: 0xff00ff },
+      "uAlpha" : { type : "f", value : 1 },
+      "uWidth" : { type : "f", value : 1 }
     },
 
     blending: THREE.NormalBlending,
@@ -33,14 +32,20 @@ export function lineMaterial(col, opacity, linewidth) {
         "float mag = length(vOffset);",
         "gl_FragColor = vec4(uCol, uAlpha*(1.0-smoothstep((uWidth-1.0)/(uWidth+4.0),(uWidth+1.0)/(uWidth+4.0),mag)));",
       "}"
-    ].join("\n")
+    ].join("\n"),
+
+    side : THREE.DoubleSide,
+
+    transparent : true,
 
   });
 
-  material.side = THREE.DoubleSide;
-  material.transparent = true;
+export function lineMaterial(col, opacity, linewidth) {
+  const material = lineShader.clone(); // cloning avoids multiple shaders being stored on the GPU
+  material.uniforms["uCol"].value = col;
+  material.uniforms["uAlpha"].uAlpha = opacity || 1;
+  material.uniforms["uWidth"].value = linewidth || 1;
   return material;
-
 };
 
 export function createLineGeometry ( points, offsets, closed = true ) {

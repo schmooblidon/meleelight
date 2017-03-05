@@ -22,7 +22,7 @@ import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
 import * as THREE from "three";
-import {drawBezierCurves, makeRectShape, makeDiskShape, makePolygonShape, drawShape, drawLine} from "../render/threeUtil";
+import {drawBezierCurves, makeRectShape, makeDiskShape, makePolygonShape, drawShape, drawLine, meshBasicMaterial} from "../render/threeUtil";
 import {createOrUpdateBufferGeometry} from "../render/createOrUpdateBufferGeometry";
 import {drawECB} from "../render/drawECB";
 import {stageTransform} from "../render/stageTransform";
@@ -69,10 +69,11 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
 
 export function renderFrameTransformed(scene, animFrame, col, transform ) {
   const cloned = animFrame.clone();
+  cloned.material = meshBasicMaterial.clone();
+  cloned.material.color.set(new THREE.Color(col));
+  cloned.material.transparent = false;
   const rpX = transform.rpX;
   const rpY = transform.rpY;
-  cloned.material.color.set (new THREE.Color(col));
-  cloned.material.transparent = false;
   const sX = transform.sX;
   const sY = transform.sY;
   cloned.scale.set( sX, sY , 1);

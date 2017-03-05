@@ -36,6 +36,8 @@ THREE.ShapeUtils.triangulateShape = function ( contour, holes ) {
   return grouped;
 };
 
+export const meshBasicMaterial = new THREE.MeshBasicMaterial( { color : 0xff00ff, opacity : 0, side : THREE.DoubleSide, transparent : true } );
+
 export function drawBezierCurves (scene, path) {  
   for (let j = 0; j < path.length; j++) {
     const curve = new THREE.Shape();
@@ -54,10 +56,7 @@ export function drawBezierCurves (scene, path) {
     geometry.attributes.normal.onUploadCallback = function (name) { this.array = null; } ;
     geometry.attributes.uv.onUploadCallback = function (name) { this.array = null; } ;
     geometry.parameters = null; 
-    const material = new THREE.MeshBasicMaterial( { color : new THREE.Color("rgb(255,0,255)"), opacity : 0 } );
-    material.transparent = true;
-    material.side = THREE.DoubleSide;
-    const curveObject = new THREE.Mesh( geometry, material );
+    const curveObject = new THREE.Mesh( geometry, meshBasicMaterial );
     scene.add(curveObject);
   }
 }
