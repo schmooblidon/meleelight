@@ -1,42 +1,12 @@
-import * as THREE from "three";
-import {earcut} from "./earcut";
 import {Vec2D} from "../main/util/Vec2D";
 import {normalise} from "../main/linAlg";
 import {lineMaterial, createLineGeometry} from "./lineGeometry";
+import {meshBasicMaterialT} from "./materials";
+import {triangulateShape} from "./triangulateShape";
+import * as THREE from "three";
 
-THREE.ShapeUtils.triangulateShape = function ( contour, holes ) {
-  function removeDupEndPts( points ) {
-    const l = points.length;
-    if ( l > 2 && points[ l - 1 ].equals( points[ 0 ] ) ) {
-      points.pop();
-    }
-  }
-  function addContour( vertices, contour ) {
-    for ( let i = 0; i < contour.length; i ++ ) {
-      vertices.push( contour[ i ].x );
-      vertices.push( contour[ i ].y );
-    }
-  }
-  removeDupEndPts( contour );
-  holes.forEach( removeDupEndPts );
-  const vertices = [];
-  addContour( vertices, contour );
-  const holeIndices = [];
-  let holeIndex = contour.length;
-  for ( let i = 0; i < holes.length; i ++ ) {
-    holeIndices.push( holeIndex );
-    holeIndex += holes[ i ].length;
-    addContour( vertices, holes[ i ] );
-  }
-  const result = earcut( vertices, holeIndices, 2 );
-  const grouped = [];
-  for ( let i = 0; i < result.length; i += 3 ) {
-    grouped.push( result.slice( i, i + 3 ) );
-  }
-  return grouped;
-};
-
-const meshBasicMaterial = new THREE.MeshBasicMaterial( { color : 0xff00ff, opacity : 0, side : THREE.DoubleSide, transparent : true } );
+// use earcut for triangulation
+THREE.ShapeUtils.triangulateShape = triangulateShape;
 
 export function drawBezierCurves (scene, path) {  
   for (let j = 0; j < path.length; j++) {
@@ -56,7 +26,7 @@ export function drawBezierCurves (scene, path) {
     geometry.attributes.normal.onUploadCallback = function (name) { this.array = null; } ;
     geometry.attributes.uv.onUploadCallback = function (name) { this.array = null; } ;
     geometry.parameters = null; 
-    const curveObject = new THREE.Mesh( geometry, meshBasicMaterial );
+    const curveObject = new THREE.Mesh( geometry, meshBasicMaterialT );
     scene.add(curveObject);
   }
 }

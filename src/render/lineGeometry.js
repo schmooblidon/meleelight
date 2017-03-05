@@ -1,5 +1,8 @@
 /*eslint indent:0*/
 
+import {Vec2D} from "../main/util/Vec2D";
+import {add, normalise} from "../main/linAlg";
+
 import * as THREE from "three";
 
 const lineShader = new THREE.ShaderMaterial ({
@@ -92,7 +95,7 @@ export function createLineGeometry ( points, offsets, closed = true ) {
   }
 }
 
-export function polygonGeometry (n) {
+export function regularPolygonLineGeometry (n) {
   const points = [];
   const offsets = [];
   for (let i = 0; i < n; i++) {
@@ -101,4 +104,50 @@ export function polygonGeometry (n) {
     offsets.push({ x : pt.x, y : pt.y });
   }
   return createLineGeometry (points, offsets, true);
+}
+
+// create a polygon from a polar parametrisation
+// polar takes an angle and returns a 3D point { x : x, y : y, z : z }
+export function polygonLineGeometryFromPolar (n, polar) {
+  const points = [];
+  const offsets = [];
+  for (let i = 0; i < n; i++) {
+    const theta = 2*i*Math.PI/n;
+    points.push(polar(theta));
+    offsets.push({ x : Math.cos(theta), y : Math.sin(theta) });
+  }
+  return createLineGeometry (points, offsets, true);
+}
+
+export function polygonLineGeometry(points, closed = true, z = 0.01) {
+  const lg = points.length;
+  if (lg > 2) {
+    const dirs = [];
+    const offsets = [];
+    for (let i = 0; i < lg-1; i++) {
+      const p1 = points[i];
+      const p2 = points[i+1];
+      const v = new Vec2D (p1.y-p2.y,p2.x-p1.x);
+      dirs.push(v);
+    }
+    if (closed) {
+      const p1 = points[lg-1];
+      const p2 = points[0];
+      const v = new Vec2D (p1.y-p2.y,p2.x-p1.x);
+      offsets.push(normalise(add(dirs[0],v)));
+    }
+    else {
+      offsets.push(normalise(dirs[0]));
+    }
+    for (let i = 1; i < lg-1; i++) {
+      offsets.push(normalise(add(dirs[i],dirs[i+1])));
+    }
+    
+    return createLineGeometry ( points.map( (vec) => ({ x : vec.x, y : vec.y, z : z }) )
+                              , offsets
+                              , closed );
+  }
+  else {
+    console.log("error in 'polygonLineGeometry': need at least 2 points");
+  }
 }

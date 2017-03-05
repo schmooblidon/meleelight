@@ -28,6 +28,7 @@ import {drawECB} from "../render/drawECB";
 import {stageTransform} from "../render/stageTransform";
 import {getObjectByNameNonRecursive} from "./util/renderUtils";
 import {polygonGeometry, lineMaterial} from "../render/lineGeometry";
+import {lineBasicMaterial, meshBasicMaterial} from "../render/materials";
 
 export const hurtboxColours = ["#ffed46", "#2a39ff", "#36ff25"];
 export const twoPi = Math.PI * 2;
@@ -66,8 +67,6 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
   scene.add(animationsGroup);
   animationsGroup.updateMatrixWorld = function() {};
 }
-
-const meshBasicMaterial = new THREE.MeshBasicMaterial( { color : 0xff00ff, opacity : 0, side : THREE.DoubleSide } );
 
 const playerMaterials = [ meshBasicMaterial.clone()
                         , meshBasicMaterial.clone()
