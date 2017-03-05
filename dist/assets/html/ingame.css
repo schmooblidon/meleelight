@@ -1,0 +1,55 @@
+#stockWrapper {
+  position: fixed;
+  padding: 2em;
+  left: 50%;
+  top: 85%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+#matchTimer {
+  position: fixed;
+  padding: 2em;
+  left: 50%;
+  top: 7%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  display: inline-block;
+}
+
+.timerText {
+  font-family: "Arial Black";
+  color : white;
+}
+
+.percent {
+  float: left;
+  padding: 30px;
+  font-family: "Arial Black";
+  font-size: 28px;
+  color : white;
+  -webkit-text-stroke : 1px #000000;
+}
+
+.bigTime {
+  overflow: hidden;
+  position: relative;
+  float: left;
+  font-size: 40px;
+  -webkit-text-stroke : 1.2px #000000;
+}
+
+.littleTime {
+  overflow: hidden;
+  position: relative;
+  float: left;
+  font-size: 25px;
+  margin-top: 15px;
+  padding-left: 5px;
+  -webkit-text-stroke : 1px #000000;
+}
+
+#minutesSecondsDivider {
+  width:0.45em;
+  padding-left: 5px;
+}

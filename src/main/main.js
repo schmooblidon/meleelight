@@ -505,7 +505,7 @@ export function positionPlayersInCSS (){
 // 0:Title Screen
 
 export function changeGamemode (newGamemode){
-  fillBackground(mainScene, "#000000");
+  fillBackground(mainScene, "#e7ead8");
   gameMode = newGamemode;
   switch (newGamemode) {
     // TITLESCREEN
@@ -1467,12 +1467,9 @@ camera.position.x = 600;
 camera.position.y = 375;
 camera.lookAt( new THREE.Vector3(600,375,0));
 camera.scale.set(1,-1,1);
-//camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), degInRad(180));
 export const renderer = new THREE.WebGLRenderer( { antialias : true });
-const displayPort = document.getElementById("display");
+const displayPort = document.getElementById("render");
 renderer.setSize(1200, 750);
-renderer.setClearColor(0x000000);
-// renderer.setPixelRatio(window.devicePixelRatio);
 renderer.autoClear = false;
 let animationsNotCleared = true;
 export const generalDynamic = new THREE.Group();
@@ -1514,7 +1511,6 @@ export function start (){
   gameTick(nullInputBuffers);
   renderTick();
 startGame();
-$("#start").attr("checked",true);
   $("#effectsButton").click(function() {
     if (getShowSFX()) {
       $("#effectsButtonEdit").empty().append("OFF");

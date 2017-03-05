@@ -1,7 +1,7 @@
 function includeGamepadSVG(id, x, y, isCalibration) {
   const iframe = document.getElementById(id);
   const css = isCalibration ? "interactiveGamepad.css" : "gamepad.css";
-  const style = `<link type="text/css" href="./`+css+`" rel="stylesheet"/>`;
+  const style = `<link type="text/css" href="./assets/html/`+css+`" rel="stylesheet"/>`;
   const svgData = `
 <head>`+style+`</head>
 <body>

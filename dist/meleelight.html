@@ -272,15 +272,13 @@
         <div class="buttonDetails"><p>Toggle Fullscreen</p></div>
     </div>
 </div>
-<div id="display" width="1200" height="750">
 
-    <!--<canvas id="background1Canvas" class="gameCanvas" width="1200" height="750"></canvas>-->
-    <!--<canvas id="background2Canvas" class="gameCanvas" width="1200" height="750"></canvas>-->
-    <!--<canvas id="foreground1Canvas" class="gameCanvas" width="1200" height="750"></canvas>-->
-    <!--<canvas id="foreground2Canvas" class="gameCanvas" width="1200" height="750"></canvas>-->
-    <!--<canvas id="uiCanvas" class="gameCanvas" width="1200" height="750"></canvas>-->
+
+<div id="display" width="1200" height="750">
+    <iframe id="ingame" scrolling="no" frameborder="0" src="./assets/html/ingame.html" ></iframe>
+    <div id="render" width="1200" height="750">
     <!--<iframe id="gamepadSVGCalibration" scrolling="no" width="610" height="560" frameborder="0" style="display:none;">-->
-    <!--<html> <head> <link type="text/css" href="./gamepad.css" rel="stylesheet"/> </head> <body></body></html>-->
+    <!--<html> <head> <link type="text/css" href="./assets/html/gamepad.css" rel="stylesheet"/> </head> <body></body></html>-->
     <!--</iframe>-->
     <!--<script> includeGamepadSVG("gamepadSVGCalibration", 600, 600, true); </script>-->
     <!--<div id="tagTextContainer"><textarea id="pTagEdit0" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit1" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit2" class="pTagEdit" maxlength="10"></textarea><textarea id="pTagEdit3" class="pTagEdit" maxlength="10"></textarea></div>-->
@@ -311,53 +309,6 @@
                 <div id="layer5" class="layer layerOn"><p>UI</p></div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <!-- time to add the controls -->
-        <input id="start" name="controls" type="radio" />
-        <input id="stop" name="controls" type="radio" />
-        <input id="reset" name="controls" type="radio" />
-        <div class="timer">
-            <div class="cell">
-                <div class="numbers tenhour moveten" hidden>0 1 2 3 4 5 6 7 8 9</div>
-            </div>
-            <div class="cell">
-                <div class="numbers hour moveten" hidden>0 1 2 3 4 5 6 7 8 9</div>
-            </div>
-
-            <div class="cell">
-                <div class="numbers tenminute movesix">6 5 4 3 2 1 0</div>
-            </div>
-            <div class="cell">
-                <div class="numbers minute moveten">9 8 7 6 5 4 3 2 1 0</div>
-            </div>
-            <div class="cell divider"><div class="numbers">:</div></div>
-            <div class="cell">
-                <div class="numbers tensecond movesix">6 5 4 3 2 1 0</div>
-            </div>
-            <div class="cell">
-                <div class="numbers second moveten">9 8 7 6 5 4 3 2 1 0</div>
-            </div>
-
-            <div class="cell smallerTime">
-                <div class="numbers milisecond moveten">9 8 7 6 5 4 3 2 1 0</div>
-            </div>
-            <div class="cell smallerTime">
-                <div class="numbers tenmilisecond moveten">9 8 7 6 5 4 3 2 1 0</div>
-            </div>
-            <div class="cell smallerTime">
-                <div class="numbers hundredmilisecond moveten">9 8 7 6 5 4 3 2 1 0</div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <div id="stockWrapper">
-        <div id="p1Percent" class="gameButton">99%</div>
-        <div id="p2Percent" class="gameButton">99%</div>
-        <div id="p3Percent" class="gameButton">99%</div>
-        <div id="p4Percent" class="gameButton">99%</div>
     </div>
 </div>
 
