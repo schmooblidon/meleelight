@@ -1168,7 +1168,7 @@ export function renderTick (){
       }
     //  renderArticles();
      // renderVfx();
-     // renderOverlay(true);
+     renderOverlay(true);
 
       if (showDebug) {
         var diff = performance.now() - rStart;

@@ -416,6 +416,19 @@ export function renderOverlay(showStock) {
   // stocks, percent, timer
 
   if (!versusMode || gameMode === 5) {
+    
+    const timerContainer = document.getElementById("matchTimer");
+    const mins = (Math.floor(matchTimer / 60)).toString();
+    const minutes = (mins.length < 2) ? "0" + mins : mins;
+    const rest = (matchTimer % 60).toFixed(2);
+    const seconds = (rest.length < 5) ? "0" + rest[0] : rest[0] + rest[1];
+    const hundreths = (rest.length < 5) ? rest[2] + rest[3] : rest[3] + rest[4];
+    timerContainer.children.minutes.innerHTML = minutes;
+    timerContainer.children.seconds.innerHTML = seconds;
+    timerContainer.children.hundreths.innerHTML = hundreths;
+
+    /*
+
     ui.fillStyle = "white";
     ui.lineWidth = 2;
     ui.font = "900 40px Arial";
@@ -429,7 +442,9 @@ export function renderOverlay(showStock) {
     ui.font = "900 25px Arial";
     ui.fillText(((sec.length < 5) ? sec[2] + sec[3] : sec[3] + sec[4]), 670, 70);
     ui.strokeText(((sec.length < 5) ? sec[2] + sec[3] : sec[3] + sec[4]), 670, 70);
+    */
   }
+  /*
   if (showStock) {
     ui.font = "900 53px Arial";
     ui.lineWidth = (holiday === 1) ? 3 : 2;
@@ -490,6 +505,7 @@ export function renderOverlay(showStock) {
     }
     ui.textAlign = "start";
   }
+  */
 }
 
 /*export function setLostStockQueue(index,val){
