@@ -84,7 +84,7 @@ export function drawShape (scene, shape, meshMat, lineMat, transform = null, pts
 
 export function drawLine(scene, style, x1, y1, x2, y2, z = 0.1, order = 1) {
   const pts = [{ x : x1, y: y1, z: z}, { x:x2, y:y2, z:z }];
-  const v = new Vec2D (y1-y2,x2-x1);
+  const v = new Vec2D (y2-y1,x2-x1);
   const nv = normalise(v);
   const offsets = [nv,nv];
   const line = createLineGeometry ( pts, offsets, false );

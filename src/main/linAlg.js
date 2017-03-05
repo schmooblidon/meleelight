@@ -6,6 +6,10 @@ export function dotProd(vec1 : Vec2D, vec2 : Vec2D) : number {
   return (vec1.x * vec2.x + vec1.y * vec2.y);
 };
 
+export function crossProd(v1 : Vec2D, v2 : Vec2D) : number {
+  return (v1.x*v2.y-v1.y*v2.x);
+}
+
 export function scalarProd( lambda : number, vec : Vec2D) : Vec2D {
   return ( new Vec2D ( lambda * vec.x, lambda * vec.y ));
 };

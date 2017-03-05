@@ -1,7 +1,7 @@
 /*eslint indent:0*/
 
 import {Vec2D} from "../main/util/Vec2D";
-import {add, normalise} from "../main/linAlg";
+import {add, normalise, scalarProd, crossProd} from "../main/linAlg";
 import {unmakeColour} from "../main/vfx/makeColour";
 
 import * as THREE from "three";
@@ -18,23 +18,24 @@ const lineShader = new THREE.ShaderMaterial ({
   
     vertexShader : [
       "attribute vec2 offset;",
-      "varying vec2 vOffset;",
+      "attribute float side;",
+      "varying float vSide;",
       "uniform float uWidth;",
       "void main(){",
+        "vSide = side;", // passed on to the fragment shader
         "vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);",
-        "vOffset = normalize(offset);",
-        "gl_Position = projectionMatrix * vec4(mvPosition.xy + 0.5*(uWidth+8.0)*offset, mvPosition.zw);",
+        "gl_Position = projectionMatrix * vec4(mvPosition.x + 0.5*(uWidth+3.0)*offset.x, mvPosition.y - 0.5*(uWidth+3.0)*offset.y, mvPosition.zw);",
       "}"
     ].join("\n"),
   
     fragmentShader : [
       "uniform vec3 uCol;",
-      "uniform float uWidth;",
       "uniform float uAlpha;",
-      "varying vec2 vOffset;",
+      "uniform float uWidth;",
+      "varying float vSide;",
       "void main() {",
-        "float mag = length(vOffset);",
-        "gl_FragColor = vec4(uCol, uAlpha*(1.0-smoothstep((uWidth-1.0)/(uWidth+4.0),(uWidth+1.0)/(uWidth+4.0),mag)));",
+        "float mag = abs(vSide);",
+        "gl_FragColor = vec4(uCol.rgb, uAlpha*(1.0-smoothstep((0.5*uWidth-1.5)/(0.5*uWidth+1.5),(0.5*uWidth+1.5)/(0.5*uWidth+1.5),mag)));",
       "}"
     ].join("\n"),
 
@@ -67,6 +68,7 @@ export function createLineGeometry ( points, offsets, closed = true ) {
     const pointArray = new Float32Array( 6 * lg );
     const indexArray = new Uint32Array( closed ? 6 * lg : 6 * (lg - 1));
     const offsetArray = new Float32Array( 4 * lg );
+    const sideArray = new Float32Array( 2 * lg );
     for (let i = 0; i < lg; i++) {
       const point = points[i];
       const offset = offsets[i];
@@ -80,38 +82,43 @@ export function createLineGeometry ( points, offsets, closed = true ) {
       offsetArray[4*i+1] =  offset.y;
       offsetArray[4*i+2] = -offset.x;
       offsetArray[4*i+3] = -offset.y;
+      sideArray[2*i  ] =  1;
+      sideArray[2*i+1] = -1;
       if (i > 0) {
         indexArray[6*i-6] = 2*i  ;
         indexArray[6*i-5] = 2*i-1;
         indexArray[6*i-4] = 2*i-2;
-        indexArray[6*i-3] = 2*i  ;
-        indexArray[6*i-2] = 2*i-1;
-        indexArray[6*i-1] = 2*i+1;
+        indexArray[6*i-3] = 2*i+1; 
+        indexArray[6*i-2] = 2*i  ;
+        indexArray[6*i-1] = 2*i-1;
       }
     }
     if (closed) {
       indexArray[6*lg-6] = 0     ;
       indexArray[6*lg-5] = 2*lg-1;
       indexArray[6*lg-4] = 2*lg-2;
-      indexArray[6*lg-3] = 0     ;
-      indexArray[6*lg-2] = 2*lg-1;
-      indexArray[6*lg-1] = 1     ;
+      indexArray[6*lg-3] = 1     ;
+      indexArray[6*lg-2] = 0     ;
+      indexArray[6*lg-1] = 2*lg-1;
     }
     const geometry = new THREE.BufferGeometry();
     geometry.addAttribute("position", new THREE.BufferAttribute(pointArray , 3));
     geometry.addAttribute("offset"  , new THREE.BufferAttribute(offsetArray, 2));
+    geometry.addAttribute("side"    , new THREE.BufferAttribute(sideArray  , 1));
     geometry.setIndex( new THREE.BufferAttribute(indexArray, 1));
     return geometry;
   }
 }
 
-export function regularPolygonLineGeometry (n) {
+export function regularPolygonLineGeometry (n, r = 1, z = 0) {
   const points = [];
   const offsets = [];
   for (let i = 0; i < n; i++) {
-    const pt = { x : Math.cos(2*i*Math.PI/n), y : Math.sin(2*i*Math.PI/n), z : 0 };
+    const x = Math.cos(2*i*Math.PI/n);
+    const y = Math.sin(2*i*Math.PI/n);
+    const pt = { x : r*x, y : r*y, z : z };
     points.push(pt);
-    offsets.push({ x : pt.x, y : pt.y });
+    offsets.push({ x : x, y : y });
   }
   return createLineGeometry (points, offsets, true);
 }
@@ -129,7 +136,7 @@ export function polygonLineGeometryFromPolar (n, polar) {
   return createLineGeometry (points, offsets, true);
 }
 
-export function polygonLineGeometry(points, closed = true, z = 0.01) {
+export function polygonLineGeometry(points, closed = true, z = 0.05, w = 1) {
   const lg = points.length;
   if (lg > 2) {
     const dirs = [];
@@ -137,28 +144,22 @@ export function polygonLineGeometry(points, closed = true, z = 0.01) {
     for (let i = 0; i < lg-1; i++) {
       const p1 = points[i];
       const p2 = points[i+1];
-      const v = new Vec2D (p1.y-p2.y,p2.x-p1.x);
-      dirs.push(v);
-    }
-    let v0;
-    if (closed) {
-      const p1 = points[lg-1];
-      const p2 = points[0];
-      const v = new Vec2D (p1.y-p2.y,p2.x-p1.x);
-      v0 = normalise(add(dirs[0],v));
-      offsets.push(v0);
-    }
-    else {
-      offsets.push(normalise(dirs[0]));
-    }
-    for (let i = 1; i < lg-1; i++) {
-      offsets.push(normalise(add(dirs[i-1],dirs[i])));
+      const v = new Vec2D (p2.x-p1.x,p2.y-p1.y);
+      dirs.push(normalise(v));
     }
     if (closed) {
-      offsets.push(v0);
+      const pl = points[lg-1];
+      const p0 = points[0];
+      const v0 = normalise(new Vec2D (p0.x-pl.x,p0.y-pl.y));
+      offsets.push(miter(v0, dirs[0], w, w));
+      dirs.push(v0);
     }
     else {
-      offsets.push(offsets[lg-2]);
+      dirs.push(dirs[0]);
+      offsets.push(scalarProd(w,normalise(dirs[0])));
+    }
+    for (let i = 1; i < dirs.length; i++) {
+      offsets.push(miter(dirs[i-1], dirs[i], w, w));
     }
     
     return createLineGeometry ( points.map( (vec) => ({ x : vec.x, y : vec.y, z : z }) )
@@ -168,4 +169,12 @@ export function polygonLineGeometry(points, closed = true, z = 0.01) {
   else {
     console.log("error in 'polygonLineGeometry': need at least 2 points");
   }
+}
+
+// finds the offset vector for miter joint from two consecutive lines with direction vectors v1, v2
+// and with line widths w1 (around v1) and w2 (around v2)
+// assumes that v1 and v2 are normalised
+export function miter(v1, v2, w1, w2) {
+  const c = crossProd(v1,v2);
+  return add(scalarProd(0.5*w2/c,v1),scalarProd(-0.5*w1/c,v2));
 }

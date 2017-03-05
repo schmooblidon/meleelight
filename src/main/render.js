@@ -28,6 +28,7 @@ import {createOrUpdateBufferGeometry} from "../render/createOrUpdateBufferGeomet
 import {drawECB} from "../render/drawECB";
 import {stageTransform} from "../render/stageTransform";
 import {getObjectByNameNonRecursive} from "./util/renderUtils";
+import {regularPolygonPoints} from "../render/geometry";
 import {polygonGeometry, lineMaterial} from "../render/lineGeometry";
 import {lineBasicMaterial, meshBasicMaterial} from "../render/materials";
 
@@ -242,11 +243,11 @@ export function renderPlayer(scene, i) {
     }
 
     if (player[i].miniView && player[i].actionState !== "SLEEP" && player[i].actionState !== "REBIRTH" && player[i].actionState !== "REBIRTHWAIT") {
-      const miniViewBubble = makeDiskShape(0, 0, 35 );
+      const miniViewBubble = regularPolygonPoints(5, 35);
       const bubblePosition = new THREE.Vector3(  player[i].miniViewPoint.x
                                               ,  player[i].miniViewPoint.y
                                               , -0.1);
-      createOrUpdateBufferGeometry(scene, "miniViewBubble"+i, { shape : miniViewBubble, position : bubblePosition, linewidth : 5, fill : 0x000000, stroke : palettes[pPal[i]][0] });
+      createOrUpdateBufferGeometry(scene, "miniViewBubble"+i, { polygon : { points : miniViewBubble, closed : true }, position : bubblePosition, linewidth : 5, fill : 0x000000, stroke : palettes[pPal[i]][0] });
       renderFrameTransformed(scene, i, animFrame, col, { tX : player[i].miniViewPoint.x
                                                        , tY : player[i].miniViewPoint.y + 30  
                                                        , sX : player[i].charAttributes.miniScale * face 
@@ -283,7 +284,7 @@ export function renderPlayer(scene, i) {
         const shieldBubble = makeDiskShape(0, 0, activeStage.scale);
         const shieldPos = new THREE.Vector3(player[i].phys.shieldPositionReal.x * activeStage.scale + activeStage.offset[0], - player[i].phys.shieldPositionReal.y * activeStage.scale + activeStage.offset[1], 0.05);
         createOrUpdateBufferGeometry(scene, "shieldBubble"+i, { scale : new THREE.Vector3(player[i].phys.shieldSize,player[i].phys.shieldSize,1)
-                                                              , position: shieldPos, shape : shieldBubble, fill : sCol, opacity : 0.6 * player[i].phys.shieldAnalog});
+                                                              , position: shieldPos, shape : shieldBubble, pts : 12, fill : sCol, opacity : 0.6 * player[i].phys.shieldAnalog});
       }
     }
     if (hasTag[i]) {
@@ -314,7 +315,7 @@ export function renderPlayer(scene, i) {
                                          , new Vec2D(- 18   * (activeStage.scale / 4.5), 13.5 * (activeStage.scale / 4.5) ) ]
                               , closed : true };
       const platPosition = new THREE.Vector3( temX, temY, 0.01);
-      createOrUpdateBufferGeometry(scene, "rebirthPlatform"+i, { position: platPosition, polygon : rebirthPlatform, fill : palettes[pPal[i]][1], stroke : palettes[pPal[i]][0], linewidth : 2 });
+      createOrUpdateBufferGeometry(scene, "rebirthPlatform"+i, { position: platPosition, polygon : rebirthPlatform, fill : palettes[pPal[i]][1], stroke : palettes[pPal[i]][0], linewidth : 8 });
     }
     if (player[i].showLedgeGrabBox) {
       const ledgeGrabBox = makeRectShape( 0, 14 * activeStage.scale, 0, - 10 * activeStage.scale );
