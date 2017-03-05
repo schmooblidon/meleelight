@@ -415,8 +415,7 @@ export function renderPlayer(scene, i) {
 export function renderOverlay(showStock) {
   // stocks, percent, timer
 
-  if (!versusMode || gameMode === 5) {
-    
+  if (!versusMode || gameMode === 5) {    
     const timerContainer = document.getElementById("matchTimer");
     const mins = (Math.floor(matchTimer / 60)).toString();
     const minutes = (mins.length < 2) ? "0" + mins : mins;
@@ -426,41 +425,22 @@ export function renderOverlay(showStock) {
     timerContainer.children.minutes.innerHTML = minutes;
     timerContainer.children.seconds.innerHTML = seconds;
     timerContainer.children.hundreths.innerHTML = hundreths;
-
-    /*
-
-    ui.fillStyle = "white";
-    ui.lineWidth = 2;
-    ui.font = "900 40px Arial";
-    ui.textAlign = "center";
-    const min = (Math.floor(matchTimer / 60)).toString();
-    const sec = (matchTimer % 60).toFixed(2);
-    ui.fillText(((min.length < 2) ? "0" + min : min) + ":" + ((sec.length < 5) ? "0" + sec[0] : sec[0] + sec[1]), 590,
-          70);
-    ui.strokeText(((min.length < 2) ? "0" + min : min) + ":" + ((sec.length < 5) ? "0" + sec[0] : sec[0] + sec[1]),
-          590, 70);
-    ui.font = "900 25px Arial";
-    ui.fillText(((sec.length < 5) ? sec[2] + sec[3] : sec[3] + sec[4]), 670, 70);
-    ui.strokeText(((sec.length < 5) ? sec[2] + sec[3] : sec[3] + sec[4]), 670, 70);
-    */
   }
-  /*
   if (showStock) {
-    ui.font = "900 53px Arial";
-    ui.lineWidth = (holiday === 1) ? 3 : 2;
-    ui.textAlign = "end";
-    ui.save();
-    ui.scale(0.8, 1);
+    const stockContainer = document.getElementById("stockWrapper");
     for (let i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        ui.fillStyle = "rgb(255," + Math.max(255 - player[i].percent, 0) + ", " + Math.max(255 - player[i].percent, 0) +
-              ")";
+        stockContainer.children["p"+(i+1)+"Percent"].style.color = "rgb(255," + Math.max(255 - player[i].percent, 0) + ", " + Math.max(255 - player[i].percent, 0) +")";
+        stockContainer.children["p"+(i+1)+"Percent"].innerHTML = Math.floor(player[i].percent) + "%";
+        /*
         ui.fillText(Math.floor(player[i].percent) + "%", (450 + i * 145 + player[i].percentShake.x) * 1.25, 670 +
               player[i].percentShake.y);
         ui.strokeText(Math.floor(player[i].percent) + "%", (450 + i * 145 + player[i].percentShake.x) * 1.25, 670 +
               player[i].percentShake.y);
+        */
       }
     }
+    /*
     ui.restore();
     for (let i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
@@ -504,8 +484,8 @@ export function renderOverlay(showStock) {
       lostStockQueue.splice(lostStockPopQueue[k] - k, 1);
     }
     ui.textAlign = "start";
+    */
   }
-  */
 }
 
 /*export function setLostStockQueue(index,val){
