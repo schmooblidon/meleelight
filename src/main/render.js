@@ -243,7 +243,7 @@ export function renderPlayer(scene, i) {
     }
 
     if (player[i].miniView && player[i].actionState !== "SLEEP" && player[i].actionState !== "REBIRTH" && player[i].actionState !== "REBIRTHWAIT") {
-      const miniViewBubble = regularPolygonPoints(5, 35);
+      const miniViewBubble = regularPolygonPoints(30, 35);
       const bubblePosition = new THREE.Vector3(  player[i].miniViewPoint.x
                                               ,  player[i].miniViewPoint.y
                                               , -0.1);
@@ -420,7 +420,7 @@ export function renderPlayer(scene, i) {
 } 
 
 
-export function renderOverlay(scene,showStock) {
+export function renderOverlay(showStock) {
   // stocks, percent, timer
 
   if (!versusMode || gameMode === 5) {    
