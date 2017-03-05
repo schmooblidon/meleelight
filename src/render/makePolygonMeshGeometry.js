@@ -12,7 +12,7 @@ export function makePolygonMeshGeometry(polygon, z = 0) {
   const indices = [];
 
   // use earcut for triangulation
-  const faces = triangulateShape( vertices );
+  const faces = triangulateShape( polygon, [] ); // no holes
 
   // vertices, normals
   for ( let i = 0; i < lg; i++ ) {
@@ -31,8 +31,8 @@ export function makePolygonMeshGeometry(polygon, z = 0) {
   }
 
   const meshGeometry = new THREE.BufferGeometry();
-  meshGeometry.addAttribute("position", new THREE.BufferAttribute( vertices, 3 ) );
-  meshGeometry.addAttribute("normal"  , new THREE.BufferAttribute( normals , 3 ) );
-  meshGeometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
+  meshGeometry.addAttribute("position", new THREE.Float32BufferAttribute( vertices, 3 ) );
+  meshGeometry.addAttribute("normal"  , new THREE.Float32BufferAttribute( normals , 3 ) );
+  meshGeometry.setIndex( new THREE.Uint32BufferAttribute( indices, 1 ) );
   return meshGeometry;
 }

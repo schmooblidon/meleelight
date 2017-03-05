@@ -308,13 +308,13 @@ export function renderPlayer(scene, i) {
       */
     }
     if (player[i].actionState === "REBIRTH" || player[i].actionState === "REBIRTHWAIT") {
-      const rebirthPlatform = makePolygonShape( [ new Vec2D(  18   * (activeStage.scale / 4.5), 13.5 * (activeStage.scale / 4.5) )
-                                                , new Vec2D(  31.5 * (activeStage.scale / 4.5), 0                                )
-                                                , new Vec2D(- 31.5 * (activeStage.scale / 4.5), 0                                )
-                                                , new Vec2D(- 18   * (activeStage.scale / 4.5), 13.5 * (activeStage.scale / 4.5) ) ]
-                                              , true );
+      const rebirthPlatform = { points : [ new Vec2D(  18   * (activeStage.scale / 4.5), 13.5 * (activeStage.scale / 4.5) )
+                                         , new Vec2D(  31.5 * (activeStage.scale / 4.5), 0                                )
+                                         , new Vec2D(- 31.5 * (activeStage.scale / 4.5), 0                                )
+                                         , new Vec2D(- 18   * (activeStage.scale / 4.5), 13.5 * (activeStage.scale / 4.5) ) ]
+                              , closed : true };
       const platPosition = new THREE.Vector3( temX, temY, 0.01);
-      createOrUpdateBufferGeometry(scene, "rebirthPlatform"+i, { position: platPosition, shape : rebirthPlatform, fill : palettes[pPal[i]][1], stroke : palettes[pPal[i]][0], linewidth : 2 });
+      createOrUpdateBufferGeometry(scene, "rebirthPlatform"+i, { position: platPosition, polygon : rebirthPlatform, fill : palettes[pPal[i]][1], stroke : palettes[pPal[i]][0], linewidth : 2 });
     }
     if (player[i].showLedgeGrabBox) {
       const ledgeGrabBox = makeRectShape( 0, 14 * activeStage.scale, 0, - 10 * activeStage.scale );

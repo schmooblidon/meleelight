@@ -2,6 +2,7 @@
 
 import {Vec2D} from "../main/util/Vec2D";
 import {add, normalise} from "../main/linAlg";
+import {unmakeColour} from "../main/vfx/makeColour";
 
 import * as THREE from "three";
 
@@ -45,7 +46,16 @@ const lineShader = new THREE.ShaderMaterial ({
 
 export function lineMaterial(col, opacity, linewidth) {
   const material = lineShader.clone(); // cloning avoids multiple shaders being stored on the GPU
-  material.uniforms["uCol"].value = col;
+  let colour = col;
+  if (typeof col === 'string') {
+    if (col.substring(0,3) === "rgb") {
+      colour = unmakeColour(col);
+      colour.r *= 1/255;
+      colour.g *= 1/255;
+      colour.b *= 1/255;
+    }
+  }
+  material.uniforms["uCol"].value = colour;
   material.uniforms["uAlpha"].uAlpha = opacity || 1;
   material.uniforms["uWidth"].value = linewidth || 1;
   return material;
@@ -130,17 +140,25 @@ export function polygonLineGeometry(points, closed = true, z = 0.01) {
       const v = new Vec2D (p1.y-p2.y,p2.x-p1.x);
       dirs.push(v);
     }
+    let v0;
     if (closed) {
       const p1 = points[lg-1];
       const p2 = points[0];
       const v = new Vec2D (p1.y-p2.y,p2.x-p1.x);
-      offsets.push(normalise(add(dirs[0],v)));
+      v0 = normalise(add(dirs[0],v));
+      offsets.push(v0);
     }
     else {
       offsets.push(normalise(dirs[0]));
     }
     for (let i = 1; i < lg-1; i++) {
-      offsets.push(normalise(add(dirs[i],dirs[i+1])));
+      offsets.push(normalise(add(dirs[i-1],dirs[i])));
+    }
+    if (closed) {
+      offsets.push(v0);
+    }
+    else {
+      offsets.push(offsets[lg-2]);
     }
     
     return createLineGeometry ( points.map( (vec) => ({ x : vec.x, y : vec.y, z : z }) )

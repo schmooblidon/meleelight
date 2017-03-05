@@ -112,15 +112,15 @@ function createBufferGeometry(scene, name, instructions) {
   const group = new THREE.Group();
   group.name = name;
 
-  if (instructions.shape) {
+  if (instructions.shape !== undefined) {
     const shape = instructions.shape;
     const pts = instructions.pts || 5;
 
     // outline material
     let lineMat = null;
-    if (instructions.stroke) {
+    if (instructions.stroke !== undefined) {
       const lineGeometry = shape.createPointsGeometry(pts);
-      if (instructions.opacity) {
+      if (instructions.opacity !== undefined) {
         lineMat = lineBasicMaterialT.clone();
         lineMat.opacity = instructions.opacity;
       }
@@ -128,16 +128,16 @@ function createBufferGeometry(scene, name, instructions) {
         lineMat = lineBasicMaterial.clone();
       }
       lineMat.color.set(instructions.stroke);
-      if (instructions.lineWidth) {
+      if (instructions.lineWidth !== undefined) {
         lineMat.linewidth = instructions.linewidth;
       }
     }
 
     // fill material
     let meshMat = null;
-    if (instructions.fill) {
+    if (instructions.fill !== undefined) {
       const meshGeometry = new THREE.ShapeBufferGeometry(shape, pts);
-      if (instructions.opacity) {
+      if (instructions.opacity !== undefined) {
         meshMat = meshBasicMaterialT.clone();
         meshMat.opacity = instructions.opacity;
       }
@@ -150,11 +150,11 @@ function createBufferGeometry(scene, name, instructions) {
     // create object and put it into the group 'group'
     drawShape(group, instructions.shape, meshMat, lineMat, instructions.transform, pts);
   }
-  else if (instructions.polygon) {
-    if (instructions.fill) {
+  else if (instructions.polygon !== undefined && instructions.polygon.points !== undefined) {
+    if (instructions.fill !== undefined) {
       let meshMat = null;
-      const meshGeometry = makePolygonMeshGeometry(instructions.polygon);
-      if (instructions.opacity) {
+      const meshGeometry = makePolygonMeshGeometry(instructions.polygon.points);
+      if (instructions.opacity !== undefined) {
         meshMat = meshBasicMaterialT.clone();
         meshMat.opacity = instructions.opacity;
       }
@@ -162,16 +162,16 @@ function createBufferGeometry(scene, name, instructions) {
         meshMat = meshBasicMaterial.clone();
       }
       meshMat.color.set(instructions.fill);
-      const mesh = new THREE.BufferGeometry(meshGeometry, meshMat);
+      const mesh = new THREE.Mesh(meshGeometry, meshMat);
       mesh.name = "mesh";
       group.add(mesh);
     }
-    if (instructions.stroke) {
+    if (instructions.stroke !== undefined) {      
       const lineMat = lineMaterial(instructions.stroke, instructions.opacity, instructions.linewidth);
-      const lineGeometry = polygonLineGeometry(instructions.polygon, instructions.closed);
-      const line = new THREE.BufferGeometry(lineGeometry, lineMat);
+      const lineGeometry = polygonLineGeometry(instructions.polygon.points, instructions.polygon.closed);
+      const line = new THREE.Mesh(lineGeometry, lineMat);
       line.name = "line";
-      group.add(line);
+      group.add(line);      
     }
 
   }
@@ -190,15 +190,14 @@ function createBufferGeometry(scene, name, instructions) {
   
       // mesh material
       if (instructions.fill !== undefined) {
-        const meshBasicMaterial = { color : instructions.fill };
         if (instructions.opacity !== undefined) {
-          meshBasicMaterial.opacity = instructions.opacity;
+          meshMat = meshBasicMaterialT.clone();
+          meshMat.opacity = instructions.opacity;
         }
-        const meshMat = new THREE.MeshBasicMaterial(meshBasicMaterial);
-        if (instructions.opacity !== undefined) {
-          meshMat.transparent = true;
+        else {
+          meshMat = meshBasicMaterial.clone();
         }
-        meshMat.side = THREE.DoubleSide;
+        meshMat.color.set(instructions.fill);
         const mesh = new THREE.Mesh(meshGeometry, meshMat);
         mesh.name = "mesh";
         group.add(mesh);
@@ -215,8 +214,8 @@ function createBufferGeometry(scene, name, instructions) {
       }
       // outline material
       let lineMat = null;
-      if (instructions.stroke) {
-        if (instructions.opacity) {
+      if (instructions.stroke !== undefined) {
+        if (instructions.opacity !== undefined) {
           lineMat = lineBasicMaterialT.clone();
           lineMat.opacity = instructions.opacity;
         }
@@ -224,7 +223,7 @@ function createBufferGeometry(scene, name, instructions) {
           lineMat = lineBasicMaterial.clone();
         }
         lineMat.color.set(instructions.stroke);
-        if (instructions.lineWidth) {
+        if (instructions.lineWidth !== undefined) {
           lineMat.linewidth = instructions.linewidth;
         }
       }
