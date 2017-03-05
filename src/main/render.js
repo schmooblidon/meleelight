@@ -22,7 +22,7 @@ import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
 import * as THREE from "three";
-import {drawBezierCurves, makeRectShape, makeDiskShape, makePolygonShape, drawShape, drawLine, meshBasicMaterial} from "../render/threeUtil";
+import {drawBezierCurves, makeRectShape, makeDiskShape, makePolygonShape, drawShape, drawLine} from "../render/threeUtil";
 import {createOrUpdateBufferGeometry} from "../render/createOrUpdateBufferGeometry";
 import {drawECB} from "../render/drawECB";
 import {stageTransform} from "../render/stageTransform";
@@ -67,11 +67,17 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
   animationsGroup.updateMatrixWorld = function() {};
 }
 
-export function renderFrameTransformed(scene, animFrame, col, transform ) {
+const meshBasicMaterial = new THREE.MeshBasicMaterial( { color : 0xff00ff, opacity : 0, side : THREE.DoubleSide } );
+
+const playerMaterials = [ meshBasicMaterial.clone()
+                        , meshBasicMaterial.clone()
+                        , meshBasicMaterial.clone()
+                        , meshBasicMaterial.clone() ];
+
+export function renderFrameTransformed(scene, i, animFrame, col, transform ) {
   const cloned = animFrame.clone();
-  cloned.material = meshBasicMaterial.clone();
+  cloned.material = playerMaterials[i];
   cloned.material.color.set(new THREE.Color(col));
-  cloned.material.transparent = false;
   const rpX = transform.rpX;
   const rpY = transform.rpY;
   const sX = transform.sX;
@@ -241,31 +247,31 @@ export function renderPlayer(scene, i) {
                                               ,  player[i].miniViewPoint.y
                                               , -0.1);
       createOrUpdateBufferGeometry(scene, "miniViewBubble"+i, { shape : miniViewBubble, position : bubblePosition, linewidth : 5, fill : 0x000000, stroke : palettes[pPal[i]][0] });
-      renderFrameTransformed(scene, animFrame, col, { tX : player[i].miniViewPoint.x
-                                                    , tY : player[i].miniViewPoint.y + 30  
-                                                    , sX : player[i].charAttributes.miniScale * face 
-                                                    , sY : player[i].charAttributes.miniScale
-                                                    , rotation : player[i].rotation
-                                                    , rpX : player[i].rotationPoint.x
-                                                    , rpY : player[i].rotationPoint.y } );
+      renderFrameTransformed(scene, i, animFrame, col, { tX : player[i].miniViewPoint.x
+                                                       , tY : player[i].miniViewPoint.y + 30  
+                                                       , sX : player[i].charAttributes.miniScale * face 
+                                                       , sY : player[i].charAttributes.miniScale
+                                                       , rotation : player[i].rotation
+                                                       , rpX : player[i].rotationPoint.x
+                                                       , rpY : player[i].rotationPoint.y } );
     } 
     else if (player[i].actionState === "ENTRANCE") {
-      renderFrameTransformed(scene, animFrame, col, { tX : temX
-                                                    , tY : temY
-                                                    , sX : player[i].charAttributes.charScale * face * (activeStage.scale / 4.5) 
-                                                    , sY : Math.max(0.01, Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 - startTimer)) * (activeStage.scale / 4.5))
-                                                    , rotation : player[i].rotation
-                                                    , rpX : player[i].rotationPoint.x
-                                                    , rpY : player[i].rotationPoint.y } );
+      renderFrameTransformed(scene, i, animFrame, col, { tX : temX
+                                                       , tY : temY
+                                                       , sX : player[i].charAttributes.charScale * face * (activeStage.scale / 4.5) 
+                                                       , sY : Math.max(0.01, Math.min(player[i].charAttributes.charScale, player[i].charAttributes.charScale * (1.5 - startTimer)) * (activeStage.scale / 4.5))
+                                                       , rotation : player[i].rotation
+                                                       , rpX : player[i].rotationPoint.x
+                                                       , rpY : player[i].rotationPoint.y } );
     } 
     else {
-      renderFrameTransformed(scene, animFrame, col, { tX : temX
-                                                    , tY : temY
-                                                    , sX : player[i].charAttributes.charScale * face * (activeStage.scale / 4.5) 
-                                                    , sY : player[i].charAttributes.charScale * (activeStage.scale / 4.5)
-                                                    , rotation : player[i].rotation
-                                                    , rpX : player[i].rotationPoint.x
-                                                    , rpY : player[i].rotationPoint.y } );
+      renderFrameTransformed(scene, i, animFrame, col, { tX : temX
+                                                       , tY : temY
+                                                       , sX : player[i].charAttributes.charScale * face * (activeStage.scale / 4.5) 
+                                                       , sY : player[i].charAttributes.charScale * (activeStage.scale / 4.5)
+                                                       , rotation : player[i].rotation
+                                                       , rpX : player[i].rotationPoint.x
+                                                       , rpY : player[i].rotationPoint.y } );
     }
     if (player[i].phys.shielding) {
       if (!(player[i].phys.powerShielded && player[i].hit.hitlag > 0)) {

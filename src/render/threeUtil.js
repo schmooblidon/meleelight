@@ -36,7 +36,7 @@ THREE.ShapeUtils.triangulateShape = function ( contour, holes ) {
   return grouped;
 };
 
-export const meshBasicMaterial = new THREE.MeshBasicMaterial( { color : 0xff00ff, opacity : 0, side : THREE.DoubleSide, transparent : true } );
+const meshBasicMaterial = new THREE.MeshBasicMaterial( { color : 0xff00ff, opacity : 0, side : THREE.DoubleSide, transparent : true } );
 
 export function drawBezierCurves (scene, path) {  
   for (let j = 0; j < path.length; j++) {
