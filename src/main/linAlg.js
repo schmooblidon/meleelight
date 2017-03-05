@@ -14,6 +14,11 @@ export function norm(vec : Vec2D) : number {
   return ( Math.sqrt( dotProd(vec,vec) ));
 }
 
+export function normalise (vec : Vec2D) : Vec2D {
+  const nm = norm(vec);
+  return (nm === 0 ? new Vec2D(0,0) : scalarProd( 1/nm, vec));
+}
+
 export function add(vec1 : Vec2D, vec2 : Vec2D) : Vec2D {
   return ( new Vec2D ( vec1.x + vec2.x, vec1.y + vec2.y) );
 }

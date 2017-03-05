@@ -62,14 +62,14 @@ export function drawStageInit() {
     const type = types[i];
     for (let j = 0; j < activeStage[type].length; j++) {
       const surf = activeStage[type][j];
-      drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : surfaceColors[i] }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+      drawLine(group, { linewidth : 1, color : surfaceColors[i] }, surf[0].x, surf[0].y, surf[1].x, surf[1].y);
     }
   }
 
   for (let j = 0; j < activeStage.platform.length; j++) {
     if (activeStage.movingPlats === null || activeStage.movingPlats === undefined || activeStage.movingPlats.indexOf(j) === -1){ // not a moving platform
       const surf = activeStage.platform[j];
-      drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+      drawLine(group, { linewidth : 2, color : "#4794c6" }, surf[0].x, surf[0].y, surf[1].x, surf[1].y);
     }
   }  
 
@@ -99,7 +99,7 @@ export function drawStageInit() {
     const magnitude = euclideanDist(pA, pB);
     const length = Math.min(0.4 * magnitude, 20 / activeStage.scale);
     const pC = new Vec2D(pA.x + length * Math.cos(ang), pA.y + length * Math.sin(ang));
-    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 2, color : "#e7a44c" }), pA.x, pA.y, pC.x, pC.y);
+    drawLine(group, { linewidth : 2, color : "#e7a44c" }, pA.x, pA.y, pC.x, pC.y);
   }
 
   group.scale.set(activeStage.scale, -activeStage.scale, 1);
@@ -160,7 +160,7 @@ export function drawDamageLines(type, scene, stage){
     const surfaceProperties = stage[type][i][2];
     if (surfaceProperties !== undefined && surfaceProperties.damageType !== null) {
       drawLine( scene
-              , new THREE.LineBasicMaterial( { linewidth : 4, color : wallColourFromDamageType(surfaceProperties.damageType) })
+              , { linewidth : 4, color : wallColourFromDamageType(surfaceProperties.damageType) }
               , stage[type][i][0].x, stage[type][i][0].y, stage[type][i][1].x, stage[type][i][1].y );
     }
   }
@@ -183,7 +183,7 @@ export function drawStageBackground() {
     if (activeStage.background.line !== null && activeStage.background.line !== undefined) {
       for (let j=0;j<activeStage.background.line.length;j++){
         const surf = activeStage.background.line[j];
-        drawLine(group, new THREE.LineBasicMaterial( { linewidth : 3, color : boxFillBG }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+        drawLine(group, { linewidth : 3, color : boxFillBG }, surf[0].x, surf[0].y, surf[1].x, surf[1].y);
       }
     }    
     group.scale.set(activeStage.scale, -activeStage.scale, 1);
@@ -211,13 +211,13 @@ export function drawStage() {
     }
     // sorry Randall
     //bg2.drawImage(randall[Math.floor(randallTimer/10)],(activeStage.platform[0][0].x * activeStage.scale) + activeStage.offset[0]-20, (activeStage.platform[0][0].y * -activeStage.scale) + activeStage.offset[1]-20,100,100);
-    drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), activeStage.platform[0][0].x, activeStage.platform[0][0].y, activeStage.platform[0][1].x, activeStage.platform[0][1].y);
+    drawLine(group, { linewidth : 1, color : "#4794c6" }, activeStage.platform[0][0].x, activeStage.platform[0][0].y, activeStage.platform[0][1].x, activeStage.platform[0][1].y);
   }
   else if (activeStage.movingPlats !== null && activeStage.movingPlats !== undefined && activeStage.movingPlats.length !== 0) {
     for (let i = 0; i < activeStage.movingPlats.length; i++) {
       if (activeStage.name !== "fountain" || activeStage.platform[activeStage.movingPlats[i]][0].y > 0) {
         const surf = activeStage.platform[activeStage.movingPlats[i]];
-        drawLine(group, new THREE.LineBasicMaterial( { linewidth : 1, color : "#4794c6" }), surf[0].x, surf[0].y, surf[1].x, surf[1].y);
+        drawLine(group, { linewidth : 1, color : "#4794c6" }, surf[0].x, surf[0].y, surf[1].x, surf[1].y);
       }
     }
   }

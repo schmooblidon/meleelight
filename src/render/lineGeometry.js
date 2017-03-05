@@ -8,7 +8,7 @@ export function lineMaterial(col, opacity, linewidth) {
     uniforms: {
       "uCol" : { type: "c", value: col },
       "uAlpha" : { type : "f", value : opacity },
-      "uWidth" : { type : "f", value : 0.5*linewidth }
+      "uWidth" : { type : "f", value : linewidth }
     },
 
     blending: THREE.NormalBlending,
@@ -20,17 +20,18 @@ export function lineMaterial(col, opacity, linewidth) {
       "void main(){",
         "vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);",
         "vOffset = normalize(offset);",
-        "gl_Position = projectionMatrix * vec4(mvPosition.xy + uWidth*offset, mvPosition.zw);",
+        "gl_Position = projectionMatrix * vec4(mvPosition.xy + 0.5*(uWidth+2.0)*offset, mvPosition.zw);",
       "}"
     ].join("\n"),
   
     fragmentShader : [
       "uniform vec3 uCol;",
+      "uniform float uWidth;",
       "uniform float uAlpha;",
       "varying vec2 vOffset;",
       "void main() {",
         "float mag = dot(vOffset, vOffset);",
-        "gl_FragColor = vec4(uCol, uAlpha*(1.0-smoothstep(0.5,1.0,mag)));",
+        "gl_FragColor = vec4(uCol, uAlpha*(1.0-smoothstep(uWidth/(uWidth+1.0),1.0,mag)));",
       "}"
     ].join("\n")
 

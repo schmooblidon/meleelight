@@ -1,5 +1,8 @@
 import * as THREE from "three";
 import {earcut} from "./earcut";
+import {Vec2D} from "../main/util/Vec2D";
+import {normalise} from "../main/linAlg";
+import {lineMaterial, createLineGeometry} from "./lineGeometry";
 
 THREE.ShapeUtils.triangulateShape = function ( contour, holes ) {
   function removeDupEndPts( points ) {
@@ -110,12 +113,17 @@ export function drawShape (scene, shape, meshMat, lineMat, transform = null, pts
   scene.add(group);
 }
 
-export function drawLine(scene, mat, x1, y1, x2, y2) {
-  const line = new THREE.Shape();
-  line.moveTo(x1,y1);
-  line.lineTo(x2,y2);
-  const geometry = line.createPointsGeometry();
-  const object = new THREE.Line(geometry, mat);
+export function drawLine(scene, style, x1, y1, x2, y2) {
+  const pts = [{ x : x1, y: y1, z: 0}, { x:x2, y:y2, z:0}];
+  const v = new Vec2D (y1-y2,x2-x1);
+  const nv = normalise(v);
+  const offsets = [nv,nv];
+  const line = createLineGeometry ( pts, offsets, false );
+  const opacity = style.opacity || 1;
+  const linewidth = style.linewidth || 1;
+  const col = style.color || style.col || "#ff00ff";
+  const mat = lineMaterial(new THREE.Color(col), opacity, linewidth);
+  const object = new THREE.Mesh(line, mat);
   scene.add(object);
 }
 
