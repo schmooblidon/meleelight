@@ -8,3 +8,10 @@ export function regularPolygonPoints( n, r = 1, z = 0) {
   }
   return points;
 }
+
+export function polygonFromRect (xmin, ymin, xmax, ymax) {
+  return [ new Vec2D (xmin, ymin)
+         , new Vec2D (xmax, ymin)
+         , new Vec2D (xmax, ymax)
+         , new Vec2D (xmin, ymax) ];
+}

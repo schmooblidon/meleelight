@@ -28,7 +28,7 @@ import {createOrUpdateBufferGeometry} from "../render/createOrUpdateBufferGeomet
 import {drawECB} from "../render/drawECB";
 import {stageTransform} from "../render/stageTransform";
 import {getObjectByNameNonRecursive} from "./util/renderUtils";
-import {regularPolygonPoints} from "../render/geometry";
+import {regularPolygonPoints, polygonFromRect} from "../render/geometry";
 import {polygonGeometry, lineMaterial} from "../render/lineGeometry";
 import {lineBasicMaterial, meshBasicMaterial} from "../render/materials";
 
@@ -318,21 +318,26 @@ export function renderPlayer(scene, i) {
       createOrUpdateBufferGeometry(scene, "rebirthPlatform"+i, { position: platPosition, polygon : rebirthPlatform, fill : palettes[pPal[i]][1], stroke : palettes[pPal[i]][0], linewidth : 8 });
     }
     if (player[i].showLedgeGrabBox) {
-      const ledgeGrabBox = makeRectShape( 0, 14 * activeStage.scale, 0, - 10 * activeStage.scale );
+      const ledgeGrabBox = { points : polygonFromRect(0, 14 * activeStage.scale, 0, - 10 * activeStage.scale )
+                           , closed : true };
       const grabBoxFPos = new THREE.Vector3(  player[i].phys.ledgeSnapBoxF.min.x * activeStage.scale + activeStage.offset[0]
                                            , -player[i].phys.ledgeSnapBoxF.min.y * activeStage.scale + activeStage.offset[1]);
       const grabBoxBPos = new THREE.Vector3(  player[i].phys.ledgeSnapBoxB.min.x * activeStage.scale + activeStage.offset[0]
                                            , -player[i].phys.ledgeSnapBoxB.min.y * activeStage.scale + activeStage.offset[1]);
-      createOrUpdateBufferGeometry(scene, "ledgeGrabBoxF"+i, { position : grabBoxFPos, shape : ledgeGrabBox, stroke : "#4478ff", linewidth : 3 });
-      createOrUpdateBufferGeometry(scene, "ledgeGrabBoxB"+i, { position : grabBoxBPos, shape : ledgeGrabBox, stroke : "#ff4444", linewidth : 3 });
+      createOrUpdateBufferGeometry(scene, "ledgeGrabBoxF"+i, { position : grabBoxFPos, polygon : ledgeGrabBox, stroke : new THREE.Color(0x4478ff), linewidth : 3 });
+      createOrUpdateBufferGeometry(scene, "ledgeGrabBoxB"+i, { position : grabBoxBPos, polygon : ledgeGrabBox, stroke : new THREE.Color(0xff4444), linewidth : 3 });
     }
     if (player[i].showECB) {
       drawECB(scene, player[i].phys.ECB1, { fill : "#ff8d2f" }, "ECB1"+i, 0 );
       drawECB(scene, player[i].phys.ECBp, { stroke : "white" }, "ECBp"+i, 0.1 );
-      /*
-      drawLine(scene, new THREE.LineBasicMaterial({ color : "white", linewidth : 3 }), temX, temY-6, temX, temY+6 );
-      drawLine(scene, new THREE.LineBasicMaterial({ color : "white", linewidth : 3 }), temX+6, temY, temX-6, temY );
-      */
+      createOrUpdateBufferGeometry(scene, "posx"+i, { position : new THREE.Vector3(temX, temY, 0.15)
+                                                    , polygon : { points : [ new Vec2D(-6,0), new Vec2D(6,0) ]
+                                                                , closed : false }
+                                                    , stroke : new THREE.Color(0xffffff), linewidth : 2 });
+      createOrUpdateBufferGeometry(scene, "posy"+i, { position : new THREE.Vector3(temX, temY, 0.15)
+                                                    , polygon : { points : [ new Vec2D(0,-6), new Vec2D(0,6) ]
+                                                                , closed : false }
+                                                    , stroke : new THREE.Color(0xffffff), linewidth : 2 });
     }
     if (player[i].showHitbox) {
       /* TODO: redo

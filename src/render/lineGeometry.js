@@ -1,7 +1,8 @@
 /*eslint indent:0*/
+/*eslint camelcase:0*/
 
 import {Vec2D} from "../main/util/Vec2D";
-import {add, normalise, scalarProd, crossProd} from "../main/linAlg";
+import {add, norm, normalise, scalarProd, dotProd, crossProd} from "../main/linAlg";
 import {unmakeColour} from "../main/vfx/makeColour";
 
 import * as THREE from "three";
@@ -138,7 +139,7 @@ export function polygonLineGeometryFromPolar (n, polar) {
 
 export function polygonLineGeometry(points, closed = true, z = 0.05, w = 1) {
   const lg = points.length;
-  if (lg > 2) {
+  if (lg > 1) {
     const dirs = [];
     const offsets = [];
     for (let i = 0; i < lg-1; i++) {
@@ -151,15 +152,16 @@ export function polygonLineGeometry(points, closed = true, z = 0.05, w = 1) {
       const pl = points[lg-1];
       const p0 = points[0];
       const v0 = normalise(new Vec2D (p0.x-pl.x,p0.y-pl.y));
-      offsets.push(miter(v0, dirs[0], w, w));
+      offsets.push(miter(v0, dirs[0], w));
       dirs.push(v0);
     }
     else {
-      dirs.push(dirs[0]);
-      offsets.push(scalarProd(w,normalise(dirs[0])));
+      const d0 = dirs[0];
+      dirs.push(d0);
+      offsets.push(miter(d0,d0,w));
     }
     for (let i = 1; i < dirs.length; i++) {
-      offsets.push(miter(dirs[i-1], dirs[i], w, w));
+      offsets.push(miter(dirs[i-1], dirs[i], w));
     }
     
     return createLineGeometry ( points.map( (vec) => ({ x : vec.x, y : vec.y, z : z }) )
@@ -171,10 +173,21 @@ export function polygonLineGeometry(points, closed = true, z = 0.05, w = 1) {
   }
 }
 
-// finds the offset vector for miter joint from two consecutive lines with direction vectors v1, v2
-// and with line widths w1 (around v1) and w2 (around v2)
-// assumes that v1 and v2 are normalised
-export function miter(v1, v2, w1, w2) {
-  const c = crossProd(v1,v2);
-  return add(scalarProd(0.5*w2/c,v1),scalarProd(-0.5*w1/c,v2));
+// finds the offset vector for miter joint from two consecutive lines with direction vectors u, v
+// and with line widths w1 (around u) and w2 (around v)
+// assumes that u and v are normalised
+export function miter(u, v, w) {
+  const n_u = new Vec2D(w*u.y,-w*u.x);
+  const n_v = new Vec2D(w*v.y,-w*v.x);
+  const n = add(n_u, n_v);
+  const sin = crossProd(u,v);
+  const cos = dotProd(u,v);
+  let t;
+  if (cos > 0) {
+    t = w*sin/(1+cos);
+  }
+  else {
+    t = w*(1-cos)/sin;
+  }
+  return scalarProd(0.25, add(n,add(scalarProd(t,u),scalarProd(-t,v))));
 }
