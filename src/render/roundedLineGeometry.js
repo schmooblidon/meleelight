@@ -86,7 +86,7 @@ function getDirections(points, closed = true) {
   return dirs;
 }
 
-export function getOffsets(dirs, closed = true, w = 1) {
+export function getOffsets(dirs, closed = true) {
   const lg = dirs.length;
   const offsets = [];
   const dists = [];
@@ -95,22 +95,22 @@ export function getOffsets(dirs, closed = true, w = 1) {
   for (let i = 0; i < lg; i++) {
     const dir = dirs[i];
     const prevDir = i === 0 ? finalDir : dirs[i-1];
-    const n = scaledNormal(dir,-w/2);
+    const n = scaledNormal(dir,-1);
     if (!closed && (i === 0 || i === lg - 1)) {
       offsets.push(n);
       offsets.push(scalarProd(-1,n));
       dists.push(1);
     }
     else {
-      const prevn = scaledNormal(prevDir,-w/2);
-      const m = miter(dir,prevDir,w);
+      const prevn = scaledNormal(prevDir,-1);
+      const m = miter(dir,prevDir,2); // miter of width 2 corresponds to normalised edge distances being 1/-1
       offsets.push(prevn);
       offsets.push(scalarProd(-1,m));
       offsets.push(zero);
       offsets.push(n);
       offsets.push(m);
       const sign = Math.sign(crossProd(dir,prevDir));
-      const nm = Math.max(2*norm(m),1);
+      const nm = Math.max(norm(m),1);
       dists.push(sign*nm); // change this to sign for miter line-joins
                            // can also be changed to create bevel line-joins
     }
@@ -118,9 +118,9 @@ export function getOffsets(dirs, closed = true, w = 1) {
   return [offsets, dists];
 }
 
-export function roundedPolygonLineGeometry(points, closed : true, w = 1, z = 0.05) {
+export function roundedPolygonLineGeometry(points, closed : true, z = 0.05) {
   const dirs = getDirections(points, closed);
-  const [offsets, dists] = getOffsets(dirs, closed, w);
+  const [offsets, dists] = getOffsets(dirs, closed);
   const lg = points.length;
   if (lg > 1) {
     const pts = closed ? 5 * lg : 5 * lg - 6;
@@ -219,7 +219,6 @@ export function roundedPolygon(points, instructions) {
   const w = instructions.w || instructions.linewidth || instructions.width || 1;
   const geometry = roundedPolygonLineGeometry( points
                                              , instructions.closed || true
-                                             , w
                                              , instructions.z || 0.01 );
   const material = roundedLineMaterial( instructions.color || instructions.colour || instructions.col
                                       , instructions.opacity || instructions.alpha
