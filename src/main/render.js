@@ -247,7 +247,7 @@ export function renderPlayer(scene, i) {
       const bubblePosition = new THREE.Vector3(  player[i].miniViewPoint.x
                                               ,  player[i].miniViewPoint.y
                                               , -0.1);
-      createOrUpdateBufferGeometry(scene, "miniViewBubble"+i, { polygon : { points : miniViewBubble, closed : true }, position : bubblePosition, linewidth : 5, fill : 0x000000, stroke : palettes[pPal[i]][0] });
+      createOrUpdateBufferGeometry(scene, "miniViewBubble"+i, { polygon : { points : miniViewBubble, closed : true }, position : bubblePosition, linewidth : 5, fill : 0x000000, stroke : palettes[pPal[i]][0], rounded : true });
       renderFrameTransformed(scene, i, animFrame, col, { tX : player[i].miniViewPoint.x
                                                        , tY : player[i].miniViewPoint.y + 30  
                                                        , sX : player[i].charAttributes.miniScale * face 
@@ -315,10 +315,10 @@ export function renderPlayer(scene, i) {
                                          , new Vec2D(- 18   * (activeStage.scale / 4.5), 13.5 * (activeStage.scale / 4.5) ) ]
                               , closed : true };
       const platPosition = new THREE.Vector3( temX, temY, 0.01);
-      createOrUpdateBufferGeometry(scene, "rebirthPlatform"+i, { position: platPosition, polygon : rebirthPlatform, fill : palettes[pPal[i]][1], stroke : palettes[pPal[i]][0], linewidth : 8 });
+      createOrUpdateBufferGeometry(scene, "rebirthPlatform"+i, { position: platPosition, polygon : rebirthPlatform, fill : palettes[pPal[i]][1], stroke : palettes[pPal[i]][0], linewidth : 4 });
     }
     if (player[i].showLedgeGrabBox) {
-      const ledgeGrabBox = { points : polygonFromRect(0, 14 * activeStage.scale, 0, - 10 * activeStage.scale )
+      const ledgeGrabBox = { points : polygonFromRect(0, 0, 14 * activeStage.scale, 10 * activeStage.scale )
                            , closed : true };
       const grabBoxFPos = new THREE.Vector3(  player[i].phys.ledgeSnapBoxF.min.x * activeStage.scale + activeStage.offset[0]
                                            , -player[i].phys.ledgeSnapBoxF.min.y * activeStage.scale + activeStage.offset[1]);

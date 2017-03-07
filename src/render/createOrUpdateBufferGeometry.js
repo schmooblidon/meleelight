@@ -2,6 +2,7 @@ import {drawShape} from "./threeUtil";
 import {getObjectByNameNonRecursive} from "../main/util/renderUtils";
 import {lineBasicMaterial, lineBasicMaterialT, meshBasicMaterial, meshBasicMaterialT} from "./materials";
 import {lineMaterial, polygonLineGeometry} from "./lineGeometry";
+import {roundedLineMaterial, roundedPolygonLineGeometry} from "./roundedLineGeometry";
 import {makePolygonMeshGeometry} from "./makePolygonMeshGeometry";
 import * as THREE from "three";
 
@@ -166,12 +167,20 @@ function createBufferGeometry(scene, name, instructions) {
       mesh.name = "mesh";
       group.add(mesh);
     }
-    if (instructions.stroke !== undefined) {      
-      const lineMat = lineMaterial(instructions.stroke, instructions.opacity, instructions.linewidth);
-      const lineGeometry = polygonLineGeometry(instructions.polygon.points, instructions.polygon.closed);
+    if (instructions.stroke !== undefined) {
+      let lineMat;
+      let lineGeometry;
+      if (instructions.rounded === true) {
+        lineMat = roundedLineMaterial(instructions.stroke, instructions.opacity, instructions.linewidth);
+        lineGeometry = roundedPolygonLineGeometry(instructions.polygon.points, instructions.polygon.closed);
+      }
+      else {
+        lineMat = lineMaterial(instructions.stroke, instructions.opacity, instructions.linewidth);
+        lineGeometry = polygonLineGeometry(instructions.polygon.points, instructions.polygon.closed);
+      }
       const line = new THREE.Mesh(lineGeometry, lineMat);
       line.name = "line";
-      group.add(line);      
+      group.add(line);
     }
 
   }

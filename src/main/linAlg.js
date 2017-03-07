@@ -31,7 +31,6 @@ export function subtract(vec1 : Vec2D, vec2 : Vec2D) : Vec2D {
   return ( new Vec2D ( vec1.x - vec2.x , vec1.y - vec2.y ) );
 }
 
-
 function squaredDist (center1 : Vec2D, center2 : Vec2D) : number {
   return ( (center2.x - center1.x)*(center2.x - center1.x) + (center2.y - center1.y)*(center2.y - center1.y) );
 };
@@ -97,4 +96,8 @@ export function reflect( reflectee : Vec2D, reflector : Vec2D ) : Vec2D {
   const projVec = orthogonalProjection(reflectee, [new Vec2D(0,0), reflector]);
   const moveVec = subtract(projVec, reflectee);
   return add(reflectee, scalarProd(2, moveVec));
+}
+
+export function scaledNormal(v : Vec2D, w : number) : Vec2D {
+  return new Vec2D(w*v.y,-w*v.x);
 }
