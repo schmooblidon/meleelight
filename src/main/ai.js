@@ -722,11 +722,13 @@ function foxAI(i) {
     }
   }
   if (isDead) {
+    /*
     if (player[i].currentSubaction == "NONE" && player[i].currentAction == "NONE" && pgrounded && pdiff >= 3) { //can do it
       player[i].currentAction = "RESPAWNMULTISHINE";
       player[i].currentSubaction = "SHINE";
       return;
     }
+    */
   }
   if (player[i].currentAction == "SHIELDMULTISHINE") {
 	  if (player[nearest].actionState.substr(0,4) != "GUAR" || ["WAIT","KNEEBEND","JUMPF","DOWNSPECIALGROUND","DOWNSPECIALAIR"].indexOf(paction) || Math.abs(px - player[nearest].phys.pos.x) >= 15) {
