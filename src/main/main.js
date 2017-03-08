@@ -1043,25 +1043,20 @@ export function gameTick (oldInputBuffers){
       }
     }
   }
-  /*
 
-  var beforeWaster = performance.now();
-  // neeed to waste 0.666ms
-  var timeWasted = false;
-  var t = 0;
-  var o = performance.now();
-  while(!timeWasted){
-    var n = performance.now();
-    t += n - o;
-    //console.log(t);
-    if (t > 0.6666){
-      timeWasted = true;
-    }
-    o = n;
-    //console.log(".");
+  setTimeout(awaitGameTick, 16-diff, input);
+}
+
+let needsUpdate = false;
+
+function awaitGameTick(input) {
+  if ( needsUpdate ) {
+    needsUpdate = false;
+    gameTick(input);
   }
-  //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick, 16 - diff, input);
+  else {
+    setTimeout(awaitGameTick, 1, input);
+  }
 }
 
 export function clearScreen (){
@@ -1070,9 +1065,11 @@ export function clearScreen (){
 
 let otherFrame = true;
 let fps30 = false;
+
 export function renderTick (){
-  const dynamicGroup = generalDynamic;
+  needsUpdate = true;
   window.requestAnimationFrame(renderTick);
+  const dynamicGroup = generalDynamic;
   otherFrame ^= true
   if ((fps30 && otherFrame) || !fps30) {
     //console.log("------");
