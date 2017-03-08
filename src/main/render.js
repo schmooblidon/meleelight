@@ -422,7 +422,9 @@ export function renderPlayer(scene, i) {
       */
     }
   }
-} 
+}
+
+const percentShakeUpdate = [false, false, false, false];
 
 export function renderOverlay(showStock) {
   // stocks, percent, timer
@@ -456,9 +458,14 @@ export function renderOverlay(showStock) {
       if (playerType[i] > -1) {
         const playerPercentContainer = playerPercentContainers[i];
         playerPercentContainer.style.color = "rgb(255," + Math.max(255 - player[i].percent, 0) + ", " + Math.max(255 - player[i].percent, 0) +")";
+        //playerPercentContainer.style.visibility = player[i].stocks < 1 ? "hidden" : "visible";
         playerPercentContainer.innerHTML = Math.floor(player[i].percent) + `<font size="4"> %</font>`;
-        playerPercentContainer.style.right = (player[i].percentShake.x)+"px";
-        playerPercentContainer.style.top = (player[i].percentShake.y)+"px";
+        const percentShakeMove = Math.abs(player[i].percentShake.x) > 0.5 || Math.abs(player[i].percentShake.y) > 0.5;
+        if (percentShakeMove || percentShakeUpdate[i] === true) {
+          playerPercentContainer.style.right = (player[i].percentShake.x)+"px";
+          playerPercentContainer.style.top = (player[i].percentShake.y)+"px";
+          percentShakeUpdate[i] = percentShakeMove;
+        }
         const playerStocksSVG = playerStocksSVGs[i];
         const stocks = player[i].stocks;
         for (let j = 0; j < 5; j++) {
