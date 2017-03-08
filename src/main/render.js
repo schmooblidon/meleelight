@@ -457,7 +457,9 @@ export function renderOverlay(showStock) {
     for (let i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
         const playerPercentContainer = playerPercentContainers[i];
-        playerPercentContainer.style.color = "rgb(255," + Math.max(255 - player[i].percent, 0) + ", " + Math.max(255 - player[i].percent, 0) +")";
+        const r = 255-Math.min(180,0.5*Math.max(0,player[i].percent-200));
+        const gb = Math.max(255 - 0.8*player[i].percent, 20);
+        playerPercentContainer.style.color = "rgb(" + r + "," + gb + "," + gb + ")";
         //playerPercentContainer.style.visibility = player[i].stocks < 1 ? "hidden" : "visible";
         playerPercentContainer.innerHTML = Math.floor(player[i].percent) + `<font size="4"> %</font>`;
         const percentShakeMove = Math.abs(player[i].percentShake.x) > 0.5 || Math.abs(player[i].percentShake.y) > 0.5;
