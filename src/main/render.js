@@ -424,11 +424,10 @@ export function renderPlayer(scene, i) {
   }
 } 
 
-
 export function renderOverlay(showStock) {
   // stocks, percent, timer
 
-  if (!versusMode || gameMode === 5) {    
+  if (!versusMode || gameMode === 5) {
     const timerContainer = dom.matchTimer;
     const mins = (Math.floor(matchTimer / 60)).toString();
     const minutes = (mins.length < 2) ? "0" + mins : mins;
@@ -441,30 +440,49 @@ export function renderOverlay(showStock) {
   }
   if (showStock) {
     const stockContainer = dom.stockWrapper;
+    const playerContainers = [ stockContainer.children["p1"]
+                             , stockContainer.children["p2"]
+                             , stockContainer.children["p3"]
+                             , stockContainer.children["p4"] ];
+    const playerPercentContainers = [ playerContainers[0].children["p1Percent"]
+                                    , playerContainers[1].children["p2Percent"]
+                                    , playerContainers[2].children["p3Percent"]
+                                    , playerContainers[3].children["p4Percent"] ];
+    const playerStocksSVGs = [ playerContainers[0].children["p1Stocks"].children[0]
+                             , playerContainers[1].children["p2Stocks"].children[0]
+                             , playerContainers[2].children["p3Stocks"].children[0]
+                             , playerContainers[3].children["p4Stocks"].children[0] ];
     for (let i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
-        const playerContainer = stockContainer.children["p"+(i+1)];
-        const playerPercentContainer = playerContainer.children["p"+(i+1)+"Percent"];
+        const playerPercentContainer = playerPercentContainers[i];
         playerPercentContainer.style.color = "rgb(255," + Math.max(255 - player[i].percent, 0) + ", " + Math.max(255 - player[i].percent, 0) +")";
         playerPercentContainer.innerHTML = Math.floor(player[i].percent) + `<font size="4"> %</font>`;
-        playerPercentContainer.style.right = (22+player[i].percentShake.x)+"px";
-        playerPercentContainer.style.top = (18+player[i].percentShake.y)+"px";
-      }
-    }
-    /*
-    ui.restore();
-    for (let i = 0; i < 4; i++) {
-      if (playerType[i] > -1) {
-        ui.fillStyle = palettes[pPal[i]][0];
-        for (let j = 0; j < player[i].stocks; j++) {
-          ui.beginPath();
-          ui.arc(337 + i * 145 + j * 30, 600, 12, 0, twoPi);
-          ui.closePath();
-          ui.fill();
-          ui.stroke();
+        playerPercentContainer.style.right = (player[i].percentShake.x)+"px";
+        playerPercentContainer.style.top = (player[i].percentShake.y)+"px";
+        const playerStocksSVG = playerStocksSVGs[i];
+        const stocks = player[i].stocks;
+        for (let j = 0; j < 5; j++) {
+          const pip = playerStocksSVG.children["stock"+j];
+          if (j+1 > player[i].stocks || (j !== 1 && player[i].stocks > 5)) {
+            pip.style.visibility = "hidden";
+          }
+          else {
+            pip.style.visibility = "visible";
+            pip.style.fill = palettes[pPal[i]][1];
+            pip.style.stroke = palettes[pPal[i]][0];
+          }
+        }
+        const text = playerStocksSVG.children["text"];
+        if (player[i].stocks > 5) {
+          text.style.visibility = "visible";
+          text.innerHTML = "<tspan>×"+player[i].stocks+"</tspan>";
+        }
+        else {
+          text.style.visibility = "hidden";
         }
       }
     }
+    /*
     const lostStockPopQueue = [];
     ui.fillStyle = "white";
     ui.strokeStyle = "white";

@@ -59,3 +59,8 @@
   width:0.45em;
   padding-left: 5px;
 }
+
+.stocks {
+  transform: scale(0.5,0.5);
+  margin-bottom: -5px;
+}
