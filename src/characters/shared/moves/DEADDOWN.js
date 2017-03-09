@@ -29,6 +29,7 @@ export default {
     if (!actionStates[characterSelections[p]].DEADDOWN.interrupt(p,input)){
       player[p].phys.outOfCameraTimer = 0;
       player[p].phys.intangibleTimer = 2;
+      player[p].phys.hurtBoxState = 1;
       if (player[p].timer === 4){
         if (isFinalDeath()){
           finishGame(input);

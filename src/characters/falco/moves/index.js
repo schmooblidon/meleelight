@@ -63,6 +63,7 @@ import CLIFFATTACKQUICK from "characters/falco/moves/CLIFFATTACKQUICK";
 import DOWNATTACK from "characters/falco/moves/DOWNATTACK";
 import GRAB from "characters/falco/moves/GRAB";
 import CATCHATTACK from "characters/falco/moves/CATCHATTACK";
+import APPEAL from "characters/falco/moves/APPEAL";
 
 export default {
   JAB1,
@@ -129,4 +130,5 @@ export default {
   DOWNATTACK,
   GRAB,
   CATCHATTACK,
+  APPEAL
 };

@@ -43,8 +43,8 @@ export default {
       }
 
       if (player[p].timer === 16){
-        sounds.foxillusion1.play();
-        sounds.foxillusion2.play();
+        sounds.phantasm.play();
+        sounds.phantasmshout.play();
       }
 
       if (player[p].timer === 17) {
@@ -73,7 +73,7 @@ export default {
       }
 
       if (player[p].timer >= 18 && player[p].timer <= 21){
-        drawVfx("illusion",player[p].phys.posPrev,player[p].phys.face);
+        drawVfx("phantasm",player[p].phys.posPrev,player[p].phys.face);
       }
     }
   },

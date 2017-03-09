@@ -22,8 +22,8 @@ export default {
   init : function(p,input){
     player[p].actionState = "UPSPECIALLAUNCH";
     player[p].timer = 0;
-    sounds.foxupbshout.play();
-    sounds.foxupblaunch.play();
+    sounds.firebirdlaunch.play();
+    sounds.falcofirebird.play();
     player[p].hitboxes.id[0] = player[p].charHitboxes.upspecial.id0;
     player[p].hitboxes.active = [true,false,false,false];
     player[p].hitboxes.frame = 0;

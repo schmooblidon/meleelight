@@ -54,6 +54,10 @@ export default {
       actionStates[characterSelections[p]][t[1]].init(p,input);
       return true;
     }
+    else if (input[p][0].du) {
+      actionStates[characterSelections[p]].APPEAL.init(p,input);
+      return true;
+    }
     else if (checkForDash(p,input)){
       actionStates[characterSelections[p]].DASH.init(p,input);
       return true;

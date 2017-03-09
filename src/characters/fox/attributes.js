@@ -143,19 +143,24 @@ setFrames(CHARIDS.FOX_ID, {
   "THROWNFOXBACK" : 6,
   "THROWNFOXFORWARD" : 10,
   "THROWNFOXDOWN" : 32,
+  "THROWNFALCOUP" : 5,
+  "THROWNFALCOBACK" : 6,
+  "THROWNFALCOFORWARD" : 8,
+  "THROWNFALCODOWN" : 24,
   "FURASLEEPSTART" : 30,
   "FURASLEEPLOOP" : 110,
   "FURASLEEPEND" : 60,
   "STOPCEIL" : 9,
   "TECHU" : 26,
+  "REBOUND" : 14
 });
 
 setActionSounds(CHARIDS.FOX_ID, {
   "JUMP" : [],
   "ESCAPEAIR" : [[4,"foxairdodge"]],
   "JUMPAERIAL" : [[1,"foxjump"]],
-  "GUARDON" : [[1,"swordsheath"]],
-  "GUARDOFF" : [[6,"sworddraw"]],
+  "GUARDON" : [],
+  "GUARDOFF" : [],
   "CLIFFCATCH" : [[1,"foxcliffcatch"],[1,"puffledgegrab"]],
   "DEAD" : [[1,"foxdeath"]],
   "FURAFURA" : [[0,"foxfura"]],
@@ -163,6 +168,7 @@ setActionSounds(CHARIDS.FOX_ID, {
   "ESCAPEF" : [],
   "ESCAPEN" : [],
   "OTTOTTOWAIT" : [[0,"foxairdodge"]],
+  "TECH" : []
 });
 
 // HITBOX OFFSETS

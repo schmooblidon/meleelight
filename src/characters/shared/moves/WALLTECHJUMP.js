@@ -1,4 +1,4 @@
-import {checkForSpecials, checkForAerials, checkForDoubleJump, airDrift, fastfall, actionStates} from "physics/actionStateShortcuts";
+import {checkForSpecials, checkForAerials, checkForDoubleJump, airDrift, fastfall, actionStates, playSounds} from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {characterSelections,  player} from "main/main";
 import {framesData} from 'main/characters';
@@ -44,6 +44,7 @@ export default {
     if (player[p].timer === 2){
       sounds.walljump.play();
     }
+    playSounds("TECH",p);
     if (!actionStates[characterSelections[p]].WALLTECH.interrupt(p,input)){
       if (player[p].timer > 0.89 && player[p].timer < 0.91){
         player[p].phys.cVel.x = player[p].phys.face * player[p].charAttributes.wallJumpVelX;

@@ -16,7 +16,6 @@ export default {
       player[p].timer = 0;
     }
     player[p].phys.grounded = false;
-    player[p].phys.face *= -1;
     player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x,player[player[p].phys.grabbedBy].phys.pos.y);
     this.main(p,input);
   },

@@ -152,21 +152,23 @@ setFrames(CHARIDS.FALCO_ID, {
   "FURASLEEPEND" : 60,
   "STOPCEIL" : 9,
   "TECHU" : 26,
+  "REBOUND" : 15
 });
 
 setActionSounds(CHARIDS.FALCO_ID, {
   "JUMP" : [],
-  "ESCAPEAIR" : [[4,"foxairdodge"]],
-  "JUMPAERIAL" : [[1,"foxjump"]],
-  "GUARDON" : [[1,"swordsheath"]],
-  "GUARDOFF" : [[6,"sworddraw"]],
-  "CLIFFCATCH" : [[1,"foxcliffcatch"],[1,"puffledgegrab"]],
-  "DEAD" : [[1,"foxdeath"]],
-  "FURAFURA" : [[0,"foxfura"]],
+  "ESCAPEAIR" : [[4,"falcoairdodge"]],
+  "JUMPAERIAL" : [[1,"falcodoublejump"]],
+  "GUARDON" : [],
+  "GUARDOFF" : [],
+  "CLIFFCATCH" : [[1,"falcocliffcatch"],[1,"puffledgegrab"]],
+  "DEAD" : [[1,"falcodeath"]],
+  "FURAFURA" : [[28,"falcofura"]],
   "ESCAPEB" : [],
   "ESCAPEF" : [],
   "ESCAPEN" : [],
-  "OTTOTTOWAIT" : [[0,"foxairdodge"]],
+  "OTTOTTOWAIT" : [[0,"falcoairdodge"]],
+  "TECH" : [[1,"falcotech"]]
 });
 
 // HITBOX OFFSETS

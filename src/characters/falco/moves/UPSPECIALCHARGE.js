@@ -23,7 +23,7 @@ export default {
     player[p].phys.cVel.y = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.landingMultiplier = 10;
-    sounds.foxupbburn.play();
+    sounds.firebirdcharge.play();
     this.main(p,input);
   },
   main : function(p,input){

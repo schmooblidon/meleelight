@@ -428,6 +428,84 @@ export const sounds = {
   }),
   foxshinereflect: new Howl({
     src: ['sfx/foxshinereflect.wav']
+  }),
+  falco: new Howl({
+    src: ['sfx/falco.wav']
+  }),
+  falcotaunt: new Howl({
+    src: ['sfx/falcotaunt.wav']
+  }),
+  foxtaunt: new Howl({
+    src: ['sfx/foxtaunt.wav']
+  }),
+  marthtaunt: new Howl({
+    src: ['sfx/marthtaunt.wav']
+  }),
+  pufftaunt: new Howl({
+    src: ['sfx/pufftaunt.wav']
+  }),
+  falcofirebird: new Howl({
+    src: ['sfx/falcofirebird.wav']
+  }),
+  falcocliffcatch: new Howl({
+    src: ['sfx/falcocliffcatch.wav']
+  }),
+  falcoshout1: new Howl({
+    src: ['sfx/falcoshout1.wav']
+  }),
+  falcoshout2: new Howl({
+    src: ['sfx/falcoshout2.wav']
+  }),
+  falcoshout3: new Howl({
+    src: ['sfx/falcoshout3.wav']
+  }),
+  falcoshout4: new Howl({
+    src: ['sfx/falcoshout4.wav']
+  }),
+  falcoshout5: new Howl({
+    src: ['sfx/falcoshout5.wav']
+  }),
+  falcofura: new Howl({
+    src: ['sfx/falcofura.wav']
+  }),
+  falcodeath: new Howl({
+    src: ['sfx/falcodeath.wav']
+  }),
+  falcodoublejump: new Howl({
+    src: ['sfx/falcodoublejump.wav']
+  }),
+  falcoairdodge: new Howl({
+    src: ['sfx/falcoairdodge.wav']
+  }),
+  falcotech: new Howl({
+    src: ['sfx/falcotech.wav']
+  }),
+  falcohurt1: new Howl({
+    src: ['sfx/falcohurt1.wav']
+  }),
+  falcohurt2: new Howl({
+    src: ['sfx/falcohurt2.wav']
+  }),
+  falcohurt3: new Howl({
+    src: ['sfx/falcohurt3.wav']
+  }),
+  phantasm: new Howl({
+    src: ['sfx/phantasm.wav']
+  }),
+  phantasmshout: new Howl({
+    src: ['sfx/phantasmshout.wav']
+  }),
+  firebirdcharge: new Howl({
+    src: ['sfx/firebirdcharge.wav']
+  }),
+  firebirdlaunch: new Howl({
+    src: ['sfx/firebirdlaunch.wav']
+  }),
+  falcosleep: new Howl({
+    src: ['sfx/falcosleep.wav']
+  }),
+  hitspin: new Howl({
+    src: ['sfx/hitspin.wav']
   })
 }
 

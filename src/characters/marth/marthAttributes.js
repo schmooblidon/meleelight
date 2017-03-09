@@ -148,11 +148,16 @@ setFrames(CHARIDS.MARTH_ID, {
   "THROWNFOXBACK" : 7,
   "THROWNFOXFORWARD" : 10,
   "THROWNFOXDOWN" : 32,
+  "THROWNFALCOUP" : 6,
+  "THROWNFALCOBACK" : 7,
+  "THROWNFALCOFORWARD" : 9,
+  "THROWNFALCODOWN" : 28,
   "FURASLEEPSTART" : 30,
   "FURASLEEPLOOP" : 80,
   "FURASLEEPEND" : 60,
   "STOPCEIL" : 9,
-  "TECHU" : 26
+  "TECHU" : 26,
+  "REBOUND" : 8
 });
 
 setActionSounds(CHARIDS.MARTH_ID, {
@@ -167,7 +172,8 @@ setActionSounds(CHARIDS.MARTH_ID, {
   "ESCAPEB" : [[33,"sworddraw"]],
   "ESCAPEF" : [[33,"sworddraw"]],
   "ESCAPEN" : [[2,"airdodge"],[18,"sworddraw"]],
-  "OTTOTTOWAIT" : [[0,"airdodge"]]
+  "OTTOTTOWAIT" : [[0,"airdodge"]],
+  "TECH" : []
 });
 
 // HITBOX OFFSETS

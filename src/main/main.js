@@ -51,7 +51,7 @@ export const player = [0,0,0,0];
 export const renderTime = [10,0,100,0];
 export const gamelogicTime = [5,0,100,0];
 export const framerate = [0,0,0];
-export var characterSelections = [3,0,0,0];
+export var characterSelections = [0,0,0,0];
 
 export var shine = 0.5;
 
@@ -674,7 +674,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
       pause[i][0] = false;
     }
 
-    if ( (gameMode == 3 || gameMode == 5)
+    if ( !playing && (gameMode == 3 || gameMode == 5)
          && (tempBuffer[0].a || tempBuffer[1].a) && (tempBuffer[0].l || tempBuffer[1].l) 
          && (tempBuffer[0].r || tempBuffer[1].r) && (tempBuffer[0].s || tempBuffer[1].s)) {
       if (tempBuffer[0].b || tempBuffer[1].b) {
@@ -689,7 +689,7 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   }
   else if (mType[i] !== null) { // gamepad controls
 
-    if ( (gameMode == 3 || gameMode == 5) &&
+    if ( !playing && (gameMode == 3 || gameMode == 5) &&
              ( tempBuffer[0].a && tempBuffer[0].l && tempBuffer[0].r && tempBuffer[0].s ) 
        && (! ( tempBuffer[1].a && tempBuffer[1].l && tempBuffer[1].r && tempBuffer[1].s ))) {
       if (tempBuffer[0].b) {
