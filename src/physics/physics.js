@@ -1027,7 +1027,7 @@ export function physics (i : number, input : any) : void {
   player[i].phys.passing = false;
   player[i].phys.posPrev = new Vec2D(player[i].phys.pos.x,player[i].phys.pos.y);
   player[i].phys.facePrev = player[i].phys.face;
-  deepCopyObject(true,player[i].phys.prevFrameHitboxes,player[i].hitboxes);
+  player[i].phys.prevFrameHitboxes= {...player[i].hitboxes};
 
   hitlagSwitchUpdate(i, input);
   hurtBoxStateUpdate(i);

@@ -592,8 +592,8 @@ export function turboGroundedInterrupt (p,input){
 }
 
 export const actionStates = [];
-export function setupActionStates(index, val){
-  actionStates[index]= deepCopyObject(true,actionStates[index],  val);
+export function setupActionStates(index, val) {
+  actionStates[index] = {...val};
 }
 
 /* char id:
