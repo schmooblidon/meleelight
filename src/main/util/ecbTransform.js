@@ -55,5 +55,5 @@ export function makeECB (pos : Vec2D, halfWidth : number, height : number ) : EC
          , add (pos, new Vec2D(halfWidth, 0))
          , add (pos, new Vec2D(0, height))
          , add (pos, new Vec2D(-halfWidth, 0))
-         ];
+  ];
 }

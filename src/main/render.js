@@ -35,7 +35,7 @@ import {lineBasicMaterial, meshBasicMaterial} from "../render/materials";
 export const hurtboxColours = ["#ffed46", "#2a39ff", "#36ff25"];
 export const twoPi = Math.PI * 2;
 
-export let lostStockQueue = [];
+export const lostStockQueue = [];
 export function rotateVector(vecx, vecy, ang) {
   return new Vec2D( vecx * Math.cos(ang) - vecy * Math.sin(ang)
                   , vecx * Math.sin(ang) + vecy * Math.cos(ang));

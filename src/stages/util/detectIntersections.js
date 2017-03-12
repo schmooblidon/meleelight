@@ -129,7 +129,7 @@ function distanceBetweenLines( line1 : Line, line2 : Line) : number {
                     , distanceToLine(line1[1], line2)
                     , distanceToLine(line2[0], line1)
                     , distanceToLine(line2[1], line1)
-                    ] );
+    ] );
   }
 }
 

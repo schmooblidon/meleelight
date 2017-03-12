@@ -11,8 +11,8 @@ import * as THREE from "three";
 
 const bgPos = [[-30, 500, 300, 500, 900, 500, 1230, 450, 358], [-30, 400, 300, 400, 900, 400, 1230, 350, 179]];
 const direction = [[1, -1, 1, -1, 1, -1, 1, -1, 1], [-1, 1, -1, 1, -1, 1, -1, 1, -1]];
-export let boxFill = "rgba(0, 0, 0, 0.1)";
-export let boxFillBG = "rgba(0, 0, 0, 0.1)";
+export const boxFill = "rgba(0, 0, 0, 0.1)";
+export const boxFillBG = "rgba(0, 0, 0, 0.1)";
 
 
 const bgStars = [];
@@ -20,18 +20,18 @@ for (let p = 0; p < 20; p++) {
   bgStars[p] = new bgStar();
   bgStars[p].pos = new Vec2D(600 + 100 * Math.random() * bgStars[p].velocity.x, 375 + 100 * Math.random() * bgStars[p].velocity.y);
 }
-let bgSparkle = 3;
+const bgSparkle = 3;
 const gridGrad = "rgba(94,173,255,0.2)";
 
 const circleSize = [];
 for (let i = 0; i < 5; i++) {
   circleSize[i] = i * 40;
 }
-let ang = 0;
+const ang = 0;
 export let backgroundType = 0;
 export const snowMeltTime = 200;
 
-let snowBalls = [];
+const snowBalls = [];
 
 const targetbauble = new Image();
 targetbauble.src = "assets/christmas/targetbauble.png";
