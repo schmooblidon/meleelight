@@ -31,6 +31,8 @@ import {getObjectByNameNonRecursive} from "./util/renderUtils";
 import {regularPolygonPoints, polygonFromRect} from "../render/geometry";
 import {polygonGeometry, lineMaterial} from "../render/lineGeometry";
 import {lineBasicMaterial, meshBasicMaterial} from "../render/materials";
+import {dVfx} from "./vfx";
+import {currentPlayers} from "./main";
 
 export const hurtboxColours = ["#ffed46", "#2a39ff", "#36ff25"];
 export const twoPi = Math.PI * 2;
@@ -44,6 +46,7 @@ export function rotateVector(vecx, vecy, ang) {
 /* global animations */
 window.animations;
 
+//TODO replace second arg with /main.js/currentPlayers
 export function loadCharacterAnimationFrames ( scene, characters ) {
   const animationsGroup = new THREE.Group();
   animationsGroup.name = "animationFrames";
@@ -68,6 +71,20 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
   }
   scene.add(animationsGroup);
   animationsGroup.updateMatrixWorld = function() {};
+}
+
+export function loadVFX(scene){
+  for (const effect in dVfx) {
+    const chosenEffect = dVfx[effect];
+    for (let player in currentPlayers) {
+      player = currentPlayers[player];//actually get int
+      if ((chosenEffect.usedBy.indexOf(player) !== -1) || (chosenEffect.usedBy.indexOf(activeStage.name) !== -1)) {
+        chosenEffect.preLoad(scene);
+        break;
+      }
+    }
+  }
+
 }
 
 const playerMaterials = [ meshBasicMaterial.clone()

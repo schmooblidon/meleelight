@@ -44,6 +44,7 @@ import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import * as THREE from '../../node_modules/three';
 import {fillBackground, clearScene, getObjectByNameNonRecursive} from "./util/renderUtils";
+import {loadVFX} from "./render";
 /*globals performance*/
 window._ = require('../third-party/underscore');
 window.requestAnimationFrame = require('../third-party/requestAnimationFrame.js');
@@ -1247,6 +1248,7 @@ export function startGame (){
   togglePort(3);
   characterSelections = [0,1,2,3];
   loadCharacterAnimationFrames(mainScene, [0,1,2,3]);
+  loadVFX(mainScene);
   for (var n = 0; n < 4; n++) {
     if (playerType[n] > -1) {
       initializePlayers(n, false);
