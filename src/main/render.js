@@ -21,7 +21,7 @@ import {actionStates} from "physics/actionStateShortcuts";
 import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
-import {framesData} from "./characters";
+import {framesData, assignedVFX} from "./characters";
 import * as THREE from "three";
 import {drawBezierCurves, makeRectShape, makeDiskShape, makePolygonShape, drawShape, drawLine} from "../render/threeUtil";
 import {createOrUpdateBufferGeometry} from "../render/createOrUpdateBufferGeometry";
@@ -31,7 +31,7 @@ import {getObjectByNameNonRecursive} from "./util/renderUtils";
 import {regularPolygonPoints, polygonFromRect} from "../render/geometry";
 import {polygonGeometry, lineMaterial} from "../render/lineGeometry";
 import {lineBasicMaterial, meshBasicMaterial} from "../render/materials";
-import {dVfx} from "./vfx";
+import {dVfx, vfx} from "./vfx";
 import {currentPlayers} from "./main";
 
 export const hurtboxColours = ["#ffed46", "#2a39ff", "#36ff25"];
@@ -73,18 +73,45 @@ export function loadCharacterAnimationFrames ( scene, characters ) {
   animationsGroup.updateMatrixWorld = function() {};
 }
 
+const registeredVFX = [];
+function buildVfxFromAsset(scene, assets) {
+  //may need for loop to work out individual frames
+  //may be useful as function here if we want to pass in params
+  const geometry = assets.geometry();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+  geometry.attributes.position.onUploadCallback = function (name) { this.array = null; } ;
+  geometry.attributes.normal.onUploadCallback = function (name) { this.array = null; } ;
+  geometry.attributes.uv.onUploadCallback = function (name) { this.array = null; } ;
+  geometry.parameters = null;
+  const material = assets.material();
+  const curveObject = new THREE.Mesh( geometry, material );
+  scene.add(curveObject);
+}
+
 export function loadVFX(scene){
-  for (const effect in dVfx) {
-    const chosenEffect = dVfx[effect];
-    for (let player in currentPlayers) {
-      player = currentPlayers[player];//actually get int
-      if ((chosenEffect.usedBy.indexOf(player) !== -1) || (chosenEffect.usedBy.indexOf(activeStage.name) !== -1)) {
-        chosenEffect.preLoad(scene);
-        break;
+  const vfxMasterGroup = new THREE.Group();
+  vfxMasterGroup.matrixAutoUpdate = false;
+  for (const effect in vfx) {
+    const chosenEffect = vfx[effect];
+    for (let character in currentPlayers) {
+      character = currentPlayers[character];//actually get int
+      if ((assignedVFX["SHARED"].indexOf(chosenEffect.name) !== -1) ||(assignedVFX[character].indexOf(chosenEffect.name) !== -1) || (assignedVFX[character].indexOf(activeStage.name) !== -1)) {
+        if(registeredVFX.indexOf(chosenEffect.name) === -1 ){
+          registeredVFX.push(chosenEffect.name);
+          const vfxGroup = new THREE.Group();
+          vfxGroup.name = chosenEffect.name+character;
+          vfxMasterGroup.add(vfxGroup);
+
+          buildVfxFromAsset(vfxGroup,chosenEffect.assets);
+          break;
+        }
+
       }
     }
   }
-
+  scene.add(vfxMasterGroup);
+  vfxMasterGroup.updateMatrixWorld = function() {};
 }
 
 const playerMaterials = [ meshBasicMaterial.clone()

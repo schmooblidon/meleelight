@@ -6,6 +6,25 @@ export const CHARIDS = {
     FALCO_ID : 3
 };
 
+//load vfx for each asset appropriatel
+export const assignedVFX = {
+  SHARED:["blastzoneExplosion"],
+  //MARTH
+  0:["blastzoneExplosion"],
+  //PUFF
+  1:["blastzoneExplosion"],
+  //FOX
+  2:["blastzoneExplosion"],
+  //FALCO
+  3:["blastzoneExplosion"],
+  battlefield:["blastzoneExplosion"],
+  dreamland:["blastzoneExplosion"],
+  pstadium:["blastzoneExplosion"],
+  ystory:["blastzoneExplosion"],
+  fdest:["blastzoneExplosion"],
+  fountain:["blastzoneExplosion"]
+};
+
 
 export let chars = [];
 export function setChars(index,val){

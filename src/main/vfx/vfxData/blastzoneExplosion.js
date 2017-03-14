@@ -1,3 +1,4 @@
+import * as THREE from "three";
 export default {
   name: "blastzoneExplosion",
   frames: 20,
@@ -8,6 +9,14 @@ export default {
   svg2Active: [1, 3],
   svg3Active: [4, 19],
   svg2Scale: [[1, 1], [1.3, 0.7], [0.7, 1.5]],
-  svg3Scale: [[1, 0.1], [1, 1], [1.3, 0.7], [0.5, 1.5], [1, 1], [1.2, 0.5], [1, 0.8], [0.7, 1.3], [0.5, 1.5], [0.7, 1.3], [1.2, 0.8], [1.6, 0.4], [1, 1], [0.5, 1.5], [0.2, 1.5], [0.1, 1.5]]
-
+  svg3Scale: [[1, 0.1], [1, 1], [1.3, 0.7], [0.5, 1.5], [1, 1], [1.2, 0.5], [1, 0.8], [0.7, 1.3], [0.5, 1.5], [0.7, 1.3], [1.2, 0.8], [1.6, 0.4], [1, 1], [0.5, 1.5], [0.2, 1.5], [0.1, 1.5]],
+  assets: {
+    // can use shared util function to create these or whatever
+    geometry: () => {
+     return new THREE.BoxGeometry(1, 1, 1);
+    },
+    material: () => {
+     return new THREE.MeshBasicMaterial();
+    }
+  }
 };
