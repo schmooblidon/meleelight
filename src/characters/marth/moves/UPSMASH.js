@@ -57,10 +57,15 @@ export default  {
     if (!marth.UPSMASH.interrupt(p, input)) {
       reduceByTraction(p, true);
       if (player[p].timer > 10 && player[p].timer < 16) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "UPSMASH",
-          frame: player[p].timer - 11,
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "UPSMASH",
+            frame: player[p].timer - 11,
+          }
         });
       }
       if (player[p].timer === 13) {

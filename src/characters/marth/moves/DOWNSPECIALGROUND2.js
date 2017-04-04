@@ -27,8 +27,16 @@ export default{
     sounds.powershield.play();
     sounds.marthcounterclank.play();
     sounds.marthcountershout.play();
-    drawVfx("impactLand", player[p].phys.pos, player[p].phys.face);
-    drawVfx("powershield", new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + 8), player[p].phys.face);
+    drawVfx({
+      name: "impactLand",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face
+    });
+    drawVfx({
+      name: "powershield",
+      pos: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + 8),
+      face: player[p].phys.face
+    });
     marth.DOWNSPECIALGROUND2.main(p, input);
   },
   main: function (p, input) {

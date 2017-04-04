@@ -10,7 +10,10 @@ export default {
   init : function(p,input){
     player[p].actionState = "TECHN";
     player[p].timer = 0;
-    drawVfx("tech",player[p].phys.pos);
+    drawVfx({
+      name: "tech",
+      pos: player[p].phys.pos
+    });
     sounds.tech.play();
     actionStates[characterSelections[p]].TECHN.main(p,input);
   },

@@ -32,7 +32,7 @@ import {drawVfx} from "main/vfx/drawVfx";
 import {resetVfxQueue} from "main/vfx/vfxQueue";
 import {setVsStage, getActiveStage, activeStage} from "../stages/activeStage";
 import {music} from "./sfx";
-import {getShowSFX, toggleShowSFX} from "main/vfx";
+import {isShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
@@ -1102,14 +1102,14 @@ export function renderTick (){
       if (playing || frameByFrameRender) {
         var rStart = performance.now();
         clearScreen();
-       // if (getShowSFX()) {
-         // drawBackground();
-       // }
+        //if (getShowSFX()) {
+        //  drawBackground();
+        //}
         //drawStage();
         renderPlayer(dynamicGroup, targetBuilder);
-       // renderArticles();
-       // renderVfx();
-       // renderOverlay(false);
+        //renderArticles();
+        //renderVfx();
+        //renderOverlay(false);
 
         if (showDebug) {
           var diff = performance.now() - rStart;
@@ -1137,7 +1137,7 @@ export function renderTick (){
           targetTimerTick();    
         }
         if (getShowSFX()) {
-       //   drawBackground();
+        //drawBackground();
         }
         drawStage();
         renderPlayer(dynamicGroup, targetBuilder);
@@ -1153,19 +1153,18 @@ export function renderTick (){
       //console.log("test2");
       var rStart = performance.now();
       clearScreen();
-
-    //  if (getShowSFX()) {
+      //if (getShowSFX()) {
       //  drawBackground();
-    //  }
+      //}
       drawStage();
       for (var i = 0; i < 4; i++) {
         if (playerType[i] > -1) {
           renderPlayer(dynamicGroup, i);
         }
       }
-    //  renderArticles();
-     // renderVfx();
-     renderOverlay(true);
+      //renderArticles();
+      //renderVfx();
+      renderOverlay(true);
 
       if (showDebug) {
         var diff = performance.now() - rStart;
@@ -1222,9 +1221,15 @@ export function buildPlayerObject (i){
 export function initializePlayers (i,target){
   buildPlayerObject(i);
   if (target) {
-    drawVfx("entrance", new Vec2D(activeStage.startingPoint[0].x, activeStage.startingPoint[0].y));
+    drawVfx({
+      name: "entrance",
+      pos: new Vec2D(activeStage.startingPoint[0].x, activeStage.startingPoint[0].y)
+    });
   } else {
-    drawVfx("entrance", new Vec2D(startingPoint[i][0], startingPoint[i][1]));
+    drawVfx({
+      name: "entrance",
+      pos: new Vec2D(startingPoint[i][0], startingPoint[i][1])
+    });
   }
 }
 
@@ -1281,7 +1286,10 @@ export function startGame (){
     default:
       break;
   }
-  drawVfx("start", new Vec2D(0, 0));
+  drawVfx({
+    name: "start",
+    pos: new Vec2D(0, 0)
+  });
   findingPlayers = false;
   playing = true;
 }
@@ -1509,7 +1517,7 @@ export function start (){
   renderTick();
 startGame();
   $("#effectsButton").click(function() {
-    if (getShowSFX()) {
+    if (isShowSFX()) {
       $("#effectsButtonEdit").empty().append("OFF");
     } else {
       $("#effectsButtonEdit").empty().append("ON");

@@ -1,4 +1,4 @@
 import general from "./general";
-export default (j)=> {
-  general(j, 0);
+export default (posInQueue)=> {
+  general(posInQueue, 0);
 };

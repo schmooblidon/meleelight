@@ -36,7 +36,11 @@ export default  {
   },
   main: function (p, input) {
     if (player[p].timer === 15) {
-      drawVfx("dashDust", player[p].phys.pos, player[p].phys.face);
+      drawVfx({
+        name: "dashDust",
+        pos: player[p].phys.pos,
+        face: player[p].phys.face
+      });
     }
     if (player[p].timer >= 16 && player[p].timer <= 45 && player[p].phys.rollOutChargeAttempt) {
       if (input[p][0].b) {
@@ -47,7 +51,11 @@ export default  {
         }
         if (player[p].phys.rollOutCharge >= 21) {
           if (player[p].timer === 16) {
-            drawVfx("dashDust", player[p].phys.pos, player[p].phys.face);
+            drawVfx({
+              name: "dashDust",
+              pos: player[p].phys.pos,
+              face: player[p].phys.face
+            });
           }
         }
       }
@@ -94,7 +102,11 @@ export default  {
           player[p].hitboxes.id[2].dmg = newDmg;
           if (player[p].phys.rollOutCharge >= 21) {
             if (player[p].phys.rollOutDistance % 10 === 0) {
-              drawVfx("dashDust", player[p].phys.pos, player[p].phys.face);
+              drawVfx({
+                name: "dashDust",
+                pos: player[p].phys.pos,
+                face: player[p].phys.face
+              });
             }
           }
         }
@@ -143,10 +155,20 @@ export default  {
       player[p].phys.face *= -1;
       sounds.rollouthit.play();
       if (wallFace === "R") {
-        drawVfx("wallBounce", new Vec2D(activeStage.wallR[wallNum][1].x, player[p].phys.ECBp[3].y), 1, 1);
+        drawVfx({
+          name: "wallBounce",
+          pos: new Vec2D(activeStage.wallR[wallNum][1].x, player[p].phys.ECBp[3].y),
+          face: 1,
+          f: 1
+        });
       }
       else {
-        drawVfx("wallBounce", new Vec2D(activeStage.wallL[wallNum][1].x, player[p].phys.ECBp[1].y), -1, 0);
+        drawVfx({
+          name: "wallBounce",
+          pos: new Vec2D(activeStage.wallL[wallNum][1].x, player[p].phys.ECBp[1].y),
+          face: -1,
+          f: 0
+        });
       }
     }
   },

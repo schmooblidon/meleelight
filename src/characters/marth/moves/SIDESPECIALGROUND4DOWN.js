@@ -31,10 +31,15 @@ export default {
        31-33
        37-38*/
       if (player[p].timer > 9 && player[p].timer < 40) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "SIDESPECIALGROUND4DOWN",
-          frame: player[p].timer - 10
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "SIDESPECIALGROUND4DOWN",
+            frame: player[p].timer - 10
+          }
         });
       }
       if (player[p].timer > 12 && player[p].timer < 39) {

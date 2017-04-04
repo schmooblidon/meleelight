@@ -14,8 +14,16 @@ export default {
   init : function(p,input){
     player[p].actionState = "LANDING";
     player[p].timer = 0;
-    drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
-    drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
+    drawVfx({
+      name: "impactLand",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face
+    });
+    drawVfx({
+      name: "circleDust",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face
+    });
     sounds.land.play();
     actionStates[characterSelections[p]].LANDING.main(p,input);
   },

@@ -36,10 +36,15 @@ export default {
     if (!marth.JAB1.interrupt(p, input)) {
       reduceByTraction(p, true);
       if (player[p].timer > 3 && player[p].timer < 15) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "JAB1",
-          frame: player[p].timer - 4
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "JAB1",
+            frame: player[p].timer - 4
+          }
         });
       }
       if (player[p].timer > 2 && player[p].timer < 26 && input[p][0].a && !input[p][1].a) {

@@ -25,7 +25,11 @@ export default {
         }
       }
       if (player[p].timer === 4){
-        drawVfx("dashDust",player[p].phys.pos,player[p].phys.face);
+        drawVfx({
+          name: "dashDust",
+          pos: player[p].phys.pos,
+          face: player[p].phys.face
+        });
       }
       if (player[p].timer > 1){
         if (Math.abs(input[p][0].lsX) < 0.3){

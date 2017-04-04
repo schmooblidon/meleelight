@@ -43,8 +43,20 @@ export default {
       if (player[p].timer === 10){
         sounds.foxlaserfire.play();
         // laser instance
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),player[p].phys.face,0);
-        articles.LASER.init(p,8,9,0);
+        drawVfx({
+          name:"laser",
+          pos:new Vec2D(player[p].phys.pos.x+(8*player[p].phys.face),player[p].phys.pos.y+9),
+          face:player[p].phys.face,
+          f:0,
+          color1:{r:255,g:59,b:59},
+          color2:{r:255,g:57,b:87}
+        });
+        articles.LASER.init({
+          p: p,
+          x: 8,
+          y: 9,
+          rotate: 0
+        });
       }
       if (player[p].timer === 30){
         sounds.foxlaserholster.play();
