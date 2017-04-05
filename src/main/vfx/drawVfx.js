@@ -10,7 +10,7 @@ export function drawVfx(vfxConfig) {
   if (typeof(facing) === 'undefined') {
     facing = -1;
   }
-  const instance = deepCopyObject(true, vfxConfig.name);
+  const instance = deepCopyObject(true, vfx[vfxConfig.name]);
   if (instance.name === "circleDust") {
     instance.circles[0] = Math.random() * -2;
     instance.circles[1] = (Math.random() * -activeStage.scale) - 2;
