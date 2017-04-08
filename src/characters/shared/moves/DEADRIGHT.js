@@ -15,7 +15,11 @@ export default {
     player[p].phys.kVel.x = 0;
     player[p].phys.kVel.y = 0;
     player[p].percent = 0;
-    drawVfx("blastzoneExplosion",player[p].phys.pos,-90);
+    drawVfx({
+      name: "blastzoneExplosion",
+      pos: player[p].phys.pos,
+      face: -90
+    });
     if (!isFinalDeath()){
       screenShake(500);
       percentShake(500,p);

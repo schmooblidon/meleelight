@@ -14,11 +14,11 @@ import vfx from "main/vfx/vfxData/index";
 export function singGen(j, rMin, rMax, notePhase, posScale, posPhase) {
   let i;
   fg2.save();
-  const p = vfxQueue[j][3];
+  const p = vfxQueue[j].face;
   // total 31
   // fade out on 26
   // 5 frames of fade in, full opacity on frame 6
-  const frame = vfxQueue[j][1];
+  const frame = vfxQueue[j].timer;
   const pos = new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + 8);
   const lrScaling = posScale * player[p].phys.face;
   fg2.translate((pos.x * activeStage.scale) + activeStage.offset[0] + lrScaling * Math.cos(frame / 6.5 + posPhase), (pos.y * -activeStage.scale) + activeStage.offset[1] - 2.5 * Math.sin(frame / 8));

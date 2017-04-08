@@ -4,13 +4,13 @@ import {activeStage} from "stages/activeStage";
 import {makeColour} from "main/vfx/makeColour";
 import {drawArrayPathNew} from "../drawArrayPathNew";
 import vfx from "main/vfx/vfxData/index";
-export default(j)=> {
-  const p = vfxQueue[j][4];
+export default (posInQueue)=> {
+  const p = vfxQueue[posInQueue].facing;
   if (player[p].actionState === "UPSPECIALLAUNCH") {
     fg2.save();
     const frame = (player[p].timer - 1) % 4;
 
-    fg2.translate((vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0], (vfxQueue[j][2].y * -activeStage.scale) + activeStage.offset[
+    fg2.translate((vfxQueue[posInQueue].newPos.x * activeStage.scale) + activeStage.offset[0], (vfxQueue[posInQueue].newPos.y * -activeStage.scale) + activeStage.offset[
             1]);
 
     const fireGrad = fg2.createLinearGradient(0, -130, 0, 20);
@@ -26,7 +26,7 @@ export default(j)=> {
       fireGrad.addColorStop(0.6, makeColour(210, 59, 26, 0.9));
       fireGrad.addColorStop(1, makeColour(158, 34, 12, 0.3));
     }
-    drawArrayPathNew(fg2, fireGrad, vfxQueue[j][3], 0, 0, vfx.firefoxlaunch.path[frame], 0.35 * (activeStage.scale /
+    drawArrayPathNew(fg2, fireGrad, vfxQueue[posInQueue].face, 0, 0, vfx.firefoxlaunch.path[frame], 0.35 * (activeStage.scale /
         4.5), 0.35 * (activeStage.scale / 4.5), player[p].rotation, player[p].rotationPoint.x, player[p].rotationPoint
         .y);
     fg2.restore();

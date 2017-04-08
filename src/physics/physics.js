@@ -86,7 +86,12 @@ function dealWithWallCollision ( i : number, newPosition : Vec2D, pt : number, w
   }
   else if (inDamageState && Math.sign(player[i].phys.kVel) !== sign && player[i].hit.hitlag === 0 && Math.pow(player[i].phys.kVel.x,2)+Math.pow(player[i].phys.kVel.y,2) >= 2.25){
     player[i].phys.face = sign;
-    drawVfx("wallBounce", new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y), sign, wallNormal);
+    drawVfx({
+      name: "wallBounce",
+      pos: new Vec2D(player[i].phys.pos.x, player[i].phys.ECBp[1].y),
+      face: sign,
+      f: wallNormal
+    });
     actionStates[characterSelections[i]].WALLDAMAGE.init(i,input, wallNormal);
   }
   else if (player[i].hit.hitlag === 0){
@@ -340,7 +345,12 @@ function dealWithCeilingCollision( i : number, newPosition : Vec2D
       if (player[i].phys.techTimer > 0) {
         actionStates[characterSelections[i]].TECHU.init(i,input);
       } else {
-        drawVfx("ceilingBounce", ecbTop, 1, ceilingNormal);
+        drawVfx({
+          name: "ceilingBounce",
+          pos: ecbTop,
+          face: 1,
+          f: ceilingNormal
+        });
         sounds.bounce.play();
         actionStates[characterSelections[i]].STOPCEIL.init(i,input,ceilingNormal);
       }
@@ -541,13 +551,21 @@ function hitlagSwitchUpdate(i : number, input : any) : void {
       if (player[i].shocked % 5 === 0) {
         sounds.electricfizz.play();
       }
-      drawVfx("shocked", new Vec2D(player[i].phys.pos.x, player[i].phys.pos.y + 5), player[i].phys.face);
+      drawVfx({
+        name: "shocked",
+        pos: new Vec2D(player[i].phys.pos.x, player[i].phys.pos.y + 5),
+        face: player[i].phys.face
+      });
     }
 
     if (player[i].burning > 0) {
       player[i].burning--;
       if (player[i].burning % 6 === 0) {
-        drawVfx("burning", new Vec2D(player[i].phys.pos.x, player[i].phys.pos.y + 5), player[i].phys.face);
+        drawVfx({
+          name: "burning",
+          pos: new Vec2D(player[i].phys.pos.x, player[i].phys.pos.y + 5),
+          face: player[i].phys.face
+        });
       }
     }
 

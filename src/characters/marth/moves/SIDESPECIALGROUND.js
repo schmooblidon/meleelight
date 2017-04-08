@@ -38,10 +38,15 @@ export default {
       }
       reduceByTraction(p, true);
       if (player[p].timer > 4 && player[p].timer < 12) {
-        drawVfx("swing", new Vec2D(0, 0), player[p].phys.face, {
-          pNum: p,
-          swingType: "SIDESPECIALGROUND1",
-          frame: player[p].timer - 5
+        drawVfx({
+          name: "swing",
+          pos: new Vec2D(0, 0),
+          face: player[p].phys.face,
+          f: {
+            pNum: p,
+            swingType: "SIDESPECIALGROUND1",
+            frame: player[p].timer - 5
+          }
         });
       }
       if (player[p].timer === 6) {

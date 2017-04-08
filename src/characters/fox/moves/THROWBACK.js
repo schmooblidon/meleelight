@@ -33,22 +33,58 @@ export default {
         player[p].phys.face *= -1;
       }
       if (prevFrame < 14 && player[p].timer >= 14){
-        articles.LASER.init(p,5.2,10,Math.PI*0.22);
+        articles.LASER.init({
+          p: p,
+          x: 5.2,
+          y: 10,
+          rotate: Math.PI * 0.22
+        });
         sounds.foxlaserfire.play();
         // 135
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.2*player[p].phys.face),player[p].phys.pos.y+10),player[p].phys.face,Math.PI*0.22);
+        drawVfx({
+          name:"laser",
+          pos:new Vec2D(player[p].phys.pos.x+(5.2*player[p].phys.face),player[p].phys.pos.y+10),
+          face:player[p].phys.face,
+          f:Math.PI*0.22,
+          color1:{r:255,g:59,b:59},
+          color2:{r:255,g:57,b:87}
+        });
       }
       else if (prevFrame < 16 && player[p].timer >= 16){
-        articles.LASER.init(p,5.4,9.7,Math.PI*0.20);
+        articles.LASER.init({
+          p: p,
+          x: 5.4,
+          y: 9.7,
+          rotate: Math.PI * 0.20
+        });
         sounds.foxlaserfire.play();
         // 135
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.4*player[p].phys.face),player[p].phys.pos.y+9.7),player[p].phys.face,Math.PI*0.20);
+        drawVfx({
+          name:"laser",
+          pos:new Vec2D(player[p].phys.pos.x+(5.4*player[p].phys.face),player[p].phys.pos.y+9.7),
+          face:player[p].phys.face,
+          f:Math.PI*0.20,
+          color1:{r:255,g:59,b:59},
+          color2:{r:255,g:57,b:87}
+        });
       }
       else if (prevFrame < 19 && player[p].timer >= 19){
-        articles.LASER.init(p,5.3,9.8,Math.PI*0.22);
+        articles.LASER.init({
+          p: p,
+          x: 5.3,
+          y: 9.8,
+          rotate: Math.PI * 0.22
+        });
         sounds.foxlaserfire.play();
         // 135
-        drawVfx("laser",new Vec2D(player[p].phys.pos.x+(5.3*player[p].phys.face),player[p].phys.pos.y+9.8),player[p].phys.face,Math.PI*0.22);
+        drawVfx({
+          name:"laser",
+          pos:new Vec2D(player[p].phys.pos.x+(5.3*player[p].phys.face),player[p].phys.pos.y+9.8),
+          face:player[p].phys.face,
+          f:Math.PI*0.22,
+          color1:{r:255,g:59,b:59},
+          color2:{r:255,g:57,b:87}
+        });
       }
       if (Math.floor(player[p].timer+0.01) === 8){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);

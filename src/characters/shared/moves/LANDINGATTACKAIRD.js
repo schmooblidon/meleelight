@@ -16,7 +16,11 @@ export default {
     else {
       player[p].phys.landingLagScaling = 1;
     }
-    drawVfx("circleDust",player[p].phys.pos,player[p].phys.face);
+    drawVfx({
+      name: "circleDust",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face
+    });
     sounds.land.play();
     actionStates[characterSelections[p]].LANDINGATTACKAIRD.main(p,input);
   },
