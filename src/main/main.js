@@ -198,7 +198,7 @@ export function setMatchTimer (val){
 }
 
 export let usingLocalStorage = false;
-if (typeof(Storage) !== "undefined") {
+if (window.localStorage) {
   // Code for localStorage/sessionStorage.
   usingLocalStorage = true;
   console.log("local storage works");
