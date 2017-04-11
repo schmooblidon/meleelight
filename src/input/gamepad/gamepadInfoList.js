@@ -15,7 +15,8 @@ import {rockx360} from "./gamepads/rockx360.js";
 import {wiiU} from "./gamepads/wiiU.js";
 import {betop} from "./gamepads/betop.js";
 import {dualAction} from "./gamepads/dualAction.js";
+import {ps3} from "./gamepads/ps3.js";
 
 export const gamepadInfoList = [ mayflash, vjoy, raphnetV2_9, raphnetV3_2, xbox, tigergame1, tigergame2
-                               , retrolink, brook, ps4, rockx360, wiiU, betop, dualAction 
+                               , retrolink, brook, ps4, rockx360, wiiU, betop, dualAction, ps3 
                                ];
