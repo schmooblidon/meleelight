@@ -25,8 +25,15 @@ export default {
     player[p].phys.inShine = 0;
     sounds.foxshine.play();
     player[p].shineLoop = 6;
-    drawVfx("impactLand",player[p].phys.pos,player[p].phys.face);
-    drawVfx("shine",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+6));
+    drawVfx({
+      name: "impactLand",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face
+    });
+    drawVfx({
+      name: "shine",
+      pos: new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + 6)
+    });
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.downspecial.id0;
     this.main(p,input);
@@ -53,7 +60,11 @@ export default {
             player[p].shineLoop = 0;
           }
           player[p].shineLoop++;
-          drawVfx("shineloop",new Vec2D(0,0),p);
+          drawVfx({
+            name: "shineloop",
+            pos: new Vec2D(0, 0),
+            face: p
+          });
         }
         if (player[p].timer === 35){
           player[p].phys.face *= -1;

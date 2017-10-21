@@ -30,7 +30,11 @@ export default {
         player[p].shineLoop = 0;
       }
       player[p].shineLoop++;
-      drawVfx("shineloop",new Vec2D(0,0),p);
+      drawVfx({
+        name:"shineloop",
+        pos:new Vec2D(0,0),
+        face:p
+      });
     }
   },
   interrupt : function(p,input) {

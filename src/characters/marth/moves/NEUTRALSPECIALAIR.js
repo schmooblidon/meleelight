@@ -45,7 +45,11 @@ export default {
         player[p].colourOverlay = "rgb(" + newCol[0] + "," + newCol[1] + "," + newCol[2] + ")";
         player[p].colourOverlayBool = true;
         if (player[p].phys.shieldBreakerCharge % 6 === 0) {
-          drawVfx("dashDust", player[p].phys.pos, player[p].phys.face);
+          drawVfx({
+            name: "dashDust",
+            pos: player[p].phys.pos,
+            face: player[p].phys.face
+          });
         }
       }
       else {
@@ -122,7 +126,11 @@ export default {
 
       if (player[p].timer === 50) {
         if (player[p].phys.shieldBreakerCharge >= 120) {
-          drawVfx("groundBounce", new Vec2D(player[p].phys.pos.x + 18 * player[p].phys.face, player[p].phys.pos.y), player[p].phys.face);
+          drawVfx({
+            name: "groundBounce",
+            pos: new Vec2D(player[p].phys.pos.x + 18 * player[p].phys.face, player[p].phys.pos.y),
+            face: player[p].phys.face
+          });
         }
       }
     }

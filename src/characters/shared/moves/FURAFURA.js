@@ -13,7 +13,11 @@ export default {
     player[p].actionState = "FURAFURA";
     player[p].timer = 0;
     player[p].phys.stuckTimer = 490;
-    drawVfx("furaFura",new Vec2D(player[p].phys.pos.x+(4+Math.random()*2)*player[p].phys.face,player[p].phys.pos.y+11+Math.random()*3),player[p].phys.face);
+    drawVfx({
+      name: "furaFura",
+      pos: new Vec2D(player[p].phys.pos.x + (4 + Math.random() * 2) * player[p].phys.face, player[p].phys.pos.y + 11 + Math.random() * 3),
+      face: player[p].phys.face
+    });
     player[p].furaLoopID = sounds.furaloop.play();
     actionStates[characterSelections[p]].FURAFURA.main(p,input);
   },
@@ -25,10 +29,18 @@ export default {
       }
       reduceByTraction(p,true);
       if (player[p].timer % 49 === 0){
-        drawVfx("furaFura",new Vec2D(player[p].phys.pos.x+(3+Math.random()*2)*player[p].phys.face,player[p].phys.pos.y+11+Math.random()*3),player[p].phys.face);
+        drawVfx({
+          name: "furaFura",
+          pos: new Vec2D(player[p].phys.pos.x + (3 + Math.random() * 2) * player[p].phys.face, player[p].phys.pos.y + 11 + Math.random() * 3),
+          face: player[p].phys.face
+        });
       }
       if (player[p].timer % 49 === 20){
-        drawVfx("furaFura",new Vec2D(player[p].phys.pos.x+(5+Math.random()*2)*player[p].phys.face,player[p].phys.pos.y+8+Math.random()*3),player[p].phys.face);
+        drawVfx({
+          name: "furaFura",
+          pos: new Vec2D(player[p].phys.pos.x + (5 + Math.random() * 2) * player[p].phys.face, player[p].phys.pos.y + 8 + Math.random() * 3),
+          face: player[p].phys.face
+        });
       }
       if (player[p].phys.shieldHP > 30){
         player[p].phys.shieldHP = 30;

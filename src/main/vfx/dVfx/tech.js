@@ -2,17 +2,17 @@ import {fg2} from "main/main";
 import {makeColour} from "main/vfx/makeColour";
 import {vfxQueue} from "main/vfx/vfxQueue";
 import {activeStage} from "stages/activeStage";
-export default(j)=> {
+export default (posInQueue)=> {
   fg2.save();
-  fg2.strokeStyle = makeColour(251, 246, 119, (0.3 * ((vfxQueue[j][0].frames - vfxQueue[j][1]) / vfxQueue[j][0].frames) +
+  fg2.strokeStyle = makeColour(251, 246, 119, (0.3 * ((vfxQueue[posInQueue].frames - vfxQueue[posInQueue].timer) / vfxQueue[posInQueue].frames) +
   0.7));
-  fg2.fillStyle = makeColour(255, 116, 92, (0.3 * ((vfxQueue[j][0].frames - vfxQueue[j][1]) / vfxQueue[j][0].frames) +
+  fg2.fillStyle = makeColour(255, 116, 92, (0.3 * ((vfxQueue[posInQueue].frames - vfxQueue[posInQueue].timer) / vfxQueue[posInQueue].frames) +
   0.7));
-  fg2.translate((vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0], (vfxQueue[j][2].y * -activeStage.scale) + activeStage.offset[
+  fg2.translate((vfxQueue[posInQueue].newPos.x * activeStage.scale) + activeStage.offset[0], (vfxQueue[posInQueue].newPos.y * -activeStage.scale) + activeStage.offset[
           1]);
   fg2.lineWidth = 3;
-  fg2.scale(Math.min(0.2 * vfxQueue[j][1], 1), Math.min(0.2 * vfxQueue[j][1], 1));
-  fg2.rotate(vfxQueue[j][1] * Math.PI / 8);
+  fg2.scale(Math.min(0.2 * vfxQueue[posInQueue].timer, 1), Math.min(0.2 * vfxQueue[posInQueue].timer, 1));
+  fg2.rotate(vfxQueue[posInQueue].timer * Math.PI / 8);
   for (let i = 0; i < 4; i++) {
     fg2.scale(0.7 + Math.random() * 0.6, 0.7 + Math.random() * 0.6);
     fg2.rotate(i * Math.PI / 2);

@@ -1,5 +1,8 @@
-export function drawArrayPathNew(can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY) {
+export function drawArrayPathNew(can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY, extra) {
   can.save();
+  if (extra !== undefined) {
+    extra();
+  }
   can.translate(tX - rpX, tY - rpY);
   can.rotate(rotate);
   for (let j = 0; j < path.length; j++) {

@@ -9,15 +9,15 @@ import {vfx} from "main/vfx";
 const lightBlue = "rgba(196, 252, 254, 0.82)";
 const white =  "rgba(235, 250, 255, 0.9)";
 
-export default(j) =>{
+export default (posInQueue) =>{
   fg2.save();
-  const tX = (vfxQueue[j][2].x * activeStage.scale) + activeStage.offset[0];
-  const tY = (vfxQueue[j][2].y * -activeStage.scale) + activeStage.offset[1];
+  const tX = (vfxQueue[posInQueue].newPos.x * activeStage.scale) + activeStage.offset[0];
+  const tY = (vfxQueue[posInQueue].newPos.y * -activeStage.scale) + activeStage.offset[1];
   let r;
   let a;
   let b;
 
-  if (vfxQueue[j][1] === 1) {
+  if (vfxQueue[posInQueue].timer === 1) {
     fg2.fillStyle = lightBlue;
     drawHexagon(5.1 * activeStage.scale, tX, tY, 10);
     fg2.fillStyle = white;
@@ -34,7 +34,7 @@ export default(j) =>{
     fg2.closePath();
     fg2.fill();
     stars(tX,tY, 2+3*Math.floor(Math.random()), 1.5 * activeStage.scale, 5.5 * activeStage.scale );
-  } else if (vfxQueue[j][1] === 2) {
+  } else if (vfxQueue[posInQueue].timer === 2) {
     fg2.fillStyle = lightBlue;
     drawHexagon(6.6 * activeStage.scale, tX, tY, 10);
     fg2.fillStyle = white;
