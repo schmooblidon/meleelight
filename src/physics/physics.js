@@ -1089,8 +1089,7 @@ export function physics (i : number, input : any) : void {
   }
 
 
-  if (!actionStates[characterSelections[i]][player[i].actionState].ignoreCollision) { 
-  // second disjunct temporary, until throws no longer set "ignoreCollision" to true
+  if (!actionStates[characterSelections[i]][player[i].actionState].ignoreCollision) {
 
     let notTouchingWalls = [true, true];
     let stillGrounded = true;
