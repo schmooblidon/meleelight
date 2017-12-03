@@ -16,6 +16,8 @@ import {Segment2D} from "../main/util/Segment2D";
 import {drawLaserLine} from "../main/vfx/dVfx/laser";
 import {chromaticAberration} from "../main/vfx/chromaticAberration";
 import {unmakeColour} from "../main/vfx/makeColour";
+
+import {sweepCircleVsSweepCircle, sweepCircleVsAABB} from "./interpolatedCollision";
 /* eslint-disable */
 
 export let aArticles = [];
@@ -494,7 +496,7 @@ export function executeArticleHits (input){
 }
 
 export function wallDetection (i){
-  const article = aArticles[i][2];
+  const article = aArticles[i].instance;
   const ecbp = article.ecb;
   let ecb1;
   if (article.timer < 2) {
@@ -576,9 +578,9 @@ export function articleShieldCollision (a,v,previous){
 }
 
 export function interpolatedArticleCircleCollision (a,circlePos,r){
-  const h1 = aArticles[a][2].posPrev;
-  const h2 = aArticles[a][2].pos;
-  const s  = aArticles[a][2].hb.size
+  const h1 = aArticles[a].instance.posPrev;
+  const h2 = aArticles[a].instance.pos;
+  const s  = aArticles[a].instance.hb.size
 
   const collision = sweepCircleVsSweepCircle ( h1, s, h2, s, circlePos, r, circlePos, r );
 
@@ -592,9 +594,9 @@ export function interpolatedArticleCircleCollision (a,circlePos,r){
 
 export function interpolatedArticleHurtCollision (a,v){
   const hurt = player[v].phys.hurtbox;
-  const h1 = aArticles[a][2].posPrev;
-  const h2 = aArticles[a][2].pos;
-  const r  = aArticles[a][2].hb.size
+  const h1 = aArticles[a].instance.posPrev;
+  const h2 = aArticles[a].instance.pos;
+  const r  = aArticles[a].instance.hb.size
 
   const collision = sweepCircleVsAABB ( h1, r, h2, r, hurt.min, hurt.max );
 

@@ -31,7 +31,7 @@ import {toggleTransparency,getTransparency} from "main/vfx/transparency";
 import {drawVfx} from "main/vfx/drawVfx";
 import {resetVfxQueue} from "main/vfx/vfxQueue";
 import {setVsStage, getActiveStage, activeStage} from "../stages/activeStage";
-import {music} from "./sfx";
+import {MusicManager} from "./music";
 import {isShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
@@ -361,7 +361,7 @@ export function findPlayers (){
           keyboardOccupied = true;
           sounds.menuForward.play();
           if (ports == 0) {
-            music.menu.play("menuStart");
+            MusicManager.playMenuLoop();
           }
           addPlayer(ports, "keyboard");
         }
@@ -405,7 +405,7 @@ export function findPlayers (){
           if (buttonState(gamepad, gpdInfo, "s")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == i) {
+              if (currentPlayers[k] === i) {
                 alreadyIn = true;
               }
             }
@@ -414,8 +414,8 @@ export function findPlayers (){
                 changeGamemode(1);
                 $("#keyboardPrompt").hide();
                 sounds.menuForward.play();
-                if (ports == 0) {
-                  music.menu.play("menuStart");
+                if (ports === 0) {
+                  MusicManager.playMenuLoop();
                 }
                 addPlayer(i, gpdInfo);
               }
@@ -784,10 +784,10 @@ function interpretPause(pause0, pause1) {
       playing ^= true;
       if (!playing) {
         sounds.pause.play();
-        changeVolume(music, masterVolume[1] * 0.3, 1);
+        changeVolume(MusicManager, masterVolume[1] * 0.3, 1);
         renderForeground();
       } else {
-        changeVolume(music, masterVolume[1], 1);
+        changeVolume(MusicManager, masterVolume[1], 1);
       }
     }
   }
@@ -1256,23 +1256,19 @@ export function startGame (){
   matchTimer = 480;
   startTimer = 1.5;
   starting = true;
-  music.menu.stop();
+  MusicManager.stopWhatisPlaying();
   switch (stageSelect) {
     case 0:
-      music.battlefield.stop();
-      music.battlefield.play("battlefieldStart");
+      MusicManager.playBattleFieldLoop();
       break;
     case 1:
-      music.yStory.stop();
-      music.yStory.play("yStoryStart");
+      MusicManager.playyStoryLoop();
       break;
     case 2:
-      music.pStadium.stop();
-      music.pStadium.play("pStadiumStart");
+      MusicManager.playpStadiumLoop();
       break;
     case 3:
-      music.dreamland.stop();
-      music.dreamland.play("dreamlandStart");
+      MusicManager.playDreamLandLoop();
       break;
     default:
       break;
@@ -1290,17 +1286,14 @@ export function endGame (input){
   resetLostStockQueue();
     setPhantonQueue([]);
     resetAArticles();
-  music.battlefield.stop();
-  music.yStory.stop();
-  music.pStadium.stop();
-  music.dreamland.stop();
-  changeVolume(music, masterVolume[1], 1);
+  MusicManager.stopWhatisPlaying();
+  changeVolume(MusicManager, masterVolume[1], 1);
   playing = false;
   clearScreen();
   drawStage();
   if (gameMode == 3) {
     changeGamemode(2);
-    music.menu.play("menuStart");
+    MusicManager.playMenuLoop();
   } else if (gameMode == 5) {
     if (targetTesting) {
       changeGamemode(4);
@@ -1410,10 +1403,7 @@ export function finishGame (input){
   fg2.font = "900 " + size + "px Arial";
   fg2.fillText(text, 600, 470 / textScale);
   fg2.restore();
-  music.battlefield.stop();
-  music.yStory.stop();
-  music.pStadium.stop();
-  music.dreamland.stop();
+  MusicManager.stopWhatisPlaying();
   setTimeout(function() {
     endGame(input)
   }, 2500);

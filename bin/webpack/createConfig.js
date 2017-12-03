@@ -63,7 +63,7 @@ function createConfig(options) {
               loader: 'babel-loader',
               query: {
                 presets: ['es2015'],
-                plugins: ['transform-flow-strip-types']
+                plugins: ['transform-flow-strip-types','transform-class-properties']
               }
             }
           ],
@@ -102,7 +102,7 @@ function createConfig(options) {
               loader: 'babel-loader',
               query: {
                 presets: ['es2015'],
-                plugins: ['transform-flow-strip-types']
+                plugins: ['transform-flow-strip-types','transform-class-properties']
               }
             }
           ],

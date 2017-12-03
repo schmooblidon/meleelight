@@ -6,7 +6,7 @@ import { setTargetPlayer} from "target/targetplay";
 import { setTargetPointerPos} from "../stages/targetselect";
 import {  setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
-import {music} from "../main/sfx";
+import {MusicManager} from "../main/music";
 import {runCalibration} from "../input/gamepad/gamepadCalibration";
 /* eslint-disable */
 
@@ -51,8 +51,8 @@ export function menuMove (i, input){
           setTargetPlayer(i);
           setTargetPointerPos([178.5,137]);
         //input[i].a[1] = true;
-        music.menu.stop();
-        music.targettest.play("targettestStart");
+        MusicManager.stopWhatisPlaying();
+        MusicManager.playTargetTestLoop();
         changeGamemode(7);
       }
       else if (menuSelected == 2){

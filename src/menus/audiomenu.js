@@ -6,7 +6,7 @@ import {player, setCookie, changeGamemode, ports, bg1, bg1 as fg1, layers, fg2 a
 import {sounds} from "main/sfx";
 import {twoPi} from "main/render";
 import {stickHoldEach, stickHold, increaseStick, resetStick} from "menus/menu";
-import {music} from "../main/sfx";
+import {MusicManager} from "../main/music";
 /* eslint-disable */
 
 // sounds, music
@@ -115,7 +115,7 @@ export function audioMenuControls (i, input){
     if (audioMenuSelected == 0) {
       changeVolume(sounds, masterVolume[0], 0);
     } else {
-      changeVolume(music, masterVolume[1], 1);
+      changeVolume(MusicManager, masterVolume[1], 1);
     }
   }
 }
@@ -218,6 +218,6 @@ export function getAudioCookies (){
   const m = getCookie("musicLevel");
   if (m != null && m != undefined && m != "null"){
     masterVolume[1] = Number(m);
-    changeVolume(music, masterVolume[1], 1);
+    changeVolume(MusicManager, masterVolume[1], 1);
   }
 }
