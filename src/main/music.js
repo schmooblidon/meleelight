@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-import {masterVolume} from '../menus/audiomenu';
 
 export class MusicManager {
 
@@ -16,7 +15,9 @@ export class MusicManager {
       //end - 181070
     },
     onend: function () {
-      this.play("menuLoop");
+      if (MusicManager.isWhatisPlaying(MusicManager.menu)) {
+        this.play("menuLoop");
+      }
     }
   })
   static battlefield = new Howl({
@@ -70,6 +71,34 @@ export class MusicManager {
       this.play("dreamlandLoop");
     }
   })
+
+  static fod = new Howl({
+    src: ['music/fod.ogg'],
+    sprite: {
+      fodStart: [21320, 21321],
+      fodLoop: [21320, 310782]
+      // end 211102
+    },
+    volume: 1,
+    html5: true,
+    onend: function () {
+      this.play("fodLoop");
+    }
+  })
+
+  static finald = new Howl({
+    src: ['music/finald.ogg'],
+    sprite: {
+      finaldStart: [15000, 15001],
+      finaldLoop: [15000, 210000]
+      // end 211102
+    },
+    volume: 1,
+    html5: true,
+    onend: function () {
+      this.play("finaldLoop");
+    }
+  })
   static targettest = new Howl({
     src: ['music/targettest.ogg'],
     sprite: {
@@ -89,14 +118,26 @@ export class MusicManager {
   static playLoop(track, sprite) {
     this.stopWhatisPlaying();
     console.log("starting sound");
-    console.log(getStackTrace());
-    console.log(track);
+    console.log(track._src);
     track.play(sprite);
     this.whatisPlaying = track;
     console.log("now what is playing");
-    console.log(this.whatisPlaying);
     console.log(this.whatisPlaying._src);
-    console.log(this.whatisPlaying._state);
+  }
+
+  static stopWhatisPlaying() {
+    console.log("stopping sound");
+
+    if (!this.whatisPlaying) {
+      return;
+    }
+    console.log("waiting to stop playing");
+    console.log(this.whatisPlaying._src);
+
+    while (this.whatisPlaying.playing()) {
+      this.whatisPlaying.stop();
+      console.log("confirmed stopped sound");
+    }
   }
 
   static playMenuLoop() {
@@ -123,6 +164,14 @@ export class MusicManager {
     this.playLoop(this.targettest, "targettestStart");
   }
 
+  static playfinaldLoop() {
+    this.playLoop(this.finald, "finaldStart");
+  }
+
+  static playfodLoop() {
+    this.playLoop(this.fod, "fodStart");
+  }
+
   static isWhatisPlaying(track) {
     return this.whatisPlaying === track;
   }
@@ -131,38 +180,6 @@ export class MusicManager {
     this.whatisPlaying = track;
   }
 
-  static stopWhatisPlaying() {
-    console.log("stopping sound");
-    console.log(this.whatisPlaying);
-    console.log(getStackTrace());
 
-    if (!this.whatisPlaying) {
-      return;
-    }
-    console.log(this.whatisPlaying._state);
-    console.log(this.whatisPlaying._src);
-    console.log("waiting to stop playing");
-    while (this.whatisPlaying.playing()) {
-      this.whatisPlaying.stop();
-      console.log("confirmed stopped sound");
-    }
-    console.log("checking what sound after stop");
-    console.log(this.whatisPlaying._state);
-    console.log(this.whatisPlaying._src);
-  }
 }
 
-function getStackTrace () {
-
-  let stack;
-
-  try {
-    throw new Error('');
-  }
-  catch (error) {
-    stack = error.stack || '';
-  }
-
-  stack = stack.split('\n').map((line) => line.trim());
-  return stack.splice(stack[0] === 'Error' ? 2 : 1);
-}

@@ -1270,6 +1270,12 @@ export function startGame (){
     case 3:
       MusicManager.playDreamLandLoop();
       break;
+      case 4:
+      MusicManager.playfinaldLoop();
+      break;
+      case 5:
+      MusicManager.playfodLoop();
+      break;
     default:
       break;
   }
