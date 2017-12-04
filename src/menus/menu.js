@@ -6,9 +6,11 @@ import {setTargetPlayer} from "target/targetplay";
 import {setTargetPointerPos} from "../stages/targetselect";
 import {setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
-import {music} from "../main/sfx";
+
 import {connectToMPServer} from "../main/multiplayer/streamclient";
 import {connectAsSpectator} from "../main/multiplayer/spectatorclient";
+
+import {MusicManager} from "../main/music";
 import {runCalibration} from "../input/gamepad/gamepadCalibration";
 /* eslint-disable */
 
@@ -74,10 +76,11 @@ export function menuMove(i, input) {
       } else {
         if (menuSelected == TARGETTEST) {
           setTargetPlayer(i);
+
           setTargetPointerPos([178.5, 137]);
           //input[i].a[1] = true;
-          music.menu.stop();
-          music.targettest.play("targettestStart");
+         MusicManager.stopWhatisPlaying();
+        MusicManager.playTargetTestLoop();
           changeGamemode(7);
         } else {
           if (menuSelected == TARGETBUILDER) {

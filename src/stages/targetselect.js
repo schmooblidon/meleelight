@@ -10,7 +10,7 @@ import {showingCode, stageTemp,  setShowingCode, resetStageTemp, setTargetBuilde
     setEditingStage
     , setStageTemp
 } from "../target/targetbuilder";
-import {sounds,music} from "../main/sfx";
+import {sounds} from "../main/sfx";
 import {twoPi} from "../main/render";
 import {foxPic, puffPic, marthPic, falcoPic} from "../menus/css";
 import {customTargetStages, setCustomTargetStages,setActiveStageTarget} from "stages/activeStage";
@@ -21,6 +21,7 @@ import {getConnected} from "../target/util/getConnected";
 import {getSurfaceFromStage} from "./stage";
 import {setActiveStageCustomTarget} from "./activeStage";
 import {parseStageCode} from "./encode";
+import {MusicManager} from "../main/music";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;
@@ -71,8 +72,8 @@ export function tssControls (i, input){
     }
     if (input[i][0].b && !input[i][1].b) {
       sounds.menuBack.play();
-      music.targettest.stop();
-      music.menu.play("menuStart");
+      MusicManager.stopWhatisPlaying();
+      MusicManager.playMenuLoop();
       changeGamemode(1);
       return;
     } else {
@@ -118,8 +119,8 @@ export function tssControls (i, input){
             setEditingStage(targetSelected-10);
           //input[i][i].a[1] = true;
           changeGamemode(4);
-          music.targettest.stop();
-          music.menu.play("menuStart");
+          MusicManager.stopWhatisPlaying();
+          MusicManager.playMenuLoop();
           return;
         }
       }

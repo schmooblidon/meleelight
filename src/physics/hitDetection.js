@@ -175,6 +175,7 @@ export function hitHitCollision (i,p,j,k){
             p].phys.face), player[p].phys.pos.y + player[p].hitboxes.id[j].offset[framePos1].y);
     var hbpos2 = new Vec2D(player[i].phys.pos.x + (player[i].hitboxes.id[k].offset[framePos2].x * player[
             i].phys.face), player[i].phys.pos.y + player[i].hitboxes.id[k].offset[framePos2].y);
+
     var hitPoint = new Vec2D((hbpos.x + hbpos2.x) / 2, (hbpos.y + hbpos2.y) / 2);
 
     return [    Math.pow(hbpos2.x - hbpos.x, 2) + Math.pow(hbpos.y - hbpos2.y, 2)
@@ -227,6 +228,7 @@ export function hitShieldCollision (i,p,j,previous){
 }
 
 export function interpolatedHitCircleCollision (circlePos,r,p,j){
+
   let prevPosFrame = player[p].phys.prevFrameHitboxes.frame;
   if (prevPosFrame > 1){
     prevPosFrame = 1;
@@ -241,6 +243,7 @@ export function interpolatedHitCircleCollision (circlePos,r,p,j){
             .face), player[p].phys.pos.y + player[p].hitboxes.id[j].offset[posFrame].y);
   const s = player[p].hitboxes.id[j].size;
   const collision = sweepCircleVsSweepCircle ( h1, s, h2, s, circlePos, r, circlePos, r );
+
   if (collision === null) {
     return false;
   }
@@ -348,6 +351,7 @@ export function hitHurtCollision (i,p,j,previous,phantom){
 
 export function cssHits(input) {
   for (var i = 0; i < hitQueue.length; i++) {
+
     var v = hitQueue[i][0];
     if(v === -1){
       continue;
@@ -362,6 +366,8 @@ export function cssHits(input) {
     if(frame > 1){
       frame = 1;
     }
+    const damage = player[a].hitboxes.id[h].dmg;
+
     if (shieldHit) {
       sounds.blunthit.play();
       player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);

@@ -489,7 +489,7 @@ export function checkForJump (p,input){
 export function checkForDoubleJump (p,input){
   return (    (input[p][0].x && !input[p][1].x)
            || (input[p][0].y && !input[p][1].y)
-           || (gameSettings["tapJumpOffp" + (p + 1)] == false && (input[p][0].lsY > 0.7 && input[p][1].lsY <= 0.7))
+           || (gameSettings["tapJumpOffp" + (p + 1)] == false && (input[p][0].lsY > 0.69 && input[p][1].lsY <= 0.69))
          );
 }
 export function checkForMultiJump (p,input){

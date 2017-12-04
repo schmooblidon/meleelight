@@ -21,7 +21,7 @@ export function singGen(j, rMin, rMax, notePhase, posScale, posPhase) {
   const frame = vfxQueue[j].timer;
   const pos = new Vec2D(player[p].phys.pos.x, player[p].phys.pos.y + 8);
   const lrScaling = posScale * player[p].phys.face;
-  fg2.translate((pos.x * activeStage.scale) + activeStage.offset[0] + lrScaling * Math.cos(frame / 6.5 + posPhase), (pos.y * -activeStage.scale) + activeStage.offset[1] - 2.5 * Math.sin(frame / 8));
+  fg2.translate(((pos.x-0.8) * activeStage.scale) + activeStage.offset[0] + lrScaling * Math.cos(frame / 6.5 + posPhase), (pos.y * -activeStage.scale) + activeStage.offset[1] - 2.5 * Math.sin(frame / 8));
   // cos/sin functions account for the character animation moving the sing vfx
   const opaqMultiplier = 0.8;
   let opaq = opaqMultiplier;  //opacity
@@ -31,14 +31,25 @@ export function singGen(j, rMin, rMax, notePhase, posScale, posPhase) {
   else if (frame > 25) {
     opaq = opaqMultiplier * (1 - ((frame - 25) / 6));
   }
+  fg2.globalCompositeOperation = "screen";
   fg2.strokeStyle = "rgba(244, 212, 45," + opaq + ")";
   fg2.lineWidth = 3;
   for (i = 0; i < 5; i++) {
     fg2.beginPath();
-    fg2.arc(0, 0, i * 2 * activeStage.scale, 0, twoPi);
+    fg2.arc(0, 0, (i+1) * 1.6 * activeStage.scale, 0, twoPi);
     fg2.closePath();
     fg2.stroke();
   }
+  fg2.fillStyle = "rgba(191, 82, 146," + opaq + ")";
+  fg2.beginPath();
+  fg2.arc(-4.5*activeStage.scale*Math.sin(frame*0.07+0.2), -4.5*activeStage.scale*Math.cos(frame*0.07+0.2), 3.5 * activeStage.scale, 0, twoPi);
+  fg2.closePath();
+  fg2.fill();
+  fg2.beginPath();
+  fg2.arc(4.5*activeStage.scale*Math.sin(frame*0.07+0.2), 4.5*activeStage.scale*Math.cos(frame*0.07+0.2), 3.5 * activeStage.scale, 0, twoPi);
+  fg2.closePath();
+  fg2.fill();
+  fg2.globalCompositeOperation = "source-over";
   const angles = [notePhase + frame * 0.1, notePhase + 2 * Math.PI / 3 + frame * 0.1, notePhase + 4 * Math.PI / 3 + frame * 0.1];
   let r = rMax; // distance of notes from center
   if (frame < 15) {

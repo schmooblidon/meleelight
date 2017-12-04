@@ -687,9 +687,10 @@ function lCancelUpdate(i: number, input: any): void {
   }
   // l CANCEL
   if (player[i].phys.lCancelTimer === 0 &&
-      ((input[i][0].lA > 0 && input[i][1].lA === 0) ||
-      (input[i][0].rA > 0 && input[i][1].lA === 0) ||
-      (input[i][0].z && !input[i][1].z))) {
+
+    ((input[i][0].lA > 0 && input[i][1].lA === 0) ||
+     (input[i][0].rA > 0 && input[i][1].rA === 0) ||
+     (input[i][0].z && !input[i][1].z))) {
 
     // if smash 64 lcancel, increase window to 11 frames
     if (gameSettings.lCancelType === 2 && gameMode !== 5) {

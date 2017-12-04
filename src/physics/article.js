@@ -13,6 +13,11 @@ import {activeStage} from "stages/activeStage";
 import {createHitbox} from "../main/util/createHitBox";
 import {Vec2D} from "../main/util/Vec2D";
 import {Segment2D} from "../main/util/Segment2D";
+
+import {drawLaserLine} from "../main/vfx/dVfx/laser";
+import {chromaticAberration} from "../main/vfx/chromaticAberration";
+import {unmakeColour} from "../main/vfx/makeColour";
+
 import {sweepCircleVsSweepCircle, sweepCircleVsAABB} from "./interpolatedCollision";
 /* eslint-disable */
 
@@ -28,8 +33,6 @@ export const articles = {
     "LASER": {
         name: "LASER",
         canTurboCancel: false,
-      strokeStyle: "rgb(255, 59, 59)" ,
-      fillStyle: "rgb(255, 193, 193)",
         init: function(options) {
           const p = options.p;
           const x = options.x;
@@ -37,7 +40,7 @@ export const articles = {
           const rotate = options.rotate;
           const isFox = (options.isFox !== undefined) ? options.isFox : true;
           const partOfThrow = options.partOfThrow || false;
-          this.strokeStyle = isFox ? "rgb(255, 59, 59)" : "rgb(137,255,255)";
+          this.strokeStyle = isFox ? "rgba(255, 59, 59,0.6)" : "rgba(73,130,234,0.6)";
           this.fillStyle   = isFox ? "rgb(255, 193, 193)" : "rgb(225, 255, 255)";
             var obj = {
                 hitList: [],
@@ -98,9 +101,6 @@ export const articles = {
         },
         draw: function(i) {
             fg2.save();
-            fg2.strokeStyle = this.strokeStyle;
-            fg2.fillStyle = this.fillStyle;
-            fg2.lineWidth = 2;
             var h = new Vec2D((aArticles[i].instance.pos.x * activeStage.scale) + activeStage.offset[0], (aArticles[i].instance.pos.y * -activeStage.scale) +
                 activeStage.offset[1]);
             var t = new Vec2D((aArticles[i].instance.posPrev.x * activeStage.scale) + activeStage.offset[0], (aArticles[i].instance.posPrev.y * -
@@ -111,17 +111,10 @@ export const articles = {
             var v2 = rotateVector(4, 2, -r);
             var v3 = rotateVector(4, -2, -r);
             var v4 = rotateVector(-4, -2, -r);
-            fg2.beginPath();
-            fg2.moveTo(h.x, h.y);
-            fg2.lineTo(h.x + v1.x * d, h.y + v1.y);
-            fg2.lineTo(t.x + v2.x * d, t.y + v2.y);
-            fg2.lineTo(t.x, t.y);
-            fg2.lineTo(t.x + v3.x * d, t.y + v3.y);
-            fg2.lineTo(h.x + v4.x * d, h.y + v4.y);
-            fg2.closePath();
-            fg2.fill();
-            fg2.stroke();
+            chromaticAberration( fg2, (c1, c2) => drawLaserLine(h,t,v1,v2,v3,v4,d,c1,c2), unmakeColour(this.strokeStyle), unmakeColour(this.fillStyle), 0.8
+                               , new Vec2D ( -0.3 * Math.sin(r) * activeStage.scale, - 0.3 * Math.cos(r) * activeStage.scale) );
             fg2.restore();
+
         }
     },
 
@@ -177,7 +170,6 @@ export const articles = {
         }
     }
 };
-
 
 export function executeArticles (){
   destroyArticleQueue = [];
