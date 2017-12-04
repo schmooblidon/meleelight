@@ -47,7 +47,6 @@ function createConfig(options) {
             {
               cacheId: 'meleelight',
               filename: 'service-worker.js',
-              maximumFileSizeToCacheInBytes: 4194304,
               runtimeCaching: [{
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
@@ -62,6 +61,7 @@ function createConfig(options) {
             {
               loader: 'babel-loader',
               query: {
+
                 presets: ['es2015'],
                 plugins: ['transform-flow-strip-types','transform-class-properties']
               }
@@ -86,7 +86,6 @@ function createConfig(options) {
             {
               cacheId: 'meleelight',
               filename: 'service-worker.js',
-              maximumFileSizeToCacheInBytes: 4194304,
               runtimeCaching: [{
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
@@ -101,6 +100,7 @@ function createConfig(options) {
             {
               loader: 'babel-loader',
               query: {
+
                 presets: ['es2015'],
                 plugins: ['transform-flow-strip-types','transform-class-properties']
               }

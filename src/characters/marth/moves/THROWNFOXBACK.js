@@ -12,7 +12,11 @@ export default {
   //7.53
   init: function (p, input) {
     player[p].actionState = "THROWNFOXBACK";
-    if (player[p].phys.grabbedBy < p) {
+    const grabbedBy = player[p].phys.grabbedBy;
+    if(grabbedBy === -1){
+      return;
+    }
+    if (grabbedBy < p) {
       player[p].timer = -1;
     }
     else {
@@ -25,8 +29,16 @@ export default {
   main: function (p, input) {
     player[p].timer++;
     if (!marth.THROWNFOXBACK.interrupt(p, input)) {
-      if (player[p].timer > 0) {
-        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + marth.THROWNFOXBACK.offset[player[p].timer - 1][0] * player[p].phys.face * -1, player[player[p].phys.grabbedBy].phys.pos.y + marth.THROWNFOXBACK.offset[player[p].timer - 1][1]);
+      let timer = player[p].timer;
+      if (timer > 0) {
+        const grabbedBy = player[p].phys.grabbedBy;
+        if(grabbedBy === -1){
+          return;
+        }
+        if(timer > marth.THROWNFOXBACK.offset.length){
+          timer =marth.THROWNFOXBACK.offset.length -1;
+        }
+        player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x + marth.THROWNFOXBACK.offset[timer - 1][0] * player[p].phys.face * -1, player[grabbedBy].phys.pos.y + marth.THROWNFOXBACK.offset[timer - 1][1]);
       }
 
     }

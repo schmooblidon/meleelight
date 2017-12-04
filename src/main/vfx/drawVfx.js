@@ -1,9 +1,10 @@
 
-import {deepCopyObject} from "main/util/deepCopyObject";
+import {deepObjectMerge} from "main/util/deepCopyObject";
 import {vfx} from "main/vfx";
 import {activeStage} from "stages/activeStage";
 import {addToVfxQueue} from "main/vfx/vfxQueue";
 import {Vec2D} from "../util/Vec2D";
+import {deepCopy} from "../util/deepCopy";
 
 export function drawVfx(vfxConfig) {
   let facing = vfxConfig.f;

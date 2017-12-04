@@ -10,7 +10,11 @@ export default {
   init : function(p,input){
     player[p].actionState = "CAPTUREWAIT";
     player[p].timer = 0;
-    player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x+(-9.04298*player[p].phys.face),player[player[p].phys.grabbedBy].phys.pos.y);
+    const grabbedBy = player[p].phys.grabbedBy;
+    if(grabbedBy === -1){
+      return;
+    }
+    player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x+(-9.04298*player[p].phys.face),player[grabbedBy].phys.pos.y);
     actionStates[characterSelections[p]].CAPTUREWAIT.main(p,input);
   },
   main : function(p,input){
@@ -22,13 +26,21 @@ export default {
         player[p].phys.pos.x += 0.5*Math.sign(Math.random()-0.5);
       }
       else {
-        player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-9.04298*player[p].phys.face);
+        const grabbedBy = player[p].phys.grabbedBy;
+        if(grabbedBy === -1){
+          return;
+        }
+        player[p].phys.pos.x = player[grabbedBy].phys.pos.x+(-9.04298*player[p].phys.face);
       }
     }
   },
   interrupt : function(p,input){
     if (player[p].phys.stuckTimer < 0){
-      actionStates[characterSelections[p]].CATCHCUT.init(player[p].phys.grabbedBy,input);
+      const grabbedBy = player[p].phys.grabbedBy;
+      if(grabbedBy === -1){
+        return;
+      }
+      actionStates[characterSelections[p]].CATCHCUT.init(grabbedBy,input);
       actionStates[characterSelections[p]].CAPTURECUT.init(p,input);
       return true;
     }

@@ -2,28 +2,34 @@ import {bg1,fg1,fg2,bg2, player, changeGamemode, positionPlayersInCSS, setKeyBin
     setCreditsPlayer, setCalibrationPlayer, currentPlayers
 } from "main/main";
 import {sounds} from "main/sfx";
-import { setTargetPlayer} from "target/targetplay";
-import { setTargetPointerPos} from "../stages/targetselect";
-import {  setEditingStage, setTargetBuilder} from "target/targetbuilder";
+import {setTargetPlayer} from "target/targetplay";
+import {setTargetPointerPos} from "../stages/targetselect";
+import {setEditingStage, setTargetBuilder} from "target/targetbuilder";
 import {twoPi} from "main/render";
+
+import {connectToMPServer} from "../main/multiplayer/streamclient";
+import {connectAsSpectator} from "../main/multiplayer/spectatorclient";
+
 import {MusicManager} from "../main/music";
 import {runCalibration} from "../input/gamepad/gamepadCalibration";
 /* eslint-disable */
 
- let menuSelected = 0;
+let menuSelected = 0;
 
 const menuText = [
   ["VS. Melee", "Target Test", "Target Builder", "Options"],
-  ["Audio", "Gameplay", "Controls", "Credits"],
+  ["Audio", "Gameplay", "Keyboard Controls", "Credits"],
+  ["Local VS", "Spectate", "P2P", "Server"],
   ["Controller", "Keyboard"]
 ];
 const menuExplanation = [
   ["Multiplayer Battles!", "Smash ten targets!", "Build target test stages!", "Game setup."],
   ["Select audio levels.", "Change gameplay settings.", "Customize & calibrate controls.", "Who did this?"],
+  ["One box this screen.", "Ranked Mode", "Hostless Muliplayer", "Hosted Multiplayer"],
   ["Customize & calibrate controller.", "Customize keyboard controls."]
 ];
-const menuCount = [4, 4, 2];
-const menuTitle = ["Main Menu", "Options", "Controls"];
+const menuCount = [4, 4, 4,2];
+const menuTitle = ["Main Menu", "Options", "Battle Mode", "Controls"];
 let menuColourOffset = 0;
 const menuColours = [238, 358, 117, 55];
 let menuCurColour = 238;
@@ -34,57 +40,115 @@ let menuMode = 0;
 let menuGlobalTimer = 0;
 let menuAngle = 0;
 let menuRandomBox = [Math.random(), Math.random(), Math.random(), Math.random()];
+//menu modes
+const TOPLEVEL = 0;
+const SECONDLEVELOPTIONS = 1;
+const MPMENU = 2;
+const CONTROLLERCALIB = 3;
+//top level
+const VSMODE = 0;
+const TARGETTEST = 1;
+const TARGETBUILDER = 2;
+const OPTIONS = 3;
+//second level
+const AUDIOOPTIONS = 0;
+const GAMEPLAYOPTIONS = 1;
+const KEYBOARDOPTIONS = 2;
+const CREDITS = 3;
+//mp level
+const LOCALVS = 0;
+const SPECTATING = 1;
+const P2PMP = 2;
+const SERVERMP = 3;
 
 export let stickHoldEach = [];
 export let stickHold = 0;
-export function menuMove (i, input){
+export function menuMove(i, input) {
   var menuMove = false;
   var previousMenuS = menuSelected;
   if (input[i][0].a && !input[i][1].a) {
     sounds.menuForward.play();
-    if (menuMode == 0) {
-      if (menuSelected == 0) {
-        changeGamemode(2);
-        positionPlayersInCSS();
-      }
-      else if (menuSelected == 1){
+
+    if (menuMode == TOPLEVEL) {
+      if (menuSelected == VSMODE) {
+        menuSelected = LOCALVS;
+        menuMode = MPMENU;
+      } else {
+        if (menuSelected == TARGETTEST) {
           setTargetPlayer(i);
-          setTargetPointerPos([178.5,137]);
-        //input[i].a[1] = true;
-        MusicManager.stopWhatisPlaying();
+
+          setTargetPointerPos([178.5, 137]);
+          //input[i].a[1] = true;
+         MusicManager.stopWhatisPlaying();
         MusicManager.playTargetTestLoop();
-        changeGamemode(7);
+          changeGamemode(7);
+        } else {
+          if (menuSelected == TARGETBUILDER) {
+            setEditingStage(-1);
+            setTargetBuilder(i);
+            //input[i].a[1] = true;
+            changeGamemode(4);
+          } else {
+
+            if (menuSelected == OPTIONS) {
+              // options
+              menuMode = SECONDLEVELOPTIONS;
+              menuSelected = AUDIOOPTIONS;
+              menuMove = true;
+            }
+          }
+        }
       }
-      else if (menuSelected == 2){
-       setEditingStage(-1);
-        setTargetBuilder(i);
-        //input[i].a[1] = true;
-        changeGamemode(4);
-      } else if (menuSelected == 3) {
-        // options
-        menuMode = 1;
-        menuSelected = 0;
-        menuMove = true;
+    } else if (menuMode === MPMENU) {
+
+      if (menuSelected == LOCALVS) {
+        // changeGamemode(2);
+        // positionPlayersInCSS();
+      } else {
+        if (menuSelected == SPECTATING) {
+          connectAsSpectator();
+          changeGamemode(2);
+        } else {
+          if (menuSelected == P2PMP) {
+            //  connectToMPRoom();
+            // changeGamemode(2);
+            // positionPlayersInCSS();
+          } else {
+            if (menuSelected == SERVERMP) {
+              connectToMPServer();
+              changeGamemode(2);
+              positionPlayersInCSS();
+            }
+          }
+        }
       }
-    } else if (menuMode === 1) {
-      if (menuSelected == 0) {
+    } else if (menuMode === SECONDLEVELOPTIONS) {
+
+      if (menuSelected == AUDIOOPTIONS) {
         //audio menu
         changeGamemode(10);
-      } else if (menuSelected == 1) {
-        //gameplay menu
-        changeGamemode(11);
-      } else if (menuSelected == 2) {
-        // controls
-        menuMode = 2;
-        menuSelected = 0;
-        menuMove = true;
+      } else {
+
+        if (menuSelected == GAMEPLAYOPTIONS) {
+          //gameplay menu
+          changeGamemode(11);
+        } else {
+
+          if (menuSelected == KEYBOARDOPTIONS) {
+            menuMode = CONTROLLERCALIB;
+            menuSelected = 0;
+            menuMove = true;
+          } else {
+
+            if (menuSelected == CREDITS) {
+              //credits
+              setCreditsPlayer(i);
+              changeGamemode(13);
+            }
+          }
+        }
       }
-      else if (menuSelected == 3){
-        //credits
-        setCreditsPlayer(i);
-        changeGamemode(13);
-      }
-    } else {
+    } else if (menuMode === CONTROLLERCALIB) {
       if (menuSelected === 0) {
         // map controller
         setCalibrationPlayer(i);
@@ -97,9 +161,25 @@ export function menuMove (i, input){
       }
     }
   } else if (input[i][0].b && !input[i][1].b) {
-    if (menuMode == 1) {
-      menuMode = 0;
-      menuSelected = 3;
+
+    if (menuMode == CONTROLLERCALIB) {
+      menuMode = SECONDLEVELOPTIONS;
+      menuSelected = AUDIOOPTIONS;
+      menuMove = true;
+      sounds.menuBack.play();
+    } else if (menuMode == SECONDLEVELOPTIONS) {
+      menuMode = TOPLEVEL;
+      menuSelected = OPTIONS;
+      menuMove = true;
+      sounds.menuBack.play();
+    } else if (menuMode == MPMENU) {
+      menuMode = TOPLEVEL;
+      menuSelected = VSMODE;
+      menuMove = true;
+      sounds.menuBack.play();
+    } else if (menuMode === 2) {
+      menuMode = 1;
+      menuSelected = 2;
       menuMove = true;
       sounds.menuBack.play();
     } else if (menuMode === 2) {
@@ -159,13 +239,13 @@ export function menuMove (i, input){
     if (menuSelected == menuCount[menuMode]) {
       menuSelected = 0;
     }
-    if ((previousMenuS == 1 && menuSelected == 2) || (previousMenuS == 2 && menuSelected == 1)) {
-      if (menuSelected == 1) {
+    if ((previousMenuS == TARGETTEST && menuSelected == TARGETBUILDER) || (previousMenuS == TARGETBUILDER && menuSelected == TARGETTEST)) {
+      if (menuSelected == TARGETTEST) {
         menuColours[menuSelected] = 0;
       } else {
         menuCurColour = 0;
       }
-    } else if (previousMenuS == 1) {
+    } else if (previousMenuS == TARGETTEST) {
       menuCurColour = 358;
       menuColours[1] = 358;
     }
@@ -174,24 +254,23 @@ export function menuMove (i, input){
 }
 
 
-
-export function drawMainMenuInit (){
-  var bgGrad =bg1.createLinearGradient(0,0,1200,750);
-  bgGrad.addColorStop(0,"rgba(12, 11, 54, 1)");
-  bgGrad.addColorStop(1,"rgba(1, 2, 15, 1)");
-  bg1.fillStyle=bgGrad;
-  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+export function drawMainMenuInit() {
+  var bgGrad = bg1.createLinearGradient(0, 0, 1200, 750);
+  bgGrad.addColorStop(0, "rgba(12, 11, 54, 1)");
+  bgGrad.addColorStop(1, "rgba(1, 2, 15, 1)");
+  bg1.fillStyle = bgGrad;
+  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
 
   fg1.lineWidth = 5;
   /*
-  fg1.strokeStyle = "rgb(0, 0, 0)";
-  for (var i = 0; i < 60; i++) {
-    fg1.beginPath();
-    fg1.moveTo(0, 900 - (i * 15));
-    fg1.lineTo(1200, 750 - (i * 15));
-    fg1.stroke();
-  }
-  */  
+   fg1.strokeStyle = "rgb(0, 0, 0)";
+   for (var i = 0; i < 60; i++) {
+   fg1.beginPath();
+   fg1.moveTo(0, 900 - (i * 15));
+   fg1.lineTo(1200, 750 - (i * 15));
+   fg1.stroke();
+   }
+   */
   fg1.strokeStyle = "rgba(3, 31, 219,0.5)";
   fg1.fillStyle = "hsla(" + menuCurColour + ",100%,50%,0.5)";
   fg1.save();
@@ -225,7 +304,7 @@ export function drawMainMenuInit (){
   fg1.stroke();
 }
 
-export function drawMainMenu (){
+export function drawMainMenu() {
   clearScreen();
   menuGlobalTimer++;
   if (menuGlobalTimer > 600) {
@@ -257,7 +336,7 @@ export function drawMainMenu (){
   if (menuGlobalTimer % 130 < 50) {
     bg2.fillStyle = "rgba(118, 113, 255," + Math.max(0.5 - (menuGlobalTimer % 130) * 0.01, 0) + ")"
     bg2.fillRect(menuRandomBox[0] * -450, menuRandomBox[1] * 800 - 400, menuRandomBox[2] * 50 + 30, menuRandomBox[3] *
-      60 + 30);
+        60 + 30);
   }
   bg2.restore();
   fg2.fillStyle = "hsla(" + menuCurColour + ", 60%, 41%,0.75)";
@@ -447,9 +526,9 @@ export function drawMainMenu (){
   }
   ui.restore();
 }
-export function increaseStick(){
+export function increaseStick() {
   stickHold++;
 }
-export function resetStick(){
+export function resetStick() {
   stickHold = 0;
 }

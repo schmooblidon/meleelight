@@ -17,8 +17,12 @@ export default {
   init : function(p,input){
     player[p].actionState = "THROWDOWN";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXDOWN.init(player[p].phys.grabbing);
-    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXDOWN;
+    const grabbing = player[p].phys.grabbing;
+    if(grabbing === -1){
+      return;
+    }
+    actionStates[characterSelections[grabbing]].THROWNFOXDOWN.init(grabbing);
+    const frame = framesData[characterSelections[grabbing]].THROWNFOXDOWN;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
@@ -116,12 +120,18 @@ export default {
       WAIT.init(p,input);
       return true;
     }
-    else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p,input);
-      return true;
-    }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1){
+        return;
+      }
+      if (player[p].timer < player[p].phys.releaseFrame && player[grabbing].phys.grabbedBy !== p){
+        CATCHCUT.init(p,input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

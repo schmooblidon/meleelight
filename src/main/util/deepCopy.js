@@ -1,12 +1,12 @@
 // @flow
 /*eslint-disable */
 
-export function deepCopyObject <T : { [_: *] : * } > (deep: bool, object: T, exclusionList: ?Array<*>): $ObjMap<T,<V>(_: V) => V> {
+export function deepCopyObject <T : { [_: *] : * } > (deep: bool, object: T, exclusionList: ?Array<*> = []): $ObjMap<T,<V>(_: V) => V> {
   if (deep) {
     const result = {};
     for (const key in object) {
       // if (object.hasOwnProperty(key)) {
-      if (object[key] === null || (exclusionList && exclusionList.indexOf(key) !== -1)) {
+      if (object[key] === null ||  exclusionList.indexOf(key) !== -1) {
         result[key] = object[key];
       }
       else if (Array.isArray(object[key])) {
@@ -20,7 +20,7 @@ export function deepCopyObject <T : { [_: *] : * } > (deep: bool, object: T, exc
       }
     }
     return result;
-  } 
+  }
   else {
     return Object.assign({}, object);
   }
@@ -45,7 +45,7 @@ export function deepCopyArray < T : Array<*> > (deep: bool, array: T, exclusionL
     }
     result.length = array.length;
     return result;
-  } 
+  }
   else {
     return Object.assign({}, ...array);
   }

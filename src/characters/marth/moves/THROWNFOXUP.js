@@ -9,7 +9,11 @@ export default  {
   offset: [[-6.22, -2.90], [-5.58, -2.40], [-5.10, -2.15], [-4.84, -2.89], [-4.66, 2.92], [-1.86, 9.18], [-1.86, 9.18], [-1.86, 9.18]],
   init: function (p, input) {
     player[p].actionState = "THROWNFOXUP";
-    if (player[p].phys.grabbedBy < p) {
+    const grabbedBy = player[p].phys.grabbedBy;
+    if(grabbedBy === -1){
+      return;
+    }
+    if (grabbedBy < p) {
       player[p].timer = -1;
     }
     else {
@@ -21,8 +25,16 @@ export default  {
   main: function (p, input) {
     player[p].timer++;
     if (!marth.THROWNFOXUP.interrupt(p, input)) {
-      if (player[p].timer > 0) {
-        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + marth.THROWNFOXUP.offset[player[p].timer - 1][0] * player[p].phys.face, player[player[p].phys.grabbedBy].phys.pos.y + marth.THROWNFOXUP.offset[player[p].timer - 1][1]);
+      let timer = player[p].timer;
+      if (timer > 0) {
+        const grabbedBy = player[p].phys.grabbedBy;
+        if(grabbedBy === -1){
+          return;
+        }
+        if(timer > marth.THROWNFOXUP.offset.length){
+          timer = marth.THROWNFOXUP.offset.length -1;
+        }
+        player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x + marth.THROWNFOXUP.offset[timer - 1][0] * player[p].phys.face, player[grabbedBy].phys.pos.y + marth.THROWNFOXUP.offset[timer - 1][1]);
       }
     }
   },

@@ -13,8 +13,12 @@ export default {
   init : function(p,input){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD.init(player[p].phys.grabbing,input);
-    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNFOXFORWARD;
+    const grabbing = player[p].phys.grabbing;
+    if(grabbing === -1){
+      return;
+    }
+    actionStates[characterSelections[grabbing]].THROWNFOXFORWARD.init(grabbing,input);
+    const frame = framesData[characterSelections[grabbing]].THROWNFOXFORWARD;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
@@ -45,12 +49,18 @@ export default {
       WAIT.init(p,input);
       return true;
     }
-    else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p,input);
-      return true;
-    }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1){
+        return;
+      }
+      if (player[p].timer < player[p].phys.releaseFrame && player[grabbing].phys.grabbedBy !== p){
+        CATCHCUT.init(p,input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

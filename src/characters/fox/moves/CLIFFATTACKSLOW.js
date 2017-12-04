@@ -24,7 +24,12 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      const l = activeStage.ledge[player[p].phys.onLedge];
+      const onLedge = player[p].phys.onLedge;
+      if(onLedge === -1){
+        this.canGrabLedge = false;
+        return;
+      }
+      const l = activeStage.ledge[onLedge];
       const x = activeStage[l[0]][l[1]][l[2]].x;
       const y = activeStage[l[0]][l[1]][l[2]].y;
       if (player[p].timer < 54){

@@ -41,7 +41,11 @@ export default {
     player[p].timer++;
     playSounds("CLIFFCATCH",p);
     if (!actionStates[characterSelections[p]].CLIFFCATCH.interrupt(p,input)){
-      const l = activeStage.ledge[player[p].phys.onLedge];
+      const onLedge = player[p].phys.onLedge;
+      if(onLedge === -1){
+        return;
+      }
+      const l = activeStage.ledge[onLedge];
       const x = activeStage[l[0]][l[1]][l[2]].x;
       const y = activeStage[l[0]][l[1]][l[2]].y;
       player[p].phys.pos = new Vec2D(x+(actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+actionStates[characterSelections[p]].CLIFFCATCH.posOffset[player[p].timer-1][1]);

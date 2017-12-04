@@ -11,9 +11,11 @@ import {cpuDifficulty, characterSelections, player, changeGamemode, playerType,b
 import {drawArrayPathCompress, twoPi} from "main/render";
 import {sounds} from "main/sfx";
 import {actionStates} from "physics/actionStateShortcuts";
-import {setCS} from "../main/main";
+import {setCS, gameMode} from "../main/main";
 import {chars} from "../main/characters";
 import {Vec2D} from "../main/util/Vec2D";
+import {syncCharacter, syncGameMode, syncTagText, inServerMode} from "../main/multiplayer/streamclient";
+import {gameSettings} from "../settings";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -32,6 +34,9 @@ export const handGrab = new Image();
 handGrab.src = "assets/hand/handgrab.png";
 
 export let choosingTag = -1;
+export function setChoosingTag(val){
+  choosingTag = val;
+}
 export const handType = [0,0,0,0];
 export const handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
 export const tokenPos = [new Vec2D(475-54,268),new Vec2D(515-54,268),new Vec2D(475-54,308),new Vec2D(515-54,308)];
@@ -51,13 +56,86 @@ export let readyToFight = false;
 
 export let rtfFlash = 25;
 export let rtfFlashD = 1;
+const gameSettingsText = {
+  turbo : "Turbo Mode",
+  lCancelType : "L-Cancel Type", // 0- normal | 1 - Auto | 2 - smash 64
+  blastzoneWrapping : "",
+  flashOnLCancel : "Flash on L-Cancel",
+  dustLessPerfectWavedash : "",
+  phantomThreshold : "",
+  everyCharWallJump : "Everyone Walljumps", //0 - off | 1 - on
+  tapJumpOffp1: "Player 1 tap-jump",
+  tapJumpOffp2: "Player 2 tap-jump",
+  tapJumpOffp3: "Player 3 tap-jump",
+  tapJumpOffp4: "Player 4 tap-jump",
+};
 
+const gameSettingsValueTranslation = {
+  turbo : (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  lCancelType : (value)=>{
+    return (value === 0)? "NORMAL":(value === 1)? "AUTO":"SMASH 64";
+  }, // 0- normal | 1 - Auto | 2 - smash 64
+  blastzoneWrapping : "",
+  flashOnLCancel : (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  dustLessPerfectWavedash : "",
+  phantomThreshold : "",
+  everyCharWallJump : (value)=>{
+    return (value === 0)? "OFF":"ON";
+  }, //0 - off | 1 - on
+  tapJumpOffp1: (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  tapJumpOffp2: (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  tapJumpOffp3: (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+  tapJumpOffp4: (value)=>{
+    return (value === 0)? "OFF":"ON";
+  },
+};
+//in order
+//marth
+//puff
+//fox
+const charIconPos = [new Vec2D(475,268),new Vec2D(568,268),new Vec2D(663,268)];
+
+export function setChosenChar(index,charSelected){
+  setCS(index,charSelected);
+  chosenChar[index] = charSelected;
+  tokenGrabbed[index] = false;
+  occupiedToken[index] = false;
+ setTokenPos(index,charSelected);
+  player[index].actionState = "WAIT";
+  player[index].timer = 0;
+  player[index].charAttributes = chars[characterSelections[index]].attributes;
+  player[index].charHitboxes = chars[characterSelections[index]].hitboxes;
+  whichTokenGrabbed[index] = -1;
+}
+
+export function setTokenPos(index,val){
+  tokenPos[index] =charIconPos[val];
+}
 export function changeCharacter (i,c){
   setCS(i,c);
+  syncCharacter(i,c);
   player[i].actionState = "WAIT";
   player[i].timer = 0;
   player[i].charAttributes = chars[characterSelections[i]].attributes;
   player[i].charHitboxes = chars[characterSelections[i]].hitboxes;
+}
+
+function cancelSetTag() {
+  sounds.menuSelect.play();
+  tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
+  syncTagText(choosingTag, tagText[choosingTag]);
+  $("#pTagEdit" + choosingTag).hide();
+  choosingTag = -1;
 }
 
 export function cssControls (i, input){
@@ -268,7 +346,10 @@ export function cssControls (i, input){
       }
     }
 
-    if (handPos[i].y > 640 && handPos[i].y < 680 && handPos[i].x > 130 + i * 225 && handPos[i].x < 310 + i * 225) {
+    if (handPos[i].y > 640 && handPos[i].y < 680 && handPos[i].x > 130 + i * 225 && handPos[i].x < 310 + i * 225 ) {
+      if(gameMode !== 2){
+        cancelSetTag();
+      }
       if (input[i][0].a && !input[i][1].a) {
         // do tag
         if (handPos[i].x < 154 + i * 225) {
@@ -276,6 +357,7 @@ export function cssControls (i, input){
           sounds.menuSelect.play();
           hasTag[i] = true;
           tagText[i] = randomTags[Math.round((randomTags.length - 1) * Math.random())];
+          syncTagText(i,tagText[i]);
         } else if (handPos[i].x > 286 + i * 225) {
           // remove
           sounds.menuSelect.play();
@@ -293,19 +375,18 @@ export function cssControls (i, input){
       }
     }
   } else if (choosingTag == i && ((input[i][0].a && !input[i][1].a) || keys[13])) {
-    sounds.menuSelect.play();
-    tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
-    $("#pTagEdit" + choosingTag).hide();
-    choosingTag = -1;
+    cancelSetTag();
   }
   if (readyToFight && choosingTag == -1) {
     if (pause[i][0] && !pause[i][1]) {
       sounds.menuForward.play();
       changeGamemode(6);
+      syncGameMode(6);
     }
   } else if (choosingTag == -1 && input[i][0].du && !input[i][1].du) {
     sounds.menuForward.play();
     changeGamemode(6);
+    syncGameMode(6);
   } else if (choosingTag == -1 && input[i][0].dr && !input[i][1].dr) {
     chosenChar[i] = 3;
     changeCharacter(i, 3);
@@ -599,7 +680,7 @@ export function drawCSS (){
   ui.restore();
   for (var i = 0; i < 4; i++) {
     if (playerType[i] > -1) {
-      if (playerType[i] == 0) {
+      if (playerType[i] == 0 || playerType[i] == 2) {
         switch (i) {
           case 0:
             ui.fillStyle = "rgb(218, 51, 51)";
@@ -714,6 +795,10 @@ export function drawCSS (){
       case 1:
         text = "CPU";
         ui.fillStyle = "rgb(161, 161, 161)";
+        break;
+        case 2:
+        text = "NET";
+        ui.fillStyle = "rgb(66, 241, 244)";
         break;
       default:
         break;
@@ -1019,6 +1104,21 @@ export function drawCSS (){
       }
     }
   }
+
+  if(inServerMode){
+    ui.fillStyle = "white";
+
+    var keys = Object.keys(gameSettings);
+    let spacer = 50;
+    for (var j = 0; j < keys.length; j++) {
+      if(gameSettingsText[keys[j]] !== "") {
+        ui.fillText(gameSettingsText[keys[j]] + ":" + gameSettingsValueTranslation[keys[j]](gameSettings[keys[j]]), 820, 130 +  spacer);
+        spacer = spacer + 30;
+      }
+    }
+
+  }
+
   if (readyToFight) {
     ui.save();
     ui.fillStyle = "rgba(223, 31, 31, 0.8)";
@@ -1083,4 +1183,7 @@ export function drawCSS (){
     ui.fillText("Press A to finish", 250 + choosingTag * 225, 600);
     ui.textAlign = "start";
   }
+
+
+
 }

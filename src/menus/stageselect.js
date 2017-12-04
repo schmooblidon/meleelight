@@ -4,6 +4,7 @@ import {
   , setStageSelect
 } from "main/main";
 import {twoPi} from "main/render";
+import {syncStartGame} from "../main/multiplayer/streamclient";
 /* eslint-disable */
 
 /*
@@ -76,13 +77,13 @@ export function sssControls (i, input){
   if (input[i][0].b && !input[i][1].b) {
     sounds.menuBack.play();
     changeGamemode(2);
-  } else if ((input[i][0].s && !input[i][1].s) || (input[i][0].a && !input[i][1].a)) {
+  } else if ( (input[i][0].a && !input[i][1].a)) {
     sounds.menuForward.play();
     if (stageSelected == smallBoxStageNames.length) {
       stageSelected = Math.floor(Math.random() * (smallBoxStageNames.length - 0.01));
     }
     setStageSelect(stageSelected);
-
+    syncStartGame(stageSelected);
     startGame();
   }
 }

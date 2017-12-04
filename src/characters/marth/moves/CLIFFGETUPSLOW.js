@@ -17,6 +17,11 @@ export default {
   main: function (p, input) {
     player[p].timer++;
     if (!marth.CLIFFGETUPSLOW.interrupt(p, input)) {
+      const onLedge = player[p].phys.onLedge;
+      if(onLedge === -1){
+        this.canGrabLedge = false;
+        return;
+      }
       const l = activeStage.ledge[player[p].phys.onLedge];
       const x = activeStage[l[0]][l[1]][l[2]].x;
       const y = activeStage[l[0]][l[1]][l[2]].y;
