@@ -36,12 +36,17 @@ import {isShowSFX, toggleShowSFX} from "main/vfx";
 import {renderVfx} from "./vfx/renderVfx";
 import {Box2D} from "./util/Box2D";
 import {Vec2D} from "./util/Vec2D";
-import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters} from "../input/input";
+import {updateNetworkInputs, connectToMPRoom, retrieveNetworkInputs, giveInputs,connectToMPServer, syncGameMode} from "./multiplayer/streamclient";
+import {saveGameState, loadReplay, gameTickDelay} from "./replay";
+import {keyboardMap, showButton, nullInputs, pollInputs, inputData, setCustomCenters, nullInput} from "../input/input";
 import {deaden} from "../input/meleeInputs";
 import {getGamepadNameAndInfo} from "../input/gamepad/findGamepadInfo";
 import {customGamepadInfo} from "../input/gamepad/gamepads/custom";
 import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
+import {deepCopy} from "./util/deepCopy";
+import {deepObjectMerge} from "./util/deepCopyObject";
+import {setTokenPosSnapToChar} from "../menus/css";
 /*globals performance*/
 
 export const holiday = 0;
@@ -60,7 +65,7 @@ export let endTargetGame = false;
 export let creditsPlayer = 0;
 export let calibrationPlayer = 0;
 
-let gameEnd = false;
+export let gameEnd = false;
 export let controllerResetCountdowns = [0,0,0,0];
 export function setControllerReset( i ) {
   controllerResetCountdowns[i] = 0;
@@ -77,7 +82,7 @@ export function setUsingCustomControls( i, bool, info ) {
   }
   else {
     mType[i] = info;
-  }  
+  }
 }
 
 export let firstTimeDetected = [true, true, true, true];
@@ -87,7 +92,15 @@ window.mType = [null, null, null, null];
 
 export const mType = [null,null,null,null];
 
+export  function setMtype(index,val){
+  mType[index] = val;
+}
+
 export const currentPlayers = [];
+
+export function setCurrentPlayer(index,val){
+  currentPlayers[index] =val;
+}
 
 export const playerAmount = 0;
 
@@ -139,7 +152,10 @@ export const palettes = [["rgb(250, 89, 89)","rgb(255, 170, 170)","rgba(255, 206
 
 export const hasTag = [false,false,false,false];
 export const tagText = ["","","",""];
-
+export function setTagText(index,value){
+  tagText[index] = value;
+  hasTag[index] = true;
+}
 export const pPal = [0,1,2,3];
 
 export const costumeTimeout = [];
@@ -195,6 +211,10 @@ export function addMatchTimer (val){
 }
 export function setMatchTimer (val){
   matchTimer = val;
+}
+
+export function getMatchTimer(){
+  return matchTimer;
 }
 
 export let usingLocalStorage = false;
@@ -377,6 +397,22 @@ export function findPlayers (){
   }
   for (var i = 0; i < gps.length; i++) {
     var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[i] : null);
+    if(playerType[i] === 2){
+      var alreadyIn = false;
+      for (var k = 0; k < ports; k++) {
+        if (currentPlayers[k] === i) {
+          alreadyIn = true;
+        }
+      }
+      if (!alreadyIn) {
+        if (ports < 4) {
+          addPlayer(i, 99);
+        }
+      }
+      continue;
+    }
+
+    var gamepad = navigator.getGamepads ? navigator.getGamepads()[i] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[i] : null);
     if (typeof gamepad != "undefined" && gamepad != null) {
       var detected = false;
       var gpdName;
@@ -405,7 +441,7 @@ export function findPlayers (){
           if (buttonState(gamepad, gpdInfo, "s")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] === i) {
+              if (currentPlayers[k] == controllerIndex) {
                 alreadyIn = true;
               }
             }
@@ -425,7 +461,7 @@ export function findPlayers (){
           if (buttonState(gamepad, gpdInfo, "a")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == i) {
+              if (currentPlayers[k] == controllerIndex) {
                 alreadyIn = true;
               }
             }
@@ -443,21 +479,31 @@ export function findPlayers (){
   }
 }
 
+export function setPlayerType(playerSlot,type){
+  playerType[playerSlot] = type;
+}
 
 export function addPlayer (i, controllerInfo){
-  ports++;
-  currentPlayers[ports - 1] = i;
-  playerType[ports - 1] = 0;
-  mType[ports - 1] = controllerInfo;
-  if (showDebug) {
-    updateGamepadSVGColour(i, "gamepadSVG"+i);
-    document.getElementById("gamepadSVG"+i).style.display = "";
+  if(controllerInfo === 99){
+    ports++;
+    currentPlayers[ports - 1] = i;
+    playerType[ports - 1] = 2;
+    mType[ports - 1] = controllerInfo;
+  }else {
+    ports++;
+    currentPlayers[ports - 1] = i;
+    playerType[ports - 1] = 0;
+    mType[ports - 1] = controllerInfo;
+    if (showDebug) {
+      updateGamepadSVGColour(i, "gamepadSVG" + i);
+      document.getElementById("gamepadSVG" + i).style.display = "";
+    }
   }
 }
 
 export function togglePort (i){
   playerType[i]++;
-  if (playerType[i] == 2) {
+  if (playerType[i] == 3) {
     playerType[i] = -1;
     if (showDebug) {
       document.getElementById("gamepadSVG"+i).style.display = "none";
@@ -467,7 +513,7 @@ export function togglePort (i){
     playerType[i] = 1;
     setGamepadSVGColour(i, "black");
     if (showDebug) {
-      updateGamepadSVGColour(i, "gamepadSVG"+i);      
+      updateGamepadSVGColour(i, "gamepadSVG"+i);
       document.getElementById("gamepadSVG"+i).style.display = "";
     }
   }
@@ -503,6 +549,7 @@ export function changeGamemode (newGamemode){
   bg1.fillStyle = "black";
   bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
   fg1.clearRect(0, 0, layers.FG1.width, layers.FG1.height);
+
   gameMode = newGamemode;
   switch (newGamemode) {
     // TITLESCREEN
@@ -555,10 +602,18 @@ export function changeGamemode (newGamemode){
     case 13:
       drawCreditsInit();
       break;
-      // controller menu
+      // Multiplayer Modes
     case 14:
       drawControllerMenuInit();
+
       break;
+    case 15:
+      drawCSSInit();
+      connectToMPServer();
+
+      break;
+
+
       // startup
     case 20:
       break;
@@ -651,9 +706,9 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
   }
 
   if (mType !== null) {
-    if (    (mType[i] === "keyboard" && (tempBuffer[0].z ||  tempBuffer[1].z)) 
+    if (    (mType[i] === "keyboard" && (tempBuffer[0].z ||  tempBuffer[1].z))
          || (mType[i] !== "keyboard" && (tempBuffer[0].z && !tempBuffer[1].z))
-       )  { 
+       )  {
       frameAdvance[i][0] = true;
     }
     else {
@@ -758,6 +813,11 @@ export function interpretInputs  (i, active,playertype, inputBuffer) {
     }
   }
 
+  if(giveInputs[i] === true){
+    //turns out keyboards leave gaps in the input buffer
+    deepObjectMerge(true,nullInput(),tempBuffer[0]);
+    updateNetworkInputs(tempBuffer[0],i);
+  }
   if (active) {
     if (tempBuffer[0].dl && !tempBuffer[1].dl ) {
      player[i].showLedgeGrabBox ^= true;
@@ -845,6 +905,7 @@ let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
+
 export function gameTick (oldInputBuffers){
   var start = performance.now();
   var diff = 0;
@@ -880,7 +941,12 @@ export function gameTick (oldInputBuffers){
   } else if (gameMode == 14) {
     // controller calibration
     input[calibrationPlayer] = interpretInputs(calibrationPlayer, true, playerType[calibrationPlayer],oldInputBuffers[calibrationPlayer]);
-  } else if (gameMode == 2) {
+  }else if (gameMode == 15) {
+    for (var i = 0; i < ports; i++) {
+      input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
+      menuMove(i, input);
+    }
+  }else if (gameMode == 2) {
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
         input[i] = interpretInputs(i, true, playerType[i],oldInputBuffers[i]);
@@ -1017,7 +1083,6 @@ export function gameTick (oldInputBuffers){
       wasFrameByFrame = true;
     }
     frameByFrame = false;
-
     if (showDebug) {
       diff = performance.now() - start;
       gamelogicTime[0] += diff;
@@ -1041,7 +1106,7 @@ export function gameTick (oldInputBuffers){
   } else {
     if (!gameEnd) {
       for (var i = 0; i < 4; i++) {
-        if (playerType[i] == 0) {
+        if (playerType[i] == 0 ||playerType[i] == 2) {
           if (currentPlayers[i] != -1) {
             input[i] = interpretInputs(i, false,playerType[i],oldInputBuffers[i]);
           }
@@ -1067,7 +1132,11 @@ export function gameTick (oldInputBuffers){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick, 16 - diff, input);
+
+    saveGameState(input,ports);
+
+  setTimeout(gameTick, 16, input);
+
 }
 
 export function clearScreen (){
@@ -1083,7 +1152,7 @@ let otherFrame = true;
 let fps30 = false;
 export function renderTick (){
   window.requestAnimationFrame(renderTick);
-  otherFrame ^= true
+  otherFrame ^= true;
   if ((fps30 && otherFrame) || !fps30) {
     //console.log("------");
     if (gameMode == 20) {
@@ -1297,6 +1366,10 @@ export function endGame (input){
   playing = false;
   clearScreen();
   drawStage();
+  setTokenPosSnapToChar(0);
+  setTokenPosSnapToChar(1);
+  setTokenPosSnapToChar(2);
+  setTokenPosSnapToChar(3);
   if (gameMode == 3) {
     changeGamemode(2);
     MusicManager.playMenuLoop();
@@ -1382,7 +1455,7 @@ export function finishGame (input){
     }
   } else {
     if (matchTimer <= 0) {
-      text = "Time!"
+      text = "Time!";
       sounds.time.play();
       textGrad.addColorStop(0, "black");
       textGrad.addColorStop(0.5, "black");
@@ -1450,6 +1523,7 @@ function onFullScreenChange() {
     cont.style.opacity = 1;
   }
 }
+
 
 export function start (){
   if (holiday === 1){
@@ -1604,7 +1678,7 @@ export function start (){
         document.webkitCancelFullScreen();
       }
     }
-    resize();
+    // resize();
   });
 
   document.addEventListener("fullscreenchange", onFullScreenChange, false);
@@ -1647,6 +1721,14 @@ export function start (){
       $("#snowButtonEdit").text(snowCount);
     });
   }
+
+  $("#replay").change(function() {
+
+
+    // grab the first image in the FileList object and pass it to the function
+    loadReplay(this.files[0]);
+  });
+
   resize();
 }
 window.start = start;

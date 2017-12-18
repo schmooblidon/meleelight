@@ -16,6 +16,8 @@ import {Vec2D} from "../main/util/Vec2D";
 // if 'connectednessFunction' is not supplied, it is assumed that no grounds/platforms are connected to any other grounds/platforms
 
 
+import {syncStage} from "../main/multiplayer/streamclient";
+import {deepObjectMerge} from "../main/util/deepCopyObject";
 const stageMapping = {
   0: "battlefield",
   1: "ystory",
@@ -27,7 +29,9 @@ const stageMapping = {
 
 export function setVsStage(val) {
   activeStage = vsstages[stageMapping[val]];
+
 }
+
 
 export const targetStageMapping = {
   0: "targetstage1",

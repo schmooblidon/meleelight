@@ -4,8 +4,8 @@ import {drawStar} from "main/vfx/drawStar";
 import {activeStage} from "stages/activeStage";
 
 export default (posInQueue)=> {
-  const tX = vfxQueue[posInQueue].pos.x;
-  const tY = vfxQueue[posInQueue].pos.y;
+  const tX = vfxQueue[posInQueue].newPos.x;
+  const tY = vfxQueue[posInQueue].newPos.y;
   const t = vfxQueue[posInQueue].timer / vfxQueue[posInQueue].frames;
   const [deltaX, deltaY] = vfxQueue[posInQueue].face;
   const scale = vfxQueue[posInQueue].facing;

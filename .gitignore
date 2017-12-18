@@ -63,3 +63,5 @@ MeleeLight-mas-x64/*
 MeleeLight-win32-ia32/*
 MeleeLight-win32-x64/*
 node_modules/*
+
+\.idea/

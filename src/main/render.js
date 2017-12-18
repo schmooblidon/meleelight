@@ -45,6 +45,10 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
     can.fillStyle = col;
     can.beginPath();
     // for each shape
+  if(path !== undefined && path !== null && path.length !== undefined) {
+
+
+
     for (var j = 0; j < path.length; j++) {
         // first 2 numbers are starting vector points
         var x = (path[j][0] * scaleX * face) + rpX;
@@ -57,6 +61,7 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
                 scaleY) + rpY);
         }
     }
+  }
     can.closePath();
     can.fill();
     can.restore();
@@ -74,6 +79,12 @@ export function renderPlayer(i) {
     }
     if (frame > framesData[characterSelections[i]][player[i].actionState]) {
         frame = framesData[characterSelections[i]][player[i].actionState];
+    }
+    if(animations[characterSelections[i]][player[i].actionState] === undefined){
+      return;
+    }
+    if(animations[characterSelections[i]][player[i].actionState][frame - 1] === undefined){
+      return;
     }
 
     var model = animations[characterSelections[i]][player[i].actionState][frame - 1];

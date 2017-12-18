@@ -1,19 +1,40 @@
-import {cpuDifficulty, characterSelections, player, changeGamemode, playerType,bg1,ui, palettes, pPal, clearScreen, versusMode, tagText,
-    pause
-    , hasTag
-    , randomTags
-    , layers
-    , togglePort
-    , keys
-    , ports
-    , setVersusMode
+import {
+  cpuDifficulty,
+  characterSelections,
+  player,
+  changeGamemode,
+  playerType,
+  bg1,
+  ui,
+  palettes,
+  pPal,
+  clearScreen,
+  versusMode,
+  tagText,
+  pause
+  ,
+  hasTag
+  ,
+  randomTags
+  ,
+  layers
+  ,
+  togglePort
+  ,
+  keys
+  ,
+  ports
+  ,
+  setVersusMode
 } from "main/main";
 import {drawArrayPathCompress, twoPi} from "main/render";
 import {sounds} from "main/sfx";
 import {actionStates} from "physics/actionStateShortcuts";
-import {setCS} from "../main/main";
+import {setCS, gameMode} from "../main/main";
 import {chars} from "../main/characters";
 import {Vec2D} from "../main/util/Vec2D";
+import {syncCharacter, syncGameMode, syncTagText, inServerMode} from "../main/multiplayer/streamclient";
+import {gameSettings} from "../settings";
 /* eslint-disable */
 
 export const marthPic = new Image();
@@ -32,39 +53,132 @@ export const handGrab = new Image();
 handGrab.src = "assets/hand/handgrab.png";
 
 export let choosingTag = -1;
-export const handType = [0,0,0,0];
-export const handPos = [new Vec2D(140,700),new Vec2D(365,700),new Vec2D(590,700),new Vec2D(815,700)];
-export const tokenPos = [new Vec2D(475-54,268),new Vec2D(515-54,268),new Vec2D(475-54,308),new Vec2D(515-54,308)];
-export const chosenChar = [0,0,0,0];
-export const tokenGrabbed = [false,false,false,false];
-export const whichTokenGrabbed = [-1,-1,-1,-1];
-export const occupiedToken = [false,false,false,false];
-export const bHold = [0,0,0,0];
 
-export const cpuSlider = [new Vec2D(152+15+166+0-50,595),new Vec2D(152+15+166+225-50,595),new Vec2D(152+15+166+450-50,595),new Vec2D(152+15+166+675-50,595)];
+export function setChoosingTag(val) {
+  choosingTag = val;
+}
 
-export const cpuGrabbed = [false,false,false,false];
-export const whichCpuGrabbed = [-1,-1,-1,-1];
-export const occupiedCpu = [false,false,false,false];
+export const handType = [0, 0, 0, 0];
+export const handPos = [new Vec2D(140, 700), new Vec2D(365, 700), new Vec2D(590, 700), new Vec2D(815, 700)];
+export const tokenPos = [new Vec2D(475 - 54, 268), new Vec2D(515 - 54, 268), new Vec2D(475 - 54, 308), new Vec2D(515 - 54, 308)];
+export const chosenChar = [0, 0, 0, 0];
+export const tokenGrabbed = [false, false, false, false];
+export const whichTokenGrabbed = [-1, -1, -1, -1];
+export const occupiedToken = [false, false, false, false];
+export const bHold = [0, 0, 0, 0];
+
+export const cpuSlider = [new Vec2D(152 + 15 + 166 + 0 - 50, 595), new Vec2D(152 + 15 + 166 + 225 - 50, 595), new Vec2D(152 + 15 + 166 + 450 - 50, 595), new Vec2D(152 + 15 + 166 + 675 - 50, 595)];
+
+export const cpuGrabbed = [false, false, false, false];
+export const whichCpuGrabbed = [-1, -1, -1, -1];
+export const occupiedCpu = [false, false, false, false];
 
 export let readyToFight = false;
 
 export let rtfFlash = 25;
 export let rtfFlashD = 1;
+const gameSettingsText = {
+  turbo: "Turbo Mode",
+  lCancelType: "L-Cancel Type", // 0- normal | 1 - Auto | 2 - smash 64
+  blastzoneWrapping: "",
+  flashOnLCancel: "Flash on L-Cancel",
+  dustLessPerfectWavedash: "",
+  phantomThreshold: "",
+  everyCharWallJump: "Everyone Walljumps", //0 - off | 1 - on
+  tapJumpOffp1: "Player 1 tap-jump",
+  tapJumpOffp2: "Player 2 tap-jump",
+  tapJumpOffp3: "Player 3 tap-jump",
+  tapJumpOffp4: "Player 4 tap-jump",
+};
 
-export function changeCharacter (i,c){
-  setCS(i,c);
+const gameSettingsValueTranslation = {
+  turbo: (value) => {
+    return (value === 0) ? "OFF" : "ON";
+  },
+  lCancelType: (value) => {
+    return (value === 0) ? "NORMAL" : (value === 1) ? "AUTO" : "SMASH 64";
+  }, // 0- normal | 1 - Auto | 2 - smash 64
+  blastzoneWrapping: "",
+  flashOnLCancel: (value) => {
+    return (value === 0) ? "OFF" : "ON";
+  },
+  dustLessPerfectWavedash: "",
+  phantomThreshold: "",
+  everyCharWallJump: (value) => {
+    return (value === 0) ? "OFF" : "ON";
+  }, //0 - off | 1 - on
+  tapJumpOffp1: (value) => {
+    return (value === 0) ? "OFF" : "ON";
+  },
+  tapJumpOffp2: (value) => {
+    return (value === 0) ? "OFF" : "ON";
+  },
+  tapJumpOffp3: (value) => {
+    return (value === 0) ? "OFF" : "ON";
+  },
+  tapJumpOffp4: (value) => {
+    return (value === 0) ? "OFF" : "ON";
+  },
+};
+//in order
+
+
+const charIconPos = [
+  //marth
+  new Vec2D(475, 268),
+  //puff
+  new Vec2D(568, 268),
+  //fox
+  new Vec2D(663, 268),
+  //falco
+  new Vec2D(733, 268)];
+
+export function setChosenChar(index, charSelected) {
+  setCS(index, charSelected);
+  chosenChar[index] = charSelected;
+  tokenGrabbed[index] = false;
+  occupiedToken[index] = false;
+  setTokenPosSnapToChar(index, charSelected);
+  player[index].actionState = "WAIT";
+  player[index].timer = 0;
+  player[index].charAttributes = chars[characterSelections[index]].attributes;
+  player[index].charHitboxes = chars[characterSelections[index]].hitboxes;
+  whichTokenGrabbed[index] = -1;
+}
+
+export function setTokenPosSnapToChar(index) {
+  tokenPos[index] = charIconPos[index];
+}
+
+export function setTokenPosValue(index, val) {
+  if (typeof(val) === 'undefined') {
+    debugger;
+  }
+  tokenPos[index] = val;
+}
+
+export function changeCharacter(i, c) {
+  setCS(i, c);
+  syncCharacter(i, c);
   player[i].actionState = "WAIT";
   player[i].timer = 0;
   player[i].charAttributes = chars[characterSelections[i]].attributes;
   player[i].charHitboxes = chars[characterSelections[i]].hitboxes;
 }
 
-export function cssControls (i, input){
+function cancelSetTag() {
+  sounds.menuSelect.play();
+  tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
+  syncTagText(choosingTag, tagText[choosingTag]);
+  $("#pTagEdit" + choosingTag).hide();
+  choosingTag = -1;
+}
+
+export function cssControls(i, input) {
   let allowRegrab = true;
   let o = 54;
-  if (choosingTag == -1){
-    if (input[i][0].b){
+  if (choosingTag == -1) {
+    if (input[i][0].b) {
       bHold[i]++;
       if (bHold[i] == 30) {
         sounds.menuBack.play();
@@ -89,17 +203,17 @@ export function cssControls (i, input){
       handType[i] = 1;
       if (input[i][0].b && !input[i][1].b && playerType[i] == 0 && whichTokenGrabbed[i] == -1) {
         handType[i] = 2;
-        tokenPos[i] = new Vec2D(handPos[i].x, handPos[i].y);
+        setTokenPosValue(i, new Vec2D(handPos[i].x, handPos[i].y));
         tokenGrabbed[i] = true;
         whichTokenGrabbed[i] = i;
         occupiedToken[i] = true;
       }
       if (tokenGrabbed[whichTokenGrabbed[i]]) {
         handType[i] = 2;
-        tokenPos[whichTokenGrabbed[i]] = new Vec2D(handPos[i].x, handPos[i].y);
+        setTokenPosValue(whichTokenGrabbed[i], new Vec2D(handPos[i].x, handPos[i].y));
         if (handPos[i].y > 240 && handPos[i].y < 335) {
           // - 43
-          if (handPos[i].x > 452-o && handPos[i].x < 547-o) {
+          if (handPos[i].x > 452 - o && handPos[i].x < 547 - o) {
             if (chosenChar[whichTokenGrabbed[i]] != 0) {
               chosenChar[whichTokenGrabbed[i]] = 0;
               changeCharacter(whichTokenGrabbed[i], 0);
@@ -108,12 +222,12 @@ export function cssControls (i, input){
             if (input[i][0].a && !input[i][1].a) {
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
-              tokenPos[whichTokenGrabbed[i]] = new Vec2D(473-o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
-                whichTokenGrabbed[i] > 1 ? 40 : 0));
+              setTokenPosValue(whichTokenGrabbed[i], new Vec2D(473 - o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
+                  whichTokenGrabbed[i] > 1 ? 40 : 0)));
               whichTokenGrabbed[i] = -1;
               sounds.marth.play();
             }
-          } else if (handPos[i].x > 547-o && handPos[i].x < 642-o) {
+          } else if (handPos[i].x > 547 - o && handPos[i].x < 642 - o) {
             if (chosenChar[whichTokenGrabbed[i]] != 1) {
               chosenChar[whichTokenGrabbed[i]] = 1;
               changeCharacter(whichTokenGrabbed[i], 1);
@@ -123,12 +237,12 @@ export function cssControls (i, input){
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
-              tokenPos[whichTokenGrabbed[i]] = new Vec2D(568-o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
-                whichTokenGrabbed[i] > 1 ? 40 : 0));
+              setTokenPosValue(whichTokenGrabbed[i], new Vec2D(568 - o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
+                  whichTokenGrabbed[i] > 1 ? 40 : 0)));
               whichTokenGrabbed[i] = -1;
               sounds.jigglypuff.play();
             }
-          } else if (handPos[i].x > 642-o && handPos[i].x < 737-o) {
+          } else if (handPos[i].x > 642 - o && handPos[i].x < 737 - o) {
             if (chosenChar[whichTokenGrabbed[i]] != 2) {
               chosenChar[whichTokenGrabbed[i]] = 2;
               changeCharacter(whichTokenGrabbed[i], 2);
@@ -138,12 +252,12 @@ export function cssControls (i, input){
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
-              tokenPos[whichTokenGrabbed[i]] = new Vec2D(663-o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
-                whichTokenGrabbed[i] > 1 ? 40 : 0));
+              setTokenPosValue(whichTokenGrabbed[i], new Vec2D(663 - o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
+                  whichTokenGrabbed[i] > 1 ? 40 : 0)));
               whichTokenGrabbed[i] = -1;
               sounds.fox.play();
             }
-          } else if (handPos[i].x > 737-o && handPos[i].x < 832-o) {
+          } else if (handPos[i].x > 737 - o && handPos[i].x < 832 - o) {
             if (chosenChar[whichTokenGrabbed[i]] != 3) {
               chosenChar[whichTokenGrabbed[i]] = 3;
               changeCharacter(whichTokenGrabbed[i], 3);
@@ -153,8 +267,8 @@ export function cssControls (i, input){
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
-              tokenPos[whichTokenGrabbed[i]] = new Vec2D(758-o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
-                whichTokenGrabbed[i] > 1 ? 40 : 0));
+              setTokenPosValue(whichTokenGrabbed[i], new Vec2D(758 - o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
+                  whichTokenGrabbed[i] > 1 ? 40 : 0)));
               whichTokenGrabbed[i] = -1;
               sounds.falco.play();
             }
@@ -165,11 +279,11 @@ export function cssControls (i, input){
           //console.log(j+" "+occupiedToken[j]);
           if (!occupiedToken[j] && (playerType[j] == 1 || i == j)) {
             if (handPos[i].y > tokenPos[j].y - 20 && handPos[i].y < tokenPos[j].y + 20 && handPos[i].x > tokenPos[j].x -
-              20 && handPos[i].x < tokenPos[j].x + 20) {
+                20 && handPos[i].x < tokenPos[j].x + 20) {
               if (input[i][0].a && !input[i][1].a) {
                 handType[i] = 2;
                 whichTokenGrabbed[i] = j;
-                tokenPos[whichTokenGrabbed[i]] = new Vec2D(handPos[i].x, handPos[i].y);
+                setTokenPosValue(whichTokenGrabbed[i], new Vec2D(handPos[i].x, handPos[i].y));
                 tokenGrabbed[whichTokenGrabbed[i]] = true;
                 occupiedToken[whichTokenGrabbed[i]] = true;
                 break;
@@ -189,7 +303,7 @@ export function cssControls (i, input){
       }
       cpuSlider[whichCpuGrabbed[i]].x = handPos[i].x;
       cpuDifficulty[whichCpuGrabbed[i]] = Math.round((cpuSlider[whichCpuGrabbed[i]].x - whichCpuGrabbed[i] * 225 -
-        152 - 15) * 3 / 166) + 1;
+          152 - 15) * 3 / 166) + 1;
       player[whichCpuGrabbed[i]].difficulty = cpuDifficulty[whichCpuGrabbed[i]];
       if (input[i][0].a && !input[i][1].a) {
         cpuGrabbed[i] = false;
@@ -200,8 +314,10 @@ export function cssControls (i, input){
       }
     } else {
       handType[i] = 0;
-      tokenPos[whichTokenGrabbed[i]] = new Vec2D(518 + (whichTokenGrabbed[i] % 2) * 40 + chosenChar[whichTokenGrabbed[
-        i]] * 93, 268 + (whichTokenGrabbed[i] > 1 ? 40 : 0));
+
+        setTokenPosValue(whichTokenGrabbed[i], new Vec2D(518 + (whichTokenGrabbed[i] % 2) * 40 + chosenChar[whichTokenGrabbed[
+            i]] * 93, 268 + (whichTokenGrabbed[i] > 1 ? 40 : 0)));
+
       //tokenPos[i] = new Vec2D(518+(i%2)*40,268+(i>1?40:0));
       //tokenGrabbed[i] = false;
       if (whichTokenGrabbed[i] > -1 && tokenGrabbed[whichTokenGrabbed[i]] == true) {
@@ -229,7 +345,11 @@ export function cssControls (i, input){
     let tok;
     if (input[i][0].x && !input[i][1].x) {
       sounds.menuSelect.play();
-      if (whichTokenGrabbed[i] != -1) { tok = whichTokenGrabbed[i]; } else { tok = i; }
+      if (whichTokenGrabbed[i] != -1) {
+        tok = whichTokenGrabbed[i];
+      } else {
+        tok = i;
+      }
       pPal[tok]++;
       if (pPal[tok] > 6) {
         pPal[tok] = 0;
@@ -237,7 +357,11 @@ export function cssControls (i, input){
     }
     if (input[i][0].y && !input[i][1].y) {
       sounds.menuSelect.play();
-      if (whichTokenGrabbed[i] != -1) { tok = whichTokenGrabbed[i]; } else { tok = i; }
+      if (whichTokenGrabbed[i] != -1) {
+        tok = whichTokenGrabbed[i];
+      } else {
+        tok = i;
+      }
       pPal[tok]--;
       if (pPal[tok] < 0) {
         pPal[tok] = 6;
@@ -246,7 +370,7 @@ export function cssControls (i, input){
     if (handPos[i].y > 100 && handPos[i].y < 160 && handPos[i].x > 380 && handPos[i].x < 910) {
       if (input[i][0].a && !input[i][1].a) {
         sounds.menuSelect.play();
-       setVersusMode( 1 - versusMode);
+        setVersusMode(1 - versusMode);
       }
     }
     if (!cpuGrabbed[i]) {
@@ -254,7 +378,7 @@ export function cssControls (i, input){
         if (playerType[s] == 1) {
           if (!occupiedCpu[s]) {
             if (handPos[i].y >= cpuSlider[s].y - 25 && handPos[i].y <= cpuSlider[s].y + 25 && handPos[i].x >=
-              cpuSlider[s].x - 25 && handPos[i].x <= cpuSlider[s].x + 25) {
+                cpuSlider[s].x - 25 && handPos[i].x <= cpuSlider[s].x + 25) {
               if (input[i][0].a && !input[i][1].a && allowRegrab) {
                 cpuGrabbed[i] = true;
                 whichCpuGrabbed[i] = s;
@@ -269,6 +393,9 @@ export function cssControls (i, input){
     }
 
     if (handPos[i].y > 640 && handPos[i].y < 680 && handPos[i].x > 130 + i * 225 && handPos[i].x < 310 + i * 225) {
+      if (gameMode !== 2) {
+        cancelSetTag();
+      }
       if (input[i][0].a && !input[i][1].a) {
         // do tag
         if (handPos[i].x < 154 + i * 225) {
@@ -276,6 +403,7 @@ export function cssControls (i, input){
           sounds.menuSelect.play();
           hasTag[i] = true;
           tagText[i] = randomTags[Math.round((randomTags.length - 1) * Math.random())];
+          syncTagText(i, tagText[i]);
         } else if (handPos[i].x > 286 + i * 225) {
           // remove
           sounds.menuSelect.play();
@@ -293,19 +421,18 @@ export function cssControls (i, input){
       }
     }
   } else if (choosingTag == i && ((input[i][0].a && !input[i][1].a) || keys[13])) {
-    sounds.menuSelect.play();
-    tagText[choosingTag] = $("#pTagEdit" + choosingTag).val();
-    $("#pTagEdit" + choosingTag).hide();
-    choosingTag = -1;
+    cancelSetTag();
   }
   if (readyToFight && choosingTag == -1) {
     if (pause[i][0] && !pause[i][1]) {
       sounds.menuForward.play();
       changeGamemode(6);
+      syncGameMode(6);
     }
   } else if (choosingTag == -1 && input[i][0].du && !input[i][1].du) {
     sounds.menuForward.play();
     changeGamemode(6);
+    syncGameMode(6);
   } else if (choosingTag == -1 && input[i][0].dr && !input[i][1].dr) {
     chosenChar[i] = 3;
     changeCharacter(i, 3);
@@ -313,12 +440,12 @@ export function cssControls (i, input){
   }
 }
 
-export function drawCSSInit (){
-  var bgGrad =bg1.createLinearGradient(0,0,1200,700);
-  bgGrad.addColorStop(0,"rgb(17, 12, 56)");
-  bgGrad.addColorStop(1,"black");
-  bg1.fillStyle=bgGrad;
-  bg1.fillRect(0,0,layers.BG1.width,layers.BG1.height);
+export function drawCSSInit() {
+  var bgGrad = bg1.createLinearGradient(0, 0, 1200, 700);
+  bgGrad.addColorStop(0, "rgb(17, 12, 56)");
+  bgGrad.addColorStop(1, "black");
+  bg1.fillStyle = bgGrad;
+  bg1.fillRect(0, 0, layers.BG1.width, layers.BG1.height);
   bg1.fillStyle = "rgb(85, 96, 107)";
   bg1.strokeStyle = "rgb(144, 152, 161)";
   bg1.save();
@@ -445,14 +572,14 @@ export function drawCSSInit (){
   for (var j = 0; j < 4; j++) {
     bg1.fillStyle = bgGrad;
     bg1.beginPath();
-    bg1.moveTo(457-o + j * 95, 265);
-    bg1.bezierCurveTo(457-o + j * 95, 245, 457-o + j * 95, 245, 477-o + j * 95, 245);
-    bg1.lineTo(522-o + j * 95, 245);
-    bg1.bezierCurveTo(542-o + j * 95, 245, 542-o + j * 95, 245, 542-o + j * 95, 265);
-    bg1.lineTo(542-o + j * 95, 310);
-    bg1.bezierCurveTo(542-o + j * 95, 330, 542-o + j * 95, 330, 522-o + j * 95, 330);
-    bg1.lineTo(477-o + j * 95, 330);
-    bg1.bezierCurveTo(457-o + j * 95, 330, 457-o + j * 95, 330, 457-o + j * 95, 310);
+    bg1.moveTo(457 - o + j * 95, 265);
+    bg1.bezierCurveTo(457 - o + j * 95, 245, 457 - o + j * 95, 245, 477 - o + j * 95, 245);
+    bg1.lineTo(522 - o + j * 95, 245);
+    bg1.bezierCurveTo(542 - o + j * 95, 245, 542 - o + j * 95, 245, 542 - o + j * 95, 265);
+    bg1.lineTo(542 - o + j * 95, 310);
+    bg1.bezierCurveTo(542 - o + j * 95, 330, 542 - o + j * 95, 330, 522 - o + j * 95, 330);
+    bg1.lineTo(477 - o + j * 95, 330);
+    bg1.bezierCurveTo(457 - o + j * 95, 330, 457 - o + j * 95, 330, 457 - o + j * 95, 310);
     bg1.closePath();
     bg1.fill();
     bg1.stroke();
@@ -472,33 +599,33 @@ export function drawCSSInit (){
     }
     bg1.fillStyle = "black";
     bg1.beginPath();
-    bg1.moveTo(540-o + j * 95, 305 - add);
-    bg1.lineTo(540-o + j * 95, 310 - add);
-    bg1.bezierCurveTo(540-o + j * 95, 328, 540-o + j * 95, 328, 522-o + j * 95, 328);
-    bg1.lineTo(487-o + j * 95, 328);
-    bg1.bezierCurveTo(459-o + j * 95, 328, 459-o + j * 95, 328, 459-o + j * 95, 310 - add);
-    bg1.lineTo(459-o + j * 95, 305 - add);
+    bg1.moveTo(540 - o + j * 95, 305 - add);
+    bg1.lineTo(540 - o + j * 95, 310 - add);
+    bg1.bezierCurveTo(540 - o + j * 95, 328, 540 - o + j * 95, 328, 522 - o + j * 95, 328);
+    bg1.lineTo(487 - o + j * 95, 328);
+    bg1.bezierCurveTo(459 - o + j * 95, 328, 459 - o + j * 95, 328, 459 - o + j * 95, 310 - add);
+    bg1.lineTo(459 - o + j * 95, 305 - add);
     bg1.closePath();
     bg1.fill();
     bg1.fillStyle = "rgb(180, 180, 180)";
     bg1.font = "700 18px Arial";
     switch (j) {
       case 0:
-        bg1.fillText("MARTH", 467-o + j * 95, 323);
-        bg1.drawImage(marthPic, 459-o + j * 95, 247, 81, 58);
+        bg1.fillText("MARTH", 467 - o + j * 95, 323);
+        bg1.drawImage(marthPic, 459 - o + j * 95, 247, 81, 58);
         break;
       case 1:
-        bg1.fillText("JIGGLY-", 464-o + j * 95, 313);
-        bg1.fillText("PUFF", 477-o + j * 95, 326);
-        bg1.drawImage(puffPic, 459-o + j * 95, 247, 81, 51);
+        bg1.fillText("JIGGLY-", 464 - o + j * 95, 313);
+        bg1.fillText("PUFF", 477 - o + j * 95, 326);
+        bg1.drawImage(puffPic, 459 - o + j * 95, 247, 81, 51);
         break;
       case 2:
-        bg1.fillText("  F O X ", 467-o + j * 95, 323);
-        bg1.drawImage(foxPic, 459-o + j * 95, 247, 81, 58);
+        bg1.fillText("  F O X ", 467 - o + j * 95, 323);
+        bg1.drawImage(foxPic, 459 - o + j * 95, 247, 81, 58);
         break;
       case 3:
-        bg1.fillText("FALCO", 470-o + j * 95, 323);
-        bg1.drawImage(falcoPic, 459-o + j * 95, 247, 81, 58);
+        bg1.fillText("FALCO", 470 - o + j * 95, 323);
+        bg1.drawImage(falcoPic, 459 - o + j * 95, 247, 81, 58);
         break;
       default:
         break;
@@ -556,7 +683,7 @@ export function drawCSSInit (){
   }
 }
 
-export function drawCSS (){
+export function drawCSS() {
   clearScreen();
   ui.fillStyle = "rgb(219, 219, 219)";
   ui.save();
@@ -599,7 +726,7 @@ export function drawCSS (){
   ui.restore();
   for (var i = 0; i < 4; i++) {
     if (playerType[i] > -1) {
-      if (playerType[i] == 0) {
+      if (playerType[i] == 0 || playerType[i] == 2) {
         switch (i) {
           case 0:
             ui.fillStyle = "rgb(218, 51, 51)";
@@ -715,6 +842,10 @@ export function drawCSS (){
         text = "CPU";
         ui.fillStyle = "rgb(161, 161, 161)";
         break;
+      case 2:
+        text = "NET";
+        ui.fillStyle = "rgb(66, 241, 244)";
+        break;
       default:
         break;
     }
@@ -767,13 +898,13 @@ export function drawCSS (){
         ui.globalAlpha = 1;
       }
       drawArrayPathCompress(ui, col, face, (player[i].phys.pos.x * 4.5 * 1.5) + 600, (player[i].phys.pos.y * -4.5) +
-        480, model, player[i].charAttributes.charScale * 1.5, player[i].charAttributes.charScale * 1.5, 0, 0, 0);
+          480, model, player[i].charAttributes.charScale * 1.5, player[i].charAttributes.charScale * 1.5, 0, 0, 0);
       if (player[i].phys.shielding) {
         var sCol = palettes[pPal[i]][2];
         ui.fillStyle = sCol + (0.6 * player[i].phys.shieldAnalog) + ")";
         ui.beginPath();
         ui.arc((player[i].phys.shieldPositionReal.x * 4.5 * 1.5) + 600, (player[i].phys.shieldPositionReal.y * -4.5) +
-          460, player[i].phys.shieldSize * 4.5 * 1.5, twoPi, 0);
+            460, player[i].phys.shieldSize * 4.5 * 1.5, twoPi, 0);
         ui.fill();
       }
       ui.globalAlpha = 1;
@@ -853,68 +984,12 @@ export function drawCSS (){
   }
   ui.font = "900 31px Arial";
   ui.lineWidth = 2;
-  let alreadyDrawn = [false,false,false,false];
+  let alreadyDrawn = [false, false, false, false];
   for (let i = 3; i >= 0; i--) {
-      if (playerType[i] > -1) {
-	  if (tokenGrabbed[i] === false) {
-		  alreadyDrawn[i] = true;
-	  }
-      var bgGrad = ui.createLinearGradient(tokenPos[i].x - 100, tokenPos[i].y, tokenPos[i].x + 50, tokenPos[i].y);
-      bgGrad.addColorStop(0, "rgb(255, 255, 255)");
-      var text = "";
-      switch (playerType[i]) {
-        case 0:
-          text = "P" + (i + 1);
-          switch (i) {
-            case 0:
-              bgGrad.addColorStop(1, "rgb(233, 57, 57)");
-              break;
-            case 1:
-              bgGrad.addColorStop(1, "rgb(62, 130, 233)");
-              break;
-            case 2:
-              bgGrad.addColorStop(1, "rgb(255, 253, 47)");
-              break;
-            case 3:
-              bgGrad.addColorStop(1, "rgb(36, 242, 45)");
-              break;
-            default:
-              break;
-          }
-          break;
-        case 1:
-          text = "CP";
-          bgGrad.addColorStop(1, "rgb(135, 135, 135)");
-        default:
-          break;
-      }
-      ui.fillStyle = "rgba(0,0,0,0.4)";
-      ui.beginPath();
-      ui.arc(tokenPos[i].x, tokenPos[i].y, 34, 0, twoPi);
-      ui.closePath();
-      ui.fill();
-      ui.fillStyle = bgGrad;
-      ui.beginPath();
-      ui.arc(tokenPos[i].x, tokenPos[i].y, 30, 0, twoPi);
-      ui.closePath();
-      ui.fill();
-      ui.fillStyle = "rgba(0,0,0,0.4)";
-      ui.beginPath(tokenPos[i].y);
-      //ui.moveTo(tokenPos[i].x,tokenPos[i].y+4);
-      ui.arc(tokenPos[i].x, tokenPos[i].y, 26, 1.2 * Math.PI, 0.4 * Math.PI);
-      ui.arc(tokenPos[i].x - 3, tokenPos[i].y, 23, 0.5 * Math.PI, 1.2 * Math.PI, true);
-      ui.closePath();
-      ui.fill();
-      ui.strokeStyle = "rgb(57, 57, 57)";
-      ui.fillStyle = "rgb(207, 207, 207)";
-
-      ui.fillText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
-      ui.strokeText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
-	  }
-  }
-  for (let i = 3; i >= 0; i--) {
-	if (alreadyDrawn[i] === false) {
     if (playerType[i] > -1) {
+      if (tokenGrabbed[i] === false) {
+        alreadyDrawn[i] = true;
+      }
       var bgGrad = ui.createLinearGradient(tokenPos[i].x - 100, tokenPos[i].y, tokenPos[i].x + 50, tokenPos[i].y);
       bgGrad.addColorStop(0, "rgb(255, 255, 255)");
       var text = "";
@@ -967,7 +1042,63 @@ export function drawCSS (){
       ui.fillText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
       ui.strokeText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
     }
-	}
+  }
+  for (let i = 3; i >= 0; i--) {
+    if (alreadyDrawn[i] === false) {
+      if (playerType[i] > -1) {
+        var bgGrad = ui.createLinearGradient(tokenPos[i].x - 100, tokenPos[i].y, tokenPos[i].x + 50, tokenPos[i].y);
+        bgGrad.addColorStop(0, "rgb(255, 255, 255)");
+        var text = "";
+        switch (playerType[i]) {
+          case 0:
+            text = "P" + (i + 1);
+            switch (i) {
+              case 0:
+                bgGrad.addColorStop(1, "rgb(233, 57, 57)");
+                break;
+              case 1:
+                bgGrad.addColorStop(1, "rgb(62, 130, 233)");
+                break;
+              case 2:
+                bgGrad.addColorStop(1, "rgb(255, 253, 47)");
+                break;
+              case 3:
+                bgGrad.addColorStop(1, "rgb(36, 242, 45)");
+                break;
+              default:
+                break;
+            }
+            break;
+          case 1:
+            text = "CP";
+            bgGrad.addColorStop(1, "rgb(135, 135, 135)");
+          default:
+            break;
+        }
+        ui.fillStyle = "rgba(0,0,0,0.4)";
+        ui.beginPath();
+        ui.arc(tokenPos[i].x, tokenPos[i].y, 34, 0, twoPi);
+        ui.closePath();
+        ui.fill();
+        ui.fillStyle = bgGrad;
+        ui.beginPath();
+        ui.arc(tokenPos[i].x, tokenPos[i].y, 30, 0, twoPi);
+        ui.closePath();
+        ui.fill();
+        ui.fillStyle = "rgba(0,0,0,0.4)";
+        ui.beginPath(tokenPos[i].y);
+        //ui.moveTo(tokenPos[i].x,tokenPos[i].y+4);
+        ui.arc(tokenPos[i].x, tokenPos[i].y, 26, 1.2 * Math.PI, 0.4 * Math.PI);
+        ui.arc(tokenPos[i].x - 3, tokenPos[i].y, 23, 0.5 * Math.PI, 1.2 * Math.PI, true);
+        ui.closePath();
+        ui.fill();
+        ui.strokeStyle = "rgb(57, 57, 57)";
+        ui.fillStyle = "rgb(207, 207, 207)";
+
+        ui.fillText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
+        ui.strokeText(text, tokenPos[i].x - 22, tokenPos[i].y + 13);
+      }
+    }
   }
   // 72 95
   for (var i = 0; i < ports; i++) {
@@ -1019,6 +1150,21 @@ export function drawCSS (){
       }
     }
   }
+
+  if (inServerMode) {
+    ui.fillStyle = "white";
+
+    var keys = Object.keys(gameSettings);
+    let spacer = 50;
+    for (var j = 0; j < keys.length; j++) {
+      if (gameSettingsText[keys[j]] !== "") {
+        ui.fillText(gameSettingsText[keys[j]] + ":" + gameSettingsValueTranslation[keys[j]](gameSettings[keys[j]]), 820, 130 + spacer);
+        spacer = spacer + 30;
+      }
+    }
+
+  }
+
   if (readyToFight) {
     ui.save();
     ui.fillStyle = "rgba(223, 31, 31, 0.8)";
@@ -1083,4 +1229,6 @@ export function drawCSS (){
     ui.fillText("Press A to finish", 250 + choosingTag * 225, 600);
     ui.textAlign = "start";
   }
+
+
 }

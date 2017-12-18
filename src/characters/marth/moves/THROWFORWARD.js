@@ -12,11 +12,15 @@ export default  {
   init: function (p, input) {
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
-    actionStates[characterSelections[player[p].phys.grabbing]].THROWNMARTHFORWARD.init(player[p].phys.grabbing, input);
+    const grabbing = player[p].phys.grabbing;
+    if(grabbing === -1){
+      return;
+    }
+    actionStates[characterSelections[grabbing]].THROWNMARTHFORWARD.init(grabbing, input);
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
     randomShout(characterSelections[p]);
-    const frame = framesData[characterSelections[player[p].phys.grabbing]].THROWNMARTHFORWARD;
+    const frame = framesData[characterSelections[grabbing]].THROWNMARTHFORWARD;
     player[p].phys.releaseFrame = frame + 1;
     marth.THROWFORWARD.main(p, input);
   },
@@ -36,12 +40,18 @@ export default  {
       WAIT.init(p, input);
       return true;
     }
-    else if (player[p].timer < 13 && player[player[p].phys.grabbing].phys.grabbedBy !== p) {
-      CATCHCUT.init(p, input);
-      return true;
-    }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1){
+        return;
+      }
+      if (player[p].timer < 13 && player[grabbing].phys.grabbedBy !== p) {
+        CATCHCUT.init(p, input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

@@ -347,7 +347,7 @@ export function targetBuilderControls (p, input){
                           if (Math.sign(angle) === -1) {
                             angle += twoPi;
                           }
-                          
+
                           if (angle <= Math.PI/6 || angle >= Math.PI*11/6) {
                             // is ground
                             stageTemp.ground.push([new Vec2D(realLine[0].x, realLine[0].y), new Vec2D(realLine[1].x, realLine[1].y)]);
@@ -366,7 +366,7 @@ export function targetBuilderControls (p, input){
                             stageTemp.polygonMap[stageTemp.polygonMap.length-1].push(["wallL",stageTemp.wallL.length-1]);
                           }
                         }
-    
+
                         curIndex = nextIndex;
                       }
                     } else {
@@ -546,7 +546,7 @@ export function targetBuilderControls (p, input){
           }
           if (hoverItem != 0) {
             if (input[p][0].a && !input[p][1].a && !input[p][0].z) {
-              if (   stageTemp[hoverItem[0]][hoverItem[1]][2] === undefined 
+              if (   stageTemp[hoverItem[0]][hoverItem[1]][2] === undefined
                   || stageTemp[hoverItem[0]][hoverItem[1]][2].damageType !== damageType ) {
                 stageTemp[hoverItem[0]][hoverItem[1]][2] = { damageType : damageType };
               }
@@ -555,7 +555,7 @@ export function targetBuilderControls (p, input){
               }
               sounds.menuSelect.play();
             }
-          }          
+          }
           break;
         case 5:
           //TARGET
@@ -622,7 +622,7 @@ export function targetBuilderControls (p, input){
             if (!findPolygon(crossHairPos, true)) {
               if (!findLine(realCrossHair, true, ["line"])) {
                 hoverItem = 0;
-              } 
+              }
             }
           } else {
             if (!findTarget(realCrossHair)) {
@@ -714,7 +714,7 @@ export function targetBuilderControls (p, input){
                         stageTemp.connected[0].splice(index, 1);
                       }
                       for (let p=0;p<stageTemp.polygonMap.length;p++){
-                        if (stageTemp.polygonMap[p] !== null ){ 
+                        if (stageTemp.polygonMap[p] !== null ){
                           for (let k=0;k<stageTemp.polygonMap[p].length;k++){
                             if (stageTemp.polygonMap[p][k][0] === type && stageTemp.polygonMap[p][k][1] > index){
                               stageTemp.polygonMap[p][k][1]--;
@@ -723,7 +723,7 @@ export function targetBuilderControls (p, input){
                         }
                       }
                     }
-                  }  
+                  }
                   stageTemp.polygonMap.splice(hoverItem[1], 1);
                   stageTemp.polygon.splice(hoverItem[1], 1);
                   sounds.menuBack.play();
@@ -944,7 +944,7 @@ export function drawTargetStage (){
   drawLinesOfType("platform", "#4794c6");
   drawLinesOfType("wallL", "#47c648");
   drawLinesOfType("wallR", "#9867de");
-  drawLinesOfType("ceiling", "#f04c4c"); 
+  drawLinesOfType("ceiling", "#f04c4c");
 
   calculateDamageWallColours();
   ui.lineWidth = 4;
@@ -1301,7 +1301,7 @@ export function renderTargetBuilder (){
   ui.fillStyle = "rgba(0,0,0,0.8)";
   ui.strokeStyle = "rgba(0,0,0,0.8)";
   ui.font = "600 14px Lucida Console, monaco, monospace";
-  //ui.fillText(120 - stageTemp.box.length, 745, 707); 
+  //ui.fillText(120 - stageTemp.box.length, 745, 707);
   ui.beginPath();
   ui.moveTo(590,40);
   ui.lineTo(602,60);
@@ -1576,13 +1576,13 @@ export function centerItem (item,realCrossHair){
       stageTemp.background[item[0]][item[1]][1].x += offset.x;
       stageTemp.background[item[0]][item[1]][0].y += offset.y;
       stageTemp.background[item[0]][item[1]][1].y += offset.y;
-      break;      
+      break;
     case "polygonBG":
       for (let i=0;i<stageTemp.background.polygon[item[1]].length;i++){
         stageTemp.background.polygon[item[1]][i].x += offset.x;
         stageTemp.background.polygon[item[1]][i].y += offset.y;
       }
-      break;    
+      break;
     default:
       break;
   }

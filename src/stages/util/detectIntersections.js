@@ -10,16 +10,16 @@ type Line = [Vec2D, Vec2D];
 type Polygon = Array<Vec2D>;
 
 
-export function intersectsAny (newLine : Line, lines : Array<Line>) : bool {
+export function intersectsAny(newLine: Line, lines: Array<Line>): bool {
   for (let i = 0; i < lines.length; i++) {
     if (intersects(newLine, lines[i])) {
       return true;
     }
-  } 
+  }
   return false;
 }
 
-function intersects( line1 : Line, line2 : Line) : bool {
+function intersects(line1: Line, line2: Line): bool {
   const t1 = coordinateInterceptParameter(line1, line2);
   const t2 = coordinateInterceptParameter(line2, line1);
   if (isNaN(t1) || isNaN(t2) || t1 === Infinity || t2 === Infinity || t1 < 0 || t2 < 0 || t1 > 1 || t2 > 1) {
@@ -36,7 +36,7 @@ function isInside( point : Vec2D, lines : Array<Line>) : bool {
   return !evenNumberOfTrue( lines.map((line) => intersects(line, [pt, atInfinity])));
 }
 
-function evenNumberOfTrue ( list : Array<bool> ) : bool {
+function evenNumberOfTrue(list: Array<bool>): bool {
   if (list.length < 1) {
     return true;
   }
@@ -51,36 +51,36 @@ function evenNumberOfTrue ( list : Array<bool> ) : bool {
   }
 }
 
-function distanceToLines( point : Vec2D, lines : Array<Line>) : number {
+function distanceToLines(point: Vec2D, lines: Array<Line>): number {
   if (isInside(point, lines)) {
     return -1;
   }
   else {
-    return minimum( lines.map( (line) => distanceToLine(point, line)));
+    return minimum(lines.map((line) => distanceToLine(point, line)));
   }
 }
 
-export function distanceToLine (point : Vec2D, line : Line) : number {
-  if (euclideanDist(line[0], line[1]) < 0.001 ) {
+export function distanceToLine(point: Vec2D, line: Line): number {
+  if (euclideanDist(line[0], line[1]) < 0.001) {
     return euclideanDist(point, line[0]);
   }
   else {
-    const projectedPoint = orthogonalProjection(point,line);
-    const lineRight = extremePoint(line,"r");
-    const lineLeft = extremePoint(line,"l");
-    const lineTop = extremePoint(line,"t");
-    const lineBot = extremePoint(line,"b");
+    const projectedPoint = orthogonalProjection(point, line);
+    const lineRight = extremePoint(line, "r");
+    const lineLeft = extremePoint(line, "l");
+    const lineTop = extremePoint(line, "t");
+    const lineBot = extremePoint(line, "b");
     if (projectedPoint.x > lineRight.x) {
-      return euclideanDist (point, lineRight);
+      return euclideanDist(point, lineRight);
     }
     else if (projectedPoint.x < lineLeft.x) {
-      return euclideanDist (point, lineLeft);
+      return euclideanDist(point, lineLeft);
     }
     else if (projectedPoint.y > lineTop.y) {
-      return euclideanDist (point, lineTop);
+      return euclideanDist(point, lineTop);
     }
     else if (projectedPoint.y < lineBot.y) {
-      return euclideanDist (point, lineBot);
+      return euclideanDist(point, lineBot);
     }
     else {
       return euclideanDist(point, projectedPoint);
@@ -89,7 +89,7 @@ export function distanceToLine (point : Vec2D, line : Line) : number {
 }
 
 
-function minimum ( numbers : Array<number>) : number {
+function minimum(numbers: Array<number>): number {
   if (numbers.length < 1) {
     return Infinity;
   }
@@ -105,13 +105,13 @@ function minimum ( numbers : Array<number>) : number {
   }
 }
 
-export function distanceToPolygon( point : Vec2D, polygon : Polygon) : number {
+export function distanceToPolygon(point: Vec2D, polygon: Polygon): number {
   return distanceToLines(point, linesOfPolygon(polygon));
 }
 
-function linesOfPolygon( polygon : Polygon ) : Array<Line> {
+function linesOfPolygon(polygon: Polygon): Array<Line> {
   const lg = polygon.length;
-  let pt = polygon[lg-1];
+  let pt = polygon[lg - 1];
   const lines = [];
   for (let i = 0; i < polygon.length; i++) {
     lines.push([pt, polygon[i]]);
@@ -120,19 +120,19 @@ function linesOfPolygon( polygon : Polygon ) : Array<Line> {
   return lines;
 }
 
-function distanceBetweenLines( line1 : Line, line2 : Line) : number {
+function distanceBetweenLines(line1: Line, line2: Line): number {
   if (intersects(line1, line2)) {
     return 0;
   }
   else {
-    return minimum( [ distanceToLine(line1[0], line2)
-                    , distanceToLine(line1[1], line2)
-                    , distanceToLine(line2[0], line1)
-                    , distanceToLine(line2[1], line1)
-                    ] );
+    return minimum([distanceToLine(line1[0], line2)
+      , distanceToLine(line1[1], line2)
+      , distanceToLine(line2[0], line1)
+      , distanceToLine(line2[1], line1)
+    ]);
   }
 }
 
-export function lineDistanceToLines( thisLine : Line, otherLines : Array<Line>) : number {
-  return minimum( otherLines.map( (otherLine) => distanceBetweenLines(thisLine, otherLine)));
+export function lineDistanceToLines(thisLine: Line, otherLines: Array<Line>): number {
+  return minimum(otherLines.map((otherLine) => distanceBetweenLines(thisLine, otherLine)));
 }

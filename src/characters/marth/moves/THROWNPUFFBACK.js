@@ -13,7 +13,11 @@ export default {
   //7.53
   init: function (p, input) {
     player[p].actionState = "THROWNPUFFBACK";
-    if (player[p].phys.grabbedBy < p) {
+    const grabbedBy = player[p].phys.grabbedBy;
+    if(grabbedBy === -1){
+      return;
+    }
+    if (grabbedBy < p) {
       player[p].timer = -1;
     }
     else {
@@ -26,8 +30,16 @@ export default {
   main: function (p, input) {
     player[p].timer++;
     if (!marth.THROWNPUFFBACK.interrupt(p, input)) {
-      if (player[p].timer > 0) {
-        player[p].phys.pos = new Vec2D(player[player[p].phys.grabbedBy].phys.pos.x + marth.THROWNPUFFBACK.offset[player[p].timer - 1][0] * player[p].phys.face * -1, player[player[p].phys.grabbedBy].phys.pos.y + marth.THROWNPUFFBACK.offset[player[p].timer - 1][1]);
+      let timer = player[p].timer;
+      if (timer > 0) {
+        const grabbedBy = player[p].phys.grabbedBy;
+        if(grabbedBy === -1){
+          return;
+        }
+        if(timer > marth.THROWNPUFFBACK.offset.length){
+          timer = marth.THROWNPUFFBACK.offset.length - 1;
+        }
+        player[p].phys.pos = new Vec2D(player[grabbedBy].phys.pos.x + marth.THROWNPUFFBACK.offset[timer - 1][0] * player[p].phys.face * -1, player[grabbedBy].phys.pos.y + marth.THROWNPUFFBACK.offset[timer - 1][1]);
         /*if (player[p].timer > 13 && player[p].timer < 19){
          player[p].phys.pos.x += marth.THROWNPUFFBACK.offsetVel[player[p].timer-14]*player[p].phys.face;
          }*/

@@ -7,7 +7,7 @@ import type {GamepadInfo} from "../gamepadInfo";
 
 const mayflashIDs = [ { name : "Mayflash Wii U 4-way adapter", id : "Mayflash", vendor : "0079", product : "1843" } 
                     , { name : "Nexilux adapter", id : "NEXILUX", vendor : "0079", product : "1845" }
-                    , { name : "Generic GC controller adapter", id : "GameCube Controller Adapter", vendor : "0079", product : "1846" } 
+                    , { name : "Generic GC controller adapter", id : "GameCube Controller Adapter", vendor : "0079", product : "1846" }
                     , { name : "Mayflash Wii U 4-way adapter", id : "Wii U Gamecube Adapter" }
                     , { name : "Mayflash 2-port adapter", id : "USB GamePad", vendor : "1a34", product : "f705" }
                     ];

@@ -174,7 +174,7 @@ function unitRetract ( [x : number,y : number] ) : [number, number] {
   }
 };
 
-function meleeRound (x : number)  : number{
+export function meleeRound (x : number)  : number{
   return Math.round(steps*x)/steps;
 };
 

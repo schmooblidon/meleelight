@@ -128,6 +128,9 @@ export function hitDetect (p,input){
                                                 storedPhantom = j;
                                             } else {
                                                 hitQueue.push([i, p, j, false, false, false, false]);
+                                                if(player[p].hitboxes)
+                                                if(player[p].hitboxes.hitList)
+                                                if(player[p].hitboxes.hitList instanceof Array)
                                                 player[p].hitboxes.hitList.push(i);
                                                 setHasHit(p, j);
                                                 break;
@@ -158,10 +161,21 @@ export function setHasHit (p,j){
 }
 
 export function hitHitCollision (i,p,j,k){
-    var hbpos  = new Vec2D ( player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x * player[p].phys.face)
-                           , player[p].phys.pos.y +  player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y );
-    var hbpos2 = new Vec2D ( player[i].phys.pos.x + (player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].x * player[i].phys.face)
-                           , player[i].phys.pos.y +  player[i].hitboxes.id[k].offset[player[i].hitboxes.frame].y );
+
+
+  let framePos1 = player[p].hitboxes.frame;
+  if(framePos1 > 1){
+    framePos1 = 1;
+  }
+  let framePos2 = player[i].hitboxes.frame;
+  if(framePos2 > 1){
+    framePos2 = 1;
+  }
+  var hbpos = new Vec2D(player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[framePos1].x * player[
+            p].phys.face), player[p].phys.pos.y + player[p].hitboxes.id[j].offset[framePos1].y);
+    var hbpos2 = new Vec2D(player[i].phys.pos.x + (player[i].hitboxes.id[k].offset[framePos2].x * player[
+            i].phys.face), player[i].phys.pos.y + player[i].hitboxes.id[k].offset[framePos2].y);
+
     var hitPoint = new Vec2D((hbpos.x + hbpos2.x) / 2, (hbpos.y + hbpos2.y) / 2);
 
     return [    Math.pow(hbpos2.x - hbpos.x, 2) + Math.pow(hbpos.y - hbpos2.y, 2)
@@ -194,12 +208,18 @@ export function interpolatedHitHitCollision(i,p,j,k) {
 
 export function hitShieldCollision (i,p,j,previous){
     if (previous) {
-        var hbpos = new Vec2D(player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes
-                .frame].x * player[p].phys.facePrev), player[p].phys.posPrev.y + player[p].phys.prevFrameHitboxes.id[j].offset[
-                player[p].phys.prevFrameHitboxes.frame].y);
+      let checkPreviousFrame = player[p].phys.prevFrameHitboxes.frame;
+      if( checkPreviousFrame> 1){
+        checkPreviousFrame = 1;
+      }
+        var hbpos = new Vec2D(player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[checkPreviousFrame].x * player[p].phys.facePrev), player[p].phys.posPrev.y + player[p].phys.prevFrameHitboxes.id[j].offset[checkPreviousFrame].y);
     } else {
-        var hbpos = new Vec2D(player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x *
-            player[p].phys.face), player[p].phys.pos.y + player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y);
+      let checkFrame = player[p].hitboxes.frame;
+      if( checkFrame> 1){
+        checkFrame = 1;
+      }
+        var hbpos = new Vec2D(player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[checkFrame].x *
+            player[p].phys.face), player[p].phys.pos.y + player[p].hitboxes.id[j].offset[checkFrame].y);
     }
     var shieldpos = player[i].phys.shieldPositionReal;
 
@@ -208,12 +228,20 @@ export function hitShieldCollision (i,p,j,previous){
 }
 
 export function interpolatedHitCircleCollision (circlePos,r,p,j){
-  const h1 = new Vec2D ( player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].x * player[p].phys.facePrev)
-                       , player[p].phys.posPrev.y +  player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes.frame].y );
-  const h2 = new Vec2D ( player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].x * player[p].phys.face)
-                       , player[p].phys.pos.y +  player[p].hitboxes.id[j].offset[player[p].hitboxes.frame].y );
-  const s = player[p].hitboxes.id[j].size;
 
+  let prevPosFrame = player[p].phys.prevFrameHitboxes.frame;
+  if (prevPosFrame > 1){
+    prevPosFrame = 1;
+  }
+  let posFrame = player[p].hitboxes.frame;
+  if (posFrame > 1){
+    posFrame = 1;
+  }
+  var h1 = new Vec2D(player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[prevPosFrame].x * player[p].phys.facePrev), player[p].phys.posPrev.y + player[p].phys.prevFrameHitboxes.id[j].offset[
+            prevPosFrame].y);
+  var h2 = new Vec2D(player[p].phys.pos.x + (player[p].hitboxes.id[j].offset[posFrame].x * player[p].phys
+            .face), player[p].phys.pos.y + player[p].hitboxes.id[j].offset[posFrame].y);
+  const s = player[p].hitboxes.id[j].size;
   const collision = sweepCircleVsSweepCircle ( h1, s, h2, s, circlePos, r, circlePos, r );
 
   if (collision === null) {
@@ -272,14 +300,27 @@ export function interpolatedHitHurtCollision (i,p,j,phantom){
 
 export function hitHurtCollision (i,p,j,previous,phantom){
     phantom = phantom || false;
-    var offset = player[p].hitboxes.id[j].offset[player[p].hitboxes.frame];
+  let playerframe = player[p].hitboxes.frame;
+  if(playerframe > 1){
+    playerframe = 1;
+  }
+  var offset = player[p].hitboxes.id[j].offset[playerframe];
+    if (offset === undefined){
+      return false;
+    }
     if (player[p].actionState == "DAMAGEFLYN") {
         offset = player[p].hitboxes.id[j].offset[0];
     }
     if (previous) {
-        var hbpos = new Vec2D(player[p].phys.posPrev.x + (player[p].phys.prevFrameHitboxes.id[j].offset[player[p].phys.prevFrameHitboxes
-                .frame].x * player[p].phys.facePrev), player[p].phys.posPrev.y + player[p].phys.prevFrameHitboxes.id[j].offset[
-                player[p].phys.prevFrameHitboxes.frame].y);
+      let prevframe = player[p].phys.prevFrameHitboxes.frame;
+      if(prevframe > 1){
+        prevframe = 1;
+      }
+      const prevoffset = player[p].phys.prevFrameHitboxes.id[j].offset[prevframe];
+      if(prevoffset === undefined){
+        return false;
+      }
+      var hbpos = new Vec2D(player[p].phys.posPrev.x + (prevoffset.x * player[p].phys.facePrev), player[p].phys.posPrev.y + prevoffset.y);
     } else {
         var hbpos = new Vec2D(player[p].phys.pos.x + (offset.x * player[p].phys.face), player[p].phys.pos.y + offset.y);
     }
@@ -310,14 +351,23 @@ export function hitHurtCollision (i,p,j,previous,phantom){
 
 export function cssHits(input) {
   for (var i = 0; i < hitQueue.length; i++) {
-    const v = hitQueue[i][0];
-    const a = hitQueue[i][1];
-    const h = hitQueue[i][2];
-    const shieldHit = hitQueue[i][3];
-    const isThrow = hitQueue[i][4];
-    const drawBounce = hitQueue[i][5];
-    const phantom = hitQueue[i][6] || false;
+
+    var v = hitQueue[i][0];
+    if(v === -1){
+      continue;
+    }
+    var a = hitQueue[i][1];
+    var h = hitQueue[i][2];
+    var shieldHit = hitQueue[i][3];
+    var isThrow = hitQueue[i][4];
+    var drawBounce = hitQueue[i][5];
+    var phantom = hitQueue[i][6] || false;
+    let frame = player[i].hitboxes.frame;
+    if(frame > 1){
+      frame = 1;
+    }
     const damage = player[a].hitboxes.id[h].dmg;
+
     if (shieldHit) {
       sounds.blunthit.play();
       player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
@@ -343,7 +393,7 @@ export function cssHits(input) {
       player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
       player[v].hit.knockback = getKnockback(player[a].hitboxes.id[h], damage, damage, 0, player[v].charAttributes.weight,
             false, false);
-      player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y);
+      player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y);
       if (player[a].phys.pos.x < player[v].phys.pos.x) {
         player[v].hit.reverse = false;
         player[v].phys.face = -1;
@@ -395,6 +445,10 @@ export function executeShieldHit(input, v, a, h, damage) {
     });
     sounds.powershield.play();
   } else {
+    let frame = player[v].hitboxes.frame;
+    if(frame > 1){
+      frame = 1;
+    }
     drawVfx({
       name: "clank",
       pos: new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y)
@@ -421,7 +475,11 @@ export function executeShieldHit(input, v, a, h, damage) {
 
 export function bluntHit(a,h){
   sounds.blunthit.play();
-  drawVfx("clank", new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[player[a].hitboxes.frame].y));
+  let frame = player[a].hitboxes.frame;
+  if(frame > 1){
+    frame = 1;
+  }
+  drawVfx("clank", new Vec2D(player[a].phys.pos.x + (player[a].hitboxes.id[h].offset[frame].x * player[a].phys.face), player[a].phys.pos.y + player[a].hitboxes.id[h].offset[frame].y));
 }
 
 export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounce, phantom, stageDamage, hitbox) {
@@ -457,11 +515,15 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
   if (phantom) {
     player[v].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
     player[v].hit.knockback = 0;
-    player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (hitbox.offset[player[a].hitboxes.frame].x * player[a].phys.face), player[a].phys.pos.y + hitbox.offset[player[a].hitboxes.frame].y);
+    let frame = player[a].hitboxes.frame;
+    if(frame > 1){
+      frame = 1;
+    }
+    player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (hitbox.offset[frame].x * player[a].phys.face), player[a].phys.pos.y + hitbox.offset[frame].y);
     hitEffectsAndSound(a,v,h,isThrow);
     return;
   }
-    
+
   let crouching = actionStates[characterSelections[v]][player[v].actionState].crouch;
   let vCancel = false;
   if (player[v].phys.vCancelTimer > 0) {
@@ -509,7 +571,11 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
       player[v].hit.reverse = false;
       player[v].phys.stageDamageImmunity = 20;
     } else {
-      player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (hitbox.offset[player[a].hitboxes.frame].x * player[a].phys.face), player[a].phys.pos.y + hitbox.offset[player[a].hitboxes.frame].y);
+      let frame = player[a].hitboxes.frame;
+      if(frame > 1){
+        frame = 1;
+      }
+      player[v].hit.hitPoint = new Vec2D(player[a].phys.pos.x + (hitbox.offset[frame].x * player[a].phys.face), player[a].phys.pos.y + hitbox.offset[frame].y);
       if (player[a].phys.pos.x < player[v].phys.pos.x) {
         player[v].hit.reverse = false;
       } else {
@@ -558,7 +624,7 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
       actionStates[characterSelections[player[v].phys.grabbedBy]].WAIT.init(player[v].phys.grabbedBy,input);
     }
     player[v].hit.hitstun = getHitstun(player[v].hit.knockback);
-      
+
     if (jabReset) {
       actionStates[characterSelections[v]].DOWNDAMAGE.init(v,input);
     } else if (player[v].hit.knockback >= 80 || isThrow) {
@@ -688,7 +754,7 @@ export function executeHits (input){
     else {
       hitbox = player[a].hitboxes.id[h];
     }
-    
+
     // if in furafura, make sure sfx stops
     if (player[v].actionState == "FURAFURA") {
       sounds.furaloop.stop(player[v].furaLoopID);
@@ -708,7 +774,7 @@ export function executeHits (input){
         ignoreGrabs[v] = true;
         executeRegularHit(input, v, a, h, shieldHit, isThrow, drawBounce, phantom, stageDamage, hitbox);
         break;
-    }    
+    }
   }
   executeGrabHits(input, grabQueue, ignoreGrabs);
 }

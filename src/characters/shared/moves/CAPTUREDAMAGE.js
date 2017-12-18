@@ -16,7 +16,11 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!actionStates[characterSelections[p]].CAPTUREDAMAGE.interrupt(p,input)){
-      player[p].phys.pos.x = player[player[p].phys.grabbedBy].phys.pos.x+(-actionStates[characterSelections[p]].CAPTUREDAMAGE.setPositions[player[p].timer-1]*player[p].phys.face);
+      const grabbedBy = player[p].phys.grabbedBy;
+      if(grabbedBy === -1){
+        return;
+      }
+      player[p].phys.pos.x = player[grabbedBy].phys.pos.x+(-actionStates[characterSelections[p]].CAPTUREDAMAGE.setPositions[player[p].timer-1]*player[p].phys.face);
     }
   },
   interrupt : function(p,input){
