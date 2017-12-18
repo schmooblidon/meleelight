@@ -6,8 +6,8 @@ import {chromaticAberration} from "main/vfx/chromaticAberration";
 import {Vec2D} from "main/util/Vec2D";
 
 export default (posInQueue)=> {
-  const x = vfxQueue[posInQueue].pos.x;
-  const y = vfxQueue[posInQueue].pos.y;
+  const x = vfxQueue[posInQueue].newPos.x;
+  const y = vfxQueue[posInQueue].newPos.y;
   const t = vfxQueue[posInQueue].timer / vfxQueue[posInQueue].frames;
   const dir = vfxQueue[posInQueue].direction;
   const col = vfxQueue[posInQueue].color;

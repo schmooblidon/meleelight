@@ -14,8 +14,8 @@
     "rebuild": "./node_modules/.bin/electron-rebuild  -w uws"
   },
   "engines": {
-    "node": "7.2.0",
-    "npm": "3.10.9"
+    "node": "8.9.1",
+    "npm": "5.5.1"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,6 @@
   },
   "homepage": "https://github.com/schmooblidon/meleelight#readme",
   "dependencies": {
-
     "howler": "^2.0.1",
     "jquery": "1.11.3"
   },
@@ -47,10 +46,10 @@
     "deepstream.io": "^2.1.0",
     "deepstream.io-client-js": "^2.0.0",
     "electron-menu": "^1.0.0",
-    "electron-rebuild": "^1.5.6",
+    "electron-rebuild": "^1.6.0",
     "electron-spawn": "^5.0.0",
     "electron": "^1.8.1",
-    "electron-packager": "^8.3.0",
+    "electron-packager": "^10.1.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-loader": "^1.6.1",
@@ -64,8 +63,6 @@
     "howler": "^2.0.1",
     "jquery": "1.11.3",
     "localforage": "^1.4.3",
-    "msgpack": "^1.0.2",
-    "msgpack-lite": "^0.1.26",
     "optimist": "^0.6.1",
     "pako": "^1.0.4",
     "peer": "^0.2.8",

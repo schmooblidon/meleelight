@@ -22,7 +22,7 @@ import {
   , characterSelections
 } from "../main";
 import {deepObjectMerge} from "../util/deepCopyObject";
-import {setTokenPos, setChosenChar, setChoosingTag} from "../../menus/css";
+import {setTokenPosSnapToChar, setChosenChar, setChoosingTag} from "../../menus/css";
 import pako from 'pako';
 import {gameSettings, updateGameSettings} from "../../settings";
 import {updateGameTickDelay} from "../replay";
@@ -35,7 +35,7 @@ let GAME_ID;
 let playerID;
 export let HOST_GAME_ID = null;
 export let inServerMode = false;
-export let meHost = true;
+export let meHost = false;
 let joinedGame = false;
 let lastRecievedPacket = 0;
 const usServer = 'wss://deepml.herokuapp.com:443';
@@ -101,6 +101,7 @@ if (localStorage.getItem('pickedServer') === 'america' || localStorage.getItem('
 }
 $("#lanIP").attr('value',localStorage.getItem('lastLANIP'));
 export function logIntoServer() {
+  meHost = true;
   if (localStorage.getItem('pickedServer') === 'america') {
     ds = deepstream(usServer).login(null, _onLoggedIn);
   } else if (localStorage.getItem('pickedServer') === 'europe') {
@@ -271,6 +272,7 @@ function _onLoggedIn() {
   startRoom();
 
   $("#joinServer").on('click', (e) => {
+    meHost = false;
     var destId = prompt("Host's peer ID:");
     connectToUser(destId);
   });

@@ -46,7 +46,7 @@ import {buttonState} from "../input/gamepad/retrieveGamepadInputs";
 import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycleGamepadColour} from "../input/gamepad/drawGamepad";
 import {deepCopy} from "./util/deepCopy";
 import {deepObjectMerge} from "./util/deepCopyObject";
-import {setTokenPos} from "../menus/css";
+import {setTokenPosSnapToChar} from "../menus/css";
 /*globals performance*/
 
 export const holiday = 0;
@@ -1366,10 +1366,10 @@ export function endGame (input){
   playing = false;
   clearScreen();
   drawStage();
-  setTokenPos(0,new Vec2D(475-54,268));
-  setTokenPos(1,new Vec2D(515-54,268));
-  setTokenPos(2,new Vec2D(475-54,308));
-  setTokenPos(3,new Vec2D(515-54,308));
+  setTokenPosSnapToChar(0);
+  setTokenPosSnapToChar(1);
+  setTokenPosSnapToChar(2);
+  setTokenPosSnapToChar(3);
   if (gameMode == 3) {
     changeGamemode(2);
     MusicManager.playMenuLoop();

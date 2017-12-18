@@ -102,8 +102,8 @@ export function menuMove(i, input) {
     } else if (menuMode === MPMENU) {
 
       if (menuSelected == LOCALVS) {
-        // changeGamemode(2);
-        // positionPlayersInCSS();
+        changeGamemode(2);
+        positionPlayersInCSS();
       } else {
         if (menuSelected == SPECTATING) {
           connectAsSpectator();
