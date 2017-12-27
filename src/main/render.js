@@ -21,7 +21,8 @@ import {actionStates} from "physics/actionStateShortcuts";
 import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
-import {framesData} from "./characters";
+import {CHARIDS, framesData} from "./characters";
+import {getCS, getCSName, getMatchId} from "./main";
 /* eslint-disable */
 
 export const hurtboxColours = [makeColour(255,237,70,0.6),makeColour(42,57,255,0.6),makeColour(54,255,37,0.6)];
@@ -67,7 +68,37 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
     can.restore();
 }
 
+// Metric pipe for analytics real quick
+//will do more if this works out
+var batchSize = 60;
+var countSoFar= 0;
+    var message = '';
+var dataOut = function(payloadLine, type = "log"){
+    message += type === 'metric' ? (payloadLine + " " + Date.now()) : (Date.now() + " " + payloadLine) +"\n";
+    countSoFar++;
+    if(countSoFar % 25 === 0) {
+        $.ajax({
+            url: "https://endpoint2.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV0jxzviQPX-Y-vaYlUKfmHEFaMgpkghubWmP6fE-_Nx-urqnOHF8erdUy4bWHK3-IrZuz2uNe3sDyurABdvQlxTxOh3HoemZXHABZzHu9mOcw==",
+            type: "POST",
+            data: message,
+            headers: {'Content-Type': type === 'metric' ? "application/vnd.sumologic.carbon2" : ""},
+        })
+            .done((response) => {
+                console.log('Success!')
+                message ='';
+            })
+            .fail((error) => {
+                console.log('Failed', error)
+                message = '';
+            })
+            .always(() => {
+                console.log('Done.')
+            });
+    }
+}
 
+//didnt really want to make a var for this but will keep net traffic down. This only lets diffs get logged to net traffic
+let actionDiff = [];
 
 export function renderPlayer(i) {
     var temX = (player[i].phys.pos.x * activeStage.scale) + activeStage.offset[0];
@@ -88,6 +119,11 @@ export function renderPlayer(i) {
     }
 
     var model = animations[characterSelections[i]][player[i].actionState][frame - 1];
+
+    if(actionDiff[i] !== player[i].actionState) {
+     actionDiff[i] = player[i].actionState;
+        dataOut(getMatchId() + " " + player[i].actionState + " " + i, "log");
+    }
 
     if (actionStates[characterSelections[i]][player[i].actionState].reverseModel) {
         face *= -1;
