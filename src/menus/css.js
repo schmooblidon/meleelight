@@ -45,6 +45,8 @@ export const foxPic = new Image();
 foxPic.src = "assets/css/fox.png";
 export const falcoPic = new Image();
 falcoPic.src = "assets/css/falco.png";
+export const captainPic = new Image();
+captainPic.src = "assets/css/falcface.png";
 export const handPoint = new Image();
 handPoint.src = "assets/hand/handpoint.png";
 export const handOpen = new Image();
@@ -53,7 +55,7 @@ export const handGrab = new Image();
 handGrab.src = "assets/hand/handgrab.png";
 
 export let choosingTag = -1;
-
+let totalChars = 5;
 export function setChoosingTag(val) {
   choosingTag = val;
 }
@@ -131,7 +133,10 @@ const charIconPos = [
   //fox
   new Vec2D(663, 268),
   //falco
-  new Vec2D(733, 268)];
+  new Vec2D(733, 268),
+    //cpt falcon
+  new Vec2D(823, 268)
+];
 
 export function setChosenChar(index, charSelected) {
   setCS(index, charSelected);
@@ -569,7 +574,8 @@ export function drawCSSInit() {
   bgGrad.addColorStop(1, "rgb(85, 95, 128)");
   bg1.lineWidth = 2;
   let o = 54;
-  for (var j = 0; j < 4; j++) {
+
+    for (var j = 0; j < totalChars; j++) {
     bg1.fillStyle = bgGrad;
     bg1.beginPath();
     bg1.moveTo(457 - o + j * 95, 265);
@@ -626,6 +632,10 @@ export function drawCSSInit() {
       case 3:
         bg1.fillText("FALCO", 470 - o + j * 95, 323);
         bg1.drawImage(falcoPic, 459 - o + j * 95, 247, 81, 58);
+        break;
+        case 4:
+        bg1.fillText("CPT F", 470 - o + j * 95, 323);
+        bg1.drawImage(captainPic, 459 - o + j * 95, 247, 81, 58);
         break;
       default:
         break;

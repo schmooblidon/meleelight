@@ -121,6 +121,8 @@ export let findingPlayers = true;
 
 export let showDebug = false;
 
+export let matchID = `${Date.now().toString(36)}${(Math.random() * 10000000000000000000).toString(36)}`;
+
 export let gameMode = 20;
 // 20:Startup
 // 13:Data Menu
@@ -1305,6 +1307,7 @@ export function initializePlayers (i,target){
 }
 
 export function startGame (){
+  setNewMatchId();
   setVsStage(stageSelect);
   setBackgroundType(Math.round(Math.random()));
   if (holiday == 1){
@@ -1785,4 +1788,33 @@ export function cacheDom() {
 
 export function setCS(index,val){
   characterSelections[index] = val;
+}
+
+export function getCS(index){
+ return characterSelections[index];
+}
+
+export function getCSName(index) {
+    switch (index) {
+        case 0:
+            return "Marth";
+            break;
+        case 1:
+            return "PUFF";
+        case 2:
+
+            return "FOX";
+        case 3:
+            return "FALCO";
+        case 4:
+            return "CAPT";
+    }
+}
+
+export function getMatchId() {
+    return matchID;
+}
+
+export function setNewMatchId(){
+  matchID = `${Date.now().toString(36)}${(Math.random() * 10000000000000000000).toString(36)}`;
 }
