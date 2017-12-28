@@ -84,11 +84,12 @@ export function renderPlayer(i) {
 
     var model = animations[characterSelections[i]][player[i].actionState][frame - 1];
 
+    // detect and report as a log message, if action state has changed
     if(actionDiff[i] !== player[i].actionState) {
      actionDiff[i] = player[i].actionState;
         dataOut(getMatchId() + " " + player[i].actionState + " " + i, "log");
     }
-
+    
     if (actionStates[characterSelections[i]][player[i].actionState].reverseModel) {
         face *= -1;
     } else if (player[i].actionState == "TILTTURN") {
@@ -389,6 +390,8 @@ export function renderPlayer(i) {
     }
 
 } 
+//added to track changing second
+let secDiff = '0';
 export function renderOverlay(showStock) {
 
 
@@ -401,6 +404,17 @@ export function renderOverlay(showStock) {
         ui.textAlign = "center";
         var min = (Math.floor(matchTimer / 60)).toString();
         var sec = (matchTimer % 60).toFixed(2);
+
+        // Once a second, report the player damage percentages and the seconds left in the match, as metrics.
+        var wholesec = matchTimer.toFixed(0);
+        if(secDiff !== wholesec) {
+            secDiff = wholesec;
+            for (var i = 0; i < 4; i++) {
+                dataOut("matchId=" + getMatchId() + " metric=playerPercent playerId=" + i + "  " + player[i].percent, "metric");
+            }
+            dataOut("matchId=" + getMatchId() + " metric=matchTimer  " + wholesec, "metric");
+        }
+
         ui.fillText(((min.length < 2) ? "0" + min : min) + ":" + ((sec.length < 5) ? "0" + sec[0] : sec[0] + sec[1]), 590,
             70);
         ui.strokeText(((min.length < 2) ? "0" + min : min) + ":" + ((sec.length < 5) ? "0" + sec[0] : sec[0] + sec[1]),

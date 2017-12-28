@@ -47,6 +47,7 @@ import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycl
 import {deepCopy} from "./util/deepCopy";
 import {deepObjectMerge} from "./util/deepCopyObject";
 import {setTokenPosSnapToChar} from "../menus/css";
+import {flushDataOut} from "./metrics";
 /*globals performance*/
 
 export const holiday = 0;
@@ -1472,6 +1473,7 @@ export function finishGame (input){
       textGrad.addColorStop(1, "rgb(255, 31, 52)");
     }
   }
+  flushDataOut(); //send any lingering metrics/logs from the buffer.
   fg2.scale(1, textScale);
   fg2.fillStyle = textGrad;
   fg2.lineWidth = 40;

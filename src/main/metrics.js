@@ -3,28 +3,63 @@
 
 
 const batchSize = 60;
-let countSoFar = 0;
-let message = '';
+let lcountSoFar = 0;
+let mcountSoFar = 0;
+let lmessage = '';
+let mmessage = '';
+const mheader = "application/vnd.sumologic.carbon2";
+const lheader = "log";
+
 export function dataOut(payloadLine, type = "log") {
-  message += type === 'metric' ? (payloadLine + " " + Date.now()) : (Date.now() + " " + payloadLine) + "\n";
-  countSoFar++;
-  if (countSoFar % 25 === 0) {
-    $.ajax({
-      url: "https://endpoint2.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV0jxzviQPX-Y-vaYlUKfmHEFaMgpkghubWmP6fE-_Nx-urqnOHF8erdUy4bWHK3-IrZuz2uNe3sDyurABdvQlxTxOh3HoemZXHABZzHu9mOcw==",
-      type: "POST",
-      data: message,
-      headers: {'Content-Type': type === 'metric' ? "application/vnd.sumologic.carbon2" : ""},
-    })
-      .done((response) => {
-        console.log('Success!');
-        message = '';
-      })
-      .fail((error) => {
-        console.log('Failed', error);
-        message = '';
-      })
-      .always(() => {
-        console.log('Done.');
-      });
-  }
+  type === 'metric' ? mPayload(payloadLine) : lPayload(payloadLine);
 };
+
+export function flushDataOut(){
+  sendPayload(lheader);
+  sendPayload(mheader);
+}
+
+// logs payload compiler
+function lPayload(message){
+  lmessage += (Date.now() + " " + message) + "\n";
+  lcountSoFar++;
+  if (lcountSoFar % 25 === 0) {
+    sendPayload(lheader);
+    lmessage = '';
+    console.log('Logs Sent.');
+  }
+}
+
+// metrics payload compiler
+function mPayload(message){
+  mmessage += (message + " " + Date.now())+ "\n";
+  mcountSoFar++;
+  if (mcountSoFar % 25 === 0) {
+    sendPayload(mheader);
+    mmessage = '';
+    console.log('Metrics Sent.');
+  }
+}
+
+function sendPayload(header){
+  let message = '';
+  message = header === mheader ? mmessage : lmessage;
+  $.ajax({
+    url: "https://endpoint2.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV0jxzviQPX-Y-vaYlUKfmHEFaMgpkghubWmP6fE-_Nx-urqnOHF8erdUy4bWHK3-IrZuz2uNe3sDyurABdvQlxTxOh3HoemZXHABZzHu9mOcw==",
+    type: "POST",
+    data: message,
+    headers: {'Content-Type': header},
+  })
+    .done((response) => {
+      console.log('Success!');
+      message = '';
+    })
+    .fail((error) => {
+      console.log('Failed', error);
+      message = '';
+    })
+    .always(() => {
+      console.log('Done.');
+      message = '';
+    });
+}
