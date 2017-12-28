@@ -5,7 +5,7 @@
 const batchSize = 60;
 let countSoFar = 0;
 let message = '';
-const dataOut = function (payloadLine, type = "log") {
+export function dataOut(payloadLine, type = "log") {
   message += type === 'metric' ? (payloadLine + " " + Date.now()) : (Date.now() + " " + payloadLine) + "\n";
   countSoFar++;
   if (countSoFar % 25 === 0) {
