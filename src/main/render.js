@@ -9,7 +9,7 @@ import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
-import {getMatchId} from "./main";
+import {getMatchId,getCSName,getCS} from "./main";
 import {dataOut} from "./metrics";
 /* eslint-disable */
 
@@ -87,7 +87,7 @@ export function renderPlayer(i) {
     // detect and report as a log message, if action state has changed
     if(actionDiff[i] !== player[i].actionState) {
      actionDiff[i] = player[i].actionState;
-        dataOut(getMatchId() + " " + player[i].actionState + " " + i, "log");
+        dataOut(getMatchId() + " " + player[i].actionState + " " + getCSName(getCS(i)) + " " + i, "log");
     }
     
     if (actionStates[characterSelections[i]][player[i].actionState].reverseModel) {
@@ -410,9 +410,13 @@ export function renderOverlay(showStock) {
         if(secDiff !== wholesec) {
             secDiff = wholesec;
             for (var i = 0; i < 4; i++) {
-                dataOut("matchId=" + getMatchId() + " metric=playerPercent playerId=" + i + "  " + player[i].percent, "metric");
+                if (playerType[i] > -1) {
+                    dataOut("matchId=" + getMatchId() + " metric=playerPercent playerId=" + i + "  character=" + getCSName(getCS(i)) + " " + player[i].percent, "metric");
+                    dataOut("matchId=" + getMatchId() + " metric=playerPercent playerId=" + i + "  character=" + getCSName(getCS(i)) + " " + player[i].percent, "log");
+                }
             }
             dataOut("matchId=" + getMatchId() + " metric=matchTimer  " + wholesec, "metric");
+            dataOut("matchId=" + getMatchId() + " metric=matchTimer  " + wholesec, "log");
         }
 
         ui.fillText(((min.length < 2) ? "0" + min : min) + ":" + ((sec.length < 5) ? "0" + sec[0] : sec[0] + sec[1]), 590,
