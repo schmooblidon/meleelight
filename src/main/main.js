@@ -13,7 +13,7 @@ import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGamepla
 import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
 import {drawControllerMenuInit, drawControllerMenu} from "menus/controllermenu";
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
-import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
+import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue,setTickSec} from "main/render";
 
 import {actionStates} from "physics/actionStateShortcuts";
 import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
@@ -1410,6 +1410,7 @@ export function endGame (input){
 
 export function finishGame (input){
     setEndTargetGame(false);
+  setTickSec(0);
   gameEnd = true;
   playing = false;
   fg2.save();
