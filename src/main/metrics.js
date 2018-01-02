@@ -23,6 +23,7 @@ export function flushDataOut(){
 function lPayload(message){
   lmessage += (Date.now() + " " + message) + "\n";
   lcountSoFar++;
+
   if (lcountSoFar % 25 === 0) {
     sendPayload(lheader);
     lmessage = '';
@@ -34,6 +35,7 @@ function lPayload(message){
 function mPayload(message){
   mmessage += (message + " " + Date.now())+ "\n";
   mcountSoFar++;
+
   if (mcountSoFar % 25 === 0) {
     sendPayload(mheader);
     mmessage = '';
@@ -42,24 +44,19 @@ function mPayload(message){
 }
 
 function sendPayload(header){
-  let message = '';
-  message = header === mheader ? mmessage : lmessage;
   $.ajax({
     url: "https://endpoint2.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV0jxzviQPX-Y-vaYlUKfmHEFaMgpkghubWmP6fE-_Nx-urqnOHF8erdUy4bWHK3-IrZuz2uNe3sDyurABdvQlxTxOh3HoemZXHABZzHu9mOcw==",
     type: "POST",
-    data: message,
+    data: header === mheader ? mmessage : lmessage,
     headers: {'Content-Type': header},
   })
     .done((response) => {
       console.log('Success!');
-      message = '';
     })
     .fail((error) => {
       console.log('Failed', error);
-      message = '';
     })
     .always(() => {
       console.log('Done.');
-      message = '';
     });
 }

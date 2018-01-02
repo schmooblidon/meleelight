@@ -24,8 +24,8 @@ const angleConversion = Math.PI / 180;
 export function hitDetect (p,input){
     var attackerClank = false;
     for (var i = 0; i < 4; i++) {
-        if (playerType[i] > -1) {
-            if (i != p) {
+        if (playerType[i] > -1) { // is player active
+            if (i != p) {         // is the target [i] NOT the current player 'p'
                 // check if victim is already in hitList
                 var inHitList = false;
                 for (var k = 0; k < player[p].hitboxes.hitList.length; k++) {
