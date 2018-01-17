@@ -444,7 +444,7 @@ export function findPlayers (){
           if (buttonState(gamepad, gpdInfo, "s")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == controllerIndex) {
+              if (currentPlayers[k] == i) {
                 alreadyIn = true;
               }
             }
@@ -464,7 +464,7 @@ export function findPlayers (){
           if (buttonState(gamepad, gpdInfo, "a")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == controllerIndex) {
+              if (currentPlayers[k] == i) {
                 alreadyIn = true;
               }
             }
