@@ -8,7 +8,10 @@ import {
   edgeOffset,
   versusMode,
   showDebug,
-  gameMode
+  gameMode,
+  getMatchId,
+  getCSName,
+  getCS
 } from "../main/main";
 import {framesData, ecb} from "../main/characters";
 import {sounds} from "../main/sfx";
@@ -44,6 +47,7 @@ import type {Connected, Surface} from "../stages/stage";
 // eslint-disable-next-line no-duplicate-imports
 import type {ECB, SquashDatum} from "../main/util/ecbTransform";
 import type {DamageType} from "./damageTypes";
+import {dataOut} from "../main/metrics";
 
 
 function updatePosition(i: number, newPosition: Vec2D): void {
@@ -975,6 +979,8 @@ function dealWithDeath(i: number, input: any): void {
       player[i].phys.outOfCameraTimer = 0;
       turnOffHitboxes(i);
       player[i].stocks--;
+      dataOut("matchId=" + getMatchId() + " metric=playerstocks playerId=" + i + "  character=" + getCSName(getCS(i)) + " " + player[i].stocks, "metric");
+      dataOut("matchId=" + getMatchId() + " playerstocks=" + player[i].stocks + " playerId=" + i + "  character=" + getCSName(getCS(i)), "log");
       player[i].colourOverlayBool = false;
       lostStockQueue.push([i, player[i].stocks, 0]);
       if (player[i].stocks === 0 && versusMode) {

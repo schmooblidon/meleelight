@@ -89,13 +89,11 @@ export function renderPlayer(i) {
     var model = animations[characterSelections[i]][player[i].actionState][frame - 1];
     // Once a second, report the player damage percentages and the seconds left in the match, as metrics.
     if (timetick % 62 === 0) {
-        debugger;
         dataOut("matchId=" + getMatchId() + " metric=playerPercent playerId=" + i + "  character=" + getCSName(getCS(i)) + " " + player[i].percent, "metric");
         dataOut("matchId=" + getMatchId() + " playerPercent=" + player[i].percent + " playerId=" + i + "  character=" + getCSName(getCS(i)), "log");
         if (i === 0) {
             dataOut("matchId=" + getMatchId() + " metric=matchTimer  " + getTickSec(), "metric");
             dataOut("matchId=" + getMatchId() + " matchTimer=" + getTickSec(), "log");
-            console.log(ticksec);
             timetick++;
             ticksec++;
         };

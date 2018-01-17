@@ -9,6 +9,8 @@ import {Segment2D} from "../main/util/Segment2D";
 import {euclideanDist} from "../main/linAlg";
 import {getSameAndOther} from "./environmentalCollision";
 import {sweepCircleVsSweepCircle, sweepCircleVsAABB} from "./interpolatedCollision";
+import {dataOut} from "../main/metrics";
+import {getMatchId,getCSName,getCS} from "../main/main";
 /* eslint-disable */
 
 export let hitQueue = [];
@@ -611,7 +613,7 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
   }
 
   player[v].percent += damage;
-
+  dataOut("matchId=" + getMatchId() + " attackeri=" + a + " attackern=" + getCSName(getCS(a)) + " victimi=" + v + " victimn=" + getCSName(getCS(v)) + " damage=" + damage + " damageType=regularhit", "log");
   // if victim is grabbing someone, put the victim's grab victim into a grab release
   if (player[v].phys.grabbing > -1) {
     player[player[v].phys.grabbing].phys.grabbedBy = -1;

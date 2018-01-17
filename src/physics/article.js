@@ -19,6 +19,9 @@ import {chromaticAberration} from "../main/vfx/chromaticAberration";
 import {unmakeColour} from "../main/vfx/makeColour";
 
 import {sweepCircleVsSweepCircle, sweepCircleVsAABB} from "./interpolatedCollision";
+import {dataOut} from "../main/metrics";
+import {getMatchId,getCSName,getCS} from "../main/main";
+
 /* eslint-disable */
 
 export let aArticles = [];
@@ -397,6 +400,7 @@ export function executeArticleHits (input){
 
                 player[v].hit.hitPoint = aArticles[a].instance.pos;
                 player[v].percent += damage;
+                dataOut("matchId=" + getMatchId() + " attackeri=" + a + " attackern=" + getCSName(getCS(a)) + " victimi=" + v + " victimn=" + getCSName(getCS(v)) + " damage=" + damage + " damageType=article", "log");
 
                 switch (hb.type) {
                     case 0:

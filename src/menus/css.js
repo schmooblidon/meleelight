@@ -157,7 +157,6 @@ export function setTokenPosSnapToChar(index) {
 
 export function setTokenPosValue(index, val) {
   if (typeof(val) === 'undefined') {
-    debugger;
   }
   tokenPos[index] = val;
 }
