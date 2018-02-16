@@ -127,8 +127,8 @@ export function drawStartScreen (){
   ui.fillStyle = bgGrad;
   ui.textAlign = "center";
   ui.font = "900 250px Arial";
-  ui.strokeText("Melee", 600, 350);
-  ui.fillText("Melee", 600, 350);
+  //ui.strokeText("Melee", 600, 350);
+  // ui.fillText("Melee", 600, 350);
   ui.globalCompositeOperation = "lighter";
   var bgGrad = ui.createLinearGradient(0, 440 + mlPos, 0, 500 + mlPos);
   bgGrad.addColorStop(0, "rgba(255, 255, 255,0.45)");
@@ -137,7 +137,10 @@ export function drawStartScreen (){
   ui.shadowBlur = 30;
   ui.shadowColor = "rgba(255, 255, 255, 0.7)";
   ui.font = "900 150px Arial";
-  ui.fillText("LIGHT", 600, 500 + mlPos);
+  ui.fillText("MELEE", 600, 525 + mlPos);
+  var smashlogo = new Image();
+  smashlogo.src = "assets/smashbroslogo.png";
+  ui.drawImage(smashlogo, 0, 100);
   mlVel += 0.05 * mlDir;
   mlPos += mlVel;
   if (Math.abs(mlVel) > 0.8) {
