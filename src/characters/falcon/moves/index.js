@@ -14,9 +14,6 @@ import ATTACKAIRD from "characters/falcon/moves/ATTACKAIRD";
 import ATTACKAIRN from "characters/falcon/moves/ATTACKAIRN";
 import ATTACKDASH from "characters/falcon/moves/ATTACKDASH";
 import UPSPECIAL from "characters/falcon/moves/UPSPECIAL";
-import UPSPECIALCHARGE from "characters/falcon/moves/UPSPECIALCHARGE";
-import UPSPECIALLAUNCH from "characters/falcon/moves/UPSPECIALLAUNCH";
-import FIREFOXBOUNCE from "characters/falcon/moves/FIREFOXBOUNCE";
 import NEUTRALSPECIALAIR from "characters/falcon/moves/NEUTRALSPECIALAIR";
 import NEUTRALSPECIALGROUND from "characters/falcon/moves/NEUTRALSPECIALGROUND";
 import SIDESPECIALAIR from "characters/falcon/moves/SIDESPECIALAIR";
@@ -73,9 +70,6 @@ export default {
   ATTACKAIRN,
   ATTACKDASH,
   UPSPECIAL,
-  UPSPECIALCHARGE,
-  UPSPECIALLAUNCH,
-  FIREFOXBOUNCE,
   NEUTRALSPECIALAIR,
   NEUTRALSPECIALGROUND,
   SIDESPECIALAIR,

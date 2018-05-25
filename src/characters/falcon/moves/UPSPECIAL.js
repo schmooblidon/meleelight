@@ -94,7 +94,21 @@ export default {
           player[p].phys.face *= -1;
         }
       }
-      player[p].phys.cVel = new Vec2D(falcon.UPSPECIAL.setVelocities[player[p].timer-1][0] * player[p].phys.face, falcon.UPSPECIAL.setVelocities[player[p].timer-1][1]);
+      if (player[p].timer > 1) {
+        player[p].phys.cVel.x -= falcon.UPSPECIAL.setVelocities[player[p].timer-2][0]*player[p].phys.face;
+      }
+      player[p].phys.cVel.x += input[p][0].lsX * 0.044;
+      if (Math.abs(input[p][0].lsX) < 0.28) {
+        player[p].phys.cVel.x = 0;
+      }
+      if (player[p].phys.cVel.x < -0.952) {
+        player[p].phys.cVel.x = -0.952;
+      }
+      if (player[p].phys.cVel.x > 0.952) {
+        player[p].phys.cVel.x = 0.952;
+      }
+      player[p].phys.cVel.x += falcon.UPSPECIAL.setVelocities[player[p].timer-1][0] * player[p].phys.face;
+      player[p].phys.cVel.y = falcon.UPSPECIAL.setVelocities[player[p].timer-1][1];
     }
   },
   interrupt: function (p, input) {

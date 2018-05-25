@@ -60,7 +60,8 @@ setCharAttributes(CHARIDS.PUFF_ID, {
   wallJumpVelY: 2.4,
   shieldBreakVel: 10,
   multiJump: true,
-  ecbscale: 2.6,
+  //ecbscale: 2.6,
+  ecbScale : 1,
   walkAnimSpeed : 1,
   runAnimSpeed : 1
 });

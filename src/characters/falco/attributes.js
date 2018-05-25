@@ -57,7 +57,8 @@ setCharAttributes(CHARIDS.FALCO_ID, {
   wallJumpVelY : 3.6,
   shieldBreakVel : 3.3,
   multiJump : false,
-  ecbScale : 2.3,
+  //ecbScale : 2.3,
+  ecbScale : 1,
   walkAnimSpeed : 1.5,
   runAnimSpeed : 0.7
 });
