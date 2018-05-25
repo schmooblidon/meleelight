@@ -3,7 +3,8 @@ export const CHARIDS = {
     MARTH_ID : 0,
     PUFF_ID : 1,
     FOX_ID : 2,
-    FALCO_ID : 3
+    FALCO_ID : 3,
+    FALCON_ID : 4
 };
 
 

@@ -158,6 +158,9 @@ export function setTokenPosValue(index, val) {
 }
 
 export function changeCharacter(i, c) {
+  if (c == 3) {
+    c = 4;
+  }
   setCS(i, c);
   syncCharacter(i, c);
   player[i].actionState = "WAIT";
