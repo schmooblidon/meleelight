@@ -7,12 +7,12 @@ import {activeStage} from "stages/activeStage";
 
 export default {
   name : "CLIFFJUMPSLOW",
-  offset : [[-70.24197,-14.37161],[-70.01204,-14.25485],[-69.68486,-14.01434],[-69.31504,-13.61466],[-68.9572,-13.0204],[-68.66598,-12.19617],[-68.49598,-11.10656],[-68.49598,-8.58951],[-69.17776,-4.88456],[-68.95471,-2.05875],[-68.61933,-0.74366],[-68.49973,-0.30766],[-68.72181,-0.92297],[-69.22082,-2.17673],[-69.18517,-2.92594],[-69.0908,-3.15013],[-69.0474,-3.24815],[-69.17303,-2.92594],[-69.01739,-1.4797]],
+  offset : [[-70.66608,-21.52236],[-70.45539,-19.85754],[-70.2335,-18.12355],[-70.01323,-16.34217],[-69.80743,-14.53517],[-69.62891,-12.72434],[-69.49054,-10.93145],[-69.39681,-9.05661],[-69.33996,-7.05793],[-69.31442,-5.04416],[-69.31463,-3.12407],[-69.33501,-1.40643],[-69.37,0],[-69.51372,0.50389],[-69.73824,0.19807],[-69.855,0],[-69.8101,0.32332],[-69.65741,0.75444]],
   canBeGrabbed : true,
   init : function(p,input){
     player[p].actionState = "CLIFFJUMPSLOW";
     player[p].timer = 0;
-    player[p].phys.intangibleTimer = 19;
+    player[p].phys.intangibleTimer = 18;
     this.main(p,input);
   },
   main : function(p,input){
@@ -26,13 +26,13 @@ export default {
       const l = activeStage.ledge[onLedge];
       const x = activeStage[l[0]][l[1]][l[2]].x;
       const y = activeStage[l[0]][l[1]][l[2]].y;
-      if (player[p].timer < 20){
+      if (player[p].timer < 19){
         player[p].phys.pos = new Vec2D(x+(this.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+this.offset[player[p].timer-1][1]);
       }
-      if (player[p].timer === 20){
-        player[p].phys.cVel = new Vec2D(1.1*player[p].phys.face,4);
+      if (player[p].timer === 19){
+        player[p].phys.cVel = new Vec2D(1*player[p].phys.face,3.3);
       }
-      if (player[p].timer > 20){
+      if (player[p].timer > 19){
         airDrift(p,input);
         fastfall(p,input);
       }

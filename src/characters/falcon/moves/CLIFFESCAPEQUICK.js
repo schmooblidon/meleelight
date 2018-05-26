@@ -12,7 +12,7 @@ export default {
   init : function(p,input){
     player[p].actionState = "CLIFFESCAPEQUICK";
     player[p].timer = 0;
-    player[p].phys.intangibleTimer = 34;
+    player[p].phys.intangibleTimer = 24;
     this.main(p,input);
   },
   main : function(p,input){

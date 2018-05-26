@@ -12,7 +12,7 @@ export default {
   init : function(p,input){
     player[p].actionState = "CLIFFJUMPQUICK";
     player[p].timer = 0;
-    player[p].phys.intangibleTimer = 14;
+    player[p].phys.intangibleTimer = 11;
     this.main(p,input);
   },
   main : function(p,input){
@@ -26,13 +26,13 @@ export default {
       const l = activeStage.ledge[onLedge];
       const x = activeStage[l[0]][l[1]][l[2]].x;
       const y = activeStage[l[0]][l[1]][l[2]].y;
-      if (player[p].timer < 15){
+      if (player[p].timer < 12){
         player[p].phys.pos = new Vec2D(x+(this.offset[player[p].timer-1][0]+68.4)*player[p].phys.face,y+this.offset[player[p].timer-1][1]);
       }
-      if (player[p].timer === 15){
-        player[p].phys.cVel = new Vec2D(1.1*player[p].phys.face,4);
+      if (player[p].timer === 12){
+        player[p].phys.cVel = new Vec2D(1*player[p].phys.face,3.3);
       }
-      if (player[p].timer > 15){
+      if (player[p].timer > 12){
         airDrift(p,input);
         fastfall(p,input);
       }

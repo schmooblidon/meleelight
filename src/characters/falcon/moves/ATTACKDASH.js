@@ -18,7 +18,6 @@ import {sounds} from "main/sfx";
 export default {
   name : "ATTACKDASH",
   canEdgeCancel : false,
-  setVelocities : [0.99874,1.82126,2.22815,2.43704,1.91481,1.39379,1.36213,1.33162,1.30228,1.27408,1.24704,1.22115,1.19642,1.17284,1.15042,1.12915,1.10902,1.09006,1.06475,1.01691,0.94598,0.85192,0.73477,0.59452,0.43115,0.32167,0.28310,0.24695,0.21323,0.18194,0.15309,0.12666,0.10266,0.08109,0.06194,0.04524,0.03096,0.0191,0.00968],
   canBeGrabbed : true,
   init : function(p,input){
     player[p].actionState = "ATTACKDASH";
@@ -31,7 +30,13 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      player[p].phys.cVel.x = this.setVelocities[player[p].timer-1]*player[p].phys.face;
+
+      if (player[p].timer < 27) {
+        player[p].phys.cVel.x = 1.30577 * player[p].phys.face;
+      }
+      else {
+        player[p].phys.cVel.x = 0.34643 * player[p].phys.face;
+      }
 
       if (player[p].timer === 4){
         player[p].hitboxes.active = [true,true,false,false];

@@ -14,7 +14,7 @@ export default {
   init : function(p,input){
     player[p].actionState = "CLIFFATTACKQUICK";
     player[p].timer = 0;
-    player[p].phys.intangibleTimer = 15;
+    player[p].phys.intangibleTimer = 20;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupquick.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupquick.id1;
