@@ -6,6 +6,7 @@ import {player} from "main/main";
 
 export default {
   name : "JAB3",
+  setVelocities : [0,0.00024,0.00024,-0.00047,3.76443,3.40589,0.00972,0.00748,0.00538,0.00342,0.0016,-0.0007,-0.0016,-0.00299,-0.00423,-0.00533,-0.00629,-0.0071,0.00051,0.00051,0.0005,0.0005,0.00051,0.00051,0.0005,0.0005,0.0005,0.00051,0.0005,0.0005,0.0005,0.00051],
   canEdgeCancel : false,
   canBeGrabbed : true,
   init : function(p,input){
@@ -18,7 +19,7 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      reduceByTraction(p,true);
+      player[p].phys.cVel.x = this.setVelocities[player[p].timer-1] * player[p].phys.face;
     }
   },
   interrupt : function(p,input){

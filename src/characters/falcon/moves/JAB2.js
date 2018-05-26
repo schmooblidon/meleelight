@@ -11,6 +11,7 @@ import {tiltTurnDashBuffer, checkForTiltTurn, checkForSmashTurn, checkForDash, c
     checkForTilts
     , checkForSpecials
     , turnOffHitboxes
+    , reduceByTraction
 } from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
 import {player} from "main/main";
@@ -31,15 +32,7 @@ export default {
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      if (player[p].timer === 1){
-        player[p].phys.cVel.x = 0;
-      }
-      else if (player[p].timer === 2){
-        player[p].phys.cVel.x = 3.36*player[p].phys.face;
-      }
-      else if (player[p].timer === 4){
-        player[p].phys.cVel.x = 0;
-      }
+      reduceByTraction(p,true);
       if (player[p].timer > 1 && player[p].timer < 26 && input[p][0].a && !input[p][1].a){
         player[p].phys.jabCombo = true;
       }

@@ -1,5 +1,3 @@
-
-import SIDESPECIALAIR from "characters/fox/moves/SIDESPECIALAIR";
 import WAIT from "characters/shared/moves/WAIT";
 import FALLSPECIAL from "characters/shared/moves/FALLSPECIAL";
 import {articles} from "physics/article";
@@ -7,82 +5,50 @@ import {sounds} from "main/sfx";
 import {turnOffHitboxes} from "physics/actionStateShortcuts";
 import { player} from "main/main";
 import {drawVfx} from "main/vfx/drawVfx";
+import SIDESPECIALGROUNDHIT from "characters/falcon/moves/SIDESPECIALGROUNDHIT";
 
 export default {
   name : "SIDESPECIALGROUND",
+  setVelocities1 : [-1.79163,-3.1017,-3.08,-1.72663],
+  setVelocities2 : [5.60854,5.2283,4.65846,3.89902,3.376,3.21597,3.05619,2.89666,2.73738,2.57834,2.41955,2.26102,2.10273,1.94468,1.78689,1.62934,1.47205,1.315,1.1582,1.05434,1.00404,0.95493,0.90701,0.86029,0.81476,0.77041,0.72726,0.6853,0.64453,0.60495,0.56656,0.52936,0.49336,0.45854,0.42492,0.39248,0.36124,0.33119,0.30233,0.27466,0.24818,0.22289,0.1988,0.1759,0.15417,0.13366,0.11432,0.09618,0.07923,0.06347,0.0489,0.03552,0.02333,0.01234,0.00253,-0.00607,-0.0135,-0.01973,-0.02478,-0.02863,-0.03128,-0.03275,-0.03303],
   canPassThrough : false,
-  canEdgeCancel : true,
+  canEdgeCancel : false,
   disableTeeter : true,
   canGrabLedge : [false,false],
   wallJumpAble : false,
   headBonk : false,
   canBeGrabbed : true,
-  airborneState : "SIDESPECIALAIR",
+  specialOnHit: true,
+  airborneState : "SIDESPECIALGROUNDTOAIR",
   init : function(p,input){
     player[p].actionState = "SIDESPECIALGROUND";
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
     player[p].phys.landingMultiplier = 1.5;
-    drawVfx({
-      name: "dashDust",
-      pos: player[p].phys.pos,
-      face: player[p].phys.face
-    });
+    this.canEdgeCancel = false;
     turnOffHitboxes(p);
-    sounds.star.play();
     this.main(p,input);
   },
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      if (player[p].phys.grounded){
-        if (player[p].timer === 21){
-          articles.ILLUSION.init({
-            p: p,
-            type: 1
-          });
-          player[p].phys.cVel.x = 18.72*player[p].phys.face;
-          if ((input[p][0].b || input[p][1].b) && !input[p][2].b){
-            player[p].timer = 24;
-          }
-        }
-        else if (player[p].timer === 22 || player[p].timer === 23){
-          if (input[p][0].b && !input[p][1].b){
-            player[p].timer = 24;
-          }
-        }
-        if (player[p].timer === 24){
-          player[p].phys.cVel.x = 2.1*player[p].phys.face;
-        }
-        if (player[p].timer > 24){
-          player[p].phys.cVel.x -= 0.1*player[p].phys.face;
-          if (player[p].phys.cVel.x*player[p].phys.face < 0){
-            player[p].phys.cVel.x = 0;
-          }
-        }
-
-        if (player[p].timer === 20){
-          sounds.foxillusion1.play();
-          sounds.foxillusion2.play();
-        }
+      if (player[p].timer <= 4) {
+        player[p].phys.cVel.x = this.setVelocities1[player[p].timer-1] * player[p].phys.face;
+      }
+      else if (player[p].timer <= 16) {
+        player[p].phys.cVel.x = 0;
       }
       else {
-        player[p].actionState = "SIDESPECIALAIR";
-        player[p].timer--;
-        SIDESPECIALAIR.main(p,input);
-      }
-
-      if (player[p].timer >= 21 && player[p].timer <= 24){
-        drawVfx({
-          name: "illusion",
-          pos: player[p].phys.posPrev,
-          face: player[p].phys.face
-        });
+        this.canEdgeCancel = true;
+        player[p].phys.cVel.x = this.setVelocities2[player[p].timer-17] * player[p].phys.face;
       }
     }
   },
   interrupt : function(p,input){
-    if (player[p].timer > 63){
+    if (player[p].phys.raptorBoost) {
+      SIDESPECIALGROUNDHIT.init(p,input);
+    }
+    else if (player[p].timer > 79){
       if (player[p].phys.grounded){
         WAIT.init(p,input);
       }
@@ -97,5 +63,8 @@ export default {
   },
   land : function(p,input){
 
+  },
+  onPlayerHit: function (p) {
+    player[p].phys.raptorBoost = true;
   }
 };

@@ -14,12 +14,21 @@ import ATTACKAIRD from "characters/falcon/moves/ATTACKAIRD";
 import ATTACKAIRN from "characters/falcon/moves/ATTACKAIRN";
 import ATTACKDASH from "characters/falcon/moves/ATTACKDASH";
 import UPSPECIAL from "characters/falcon/moves/UPSPECIAL";
+import UPSPECIALCATCH from "characters/falcon/moves/UPSPECIALCATCH";
+import UPSPECIALTHROW from "characters/falcon/moves/UPSPECIALTHROW";
 import NEUTRALSPECIALAIR from "characters/falcon/moves/NEUTRALSPECIALAIR";
 import NEUTRALSPECIALGROUND from "characters/falcon/moves/NEUTRALSPECIALGROUND";
 import SIDESPECIALAIR from "characters/falcon/moves/SIDESPECIALAIR";
+import SIDESPECIALAIRHIT from "characters/falcon/moves/SIDESPECIALAIRHIT";
 import SIDESPECIALGROUND from "characters/falcon/moves/SIDESPECIALGROUND";
+import SIDESPECIALGROUNDTOAIR from "characters/falcon/moves/SIDESPECIALGROUNDTOAIR";
+import SIDESPECIALGROUNDHIT from "characters/falcon/moves/SIDESPECIALGROUNDHIT";
 import DOWNSPECIALAIR from "characters/falcon/moves/DOWNSPECIALAIR";
+import DOWNSPECIALAIRENDAIR from "characters/falcon/moves/DOWNSPECIALAIRENDAIR";
+import DOWNSPECIALAIRENDGROUND from "characters/falcon/moves/DOWNSPECIALAIRENDGROUND";
 import DOWNSPECIALGROUND from "characters/falcon/moves/DOWNSPECIALGROUND";
+import DOWNSPECIALGROUNDENDAIR from "characters/falcon/moves/DOWNSPECIALGROUNDENDAIR";
+import DOWNSPECIALGROUNDENDGROUND from "characters/falcon/moves/DOWNSPECIALGROUNDENDGROUND";
 import THROWBACK from "characters/falcon/moves/THROWBACK";
 import THROWDOWN from "characters/falcon/moves/THROWDOWN";
 import THROWUP from "characters/falcon/moves/THROWUP";
@@ -70,12 +79,21 @@ export default {
   ATTACKAIRN,
   ATTACKDASH,
   UPSPECIAL,
+  UPSPECIALCATCH,
+  UPSPECIALTHROW,
   NEUTRALSPECIALAIR,
   NEUTRALSPECIALGROUND,
   SIDESPECIALAIR,
+  SIDESPECIALAIRHIT,
   SIDESPECIALGROUND,
+  SIDESPECIALGROUNDTOAIR,
+  SIDESPECIALGROUNDHIT,
   DOWNSPECIALAIR,
+  DOWNSPECIALAIRENDAIR,
+  DOWNSPECIALAIRENDGROUND,
   DOWNSPECIALGROUND,
+  DOWNSPECIALGROUNDENDAIR,
+  DOWNSPECIALGROUNDENDGROUND,
   THROWBACK,
   THROWDOWN,
   THROWUP,

@@ -119,7 +119,7 @@ function dealWithWallCollision(i: number, newPosition: Vec2D, pt: number, wallTy
       dealWithDamagingStageCollision(i, wallNormal, false, pt, damageType);
     }
     else if (actionStates[characterSelections[i]][player[i].actionState].specialWallCollide) {
-      actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, wallLabel, wallIndex);
+      actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, input, wallLabel, wallIndex);
     }
     else if (player[i].phys.canWallJump) {
       if (player[i].phys.wallJumpTimer === 254) {
@@ -206,7 +206,7 @@ function fallOffGround(i: number, side: string
       player[i].phys.pos.y = Math.max(player[i].phys.pos.y, groundEdgePosition.y) + additionalOffset;
       backward = true;
     }
-    else if (sign * input[i][0].lsX < -0.6
+    else if (Math.abs(input[i][0].lsX) > 0.6
         || (player[i].phys.cVel.x === 0 && player[i].phys.kVel.x === 0)
         || actionStates[characterSelections[i]][player[i].actionState].disableTeeter
         || player[i].phys.shielding) {
