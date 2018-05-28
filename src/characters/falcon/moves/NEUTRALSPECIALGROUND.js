@@ -2,7 +2,7 @@
 import WAIT from "characters/shared/moves/WAIT";
 import { player} from "main/main";
 import {sounds} from "main/sfx";
-import {reduceByTraction} from "physics/actionStateShortcuts";
+import {reduceByTraction, turnOffHitboxes} from "physics/actionStateShortcuts";
 import {drawVfx} from "main/vfx/drawVfx";
 import {Vec2D} from "../../../main/util/Vec2D";
 

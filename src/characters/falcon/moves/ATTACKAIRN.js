@@ -55,6 +55,7 @@ export default {
         player[p].hitboxes.id[0] = player[p].charHitboxes.nair2.id0;
         player[p].hitboxes.id[1] = player[p].charHitboxes.nair2.id1;
         player[p].hitboxes.id[2] = player[p].charHitboxes.nair2.id2;
+        player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
       }
       if (player[p].timer > 20 && player[p].timer < 30){

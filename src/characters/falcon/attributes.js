@@ -360,7 +360,7 @@ setOffsets(CHARIDS.FALCON_ID, {
       new Vec2D(-9.01,9.50),
       new Vec2D(-8.98,9.65)
     ]
-  }
+  },
   upsmash1 : {
     id0 : [
       new Vec2D(3.39,15.57),
@@ -560,7 +560,7 @@ setOffsets(CHARIDS.FALCON_ID, {
       new Vec2D(-5.21,10.44),
       new Vec2D(-5.15,10.45)
     ]
-  }
+  },
   fairClean : {
     id0 : [
       new Vec2D(5.27,7.16),
@@ -1057,214 +1057,214 @@ for (let k = 0; k < 20; k++) {
 
 setHitBoxes(CHARIDS.FALCON_ID, {
   fairClean : new createHitboxObject(
-    new createHitbox(offsets[2].fairClean.id0,5.078,18,32,100,24,0,4,0,1,1),
-    new createHitbox(offsets[2].fairClean.id1,3.515,18,32,100,24,0,4,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].fairClean.id0,5.078,18,32,100,24,0,4,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].fairClean.id1,3.515,18,32,100,24,0,4,0,1,1)
   ),
   fairLate : new createHitboxObject(
-    new createHitbox(offsets[2].fairLate.id0,5.078,6,361,80,35,0,0,0,1,1),
-    new createHitbox(offsets[2].fairLate.id1,3.515,6,361,80,35,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].fairLate.id0,5.078,6,361,80,35,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].fairLate.id1,3.515,6,361,80,35,0,0,0,1,1)
   ),
   bairClean : new createHitboxObject(
-    new createHitbox(offsets[2].bairClean.id0,4.687,14,361,100,20,0,0,0,1,1),
-    new createHitbox(offsets[2].bairClean.id1,4.687,14,361,100,0,0,0,0,1,1),
-    new createHitbox(offsets[2].bairClean.id2,3.906,14,361,100,0,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].bairClean.id0,4.687,14,361,100,20,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].bairClean.id1,4.687,14,361,100,0,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].bairClean.id2,3.906,14,361,100,0,0,0,0,1,1)
   ),
   bairLate : new createHitboxObject(
-    new createHitbox(offsets[2].bair2.id0,4.687,8,361,100,20,0,0,0,1,1),
-    new createHitbox(offsets[2].bair2.id1,4.687,8,361,100,0,0,0,0,1,1),
-    new createHitbox(offsets[2].bair2.id2,3.906,8,361,100,0,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].bairLate.id0,4.687,8,361,100,20,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].bairLate.id1,4.687,8,361,100,0,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].bairLate.id2,3.906,8,361,100,0,0,0,0,1,1)
   ),
   nair1 : new createHitboxObject(
-    new createHitbox(offsets[2].nair1.id0,4.297,6,82,100,0,40,0,0,1,1),
-    new createHitbox(offsets[2].nair1.id1,5.468,5,78,100,0,40,0,0,1,1),
-    new createHitbox(offsets[2].nair1.id1,4.297,6,74,100,0,40,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].nair1.id0,4.297,6,82,100,0,40,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].nair1.id1,5.468,5,78,100,0,40,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].nair1.id1,4.297,6,74,100,0,40,0,0,1,1)
   ),
   nair2 : new createHitboxObject(
-    new createHitbox(offsets[2].nair2.id0,4.297,7,361,100,40,0,0,0,1,1),
-    new createHitbox(offsets[2].nair2.id1,4.297,7,361,100,40,0,0,0,1,1),
-    new createHitbox(offsets[2].nair2.id1,4.297,7,361,100,40,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].nair2.id0,4.297,7,361,100,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].nair2.id1,4.297,7,361,100,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].nair2.id1,4.297,7,361,100,40,0,0,0,1,1)
   ),
   dair : new createHitboxObject(
-    new createHitbox(offsets[2].dair.id0,6.640,16,270,100,40,0,0,0,1,1),
-    new createHitbox(offsets[2].dair.id1,5.859,16,270,100,40,0,0,0,1,1),
-    new createHitbox(offsets[2].dair.id2,5.468,16,290,100,40,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dair.id0,6.640,16,270,100,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dair.id1,5.859,16,270,100,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dair.id2,5.468,16,290,100,40,0,0,0,1,1)
   ),
   upairClean : new createHitboxObject(
-    new createHitbox(offsets[2].upairClean.id0,3.906,13,361,100,30,0,0,0,1,1),
-    new createHitbox(offsets[2].upairClean.id1,4.687,13,361,100,10,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upairClean.id0,3.906,13,361,100,30,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upairClean.id1,4.687,13,361,100,10,0,0,0,1,1),
   ),
   upairMid : new createHitboxObject(
-    new createHitbox(offsets[2].upairMid.id0,3.906,12,30,80,8,0,0,0,1,1),
-    new createHitbox(offsets[2].upairMid.id1,4.687,10,30,80,8,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upairMid.id0,3.906,12,30,80,8,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upairMid.id1,4.687,10,30,80,8,0,0,0,1,1),
   ),
   /*
   doesnt actually exist
   upairLate : new createHitboxObject(
-    new createHitbox(offsets[2].upairMid.id0,3.906,8,0,70,6,0,0,0,1,1),
-    new createHitbox(offsets[2].upairMid.id1,4.687,6,0,70,6,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upairMid.id0,3.906,8,0,70,6,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upairMid.id1,4.687,6,0,70,6,0,0,0,1,1),
   ),*/
   falcondive1 : new createHitboxObject(
-    new createHitbox(offsets[2].falcondive1.id0,2.734,0,361,100,0,0,2,3,1,1),
-    new createHitbox(offsets[2].falcondive1.id0,4.297,0,361,100,0,0,2,3,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falcondive1.id0,2.734,0,361,100,0,0,2,3,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falcondive1.id0,4.297,0,361,100,0,0,2,3,1,1)
   ),
   falcondive2 : new createHitboxObject(
-    new createHitbox(offsets[2].falcondive2.id0,2.734,0,361,100,0,0,2,3,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falcondive2.id0,2.734,0,361,100,0,0,2,3,1,1)
   ),
   ///
   falcondivethrow : new createHitboxObject(
     new createHitbox(new Vec2D(14.19-4.61,2.805),0,12,361,82,40,0,3,0,1,1)
   ),
   falcondivethrowextra : new createHitboxObject(
-    new createHitbox(offsets[2].falcondivethrowextra.id0,7.812,6,0,50,70,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falcondivethrowextra.id0,7.812,6,0,50,70,0,0,0,1,1)
   ),
   dtilt : new createHitboxObject(
-    new createHitbox(offsets[2].dtilt.id0,3.906,12,80,75,25,0,0,1,1,1),
-    new createHitbox(offsets[2].dtilt.id1,3.906,12,70,75,25,0,0,1,1,1),
-    new createHitbox(offsets[2].dtilt.id2,3.906,12,60,75,25,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dtilt.id0,3.906,12,80,75,25,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dtilt.id1,3.906,12,70,75,25,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dtilt.id2,3.906,12,60,75,25,0,0,1,1,1)
   ),
   uptilt : new createHitboxObject(
-    new createHitbox(offsets[2].uptilt.id0,4.687,13,361,80,50,0,0,1,1,1),
-    new createHitbox(offsets[2].uptilt.id1,3.125,13,361,80,50,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].uptilt.id0,4.687,13,361,80,50,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].uptilt.id1,3.125,13,361,80,50,0,0,1,1,1)
   ),
   ftilt : new createHitboxObject(
-    new createHitbox(offsets[2].ftilt.id0,4.297,11,361,100,10,0,0,1,1,1),
-    new createHitbox(offsets[2].ftilt.id1,3.515,11,361,100,10,0,0,1,1,1),
-    new createHitbox(offsets[2].ftilt.id2,3.515,11,361,100,10,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].ftilt.id0,4.297,11,361,100,10,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].ftilt.id1,3.515,11,361,100,10,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].ftilt.id2,3.515,11,361,100,10,0,0,1,1,1)
   ),
   dashattackClean : new createHitboxObject(
-    new createHitbox(offsets[2].dashattackClean.id0,5.859,10,361,90,22,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dashattackClean.id0,5.859,10,361,90,22,0,0,1,1,1)
   ),
   dashattackLate : new createHitboxObject(
-    new createHitbox(offsets[2].dashattackLate.id0,3.125,7,361,50,10,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dashattackLate.id0,3.125,7,361,50,10,0,0,1,1,1)
   ),
   jab1 : new createHitboxObject(
-    new createHitbox(offsets[2].jab1.id0,3.515,2,80,100,20,0,0,1,1,1),
-    new createHitbox(offsets[2].jab1.id1,3.515,2,80,100,20,0,0,1,1,1),
-    new createHitbox(offsets[2].jab1.id2,2.344,2,80,100,20,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab1.id0,3.515,2,80,100,20,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab1.id1,3.515,2,80,100,20,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab1.id2,2.344,2,80,100,20,0,0,1,1,1)
   ),
   jab2 : new createHitboxObject(
-    new createHitbox(offsets[2].jab2.id0,3.515,3,80,100,20,0,0,1,1,1),
-    new createHitbox(offsets[2].jab2.id1,3.515,3,80,100,20,0,0,1,1,1),
-    new createHitbox(offsets[2].jab2.id2,2.734,3,80,100,20,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab2.id0,3.515,3,80,100,20,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab2.id1,3.515,3,80,100,20,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab2.id2,2.734,3,80,100,20,0,0,1,1,1)
   ),
   jab3Clean : new createHitboxObject(
-    new createHitbox(offsets[2].jab3Clean.id0,5.079,8,361,100,20,0,0,1,1,1),
-    new createHitbox(offsets[2].jab3Clean.id1,3.515,8,361,100,20,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab3Clean.id0,5.079,8,361,100,20,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab3Clean.id1,3.515,8,361,100,20,0,0,1,1,1)
   ),
   jab3Late : new createHitboxObject(
-    new createHitbox(offsets[2].jab3Late.id0,3.906,6,361,100,0,0,0,1,1,1),
-    new createHitbox(offsets[2].jab3Late.id1,3.125,6,361,100,0,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab3Late.id0,3.906,6,361,100,0,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].jab3Late.id1,3.125,6,361,100,0,0,0,1,1,1)
   ),
   fsmash : new createHitboxObject(
-    new createHitbox(offsets[2].fsmash.id0,3.515,20,361,100,24,0,3,1,1,1),
-    new createHitbox(offsets[2].fsmash.id1,3.515,20,361,100,24,0,3,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].fsmash.id0,3.515,20,361,100,24,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].fsmash.id1,3.515,20,361,100,24,0,3,1,1,1)
   ),
   upsmash1 : new createHitboxObject(
-    new createHitbox(offsets[2].upsmash1.id0,5.468,8,90,100,0,80,0,1,1,1),
-    new createHitbox(offsets[2].upsmash1.id1,4.687,8,100,100,0,100,0,1,1,1),
-    new createHitbox(offsets[2].upsmash1.id2,3.906,14,80,105,30,0,0,1,1,1),
-    new createHitbox(offsets[2].upsmash1.id3,3.906,14,90,105,30,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upsmash1.id0,5.468,8,90,100,0,80,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upsmash1.id1,4.687,8,100,100,0,100,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upsmash1.id2,3.906,14,80,105,30,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upsmash1.id3,3.906,14,90,105,30,0,0,1,1,1),
   ),
   upsmash2 : new createHitboxObject(
-    new createHitbox(offsets[2].upsmash2.id0,3.906,13,90,128,30,0,0,1,1,1),
-    new createHitbox(offsets[2].upsmash2.id1,3.906,13,90,126,30,0,0,1,1,1),
-    new createHitbox(offsets[2].upsmash2.id2,3.906,12,80,110,30,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upsmash2.id0,3.906,13,90,128,30,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upsmash2.id1,3.906,13,90,126,30,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].upsmash2.id2,3.906,12,80,110,30,0,0,1,1,1)
   ),
   dsmash1 : new createHitboxObject(
-    new createHitbox(offsets[2].dsmash1.id0,3.906,18,361,100,30,0,0,1,1,1),
-    new createHitbox(offsets[2].dsmash1.id1,3.906,18,361,100,30,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dsmash1.id0,3.906,18,361,100,30,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dsmash1.id1,3.906,18,361,100,30,0,0,1,1,1)
   ),
   dsmash2 : new createHitboxObject(
-    new createHitbox(offsets[2].dsmash2.id0,3.515,16,361,100,20,0,0,1,1,1),
-    new createHitbox(offsets[2].dsmash2.id1,3.515,16,361,100,20,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dsmash2.id0,3.515,16,361,100,20,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].dsmash2.id1,3.515,16,361,100,20,0,0,1,1,1)
   ),
   grab : new createHitboxObject(
-    new createHitbox(offsets[2].grab.id0,3.906,0,361,100,0,0,2,3,1,1),
-    new createHitbox(offsets[2].grab.id1,3.906,0,361,100,0,0,2,3,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].grab.id0,3.906,0,361,100,0,0,2,3,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].grab.id1,3.906,0,361,100,0,0,2,3,1,1)
   ),
   downattack1 : new createHitboxObject(
-    new createHitbox(offsets[2].downattack1.id0,4.687,6,361,50,80,0,0,1,1,1),
-    new createHitbox(offsets[2].downattack1.id1,4.687,6,361,50,80,0,0,1,1,1),
-    new createHitbox(offsets[2].downattack1.id2,6.250,6,361,50,80,0,0,1,1,1),
-    new createHitbox(offsets[2].downattack1.id3,6.250,6,361,50,80,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].downattack1.id0,4.687,6,361,50,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].downattack1.id1,4.687,6,361,50,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].downattack1.id2,6.250,6,361,50,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].downattack1.id3,6.250,6,361,50,80,0,0,1,1,1)
   ),
   downattack2 : new createHitboxObject(
-    new createHitbox(offsets[2].downattack2.id0,4.687,6,361,50,80,0,0,1,1,1),
-    new createHitbox(offsets[2].downattack2.id1,4.687,6,361,50,80,0,0,1,1,1),
-    new createHitbox(offsets[2].downattack2.id2,6.250,6,361,50,80,0,0,1,1,1),
-    new createHitbox(offsets[2].downattack1.id3,6.250,6,361,50,80,0,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].downattack2.id0,4.687,6,361,50,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].downattack2.id1,4.687,6,361,50,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].downattack2.id2,6.250,6,361,50,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].downattack1.id3,6.250,6,361,50,80,0,0,1,1,1)
   ),
   falconkickgroundClean : new createHitboxObject(
-    new createHitbox(offsets[2].falconkickgroundClean.id0,3.906,15,361,70,50,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickgroundClean.id1,2.734,15,361,70,50,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickgroundClean.id2,4.297,15,361,70,50,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundClean.id0,3.906,15,361,70,50,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundClean.id1,2.734,15,361,70,50,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundClean.id2,4.297,15,361,70,50,0,3,1,1,1),
   ),
   //starts on 4
   falconkickgroundMid : new createHitboxObject(
-    new createHitbox(offsets[2].falconkickgroundMid.id0,3.906,12,80,60,50,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickgroundMid.id1,2.734,12,80,60,50,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickgroundMid.id2,4.297,12,80,60,50,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundMid.id0,3.906,12,80,60,50,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundMid.id1,2.734,12,80,60,50,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundMid.id2,4.297,12,80,60,50,0,3,1,1,1),
   ),
   //starts on 12
   falconkickgroundLate : new createHitboxObject(
-    new createHitbox(offsets[2].falconkickgroundLate.id0,3.906,9,90,50,50,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickgroundLate.id1,2.734,9,90,50,50,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickgroundClean.id3,4.297,9,90,50,50,0,3,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundLate.id0,3.906,9,90,50,50,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundLate.id1,2.734,9,90,50,50,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickgroundLate.id2,4.297,9,90,50,50,0,3,1,1,1)
   ),
   falconkickairClean : new createHitboxObject(
-    new createHitbox(offsets[2].falconkickairClean.id0,3.906,15,361,70,40,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickairClean.id1,4.687,15,361,70,40,0,3,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickairClean.id0,3.906,15,361,70,40,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickairClean.id1,4.687,15,361,70,40,0,3,1,1,1)
   ),
   falconkickairMid : new createHitboxObject(
-    new createHitbox(offsets[2].falconkickairMid.id0,3.906,13,361,65,40,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickairMid.id1,4.687,13,361,65,40,0,3,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickairMid.id0,3.906,13,361,65,40,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickairMid.id1,4.687,13,361,65,40,0,3,1,1,1)
   ),
   falconkickairLate : new createHitboxObject(
-    new createHitbox(offsets[2].falconkickairLate.id0,3.906,11,361,60,40,0,3,1,1,1),
-    new createHitbox(offsets[2].falconkickairLate.id1,4.687,11,361,60,40,0,3,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickairLate.id0,3.906,11,361,60,40,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickairLate.id1,4.687,11,361,60,40,0,3,1,1,1)
   ),
   falconkickland : new createHitboxObject(
-    new createHitbox(offsets[2].falconkickland.id0,3.906,9,80,20,80,0,0,1,1,1),
-    new createHitbox(offsets[2].falconkickland.id1,3.906,9,80,20,80,0,0,1,1,1),
-    new createHitbox(offsets[2].falconkickland.id2,3.906,9,80,20,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickland.id0,3.906,9,80,20,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickland.id1,3.906,9,80,20,80,0,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconkickland.id2,3.906,9,80,20,80,0,0,1,1,1),
   ),
   falconpunchground : new createHitboxObject(
-    new createHitbox(offsets[2].falconpunchground.id0,3.906,27,361,102,30,0,3,1,1,1),
-    new createHitbox(offsets[2].falconpunchground.id1,3.515,25,361,102,30,0,3,1,1,1),
-    new createHitbox(offsets[2].falconpunchground.id2,4.883,23,361,102,30,0,3,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconpunchground.id0,3.906,27,361,102,30,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconpunchground.id1,3.515,25,361,102,30,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconpunchground.id2,4.883,23,361,102,30,0,3,1,1,1)
   ),
   falconpunchair : new createHitboxObject(
-    new createHitbox(offsets[2].falconpunchair.id0,5.273,27,361,102,40,0,3,1,1,1),
-    new createHitbox(offsets[2].falconpunchair.id1,4.687,25,361,102,40,0,3,1,1,1),
-    new createHitbox(offsets[2].falconpunchair.id2,4.883,23,361,102,40,0,3,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconpunchair.id0,5.273,27,361,102,40,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconpunchair.id1,4.687,25,361,102,40,0,3,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falconpunchair.id2,4.883,23,361,102,40,0,3,1,1,1)
   ),
   raptorboostground : new createHitboxObject(
-    new createHitbox(offsets[2].raptorboostground.id0,4.000,0,361,0,0,0,8,0,1,1),
-    new createHitbox(offsets[2].raptorboostground.id1,4.000,0,361,0,0,0,8,0,1,1),
-    new createHitbox(offsets[2].raptorboostground.id2,4.000,0,361,0,0,0,8,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].raptorboostground.id0,4.000,0,361,0,0,0,8,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].raptorboostground.id1,4.000,0,361,0,0,0,8,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].raptorboostground.id2,4.000,0,361,0,0,0,8,0,1,1)
   ),
   raptorboostair : new createHitboxObject(
-    new createHitbox(offsets[2].raptorboostair.id0,4.000,0,361,0,0,0,8,0,1,1),
-    new createHitbox(offsets[2].raptorboostair.id1,4.000,0,361,0,0,0,8,0,1,1),
-    new createHitbox(offsets[2].raptorboostair.id2,4.000,0,361,0,0,0,8,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].raptorboostair.id0,4.000,0,361,0,0,0,8,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].raptorboostair.id1,4.000,0,361,0,0,0,8,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].raptorboostair.id2,4.000,0,361,0,0,0,8,0,1,1)
   ),
   raptorboostgroundhit : new createHitboxObject(
-    new createHitbox(offsets[2].raptorboostgroundhit.id0,7.500,7,90,80,78,0,3,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].raptorboostgroundhit.id0,7.500,7,90,80,78,0,3,1,1,1)
   ),
   raptorboostairhit : new createHitboxObject(
-    new createHitbox(offsets[2].raptorboostairhit.id0,7.500,7,270,70,60,0,3,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].raptorboostairhit.id0,7.500,7,270,70,60,0,3,0,1,1)
   ),
   ledgegetupquick : new createHitboxObject(
-    new createHitbox(offsets[2].ledgegetupquick.id0,4.687,10,361,100,0,90,0,1,1,1),
-    new createHitbox(offsets[2].ledgegetupquick.id1,6.250,10,361,100,0,90,0,1,1,1),
-    new createHitbox(offsets[2].ledgegetupquick.id2,4.687,10,361,100,0,90,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].ledgegetupquick.id0,4.687,10,361,100,0,90,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].ledgegetupquick.id1,6.250,10,361,100,0,90,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].ledgegetupquick.id2,4.687,10,361,100,0,90,0,1,1,1)
   ),
   ledgegetupslow : new createHitboxObject(
-    new createHitbox(offsets[2].ledgegetupslow.id0,6.250,8,361,100,0,90,0,1,1,1),
-    new createHitbox(offsets[2].ledgegetupslow.id1,4.687,8,361,100,0,90,0,1,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].ledgegetupslow.id0,6.250,8,361,100,0,90,0,1,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].ledgegetupslow.id1,4.687,8,361,100,0,90,0,1,1,1)
   ),
   pummel : new createHitboxObject(
-    new createHitbox(offsets[2].pummel.id0,5.078,3,80,100,0,30,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].pummel.id0,5.078,3,80,100,0,30,0,0,1,1)
   ),
   throwup : new createHitboxObject(
     new createHitbox(new Vec2D(-0.067,17.54),0,3,85,105,70,0,0,0,1,1)
@@ -1279,22 +1279,22 @@ setHitBoxes(CHARIDS.FALCON_ID, {
     new createHitbox(new Vec2D(14.19-4.61,2.805),0,4,45,105,45,0,0,0,1,1)
   ),
   throwforwardextra : new createHitboxObject(
-    new createHitbox(offsets[2].throwforwardextra.id0,3.906,5,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[2].throwforwardextra.id1,1.953,5,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[2].throwforwardextra.id2,1.953,5,361,110,40,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id0,3.906,5,361,110,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id1,1.953,5,361,110,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id2,1.953,5,361,110,40,0,0,0,1,1)
   ),
   throwupextra : new createHitboxObject(
-    new createHitbox(offsets[2].throwupextra.id0,3.515,4,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[2].throwupextra.id1,3.125,4,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[2].throwupextra.id2,2.734,4,361,110,40,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id0,3.515,4,361,110,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id1,3.125,4,361,110,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id2,2.734,4,361,110,40,0,0,0,1,1)
   ),
   throwbackextra : new createHitboxObject(
-    new createHitbox(offsets[2].throwbackextra.id0,3.906,5,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[2].throwbackextra.id1,3.515,5,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[2].throwbackextra.id2,2.734,5,361,110,40,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id0,3.906,5,361,110,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id1,3.515,5,361,110,40,0,0,0,1,1),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id2,2.734,5,361,110,40,0,0,0,1,1)
   ),
   thrown : new createHitboxObject(
-    new createHitbox(offsets[2].thrown.id0,3.906,4,361,50,20,0,1,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].thrown.id0,3.906,4,361,50,20,0,1,0,1,1)
   )
 });
 
