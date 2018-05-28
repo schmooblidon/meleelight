@@ -25,10 +25,8 @@ export default {
     player[p].phys.charging = false;
     player[p].phys.chargeFrames = 0;
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.dsmash.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.dsmash.id1;
-    player[p].hitboxes.id[2] = player[p].charHitboxes.dsmash.id2;
-    player[p].hitboxes.id[3] = player[p].charHitboxes.dsmash.id3;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dsmash1.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.dsmash1.id1;
     this.main(p,input);
   },
   main : function(p,input){
@@ -56,16 +54,29 @@ export default {
     if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
 
-      if (player[p].timer === 6){
-        player[p].hitboxes.active = [true,true,true,true];
+      if (player[p].timer === 19){
+        player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
         randomShout(characterSelections[p]);
         sounds.normalswing1.play();
       }
-      if (player[p].timer > 6 && player[p].timer < 11){
+      if (player[p].timer > 19 && player[p].timer < 23){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 11){
+      if (player[p].timer === 23){
+        turnOffHitboxes(p);
+      }
+      if (player[p].timer === 29){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.dsmash2.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.dsmash2.id1;
+        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.frame = 0;
+        sounds.normalswing1.play();
+      }
+      if (player[p].timer > 29 && player[p].timer < 33){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer === 33){
         turnOffHitboxes(p);
       }
     }

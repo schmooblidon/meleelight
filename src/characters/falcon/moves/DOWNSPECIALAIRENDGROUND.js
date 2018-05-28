@@ -22,13 +22,26 @@ export default {
     player[p].phys.fastfalled = false;
     player[p].phys.cVel.y = 0;
     player[p].phys.cVel.x = 0.98542 * player[p].phys.face;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.falconkickland.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.falconkickland.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.falconkickland.id2;
     turnOffHitboxes(p);
     this.main(p,input);
   },
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      player[p].phys.cVel.x = Math.sign(player[p].phys.cVel.x) * Math.max(Math.abs(player[p].phys.cVel.x)-0.24, 0); 
+      player[p].phys.cVel.x = Math.sign(player[p].phys.cVel.x) * Math.max(Math.abs(player[p].phys.cVel.x)-0.24, 0);
+      if (player[p].timer === 1){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer > 1 && player[p].timer < 3){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer === 3){
+        turnOffHitboxes(p);
+      }
     }
   },
   interrupt : function(p,input){

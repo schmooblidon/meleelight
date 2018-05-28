@@ -15,6 +15,7 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.downattack1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.downattack1.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.downattack1.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.downattack1.id3;
     this.main(p,input);
   },
   main : function(p,input){
@@ -24,29 +25,30 @@ export default {
       if (player[p].timer === 1){
         player[p].phys.intangibleTimer = 26;
       }
-      if (player[p].timer === 17){
-        player[p].hitboxes.active = [true,true,true,false];
+      if (player[p].timer === 19){
+        player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
         sounds.sword2.play();
       }
-      if (player[p].timer > 17 && player[p].timer < 20){
+      if (player[p].timer > 19 && player[p].timer < 21){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 20){
+      if (player[p].timer === 21){
         turnOffHitboxes(p);
       }
-      if (player[p].timer === 24){
+      if (player[p].timer === 28){
         player[p].hitboxes.id[0] = player[p].charHitboxes.downattack2.id0;
         player[p].hitboxes.id[1] = player[p].charHitboxes.downattack2.id1;
         player[p].hitboxes.id[2] = player[p].charHitboxes.downattack2.id2;
-        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.id[3] = player[p].charHitboxes.downattack2.id3;
+        player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
         sounds.sword2.play();
       }
-      if (player[p].timer > 24 && player[p].timer < 27){
+      if (player[p].timer > 28 && player[p].timer < 30){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 27){
+      if (player[p].timer === 30){
         turnOffHitboxes(p);
       }
     }

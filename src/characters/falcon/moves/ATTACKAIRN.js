@@ -38,26 +38,29 @@ export default {
         player[p].phys.autoCancel = false;
       }
 
-      if (player[p].timer === 4){
+      if (player[p].timer === 7){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
         player[p].phys.autoCancel = false;
         sounds.normalswing2.play();
         // needs normalswing3
       }
-      if (player[p].timer > 4 && player[p].timer < 8){
+      if (player[p].timer > 7 && player[p].timer < 13){
         player[p].hitboxes.frames++;
       }
-      if (player[p].timer === 8){
+      if (player[p].timer === 13){
+        turnOffHitboxes(p);
+      }
+      if (player[p].timer === 20){
         player[p].hitboxes.id[0] = player[p].charHitboxes.nair2.id0;
         player[p].hitboxes.id[1] = player[p].charHitboxes.nair2.id1;
         player[p].hitboxes.id[2] = player[p].charHitboxes.nair2.id2;
         player[p].hitboxes.frame = 0;
       }
-      if (player[p].timer > 8 && player[p].timer < 32){
+      if (player[p].timer > 20 && player[p].timer < 30){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 32){
+      if (player[p].timer === 30){
         turnOffHitboxes(p);
       }
 

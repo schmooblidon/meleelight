@@ -24,9 +24,8 @@ export default {
     player[p].inAerial = true;
     player[p].IASATimer = 30;
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.upair1.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.upair1.id1;
-    player[p].hitboxes.id[2] = player[p].charHitboxes.upair1.id2;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.upairClean.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.upairClean.id1;
     this.main(p,input);
   },
   main : function(p,input){
@@ -34,30 +33,20 @@ export default {
     if (!this.interrupt(p,input)){
       fastfall(p,input);
       airDrift(p,input);
-      if (player[p].timer === 8){
-        player[p].hitboxes.active = [true,true,true,false];
+      if (player[p].timer === 6){
+        player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
-        sounds.normalswing2.play();
       }
-      else if (player[p].timer === 9){
+      if (player[p].timer > 6 && player[p].timer < 14){
         player[p].hitboxes.frame++;
       }
-      else if (player[p].timer === 10){
-        turnOffHitboxes(p);
-      }
-      else if (player[p].timer === 11){
-        player[p].hitboxes.id[0] = player[p].charHitboxes.upair2.id0;
-        player[p].hitboxes.id[1] = player[p].charHitboxes.upair2.id1;
-        player[p].hitboxes.id[2] = player[p].charHitboxes.upair2.id2;
-        player[p].hitboxes.active = [true,true,true,false];
+      if (player[p].timer === 10){
         player[p].hitboxes.frame = 0;
-        sounds.normalswing2.play();
-        // needs normalswing3
+        player[p].hitboxes.id[0] = player[p].charHitboxes.upairMid.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.upairMid.id1;
+        player[p].hitboxes.active = [true,true,false,false];
       }
-      else if (player[p].timer > 11 && player[p].timer < 15){
-        player[p].hitboxes.frame++;
-      }
-      else if (player[p].timer === 15){
+      if (player[p].timer === 14){
         turnOffHitboxes(p);
       }
       else if (player[p].timer === 22){

@@ -25,6 +25,9 @@ export default {
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
     player[p].phys.landingMultiplier = 1.5;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.raptorboostground.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.raptorboostground.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.raptorboostground.id2;
     this.canEdgeCancel = false;
     turnOffHitboxes(p);
     this.main(p,input);
@@ -41,6 +44,13 @@ export default {
       else {
         this.canEdgeCancel = true;
         player[p].phys.cVel.x = this.setVelocities2[player[p].timer-17] * player[p].phys.face;
+      }
+      if (player[p].timer === 15){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer === 35){
+        turnOffHitboxes(p);
       }
     }
   },

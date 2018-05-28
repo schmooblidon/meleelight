@@ -24,6 +24,9 @@ export default {
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = 0;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.falconkickgroundClean.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.falconkickgroundClean.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.falconkickgroundClean.id2;
     turnOffHitboxes(p);
     this.main(p,input);
   },
@@ -32,6 +35,30 @@ export default {
     if (!this.interrupt(p,input)){
       if (player[p].timer >= 12) {
         player[p].phys.cVel.x = 2.67586 * player[p].phys.face;
+      }
+      if (player[p].timer === 14){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer > 14 && player[p].timer < 33){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer === 17){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+        player[p].hitboxes.id[0] = player[p].charHitboxes.falconkickgroundMid.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.falconkickgroundMid.id1;
+        player[p].hitboxes.id[2] = player[p].charHitboxes.falconkickgroundMid.id2;
+      }
+      if (player[p].timer === 25){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+        player[p].hitboxes.id[0] = player[p].charHitboxes.falconkickgroundLate.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.falconkickgroundLate.id1;
+        player[p].hitboxes.id[2] = player[p].charHitboxes.falconkickgroundLate.id2;
+      }
+      if (player[p].timer === 33){
+        turnOffHitboxes(p);
       }
     }
   },

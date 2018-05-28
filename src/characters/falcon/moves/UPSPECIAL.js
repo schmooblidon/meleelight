@@ -83,6 +83,8 @@ export default {
     player[p].phys.upbAngleMultiplier = 0;
     turnOffHitboxes(p);
     player[p].phys.landingMultiplier = 30 / 34;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.falcondive1.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.falcondive1.id1;
     falcon.UPSPECIAL.main(p, input);
   },
   main: function (p, input) {
@@ -109,6 +111,21 @@ export default {
       }
       player[p].phys.cVel.x += falcon.UPSPECIAL.setVelocities[player[p].timer-1][0] * player[p].phys.face;
       player[p].phys.cVel.y = falcon.UPSPECIAL.setVelocities[player[p].timer-1][1];
+      if (player[p].timer === 13){
+        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer > 13 && player[p].timer < 34){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer === 14){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.falcondive2.id0;
+        player[p].hitboxes.frame = 0;
+        player[p].hitboxes.active = [true,false,false,false];
+      }
+      if (player[p].timer === 34){
+        turnOffHitboxes(p);
+      }
     }
   },
   interrupt: function (p, input) {

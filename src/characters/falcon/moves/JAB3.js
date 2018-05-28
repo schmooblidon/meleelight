@@ -13,6 +13,8 @@ export default {
     player[p].actionState = "JAB3";
     player[p].timer = 0;
     player[p].phys.jabCombo = false;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.jab3Clean.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.jab3Clean.id1;
     turnOffHitboxes(p);
     this.main(p,input);
   },
@@ -20,6 +22,23 @@ export default {
     player[p].timer++;
     if (!this.interrupt(p,input)){
       player[p].phys.cVel.x = this.setVelocities[player[p].timer-1] * player[p].phys.face;
+      if (player[p].timer === 6){
+        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.frame = 0;
+        sounds.normalswing2.play();
+      }
+      if (player[p].timer > 6 && player[p].timer < 13){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer === 9){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.jab3Late.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.jab3Late.id1;
+        player[p].hitboxes.active = [true,true,false,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer === 13){
+        turnOffHitboxes(p);
+      }
     }
   },
   interrupt : function(p,input){

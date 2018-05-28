@@ -23,8 +23,7 @@ export default {
     player[p].actionState = "ATTACKDASH";
     player[p].timer = 0;
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.dashattack1.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.dashattack1.id1;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.dashattackClean.id0;
     this.main(p,input);
   },
   main : function(p,input){
@@ -38,21 +37,18 @@ export default {
         player[p].phys.cVel.x = 0.34643 * player[p].phys.face;
       }
 
-      if (player[p].timer === 4){
-        player[p].hitboxes.active = [true,true,false,false];
+      if (player[p].timer === 7){
+        player[p].hitboxes.active = [true,false,false,false];
         player[p].hitboxes.frame = 0;
-        sounds.normalswing2.play();
-        // needs 3
       }
-      if (player[p].timer > 4 && player[p].timer < 18){
+      if (player[p].timer > 7 && player[p].timer < 17){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 8){
-        player[p].hitboxes.id[0] = player[p].charHitboxes.dashattack2.id0;
-        player[p].hitboxes.id[1] = player[p].charHitboxes.dashattack2.id1;
+      if (player[p].timer === 10){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.dashattackLate.id0;
         player[p].hitboxes.frame = 0;
       }
-      if (player[p].timer === 18){
+      if (player[p].timer === 17){
         turnOffHitboxes(p);
       }
     }

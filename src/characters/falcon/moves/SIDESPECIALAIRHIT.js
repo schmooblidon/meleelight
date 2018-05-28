@@ -20,6 +20,7 @@ export default {
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = 0;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.raptorboostairhit.id0;
     turnOffHitboxes(p);
     this.main(p,input);
   },
@@ -27,6 +28,16 @@ export default {
     player[p].timer++;
     if (!this.interrupt(p,input)){
       player[p].phys.cVel.y -= 0.05;
+      if (player[p].timer === 4){
+        player[p].hitboxes.active = [true,false,false,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer > 4 && player[p].timer < 9) {
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer === 9){
+        turnOffHitboxes(p);
+      }
     }
   },
   interrupt : function(p,input){

@@ -16,6 +16,7 @@ export default {
   init : function(p,input){
     player[p].actionState = "SIDESPECIALGROUNDHIT";
     player[p].timer = 0;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.raptorboostgroundhit.id0;
     turnOffHitboxes(p);
     this.main(p,input);
   },
@@ -27,6 +28,16 @@ export default {
       }
       else {
         player[p].phys.cVel.x = 0;
+      }
+      if (player[p].timer === 4){
+        player[p].hitboxes.active = [true,false,false,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer > 4 && player[p].timer < 9) {
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer === 9){
+        turnOffHitboxes(p);
       }
     }
   },

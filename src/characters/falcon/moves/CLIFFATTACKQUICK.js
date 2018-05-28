@@ -47,17 +47,17 @@ export default {
         player[p].phys.pos.y = y;
       }
 
-      if (player[p].timer === 25){
+      if (player[p].timer === 24){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
         // needs 3
         randomShout(characterSelections[p]);
       }
-      else if (player[p].timer > 25 && player[p].timer < 35){
+      else if (player[p].timer > 24 && player[p].timer < 30){
         player[p].hitboxes.frame++;
       }
-      else if (player[p].timer === 35){
+      else if (player[p].timer === 30){
         turnOffHitboxes(p);
       }
     }

@@ -22,6 +22,7 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.dair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.dair.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.dair.id2;
     this.main(p,input);
   },
   main : function(p,input){
@@ -33,21 +34,16 @@ export default {
         player[p].phys.autoCancel = false;
       }
 
-      if (player[p].timer > 4 && player[p].timer < 26){
-        switch (player[p].timer % 3){
-          case 2:
-            player[p].hitboxes.active = [true,true,false,false];
-            player[p].hitboxes.frame = 0;
-            sounds.normalswing2.play();
-            break;
-          case 0:
-            player[p].hitboxes.frame++;
-            break;
-          case 1:
-            turnOffHitboxes(p);
-            break;
-
-        }
+      if (player[p].timer === 16){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+        player[p].phys.autoCancel = false;
+      }
+      if (player[p].timer > 16 && player[p].timer < 21){
+        player[p].hitboxes.frames++;
+      }
+      if (player[p].timer === 21){
+        turnOffHitboxes(p);
       }
 
       if (player[p].timer === 36){

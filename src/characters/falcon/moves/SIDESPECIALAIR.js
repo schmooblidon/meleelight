@@ -25,6 +25,9 @@ export default {
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = 0;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.raptorboostair.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.raptorboostair.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.raptorboostair.id2;
     turnOffHitboxes(p);
     this.main(p,input);
   },
@@ -36,6 +39,13 @@ export default {
       }
       if (player[p].timer >= 30) {
         player[p].phys.cVel.y -= 0.05;
+      }
+      if (player[p].timer === 17){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer === 35){
+        turnOffHitboxes(p);
       }
     }
   },

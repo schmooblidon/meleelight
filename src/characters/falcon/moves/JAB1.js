@@ -26,6 +26,7 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.jab1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.jab1.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.jab1.id2;
     this.main(p,input);
   },
   main : function(p,input){
@@ -36,15 +37,15 @@ export default {
       if (player[p].timer > 2 && player[p].timer < 25 && input[p][0].a && !input[p][1].a){
         player[p].phys.jabCombo = true;
       }
-      if (player[p].timer === 2){
-        player[p].hitboxes.active = [true,true,false,false];
+      if (player[p].timer === 3){
+        player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
       }
-      if (player[p].timer > 2 && player[p].timer < 4){
+      if (player[p].timer > 3 && player[p].timer < 6){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 4){
+      if (player[p].timer === 6){
         turnOffHitboxes(p);
       }
     }

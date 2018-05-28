@@ -18,6 +18,9 @@ export default {
     player[p].actionState = "NEUTRALSPECIALGROUND";
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.falconpunchair.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.falconpunchair.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.falconpunchair.id2;
     this.main(p,input);
   },
   main : function(p,input){
@@ -25,6 +28,16 @@ export default {
     if (!this.interrupt(p,input)){
       if (player[p].timer >= 54) {
         player[p].phys.cVel.x = this.setVelocities[player[p].timer-54] * player[p].phys.face;
+      }
+      if (player[p].timer === 52){
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer > 52 && player[p].timer < 57){
+        player[p].hitboxes.frame++;
+      }
+      if (player[p].timer === 57){
+        turnOffHitboxes(p);
       }
     }
   },

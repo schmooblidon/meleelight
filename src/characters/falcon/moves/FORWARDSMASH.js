@@ -15,9 +15,8 @@ export default {
     player[p].phys.charging = false;
     player[p].phys.chargeFrames = 0;
     turnOffHitboxes(p);
-    player[p].hitboxes.id[0] = player[p].charHitboxes.fsmash1.id0;
-    player[p].hitboxes.id[1] = player[p].charHitboxes.fsmash1.id1;
-    player[p].hitboxes.id[2] = player[p].charHitboxes.fsmash1.id2;
+    player[p].hitboxes.id[0] = player[p].charHitboxes.fsmash.id0;
+    player[p].hitboxes.id[1] = player[p].charHitboxes.fsmash.id1;
     this.main(p,input);
   },
   main : function(p,input){
@@ -50,22 +49,16 @@ export default {
         player[p].phys.cVel.x = this.setVelocities[player[p].timer-1] * player[p].phys.face;
       }
 
-      if (player[p].timer === 12){
-        player[p].hitboxes.active = [true,true,true,false];
+      if (player[p].timer === 18){
+        player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
         randomShout(characterSelections[p]);
         sounds.normalswing1.play();
       }
-      if (player[p].timer > 12 && player[p].timer < 23){
+      if (player[p].timer > 18 && player[p].timer < 22){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 17){
-        player[p].hitboxes.id[0] = player[p].charHitboxes.fsmash2.id0;
-        player[p].hitboxes.id[1] = player[p].charHitboxes.fsmash2.id1;
-        player[p].hitboxes.id[2] = player[p].charHitboxes.fsmash2.id2;
-        player[p].hitboxes.frame = 0;
-      }
-      if (player[p].timer === 23){
+      if (player[p].timer === 22){
         turnOffHitboxes(p);
       }
     }

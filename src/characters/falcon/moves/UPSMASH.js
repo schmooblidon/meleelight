@@ -16,6 +16,8 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.upsmash1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.upsmash1.id1;
+    player[p].hitboxes.id[2] = player[p].charHitboxes.upsmash1.id2;
+    player[p].hitboxes.id[3] = player[p].charHitboxes.upsmash1.id3;
     this.main(p,input);
   },
   main : function(p,input){
@@ -43,21 +45,26 @@ export default {
     if (!this.interrupt(p,input)){
       reduceByTraction(p,true);
 
-      if (player[p].timer === 7){
-        player[p].hitboxes.active = [true,true,false,false];
+      if (player[p].timer === 21){
+        player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
         randomShout(characterSelections[p]);
         sounds.normalswing1.play();
       }
-      if (player[p].timer > 7 && player[p].timer < 18){
+      if (player[p].timer > 21 && player[p].timer < 23){
         player[p].hitboxes.frame++;
       }
-      if (player[p].timer === 10){
+      if (player[p].timer === 23){
+        turnOffHitboxes(p);
+      }
+      if (player[p].timer === 27){
         player[p].hitboxes.id[0] = player[p].charHitboxes.upsmash2.id0;
         player[p].hitboxes.id[1] = player[p].charHitboxes.upsmash2.id1;
+        player[p].hitboxes.id[2] = player[p].charHitboxes.upsmash2.id2;
         player[p].hitboxes.frame = 0;
+        player[p].hitboxes.active = [true,true,true,false];
       }
-      if (player[p].timer === 18){
+      if (player[p].timer === 29){
         turnOffHitboxes(p);
       }
     }
