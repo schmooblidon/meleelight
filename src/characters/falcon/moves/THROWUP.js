@@ -33,8 +33,17 @@ export default {
     player[p].timer+=15/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
       if (Math.floor(player[p].timer+0.01) === 15 && prevFrame < 15){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.throwup.id0;
+        player[p].hitboxes.active = [true,false,false,false];
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
+      }
+      if (player[p].timer >= 11 && prevFrame < 11){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.throwupextra.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.throwupextra.id1;
+        player[p].hitboxes.id[2] = player[p].charHitboxes.throwupextra.id2;
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
       }
 
     }

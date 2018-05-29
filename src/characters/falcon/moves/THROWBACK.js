@@ -33,7 +33,19 @@ export default {
     const prevFrame = player[p].timer;
     player[p].timer+=20/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
-      if (Math.floor(player[p].timer+0.01) === 20 && prevFrame < 20){
+      if (player[p].timer >= 12 && prevFrame < 12) {
+        player[p].hitboxes.id[0] = player[p].charHitboxes.throwbackextra.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.throwbackextra.id1;
+        player[p].hitboxes.id[2] = player[p].charHitboxes.throwbackextra.id2;
+        player[p].hitboxes.active = [true, true, true, false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer >= 20 && prevFrame < 20) {
+        turnOffHitboxes(p);
+      }
+      if (Math.floor(player[p].timer+0.01) >= 20 && prevFrame < 20){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.throwback.id0;
+        player[p].hitboxes.active = [true, false, false, false];
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }

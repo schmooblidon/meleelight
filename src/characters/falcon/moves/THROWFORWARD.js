@@ -28,18 +28,22 @@ export default {
     const prevFrame = player[p].timer;
     player[p].timer+=18/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
+      if (player[p].timer >= 11 && prevFrame < 11){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.throwforwardextra.id0;
+        player[p].hitboxes.id[1] = player[p].charHitboxes.throwforwardextra.id1;
+        player[p].hitboxes.id[2] = player[p].charHitboxes.throwforwardextra.id2;
+        player[p].hitboxes.active = [true,true,true,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer >= 18 && prevFrame < 18){
+        turnOffHitboxes(p);
+      }
       if (Math.floor(player[p].timer+0.01) === 18 && prevFrame < 18){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
+        player[p].hitboxes.active = [true,false,false,false];
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
-      /*if (player[p].timer == 11){
-        player[p].hitboxes.id[0] = player[p].charHitboxes.throwforwardextra.id0;
-        player[p].hitboxes.active = [true,false,false,false];
-        player[p].hitboxes.frame = 0;
-      }
-      if (player[p].timer == 12){
-        turnOffHitboxes(p);
-      }*/
     }
   },
   interrupt : function(p,input){

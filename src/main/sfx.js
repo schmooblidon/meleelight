@@ -568,6 +568,9 @@ export const sounds = {
   }),
   raptorboost: new Howl({
     src: ['sfx/raptorboost.wav']
+  }),
+  falcon: new Howl({
+    src: ['sfx/falcon.wav']
   })
 }
 
