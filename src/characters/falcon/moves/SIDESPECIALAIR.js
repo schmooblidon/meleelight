@@ -29,6 +29,7 @@ export default {
     player[p].hitboxes.id[1] = player[p].charHitboxes.raptorboostair.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.raptorboostair.id2;
     turnOffHitboxes(p);
+    sounds.raptorboost.play();
     this.main(p,input);
   },
   main : function(p,input){
@@ -43,6 +44,7 @@ export default {
       if (player[p].timer === 17){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
+        sounds.fireweakhit.play();
       }
       if (player[p].timer === 35){
         turnOffHitboxes(p);

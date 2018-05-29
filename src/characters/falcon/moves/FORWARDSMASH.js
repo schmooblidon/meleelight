@@ -53,7 +53,7 @@ export default {
         player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
         randomShout(characterSelections[p]);
-        sounds.normalswing1.play();
+        sounds.fireweakhit.play();
       }
       if (player[p].timer > 18 && player[p].timer < 22){
         player[p].hitboxes.frame++;

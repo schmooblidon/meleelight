@@ -28,6 +28,7 @@ export default {
     player[p].hitboxes.id[1] = player[p].charHitboxes.falconkickgroundClean.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.falconkickgroundClean.id2;
     turnOffHitboxes(p);
+    sounds.falconkickshout.play();
     this.main(p,input);
   },
   main : function(p,input){
@@ -39,6 +40,7 @@ export default {
       if (player[p].timer === 14){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
+        sounds.falconkick.play();
       }
       if (player[p].timer > 14 && player[p].timer < 33){
         player[p].hitboxes.frame++;

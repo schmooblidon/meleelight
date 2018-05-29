@@ -122,6 +122,7 @@ export default {
         player[p].hitboxes.id[0] = player[p].charHitboxes.falcondive2.id0;
         player[p].hitboxes.frame = 0;
         player[p].hitboxes.active = [true,false,false,false];
+        sounds.falcondive.play();
       }
       if (player[p].timer === 34){
         turnOffHitboxes(p);

@@ -30,6 +30,7 @@ export default {
     player[p].hitboxes.id[2] = player[p].charHitboxes.raptorboostground.id2;
     this.canEdgeCancel = false;
     turnOffHitboxes(p);
+    sounds.raptorboost.play();
     this.main(p,input);
   },
   main : function(p,input){
@@ -48,6 +49,7 @@ export default {
       if (player[p].timer === 15){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
+        sounds.fireweakhit.play();
       }
       if (player[p].timer === 35){
         turnOffHitboxes(p);

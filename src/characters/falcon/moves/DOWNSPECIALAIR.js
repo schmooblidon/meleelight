@@ -28,6 +28,7 @@ export default {
     player[p].phys.cVel.x = 0;
     player[p].hitboxes.id[0] = player[p].charHitboxes.falconkickairClean.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.falconkickairClean.id1;
+    sounds.falconkickshout.play();
     turnOffHitboxes(p);
     this.main(p,input);
   },
@@ -45,6 +46,7 @@ export default {
       if (player[p].timer === 15){
         player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
+        sounds.falconkick.play();
       }
       if (player[p].timer > 15 && player[p].timer < 30){
         player[p].hitboxes.frame++;

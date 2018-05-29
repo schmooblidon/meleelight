@@ -14,7 +14,7 @@ export default {
   init : function(p,input){
     player[p].actionState = "OTTOTTOWAIT";
     player[p].timer = 1;
-    if (characterSelections[p] !== 1){
+    if (characterSelections[p] !== 1 && characterSelections[p] !== 4){
       sounds[actionSounds[characterSelections[p]].OTTOTTOWAIT[0][1]].play();
     }
     player[p].phys.cVel.x = 0;

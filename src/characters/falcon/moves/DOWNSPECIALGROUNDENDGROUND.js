@@ -22,6 +22,7 @@ export default {
     player[p].phys.cVel.x = 2.14 * player[p].phys.face;
     player[p].phys.cVel.y = 0;
     turnOffHitboxes(p);
+    sounds.land.play();
     this.main(p,input);
   },
   main : function(p,input){

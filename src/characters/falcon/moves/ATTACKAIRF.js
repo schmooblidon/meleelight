@@ -39,6 +39,7 @@ export default {
       if (player[p].timer === 14){
         player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
+        sounds.normalswing1.play();
       }
       if (player[p].timer > 14 && player[p].timer < 31){
         player[p].hitboxes.frame++;

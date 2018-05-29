@@ -105,6 +105,30 @@ export function randomShout (char){
           break;
       }
       break;
+    case 4:
+      var shout = Math.round(0.5 + Math.random() * 5.99);
+      switch (shout) {
+        case 1:
+          sounds.falconshout1.play();
+          break;
+        case 2:
+          sounds.falconshout2.play();
+          break;
+        case 3:
+          sounds.falconshout3.play();
+          break;
+        case 4:
+          sounds.falconshout4.play();
+          break;
+        case 5:
+          sounds.falconshout5.play();
+          break;
+        case 6:
+          sounds.falconshout6.play();
+          break;
+        default:
+          break;
+      }
     default:
       break;
   }

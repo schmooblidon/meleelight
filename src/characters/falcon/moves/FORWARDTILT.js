@@ -25,7 +25,6 @@ export default {
         player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
         sounds.normalswing2.play();
-        // needs 3
       }
       if (player[p].timer > 9 && player[p].timer < 12){
         player[p].hitboxes.frame++;

@@ -9,14 +9,12 @@ export default {
     player[p].actionState = "APPEAL";
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
+    sounds.falcontaunt.play();
     this.main(p,input);
   },
   main : function(p,input){
     player[p].timer++;
     if (!this.interrupt(p,input)){
-      if (player[p].timer === 31) {
-        sounds.foxtaunt.play();
-      }
     }
   },
   interrupt : function(p,input){

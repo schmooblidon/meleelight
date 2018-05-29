@@ -25,6 +25,7 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.falconkickland.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.falconkickland.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.falconkickland.id2;
+    sounds.land.play();
     turnOffHitboxes(p);
     this.main(p,input);
   },

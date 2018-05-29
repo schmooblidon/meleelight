@@ -18,6 +18,7 @@ export default {
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupslow.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupslow.id1;
+    sounds.falcondoublejump.play();
     this.main(p,input);
   },
   main : function(p,input){
@@ -47,8 +48,6 @@ export default {
       if (player[p].timer === 37){
         player[p].hitboxes.active = [true,true,false,false];
         player[p].hitboxes.frame = 0;
-        sounds.normalswing2.play();
-        randomShout(characterSelections[p]);
       }
       else if (player[p].timer > 37 && player[p].timer < 41){
         player[p].hitboxes.frame++;

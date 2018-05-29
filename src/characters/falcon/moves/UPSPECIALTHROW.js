@@ -20,6 +20,7 @@ export default {
     player[p].phys.cVel = new Vec2D(0, 0);
     player[p].phys.fastfalled = false;
     turnOffHitboxes(p);
+    sounds.falconyes.play();
     falcon.UPSPECIALTHROW.main(p, input);
   },
   main: function (p, input) {

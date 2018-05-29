@@ -28,7 +28,6 @@ export default {
       if (player[p].timer === 19){
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
-        sounds.sword2.play();
       }
       if (player[p].timer > 19 && player[p].timer < 21){
         player[p].hitboxes.frame++;
@@ -43,7 +42,6 @@ export default {
         player[p].hitboxes.id[3] = player[p].charHitboxes.downattack2.id3;
         player[p].hitboxes.active = [true,true,true,true];
         player[p].hitboxes.frame = 0;
-        sounds.sword2.play();
       }
       if (player[p].timer > 28 && player[p].timer < 30){
         player[p].hitboxes.frame++;

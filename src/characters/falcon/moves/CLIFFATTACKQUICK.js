@@ -19,6 +19,7 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.ledgegetupquick.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.ledgegetupquick.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.ledgegetupquick.id2;
+    sounds.falcondoublejump.play();
     this.main(p,input);
   },
   main : function(p,input){
@@ -50,9 +51,6 @@ export default {
       if (player[p].timer === 24){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
-        sounds.normalswing2.play();
-        // needs 3
-        randomShout(characterSelections[p]);
       }
       else if (player[p].timer > 24 && player[p].timer < 30){
         player[p].hitboxes.frame++;

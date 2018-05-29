@@ -508,6 +508,66 @@ export const sounds = {
   }),
   hitspin: new Howl({
     src: ['sfx/hitspin.wav']
+  }),
+  falcondeath: new Howl({
+    src: ['sfx/falcondeath.wav']
+  }),
+  falcondive: new Howl({
+    src: ['sfx/falcondive.wav']
+  }),
+  falcondoublejump: new Howl({
+    src: ['sfx/falcondoublejump.wav']
+  }),
+  falconfura: new Howl({
+    src: ['sfx/falconfura.wav']
+  }),
+  falconhurt: new Howl({
+    src: ['sfx/falconhurt.wav']
+  }),
+  falconkick: new Howl({
+    src: ['sfx/falconkick.wav']
+  }),
+  falconkickshout: new Howl({
+    src: ['sfx/falconkickshout.wav']
+  }),
+  falconpunchbird: new Howl({
+    src: ['sfx/falconpunchbird.wav']
+  }),
+  falconpunchshout1: new Howl({
+    src: ['sfx/falconpunchshout1.wav']
+  }),
+  falconpunchshout2: new Howl({
+    src: ['sfx/falconpunchshout2.wav']
+  }),
+  falconshout1: new Howl({
+    src: ['sfx/falconshout1.wav']
+  }),
+  falconshout2: new Howl({
+    src: ['sfx/falconshout2.wav']
+  }),
+  falconshout3: new Howl({
+    src: ['sfx/falconshout3.wav']
+  }),
+  falconshout4: new Howl({
+    src: ['sfx/falconshout4.wav']
+  }),
+  falconshout5: new Howl({
+    src: ['sfx/falconshout5.wav']
+  }),
+  falconshout6: new Howl({
+    src: ['sfx/falconshout6.wav']
+  }),
+  falconsleep: new Howl({
+    src: ['sfx/falconsleep.wav']
+  }),
+  falcontaunt: new Howl({
+    src: ['sfx/falcontaunt.wav']
+  }),
+  falconyes: new Howl({
+    src: ['sfx/falconyes.wav']
+  }),
+  raptorboost: new Howl({
+    src: ['sfx/raptorboost.wav']
   })
 }
 

@@ -23,6 +23,7 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.dair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.dair.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.dair.id2;
+    sounds.falconshout5.play();
     this.main(p,input);
   },
   main : function(p,input){
@@ -38,6 +39,7 @@ export default {
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
         player[p].phys.autoCancel = false;
+        sounds.normalswing1.play();
       }
       if (player[p].timer > 16 && player[p].timer < 21){
         player[p].hitboxes.frames++;

@@ -21,6 +21,7 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.falconpunchair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.falconpunchair.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.falconpunchair.id2;
+    sounds.falconpunchshout1.play();
     this.main(p,input);
   },
   main : function(p,input){
@@ -32,6 +33,9 @@ export default {
       if (player[p].timer === 52){
         player[p].hitboxes.active = [true,true,true,false];
         player[p].hitboxes.frame = 0;
+        sounds.falconpunchshout2.play();
+        sounds.falconpunchbird.play();
+        sounds.firemediumhit.play();
       }
       if (player[p].timer > 52 && player[p].timer < 57){
         player[p].hitboxes.frame++;
