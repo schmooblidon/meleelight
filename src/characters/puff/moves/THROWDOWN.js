@@ -25,6 +25,7 @@ export default  {
     puff.THROWDOWN.main(p, input);
   },
   main: function (p, input) {
+    const prevFrame = player[p].timer;
     player[p].timer += 61 / player[p].phys.releaseFrame;
     if (!puff.THROWDOWN.interrupt(p, input)) {
       //10,23,36,49
@@ -37,7 +38,7 @@ export default  {
           turnOffHitboxes(p);
         }
       }
-      if (Math.floor(player[p].timer + 0.01) === 61) {
+      if (Math.floor(player[p].timer + 0.01) >= 61 && prevFrame < 61) {
         player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
         hitQueue.push([player[p].phys.grabbing, p, 0, false, true, true]);
         turnOffHitboxes(p);

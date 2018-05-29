@@ -21,8 +21,8 @@ export default {
     if(grabbing === -1){
       return;
     }
-    actionStates[characterSelections[grabbing]].THROWNFOXDOWN.init(grabbing);
-    const frame = framesData[characterSelections[grabbing]].THROWNFOXDOWN;
+    actionStates[characterSelections[grabbing]].THROWNFALCONDOWN.init(grabbing);
+    const frame = framesData[characterSelections[grabbing]].THROWNFALCONDOWN;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
@@ -31,87 +31,13 @@ export default {
   },
   main : function(p,input){
     const prevFrame = player[p].timer;
-    player[p].timer+=33/player[p].phys.releaseFrame;
+    player[p].timer+=16/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
-      if (Math.floor(player[p].timer+0.01) === 33){
+      if (Math.floor(player[p].timer+0.01) >= 16 && prevFrame < 16){
         player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);
       }
-
-      if (prevFrame < 23 && player[p].timer >= 23){
-        articles.LASER.init({
-          p: p,
-          x: 1,
-          y: 12,
-          rotate: Math.PI * 275 / 180
-        });
-        sounds.foxlaserfire.play();
-        // 275
-        drawVfx({
-          name:"laser",
-          pos:new Vec2D(player[p].phys.pos.x+(1*player[p].phys.face),player[p].phys.pos.y+12),
-          face:player[p].phys.face,
-          f:Math.PI*275/180,
-          color1:{r:255,g:59,b:59},
-          color2:{r:255,g:57,b:87}
-        });
-      }
-      else if (prevFrame < 25 && player[p].timer >= 25){
-        articles.LASER.init({
-          p: p,
-          x: 1,
-          y: 16,
-          rotate: Math.PI * 260 / 180
-        });
-        sounds.foxlaserfire.play();
-        // 260
-        drawVfx({
-          name:"laser",
-          pos:new Vec2D(player[p].phys.pos.x+(1*player[p].phys.face),player[p].phys.pos.y+16),
-          face:player[p].phys.face,
-          f:Math.PI*260/180,
-          color1:{r:255,g:59,b:59},
-          color2:{r:255,g:57,b:87}
-        });
-      }
-      else if (prevFrame < 28 && player[p].timer >= 28){
-        articles.LASER.init({
-          p: p,
-          x: 2,
-          y: 15,
-          rotate: Math.PI * 290 / 180
-        });
-        sounds.foxlaserfire.play();
-        // 290
-        drawVfx({
-          name:"laser",
-          pos:new Vec2D(player[p].phys.pos.x+(2*player[p].phys.face),player[p].phys.pos.y+15),
-          face:player[p].phys.face,
-          f:Math.PI*290/180,
-          color1:{r:255,g:59,b:59},
-          color2:{r:255,g:57,b:87}
-        });
-      }
-      else if (prevFrame < 31 && player[p].timer >= 31){
-        articles.LASER.init({
-          p: p,
-          x: 2,
-          y: 17,
-          rotate: Math.PI * 275 / 180
-        });
-        sounds.foxlaserfire.play();
-        // 275
-        drawVfx({
-          name:"laser",
-          pos:new Vec2D(player[p].phys.pos.x+(2*player[p].phys.face),player[p].phys.pos.y+17),
-          face:player[p].phys.face,
-          f:Math.PI*275/180,
-          color1:{r:255,g:59,b:59},
-          color2:{r:255,g:57,b:87}
-        });
-      }
-
     }
   },
   interrupt : function(p,input){

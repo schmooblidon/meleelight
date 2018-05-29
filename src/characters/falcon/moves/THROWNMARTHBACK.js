@@ -6,7 +6,7 @@ export default {
   reverseModel : true,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  offset : [[-6.96,4.12],[-3.7,3.89],[-0.79,3.40],[0.35,0.47],[0.80,-0.44],[0.80,-0.44]],
+  offset : [[-8.22,-1.32],[-6.16,-1.59],[-3.50,-1.66],[-1.34,-2.00],[-0.73,-3.79],[0.22,-5.79],[0.31,-5.99],[0.31,-5.99]],
   init : function(p,input){
     player[p].actionState = "THROWNMARTHBACK";
     const grabbedBy = player[p].phys.grabbedBy;

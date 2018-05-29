@@ -1268,16 +1268,16 @@ setHitBoxes(CHARIDS.FALCON_ID, {
     new createHitbox(offsets[CHARIDS.FALCON_ID].pummel.id0,5.078,3,80,100,0,30,0,0,1,1)
   ),
   throwup : new createHitboxObject(
-    new createHitbox(new Vec2D(-0.067,17.54),0,3,85,105,70,0,0,0,1,1)
+    new createHitbox(new Vec2D(8.63,11.15),0,3,85,105,70,0,0,0,1,1)
   ),
   throwdown : new createHitboxObject(
-    new createHitbox(new Vec2D(0.50063,0),0,7,65,34,75,0,0,0,1,1)
+    new createHitbox(new Vec2D(8.58,3.25),0,7,65,34,75,0,0,0,1,1)
   ),
   throwback : new createHitboxObject(
-    new createHitbox(new Vec2D(-6.59,5.66),0,4,135,130,30,0,0,0,1,1)
+    new createHitbox(new Vec2D(-11.36,22.23),0,4,135,130,30,0,0,0,1,1)
   ),
   throwforward : new createHitboxObject(
-    new createHitbox(new Vec2D(14.19-4.61,2.805),0,4,45,105,45,0,0,0,1,1)
+    new createHitbox(new Vec2D(7.54,12.51),0,4,45,105,45,0,0,0,1,1)
   ),
   throwforwardextra : new createHitboxObject(
     new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id0,3.906,5,361,110,40,0,0,0,1,1),

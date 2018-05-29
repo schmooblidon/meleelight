@@ -25,9 +25,10 @@ export default  {
     marth.THROWFORWARD.main(p, input);
   },
   main: function (p, input) {
+    const prevFrame = player[p].timer
     player[p].timer += 13 / player[p].phys.releaseFrame;
     if (!marth.THROWFORWARD.interrupt(p, input)) {
-      if (Math.floor(player[p].timer + 0.01) === 13) {
+      if (Math.floor(player[p].timer + 0.01) >= 13 && prevFrame < 13) {
         hitQueue.push([player[p].phys.grabbing, p, 0, false, true, true]);
         turnOffHitboxes(p);
       }

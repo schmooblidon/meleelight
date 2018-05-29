@@ -26,10 +26,11 @@ export default {
     this.main(p,input);
   },
   main : function(p,input){
+    const prevFrame = player[p].timer;
     player[p].timer+=11/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
       player[p].phys.cVel.x = this.setVelocities[Math.floor(player[p].timer+0.01)-1]*player[p].phys.face;
-      if (Math.floor(player[p].timer+0.01) === 11){
+      if (Math.floor(player[p].timer+0.01) >= 11 && prevFrame < 11){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }

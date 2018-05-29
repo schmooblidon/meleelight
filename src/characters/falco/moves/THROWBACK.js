@@ -92,7 +92,7 @@ export default {
           color2:{r:157, g:255, b:255}
         });
       }
-      if (Math.floor(player[p].timer+0.01) === 9){
+      if (Math.floor(player[p].timer+0.01) >= 9 && prevFrame < 9){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }

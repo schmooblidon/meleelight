@@ -9,7 +9,6 @@ export default {
   name : "THROWFORWARD",
   canEdgeCancel : false,
   canBeGrabbed : true,
-  setVelocities : [-0.08,-0.14,-0.03,0.24,0.68,0.99,1.02,0.78,0.57,0.57,0.57,0.57,0.56,0.56,0.55,0.54,0.53,0.52,0.50,0.49,0.47,0.45,0.43,0.41,0.39,0.36,0,0,0,0,0,0,0],
   init : function(p,input){
     player[p].actionState = "THROWFORWARD";
     player[p].timer = 0;
@@ -17,8 +16,8 @@ export default {
     if(grabbing === -1){
       return;
     }
-    actionStates[characterSelections[grabbing]].THROWNFOXFORWARD.init(grabbing,input);
-    const frame = framesData[characterSelections[grabbing]].THROWNFOXFORWARD;
+    actionStates[characterSelections[grabbing]].THROWNFALCONFORWARD.init(grabbing,input);
+    const frame = framesData[characterSelections[grabbing]].THROWNFALCONFORWARD;
     player[p].phys.releaseFrame = frame+1;
     turnOffHitboxes(p);
     player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
@@ -26,10 +25,10 @@ export default {
     this.main(p,input);
   },
   main : function(p,input){
-    player[p].timer+=11/player[p].phys.releaseFrame;
+    const prevFrame = player[p].timer;
+    player[p].timer+=18/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
-      player[p].phys.cVel.x = this.setVelocities[Math.floor(player[p].timer+0.01)-1]*player[p].phys.face;
-      if (Math.floor(player[p].timer+0.01) === 11){
+      if (Math.floor(player[p].timer+0.01) === 18 && prevFrame < 18){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }

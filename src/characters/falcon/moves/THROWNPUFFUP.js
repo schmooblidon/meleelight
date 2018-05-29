@@ -5,7 +5,7 @@ export default {
   canEdgeCancel : false,
   canGrabLedge : [false,false],
   canBeGrabbed : false,
-  offset : [[-10.63,-3.65],[-9.46,-4.14],[-7.29,-4.39],[-2.98,-3.79],[2.65,-2.33],[4.95,-0.64],[4.95,-0.64],[4.95,-0.64]],
+  offset : [[-11.67,-7.58],[-10.82,-7.98],[-9.46,-8.40],[-7.03,-8.35],[-2.82,-7.60],[1.82,-6.29],[3.94,-4.87],[3.85,-3.69],[3.85,-3.69]],
   init : function(p,input){
     player[p].actionState = "THROWNPUFFUP";
     const grabbedBy = player[p].phys.grabbedBy;

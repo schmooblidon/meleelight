@@ -64,6 +64,10 @@ import THROWNFALCOUP from "characters/puff/moves/THROWNFALCOUP";
 import THROWNFALCODOWN from "characters/puff/moves/THROWNFALCODOWN";
 import THROWNFALCOBACK from "characters/puff/moves/THROWNFALCOBACK";
 import THROWNFALCOFORWARD from "characters/puff/moves/THROWNFALCOFORWARD";
+import THROWNFALCONUP from "characters/puff/moves/THROWNFALCONUP";
+import THROWNFALCONDOWN from "characters/puff/moves/THROWNFALCONDOWN";
+import THROWNFALCONBACK from "characters/puff/moves/THROWNFALCONBACK";
+import THROWNFALCONFORWARD from "characters/puff/moves/THROWNFALCONFORWARD";
 import APPEAL from "characters/puff/moves/APPEAL";
 
 
@@ -134,5 +138,9 @@ export default {
   THROWNFALCODOWN,
   THROWNFALCOBACK,
   THROWNFALCOFORWARD,
+  THROWNFALCONUP,
+  THROWNFALCONDOWN,
+  THROWNFALCONBACK,
+  THROWNFALCONFORWARD,
   APPEAL
 };

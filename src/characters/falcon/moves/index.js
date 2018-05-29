@@ -61,6 +61,10 @@ import THROWNFALCODOWN from "characters/falcon/moves/THROWNFALCODOWN";
 import THROWNFALCOBACK from "characters/falcon/moves/THROWNFALCOBACK";
 import THROWNFALCOFORWARD from "characters/falcon/moves/THROWNFALCOFORWARD";
 import APPEAL from "characters/falcon/moves/APPEAL";
+import THROWNFALCONUP from "characters/falcon/moves/THROWNFALCONUP";
+import THROWNFALCONDOWN from "characters/falcon/moves/THROWNFALCONDOWN";
+import THROWNFALCONBACK from "characters/falcon/moves/THROWNFALCONBACK";
+import THROWNFALCONFORWARD from "characters/falcon/moves/THROWNFALCONFORWARD";
 
 export default {
   JAB1,
@@ -125,5 +129,9 @@ export default {
   THROWNFALCODOWN,
   THROWNFALCOBACK,
   THROWNFALCOFORWARD,
-  APPEAL
+  APPEAL,
+  THROWNFALCONUP,
+  THROWNFALCONDOWN,
+  THROWNFALCONBACK,
+  THROWNFALCONFORWARD
 };
