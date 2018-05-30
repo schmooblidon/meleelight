@@ -618,7 +618,7 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
     actionStates[characterSelections[player[v].phys.grabbing]].CAPTURECUT.init(player[v].phys.grabbing,input);
   }
 
-  if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)) {
+  if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50 && !hitbox.throwextra)) {
     if (player[v].phys.grabbedBy > -1) {
       player[player[v].phys.grabbedBy].phys.grabbing = -1;
       actionStates[characterSelections[player[v].phys.grabbedBy]].WAIT.init(player[v].phys.grabbedBy,input);
@@ -633,7 +633,8 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
       actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
     }
   } else {
-    if (player[v].actionState != "THROWNPUFFDOWN") {
+    if (!hitbox.throwextra) {
+    //if (player[v].actionState != "THROWNPUFFDOWN" && player[v].actionState != "THROWNFALCONBACK" && player[v].actionState != "THROWNFALCONFORWARD" && player[v].actionState != "THROWNFALCONUP") {
       actionStates[characterSelections[v]].CAPTUREDAMAGE.init(v,input);
     }
   }

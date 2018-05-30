@@ -621,10 +621,10 @@ setHitBoxes(CHARIDS.PUFF_ID, {
   pummel: new createHitboxObject(new createHitbox(offsets[1].pummel.id0, 4.687, 3, 361, 100, 0, 30, 0, 0, 1, 1)),
   throwup: new createHitboxObject(new createHitbox(new Vec2D(-4.44533, 0.66545), 0, 11, 90, 25, 130, 0, 0, 0, 1, 1)),
   throwdown: new createHitboxObject(new createHitbox(new Vec2D(0.56941, 0), 0, 2, 80, 45, 100, 0, 0, 0, 1, 1)),
-  throwdownextra: new createHitboxObject(new createHitbox(offsets[1].throwdownextra.id0, 3.515, 1, 361, 100, 0, 30, 0, 0, 1, 1)),
+  throwdownextra: new createHitboxObject(new createHitbox(offsets[1].throwdownextra.id0, 3.515, 1, 361, 100, 0, 30, 0, 0, 1, 1, true)),
   throwback: new createHitboxObject(new createHitbox(new Vec2D(-14.20273 + 7.52, 0), 0, 10, 135, 25, 90, 0, 0, 0, 1, 1)),
   throwforward: new createHitboxObject(new createHitbox(new Vec2D(10.8537, 0.01), 0, 5, 55, 30, 100, 0, 0, 0, 1, 1)),
-  throwforwardextra: new createHitboxObject(new createHitbox(offsets[1].throwforwardextra.id0, 8.593, 7, 361, 110, 40, 0, 0, 0, 1, 1)),
+  throwforwardextra: new createHitboxObject(new createHitbox(offsets[1].throwforwardextra.id0, 8.593, 7, 361, 110, 40, 0, 0, 0, 1, 1, true)),
   thrown: new createHitboxObject(new createHitbox(offsets[1].thrown.id0, 3.906, 4, 361, 50, 20, 0, 1, 0, 1, 1))
 });
 

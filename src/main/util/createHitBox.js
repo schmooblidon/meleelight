@@ -1,5 +1,5 @@
 
-export function createHitbox(offset, size, dmg, angle, kg, bk, sk, type, clank, hG, hA) {
+export function createHitbox(offset, size, dmg, angle, kg, bk, sk, type, clank, hG, hA, throwex = false) {
   this.offset = offset;
   this.size = size;
   this.dmg = dmg;
@@ -12,4 +12,5 @@ export function createHitbox(offset, size, dmg, angle, kg, bk, sk, type, clank, 
   this.clank = clank;
   this.hitGrounded = hG;
   this.hitAirborne = hA;
+  this.throwextra = throwex;
 }

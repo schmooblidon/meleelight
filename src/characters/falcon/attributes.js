@@ -147,6 +147,10 @@ setFrames(CHARIDS.FALCON_ID, {
   "THROWNFALCOBACK" : 9,
   "THROWNFALCOFORWARD" : 11,
   "THROWNFALCODOWN" : 34,
+  "THROWNFOXUP" : 8,
+  "THROWNFOXBACK" : 9,
+  "THROWNFOXFORWARD" : 10,
+  "THROWNFOXDOWN" : 32,
   "FURASLEEPSTART" : 30,
   "FURASLEEPLOOP" : 20,
   "FURASLEEPEND" : 60,
@@ -1280,19 +1284,19 @@ setHitBoxes(CHARIDS.FALCON_ID, {
     new createHitbox(new Vec2D(7.54,12.51),0,4,45,105,45,0,0,0,1,1)
   ),
   throwforwardextra : new createHitboxObject(
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id0,3.906,5,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id1,1.953,5,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id2,1.953,5,361,110,40,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id0,3.906,5,361,110,0,0,0,0,1,1,true),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id1,1.953,5,361,110,0,0,0,0,1,1,true),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwforwardextra.id2,1.953,5,361,110,0,0,0,0,1,1,true)
   ),
   throwupextra : new createHitboxObject(
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id0,3.515,4,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id1,3.125,4,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id2,2.734,4,361,110,40,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id0,3.515,4,361,100,0,0,0,0,1,1,true),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id1,3.125,4,361,100,0,0,0,0,1,1,true),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwupextra.id2,2.734,4,361,100,0,0,0,0,1,1,true)
   ),
   throwbackextra : new createHitboxObject(
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id0,3.906,5,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id1,3.515,5,361,110,40,0,0,0,1,1),
-    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id2,2.734,5,361,110,40,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id0,3.906,5,361,0,0,0,0,0,1,1,true),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id1,3.515,5,361,0,0,0,0,0,1,1,true),
+    new createHitbox(offsets[CHARIDS.FALCON_ID].throwbackextra.id2,2.734,5,361,0,0,0,0,0,1,1,true)
   ),
   thrown : new createHitboxObject(
     new createHitbox(offsets[CHARIDS.FALCON_ID].thrown.id0,3.906,4,361,50,20,0,1,0,1,1)

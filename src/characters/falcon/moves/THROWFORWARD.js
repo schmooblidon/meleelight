@@ -38,7 +38,7 @@ export default {
       if (player[p].timer >= 18 && prevFrame < 18){
         turnOffHitboxes(p);
       }
-      if (Math.floor(player[p].timer+0.01) === 18 && prevFrame < 18){
+      if (Math.floor(player[p].timer+0.01) >= 18 && Math.floor(prevFrame+0.01) < 18){
         player[p].hitboxes.id[0] = player[p].charHitboxes.throwforward.id0;
         player[p].hitboxes.active = [true,false,false,false];
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);

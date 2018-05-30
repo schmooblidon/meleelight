@@ -28,7 +28,7 @@ export default {
     const prevFrame = player[p].timer;
     player[p].timer += 12 / player[p].phys.releaseFrame;
     if (!marth.THROWUP.interrupt(p, input)) {
-      if (Math.floor(player[p].timer + 0.01) >= 12 && prevFrame < 12) {
+      if (Math.floor(player[p].timer + 0.01) >= 12 && Math.floor(prevFrame+0.01) < 12) {
         hitQueue.push([player[p].phys.grabbing, p, 0, false, true, false]);
         turnOffHitboxes(p);
       }

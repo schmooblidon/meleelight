@@ -33,7 +33,7 @@ export default {
     const prevFrame = player[p].timer;
     player[p].timer+=16/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
-      if (Math.floor(player[p].timer+0.01) >= 16 && prevFrame < 16){
+      if (Math.floor(player[p].timer+0.01) >= 16 && Math.floor(prevFrame+0.01) < 16){
         player[p].hitboxes.id[0] = player[p].charHitboxes.throwdown.id0;
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,true]);
         turnOffHitboxes(p);

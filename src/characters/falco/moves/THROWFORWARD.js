@@ -25,8 +25,8 @@ export default {
     const prevFrame = player[p].timer;
     player[p].timer+=11/player[p].phys.releaseFrame;
     if (!this.interrupt(p,input)){
-      player[p].phys.cVel.x = this.setVelocities[Math.floor(player[p].timer+0.01)-1]*player[p].phys.face;
-      if (Math.floor(player[p].timer+0.01) >= 11 && prevFrame < 11){
+      player[p].phys.cVel.x = this.setVelocities[Math.max(0,Math.floor(player[p].timer+0.01)-1)]*player[p].phys.face;
+      if (Math.floor(player[p].timer+0.01) >= 11 && Math.floor(prevFrame+0.01) < 11){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
@@ -46,12 +46,18 @@ export default {
       WAIT.init(p,input);
       return true;
     }
-    else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p,input);
-      return true;
-    }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1){
+        return;
+      }
+      if (player[p].timer < player[p].phys.releaseFrame && player[grabbing].phys.grabbedBy !== p){
+        CATCHCUT.init(p,input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

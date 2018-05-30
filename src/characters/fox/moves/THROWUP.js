@@ -92,7 +92,7 @@ export default {
       else if (prevFrame < 33 && player[p].timer >= 33){
         sounds.foxlaserholster.play();
       }
-      if (Math.floor(player[p].timer+0.01) >= 7 && prevFrame < 7){
+      if (Math.floor(player[p].timer+0.01) >= 7 && Math.floor(prevFrame+0.01) < 7){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
