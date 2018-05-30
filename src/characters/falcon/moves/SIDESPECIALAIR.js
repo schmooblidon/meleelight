@@ -28,6 +28,7 @@ export default {
     player[p].hitboxes.id[0] = player[p].charHitboxes.raptorboostair.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.raptorboostair.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.raptorboostair.id2;
+    player[p].phys.raptorBoost = false;
     turnOffHitboxes(p);
     sounds.raptorboost.play();
     this.main(p,input);
@@ -54,6 +55,7 @@ export default {
   interrupt : function(p,input){
     if (player[p].phys.raptorBoost) {
       SIDESPECIALAIRHIT.init(p,input);
+      return true;
     }
     else if (player[p].timer > 79){
       if (player[p].phys.grounded){

@@ -47,7 +47,7 @@ setCharAttributes(CHARIDS.FALCON_ID, {
   waitAnimSpeed : 1,
   walljump : true,
   hurtboxOffset : [5,17],
-  ledgeSnapBoxOffset : [16,8,22],
+  ledgeSnapBoxOffset : [17,8,25],
   shieldOffset : [5,34],
   charScale : 0.485,
   miniScale : 0.3,
@@ -57,7 +57,7 @@ setCharAttributes(CHARIDS.FALCON_ID, {
   wallJumpVelY : 3.1,
   shieldBreakVel : 2.5,
   multiJump : false,
-  ecbScale : 1.75,
+  ecbScale : 1.45,
   walkAnimSpeed : 1,
   runAnimSpeed : 1
 });

@@ -25,6 +25,7 @@ export default {
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
     player[p].phys.landingMultiplier = 1.5;
+    player[p].phys.raptorBoost = false;
     player[p].hitboxes.id[0] = player[p].charHitboxes.raptorboostground.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.raptorboostground.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.raptorboostground.id2;
@@ -59,6 +60,7 @@ export default {
   interrupt : function(p,input){
     if (player[p].phys.raptorBoost) {
       SIDESPECIALGROUNDHIT.init(p,input);
+      return true;
     }
     else if (player[p].timer > 79){
       if (player[p].phys.grounded){

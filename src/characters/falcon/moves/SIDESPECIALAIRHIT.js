@@ -7,7 +7,7 @@ import { player} from "main/main";
 import {drawVfx} from "main/vfx/drawVfx";
 
 export default {
-  name : "SIDESPECIALAIR",
+  name : "SIDESPECIALAIRHIT",
   canPassThrough : false,
   canEdgeCancel : false,
   canGrabLedge : [false,false],
@@ -16,7 +16,7 @@ export default {
   canBeGrabbed : true,
   landType : 1,
   init : function(p,input){
-    player[p].actionState = "SIDESPECIALAIR";
+    player[p].actionState = "SIDESPECIALAIRHIT";
     player[p].timer = 0;
     player[p].phys.cVel.x = 0;
     player[p].phys.cVel.y = 0;

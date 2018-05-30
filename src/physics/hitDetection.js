@@ -489,14 +489,15 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
     if (player[a].phys.chargeFrames > 0) {
       damage *= 1 + (player[a].phys.chargeFrames * (0.3671 / 60));
     }
+    if (actionStates[characterSelections[a]][player[a].actionState].specialOnHit) {
+      actionStates[characterSelections[a]][player[a].actionState].onPlayerHit(a);
+      if (hitbox.type === 8) return;
+    }
     if (phantom) {
       phantomQueue.push([a, v]);
       player[v].phys.phantomDamage = 0.5 * damage;
     } else {
       player[a].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
-    }
-    if (actionStates[characterSelections[a]][player[a].actionState].specialOnHit) {
-      actionStates[characterSelections[a]][player[a].actionState].onPlayerHit(a);
     }
   }
   // TODO: STALING + KNOCKBACK STACKING
@@ -817,6 +818,7 @@ export function executeGrabHits(input, grabQueue, ignoreGrabs){
           turnOffHitboxes(a);
           turnOffHitboxes(v);
           if (player[a].actionState == "UPSPECIAL") {
+            player[v].phys.face = player[a].phys.face * -1;
             actionStates[characterSelections[v]].THROWNFALCONDIVE.init(v,input);
           }
           else {
