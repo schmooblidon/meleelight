@@ -816,7 +816,12 @@ export function executeGrabHits(input, grabQueue, ignoreGrabs){
           player[a].phys.grabbing = v;
           turnOffHitboxes(a);
           turnOffHitboxes(v);
-          actionStates[characterSelections[v]].CAPTUREPULLED.init(v,input);
+          if (player[a].actionState == "UPSPECIAL") {
+            actionStates[characterSelections[v]].THROWNFALCONDIVE.init(v,input);
+          }
+          else {
+            actionStates[characterSelections[v]].CAPTUREPULLED.init(v,input);
+          }
         }
       }
     }

@@ -6,6 +6,7 @@ import {Vec2D} from "../../../main/util/Vec2D";
 import {drawVfx} from "../../../main/vfx/drawVfx";
 import FALLSPECIAL from "../../shared/moves/FALLSPECIAL";
 import LANDINGFALLSPECIAL from "../../shared/moves/LANDINGFALLSPECIAL";
+import UPSPECIALCATCH from "characters/falcon/moves/UPSPECIALCATCH";
 export default {
   name: "UPSPECIAL",
   canPassThrough: true,
@@ -132,6 +133,12 @@ export default {
   interrupt: function (p, input) {
     if (player[p].timer > 64) {
       FALLSPECIAL.init(p, input);
+      return true;
+    }
+    else if (player[p].phys.grabbing !== -1) {
+      player[p].phys.pos.x = player[player[p].phys.grabbing].phys.pos.x;
+      player[p].phys.pos.y = player[player[p].phys.grabbing].phys.pos.y;
+      UPSPECIALCATCH.init(p,input);
       return true;
     }
     else {

@@ -7,13 +7,15 @@ import {drawVfx} from "../../../main/vfx/drawVfx";
 import FALLSPECIAL from "../../shared/moves/FALLSPECIAL";
 import LANDINGFALLSPECIAL from "../../shared/moves/LANDINGFALLSPECIAL";
 import UPSPECIALTHROW from "characters/falcon/moves/UPSPECIALTHROW";
+import {hitQueue} from 'physics/hitDetection';
 export default {
-  name: "UPSPECIAL",
+  name: "UPSPECIALCATCH",
   canPassThrough: true,
   canGrabLedge: [false, false],
   wallJumpAble: false,
   headBonk: false,
   canBeGrabbed: false,
+  reverseModel: false,
   landType: 1,
   init: function (p, input) {
     player[p].actionState = "UPSPECIALCATCH";
@@ -22,21 +24,46 @@ export default {
     player[p].phys.fastfalled = false;
     player[p].phys.upbAngleMultiplier = 0;
     turnOffHitboxes(p);
+    player[p].hitboxes.id[0] = player[p].charHitboxes.falcondivethrowextra.id0;
     player[p].phys.landingMultiplier = 30 / 34;
-    falcon.UPSPECIALCATCH.main(p, input);
+    this.main(p, input);
   },
   main: function (p, input) {
     player[p].timer++;
-    if (!falcon.UPSPECIALCATCH.interrupt(p, input)) {
+    if (!this.interrupt(p, input)) {
+      if (player[p].timer == 2){
+        player[p].hitboxes.active = [true,false,false,false];
+        player[p].hitboxes.frame = 0;
+      }
+      if (player[p].timer == 4){
+        turnOffHitboxes(p);
+      }
     }
   },
   interrupt: function (p, input) {
     if (player[p].timer > 16) {
+      if (player[p].phys.grabbing != -1){
+        player[p].hitboxes.id[0] = player[p].charHitboxes.falcondivethrow.id0;
+        player[p].hitboxes.active = [true,false,false,false];
+        hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
+        turnOffHitboxes(p);
+      }
       UPSPECIALTHROW.init(p, input);
       return true;
     }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1){
+        return;
+      }
+      if (player[p].timer <= 16 && player[grabbing].phys.grabbedBy !== p){
+        console.log("exiting");
+        UPSPECIALTHROW.init(p,input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   },
   land: function (p, input) {

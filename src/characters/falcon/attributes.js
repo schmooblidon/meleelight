@@ -1117,10 +1117,10 @@ setHitBoxes(CHARIDS.FALCON_ID, {
   ),
   ///
   falcondivethrow : new createHitboxObject(
-    new createHitbox(new Vec2D(14.19-4.61,2.805),0,12,361,82,40,0,3,0,1,1)
+    new createHitbox(new Vec2D(0,0),0,12,361,82,40,0,3,0,1,1)
   ),
   falcondivethrowextra : new createHitboxObject(
-    new createHitbox(offsets[CHARIDS.FALCON_ID].falcondivethrowextra.id0,7.812,6,0,50,70,0,0,0,1,1)
+    new createHitbox(offsets[CHARIDS.FALCON_ID].falcondivethrowextra.id0,7.812,6,0,50,70,0,0,0,1,1,true)
   ),
   dtilt : new createHitboxObject(
     new createHitbox(offsets[CHARIDS.FALCON_ID].dtilt.id0,3.906,12,80,75,25,0,0,1,1,1),
