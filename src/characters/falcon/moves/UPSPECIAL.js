@@ -86,6 +86,12 @@ export default {
     player[p].phys.landingMultiplier = 30 / 34;
     player[p].hitboxes.id[0] = player[p].charHitboxes.falcondive1.id0;
     player[p].hitboxes.id[1] = player[p].charHitboxes.falcondive1.id1;
+    drawVfx({
+      name: "groundBounce",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face,
+      f: Math.PI/2
+    });
     falcon.UPSPECIAL.main(p, input);
   },
   main: function (p, input) {

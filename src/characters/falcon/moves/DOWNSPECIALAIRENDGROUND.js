@@ -26,6 +26,12 @@ export default {
     player[p].hitboxes.id[1] = player[p].charHitboxes.falconkickland.id1;
     player[p].hitboxes.id[2] = player[p].charHitboxes.falconkickland.id2;
     sounds.land.play();
+    drawVfx({
+      name: "groundBounce",
+      pos: player[p].phys.pos,
+      face: player[p].phys.face,
+      f: player[p].phys.groundAngle
+    });
     turnOffHitboxes(p);
     this.main(p,input);
   },

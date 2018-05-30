@@ -43,6 +43,21 @@ export default {
       if (player[p].timer === 57){
         turnOffHitboxes(p);
       }
+      if (player[p].timer >= 52 && player[p].timer < 57) {
+        drawVfx({
+          name: "firefoxtail",
+          pos: new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[0].offset[player[p].hitboxes.frame].x+2)*player[p].phys.face,player[p].phys.pos.y+player[p].hitboxes.id[0].offset[player[p].hitboxes.frame].y-3),
+          face: player[p].phys.face
+        });
+      }
+      if (player[p].timer === 50) {
+        drawVfx({
+          name: "falconpunch",
+          pos: player[p].phys.pos,
+          face: player[p].phys.face,
+          f: p
+        });
+      }
     }
   },
   interrupt : function(p,input){

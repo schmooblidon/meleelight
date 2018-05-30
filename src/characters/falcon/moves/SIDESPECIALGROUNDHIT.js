@@ -3,6 +3,7 @@ import {sounds} from "main/sfx";
 import {turnOffHitboxes} from "physics/actionStateShortcuts";
 import { player} from "main/main";
 import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 
 export default {
   name : "SIDESPECIALGROUNDHIT",
@@ -38,6 +39,13 @@ export default {
       }
       if (player[p].timer === 9){
         turnOffHitboxes(p);
+      }
+      if (player[p].timer >= 4 && player[p].timer < 9) {
+        drawVfx({
+          name: "firefoxtail",
+          pos: new Vec2D(player[p].phys.pos.x+player[p].hitboxes.id[0].offset[player[p].hitboxes.frame].x*player[p].phys.face,player[p].phys.pos.y+player[p].hitboxes.id[0].offset[player[p].hitboxes.frame].y),
+          face: player[p].phys.face
+        });
       }
     }
   },

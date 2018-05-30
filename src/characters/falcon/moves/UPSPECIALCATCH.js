@@ -34,6 +34,13 @@ export default {
       if (player[p].timer == 2){
         player[p].hitboxes.active = [true,false,false,false];
         player[p].hitboxes.frame = 0;
+        for (var n=0;n<3;n++) {
+          drawVfx({
+            name: "firefoxtail",
+            pos: new Vec2D(player[p].phys.pos.x+(-0.5+Math.random())*17,player[p].phys.pos.y+5+(-0.5+Math.random())*17),
+            face: player[p].phys.face
+          });
+        }
       }
       if (player[p].timer == 4){
         turnOffHitboxes(p);

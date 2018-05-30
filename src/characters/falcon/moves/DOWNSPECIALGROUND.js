@@ -36,6 +36,13 @@ export default {
     if (!this.interrupt(p,input)){
       if (player[p].timer >= 12) {
         player[p].phys.cVel.x = 2.67586 * player[p].phys.face;
+        if (player[p].timer%2){
+          drawVfx({
+            name: "firefoxtail",
+            pos: new Vec2D(player[p].phys.pos.x+12*player[p].phys.face,player[p].phys.pos.y+3),
+            face: player[p].phys.face
+          });
+        }
       }
       if (player[p].timer === 14){
         player[p].hitboxes.active = [true,true,true,false];

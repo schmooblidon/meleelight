@@ -14,6 +14,8 @@ import {randomShout, tiltTurnDashBuffer, checkForSmashTurn, checkForDash, checkF
     , turnOffHitboxes
 } from "physics/actionStateShortcuts";
 import {sounds} from "main/sfx";
+import {drawVfx} from "main/vfx/drawVfx";
+import {Vec2D} from "../../../main/util/Vec2D";
 
 export default {
   name : "FORWARDSMASH",
@@ -71,6 +73,13 @@ export default {
       }
       if (player[p].timer === 22){
         turnOffHitboxes(p);
+      }
+      if (player[p].timer >= 18 && player[p].timer < 22) {
+        drawVfx({
+          name: "firefoxtail",
+          pos: new Vec2D(player[p].phys.pos.x+(player[p].hitboxes.id[0].offset[player[p].hitboxes.frame].x+2)*player[p].phys.face,player[p].phys.pos.y+player[p].hitboxes.id[0].offset[player[p].hitboxes.frame].y-3),
+          face: player[p].phys.face
+        });
       }
     }
   },

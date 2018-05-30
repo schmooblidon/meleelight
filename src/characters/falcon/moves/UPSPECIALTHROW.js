@@ -21,6 +21,13 @@ export default {
     player[p].phys.fastfalled = false;
     turnOffHitboxes(p);
     sounds.falconyes.play();
+    for (var n=0;n<3;n++) {
+      drawVfx({
+        name: "firefoxtail",
+        pos: new Vec2D(player[p].phys.pos.x+(-0.5+Math.random())*17,player[p].phys.pos.y+5+(-0.5+Math.random())*17),
+        face: player[p].phys.face
+      });
+    }
     falcon.UPSPECIALTHROW.main(p, input);
   },
   main: function (p, input) {
