@@ -57,7 +57,8 @@ setCharAttributes(CHARIDS.FALCO_ID, {
   wallJumpVelY : 3.6,
   shieldBreakVel : 3.3,
   multiJump : false,
-  ecbScale : 2.3,
+  //ecbScale : 2.3,
+  ecbScale : 1,
   walkAnimSpeed : 1.5,
   runAnimSpeed : 0.7
 });
@@ -147,6 +148,10 @@ setFrames(CHARIDS.FALCO_ID, {
   "THROWNFALCOBACK" : 7,
   "THROWNFALCOFORWARD" : 8,
   "THROWNFALCODOWN" : 26,
+  "THROWNFALCONUP" : 14,
+  "THROWNFALCONBACK" : 19,
+  "THROWNFALCONFORWARD" : 17,
+  "THROWNFALCONDOWN" : 14,
   "FURASLEEPSTART" : 30,
   "FURASLEEPLOOP" : 110,
   "FURASLEEPEND" : 60,

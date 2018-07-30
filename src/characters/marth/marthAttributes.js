@@ -62,7 +62,8 @@ import {createHitbox} from "../../main/util/createHitBox";
   wallJumpVelY : 2.4,
   shieldBreakVel : 2.5,
   multiJump : false,
-  ecbScale : 1.8,
+  //ecbScale : 1.8,
+  ecbScale : 1,
   walkAnimSpeed : 1,
   runAnimSpeed : 1
 });
@@ -152,6 +153,10 @@ setFrames(CHARIDS.MARTH_ID, {
   "THROWNFALCOBACK" : 7,
   "THROWNFALCOFORWARD" : 9,
   "THROWNFALCODOWN" : 28,
+  "THROWNFALCONUP" : 14,
+  "THROWNFALCONBACK" : 19,
+  "THROWNFALCONFORWARD" : 17,
+  "THROWNFALCONDOWN" : 19,
   "FURASLEEPSTART" : 30,
   "FURASLEEPLOOP" : 80,
   "FURASLEEPEND" : 60,

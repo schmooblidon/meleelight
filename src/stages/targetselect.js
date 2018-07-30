@@ -12,7 +12,7 @@ import {showingCode, stageTemp,  setShowingCode, resetStageTemp, setTargetBuilde
 } from "../target/targetbuilder";
 import {sounds} from "../main/sfx";
 import {twoPi} from "../main/render";
-import {foxPic, puffPic, marthPic, falcoPic} from "../menus/css";
+import {foxPic, puffPic, marthPic, falcoPic, falconPic} from "../menus/css";
 import {customTargetStages, setCustomTargetStages,setActiveStageTarget} from "stages/activeStage";
 import {deepCopyObject} from "../main/util/deepCopy";
 import {Box2D} from "../main/util/Box2D";
@@ -59,13 +59,13 @@ export function tssControls (i, input){
       let cSelected = characterSelections[i];
       setCS(i,cSelected- 1);
       if (characterSelections[i] < 0) {
-        setCS(i, 3);
+        setCS(i, 4);
       }
       sounds.menuSelect.play();
     } else if ((input[i][0].dd && !input[i][1].dd) || (input[i][0].r && !input[i][1].r)) {
       let elseSelected = characterSelections[i];
       setCS(i,elseSelected + 1);
-      if (characterSelections[i] > 3) {
+      if (characterSelections[i] > 4) {
         setCS(i, 0);
       }
       sounds.menuSelect.play();
@@ -505,6 +505,11 @@ export function drawTSS (){
       ui.fillText("FALCO", 113, 588);
       ui.drawImage(falcoPic, 102, 512, 81, 58);
       break;
+    case 4:
+      ui.font = "700 15px Arial";
+      ui.fillText("C.FALCON", 105, 588);
+      ui.drawImage(falconPic, 102, 512, 81, 58);
+      ui.font = "700 18px Arial";
     default:
       break;
   }

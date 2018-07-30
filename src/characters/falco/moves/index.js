@@ -52,6 +52,10 @@ import THROWNFALCOUP from "characters/falco/moves/THROWNFALCOUP";
 import THROWNFALCODOWN from "characters/falco/moves/THROWNFALCODOWN";
 import THROWNFALCOBACK from "characters/falco/moves/THROWNFALCOBACK";
 import THROWNFALCOFORWARD from "characters/falco/moves/THROWNFALCOFORWARD";
+import THROWNFALCONUP from "characters/falco/moves/THROWNFALCONUP";
+import THROWNFALCONDOWN from "characters/falco/moves/THROWNFALCONDOWN";
+import THROWNFALCONBACK from "characters/falco/moves/THROWNFALCONBACK";
+import THROWNFALCONFORWARD from "characters/falco/moves/THROWNFALCONFORWARD";
 import CLIFFGETUPQUICK from "characters/falco/moves/CLIFFGETUPQUICK";
 import CLIFFGETUPSLOW from "characters/falco/moves/CLIFFGETUPSLOW";
 import CLIFFESCAPEQUICK from "characters/falco/moves/CLIFFESCAPEQUICK";
@@ -119,6 +123,10 @@ export default {
   THROWNFALCODOWN,
   THROWNFALCOBACK,
   THROWNFALCOFORWARD,
+  THROWNFALCONUP,
+  THROWNFALCONDOWN,
+  THROWNFALCONBACK,
+  THROWNFALCONFORWARD,
   CLIFFGETUPQUICK,
   CLIFFGETUPSLOW,
   CLIFFESCAPEQUICK,

@@ -5,10 +5,12 @@ const marth = require("./animations/marth");
 const puff = require("./animations/puff");
 const fox = require("./animations/fox");
 const falco = require("./animations/falco");
+const falcon = require("./animations/falcon");
 
 window.animations = [
   marth,
   puff,
   fox,
-  falco
+  falco,
+  falcon
 ];

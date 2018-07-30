@@ -123,7 +123,7 @@ function dealWithWallCollision(i: number, newPosition: Vec2D, pt: number, wallTy
       dealWithDamagingStageCollision(i, wallNormal, false, pt, damageType);
     }
     else if (actionStates[characterSelections[i]][player[i].actionState].specialWallCollide) {
-      actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, wallLabel, wallIndex);
+      actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, input, wallLabel, wallIndex);
     }
     else if (player[i].phys.canWallJump) {
       if (player[i].phys.wallJumpTimer === 254) {
@@ -210,7 +210,7 @@ function fallOffGround(i: number, side: string
       player[i].phys.pos.y = Math.max(player[i].phys.pos.y, groundEdgePosition.y) + additionalOffset;
       backward = true;
     }
-    else if (sign * input[i][0].lsX < -0.6
+    else if (Math.abs(input[i][0].lsX) > 0.6
         || (player[i].phys.cVel.x === 0 && player[i].phys.kVel.x === 0)
         || actionStates[characterSelections[i]][player[i].actionState].disableTeeter
         || player[i].phys.shielding) {
@@ -1096,7 +1096,7 @@ export function physics (i : number, input : any) : void {
 
   /* global ecb */
   declare var ecb: any;
-  const ecbOffset = actionStates[characterSelections[i]][player[i].actionState].dead ? [0, 0, 0, 0] : ecb[characterSelections[i]][player[i].actionState][frame - 1];
+  const ecbOffset = actionStates[characterSelections[i]][player[i].actionState].dead ? [0, 0, 0, 0] : [ecb[characterSelections[i]][player[i].actionState][frame - 1][0]*player[i].charAttributes.ecbScale, ecb[characterSelections[i]][player[i].actionState][frame - 1][1]*player[i].charAttributes.ecbScale, ecb[characterSelections[i]][player[i].actionState][frame - 1][2]*player[i].charAttributes.ecbScale, ecb[characterSelections[i]][player[i].actionState][frame - 1][3]*player[i].charAttributes.ecbScale];
 
   const playerPosX = player[i].phys.pos.x;
   const playerPosY = player[i].phys.pos.y;
