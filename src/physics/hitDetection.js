@@ -130,7 +130,6 @@ export function hitDetect (p,input){
                                                 storedPhantom = j;
                                             } else {
                                                 hitQueue.push([i, p, j, false, false, false, false]);
-                                                debugger;
                                                 if(player[p].hitboxes)
                                                 if(player[p].hitboxes.hitList)
                                                 if(player[p].hitboxes.hitList instanceof Array)
