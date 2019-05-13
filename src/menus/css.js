@@ -45,13 +45,8 @@ export const foxPic = new Image();
 foxPic.src = "assets/css/fox.png";
 export const falcoPic = new Image();
 falcoPic.src = "assets/css/falco.png";
-<<<<<<< HEAD
-export const captainPic = new Image();
-captainPic.src = "assets/css/falcface.png";
-=======
 export const falconPic = new Image();
 falconPic.src = "assets/css/falcon.png";
->>>>>>> master
 export const handPoint = new Image();
 handPoint.src = "assets/hand/handpoint.png";
 export const handOpen = new Image();
@@ -593,12 +588,7 @@ export function drawCSSInit() {
   bgGrad.addColorStop(1, "rgb(85, 95, 128)");
   bg1.lineWidth = 2;
   let o = 54;
-<<<<<<< HEAD
-
-    for (var j = 0; j < totalChars; j++) {
-=======
   for (var j = 0; j < 5; j++) {
->>>>>>> master
     bg1.fillStyle = bgGrad;
     bg1.beginPath();
     bg1.moveTo(457 - o + j * 95, 265);
@@ -656,17 +646,11 @@ export function drawCSSInit() {
         bg1.fillText("FALCO", 470 - o + j * 95, 323);
         bg1.drawImage(falcoPic, 459 - o + j * 95, 247, 81, 58);
         break;
-<<<<<<< HEAD
-        case 4:
-        bg1.fillText("CPT F", 470 - o + j * 95, 323);
-        bg1.drawImage(captainPic, 459 - o + j * 95, 247, 81, 58);
-=======
       case 4:
         bg1.font = "700 15px Arial";
         bg1.fillText("C.FALCON", 462 - o + j * 95, 323);
         bg1.drawImage(falconPic, 459 - o + j * 95, 247, 81, 58);
         bg1.font = "700 18px Arial";
->>>>>>> master
         break;
       default:
         break;
