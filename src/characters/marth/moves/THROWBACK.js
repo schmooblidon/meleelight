@@ -25,9 +25,10 @@ export default {
     marth.THROWBACK.main(p, input);
   },
   main: function (p, input) {
+    const prevFrame = player[p].timer;
     player[p].timer += 7 / player[p].phys.releaseFrame;
     if (!marth.THROWBACK.interrupt(p, input)) {
-      if (Math.floor(player[p].timer + 0.01) === 7) {
+      if (Math.floor(player[p].timer + 0.01) >= 7 && Math.floor(prevFrame+0.01) < 7) {
         hitQueue.push([player[p].phys.grabbing, p, 0, false, true, true]);
         turnOffHitboxes(p);
       }

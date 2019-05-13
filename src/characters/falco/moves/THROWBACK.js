@@ -92,7 +92,7 @@ export default {
           color2:{r:157, g:255, b:255}
         });
       }
-      if (Math.floor(player[p].timer+0.01) === 9){
+      if (Math.floor(player[p].timer+0.01) >= 9 && Math.floor(prevFrame+0.01) < 9){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
@@ -105,12 +105,18 @@ export default {
       WAIT.init(p,input);
       return true;
     }
-    else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p,input);
-      return true;
-    }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1){
+        return;
+      }
+      if (player[p].timer < player[p].phys.releaseFrame && player[grabbing].phys.grabbedBy !== p){
+        CATCHCUT.init(p,input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

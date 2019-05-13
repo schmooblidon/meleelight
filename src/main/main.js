@@ -13,7 +13,7 @@ import {drawGameplayMenuInit, drawGameplayMenu, gameplayMenuControls, getGamepla
 import {drawKeyboardMenuInit, keyboardMenuControls, drawKeyboardMenu, getKeyboardCookie} from "menus/keyboardmenu";
 import {drawControllerMenuInit, drawControllerMenu} from "menus/controllermenu";
 import {drawCreditsInit, credits, drawCredits} from "menus/credits";
-import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue} from "main/render";
+import {renderForeground, renderPlayer, renderOverlay, resetLostStockQueue,setTickSec} from "main/render";
 
 import {actionStates} from "physics/actionStateShortcuts";
 import {executeHits, hitDetect, checkPhantoms, resetHitQueue, setPhantonQueue} from "physics/hitDetection";
@@ -47,6 +47,7 @@ import {updateGamepadSVGState, updateGamepadSVGColour, setGamepadSVGColour, cycl
 import {deepCopy} from "./util/deepCopy";
 import {deepObjectMerge} from "./util/deepCopyObject";
 import {setTokenPosSnapToChar} from "../menus/css";
+import {flushDataOut,dataOut} from "./metrics";
 /*globals performance*/
 
 export const holiday = 0;
@@ -443,7 +444,7 @@ export function findPlayers (){
           if (buttonState(gamepad, gpdInfo, "s")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == controllerIndex) {
+              if (currentPlayers[k] == i) {
                 alreadyIn = true;
               }
             }
@@ -463,7 +464,7 @@ export function findPlayers (){
           if (buttonState(gamepad, gpdInfo, "a")) {
             var alreadyIn = false;
             for (var k = 0; k < ports; k++) {
-              if (currentPlayers[k] == controllerIndex) {
+              if (currentPlayers[k] == i) {
                 alreadyIn = true;
               }
             }
@@ -906,6 +907,8 @@ export function update (i,inputBuffers){
 let delta = 0;
 let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
+let beginTimeEpoch = 0;
+let endTimeEpoch = 0;
 
 
 export function gameTick (oldInputBuffers){
@@ -948,7 +951,7 @@ export function gameTick (oldInputBuffers){
       input[i] = interpretInputs(i, true,playerType[i], oldInputBuffers[i]);
       menuMove(i, input);
     }
-  }else if (gameMode == 2) {
+  }else if (gameMode == 2) { // VS MODE
     for (var i = 0; i < 4; i++) {
       if (i < ports) {
         input[i] = interpretInputs(i, true, playerType[i],oldInputBuffers[i]);
@@ -1320,6 +1323,8 @@ export function startGame (){
       initializePlayers(n, false);
       renderPlayer(n);
       player[n].inCSS = false;
+      dataOut("matchId=" + getMatchId() + " metric=playerstocks playerId=" + n + "  character=" + getCSName(getCS(n)) + " " + player[n].stocks, "metric");
+      dataOut("matchId=" + getMatchId() + " playerstocks=" + player[n].stocks + " playerId=" + n + "  character=" + getCSName(getCS(n)), "log");
     }
     if (versusMode) {
       player[n].stocks = 1;
@@ -1357,6 +1362,8 @@ export function startGame (){
   });
   findingPlayers = false;
   playing = true;
+  beginTimeEpoch = Date.now();
+  dataOut("Match " + getMatchId() + " beginning.", "log");
 }
 
 export function endGame (input){
@@ -1409,6 +1416,7 @@ export function endGame (input){
 
 export function finishGame (input){
     setEndTargetGame(false);
+  setTickSec(0);
   gameEnd = true;
   playing = false;
   fg2.save();
@@ -1472,6 +1480,12 @@ export function finishGame (input){
       textGrad.addColorStop(1, "rgb(255, 31, 52)");
     }
   }
+  endTimeEpoch = Date.now();
+  dataOut("Match " + getMatchId() + " ended with text " + text, "log");
+  dataOut("Match " + getMatchId() + " begin=" + beginTimeEpoch + " end=" + endTimeEpoch, "log");
+  flushDataOut(); //send any lingering metrics/logs from the buffer.
+  beginTimeEpoch = 0;
+  endTimeEpoch = 0;
   fg2.scale(1, textScale);
   fg2.fillStyle = textGrad;
   fg2.lineWidth = 40;
@@ -1801,13 +1815,16 @@ export function getCSName(index) {
             break;
         case 1:
             return "PUFF";
+            break;
         case 2:
-
             return "FOX";
+            break;
         case 3:
             return "FALCO";
+            break;
         case 4:
             return "CAPT";
+            break;
     }
 }
 

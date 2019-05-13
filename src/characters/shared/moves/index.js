@@ -76,6 +76,7 @@ import STOPCEIL from "characters/shared/moves/STOPCEIL";
 import TECHU from "characters/shared/moves/TECHU";
 import SLEEP from "characters/shared/moves/SLEEP";
 import ENTRANCE from "characters/shared/moves/ENTRANCE";
+import THROWNFALCONDIVE from "characters/shared/moves/THROWNFALCONDIVE";
 
 export default {
   WAIT,
@@ -156,4 +157,5 @@ export default {
   TECHU,
   SLEEP,
   ENTRANCE,
+  THROWNFALCONDIVE
 };

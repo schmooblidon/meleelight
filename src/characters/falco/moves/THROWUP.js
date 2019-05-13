@@ -89,7 +89,7 @@ export default {
       else if (prevFrame < 33 && player[p].timer >= 33){
         sounds.foxlaserholster.play();
       }
-      if (Math.floor(player[p].timer+0.01) === 7){
+      if (Math.floor(player[p].timer+0.01) >= 7 && Math.floor(prevFrame+0.01) < 7){
         hitQueue.push([player[p].phys.grabbing,p,0,false,true,false]);
         turnOffHitboxes(p);
       }
@@ -102,12 +102,18 @@ export default {
       WAIT.init(p,input);
       return true;
     }
-    else if (player[p].timer < player[p].phys.releaseFrame && player[player[p].phys.grabbing].phys.grabbedBy !== p){
-      CATCHCUT.init(p,input);
-      return true;
-    }
     else {
-      return false;
+      const grabbing = player[p].phys.grabbing;
+      if(grabbing === -1){
+        return;
+      }
+      if (player[p].timer < player[p].phys.releaseFrame && player[grabbing].phys.grabbedBy !== p){
+        CATCHCUT.init(p,input);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 };

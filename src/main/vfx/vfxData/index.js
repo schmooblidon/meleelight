@@ -10,6 +10,7 @@ import dashDust from 'main/vfx/vfxData/dashDust';
 import doubleJumpRings from 'main/vfx/vfxData/doubleJumpRings';
 import electrichit from 'main/vfx/vfxData/electrichit';
 import entrance from 'main/vfx/vfxData/entrance';
+import falconpunch from 'main/vfx/vfxData/falconpunch';
 import fireburst from 'main/vfx/vfxData/fireburst';
 import firefoxcharge from 'main/vfx/vfxData/firefoxcharge';
 import firefoxlaunch from 'main/vfx/vfxData/firefoxlaunch';
@@ -56,6 +57,7 @@ export default {
   doubleJumpRings,
   electrichit,
   entrance,
+  falconpunch,
   fireburst,
   firefoxcharge,
   firefoxlaunch,

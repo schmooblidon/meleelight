@@ -8,7 +8,10 @@ import {
   edgeOffset,
   versusMode,
   showDebug,
-  gameMode
+  gameMode,
+  getMatchId,
+  getCSName,
+  getCS
 } from "../main/main";
 import {framesData, ecb} from "../main/characters";
 import {sounds} from "../main/sfx";
@@ -44,6 +47,7 @@ import type {Connected, Surface} from "../stages/stage";
 // eslint-disable-next-line no-duplicate-imports
 import type {ECB, SquashDatum} from "../main/util/ecbTransform";
 import type {DamageType} from "./damageTypes";
+import {dataOut} from "../main/metrics";
 
 
 function updatePosition(i: number, newPosition: Vec2D): void {
@@ -119,7 +123,7 @@ function dealWithWallCollision(i: number, newPosition: Vec2D, pt: number, wallTy
       dealWithDamagingStageCollision(i, wallNormal, false, pt, damageType);
     }
     else if (actionStates[characterSelections[i]][player[i].actionState].specialWallCollide) {
-      actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, wallLabel, wallIndex);
+      actionStates[characterSelections[i]][player[i].actionState].onWallCollide(i, input, wallLabel, wallIndex);
     }
     else if (player[i].phys.canWallJump) {
       if (player[i].phys.wallJumpTimer === 254) {
@@ -206,7 +210,7 @@ function fallOffGround(i: number, side: string
       player[i].phys.pos.y = Math.max(player[i].phys.pos.y, groundEdgePosition.y) + additionalOffset;
       backward = true;
     }
-    else if (sign * input[i][0].lsX < -0.6
+    else if (Math.abs(input[i][0].lsX) > 0.6
         || (player[i].phys.cVel.x === 0 && player[i].phys.kVel.x === 0)
         || actionStates[characterSelections[i]][player[i].actionState].disableTeeter
         || player[i].phys.shielding) {
@@ -975,6 +979,8 @@ function dealWithDeath(i: number, input: any): void {
       player[i].phys.outOfCameraTimer = 0;
       turnOffHitboxes(i);
       player[i].stocks--;
+      dataOut("matchId=" + getMatchId() + " metric=playerstocks playerId=" + i + "  character=" + getCSName(getCS(i)) + " " + player[i].stocks, "metric");
+      dataOut("matchId=" + getMatchId() + " playerstocks=" + player[i].stocks + " playerId=" + i + "  character=" + getCSName(getCS(i)), "log");
       player[i].colourOverlayBool = false;
       lostStockQueue.push([i, player[i].stocks, 0]);
       if (player[i].stocks === 0 && versusMode) {
@@ -1090,7 +1096,7 @@ export function physics (i : number, input : any) : void {
 
   /* global ecb */
   declare var ecb: any;
-  const ecbOffset = actionStates[characterSelections[i]][player[i].actionState].dead ? [0, 0, 0, 0] : ecb[characterSelections[i]][player[i].actionState][frame - 1];
+  const ecbOffset = actionStates[characterSelections[i]][player[i].actionState].dead ? [0, 0, 0, 0] : [ecb[characterSelections[i]][player[i].actionState][frame - 1][0]*player[i].charAttributes.ecbScale, ecb[characterSelections[i]][player[i].actionState][frame - 1][1]*player[i].charAttributes.ecbScale, ecb[characterSelections[i]][player[i].actionState][frame - 1][2]*player[i].charAttributes.ecbScale, ecb[characterSelections[i]][player[i].actionState][frame - 1][3]*player[i].charAttributes.ecbScale];
 
   const playerPosX = player[i].phys.pos.x;
   const playerPosY = player[i].phys.pos.y;

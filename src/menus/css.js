@@ -45,8 +45,8 @@ export const foxPic = new Image();
 foxPic.src = "assets/css/fox.png";
 export const falcoPic = new Image();
 falcoPic.src = "assets/css/falco.png";
-export const captainPic = new Image();
-captainPic.src = "assets/css/falcface.png";
+export const falconPic = new Image();
+falconPic.src = "assets/css/falcon.png";
 export const handPoint = new Image();
 handPoint.src = "assets/hand/handpoint.png";
 export const handOpen = new Image();
@@ -134,9 +134,9 @@ const charIconPos = [
   new Vec2D(663, 268),
   //falco
   new Vec2D(733, 268),
-    //cpt falcon
-  new Vec2D(823, 268)
-];
+  //falcon
+  new Vec2D(803, 268)
+  ];
 
 export function setChosenChar(index, charSelected) {
   setCS(index, charSelected);
@@ -157,7 +157,6 @@ export function setTokenPosSnapToChar(index) {
 
 export function setTokenPosValue(index, val) {
   if (typeof(val) === 'undefined') {
-    debugger;
   }
   tokenPos[index] = val;
 }
@@ -276,6 +275,21 @@ export function cssControls(i, input) {
                   whichTokenGrabbed[i] > 1 ? 40 : 0)));
               whichTokenGrabbed[i] = -1;
               sounds.falco.play();
+            }
+          } else if (handPos[i].x > 832 - o && handPos[i].x < 927 - o) {
+            if (chosenChar[whichTokenGrabbed[i]] != 4) {
+              chosenChar[whichTokenGrabbed[i]] = 4;
+              changeCharacter(whichTokenGrabbed[i], 4);
+              sounds.menuSelect.play();
+            }
+            if (input[i][0].a && !input[i][1].a) {
+
+              tokenGrabbed[whichTokenGrabbed[i]] = false;
+              occupiedToken[whichTokenGrabbed[i]] = false;
+              setTokenPosValue(whichTokenGrabbed[i], new Vec2D(853 - o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
+                  whichTokenGrabbed[i] > 1 ? 40 : 0)));
+              whichTokenGrabbed[i] = -1;
+              sounds.falcon.play();
             }
           }
         }
@@ -574,8 +588,7 @@ export function drawCSSInit() {
   bgGrad.addColorStop(1, "rgb(85, 95, 128)");
   bg1.lineWidth = 2;
   let o = 54;
-
-    for (var j = 0; j < totalChars; j++) {
+  for (var j = 0; j < 5; j++) {
     bg1.fillStyle = bgGrad;
     bg1.beginPath();
     bg1.moveTo(457 - o + j * 95, 265);
@@ -633,9 +646,11 @@ export function drawCSSInit() {
         bg1.fillText("FALCO", 470 - o + j * 95, 323);
         bg1.drawImage(falcoPic, 459 - o + j * 95, 247, 81, 58);
         break;
-        case 4:
-        bg1.fillText("CPT F", 470 - o + j * 95, 323);
-        bg1.drawImage(captainPic, 459 - o + j * 95, 247, 81, 58);
+      case 4:
+        bg1.font = "700 15px Arial";
+        bg1.fillText("C.FALCON", 462 - o + j * 95, 323);
+        bg1.drawImage(falconPic, 459 - o + j * 95, 247, 81, 58);
+        bg1.font = "700 18px Arial";
         break;
       default:
         break;
@@ -979,6 +994,9 @@ export function drawCSS() {
           break;
         case 3:
           var text = "Falco";
+          break;
+        case 4:
+          var text = "C.Falcon";
           break;
         default:
           var text = "Unknown";

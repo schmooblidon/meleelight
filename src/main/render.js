@@ -9,7 +9,7 @@ import {blendColours} from "main/vfx/blendColours";
 import {activeStage} from "stages/activeStage";
 import {Vec2D} from "./util/Vec2D";
 import {framesData} from "./characters";
-import {getMatchId} from "./main";
+import {getMatchId,getCSName,getCS} from "./main";
 import {dataOut} from "./metrics";
 /* eslint-disable */
 
@@ -23,6 +23,13 @@ export function rotateVector(vecx, vecy, ang) {
         vecx * Math.sin(ang) + vecy * Math.cos(ang));
 }
 
+export function setTickSec(val){
+  ticksec = val;
+}
+
+export function getTickSec(){
+ return ticksec;
+}
 export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, scaleY, rotate, rpX, rpY, extra) {
     can.save();
     if (extra !== undefined) {
@@ -56,14 +63,11 @@ export function drawArrayPathCompress (can, col, face, tX, tY, path, scaleX, sca
     can.restore();
 }
 
-
-
-
-
-
 //didnt really want to make a var for this but will keep net traffic down. This only lets diffs get logged to net traffic
 let actionDiff = [];
-
+//added to track changing second
+let timetick = '0';
+let ticksec = '0';
 export function renderPlayer(i) {
     var temX = (player[i].phys.pos.x * activeStage.scale) + activeStage.offset[0];
     var temY = (player[i].phys.pos.y * -activeStage.scale) + activeStage.offset[1];
@@ -83,12 +87,27 @@ export function renderPlayer(i) {
     }
 
     var model = animations[characterSelections[i]][player[i].actionState][frame - 1];
-
+    // Once a second, report the player damage percentages and the seconds left in the match, as metrics.
+    if (timetick % 62 === 0) {
+        dataOut("matchId=" + getMatchId() + " metric=playerPercent playerId=" + i + "  character=" + getCSName(getCS(i)) + " " + player[i].percent, "metric");
+        dataOut("matchId=" + getMatchId() + " playerPercent=" + player[i].percent + " playerId=" + i + "  character=" + getCSName(getCS(i)), "log");
+        if (i === 0) {
+            dataOut("matchId=" + getMatchId() + " metric=matchTimer  " + getTickSec(), "metric");
+            dataOut("matchId=" + getMatchId() + " matchTimer=" + getTickSec(), "log");
+            timetick++;
+            ticksec++;
+        };
+    } else {
+        if (i === 0) {
+            timetick++
+        };
+    }
+    // detect and report as a log message, if action state has changed
     if(actionDiff[i] !== player[i].actionState) {
      actionDiff[i] = player[i].actionState;
-        dataOut(getMatchId() + " " + player[i].actionState + " " + i, "log");
+        dataOut(getMatchId() + " " + player[i].actionState + " " + getCSName(getCS(i)) + " " + i, "log");
     }
-
+    
     if (actionStates[characterSelections[i]][player[i].actionState].reverseModel) {
         face *= -1;
     } else if (player[i].actionState == "TILTTURN") {
@@ -389,6 +408,7 @@ export function renderPlayer(i) {
     }
 
 } 
+
 export function renderOverlay(showStock) {
 
 
@@ -401,6 +421,7 @@ export function renderOverlay(showStock) {
         ui.textAlign = "center";
         var min = (Math.floor(matchTimer / 60)).toString();
         var sec = (matchTimer % 60).toFixed(2);
+
         ui.fillText(((min.length < 2) ? "0" + min : min) + ":" + ((sec.length < 5) ? "0" + sec[0] : sec[0] + sec[1]), 590,
             70);
         ui.strokeText(((min.length < 2) ? "0" + min : min) + ":" + ((sec.length < 5) ? "0" + sec[0] : sec[0] + sec[1]),
