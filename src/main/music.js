@@ -134,8 +134,10 @@ export class MusicManager {
     console.log("waiting to stop playing");
     console.log(this.whatisPlaying._src);
 
-    while (this.whatisPlaying.playing()) {
+    let i = 0;
+    while (this.whatisPlaying.playing() && i < 60) {
       this.whatisPlaying.stop();
+      i++;
       console.log("confirmed stopped sound");
     }
   }

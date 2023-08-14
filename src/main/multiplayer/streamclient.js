@@ -2,7 +2,7 @@
 import $ from 'jquery';
 import {nullInputs, nullInput} from "../../input/input";
 import {encodeInput, decodeInput} from "./encode";
-import deepstream from 'deepstream.io-client-js';
+import deepstream from '@deepstream/client';
 import {
   setPlayerType,
   ports,
@@ -47,7 +47,8 @@ $("#america").on("click", function () {
   localStorage.setItem('pickedServer', 'america');
   $("#europe").attr('checked', false);
   $("#localGame").attr('checked', false);
-  ds = deepstream(usServer).login(null, _onLoggedIn);
+  ds = deepstream(usServer);
+  ds.login(_onLoggedIn);
   GAME_ID = ds.getUid().replace("-", "");
   playerID = ds.getUid().replace("-", "");
 
@@ -57,7 +58,8 @@ $("#europe").on("click", function () {
   localStorage.setItem('pickedServer', 'europe');
   $("#america").attr('checked', false);
   $("#localGame").attr('checked', false);
-  ds = deepstream(eurServer).login(null, _onLoggedIn);
+  ds = deepstream(eurServer);
+  ds.login(_onLoggedIn);
   GAME_ID = ds.getUid().replace("-", "");
   playerID = ds.getUid().replace("-", "");
 
@@ -66,7 +68,9 @@ $("#localGame").on("click", function () {
   localStorage.setItem('pickedServer', 'lan');
   $("#america").attr('checked', false);
   $("#europe").attr('checked', false);
-  ds = deepstream(localStorage.getItem('lastLANIP')+":6020").login(null, _onLoggedIn);
+  console.log("login attempt to :" + localStorage.getItem('lastLANIP')+":6020");
+  ds = deepstream(localStorage.getItem('lastLANIP')+":6020");
+  ds.login(_onLoggedIn);
   GAME_ID = ds.getUid().replace("-", "");
   playerID = ds.getUid().replace("-", "");
 
@@ -103,15 +107,19 @@ $("#lanIP").attr('value',localStorage.getItem('lastLANIP'));
 export function logIntoServer() {
   meHost = true;
   if (localStorage.getItem('pickedServer') === 'america') {
-    ds = deepstream(usServer).login(null, _onLoggedIn);
+    ds = deepstream(usServer);
+    ds.login(_onLoggedIn);
   } else if (localStorage.getItem('pickedServer') === 'europe') {
-    ds = deepstream(eurServer).login(null, _onLoggedIn);
+    ds = deepstream(eurServer);
+    ds.login(_onLoggedIn);
   } else {
     if(localStorage.getItem('lastLANIP') === null || localStorage.getItem('lastLANIP') === "" ){
       localStorage.setItem('lastLANIP', "localhost");
       $("#lanIP").attr('value',localStorage.getItem('lastLANIP'));
     }
-    ds = deepstream(localStorage.getItem('lastLANIP')+":6020").login(null, _onLoggedIn);
+    console.log("Log into server attempt:" + localStorage.getItem('lastLANIP')+":6020");
+    ds = deepstream(localStorage.getItem('lastLANIP')+":6020");
+    ds.login(_onLoggedIn);
   }
 
 }
@@ -215,7 +223,9 @@ function startRoom() {
             lastRecievedPacket = now;
             updateGameTickDelay(frameDelay);
             saveNetworkInputs(data.playerSlot, data.inputBuffer);
-             player[data.playerSlot].phys.pos =  data.position;
+            player[data.playerSlot].phys.pos =  data.position;
+            player[data.playerSlot].percent = data.percent;
+            player[data.playerSlot].stocks = data.stocks;
 
           }
         }
@@ -300,7 +310,9 @@ function sendInputsOverNet(inputBuffer, playerSlot) {
     "playerSlot": playerSlot,
      "inputBuffer": encodeInput(inputBuffer),
     //"inputBuffer": inputBuffer,
-    "position": player[playerSlot].phys.pos
+    "position": player[playerSlot].phys.pos,
+    "stocks": player[playerSlot].stocks,
+    "percent": player[playerSlot].percent
 
   };
   ds.event.emit(HOST_GAME_ID + 'player/', {"bstring": JSON.stringify(payload)});
@@ -433,7 +445,9 @@ function connect(record, name) {
             "playerSlot": ports - 1,
             "inputBuffer": encodeInput(playerInputBuffer[0]),
             // "inputBuffer": playerInputBuffer[0],
-            "position": player[ports].phys.pos
+            "position": player[ports].phys.pos,
+            "stocks": player[ports].stocks,
+            "percent": player[ports].percent
           };
           ds.event.emit(name + 'player/', {"bstring": JSON.stringify(payload)});
           // ds.event.emit(name + 'charSelection/', {"playerSlot": ports -1, "charSelected": characterSelections[0]});
@@ -462,14 +476,16 @@ function connect(record, name) {
                   lastRecievedPacket = now;
                   updateGameTickDelay(frameDelay);
                   saveNetworkInputs(data.playerSlot, data.inputBuffer);
-                   player[data.playerSlot].phys.pos =   data.position;
+                  player[data.playerSlot].phys.pos =   data.position;
+                  player[data.playerSlot].percent = data.percent;
+                  player[data.playerSlot].stocks = data.stocks;
                 }
               }
             }
           });
           ds.event.subscribe(name + 'charSelection/', data => {
             if (data) {
-              setChosenChar(data.playerSlot, data.charSelected);
+              setChosenChar(data.playerSlot, data.charSelected, data.selected);
             }
           });
           ds.event.subscribe(name + 'gameMode/', data => {
@@ -519,13 +535,13 @@ function connectToUser(userName) {
 }
 
 
-export function syncCharacter(index, charSelection) {
+export function syncCharacter(index, charSelection, selected) {
   if (HOST_GAME_ID !== null) {
-    ds.event.emit(HOST_GAME_ID + 'charSelection/', {"playerSlot": index, "charSelected": charSelection});
+    ds.event.emit(HOST_GAME_ID + 'charSelection/', {"playerSlot": index, "charSelected": charSelection, "selected": selected});
   }
   if (meHost) {
     ds.record.getRecord(GAME_ID + '-game').whenReady(statusRecord => {
-      //  console.log("set up game status "+ GAME_ID);
+      console.log("set up game status "+ GAME_ID);
       statusRecord.set(GAME_ID + 'playerStatus/', {
         "playerID": playerID,
         "ports": ports,

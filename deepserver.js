@@ -1,12 +1,7 @@
 
-const DeepstreamServer = require('deepstream.io')
-const C = DeepstreamServer.constants;
+const { Deepstream } = require('@deepstream/server')
 
-const server = new DeepstreamServer({
-  host: 'localhost',
-  port: 6020,
-  logLevel:'DEBUG'
-});
+const server = new Deepstream({});
 server.set('logLevel', 'ERROR');
 
 server.start();

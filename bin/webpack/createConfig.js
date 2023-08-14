@@ -117,7 +117,7 @@ function createConfig(options) {
   const modules = {
     preLoaders: [{
       // ESLint
-      test: /\.jsx?$/,
+      test: /\.(js|jsx)?$/,
       loader: "eslint-loader",
       exclude: [
         /node_modules/,
@@ -126,7 +126,7 @@ function createConfig(options) {
 
     loaders: [{
       // Babel
-      test: /\.jsx?$/,
+      test: /\.(js|jsx)?$/,
       exclude: [
         /node_modules/,
       ],

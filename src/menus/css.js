@@ -138,17 +138,19 @@ const charIconPos = [
   new Vec2D(823, 268)
 ];
 
-export function setChosenChar(index, charSelected) {
+export function setChosenChar(index, charSelected, selected) {
   setCS(index, charSelected);
   chosenChar[index] = charSelected;
-  tokenGrabbed[index] = false;
-  occupiedToken[index] = false;
-  setTokenPosSnapToChar(index, charSelected);
-  player[index].actionState = "WAIT";
-  player[index].timer = 0;
-  player[index].charAttributes = chars[characterSelections[index]].attributes;
-  player[index].charHitboxes = chars[characterSelections[index]].hitboxes;
-  whichTokenGrabbed[index] = -1;
+  if(selected) {
+    tokenGrabbed[index] = false;
+    occupiedToken[index] = false;
+    setTokenPosSnapToChar(index, charSelected);
+    player[index].actionState = "WAIT";
+    player[index].timer = 0;
+    player[index].charAttributes = chars[characterSelections[index]].attributes;
+    player[index].charHitboxes = chars[characterSelections[index]].hitboxes;
+    whichTokenGrabbed[index] = -1;
+  }
 }
 
 export function setTokenPosSnapToChar(index) {
@@ -162,9 +164,9 @@ export function setTokenPosValue(index, val) {
   tokenPos[index] = val;
 }
 
-export function changeCharacter(i, c) {
+export function changeCharacter(i, c, selected) {
   setCS(i, c);
-  syncCharacter(i, c);
+  syncCharacter(i, c, selected);
   player[i].actionState = "WAIT";
   player[i].timer = 0;
   player[i].charAttributes = chars[characterSelections[i]].attributes;
@@ -218,13 +220,14 @@ export function cssControls(i, input) {
         setTokenPosValue(whichTokenGrabbed[i], new Vec2D(handPos[i].x, handPos[i].y));
         if (handPos[i].y > 240 && handPos[i].y < 335) {
           // - 43
+          const selected = input[i][0].a && !input[i][1].a;
           if (handPos[i].x > 452 - o && handPos[i].x < 547 - o) {
             if (chosenChar[whichTokenGrabbed[i]] != 0) {
               chosenChar[whichTokenGrabbed[i]] = 0;
-              changeCharacter(whichTokenGrabbed[i], 0);
+              changeCharacter(whichTokenGrabbed[i], 0, selected);
               sounds.menuSelect.play();
             }
-            if (input[i][0].a && !input[i][1].a) {
+            if (selected) {
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
               setTokenPosValue(whichTokenGrabbed[i], new Vec2D(473 - o + (whichTokenGrabbed[i] % 2) * 40, 268 + (
@@ -235,10 +238,10 @@ export function cssControls(i, input) {
           } else if (handPos[i].x > 547 - o && handPos[i].x < 642 - o) {
             if (chosenChar[whichTokenGrabbed[i]] != 1) {
               chosenChar[whichTokenGrabbed[i]] = 1;
-              changeCharacter(whichTokenGrabbed[i], 1);
+              changeCharacter(whichTokenGrabbed[i], 1, selected);
               sounds.menuSelect.play();
             }
-            if (input[i][0].a && !input[i][1].a) {
+            if (selected) {
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
@@ -250,10 +253,10 @@ export function cssControls(i, input) {
           } else if (handPos[i].x > 642 - o && handPos[i].x < 737 - o) {
             if (chosenChar[whichTokenGrabbed[i]] != 2) {
               chosenChar[whichTokenGrabbed[i]] = 2;
-              changeCharacter(whichTokenGrabbed[i], 2);
+              changeCharacter(whichTokenGrabbed[i], 2, selected);
               sounds.menuSelect.play();
             }
-            if (input[i][0].a && !input[i][1].a) {
+            if (selected) {
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
@@ -265,10 +268,10 @@ export function cssControls(i, input) {
           } else if (handPos[i].x > 737 - o && handPos[i].x < 832 - o) {
             if (chosenChar[whichTokenGrabbed[i]] != 3) {
               chosenChar[whichTokenGrabbed[i]] = 3;
-              changeCharacter(whichTokenGrabbed[i], 3);
+              changeCharacter(whichTokenGrabbed[i], 3, selected);
               sounds.menuSelect.play();
             }
-            if (input[i][0].a && !input[i][1].a) {
+            if (selected) {
 
               tokenGrabbed[whichTokenGrabbed[i]] = false;
               occupiedToken[whichTokenGrabbed[i]] = false;
