@@ -54,6 +54,10 @@ import THROWNFALCOUP from "characters/fox/moves/THROWNFALCOUP";
 import THROWNFALCODOWN from "characters/fox/moves/THROWNFALCODOWN";
 import THROWNFALCOBACK from "characters/fox/moves/THROWNFALCOBACK";
 import THROWNFALCOFORWARD from "characters/fox/moves/THROWNFALCOFORWARD";
+import THROWNFALCONUP from "characters/fox/moves/THROWNFALCONUP";
+import THROWNFALCONDOWN from "characters/fox/moves/THROWNFALCONDOWN";
+import THROWNFALCONBACK from "characters/fox/moves/THROWNFALCONBACK";
+import THROWNFALCONFORWARD from "characters/fox/moves/THROWNFALCONFORWARD";
 import APPEAL from "characters/fox/moves/APPEAL";
 
 export default {
@@ -113,5 +117,9 @@ export default {
   THROWNFALCODOWN,
   THROWNFALCOBACK,
   THROWNFALCOFORWARD,
+  THROWNFALCONUP,
+  THROWNFALCONDOWN,
+  THROWNFALCONBACK,
+  THROWNFALCONFORWARD,
   APPEAL
 };

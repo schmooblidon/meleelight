@@ -108,6 +108,7 @@ export function menuMove(i, input) {
         if (menuSelected == SPECTATING) {
           connectAsSpectator();
           changeGamemode(2);
+          positionPlayersInCSS();
         } else {
           if (menuSelected == P2PMP) {
             //  connectToMPRoom();

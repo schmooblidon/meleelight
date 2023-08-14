@@ -68,7 +68,6 @@ $("#localGame").on("click", function () {
   localStorage.setItem('pickedServer', 'lan');
   $("#america").attr('checked', false);
   $("#europe").attr('checked', false);
-  console.log("login attempt to :" + localStorage.getItem('lastLANIP')+":6020");
   ds = deepstream(localStorage.getItem('lastLANIP')+":6020");
   ds.login(_onLoggedIn);
   GAME_ID = ds.getUid().replace("-", "");

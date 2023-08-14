@@ -26,9 +26,11 @@ export default {
     puff.THROWFORWARD.main(p, input);
   },
   main: function (p, input) {
+    const prevFrame = player[p].timer;
     player[p].timer += 12 / player[p].phys.releaseFrame;
     if (!puff.THROWFORWARD.interrupt(p, input)) {
-      if (Math.floor(player[p].timer + 0.01) === 12) {
+      if (Math.floor(player[p].timer + 0.01) >= 12 && prevFrame < 12) {
+        if(player[p].phys.grabbing === -1) return;
         hitQueue.push([player[p].phys.grabbing, p, 0, false, true, true]);
         turnOffHitboxes(p);
       }

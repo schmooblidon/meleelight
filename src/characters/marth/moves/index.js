@@ -68,6 +68,10 @@ import THROWNFALCOUP from "characters/marth/moves/THROWNFALCOUP";
 import THROWNFALCODOWN from "characters/marth/moves/THROWNFALCODOWN";
 import THROWNFALCOBACK from "characters/marth/moves/THROWNFALCOBACK";
 import THROWNFALCOFORWARD from "characters/marth/moves/THROWNFALCOFORWARD";
+import THROWNFALCONUP from "characters/marth/moves/THROWNFALCONUP";
+import THROWNFALCONDOWN from "characters/marth/moves/THROWNFALCONDOWN";
+import THROWNFALCONBACK from "characters/marth/moves/THROWNFALCONBACK";
+import THROWNFALCONFORWARD from "characters/marth/moves/THROWNFALCONFORWARD";
 import APPEAL from "characters/marth/moves/APPEAL";
 
 
@@ -142,5 +146,9 @@ export default {
   THROWNFALCODOWN,
   THROWNFALCOBACK,
   THROWNFALCOFORWARD,
+  THROWNFALCONUP,
+  THROWNFALCONDOWN,
+  THROWNFALCONBACK,
+  THROWNFALCONFORWARD,
   APPEAL
 };

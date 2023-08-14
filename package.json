@@ -67,7 +67,7 @@
     "pako": "^1.0.4",
     "peer": "^0.2.8",
     "sw-precache-webpack-plugin": "^0.6.3",
-    "webpack": "^1.13.3",
+    "webpack": "^1.15.0",
     "webpack-notifier": "^1.4.1",
     "yargs": "^6.4.0"
   },

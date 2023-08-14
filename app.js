@@ -21,7 +21,6 @@ app.use('/peerjs', ExpressPeerServer(server, options));
 
 //server.listen(5000);
 
-
 var connected = [];
 server.on('connection', function (id) {
   var idx = connected.indexOf(id); // only add id if it's not in the list yet

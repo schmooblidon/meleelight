@@ -9,6 +9,7 @@ setEcbData(CHARIDS.MARTH_ID, {
 ecb[0].REBIRTH = ecb[0].WAIT;
 ecb[0].REBIRTHWAIT = ecb[0].WAIT;
 ecb[0].SLEEP = [[0,0,0,0]];
+ecb[0].THROWNFALCONDIVE = ecb[0].DAMAGEFLYN;
 
 /*ecb[0].LANDINGFALLSPECIAL = ecb[0].LANDING;
 ecb[0].ESCAPEF = ecb[0].ESCAPEB;

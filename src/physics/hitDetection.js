@@ -489,14 +489,15 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
     if (player[a].phys.chargeFrames > 0) {
       damage *= 1 + (player[a].phys.chargeFrames * (0.3671 / 60));
     }
+    if (actionStates[characterSelections[a]][player[a].actionState].specialOnHit) {
+      actionStates[characterSelections[a]][player[a].actionState].onPlayerHit(a);
+      if (hitbox.type === 8) return;
+    }
     if (phantom) {
       phantomQueue.push([a, v]);
       player[v].phys.phantomDamage = 0.5 * damage;
     } else {
       player[a].hit.hitlag = Math.floor(damage * (1 / 3) + 3);
-    }
-    if (actionStates[characterSelections[a]][player[a].actionState].specialOnHit) {
-      actionStates[characterSelections[a]][player[a].actionState].onPlayerHit(a);
     }
   }
   // TODO: STALING + KNOCKBACK STACKING
@@ -618,7 +619,7 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
     actionStates[characterSelections[player[v].phys.grabbing]].CAPTURECUT.init(player[v].phys.grabbing,input);
   }
 
-  if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50)) {
+  if (player[v].phys.grabbedBy == -1 || (player[v].phys.grabbedBy > -1 && player[v].hit.knockback > 50 && !hitbox.throwextra)) {
     if (player[v].phys.grabbedBy > -1) {
       player[player[v].phys.grabbedBy].phys.grabbing = -1;
       actionStates[characterSelections[player[v].phys.grabbedBy]].WAIT.init(player[v].phys.grabbedBy,input);
@@ -633,7 +634,8 @@ export function executeRegularHit (input, v, a, h, shieldHit, isThrow, drawBounc
       actionStates[characterSelections[v]].DAMAGEN2.init(v,input);
     }
   } else {
-    if (player[v].actionState != "THROWNPUFFDOWN") {
+    if (!hitbox.throwextra) {
+    //if (player[v].actionState != "THROWNPUFFDOWN" && player[v].actionState != "THROWNFALCONBACK" && player[v].actionState != "THROWNFALCONFORWARD" && player[v].actionState != "THROWNFALCONUP") {
       actionStates[characterSelections[v]].CAPTUREDAMAGE.init(v,input);
     }
   }
@@ -815,7 +817,13 @@ export function executeGrabHits(input, grabQueue, ignoreGrabs){
           player[a].phys.grabbing = v;
           turnOffHitboxes(a);
           turnOffHitboxes(v);
-          actionStates[characterSelections[v]].CAPTUREPULLED.init(v,input);
+          if (player[a].actionState == "UPSPECIAL") {
+            player[v].phys.face = player[a].phys.face * -1;
+            actionStates[characterSelections[v]].THROWNFALCONDIVE.init(v,input);
+          }
+          else {
+            actionStates[characterSelections[v]].CAPTUREPULLED.init(v,input);
+          }
         }
       }
     }

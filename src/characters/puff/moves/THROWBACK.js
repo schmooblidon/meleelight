@@ -26,12 +26,14 @@ export default  {
     puff.THROWBACK.main(p, input);
   },
   main: function (p, input) {
+    const prevFrame = player[p].timer;
     player[p].timer += (22 / player[p].phys.releaseFrame);
     if (!puff.THROWBACK.interrupt(p, input)) {
       if (Math.floor(player[p].timer + 0.01) > 13 && Math.floor(player[p].timer + 0.01 < 37)) {
         player[p].phys.cVel.x = puff.THROWBACK.setVelocities[Math.floor(player[p].timer + 0.01) - 14] * player[p].phys.face;
       }
-      if (Math.floor(player[p].timer + 0.01) === 22) {
+      if (Math.floor(player[p].timer + 0.01) >= 22 && prevFrame < 22) {
+        if (player[p].phys.grabbing === -1) return;
         hitQueue.push([player[p].phys.grabbing, p, 0, false, true, true]);
         turnOffHitboxes(p);
       }
